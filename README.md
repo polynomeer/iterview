@@ -78,3 +78,7 @@ npm run build
 2. decide whether CI should remain per-app or be partially unified at the root
 3. add root-level developer helpers only for workflows that span both apps
 4. move only truly shared documentation into `docs/`
+
+## Monorepo Notes
+
+- monorepo ownership and cleanup rules: `docs/monorepo-conventions.md`
