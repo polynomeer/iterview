@@ -10,5 +10,6 @@ Examples:
 Current scripts:
 - `scripts/dev_api.sh`
 - `scripts/dev_web.sh`
+- `scripts/dev_all.sh`
 - `scripts/build_all.sh`
 - `scripts/test_all.sh`
