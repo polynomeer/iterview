@@ -47,6 +47,10 @@ Examples that should stay inside `apps/web`:
 - keep app-local workflows only when they are materially different or still needed during migration
 - remove duplicated app-local workflows only after root CI is proven sufficient
 
+Current decision:
+- root CI owns standard build and test verification for `apps/api` and `apps/web`
+- duplicated per-app `ci.yml` files should be removed when they do not add unique coverage
+
 ### `docs`
 - move only cross-app documents to root `docs/`
 - keep deep implementation docs close to the owning app

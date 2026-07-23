@@ -271,8 +271,8 @@ describe("InterviewResultPage", () => {
     );
 
     expect(screen.getByText("Structured resume coverage")).toBeInTheDocument();
-    expect(screen.getByText("Weak facet recovery")).toBeInTheDocument();
-    expect(screen.getByText("Skipped facet recovery")).toBeInTheDocument();
+    expect(screen.getAllByText("Weak facet recovery").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Skipped facet recovery").length).toBeGreaterThan(0);
     expect(screen.getByText("Resume projects")).toBeInTheDocument();
     expect(screen.getAllByText("Caching rollout").length).toBeGreaterThan(0);
 

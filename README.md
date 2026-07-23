@@ -72,6 +72,13 @@ cd apps/web
 npm run build
 ```
 
+Monorepo CI:
+
+- root workflow: `.github/workflows/ci.yml`
+- verifies:
+  - `apps/api` build
+  - `apps/web` test and build
+
 ## Remaining Monorepo Tasks
 
 1. normalize duplicated docs and scripts between `apps/api` and `apps/web`
