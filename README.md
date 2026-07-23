@@ -21,6 +21,7 @@ This repository is the monorepo root for:
 - `apps/web`
 
 The existing backend and frontend have been imported as peer apps.
+The root-level onboarding, verification, and CI flow are in place.
 
 ## Principles
 
@@ -82,12 +83,11 @@ Monorepo CI:
   - `apps/api` build
   - `apps/web` test and build
 
-## Remaining Monorepo Tasks
+## Monorepo Status
 
-1. continue reducing only the remaining duplicated app assets that are truly shared
-2. decide whether CI should remain per-app or be partially unified at the root
-3. add root-level developer helpers only for workflows that span both apps
-4. keep app-specific implementation notes with the owning app
+- current status and open operational risks: `docs/monorepo-status.md`
+- root CI is unified in `.github/workflows/ci.yml`
+- app-specific implementation notes stay in each app's `docs/`
 
 ## Monorepo Notes
 

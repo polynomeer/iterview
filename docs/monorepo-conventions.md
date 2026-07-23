@@ -65,12 +65,16 @@ Current decision:
 - keep delivery backlogs inside the owning app while the work is still app-specific
 - create root-level task tracking only for monorepo-wide work
 
-## Immediate Follow-up
+## Current State
 
-Safe next cleanup candidates:
-1. review `apps/api/.github/workflows/ci.yml` and `apps/web/.github/workflows/ci.yml` against root CI
-2. move only truly shared documentation into root `docs/`
-3. add root helper scripts only when they reduce repeated manual work
+Completed decisions:
+1. root CI owns standard build and test verification for `apps/api` and `apps/web`
+2. truly shared product and roadmap documents live in root `docs/`
+3. root helper scripts exist only for cross-app setup, dev, build, test, and verify flows
+
+Operational follow-up is tracked in:
+
+- `docs/monorepo-status.md`
 
 ## Non-Goals
 
