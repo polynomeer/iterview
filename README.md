@@ -16,11 +16,11 @@ iterview/
 
 ## Current State
 
-This repository is the new monorepo root for:
-- `iterview-api`
-- `iterview-web`
+This repository is the monorepo root for:
+- `apps/api`
+- `apps/web`
 
-The root structure is prepared first so the existing backend and frontend can be imported cleanly in follow-up commits.
+The existing backend and frontend have been imported as peer apps.
 
 ## Principles
 
@@ -29,9 +29,42 @@ The root structure is prepared first so the existing backend and frontend can be
 - preserve each app's own build system
 - avoid mixing Gradle and Node concerns at the root unless there is a strong operational reason
 
-## Next Steps
+## Local Development
 
-1. import `iterview-api` into `apps/api`
-2. import `iterview-web` into `apps/web`
-3. normalize root docs and developer workflows
-4. consolidate CI only after both apps are imported
+Backend:
+
+```bash
+cd apps/api
+./gradlew bootRun
+```
+
+Frontend:
+
+```bash
+cd apps/web
+npm install
+npm run dev
+```
+
+## Verification
+
+Backend:
+
+```bash
+cd apps/api
+./gradlew build
+```
+
+Frontend:
+
+```bash
+cd apps/web
+npm run build
+```
+
+## Remaining Monorepo Tasks
+
+1. normalize duplicated docs and scripts between `apps/api` and `apps/web`
+2. decide whether CI should remain per-app or be partially unified at the root
+3. add root-level developer helpers only for workflows that span both apps
+4. move only truly shared documentation into `docs/`

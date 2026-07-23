@@ -2,6 +2,6 @@
 
 Application directories live here.
 
-Planned structure:
+Current structure:
 - `apps/api`
 - `apps/web`
