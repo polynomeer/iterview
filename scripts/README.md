@@ -8,6 +8,7 @@ Examples:
 - release or packaging helpers that span multiple apps
 
 Current scripts:
+- `scripts/setup_all.sh`
 - `scripts/dev_api.sh`
 - `scripts/dev_web.sh`
 - `scripts/dev_all.sh`
