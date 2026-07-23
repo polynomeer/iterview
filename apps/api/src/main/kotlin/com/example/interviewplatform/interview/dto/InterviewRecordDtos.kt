@@ -1,0 +1,528 @@
+package com.example.interviewplatform.interview.dto
+
+import java.math.BigDecimal
+import java.time.Instant
+import java.time.LocalDate
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
+
+data class InterviewRecordListItemDto(
+    val id: Long,
+    val companyName: String?,
+    val roleName: String?,
+    val interviewDate: LocalDate?,
+    val interviewType: String,
+    val transcriptStatus: String,
+    val transcriptErrorCode: String?,
+    val transcriptRetryCount: Int,
+    val transcriptNextRetryAt: Instant?,
+    val analysisStatus: String,
+    val linkedResumeVersionId: Long?,
+    val interviewerProfileId: Long?,
+    val questionCount: Int,
+    val createdAt: Instant,
+)
+
+data class InterviewRecordDetailDto(
+    val id: Long,
+    val companyName: String?,
+    val roleName: String?,
+    val interviewDate: LocalDate?,
+    val interviewType: String,
+    val sourceAudioFileUrl: String?,
+    val sourceAudioFileName: String?,
+    val sourceAudioDurationMs: Long?,
+    val transcriptStatus: String,
+    val transcriptErrorCode: String?,
+    val transcriptErrorMessage: String?,
+    val transcriptRetryCount: Int,
+    val transcriptLastAttemptAt: Instant?,
+    val transcriptProcessingStartedAt: Instant?,
+    val transcriptNextRetryAt: Instant?,
+    val analysisStatus: String,
+    val linkedResumeVersionId: Long?,
+    val linkedJobPostingId: Long?,
+    val interviewerProfileId: Long?,
+    val deterministicSummary: String?,
+    val aiEnrichedSummary: String?,
+    val overallSummary: String?,
+    val structuringStage: String,
+    val confirmedAt: Instant?,
+    val questionCount: Int,
+    val answerCount: Int,
+    val createdAt: Instant,
+    val updatedAt: Instant,
+)
+
+data class InterviewRecordTranscriptionStatusDto(
+    val interviewRecordId: Long,
+    val transcriptStatus: String,
+    val analysisStatus: String,
+    val inProgress: Boolean,
+    val phase: String,
+    val statusMessage: String,
+    val retryScheduled: Boolean,
+    val transcriptErrorCode: String?,
+    val transcriptErrorMessage: String?,
+    val transcriptRetryCount: Int,
+    val transcriptLastAttemptAt: Instant?,
+    val transcriptProcessingStartedAt: Instant?,
+    val transcriptNextRetryAt: Instant?,
+    val updatedAt: Instant,
+)
+
+data class InterviewRecordReviewDto(
+    val interviewRecordId: Long,
+    val playback: InterviewRecordPlaybackDto,
+    val structuringStage: String,
+    val requiresConfirmation: Boolean,
+    val deterministicSummary: String?,
+    val aiEnrichedSummary: String?,
+    val overallSummary: String?,
+    val confirmedAt: Instant?,
+    val totalSegmentCount: Int,
+    val editedSegmentCount: Int,
+    val totalQuestionCount: Int,
+    val changedQuestionCount: Int,
+    val weakAnswerCount: Int,
+    val followUpQuestionCount: Int,
+    val questionSourceCounts: Map<String, Int>,
+    val answerSourceCounts: Map<String, Int>,
+    val interviewerProfileSource: String?,
+    val questionFilterSummary: InterviewRecordReviewQuestionFilterSummaryDto,
+    val questionDistributionSummary: InterviewRecordReviewQuestionDistributionSummaryDto,
+    val questionOriginSummary: InterviewRecordReviewQuestionOriginSummaryDto,
+    val replayReadiness: InterviewRecordReplayReadinessDto,
+    val transcriptIssueSummary: InterviewRecordTranscriptIssueSummaryDto,
+    val reviewLaneSummary: InterviewRecordReviewLaneSummaryDto,
+    val answerQualitySummary: InterviewRecordAnswerQualitySummaryDto,
+    val timelineNavigation: InterviewRecordTimelineNavigationDto,
+    val actionRecommendations: InterviewRecordReviewActionRecommendationsDto,
+    val replayLaunchPreset: InterviewRecordReplayLaunchPresetDto,
+    val provenanceComparisonSummary: InterviewRecordProvenanceComparisonSummaryDto,
+    val questionSummaries: List<InterviewRecordReviewQuestionSummaryDto>,
+    val followUpThreads: List<InterviewRecordReviewFollowUpThreadDto>,
+)
+
+data class InterviewRecordReviewQuestionFilterSummaryDto(
+    val allQuestions: Int,
+    val primaryQuestions: Int,
+    val followUpQuestions: Int,
+    val weakAnswerQuestions: Int,
+    val weakFollowUpQuestions: Int,
+    val confirmedQuestions: Int,
+)
+
+data class InterviewRecordReviewQuestionDistributionSummaryDto(
+    val questionTypeCounts: Map<String, Int>,
+    val topicTagCounts: Map<String, Int>,
+)
+
+data class InterviewRecordReviewQuestionOriginSummaryDto(
+    val resumeLinkedQuestions: Int,
+    val jobPostingLinkedQuestions: Int,
+    val hybridLinkedQuestions: Int,
+    val generalQuestions: Int,
+)
+
+data class InterviewRecordReplayReadinessDto(
+    val ready: Boolean,
+    val replayableQuestionCount: Int,
+    val linkedQuestionCount: Int,
+    val unlinkedQuestionCount: Int,
+    val followUpThreadCount: Int,
+    val hasInterviewerProfile: Boolean,
+    val recommendedReplayMode: String,
+    val recommendedReplayModeLabel: String,
+    val statusBadgeText: String,
+    val statusVariant: String,
+    val statusSummary: String,
+    val primaryCtaLabel: String,
+    val blockedCtaLabel: String,
+    val blockers: List<String>,
+    val blockerDetails: List<InterviewRecordReplayBlockerDetailDto>,
+)
+
+data class InterviewRecordReplayBlockerDetailDto(
+    val code: String,
+    val label: String,
+    val description: String,
+    val severity: String,
+    val priority: String,
+    val highlightVariant: String,
+    val sortOrder: Int,
+    val recommendedAction: String,
+    val recommendedActionLabel: String,
+    val recommendedActionTarget: String,
+    val recommendedActionTargetPayload: Map<String, String>,
+)
+
+data class InterviewRecordTranscriptIssueSummaryDto(
+    val lowConfidenceSegmentCount: Int,
+    val lowConfidenceSegmentSequences: List<Int>,
+    val speakerOverrideSegmentCount: Int,
+    val speakerOverrideSegmentSequences: List<Int>,
+    val confirmedTextOverrideCount: Int,
+    val editedSegmentSequences: List<Int>,
+    val resolvedIssueCount: Int,
+    val unresolvedIssueCount: Int,
+    val confirmationReadiness: String,
+    val reviewerLaneCounts: Map<String, Int>,
+    val topPrioritySegmentActions: List<InterviewRecordTranscriptSegmentActionDto>,
+    val segmentActions: List<InterviewRecordTranscriptSegmentActionDto>,
+)
+
+data class InterviewRecordTranscriptSegmentActionDto(
+    val sequence: Int,
+    val issueTypes: List<String>,
+    val recommendedAction: String,
+    val triageReason: String,
+    val ctaLabel: String,
+    val severity: String,
+    val priority: String,
+    val reviewerLane: String,
+    val linkedQuestionId: Long?,
+    val threadRootQuestionId: Long?,
+    val seekRange: InterviewRecordReplayRangeDto?,
+    val deepLink: InterviewRecordReviewQuestionDeepLinkDto?,
+    val replayLaunchPreset: InterviewRecordReplayLaunchPresetDto?,
+)
+
+data class InterviewRecordReviewLaneSummaryDto(
+    val transcript: InterviewRecordReviewLaneItemDto,
+    val question: InterviewRecordReviewLaneItemDto,
+    val thread: InterviewRecordReviewLaneItemDto,
+)
+
+data class InterviewRecordReviewLaneItemDto(
+    val sortOrder: Int,
+    val highlightVariant: String,
+    val badgeText: String,
+    val summaryText: String,
+    val recommendedTab: String,
+    val defaultExpanded: Boolean,
+    val analyticsKey: String,
+    val trackingContext: Map<String, String>,
+    val helpText: String,
+    val whyItMatters: String,
+    val accessibilityLabel: String,
+    val screenReaderSummary: String,
+    val totalCount: Int,
+    val readyCount: Int,
+    val needsReviewCount: Int,
+    val readiness: String,
+    val severity: String,
+    val highestPriority: String,
+    val primaryAction: String,
+    val primaryActionLabel: String,
+    val primaryActionTarget: String,
+    val primaryActionTargetPayload: Map<String, String>,
+    val secondaryAction: String?,
+    val secondaryActionLabel: String?,
+    val secondaryActionTarget: String?,
+    val secondaryActionTargetPayload: Map<String, String>?,
+    val emptyStateMessage: String?,
+    val emptyStateCtaAction: String?,
+    val emptyStateCtaLabel: String?,
+    val emptyStateCtaTarget: String?,
+    val emptyStateCtaTargetPayload: Map<String, String>?,
+    val completionMessage: String?,
+    val completionCtaAction: String?,
+    val completionCtaLabel: String?,
+    val completionCtaTarget: String?,
+    val completionCtaTargetPayload: Map<String, String>?,
+    val blockingReasons: List<String>,
+    val blockingReasonDetails: List<InterviewRecordReviewLaneBlockerDetailDto>,
+)
+
+data class InterviewRecordReviewLaneBlockerDetailDto(
+    val code: String,
+    val label: String,
+    val description: String,
+    val severity: String,
+    val priority: String,
+    val highlightVariant: String,
+    val sortOrder: Int,
+    val recommendedAction: String,
+    val recommendedActionLabel: String,
+    val recommendedActionTarget: String,
+    val recommendedActionTargetPayload: Map<String, String>,
+)
+
+data class InterviewRecordAnswerQualitySummaryDto(
+    val answeredQuestionCount: Int,
+    val weakAnswerCount: Int,
+    val strengthTaggedAnswerCount: Int,
+    val quantifiedAnswerCount: Int,
+    val structuredAnswerCount: Int,
+    val tradeoffAwareAnswerCount: Int,
+    val uncertainAnswerCount: Int,
+    val detailedAnswerCount: Int,
+)
+
+data class InterviewRecordTimelineNavigationDto(
+    val items: List<InterviewRecordTimelineNavigationItemDto>,
+)
+
+data class InterviewRecordTimelineNavigationItemDto(
+    val questionId: Long,
+    val orderIndex: Int,
+    val parentQuestionId: Long?,
+    val threadRootQuestionId: Long,
+    val questionSegmentStartSequence: Int?,
+    val questionSegmentEndSequence: Int?,
+    val answerSegmentStartSequence: Int?,
+    val answerSegmentEndSequence: Int?,
+    val questionRange: InterviewRecordReplayRangeDto?,
+    val answerRange: InterviewRecordReplayRangeDto?,
+    val questionAnswerRange: InterviewRecordReplayRangeDto?,
+)
+
+data class InterviewRecordReviewActionRecommendationsDto(
+    val primaryAction: String,
+    val primaryActionLabel: String,
+    val primaryActionTarget: String,
+    val primaryActionTargetPayload: Map<String, String>,
+    val availableActions: List<String>,
+    val availableActionLabels: Map<String, String>,
+    val availableActionTargets: Map<String, String>,
+    val availableActionTargetPayloads: Map<String, Map<String, String>>,
+    val blockingReasons: List<String>,
+    val blockingReasonDetails: List<InterviewRecordReviewActionBlockerDetailDto>,
+    val canConfirm: Boolean,
+    val canReplay: Boolean,
+)
+
+data class InterviewRecordReviewActionBlockerDetailDto(
+    val code: String,
+    val label: String,
+    val description: String,
+    val severity: String,
+    val priority: String,
+    val highlightVariant: String,
+    val sortOrder: Int,
+    val recommendedAction: String,
+    val recommendedActionLabel: String,
+    val recommendedActionTarget: String,
+    val recommendedActionTargetPayload: Map<String, String>,
+)
+
+data class InterviewRecordReplayLaunchPresetDto(
+    val sessionType: String,
+    val sourceInterviewRecordId: Long,
+    val replayMode: String,
+    val recommendedReplayModeLabel: String,
+    val recommendedQuestionCount: Int,
+    val seedQuestionIds: List<Long>,
+    val availableReplayModes: List<String>,
+    val availableReplayModeLabels: Map<String, String>,
+    val presetTitle: String,
+    val presetDescription: String,
+    val launchButtonLabel: String,
+)
+
+data class InterviewRecordProvenanceComparisonSummaryDto(
+    val aiRefinementApplied: Boolean,
+    val confirmedVersionAvailable: Boolean,
+    val summaryChangedFromDeterministic: Boolean,
+    val changedQuestionCountFromDeterministic: Int,
+    val changedAnswerCountFromDeterministic: Int,
+    val currentQuestionSource: String,
+    val currentAnswerSource: String,
+    val currentInterviewerProfileSource: String?,
+)
+
+data class InterviewRecordReviewQuestionSummaryDto(
+    val questionId: Long,
+    val linkedQuestionId: Long?,
+    val deepLink: InterviewRecordReviewQuestionDeepLinkDto,
+    val orderIndex: Int,
+    val text: String,
+    val questionType: String,
+    val topicTags: List<String>,
+    val originType: String,
+    val derivedFromResumeSection: String?,
+    val derivedFromJobPostingSection: String?,
+    val isFollowUp: Boolean,
+    val parentQuestionId: Long?,
+    val hasWeakAnswer: Boolean,
+    val answerSummary: String?,
+    val confidenceMarkers: List<String>,
+    val weaknessTags: List<String>,
+    val strengthTags: List<String>,
+    val questionStructuringSource: String,
+    val answerStructuringSource: String?,
+    val questionRange: InterviewRecordReplayRangeDto?,
+    val answerRange: InterviewRecordReplayRangeDto?,
+    val questionAnswerRange: InterviewRecordReplayRangeDto?,
+)
+
+data class InterviewRecordReviewQuestionDeepLinkDto(
+    val questionDetailQuestionId: Long?,
+    val archiveSourceType: String,
+    val sourceInterviewRecordId: Long,
+    val sourceInterviewQuestionId: Long,
+    val canStartReplayMock: Boolean,
+    val replaySessionType: String,
+)
+
+data class InterviewRecordReviewFollowUpThreadDto(
+    val rootQuestionId: Long,
+    val rootLinkedQuestionId: Long?,
+    val rootOrderIndex: Int,
+    val rootText: String,
+    val questionIds: List<Long>,
+    val linkedQuestionIds: List<Long>,
+    val followUpQuestionIds: List<Long>,
+    val followUpCount: Int,
+    val weakQuestionCount: Int,
+    val answeredQuestionCount: Int,
+    val quantifiedQuestionCount: Int,
+    val structuredQuestionCount: Int,
+    val tradeoffAwareQuestionCount: Int,
+    val uncertainQuestionCount: Int,
+    val recommendedAction: String,
+    val threadRange: InterviewRecordReplayRangeDto?,
+    val replayLaunchPreset: InterviewRecordReplayLaunchPresetDto,
+    val structuringSources: List<String>,
+)
+
+data class InterviewRecordPlaybackDto(
+    val playbackAvailable: Boolean,
+    val sourceAudioFileUrl: String?,
+    val sourceAudioFileName: String?,
+    val audioDurationMs: Long?,
+    val sessionRange: InterviewRecordReplayRangeDto?,
+)
+
+data class InterviewRecordReplayRangeDto(
+    val startMs: Long,
+    val endMs: Long,
+    val durationMs: Long,
+    val startTimestampLabel: String,
+    val endTimestampLabel: String,
+)
+
+data class InterviewTranscriptSegmentDto(
+    val id: Long,
+    val startMs: Long,
+    val endMs: Long,
+    val timestampLabel: String,
+    val speakerType: String,
+    val rawText: String?,
+    val cleanedText: String?,
+    val confirmedText: String?,
+    val confidenceScore: BigDecimal?,
+    val sequence: Int,
+)
+
+data class InterviewRecordTranscriptDto(
+    val interviewRecordId: Long,
+    val playback: InterviewRecordPlaybackDto,
+    val rawTranscript: String?,
+    val cleanedTranscript: String?,
+    val confirmedTranscript: String?,
+    val transcriptStatus: String,
+    val transcriptErrorCode: String?,
+    val transcriptErrorMessage: String?,
+    val transcriptRetryCount: Int,
+    val transcriptLastAttemptAt: Instant?,
+    val transcriptNextRetryAt: Instant?,
+    val segments: List<InterviewTranscriptSegmentDto>,
+    val updatedAt: Instant,
+)
+
+data class UpdateInterviewTranscriptSegmentRequest(
+    val speakerType: String?,
+    val cleanedText: String?,
+    val confirmedText: String?,
+)
+
+data class BulkUpdateInterviewTranscriptSegmentsRequest(
+    @field:NotEmpty
+    @field:Valid
+    val edits: List<UpdateInterviewTranscriptSegmentItemRequest>,
+    val confirmAfterApply: Boolean = false,
+)
+
+data class UpdateInterviewTranscriptSegmentItemRequest(
+    @field:NotNull
+    val segmentId: Long?,
+    val speakerType: String?,
+    val cleanedText: String?,
+    val confirmedText: String?,
+)
+
+data class InterviewRecordQuestionAnswerDto(
+    val id: Long,
+    val text: String,
+    val normalizedText: String?,
+    val summary: String?,
+    val confidenceMarkers: List<String>,
+    val weaknessTags: List<String>,
+    val strengthTags: List<String>,
+    val structuringSource: String,
+    val orderIndex: Int,
+    val replayRange: InterviewRecordReplayRangeDto?,
+)
+
+data class InterviewRecordQuestionDto(
+    val id: Long,
+    val linkedQuestionId: Long?,
+    val text: String,
+    val normalizedText: String?,
+    val questionType: String,
+    val topicTags: List<String>,
+    val intentTags: List<String>,
+    val derivedFromResumeSection: String?,
+    val derivedFromResumeRecordType: String?,
+    val derivedFromResumeRecordId: Long?,
+    val derivedFromJobPostingSection: String?,
+    val parentQuestionId: Long?,
+    val structuringSource: String,
+    val orderIndex: Int,
+    val questionRange: InterviewRecordReplayRangeDto?,
+    val answerRange: InterviewRecordReplayRangeDto?,
+    val questionAnswerRange: InterviewRecordReplayRangeDto?,
+    val answer: InterviewRecordQuestionAnswerDto?,
+)
+
+data class InterviewRecordQuestionsResponseDto(
+    val interviewRecordId: Long,
+    val playback: InterviewRecordPlaybackDto,
+    val items: List<InterviewRecordQuestionDto>,
+)
+
+data class InterviewRecordFollowUpEdgeDto(
+    val fromQuestionId: Long,
+    val toQuestionId: Long,
+    val relationType: String,
+    val triggerType: String,
+)
+
+data class InterviewRecordAnalysisDto(
+    val interviewRecordId: Long,
+    val totalQuestions: Int,
+    val totalAnswers: Int,
+    val followUpCount: Int,
+    val questionTypeDistribution: Map<String, Int>,
+    val weakAnswerQuestionIds: List<Long>,
+    val topicTags: List<String>,
+    val structuringStage: String,
+    val overallSummary: String?,
+)
+
+data class InterviewerProfileDto(
+    val id: Long,
+    val sourceInterviewRecordId: Long,
+    val styleTags: List<String>,
+    val toneProfile: String,
+    val pressureLevel: String,
+    val depthPreference: String,
+    val followUpPatterns: List<String>,
+    val favoriteTopics: List<String>,
+    val openingPattern: String?,
+    val closingPattern: String?,
+    val structuringSource: String,
+)

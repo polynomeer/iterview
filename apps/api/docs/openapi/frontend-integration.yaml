@@ -1,0 +1,4272 @@
+openapi: 3.0.3
+info:
+  title: Iterview Frontend Integration API
+  version: "2026-03-11"
+  description: >
+    Frontend-oriented OpenAPI snapshot for the implemented interview intelligence
+    flows. This file is documentation-only and does not participate in runtime logic.
+servers:
+  - url: http://localhost:8080
+    description: Local development
+security:
+  - bearerAuth: []
+tags:
+  - name: Profile
+  - name: Home
+  - name: Resume
+  - name: Job Posting
+  - name: Questions
+  - name: Answers
+  - name: Skills
+  - name: Review Queue
+  - name: Interview Sessions
+paths:
+  /api/me:
+    get:
+      tags: [Profile]
+      summary: Get current user aggregate
+      responses:
+        "200":
+          description: Current user aggregate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+  /api/me/profile-image:
+    post:
+      tags: [Profile]
+      summary: Upload current user profile image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Uploaded profile image metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileImageUploadResponseDto"
+  /api/home:
+    get:
+      tags: [Home]
+      summary: Get home dashboard payload
+      responses:
+        "200":
+          description: Home dashboard payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HomeResponseDto"
+  /api/resumes/latest:
+    get:
+      tags: [Resume]
+      summary: Get latest or primary resume
+      responses:
+        "200":
+          description: Latest resume container
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeDto"
+  /api/job-postings:
+    get:
+      tags: [Job Posting]
+      summary: List saved job postings
+      responses:
+        "200":
+          description: Job posting list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobPostingDto"
+    post:
+      tags: [Job Posting]
+      summary: Create and parse one job posting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateJobPostingRequest"
+      responses:
+        "200":
+          description: Parsed job posting detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobPostingDto"
+  /api/job-postings/{jobPostingId}:
+    get:
+      tags: [Job Posting]
+      summary: Get one saved job posting
+      parameters:
+        - name: jobPostingId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Job posting detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobPostingDto"
+  /api/resumes/{resumeId}/versions/upload:
+    post:
+      tags: [Resume]
+      summary: Upload PDF resume version
+      parameters:
+        - $ref: "#/components/parameters/ResumeId"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                summaryText:
+                  type: string
+      responses:
+        "200":
+          description: Uploaded resume version metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeVersionDto"
+  /api/resume-versions/{versionId}:
+    get:
+      tags: [Resume]
+      summary: Get resume version detail
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume version detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeVersionDto"
+  /api/resume-versions/{versionId}/extraction:
+    get:
+      tags: [Resume]
+      summary: Get resume version extraction status
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume extraction status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeVersionExtractionDto"
+  /api/resume-versions/{versionId}/file:
+    get:
+      tags: [Resume]
+      summary: Download resume version file
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume file stream
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+  /api/resume-versions/{versionId}/profile:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume profile
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume profile snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeProfileSnapshotResponseDto"
+  /api/resume-versions/{versionId}/contacts:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume contacts
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume contacts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeContactPointResponseDto"
+  /api/resume-versions/{versionId}/competencies:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume competencies
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume competency statements
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeCompetencyItemResponseDto"
+  /api/resume-versions/{versionId}/skills:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume skills
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Skill snapshot list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeSkillSnapshotResponseDto"
+  /api/resume-versions/{versionId}/experiences:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume experiences
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Experience snapshot list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeExperienceSnapshotResponseDto"
+  /api/resume-versions/{versionId}/projects:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume projects
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Project snapshot list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeProjectSnapshotResponseDto"
+  /api/resume-versions/{versionId}/achievements:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume achievements
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Achievement list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAchievementItemResponseDto"
+  /api/resume-versions/{versionId}/education:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume education items
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Education list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEducationItemResponseDto"
+  /api/resume-versions/{versionId}/certifications:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume certifications
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Certification list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeCertificationItemResponseDto"
+  /api/resume-versions/{versionId}/awards:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume awards
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Award list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAwardItemResponseDto"
+  /api/resume-versions/{versionId}/risks:
+    get:
+      tags: [Resume]
+      summary: Get extracted resume risk items
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume risk list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeRiskItemResponseDto"
+  /api/resume-versions/{versionId}/question-heatmap:
+    get:
+      tags: [Resume]
+      summary: Get resume interview heatmap for one resume version
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: scope
+          in: query
+          required: false
+          schema: { type: string, default: all }
+        - name: weakOnly
+          in: query
+          required: false
+          schema: { type: boolean, default: false }
+        - name: companyName
+          in: query
+          required: false
+          schema: { type: string }
+        - name: interviewDateFrom
+          in: query
+          required: false
+          schema: { type: string, format: date }
+        - name: interviewDateTo
+          in: query
+          required: false
+          schema: { type: string, format: date }
+        - name: targetType
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Resume question heatmap
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeQuestionHeatmapDto"
+  /api/resume-versions/{versionId}/question-heatmap/overlay-targets:
+    get:
+      tags: [Resume]
+      summary: Get resume interview heatmap overlay targets for one resume version
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: scope
+          in: query
+          required: false
+          schema: { type: string, default: all }
+        - name: weakOnly
+          in: query
+          required: false
+          schema: { type: boolean, default: false }
+        - name: companyName
+          in: query
+          required: false
+          schema: { type: string }
+        - name: interviewDateFrom
+          in: query
+          required: false
+          schema: { type: string, format: date }
+        - name: interviewDateTo
+          in: query
+          required: false
+          schema: { type: string, format: date }
+        - name: targetType
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Resume question heatmap overlay target list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeQuestionHeatmapOverlayTargetListDto"
+  /api/resume-versions/{versionId}/question-heatmap/links:
+    post:
+      tags: [Resume]
+      summary: Create or replace one manual heatmap link
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeQuestionHeatmapLinkRequest"
+      responses:
+        "200":
+          description: Resume heatmap link
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeQuestionHeatmapLinkDto"
+  /api/resume-versions/{versionId}/question-heatmap/links/{linkId}:
+    patch:
+      tags: [Resume]
+      summary: Update one manual heatmap link
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: linkId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResumeQuestionHeatmapLinkRequest"
+      responses:
+        "200":
+          description: Updated resume heatmap link
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeQuestionHeatmapLinkDto"
+  /api/resume-versions/{versionId}/editor:
+    get:
+      tags: [Resume]
+      summary: Get or initialize one resume editor workspace
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume editor workspace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorWorkspaceDto"
+  /api/resume-versions/{versionId}/editor/document:
+    put:
+      tags: [Resume]
+      summary: Replace one resume editor document
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResumeEditorDocumentRequest"
+      responses:
+        "200":
+          description: Updated resume editor workspace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorWorkspaceDto"
+  /api/resume-versions/{versionId}/editor/document/operations:
+    patch:
+      tags: [Resume]
+      summary: Apply granular operations to one resume editor document
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchResumeEditorDocumentOperationsRequest"
+      responses:
+        "200":
+          description: Updated resume editor workspace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorWorkspaceDto"
+  /api/resume-versions/{versionId}/editor/import-markdown:
+    post:
+      tags: [Resume]
+      summary: Import markdown into one resume editor workspace
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImportResumeEditorMarkdownRequest"
+      responses:
+        "200":
+          description: Updated resume editor workspace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorWorkspaceDto"
+  /api/resume-versions/{versionId}/editor/comments:
+    post:
+      tags: [Resume]
+      summary: Create one resume editor comment thread
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeEditorCommentRequest"
+      responses:
+        "200":
+          description: Resume editor comment thread
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorCommentThreadDto"
+  /api/resume-versions/{versionId}/editor/comments/{commentId}:
+    patch:
+      tags: [Resume]
+      summary: Update one resume editor comment thread
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResumeEditorCommentRequest"
+      responses:
+        "200":
+          description: Updated resume editor comment thread
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorCommentThreadDto"
+  /api/resume-versions/{versionId}/editor/comments/{commentId}/replies:
+    post:
+      tags: [Resume]
+      summary: Create one resume editor comment reply
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeEditorCommentReplyRequest"
+      responses:
+        "200":
+          description: Updated resume editor comment thread
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorCommentThreadDto"
+  /api/resume-versions/{versionId}/editor/presence:
+    post:
+      tags: [Resume]
+      summary: Upsert one resume editor presence heartbeat
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeEditorPresenceRequest"
+      responses:
+        "200":
+          description: Active resume editor presence sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResumeEditorPresenceDto"
+  /api/resume-versions/{versionId}/editor/question-cards:
+    post:
+      tags: [Resume]
+      summary: Create one resume editor question card
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeEditorQuestionCardRequest"
+      responses:
+        "200":
+          description: Resume editor question card
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorQuestionCardDto"
+  /api/resume-versions/{versionId}/editor/question-cards/{cardId}:
+    patch:
+      tags: [Resume]
+      summary: Update one resume editor question card
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: cardId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResumeEditorQuestionCardRequest"
+      responses:
+        "200":
+          description: Updated resume editor question card
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorQuestionCardDto"
+  /api/resume-versions/{versionId}/editor/auto-question-suggestions:
+    post:
+      tags: [Resume]
+      summary: Generate deterministic resume editor question suggestions
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeEditorQuestionSuggestionRequest"
+      responses:
+        "200":
+          description: Resume editor question suggestion payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorQuestionSuggestionResponseDto"
+  /api/resume-versions/{versionId}/editor/rewrite-suggestions:
+    post:
+      tags: [Resume]
+      summary: Generate deterministic resume editor rewrite suggestions
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeEditorRewriteSuggestionRequest"
+      responses:
+        "200":
+          description: Resume editor rewrite suggestion payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorRewriteSuggestionResponseDto"
+  /api/resume-versions/{versionId}/editor/print-preview:
+    get:
+      tags: [Resume]
+      summary: Build one resume editor print preview
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume editor print preview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorPrintPreviewDto"
+  /api/resume-versions/{versionId}/editor/revisions:
+    get:
+      tags: [Resume]
+      summary: List one resume editor workspace revisions
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume editor revision list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResumeEditorRevisionListItemDto"
+  /api/resume-versions/{versionId}/editor/revisions/{revisionId}:
+    get:
+      tags: [Resume]
+      summary: Get one resume editor workspace revision
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: revisionId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Resume editor revision detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorRevisionDto"
+  /api/resume-versions/{versionId}/editor/tracked-changes:
+    get:
+      tags: [Resume]
+      summary: Compare two resume editor revisions
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: fromRevisionId
+          in: query
+          required: true
+          schema: { type: integer, format: int64 }
+        - name: toRevisionId
+          in: query
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Resume editor tracked changes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorTrackedChangesDto"
+  /api/resume-versions/{versionId}/editor/merge-preview:
+    post:
+      tags: [Resume]
+      summary: Preview one server-assisted resume editor merge
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResumeEditorMergePreviewRequest"
+      responses:
+        "200":
+          description: Resume editor merge preview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeEditorMergePreviewDto"
+  /api/resume-versions/{versionId}/analyses:
+    get:
+      tags: [Resume]
+      summary: List persisted analyses for one resume version
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume analysis list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResumeAnalysisListItemDto"
+    post:
+      tags: [Resume]
+      summary: Create one job-aware analysis for a resume version
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeAnalysisRequest"
+      responses:
+        "200":
+          description: Resume analysis detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAnalysisDto"
+  /api/resume-versions/{versionId}/analyses/{analysisId}:
+    get:
+      tags: [Resume]
+      summary: Get one persisted resume analysis
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: analysisId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Resume analysis detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAnalysisDto"
+  /api/resume-versions/{versionId}/analyses/{analysisId}/suggestions/{suggestionId}:
+    patch:
+      tags: [Resume]
+      summary: Accept or unaccept one resume analysis suggestion
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: analysisId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+        - name: suggestionId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResumeAnalysisSuggestionRequest"
+      responses:
+        "200":
+          description: Updated resume analysis detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAnalysisDto"
+  /api/resume-versions/{versionId}/analyses/{analysisId}/exports:
+    get:
+      tags: [Resume]
+      summary: List tailored resume exports for one analysis
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: analysisId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Export history for one analysis
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResumeAnalysisExportDto"
+    post:
+      tags: [Resume]
+      summary: Create one tailored resume export for one analysis
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: analysisId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResumeAnalysisExportRequest"
+      responses:
+        "200":
+          description: Created export metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAnalysisExportDto"
+  /api/resume-versions/{versionId}/analyses/{analysisId}/exports/{exportId}/file:
+    get:
+      tags: [Resume]
+      summary: Download one tailored resume export file
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+        - name: analysisId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+        - name: exportId
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Export file stream
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+  /api/resume-versions/{versionId}/re-extract:
+    post:
+      tags: [Resume]
+      summary: Re-run structured extraction for a resume version
+      parameters:
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200":
+          description: Resume extraction status after re-run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeVersionExtractionDto"
+  /api/questions/{questionId}:
+    get:
+      tags: [Questions]
+      security: []
+      summary: Get question detail
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        "200":
+          description: Question detail payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionDetailResponse"
+  /api/questions/{questionId}/reference-answers:
+    get:
+      tags: [Questions]
+      security: []
+      summary: Get curated model answers for a question
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        "200":
+          description: Question reference answers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuestionReferenceAnswerDto"
+    post:
+      tags: [Questions]
+      summary: Add a user reference answer for a question
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuestionReferenceAnswerRequest"
+      responses:
+        "200":
+          description: Created question reference answer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionReferenceAnswerDto"
+  /api/questions/{questionId}/learning-materials:
+    get:
+      tags: [Questions]
+      security: []
+      summary: Get curated learning materials for a question
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        "200":
+          description: Question learning materials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LearningMaterialDto"
+    post:
+      tags: [Questions]
+      summary: Add a user learning material for a question
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuestionLearningMaterialRequest"
+      responses:
+        "200":
+          description: Created question learning material
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LearningMaterialDto"
+  /api/questions/{questionId}/tree:
+    get:
+      tags: [Questions]
+      summary: Get question follow-up tree
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        "200":
+          description: Rooted question tree
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionTreeResponseDto"
+  /api/questions/{questionId}/recommended-followups:
+    get:
+      tags: [Questions]
+      summary: Get recommended follow-up questions
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        "200":
+          description: Recommended follow-up questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecommendedFollowUpDto"
+  /api/questions/resume-based:
+    get:
+      tags: [Questions]
+      summary: Get resume-based recommended questions
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        "200":
+          description: Resume-derived recommended questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResumeBasedQuestionDto"
+  /api/questions/{questionId}/answers:
+    get:
+      tags: [Answers]
+      summary: List answer attempts for a question
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      responses:
+        "200":
+          description: Answer history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnswerAttemptListItemDto"
+    post:
+      tags: [Answers]
+      summary: Submit answer attempt
+      parameters:
+        - $ref: "#/components/parameters/QuestionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitAnswerRequest"
+      responses:
+        "200":
+          description: Submission result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitAnswerResponseDto"
+  /api/answer-attempts/{answerAttemptId}:
+    get:
+      tags: [Answers]
+      summary: Get answer attempt detail
+      parameters:
+        - $ref: "#/components/parameters/AnswerAttemptId"
+      responses:
+        "200":
+          description: Answer attempt detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnswerAttemptDetailResponseDto"
+  /api/answer-attempts/{answerAttemptId}/analysis:
+    get:
+      tags: [Answers]
+      summary: Get answer analysis
+      parameters:
+        - $ref: "#/components/parameters/AnswerAttemptId"
+      responses:
+        "200":
+          description: Answer analysis payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnswerAnalysisDto"
+  /api/skills/radar:
+    get:
+      tags: [Skills]
+      summary: Get skill radar
+      responses:
+        "200":
+          description: Skill radar payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillRadarResponseDto"
+  /api/skills/gaps:
+    get:
+      tags: [Skills]
+      summary: Get ranked skill gaps
+      responses:
+        "200":
+          description: Ranked gap list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SkillGapItemDto"
+  /api/skills/progress:
+    get:
+      tags: [Skills]
+      summary: Get skill progress snapshot
+      responses:
+        "200":
+          description: Skill progress list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SkillProgressItemDto"
+  /api/review-queue:
+    get:
+      tags: [Review Queue]
+      summary: List pending review queue items
+      responses:
+        "200":
+          description: Pending queue items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReviewQueueItemDto"
+  /api/review-queue/{queueId}/skip:
+    post:
+      tags: [Review Queue]
+      summary: Skip review queue item
+      parameters:
+        - $ref: "#/components/parameters/QueueId"
+      responses:
+        "200":
+          description: Queue state update
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewQueueActionResponseDto"
+  /api/review-queue/{queueId}/done:
+    post:
+      tags: [Review Queue]
+      summary: Complete review queue item
+      parameters:
+        - $ref: "#/components/parameters/QueueId"
+      responses:
+        "200":
+          description: Queue state update
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewQueueActionResponseDto"
+  /api/archive:
+    get:
+      tags: [Archive]
+      summary: List archived questions and asked interview turns
+      responses:
+        "200":
+          description: Archived question list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ArchivedQuestionDto"
+  /api/interview-records:
+    get:
+      tags: [Interview Records]
+      summary: List imported interview records
+      responses:
+        "200":
+          description: Imported interview record list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InterviewRecordListItemDto"
+    post:
+      tags: [Interview Records]
+      summary: Upload and create imported interview record
+      description: |
+        Uploads interview audio and creates an imported interview record.
+        If transcriptText is omitted, the backend attempts automatic transcript extraction before structuring.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CreateInterviewRecordRequest"
+      responses:
+        "200":
+          description: Created imported interview record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordDetailDto"
+  /api/interview-records/{recordId}:
+    get:
+      tags: [Interview Records]
+      summary: Get imported interview record detail
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Imported interview record detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordDetailDto"
+  /api/interview-records/{recordId}/transcript:
+    get:
+      tags: [Interview Records]
+      summary: Get imported interview transcript detail
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Imported interview transcript detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordTranscriptDto"
+  /api/interview-records/{recordId}/transcript/segments/{segmentId}:
+    patch:
+      tags: [Interview Records]
+      summary: Update one imported interview transcript segment
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+        - $ref: "#/components/parameters/SegmentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateInterviewTranscriptSegmentRequest"
+      responses:
+        "200":
+          description: Updated imported interview transcript detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordTranscriptDto"
+  /api/interview-records/{recordId}/retry-transcription:
+    post:
+      tags: [Interview Records]
+      summary: Retry practical interview transcription
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Updated imported interview record detail after re-queueing transcription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordDetailDto"
+  /api/interview-records/{recordId}/questions:
+    get:
+      tags: [Interview Records]
+      summary: Get structured imported interview questions and answers
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Imported interview question list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordQuestionsResponseDto"
+  /api/interview-records/{recordId}/review:
+    get:
+      tags: [Interview Records]
+      summary: Get practical interview review provenance
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Practical interview review payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordReviewDto"
+    patch:
+      tags: [Interview Records]
+      summary: Apply bulk transcript review edits and optionally confirm
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkUpdateInterviewTranscriptSegmentsRequest"
+      responses:
+        "200":
+          description: Updated practical interview review payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordReviewDto"
+  /api/interview-records/{recordId}/analysis:
+    get:
+      tags: [Interview Records]
+      summary: Get imported interview analysis
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Imported interview analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordAnalysisDto"
+  /api/interview-records/{recordId}/interviewer-profile:
+    get:
+      tags: [Interview Records]
+      summary: Get inferred interviewer profile for an imported interview
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Inferred interviewer profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewerProfileDto"
+  /api/interview-records/{recordId}/confirm:
+    post:
+      tags: [Interview Records]
+      summary: Confirm practical interview structuring review
+      parameters:
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Confirmed imported interview record detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewRecordDetailDto"
+  /api/interview-sessions:
+    get:
+      tags: [Interview Sessions]
+      summary: List interview sessions
+      responses:
+        "200":
+          description: Session history list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InterviewSessionListItemDto"
+    post:
+      tags: [Interview Sessions]
+      summary: Create interview session
+      description: For `resume_mock`, send an explicit `resumeVersionId`. The opening question may be AI-generated from the selected resume.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInterviewSessionRequest"
+      responses:
+        "200":
+          description: Created session detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSessionDetailResponseDto"
+  /api/interview-sessions/{sessionId}:
+    get:
+      tags: [Interview Sessions]
+      summary: Get interview session detail
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+      responses:
+        "200":
+          description: Session detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSessionDetailResponseDto"
+  /api/interview-sessions/{sessionId}/coverage:
+    get:
+      tags: [Interview Sessions]
+      summary: Get interview session coverage
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+      responses:
+        "200":
+          description: Session coverage summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSessionCoverageResponseDto"
+  /api/interview-sessions/{sessionId}/resume-map:
+    get:
+      tags: [Interview Sessions]
+      summary: Get interview session resume map
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+      responses:
+        "200":
+          description: Session resume evidence map
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSessionResumeMapResponseDto"
+  /api/interview-sessions/{sessionId}/answers:
+    post:
+      tags: [Interview Sessions]
+      summary: Submit session answer
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitInterviewSessionAnswerRequest"
+      responses:
+        "200":
+          description: Session answer result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSessionAnswerResponseDto"
+  /api/interview-sessions/{sessionId}/next-question:
+    post:
+      tags: [Interview Sessions]
+      summary: Advance to next interview question
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+      responses:
+        "200":
+          description: Advanced session state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSessionAdvanceResponseDto"
+        "409":
+          description: Current question has not been answered or skipped yet
+  /api/interview-sessions/{sessionId}/skip-question:
+    post:
+      tags: [Interview Sessions]
+      summary: Skip current interview question and advance
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SkipInterviewSessionQuestionRequest"
+      responses:
+        "200":
+          description: Advanced session state after skipping the current question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSessionAdvanceResponseDto"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    VersionId:
+      in: path
+      name: versionId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ResumeId:
+      in: path
+      name: resumeId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    QuestionId:
+      in: path
+      name: questionId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    AnswerAttemptId:
+      in: path
+      name: answerAttemptId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    QueueId:
+      in: path
+      name: queueId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    SessionId:
+      in: path
+      name: sessionId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    RecordId:
+      in: path
+      name: recordId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    SegmentId:
+      in: path
+      name: segmentId
+      required: true
+      schema:
+        type: integer
+        format: int64
+  schemas:
+    MeResponse:
+      type: object
+      properties:
+        profile:
+          $ref: "#/components/schemas/ProfileDto"
+        settings:
+          $ref: "#/components/schemas/SettingsDto"
+        activeResumeVersionSummary:
+          allOf:
+            - $ref: "#/components/schemas/ActiveResumeVersionSummaryDto"
+          nullable: true
+        targetCompanies:
+          type: array
+          items:
+            $ref: "#/components/schemas/TargetCompanyDto"
+    ProfileDto:
+      type: object
+      properties:
+        nickname: { type: string, nullable: true }
+        jobRoleId: { type: integer, format: int64, nullable: true }
+        yearsOfExperience: { type: integer, nullable: true }
+        profileImageUrl: { type: string, nullable: true }
+        profileImageFileName: { type: string, nullable: true }
+        profileImageContentType: { type: string, nullable: true }
+        profileImageUploadedAt: { type: string, format: date-time, nullable: true }
+    ProfileImageUploadResponseDto:
+      type: object
+      properties:
+        imageUrl: { type: string }
+        fileName: { type: string }
+        contentType: { type: string }
+        uploadedAt: { type: string, format: date-time }
+    SettingsDto:
+      type: object
+      properties:
+        targetScoreThreshold: { type: integer }
+        passScoreThreshold: { type: integer }
+        retryEnabled: { type: boolean }
+        dailyQuestionCount: { type: integer }
+    ActiveResumeVersionSummaryDto:
+      type: object
+      properties:
+        resumeId: { type: integer, format: int64 }
+        resumeTitle: { type: string }
+        versionId: { type: integer, format: int64 }
+        versionNo: { type: integer }
+        uploadedAt: { type: string, format: date-time }
+    TargetCompanyDto:
+      type: object
+      properties:
+        companyId: { type: integer, format: int64 }
+        companyName: { type: string }
+        priorityOrder: { type: integer }
+    ResumeDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        isPrimary: { type: boolean }
+        versions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeVersionDto"
+    ResumeVersionDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        versionNo: { type: integer }
+        fileUrl: { type: string, nullable: true }
+        fileName: { type: string, nullable: true }
+        fileType: { type: string, nullable: true }
+        fileSizeBytes: { type: integer, format: int64, nullable: true }
+        summaryText: { type: string, nullable: true }
+        parsingStatus: { type: string }
+        parseStartedAt: { type: string, format: date-time, nullable: true }
+        parseCompletedAt: { type: string, format: date-time, nullable: true }
+        parseErrorMessage: { type: string, nullable: true }
+        llmExtractionStatus: { type: string, nullable: true }
+        llmExtractionStartedAt: { type: string, format: date-time, nullable: true }
+        llmExtractionCompletedAt: { type: string, format: date-time, nullable: true }
+        llmExtractionErrorMessage: { type: string, nullable: true }
+        llmModel: { type: string, nullable: true }
+        llmPromptVersion: { type: string, nullable: true }
+        llmExtractionConfidence: { type: number, format: double, nullable: true }
+        isActive: { type: boolean }
+        uploadedAt: { type: string, format: date-time }
+    ResumeVersionExtractionDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        rawParsingStatus: { type: string }
+        llmExtractionStatus: { type: string, nullable: true }
+        llmModel: { type: string, nullable: true }
+        llmPromptVersion: { type: string, nullable: true }
+        startedAt: { type: string, format: date-time, nullable: true }
+        completedAt: { type: string, format: date-time, nullable: true }
+        errorMessage: { type: string, nullable: true }
+    ResumeProfileSnapshotResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        item:
+          allOf:
+            - $ref: "#/components/schemas/ResumeProfileSnapshotDto"
+          nullable: true
+        generatedAt: { type: string, format: date-time }
+    ResumeProfileSnapshotDto:
+      type: object
+      properties:
+        fullName: { type: string, nullable: true }
+        headline: { type: string, nullable: true }
+        summaryText: { type: string, nullable: true }
+        locationText: { type: string, nullable: true }
+        yearsOfExperienceText: { type: string, nullable: true }
+        sourceText: { type: string, nullable: true }
+    ResumeContactPointResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeContactPointDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeContactPointDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        contactType: { type: string }
+        label: { type: string, nullable: true }
+        valueText: { type: string, nullable: true }
+        url: { type: string, nullable: true }
+        displayOrder: { type: integer }
+        primary: { type: boolean }
+    ResumeCompetencyItemResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeCompetencyItemDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeCompetencyItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        description: { type: string }
+        sourceText: { type: string, nullable: true }
+        displayOrder: { type: integer }
+    ResumeSkillSnapshotResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeSkillSnapshotDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeSkillSnapshotDto:
+      type: object
+      properties:
+        skillId: { type: integer, format: int64, nullable: true }
+        skillName: { type: string }
+        skillCategory: { type: string, nullable: true }
+        sourceText: { type: string, nullable: true }
+        confidenceScore: { type: number, format: double, nullable: true }
+        confirmed: { type: boolean }
+    ResumeExperienceSnapshotResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeExperienceSnapshotDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeExperienceSnapshotDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        companyName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+        employmentType: { type: string, nullable: true }
+        startedOn: { type: string, format: date, nullable: true }
+        endedOn: { type: string, format: date, nullable: true }
+        current: { type: boolean }
+        projectName: { type: string, nullable: true }
+        summaryText: { type: string }
+        impactText: { type: string, nullable: true }
+        sourceText: { type: string }
+        riskLevel: { type: string }
+        displayOrder: { type: integer }
+        confirmed: { type: boolean }
+    ResumeProjectSnapshotResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeProjectSnapshotDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeProjectSnapshotDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        resumeExperienceSnapshotId: { type: integer, format: int64, nullable: true }
+        title: { type: string }
+        organizationName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+        summaryText: { type: string }
+        contentText: { type: string, nullable: true }
+        projectCategoryCode: { type: string, nullable: true }
+        projectCategoryName: { type: string, nullable: true }
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeProjectTagDto"
+        techStackText: { type: string, nullable: true }
+        startedOn: { type: string, format: date, nullable: true }
+        endedOn: { type: string, format: date, nullable: true }
+        displayOrder: { type: integer }
+        sourceText: { type: string, nullable: true }
+    ResumeProjectTagDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        tagName: { type: string }
+        tagType: { type: string, nullable: true }
+        displayOrder: { type: integer }
+        sourceText: { type: string, nullable: true }
+    ResumeAchievementItemResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeAchievementItemDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeAchievementItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        resumeExperienceSnapshotId: { type: integer, format: int64, nullable: true }
+        resumeProjectSnapshotId: { type: integer, format: int64, nullable: true }
+        title: { type: string }
+        metricText: { type: string, nullable: true }
+        impactSummary: { type: string }
+        sourceText: { type: string, nullable: true }
+        severityHint: { type: string, nullable: true }
+        displayOrder: { type: integer }
+    ResumeEducationItemResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEducationItemDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeEducationItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        institutionName: { type: string }
+        degreeName: { type: string, nullable: true }
+        fieldOfStudy: { type: string, nullable: true }
+        startedOn: { type: string, format: date, nullable: true }
+        endedOn: { type: string, format: date, nullable: true }
+        description: { type: string, nullable: true }
+        displayOrder: { type: integer }
+        sourceText: { type: string, nullable: true }
+    ResumeCertificationItemResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeCertificationItemDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeCertificationItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        issuerName: { type: string, nullable: true }
+        credentialCode: { type: string, nullable: true }
+        issuedOn: { type: string, format: date, nullable: true }
+        expiresOn: { type: string, format: date, nullable: true }
+        scoreText: { type: string, nullable: true }
+        displayOrder: { type: integer }
+        sourceText: { type: string, nullable: true }
+    ResumeAwardItemResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeAwardItemDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeAwardItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        issuerName: { type: string, nullable: true }
+        awardedOn: { type: string, format: date, nullable: true }
+        description: { type: string, nullable: true }
+        displayOrder: { type: integer }
+        sourceText: { type: string, nullable: true }
+    ResumeRiskItemResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeRiskItemDto"
+        generatedAt: { type: string, format: date-time }
+    ResumeRiskItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        resumeExperienceSnapshotId: { type: integer, format: int64, nullable: true }
+        linkedQuestionId: { type: integer, format: int64, nullable: true }
+        riskType: { type: string }
+        title: { type: string }
+        description: { type: string }
+        severity: { type: string }
+    CreateJobPostingRequest:
+      type: object
+      properties:
+        inputType: { type: string }
+        sourceUrl: { type: string, nullable: true }
+        rawText: { type: string, nullable: true }
+        companyName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+    JobPostingDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        inputType: { type: string }
+        sourceUrl: { type: string, nullable: true }
+        rawText: { type: string, nullable: true }
+        fetchStatus: { type: string }
+        fetchedTitle: { type: string, nullable: true }
+        fetchErrorMessage: { type: string, nullable: true }
+        fetchedAt: { type: string, format: date-time, nullable: true }
+        companyName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+        parsedRequirements:
+          type: array
+          items: { type: string }
+        parsedNiceToHave:
+          type: array
+          items: { type: string }
+        parsedKeywords:
+          type: array
+          items: { type: string }
+        parsedResponsibilities:
+          type: array
+          items: { type: string }
+        parsedSummary: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    CreateResumeAnalysisRequest:
+      type: object
+      properties:
+        jobPostingId: { type: integer, format: int64, nullable: true }
+        preferredFormatType: { type: string, nullable: true }
+    CreateResumeQuestionHeatmapLinkRequest:
+      type: object
+      properties:
+        interviewRecordQuestionId: { type: integer, format: int64 }
+        anchorType: { type: string }
+        anchorRecordId: { type: integer, format: int64, nullable: true }
+        anchorKey: { type: string, nullable: true }
+        overlayTargetType: { type: string, nullable: true }
+        overlayFieldPath: { type: string, nullable: true }
+        overlaySentenceIndex: { type: integer, nullable: true }
+        overlayTextSnippet: { type: string, nullable: true }
+        confidenceScore: { type: number, nullable: true }
+    UpdateResumeQuestionHeatmapLinkRequest:
+      type: object
+      properties:
+        anchorType: { type: string, nullable: true }
+        anchorRecordId: { type: integer, format: int64, nullable: true }
+        anchorKey: { type: string, nullable: true }
+        overlayTargetType: { type: string, nullable: true }
+        overlayFieldPath: { type: string, nullable: true }
+        overlaySentenceIndex: { type: integer, nullable: true }
+        overlayTextSnippet: { type: string, nullable: true }
+        confidenceScore: { type: number, nullable: true }
+        active: { type: boolean, nullable: true }
+    UpdateResumeAnalysisSuggestionRequest:
+      type: object
+      properties:
+        accepted: { type: boolean }
+    ResumeAnalysisListItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        resumeVersionId: { type: integer, format: int64 }
+        jobPostingId: { type: integer, format: int64, nullable: true }
+        status: { type: string }
+        overallScore: { type: integer }
+        matchSummary: { type: string }
+        suggestedHeadline: { type: string, nullable: true }
+        recommendedFormatType: { type: string, nullable: true }
+        generationSource: { type: string }
+        llmModel: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+    ResumeAnalysisSuggestionDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        sectionKey: { type: string }
+        originalText: { type: string, nullable: true }
+        suggestedText: { type: string }
+        reason: { type: string }
+        suggestionType: { type: string }
+        accepted: { type: boolean }
+        displayOrder: { type: integer }
+        createdAt: { type: string, format: date-time }
+    ResumeTailoredDocumentSectionDto:
+      type: object
+      properties:
+        sectionKey: { type: string }
+        title: { type: string }
+        lines:
+          type: array
+          items: { type: string }
+    ResumeTailoredDocumentDto:
+      type: object
+      properties:
+        title: { type: string }
+        targetCompany: { type: string, nullable: true }
+        targetRole: { type: string, nullable: true }
+        formatType: { type: string }
+        sectionOrder:
+          type: array
+          items: { type: string }
+        summary: { type: string, nullable: true }
+        diffSummary: { type: string, nullable: true }
+        analysisNotes:
+          type: array
+          items: { type: string }
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeTailoredDocumentSectionDto"
+        plainText: { type: string, nullable: true }
+    CreateResumeAnalysisExportRequest:
+      type: object
+      properties:
+        exportType: { type: string }
+    ResumeAnalysisExportDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        resumeAnalysisId: { type: integer, format: int64 }
+        exportType: { type: string }
+        formatType: { type: string, nullable: true }
+        fileName: { type: string }
+        fileUrl: { type: string }
+        fileSizeBytes: { type: integer, format: int64 }
+        checksumSha256: { type: string }
+        pageCount: { type: integer, nullable: true }
+        createdAt: { type: string, format: date-time }
+    ResumeEditorCommentSummaryDto:
+      type: object
+      properties:
+        totalCount: { type: integer }
+        openCount: { type: integer }
+        resolvedCount: { type: integer }
+        totalReplyCount: { type: integer }
+    ResumeEditorQuestionCardSummaryDto:
+      type: object
+      properties:
+        totalCount: { type: integer }
+        activeCount: { type: integer }
+        archivedCount: { type: integer }
+    ResumeEditorInlineMarkDto:
+      type: object
+      properties:
+        markType: { type: string }
+        startOffset: { type: integer }
+        endOffset: { type: integer }
+        text: { type: string }
+        href: { type: string, nullable: true }
+    ResumeEditorBlockDto:
+      type: object
+      properties:
+        blockId: { type: string }
+        blockType: { type: string }
+        title: { type: string, nullable: true }
+        text: { type: string, nullable: true }
+        lines:
+          type: array
+          items: { type: string }
+        sourceAnchorType: { type: string, nullable: true }
+        sourceAnchorRecordId: { type: integer, format: int64, nullable: true }
+        sourceAnchorKey: { type: string, nullable: true }
+        fieldPath: { type: string, nullable: true }
+        displayOrder: { type: integer }
+        metadata:
+          type: object
+          additionalProperties: { type: string }
+        inlineMarks:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorInlineMarkDto"
+    ResumeEditorDocumentDto:
+      type: object
+      properties:
+        astVersion: { type: integer }
+        markdownSource: { type: string, nullable: true }
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorBlockDto"
+        rootNodeId: { type: string, nullable: true }
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorNodeDto"
+        tableOfContents:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorTableOfContentsItemDto"
+        layoutMetadata:
+          type: object
+          additionalProperties: { type: string }
+    ResumeEditorSelectionCapabilitiesDto:
+      type: object
+      properties:
+        supportsRichTree: { type: boolean }
+        supportsOperations: { type: boolean }
+        supportsInlineSelections: { type: boolean }
+        supportsContextualComments: { type: boolean }
+        supportsContextualQuestionCards: { type: boolean }
+        supportsContextualSuggestions: { type: boolean }
+    ResumeEditorTableOfContentsItemDto:
+      type: object
+      properties:
+        nodeId: { type: string }
+        title: { type: string }
+        depth: { type: integer }
+        fieldPath: { type: string, nullable: true }
+    ResumeEditorTextRunDto:
+      type: object
+      properties:
+        text: { type: string }
+        marks:
+          type: array
+          items: { type: string }
+        href: { type: string, nullable: true }
+    ResumeEditorNodeDto:
+      type: object
+      properties:
+        nodeId: { type: string }
+        parentNodeId: { type: string, nullable: true }
+        nodeType: { type: string }
+        text: { type: string, nullable: true }
+        textRuns:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorTextRunDto"
+        children:
+          type: array
+          items: { type: string }
+        collapsed: { type: boolean }
+        depth: { type: integer }
+        sourceAnchorType: { type: string, nullable: true }
+        sourceAnchorRecordId: { type: integer, format: int64, nullable: true }
+        sourceAnchorKey: { type: string, nullable: true }
+        fieldPath: { type: string, nullable: true }
+        displayOrder: { type: integer }
+        metadata:
+          type: object
+          additionalProperties: { type: string }
+    ResumeEditorSelectionAnchorDto:
+      type: object
+      properties:
+        nodeId: { type: string }
+        anchorPath: { type: string, nullable: true }
+        fieldPath: { type: string, nullable: true }
+        selectionStartOffset: { type: integer, nullable: true }
+        selectionEndOffset: { type: integer, nullable: true }
+        selectedText: { type: string, nullable: true }
+        anchorQuote: { type: string, nullable: true }
+        sentenceIndex: { type: integer, nullable: true }
+    ResumeEditorDocumentOperationDto:
+      type: object
+      properties:
+        operationType: { type: string }
+        nodeId: { type: string, nullable: true }
+        parentNodeId: { type: string, nullable: true }
+        referenceNodeId: { type: string, nullable: true }
+        text: { type: string, nullable: true }
+        startOffset: { type: integer, nullable: true }
+        endOffset: { type: integer, nullable: true }
+        nodeType: { type: string, nullable: true }
+        markType: { type: string, nullable: true }
+        href: { type: string, nullable: true }
+        collapsed: { type: boolean, nullable: true }
+    ResumeEditorCommentReplyDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        commentThreadId: { type: integer, format: int64 }
+        body: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ResumeEditorCommentThreadDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        blockId: { type: string }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        fieldPath: { type: string, nullable: true }
+        selectionStartOffset: { type: integer, nullable: true }
+        selectionEndOffset: { type: integer, nullable: true }
+        selectedText: { type: string, nullable: true }
+        body: { type: string }
+        status: { type: string }
+        resolvedAt: { type: string, format: date-time, nullable: true }
+        replyCount: { type: integer }
+        replies:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorCommentReplyDto"
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ResumeEditorQuestionCardDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        blockId: { type: string }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        fieldPath: { type: string, nullable: true }
+        selectionStartOffset: { type: integer, nullable: true }
+        selectionEndOffset: { type: integer, nullable: true }
+        selectedText: { type: string, nullable: true }
+        title: { type: string, nullable: true }
+        questionText: { type: string }
+        questionType: { type: string }
+        sourceType: { type: string }
+        linkedQuestionId: { type: integer, format: int64, nullable: true }
+        status: { type: string }
+        followUpSuggestions:
+          type: array
+          items: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ResumeEditorWorkspaceDto:
+      type: object
+      properties:
+        workspaceId: { type: integer, format: int64 }
+        resumeVersionId: { type: integer, format: int64 }
+        sourceVersionNo: { type: integer }
+        sourceFileName: { type: string, nullable: true }
+        workspaceStatus: { type: string }
+        revisionNo: { type: integer }
+        documentModel: { type: string }
+        selectionCapabilities:
+          $ref: "#/components/schemas/ResumeEditorSelectionCapabilitiesDto"
+        contextMenuActions:
+          type: array
+          items: { type: string }
+        supportedViewModes:
+          type: array
+          items: { type: string }
+        document:
+          $ref: "#/components/schemas/ResumeEditorDocumentDto"
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorCommentThreadDto"
+        questionCards:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorQuestionCardDto"
+        commentSummary:
+          $ref: "#/components/schemas/ResumeEditorCommentSummaryDto"
+        questionCardSummary:
+          $ref: "#/components/schemas/ResumeEditorQuestionCardSummaryDto"
+        heatmapAvailable: { type: boolean }
+        heatmapSummary:
+          allOf:
+            - $ref: "#/components/schemas/ResumeQuestionHeatmapSummaryDto"
+          nullable: true
+        activePresence:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorPresenceDto"
+        latestRevision:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorRevisionListItemDto"
+          nullable: true
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ResumeEditorPrintPreviewDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        workspaceId: { type: integer, format: int64 }
+        title: { type: string }
+        pageEstimate: { type: integer }
+        plainText: { type: string }
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorPrintPreviewSectionDto"
+        pages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorPrintPreviewPageDto"
+        layoutItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorPrintLayoutItemDto"
+    ResumeEditorPrintPreviewSectionDto:
+      type: object
+      properties:
+        sectionKey: { type: string }
+        title: { type: string }
+        lines:
+          type: array
+          items: { type: string }
+    ResumeEditorPrintPreviewPageDto:
+      type: object
+      properties:
+        pageNumber: { type: integer }
+        sectionKeys:
+          type: array
+          items: { type: string }
+        lineCount: { type: integer }
+    ResumeEditorPrintLayoutItemDto:
+      type: object
+      properties:
+        pageNumber: { type: integer }
+        sectionKey: { type: string }
+        blockId: { type: string }
+        blockType: { type: string }
+        yOffsetLines: { type: integer }
+        estimatedLineSpan: { type: integer }
+    ResumeEditorPresenceDto:
+      type: object
+      properties:
+        sessionKey: { type: string }
+        userId: { type: integer, format: int64 }
+        userLabel: { type: string }
+        viewMode: { type: string, nullable: true }
+        selectedBlockId: { type: string, nullable: true }
+        isCurrentUser: { type: boolean }
+        updatedAt: { type: string, format: date-time }
+    ResumeEditorChangeSummaryDto:
+      type: object
+      properties:
+        addedBlockCount: { type: integer }
+        removedBlockCount: { type: integer }
+        updatedBlockCount: { type: integer }
+        inlineMarkDelta: { type: integer }
+        changedBlockIds:
+          type: array
+          items: { type: string }
+    ResumeEditorRevisionListItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        revisionNo: { type: integer }
+        changeSource: { type: string }
+        changeSummary:
+          $ref: "#/components/schemas/ResumeEditorChangeSummaryDto"
+        createdAt: { type: string, format: date-time }
+    ResumeEditorRevisionDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        workspaceId: { type: integer, format: int64 }
+        resumeVersionId: { type: integer, format: int64 }
+        revisionNo: { type: integer }
+        changeSource: { type: string }
+        changeSummary:
+          $ref: "#/components/schemas/ResumeEditorChangeSummaryDto"
+        document:
+          $ref: "#/components/schemas/ResumeEditorDocumentDto"
+        createdAt: { type: string, format: date-time }
+    ResumeEditorTrackedChangesDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        fromRevisionId: { type: integer, format: int64 }
+        toRevisionId: { type: integer, format: int64 }
+        changeSummary:
+          $ref: "#/components/schemas/ResumeEditorChangeSummaryDto"
+        changes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorTrackedChangeDto"
+    ResumeEditorTrackedChangeDto:
+      type: object
+      properties:
+        blockId: { type: string }
+        nodeId: { type: string }
+        changeType: { type: string }
+        beforeBlockType: { type: string, nullable: true }
+        afterBlockType: { type: string, nullable: true }
+        beforeText: { type: string, nullable: true }
+        afterText: { type: string, nullable: true }
+        beforeTextLines:
+          type: array
+          items: { type: string }
+        afterTextLines:
+          type: array
+          items: { type: string }
+        fieldPath: { type: string, nullable: true }
+        beforeParentNodeId: { type: string, nullable: true }
+        afterParentNodeId: { type: string, nullable: true }
+        beforeDepth: { type: integer, nullable: true }
+        afterDepth: { type: integer, nullable: true }
+        textChanged: { type: boolean }
+        structureChanged: { type: boolean }
+        moveRelated: { type: boolean }
+    ResumeEditorMergePreviewDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        baseRevisionId: { type: integer, format: int64 }
+        currentRevisionId: { type: integer, format: int64 }
+        mergeStatus: { type: string }
+        mergedDocument:
+          $ref: "#/components/schemas/ResumeEditorDocumentDto"
+        conflicts:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorMergeConflictDto"
+        changeSummary:
+          $ref: "#/components/schemas/ResumeEditorChangeSummaryDto"
+    ResumeEditorMergeConflictDto:
+      type: object
+      properties:
+        blockId: { type: string }
+        nodeId: { type: string }
+        conflictType: { type: string }
+        baseText: { type: string, nullable: true }
+        currentText: { type: string, nullable: true }
+        proposedText: { type: string, nullable: true }
+        baseTextLines:
+          type: array
+          items: { type: string }
+        currentTextLines:
+          type: array
+          items: { type: string }
+        proposedTextLines:
+          type: array
+          items: { type: string }
+        conflictScopes:
+          type: array
+          items: { type: string }
+        baseParentNodeId: { type: string, nullable: true }
+        currentParentNodeId: { type: string, nullable: true }
+        proposedParentNodeId: { type: string, nullable: true }
+    UpdateResumeEditorDocumentRequest:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorBlockDto"
+        rootNodeId: { type: string, nullable: true }
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorNodeDto"
+        tableOfContents:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorTableOfContentsItemDto"
+        markdownSource: { type: string, nullable: true }
+        layoutMetadata:
+          type: object
+          additionalProperties: { type: string }
+        baseRevisionNo: { type: integer, nullable: true }
+        changeSource: { type: string, nullable: true }
+    PatchResumeEditorDocumentOperationsRequest:
+      type: object
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorDocumentOperationDto"
+        baseRevisionNo: { type: integer, nullable: true }
+        changeSource: { type: string, nullable: true }
+        clientSessionKey: { type: string, nullable: true }
+        clientChangeId: { type: string, nullable: true }
+    ImportResumeEditorMarkdownRequest:
+      type: object
+      properties:
+        markdownSource: { type: string }
+        replaceDocument: { type: boolean }
+        baseRevisionNo: { type: integer, nullable: true }
+        changeSource: { type: string, nullable: true }
+    CreateResumeEditorPresenceRequest:
+      type: object
+      properties:
+        sessionKey: { type: string }
+        viewMode: { type: string, nullable: true }
+        selectedBlockId: { type: string, nullable: true }
+    ResumeEditorMergePreviewRequest:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorBlockDto"
+        rootNodeId: { type: string, nullable: true }
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorNodeDto"
+        tableOfContents:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorTableOfContentsItemDto"
+        markdownSource: { type: string, nullable: true }
+        layoutMetadata:
+          type: object
+          additionalProperties: { type: string }
+        baseRevisionNo: { type: integer }
+    CreateResumeEditorCommentRequest:
+      type: object
+      properties:
+        blockId: { type: string, nullable: true }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        fieldPath: { type: string, nullable: true }
+        selectionStartOffset: { type: integer, nullable: true }
+        selectionEndOffset: { type: integer, nullable: true }
+        selectedText: { type: string, nullable: true }
+        body: { type: string }
+    UpdateResumeEditorCommentRequest:
+      type: object
+      properties:
+        body: { type: string, nullable: true }
+        status: { type: string, nullable: true }
+    CreateResumeEditorCommentReplyRequest:
+      type: object
+      properties:
+        body: { type: string }
+    CreateResumeEditorQuestionCardRequest:
+      type: object
+      properties:
+        blockId: { type: string, nullable: true }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        fieldPath: { type: string, nullable: true }
+        selectionStartOffset: { type: integer, nullable: true }
+        selectionEndOffset: { type: integer, nullable: true }
+        selectedText: { type: string, nullable: true }
+        title: { type: string, nullable: true }
+        questionText: { type: string }
+        questionType: { type: string }
+        linkedQuestionId: { type: integer, format: int64, nullable: true }
+        followUpSuggestions:
+          type: array
+          items: { type: string }
+    UpdateResumeEditorQuestionCardRequest:
+      type: object
+      properties:
+        title: { type: string, nullable: true }
+        questionText: { type: string, nullable: true }
+        questionType: { type: string, nullable: true }
+        linkedQuestionId: { type: integer, format: int64, nullable: true }
+        status: { type: string, nullable: true }
+        followUpSuggestions:
+          type: array
+          items: { type: string }
+          nullable: true
+    ResumeEditorSuggestedQuestionDto:
+      type: object
+      properties:
+        title: { type: string }
+        questionText: { type: string }
+        questionType: { type: string }
+        rationale: { type: string }
+        followUpSuggestions:
+          type: array
+          items: { type: string }
+    ResumeEditorQuestionSuggestionResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        blockId: { type: string }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        selectedText: { type: string }
+        sourceType: { type: string }
+        suggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorSuggestedQuestionDto"
+    CreateResumeEditorQuestionSuggestionRequest:
+      type: object
+      properties:
+        blockId: { type: string, nullable: true }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        fieldPath: { type: string, nullable: true }
+        selectedText: { type: string, nullable: true }
+        maxSuggestions: { type: integer }
+    ResumeEditorRewriteSuggestionDto:
+      type: object
+      properties:
+        suggestedText: { type: string }
+        rationale: { type: string }
+        focusArea: { type: string }
+        partialApplyAllowed: { type: boolean }
+    ResumeEditorRewriteSuggestionResponseDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        blockId: { type: string }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        selectedText: { type: string }
+        sourceType: { type: string }
+        suggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeEditorRewriteSuggestionDto"
+    CreateResumeEditorRewriteSuggestionRequest:
+      type: object
+      properties:
+        blockId: { type: string, nullable: true }
+        selectionAnchor:
+          allOf:
+            - $ref: "#/components/schemas/ResumeEditorSelectionAnchorDto"
+          nullable: true
+        fieldPath: { type: string, nullable: true }
+        selectedText: { type: string, nullable: true }
+    ResumeQuestionHeatmapSummaryDto:
+      type: object
+      properties:
+        totalAnchors: { type: integer }
+        totalLinkedQuestions: { type: integer }
+        hottestAnchorLabel: { type: string, nullable: true }
+        mostFollowedUpAnchorLabel: { type: string, nullable: true }
+        weakestAnchorLabel: { type: string, nullable: true }
+    ResumeQuestionHeatmapAppliedFiltersDto:
+      type: object
+      properties:
+        scope: { type: string }
+        weakOnly: { type: boolean }
+        companyName: { type: string, nullable: true }
+        interviewDateFrom: { type: string, format: date, nullable: true }
+        interviewDateTo: { type: string, format: date, nullable: true }
+        targetType: { type: string, nullable: true }
+    ResumeQuestionHeatmapFilterSummaryDto:
+      type: object
+      properties:
+        totalQuestions: { type: integer }
+        weakQuestionCount: { type: integer }
+        pressureQuestionCount: { type: integer }
+        followUpQuestionCount: { type: integer }
+        distinctInterviewCount: { type: integer }
+        distinctCompanyCount: { type: integer }
+        companyNames:
+          type: array
+          items: { type: string }
+        availableTargetTypes:
+          type: array
+          items: { type: string }
+        targetTypeCounts:
+          type: object
+          additionalProperties: { type: integer }
+        earliestInterviewDate: { type: string, format: date, nullable: true }
+        latestInterviewDate: { type: string, format: date, nullable: true }
+    ResumeQuestionHeatmapQuestionDto:
+      type: object
+      properties:
+        interviewRecordQuestionId: { type: integer, format: int64 }
+        sourceInterviewRecordId: { type: integer, format: int64 }
+        linkedQuestionId: { type: integer, format: int64, nullable: true }
+        text: { type: string }
+        questionType: { type: string }
+        isFollowUp: { type: boolean }
+        followUpCount: { type: integer }
+        pressureQuestion: { type: boolean }
+        weakAnswer: { type: boolean }
+        weaknessTags:
+          type: array
+          items: { type: string }
+        interviewDate: { type: string, format: date, nullable: true }
+        linkSource: { type: string }
+        confidenceScore: { type: number, nullable: true }
+    ResumeQuestionHeatmapOverlayTargetDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64, nullable: true }
+        anchorType: { type: string }
+        anchorRecordId: { type: integer, format: int64, nullable: true }
+        anchorKey: { type: string, nullable: true }
+        targetType: { type: string }
+        targetKey: { type: string }
+        fieldPath: { type: string }
+        textSnippet: { type: string }
+        textStartOffset: { type: integer, nullable: true }
+        textEndOffset: { type: integer, nullable: true }
+        sentenceIndex: { type: integer, nullable: true }
+        paragraphIndex: { type: integer, nullable: true }
+        heatScore: { type: number }
+        normalizedHeatLevel: { type: string }
+        questionCount: { type: integer }
+        followUpCount: { type: integer }
+        pressureQuestionCount: { type: integer }
+        weaknessCount: { type: integer }
+        linkedQuestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeQuestionHeatmapQuestionDto"
+    ResumeQuestionHeatmapOverlayTargetListDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        scope: { type: string }
+        appliedFilters:
+          $ref: "#/components/schemas/ResumeQuestionHeatmapAppliedFiltersDto"
+        filterSummary:
+          $ref: "#/components/schemas/ResumeQuestionHeatmapFilterSummaryDto"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeQuestionHeatmapOverlayTargetDto"
+    ResumeQuestionHeatmapItemDto:
+      type: object
+      properties:
+        anchorType: { type: string }
+        anchorRecordId: { type: integer, format: int64, nullable: true }
+        anchorKey: { type: string, nullable: true }
+        label: { type: string }
+        snippet: { type: string, nullable: true }
+        heatScore: { type: number }
+        normalizedHeatLevel: { type: string }
+        directQuestionCount: { type: integer }
+        followUpCount: { type: integer }
+        distinctInterviewCount: { type: integer }
+        pressureQuestionCount: { type: integer }
+        weaknessCount: { type: integer }
+        recentQuestionAt: { type: string, format: date-time, nullable: true }
+        overlayTargets:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeQuestionHeatmapOverlayTargetDto"
+        linkedQuestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeQuestionHeatmapQuestionDto"
+    ResumeQuestionHeatmapLinkDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        resumeVersionId: { type: integer, format: int64 }
+        interviewRecordQuestionId: { type: integer, format: int64 }
+        anchorType: { type: string }
+        anchorRecordId: { type: integer, format: int64, nullable: true }
+        anchorKey: { type: string, nullable: true }
+        overlayTargetType: { type: string, nullable: true }
+        overlayFieldPath: { type: string, nullable: true }
+        overlaySentenceIndex: { type: integer, nullable: true }
+        overlayTextSnippet: { type: string, nullable: true }
+        linkSource: { type: string }
+        confidenceScore: { type: number, nullable: true }
+        active: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ResumeQuestionHeatmapDto:
+      type: object
+      properties:
+        resumeVersionId: { type: integer, format: int64 }
+        scope: { type: string }
+        appliedFilters:
+          $ref: "#/components/schemas/ResumeQuestionHeatmapAppliedFiltersDto"
+        filterSummary:
+          $ref: "#/components/schemas/ResumeQuestionHeatmapFilterSummaryDto"
+        summary:
+          $ref: "#/components/schemas/ResumeQuestionHeatmapSummaryDto"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeQuestionHeatmapItemDto"
+    ResumeAnalysisDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        resumeVersionId: { type: integer, format: int64 }
+        jobPostingId: { type: integer, format: int64, nullable: true }
+        status: { type: string }
+        overallScore: { type: integer }
+        matchSummary: { type: string }
+        strongMatches:
+          type: array
+          items: { type: string }
+        missingKeywords:
+          type: array
+          items: { type: string }
+        weakSignals:
+          type: array
+          items: { type: string }
+        recommendedFocusAreas:
+          type: array
+          items: { type: string }
+        suggestedHeadline: { type: string, nullable: true }
+        suggestedSummary: { type: string, nullable: true }
+        recommendedFormatType: { type: string, nullable: true }
+        generationSource: { type: string }
+        llmModel: { type: string, nullable: true }
+        analysisNotes:
+          type: array
+          items: { type: string }
+        tailoredDocument:
+          allOf:
+            - $ref: "#/components/schemas/ResumeTailoredDocumentDto"
+          nullable: true
+        suggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeAnalysisSuggestionDto"
+        exports:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeAnalysisExportDto"
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    QuestionDetailResponse:
+      type: object
+      properties:
+        question:
+          $ref: "#/components/schemas/QuestionSummaryDetailDto"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionTagDto"
+        companies:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionCompanyDto"
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionRoleDto"
+        learningMaterials:
+          type: array
+          items:
+            $ref: "#/components/schemas/LearningMaterialDto"
+        referenceAnswers:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionReferenceAnswerDto"
+        practicalInterviewContext:
+          allOf:
+            - $ref: "#/components/schemas/PracticalInterviewQuestionContextDto"
+          nullable: true
+        userProgressSummary:
+          allOf:
+            - $ref: "#/components/schemas/UserProgressSummaryDto"
+          nullable: true
+    PracticalInterviewQuestionContextDto:
+      type: object
+      properties:
+        sourceInterviewRecordId: { type: integer, format: int64 }
+        sourceInterviewQuestionId: { type: integer, format: int64 }
+        companyName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+        interviewDate: { type: string, format: date, nullable: true }
+        interviewType: { type: string }
+        questionType: { type: string }
+        topicTags:
+          type: array
+          items: { type: string }
+        intentTags:
+          type: array
+          items: { type: string }
+        interviewerProfileId: { type: integer, format: int64, nullable: true }
+        importedAnswerSummary: { type: string, nullable: true }
+        importedAnswerText: { type: string, nullable: true }
+        isFollowUp: { type: boolean }
+    QuestionSummaryDetailDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        body: { type: string }
+        categoryId: { type: integer, format: int64 }
+        categoryName: { type: string }
+        questionType: { type: string }
+        difficultyLevel: { type: string }
+        qualityStatus: { type: string }
+        expectedAnswerSeconds: { type: integer, nullable: true }
+    QuestionTreeResponseDto:
+      type: object
+      properties:
+        root:
+          $ref: "#/components/schemas/QuestionTreeNodeDto"
+    QuestionTreeNodeDto:
+      type: object
+      properties:
+        questionId: { type: integer, format: int64 }
+        title: { type: string }
+        difficulty: { type: string }
+        depth: { type: integer }
+        relationshipType: { type: string, nullable: true }
+        nodeStatus: { type: string }
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionTreeNodeDto"
+    RecommendedFollowUpDto:
+      type: object
+      properties:
+        questionId: { type: integer, format: int64 }
+        title: { type: string }
+        difficulty: { type: string }
+        relationshipType: { type: string }
+        depth: { type: integer }
+        nodeStatus: { type: string }
+    ResumeBasedQuestionDto:
+      type: object
+      properties:
+        questionId: { type: integer, format: int64 }
+        title: { type: string }
+        difficulty: { type: string }
+        matchScore: { type: number, format: double }
+        matchedSkills:
+          type: array
+          items: { type: string }
+    QuestionReferenceAnswerDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        answerText: { type: string }
+        answerFormat: { type: string }
+        sourceType: { type: string }
+        sourceLabel: { type: string }
+        contentLocale: { type: string, nullable: true }
+        isUserGenerated: { type: boolean }
+        targetRoleId: { type: integer, format: int64, nullable: true }
+        companyId: { type: integer, format: int64, nullable: true }
+        isOfficial: { type: boolean }
+        displayOrder: { type: integer }
+    CreateQuestionReferenceAnswerRequest:
+      type: object
+      required: [title, answerText]
+      properties:
+        title: { type: string }
+        answerText: { type: string }
+        answerFormat: { type: string }
+    SubmitAnswerRequest:
+      type: object
+      required: [answerMode, contentText]
+      properties:
+        resumeVersionId: { type: integer, format: int64, nullable: true }
+        answerMode: { type: string, example: text }
+        contentText: { type: string }
+    SubmitAnswerResponseDto:
+      type: object
+      properties:
+        answerAttemptId: { type: integer, format: int64 }
+        scoreSummary:
+          $ref: "#/components/schemas/ScoreSummaryDto"
+        feedback:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerFeedbackItemDto"
+        analysis:
+          allOf:
+            - $ref: "#/components/schemas/AnswerAnalysisDto"
+          nullable: true
+        progressStatus: { type: string }
+        nextReviewAt: { type: string, format: date-time, nullable: true }
+        archiveDecision: { type: boolean }
+    AnswerAttemptListItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        attemptNo: { type: integer }
+        answerMode: { type: string }
+        submittedAt: { type: string, format: date-time }
+        score:
+          $ref: "#/components/schemas/ScoreSummaryDto"
+    AnswerAttemptDetailResponseDto:
+      type: object
+      properties:
+        answerAttempt:
+          $ref: "#/components/schemas/AnswerAttemptDto"
+        score:
+          $ref: "#/components/schemas/ScoreSummaryDto"
+        feedback:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerFeedbackItemDto"
+        analysis:
+          allOf:
+            - $ref: "#/components/schemas/AnswerAnalysisDto"
+          nullable: true
+        progressSummary:
+          allOf:
+            - $ref: "#/components/schemas/UserProgressSummaryDto"
+          nullable: true
+    AnswerAttemptDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        questionId: { type: integer, format: int64 }
+        resumeVersionId: { type: integer, format: int64, nullable: true }
+        attemptNo: { type: integer }
+        answerMode: { type: string }
+        contentText: { type: string }
+        submittedAt: { type: string, format: date-time }
+    AnswerAnalysisDto:
+      type: object
+      properties:
+        answerAttemptId: { type: integer, format: int64 }
+        overallScore: { type: number, format: double }
+        depthScore: { type: number, format: double }
+        clarityScore: { type: number, format: double }
+        accuracyScore: { type: number, format: double }
+        exampleScore: { type: number, format: double }
+        tradeoffScore: { type: number, format: double }
+        confidenceScore: { type: number, format: double, nullable: true }
+        strengthSummary: { type: string }
+        weaknessSummary: { type: string }
+        recommendedNextStep: { type: string, nullable: true }
+        detailedFeedback: { type: string, nullable: true }
+        strengthPoints:
+          type: array
+          items: { type: string }
+        improvementPoints:
+          type: array
+          items: { type: string }
+        missedPoints:
+          type: array
+          items: { type: string }
+        modelAnswer:
+          allOf:
+            - $ref: "#/components/schemas/AnswerModelAnswerDto"
+          nullable: true
+        llmModel: { type: string, nullable: true }
+        contentLocale: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+    AnswerModelAnswerDto:
+      type: object
+      properties:
+        sourceType: { type: string }
+        contentLocale: { type: string, nullable: true }
+        llmModel: { type: string, nullable: true }
+        text: { type: string }
+    ScoreSummaryDto:
+      type: object
+      properties:
+        totalScore: { type: integer }
+        structureScore: { type: integer }
+        specificityScore: { type: integer }
+        technicalAccuracyScore: { type: integer }
+        roleFitScore: { type: integer }
+        companyFitScore: { type: integer }
+        communicationScore: { type: integer }
+        evaluationResult: { type: string }
+    AnswerFeedbackItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        feedbackType: { type: string }
+        severity: { type: string }
+        title: { type: string }
+        body: { type: string }
+        displayOrder: { type: integer }
+    UserProgressSummaryDto:
+      type: object
+      properties:
+        currentStatus: { type: string }
+        latestScore: { type: number, format: double, nullable: true }
+        bestScore: { type: number, format: double, nullable: true }
+        totalAttemptCount: { type: integer }
+        lastAnsweredAt: { type: string, format: date-time, nullable: true }
+        nextReviewAt: { type: string, format: date-time, nullable: true }
+        masteryLevel: { type: string, nullable: true }
+    SkillRadarResponseDto:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillRadarCategoryDto"
+        updatedAt: { type: string, format: date-time }
+    SkillRadarCategoryDto:
+      type: object
+      properties:
+        categoryCode: { type: string }
+        label: { type: string }
+        score: { type: number, format: double }
+        benchmarkScore: { type: number, format: double, nullable: true }
+        gapScore: { type: number, format: double, nullable: true }
+    SkillGapItemDto:
+      type: object
+      properties:
+        categoryCode: { type: string }
+        label: { type: string }
+        score: { type: number, format: double }
+        benchmarkScore: { type: number, format: double, nullable: true }
+        gapScore: { type: number, format: double, nullable: true }
+    SkillProgressItemDto:
+      type: object
+      properties:
+        categoryCode: { type: string }
+        label: { type: string }
+        score: { type: number, format: double }
+        benchmarkScore: { type: number, format: double, nullable: true }
+        gapScore: { type: number, format: double, nullable: true }
+        answeredQuestionCount: { type: integer }
+        weakQuestionCount: { type: integer }
+        calculatedAt: { type: string, format: date-time }
+    ReviewQueueItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        questionId: { type: integer, format: int64 }
+        questionTitle: { type: string }
+        questionDifficulty: { type: string }
+        reasonType: { type: string }
+        priority: { type: integer }
+        scheduledFor: { type: string, format: date-time }
+        status: { type: string }
+    ReviewQueueActionResponseDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        status: { type: string }
+        updatedAt: { type: string, format: date-time }
+    HomeResponseDto:
+      type: object
+      properties:
+        todayQuestion:
+          allOf:
+            - $ref: "#/components/schemas/HomeQuestionDto"
+          nullable: true
+        retryQuestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/HomeRetryQuestionDto"
+        learningMaterials:
+          type: array
+          items:
+            $ref: "#/components/schemas/LearningMaterialDto"
+        summaryStats:
+          $ref: "#/components/schemas/HomeSummaryStatsDto"
+        skillRadarPreview:
+          type: array
+          items:
+            $ref: "#/components/schemas/HomeSkillRadarPreviewDto"
+        weakSkillHighlights:
+          type: array
+          items:
+            $ref: "#/components/schemas/HomeWeakSkillDto"
+        resumeRiskPreview:
+          type: array
+          items:
+            $ref: "#/components/schemas/HomeResumeRiskQuestionDto"
+    HomeQuestionDto:
+      type: object
+      properties:
+        dailyCardId: { type: integer, format: int64 }
+        questionId: { type: integer, format: int64 }
+        title: { type: string }
+        difficulty: { type: string }
+        cardDate: { type: string, format: date }
+        cardType: { type: string }
+        status: { type: string }
+    HomeRetryQuestionDto:
+      type: object
+      properties:
+        reviewQueueId: { type: integer, format: int64 }
+        questionId: { type: integer, format: int64 }
+        title: { type: string }
+        difficulty: { type: string }
+        priority: { type: integer }
+        scheduledFor: { type: string, format: date-time }
+    HomeSummaryStatsDto:
+      type: object
+      properties:
+        dailyQuestionCount: { type: integer }
+        retryQuestionCount: { type: integer }
+        pendingReviewCount: { type: integer }
+        archivedQuestionCount: { type: integer }
+    HomeSkillRadarPreviewDto:
+      type: object
+      properties:
+        categoryCode: { type: string }
+        score: { type: number, format: double }
+        gapScore: { type: number, format: double, nullable: true }
+    HomeWeakSkillDto:
+      type: object
+      properties:
+        categoryCode: { type: string }
+        label: { type: string }
+        gapScore: { type: number, format: double, nullable: true }
+    HomeResumeRiskQuestionDto:
+      type: object
+      properties:
+        questionId: { type: integer, format: int64 }
+        title: { type: string }
+        severity: { type: string }
+    InterviewSessionDetailResponseDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        sessionType: { type: string }
+        interviewMode: { type: string }
+        sourceInterviewRecordId: { type: integer, format: int64, nullable: true }
+        replayMode: { type: string, nullable: true }
+        status: { type: string }
+        resumeVersionId: { type: integer, format: int64, nullable: true }
+        startedAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time, nullable: true }
+        currentQuestion:
+          allOf:
+            - $ref: "#/components/schemas/InterviewSessionQuestionDto"
+          nullable: true
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionQuestionDto"
+        summary:
+          $ref: "#/components/schemas/InterviewSessionSummaryDto"
+    InterviewSessionListItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        sessionType: { type: string }
+        interviewMode: { type: string }
+        sourceInterviewRecordId: { type: integer, format: int64, nullable: true }
+        replayMode: { type: string, nullable: true }
+        status: { type: string }
+        resumeVersionId: { type: integer, format: int64, nullable: true }
+        startedAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time, nullable: true }
+        questionCount: { type: integer }
+        answeredCount: { type: integer }
+        averageScore: { type: number, format: double, nullable: true }
+    CreateInterviewSessionRequest:
+      type: object
+      required: [sessionType]
+      properties:
+        sessionType:
+          type: string
+          enum: [resume_mock, review_mock, topic_mock, replay_mock]
+        interviewMode:
+          type: string
+          enum: [quick_screen, mock_30, mock_60, free_interview, full_coverage]
+        questionCount:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 5
+        resumeVersionId:
+          type: integer
+          format: int64
+          nullable: true
+          description: Required when `sessionType` is `resume_mock`.
+        sourceInterviewRecordId:
+          type: integer
+          format: int64
+          nullable: true
+          description: Required when `sessionType` is `replay_mock`.
+        replayMode:
+          type: string
+          nullable: true
+          enum: [original_replay, pattern_similar, pressure_variant]
+        seedQuestionIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    SubmitInterviewSessionAnswerRequest:
+      type: object
+      required: [sessionQuestionId, answerMode, contentText]
+      properties:
+        sessionQuestionId: { type: integer, format: int64 }
+        answerMode: { type: string }
+        contentText: { type: string }
+        resumeVersionId:
+          type: integer
+          format: int64
+          nullable: true
+    InterviewSessionQuestionDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        questionId: { type: integer, format: int64, nullable: true }
+        title: { type: string }
+        promptText: { type: string, nullable: true }
+        bodyText: { type: string, nullable: true }
+        difficulty: { type: string }
+        orderIndex: { type: integer }
+        status: { type: string }
+        sourceType:
+          type: string
+          description: Session turn source such as replay_seed, replay_ai_follow_up, ai_opening, ai_follow_up, coverage_planner, or catalog_follow_up.
+        parentSessionQuestionId: { type: integer, format: int64, nullable: true }
+        isFollowUp: { type: boolean }
+        depth: { type: integer }
+        categoryName: { type: string, nullable: true }
+        tags:
+          type: array
+          items: { type: string }
+        focusSkillNames:
+          type: array
+          items: { type: string }
+        resumeContextSummary: { type: string, nullable: true }
+        resumeEvidence:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewResumeEvidenceDto"
+        generationRationale: { type: string, nullable: true }
+        generationStatus:
+          type: string
+          description: Generation marker such as replay_imported, replay_ai_generated, ai_generated, coverage_planned, coverage_extended, or fallback.
+        llmModel: { type: string, nullable: true }
+        llmPromptVersion: { type: string, nullable: true }
+        answerAttemptId:
+          type: integer
+          format: int64
+          nullable: true
+    InterviewSessionCoverageEvidenceItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        section: { type: string }
+        label: { type: string, nullable: true }
+        snippet: { type: string }
+        facet: { type: string }
+        sourceRecordType: { type: string }
+        sourceRecordId: { type: integer, format: int64 }
+        displayOrder: { type: integer }
+        coverageStatus: { type: string }
+        linkedQuestionIds:
+          type: array
+          items: { type: integer, format: int64 }
+    InterviewSessionCoverageResponseDto:
+      type: object
+      properties:
+        sessionId: { type: integer, format: int64 }
+        interviewMode: { type: string }
+        overallCoveragePercent: { type: integer }
+        defendedCoveragePercent: { type: integer }
+        weakFacetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        skippedFacetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        facetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        evidenceItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageEvidenceItemDto"
+    InterviewSessionCoverageFacetSummaryDto:
+      type: object
+      properties:
+        section: { type: string }
+        label: { type: string, nullable: true }
+        sourceRecordType: { type: string }
+        sourceRecordId: { type: integer, format: int64 }
+        defendedFacets:
+          type: array
+          items: { type: string }
+        weakFacets:
+          type: array
+          items: { type: string }
+        skippedFacets:
+          type: array
+          items: { type: string }
+        unaskedFacets:
+          type: array
+          items: { type: string }
+    InterviewSessionResumeMapQuestionDto:
+      type: object
+      properties:
+        sessionQuestionId: { type: integer, format: int64 }
+        title: { type: string }
+        sourceType: { type: string }
+        orderIndex: { type: integer }
+        status: { type: string }
+        isFollowUp: { type: boolean }
+    InterviewSessionResumeMapEvidenceItemDto:
+      type: object
+      properties:
+        section: { type: string }
+        label: { type: string, nullable: true }
+        snippet: { type: string }
+        facet: { type: string }
+        sourceRecordType: { type: string }
+        sourceRecordId: { type: integer, format: int64 }
+        displayOrder: { type: integer }
+        coverageStatus: { type: string }
+        primaryQuestionCount: { type: integer }
+        followUpQuestionCount: { type: integer }
+        relatedQuestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionResumeMapQuestionDto"
+    InterviewSessionResumeMapResponseDto:
+      type: object
+      properties:
+        sessionId: { type: integer, format: int64 }
+        resumeVersionId: { type: integer, format: int64, nullable: true }
+        weakFacetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        skippedFacetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        facetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        evidenceItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionResumeMapEvidenceItemDto"
+    InterviewResumeEvidenceDto:
+      type: object
+      properties:
+        type: { type: string }
+        section: { type: string, nullable: true }
+        label: { type: string, nullable: true }
+        snippet: { type: string }
+        sourceRecordType: { type: string, nullable: true }
+        sourceRecordId: { type: integer, format: int64, nullable: true }
+        confidence: { type: number, format: double, nullable: true }
+        startOffset: { type: integer, nullable: true }
+        endOffset: { type: integer, nullable: true }
+    CreateInterviewRecordRequest:
+      type: object
+      required: [file]
+      properties:
+        file:
+          type: string
+          format: binary
+        companyName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+        interviewDate: { type: string, format: date, nullable: true }
+        interviewType: { type: string, nullable: true }
+        linkedResumeVersionId: { type: integer, format: int64, nullable: true }
+        linkedJobPostingId: { type: integer, format: int64, nullable: true }
+        transcriptText: { type: string, nullable: true }
+    InterviewRecordListItemDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        companyName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+        interviewDate: { type: string, format: date, nullable: true }
+        interviewType: { type: string }
+        transcriptStatus: { type: string }
+        transcriptErrorCode: { type: string, nullable: true }
+        transcriptRetryCount: { type: integer }
+        transcriptNextRetryAt: { type: string, format: date-time, nullable: true }
+        analysisStatus: { type: string }
+        linkedResumeVersionId: { type: integer, format: int64, nullable: true }
+        interviewerProfileId: { type: integer, format: int64, nullable: true }
+        questionCount: { type: integer }
+        createdAt: { type: string, format: date-time }
+    InterviewRecordDetailDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        companyName: { type: string, nullable: true }
+        roleName: { type: string, nullable: true }
+        interviewDate: { type: string, format: date, nullable: true }
+        interviewType: { type: string }
+        sourceAudioFileUrl: { type: string, nullable: true }
+        sourceAudioFileName: { type: string, nullable: true }
+        sourceAudioDurationMs: { type: integer, format: int64, nullable: true }
+        transcriptStatus: { type: string }
+        transcriptErrorCode: { type: string, nullable: true }
+        transcriptErrorMessage: { type: string, nullable: true }
+        transcriptRetryCount: { type: integer }
+        transcriptLastAttemptAt: { type: string, format: date-time, nullable: true }
+        transcriptProcessingStartedAt: { type: string, format: date-time, nullable: true }
+        transcriptNextRetryAt: { type: string, format: date-time, nullable: true }
+        analysisStatus: { type: string }
+        linkedResumeVersionId: { type: integer, format: int64, nullable: true }
+        linkedJobPostingId: { type: integer, format: int64, nullable: true }
+        interviewerProfileId: { type: integer, format: int64, nullable: true }
+        deterministicSummary: { type: string, nullable: true }
+        aiEnrichedSummary: { type: string, nullable: true }
+        overallSummary: { type: string, nullable: true }
+        structuringStage: { type: string }
+        confirmedAt: { type: string, format: date-time, nullable: true }
+        questionCount: { type: integer }
+        answerCount: { type: integer }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    InterviewRecordReviewDto:
+      type: object
+      properties:
+        interviewRecordId: { type: integer, format: int64 }
+        playback:
+          $ref: "#/components/schemas/InterviewRecordPlaybackDto"
+        structuringStage: { type: string }
+        requiresConfirmation: { type: boolean }
+        deterministicSummary: { type: string, nullable: true }
+        aiEnrichedSummary: { type: string, nullable: true }
+        overallSummary: { type: string, nullable: true }
+        confirmedAt: { type: string, format: date-time, nullable: true }
+        totalSegmentCount: { type: integer }
+        editedSegmentCount: { type: integer }
+        totalQuestionCount: { type: integer }
+        changedQuestionCount: { type: integer }
+        weakAnswerCount: { type: integer }
+        followUpQuestionCount: { type: integer }
+        questionSourceCounts:
+          type: object
+          additionalProperties:
+            type: integer
+        answerSourceCounts:
+          type: object
+          additionalProperties:
+            type: integer
+        interviewerProfileSource: { type: string, nullable: true }
+        questionFilterSummary:
+          $ref: "#/components/schemas/InterviewRecordReviewQuestionFilterSummaryDto"
+        questionDistributionSummary:
+          $ref: "#/components/schemas/InterviewRecordReviewQuestionDistributionSummaryDto"
+        questionOriginSummary:
+          $ref: "#/components/schemas/InterviewRecordReviewQuestionOriginSummaryDto"
+        replayReadiness:
+          $ref: "#/components/schemas/InterviewRecordReplayReadinessDto"
+        reviewLaneSummary:
+          $ref: "#/components/schemas/InterviewRecordReviewLaneSummaryDto"
+        transcriptIssueSummary:
+          $ref: "#/components/schemas/InterviewRecordTranscriptIssueSummaryDto"
+        answerQualitySummary:
+          $ref: "#/components/schemas/InterviewRecordAnswerQualitySummaryDto"
+        timelineNavigation:
+          $ref: "#/components/schemas/InterviewRecordTimelineNavigationDto"
+        actionRecommendations:
+          $ref: "#/components/schemas/InterviewRecordReviewActionRecommendationsDto"
+        replayLaunchPreset:
+          $ref: "#/components/schemas/InterviewRecordReplayLaunchPresetDto"
+        provenanceComparisonSummary:
+          $ref: "#/components/schemas/InterviewRecordProvenanceComparisonSummaryDto"
+        questionSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewRecordReviewQuestionSummaryDto"
+        followUpThreads:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewRecordReviewFollowUpThreadDto"
+    InterviewRecordReviewQuestionSummaryDto:
+      type: object
+      properties:
+        questionId: { type: integer, format: int64 }
+        linkedQuestionId: { type: integer, format: int64, nullable: true }
+        deepLink:
+          $ref: "#/components/schemas/InterviewRecordReviewQuestionDeepLinkDto"
+        orderIndex: { type: integer }
+        text: { type: string }
+        questionType: { type: string }
+        topicTags:
+          type: array
+          items: { type: string }
+        originType: { type: string }
+        derivedFromResumeSection: { type: string, nullable: true }
+        derivedFromJobPostingSection: { type: string, nullable: true }
+        isFollowUp: { type: boolean }
+        parentQuestionId: { type: integer, format: int64, nullable: true }
+        hasWeakAnswer: { type: boolean }
+        answerSummary: { type: string, nullable: true }
+        confidenceMarkers:
+          type: array
+          items: { type: string }
+        weaknessTags:
+          type: array
+          items: { type: string }
+        strengthTags:
+          type: array
+          items: { type: string }
+        questionStructuringSource: { type: string }
+        answerStructuringSource: { type: string, nullable: true }
+        questionRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        answerRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        questionAnswerRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+    InterviewRecordReviewQuestionDeepLinkDto:
+      type: object
+      properties:
+        questionDetailQuestionId: { type: integer, format: int64, nullable: true }
+        archiveSourceType: { type: string }
+        sourceInterviewRecordId: { type: integer, format: int64 }
+        sourceInterviewQuestionId: { type: integer, format: int64 }
+        canStartReplayMock: { type: boolean }
+        replaySessionType: { type: string }
+    InterviewRecordReviewQuestionFilterSummaryDto:
+      type: object
+      properties:
+        allQuestions: { type: integer }
+        primaryQuestions: { type: integer }
+        followUpQuestions: { type: integer }
+        weakAnswerQuestions: { type: integer }
+        weakFollowUpQuestions: { type: integer }
+        confirmedQuestions: { type: integer }
+    InterviewRecordReviewQuestionDistributionSummaryDto:
+      type: object
+      properties:
+        questionTypeCounts:
+          type: object
+          additionalProperties:
+            type: integer
+        topicTagCounts:
+          type: object
+          additionalProperties:
+            type: integer
+    InterviewRecordReviewQuestionOriginSummaryDto:
+      type: object
+      properties:
+        resumeLinkedQuestions: { type: integer }
+        jobPostingLinkedQuestions: { type: integer }
+        hybridLinkedQuestions: { type: integer }
+        generalQuestions: { type: integer }
+    InterviewRecordReplayReadinessDto:
+      type: object
+      properties:
+        ready: { type: boolean }
+        replayableQuestionCount: { type: integer }
+        linkedQuestionCount: { type: integer }
+        unlinkedQuestionCount: { type: integer }
+        followUpThreadCount: { type: integer }
+        hasInterviewerProfile: { type: boolean }
+        recommendedReplayMode: { type: string }
+        recommendedReplayModeLabel: { type: string }
+        statusBadgeText: { type: string }
+        statusVariant: { type: string }
+        statusSummary: { type: string }
+        primaryCtaLabel: { type: string }
+        blockedCtaLabel: { type: string }
+        blockers:
+          type: array
+          items: { type: string }
+        blockerDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/InterviewRecordReplayBlockerDetailDto'
+    InterviewRecordReplayBlockerDetailDto:
+      type: object
+      properties:
+        code: { type: string }
+        label: { type: string }
+        description: { type: string }
+        severity: { type: string }
+        priority: { type: string }
+        highlightVariant: { type: string }
+        sortOrder: { type: integer }
+        recommendedAction: { type: string }
+        recommendedActionLabel: { type: string }
+        recommendedActionTarget: { type: string }
+        recommendedActionTargetPayload:
+          type: object
+          additionalProperties: { type: string }
+    InterviewRecordReviewLaneSummaryDto:
+      type: object
+      properties:
+        transcript:
+          $ref: "#/components/schemas/InterviewRecordReviewLaneItemDto"
+        question:
+          $ref: "#/components/schemas/InterviewRecordReviewLaneItemDto"
+        thread:
+          $ref: "#/components/schemas/InterviewRecordReviewLaneItemDto"
+    InterviewRecordReviewLaneItemDto:
+      type: object
+      properties:
+        sortOrder: { type: integer }
+        highlightVariant: { type: string }
+        badgeText: { type: string }
+        summaryText: { type: string }
+        recommendedTab: { type: string }
+        defaultExpanded: { type: boolean }
+        analyticsKey: { type: string }
+        trackingContext:
+          type: object
+          additionalProperties: { type: string }
+        helpText: { type: string }
+        whyItMatters: { type: string }
+        accessibilityLabel: { type: string }
+        screenReaderSummary: { type: string }
+        emptyStateCtaAction: { type: string, nullable: true }
+        emptyStateCtaLabel: { type: string, nullable: true }
+        emptyStateCtaTarget: { type: string, nullable: true }
+        emptyStateCtaTargetPayload:
+          type: object
+          nullable: true
+          additionalProperties: { type: string }
+        totalCount: { type: integer }
+        readyCount: { type: integer }
+        needsReviewCount: { type: integer }
+        readiness: { type: string }
+        severity: { type: string }
+        highestPriority: { type: string }
+        primaryAction: { type: string }
+        primaryActionLabel: { type: string }
+        primaryActionTarget: { type: string }
+        primaryActionTargetPayload:
+          type: object
+          additionalProperties: { type: string }
+        secondaryAction: { type: string, nullable: true }
+        secondaryActionLabel: { type: string, nullable: true }
+        secondaryActionTarget: { type: string, nullable: true }
+        secondaryActionTargetPayload:
+          type: object
+          nullable: true
+          additionalProperties: { type: string }
+        emptyStateMessage: { type: string, nullable: true }
+        completionCtaAction: { type: string, nullable: true }
+        completionCtaLabel: { type: string, nullable: true }
+        completionCtaTarget: { type: string, nullable: true }
+        completionCtaTargetPayload:
+          type: object
+          nullable: true
+          additionalProperties: { type: string }
+        completionMessage: { type: string, nullable: true }
+        blockingReasons:
+          type: array
+          items: { type: string }
+        blockingReasonDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/InterviewRecordReviewLaneBlockerDetailDto'
+    InterviewRecordReviewLaneBlockerDetailDto:
+      type: object
+      properties:
+        code: { type: string }
+        label: { type: string }
+        description: { type: string }
+        severity: { type: string }
+        priority: { type: string }
+        highlightVariant: { type: string }
+        sortOrder: { type: integer }
+        recommendedAction: { type: string }
+        recommendedActionLabel: { type: string }
+        recommendedActionTarget: { type: string }
+        recommendedActionTargetPayload:
+          type: object
+          additionalProperties: { type: string }
+    InterviewRecordTranscriptIssueSummaryDto:
+      type: object
+      properties:
+        lowConfidenceSegmentCount: { type: integer }
+        lowConfidenceSegmentSequences:
+          type: array
+          items: { type: integer }
+        speakerOverrideSegmentCount: { type: integer }
+        speakerOverrideSegmentSequences:
+          type: array
+          items: { type: integer }
+        confirmedTextOverrideCount: { type: integer }
+        editedSegmentSequences:
+          type: array
+          items: { type: integer }
+        resolvedIssueCount: { type: integer }
+        unresolvedIssueCount: { type: integer }
+        confirmationReadiness: { type: string }
+        reviewerLaneCounts:
+          type: object
+          additionalProperties:
+            type: integer
+        topPrioritySegmentActions:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewRecordTranscriptSegmentActionDto"
+        segmentActions:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewRecordTranscriptSegmentActionDto"
+    InterviewRecordTranscriptSegmentActionDto:
+      type: object
+      properties:
+        sequence: { type: integer }
+        issueTypes:
+          type: array
+          items: { type: string }
+        recommendedAction: { type: string }
+        triageReason: { type: string }
+        ctaLabel: { type: string }
+        severity: { type: string }
+        priority: { type: string }
+        reviewerLane: { type: string }
+        linkedQuestionId:
+          type: integer
+          format: int64
+          nullable: true
+        threadRootQuestionId:
+          type: integer
+          format: int64
+          nullable: true
+        seekRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        deepLink:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReviewQuestionDeepLinkDto"
+          nullable: true
+        replayLaunchPreset:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayLaunchPresetDto"
+          nullable: true
+    InterviewRecordAnswerQualitySummaryDto:
+      type: object
+      properties:
+        answeredQuestionCount: { type: integer }
+        weakAnswerCount: { type: integer }
+        strengthTaggedAnswerCount: { type: integer }
+        quantifiedAnswerCount: { type: integer }
+        structuredAnswerCount: { type: integer }
+        tradeoffAwareAnswerCount: { type: integer }
+        uncertainAnswerCount: { type: integer }
+        detailedAnswerCount: { type: integer }
+    InterviewRecordTimelineNavigationDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewRecordTimelineNavigationItemDto"
+    InterviewRecordTimelineNavigationItemDto:
+      type: object
+      properties:
+        questionId: { type: integer, format: int64 }
+        orderIndex: { type: integer }
+        parentQuestionId: { type: integer, format: int64, nullable: true }
+        threadRootQuestionId: { type: integer, format: int64 }
+        questionSegmentStartSequence: { type: integer, nullable: true }
+        questionSegmentEndSequence: { type: integer, nullable: true }
+        answerSegmentStartSequence: { type: integer, nullable: true }
+        answerSegmentEndSequence: { type: integer, nullable: true }
+        questionRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        answerRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        questionAnswerRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+    InterviewRecordReviewActionRecommendationsDto:
+      type: object
+      properties:
+        primaryAction: { type: string }
+        primaryActionLabel: { type: string }
+        primaryActionTarget: { type: string }
+        primaryActionTargetPayload:
+          type: object
+          additionalProperties: { type: string }
+        availableActions:
+          type: array
+          items: { type: string }
+        availableActionLabels:
+          type: object
+          additionalProperties: { type: string }
+        availableActionTargets:
+          type: object
+          additionalProperties: { type: string }
+        availableActionTargetPayloads:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: { type: string }
+        blockingReasons:
+          type: array
+          items: { type: string }
+        blockingReasonDetails:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewRecordReviewActionBlockerDetailDto"
+        canConfirm: { type: boolean }
+        canReplay: { type: boolean }
+    InterviewRecordReviewActionBlockerDetailDto:
+      type: object
+      properties:
+        code: { type: string }
+        label: { type: string }
+        description: { type: string }
+        severity: { type: string }
+        priority: { type: string }
+        highlightVariant: { type: string }
+        sortOrder: { type: integer }
+        recommendedAction: { type: string }
+        recommendedActionLabel: { type: string }
+        recommendedActionTarget: { type: string }
+        recommendedActionTargetPayload:
+          type: object
+          additionalProperties: { type: string }
+    InterviewRecordReplayLaunchPresetDto:
+      type: object
+      properties:
+        sessionType: { type: string }
+        sourceInterviewRecordId: { type: integer, format: int64 }
+        replayMode: { type: string }
+        recommendedReplayModeLabel: { type: string }
+        recommendedQuestionCount: { type: integer }
+        seedQuestionIds:
+          type: array
+          items: { type: integer, format: int64 }
+        availableReplayModes:
+          type: array
+          items: { type: string }
+        availableReplayModeLabels:
+          type: object
+          additionalProperties: { type: string }
+        presetTitle: { type: string }
+        presetDescription: { type: string }
+        launchButtonLabel: { type: string }
+    InterviewRecordProvenanceComparisonSummaryDto:
+      type: object
+      properties:
+        aiRefinementApplied: { type: boolean }
+        confirmedVersionAvailable: { type: boolean }
+        summaryChangedFromDeterministic: { type: boolean }
+        changedQuestionCountFromDeterministic: { type: integer }
+        changedAnswerCountFromDeterministic: { type: integer }
+        currentQuestionSource: { type: string }
+        currentAnswerSource: { type: string }
+        currentInterviewerProfileSource: { type: string, nullable: true }
+    InterviewRecordReviewFollowUpThreadDto:
+      type: object
+      properties:
+        rootQuestionId: { type: integer, format: int64 }
+        rootLinkedQuestionId: { type: integer, format: int64, nullable: true }
+        rootOrderIndex: { type: integer }
+        rootText: { type: string }
+        questionIds:
+          type: array
+          items: { type: integer, format: int64 }
+        linkedQuestionIds:
+          type: array
+          items: { type: integer, format: int64 }
+        followUpQuestionIds:
+          type: array
+          items: { type: integer, format: int64 }
+        followUpCount: { type: integer }
+        weakQuestionCount: { type: integer }
+        answeredQuestionCount: { type: integer }
+        quantifiedQuestionCount: { type: integer }
+        structuredQuestionCount: { type: integer }
+        tradeoffAwareQuestionCount: { type: integer }
+        uncertainQuestionCount: { type: integer }
+        recommendedAction: { type: string }
+        threadRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        replayLaunchPreset:
+          $ref: "#/components/schemas/InterviewRecordReplayLaunchPresetDto"
+        structuringSources:
+          type: array
+          items: { type: string }
+    InterviewRecordPlaybackDto:
+      type: object
+      properties:
+        playbackAvailable: { type: boolean }
+        sourceAudioFileUrl: { type: string, nullable: true }
+        sourceAudioFileName: { type: string, nullable: true }
+        audioDurationMs: { type: integer, format: int64, nullable: true }
+        sessionRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+    InterviewRecordReplayRangeDto:
+      type: object
+      properties:
+        startMs: { type: integer, format: int64 }
+        endMs: { type: integer, format: int64 }
+        durationMs: { type: integer, format: int64 }
+        startTimestampLabel: { type: string }
+        endTimestampLabel: { type: string }
+    InterviewTranscriptSegmentDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        startMs: { type: integer, format: int64 }
+        endMs: { type: integer, format: int64 }
+        timestampLabel: { type: string }
+        speakerType: { type: string }
+        rawText: { type: string, nullable: true }
+        cleanedText: { type: string, nullable: true }
+        confirmedText: { type: string, nullable: true }
+        confidenceScore: { type: number, format: double, nullable: true }
+        sequence: { type: integer }
+    InterviewRecordTranscriptDto:
+      type: object
+      properties:
+        interviewRecordId: { type: integer, format: int64 }
+        playback:
+          $ref: "#/components/schemas/InterviewRecordPlaybackDto"
+        rawTranscript: { type: string, nullable: true }
+        cleanedTranscript: { type: string, nullable: true }
+        confirmedTranscript: { type: string, nullable: true }
+        transcriptStatus: { type: string }
+        transcriptErrorCode: { type: string, nullable: true }
+        transcriptErrorMessage: { type: string, nullable: true }
+        transcriptRetryCount: { type: integer }
+        transcriptLastAttemptAt: { type: string, format: date-time, nullable: true }
+        transcriptNextRetryAt: { type: string, format: date-time, nullable: true }
+        segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewTranscriptSegmentDto"
+        updatedAt: { type: string, format: date-time }
+    UpdateInterviewTranscriptSegmentRequest:
+      type: object
+      properties:
+        speakerType: { type: string, nullable: true }
+        cleanedText: { type: string, nullable: true }
+        confirmedText: { type: string, nullable: true }
+    UpdateInterviewTranscriptSegmentItemRequest:
+      type: object
+      properties:
+        segmentId: { type: integer, format: int64 }
+        speakerType: { type: string, nullable: true }
+        cleanedText: { type: string, nullable: true }
+        confirmedText: { type: string, nullable: true }
+    BulkUpdateInterviewTranscriptSegmentsRequest:
+      type: object
+      properties:
+        edits:
+          type: array
+          items:
+            $ref: "#/components/schemas/UpdateInterviewTranscriptSegmentItemRequest"
+        confirmAfterApply: { type: boolean }
+    InterviewRecordQuestionAnswerDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        text: { type: string }
+        normalizedText: { type: string, nullable: true }
+        summary: { type: string, nullable: true }
+        confidenceMarkers:
+          type: array
+          items: { type: string }
+        weaknessTags:
+          type: array
+          items: { type: string }
+        strengthTags:
+          type: array
+          items: { type: string }
+        structuringSource: { type: string }
+        orderIndex: { type: integer }
+        replayRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+    InterviewRecordQuestionDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        linkedQuestionId: { type: integer, format: int64, nullable: true }
+        text: { type: string }
+        normalizedText: { type: string, nullable: true }
+        questionType: { type: string }
+        topicTags:
+          type: array
+          items: { type: string }
+        intentTags:
+          type: array
+          items: { type: string }
+        derivedFromResumeSection: { type: string, nullable: true }
+        derivedFromResumeRecordType: { type: string, nullable: true }
+        derivedFromResumeRecordId: { type: integer, format: int64, nullable: true }
+        derivedFromJobPostingSection: { type: string, nullable: true }
+        parentQuestionId: { type: integer, format: int64, nullable: true }
+        structuringSource: { type: string }
+        orderIndex: { type: integer }
+        questionRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        answerRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        questionAnswerRange:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordReplayRangeDto"
+          nullable: true
+        answer:
+          allOf:
+            - $ref: "#/components/schemas/InterviewRecordQuestionAnswerDto"
+          nullable: true
+    InterviewRecordQuestionsResponseDto:
+      type: object
+      properties:
+        interviewRecordId: { type: integer, format: int64 }
+        playback:
+          $ref: "#/components/schemas/InterviewRecordPlaybackDto"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewRecordQuestionDto"
+    InterviewRecordAnalysisDto:
+      type: object
+      properties:
+        interviewRecordId: { type: integer, format: int64 }
+        totalQuestions: { type: integer }
+        totalAnswers: { type: integer }
+        followUpCount: { type: integer }
+        questionTypeDistribution:
+          type: object
+          additionalProperties:
+            type: integer
+        weakAnswerQuestionIds:
+          type: array
+          items: { type: integer, format: int64 }
+        topicTags:
+          type: array
+          items: { type: string }
+        structuringStage: { type: string }
+        overallSummary: { type: string, nullable: true }
+    InterviewerProfileDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        sourceInterviewRecordId: { type: integer, format: int64 }
+        styleTags:
+          type: array
+          items: { type: string }
+        toneProfile: { type: string }
+        pressureLevel: { type: string }
+        depthPreference: { type: string }
+        followUpPatterns:
+          type: array
+          items: { type: string }
+        favoriteTopics:
+          type: array
+          items: { type: string }
+        openingPattern: { type: string, nullable: true }
+        closingPattern: { type: string, nullable: true }
+        structuringSource: { type: string }
+    ArchivedQuestionDto:
+      type: object
+      properties:
+        questionId: { type: integer, format: int64 }
+        title: { type: string }
+        difficulty: { type: string }
+        archivedAt: { type: string, format: date-time }
+        bestScore: { type: number, format: double, nullable: true }
+        totalAttemptCount: { type: integer }
+        sourceType: { type: string, nullable: true }
+        sourceLabel: { type: string, nullable: true }
+        sourceSessionId: { type: integer, format: int64, nullable: true }
+        sourceSessionQuestionId: { type: integer, format: int64, nullable: true }
+        sourceInterviewRecordId: { type: integer, format: int64, nullable: true }
+        sourceInterviewQuestionId: { type: integer, format: int64, nullable: true }
+        isFollowUp: { type: boolean }
+    InterviewSessionSummaryDto:
+      type: object
+      properties:
+        totalQuestions: { type: integer }
+        answeredQuestions: { type: integer }
+        skippedQuestions: { type: integer }
+        remainingQuestions: { type: integer }
+        averageScore: { type: number, format: double, nullable: true }
+        weakFacetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        skippedFacetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+        facetSummaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterviewSessionCoverageFacetSummaryDto"
+    SkipInterviewSessionQuestionRequest:
+      type: object
+      required: [sessionQuestionId]
+      properties:
+        sessionQuestionId: { type: integer, format: int64 }
+    InterviewSessionAnswerResponseDto:
+      type: object
+      properties:
+        sessionId: { type: integer, format: int64 }
+        sessionQuestionId: { type: integer, format: int64 }
+        status: { type: string }
+        answer:
+          $ref: "#/components/schemas/SubmitAnswerResponseDto"
+        nextQuestion:
+          allOf:
+            - $ref: "#/components/schemas/InterviewSessionQuestionDto"
+          nullable: true
+        summary:
+          $ref: "#/components/schemas/InterviewSessionSummaryDto"
+    InterviewSessionAdvanceResponseDto:
+      type: object
+      properties:
+        sessionId: { type: integer, format: int64 }
+        status: { type: string }
+        currentQuestion:
+          allOf:
+            - $ref: "#/components/schemas/InterviewSessionQuestionDto"
+          nullable: true
+        summary:
+          $ref: "#/components/schemas/InterviewSessionSummaryDto"
+    QuestionTagDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+    QuestionCompanyDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        relevanceScore: { type: number, format: double }
+        pastFrequent: { type: boolean }
+        trendingRecent: { type: boolean }
+    QuestionRoleDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        relevanceScore: { type: number, format: double }
+    LearningMaterialDto:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        materialType: { type: string }
+        sourceType: { type: string }
+        sourceLabel: { type: string }
+        description: { type: string, nullable: true }
+        contentText: { type: string, nullable: true }
+        contentUrl: { type: string, nullable: true }
+        sourceName: { type: string, nullable: true }
+        contentLocale: { type: string, nullable: true }
+        isUserGenerated: { type: boolean }
+        difficultyLevel: { type: string, nullable: true }
+        estimatedMinutes: { type: integer, nullable: true }
+        isOfficial: { type: boolean }
+        displayOrder: { type: integer, nullable: true }
+        relationshipType: { type: string, nullable: true }
+        labelOverride: { type: string, nullable: true }
+        relevanceScore: { type: number, format: double, nullable: true }
+    CreateQuestionLearningMaterialRequest:
+      type: object
+      required: [title, materialType]
+      properties:
+        title: { type: string }
+        materialType: { type: string }
+        description: { type: string, nullable: true }
+        contentText: { type: string, nullable: true }
+        contentUrl: { type: string, nullable: true }
+        sourceName: { type: string, nullable: true }
+        difficultyLevel: { type: string, nullable: true }
+        estimatedMinutes: { type: integer, nullable: true }
+        relationshipType: { type: string, nullable: true }
+        labelOverride: { type: string, nullable: true }
+        relevanceScore: { type: number, format: double, nullable: true }

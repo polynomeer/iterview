@@ -1,0 +1,252 @@
+package com.example.interviewplatform.interview.mapper
+
+import com.example.interviewplatform.interview.dto.InterviewRecordAnalysisDto
+import com.example.interviewplatform.interview.dto.InterviewRecordDetailDto
+import com.example.interviewplatform.interview.dto.InterviewRecordFollowUpEdgeDto
+import com.example.interviewplatform.interview.dto.InterviewRecordListItemDto
+import com.example.interviewplatform.interview.dto.InterviewRecordPlaybackDto
+import com.example.interviewplatform.interview.dto.InterviewRecordQuestionAnswerDto
+import com.example.interviewplatform.interview.dto.InterviewRecordQuestionDto
+import com.example.interviewplatform.interview.dto.InterviewRecordReplayRangeDto
+import com.example.interviewplatform.interview.dto.InterviewTranscriptSegmentDto
+import com.example.interviewplatform.interview.dto.InterviewerProfileDto
+import com.example.interviewplatform.interview.entity.InterviewRecordAnswerEntity
+import com.example.interviewplatform.interview.entity.InterviewRecordEntity
+import com.example.interviewplatform.interview.entity.InterviewRecordFollowUpEdgeEntity
+import com.example.interviewplatform.interview.entity.InterviewRecordQuestionEntity
+import com.example.interviewplatform.interview.entity.InterviewTranscriptSegmentEntity
+import com.example.interviewplatform.interview.entity.InterviewerProfileEntity
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import kotlin.math.max
+
+object InterviewRecordMapper {
+    fun toListItemDto(
+        entity: InterviewRecordEntity,
+        questionCount: Int,
+    ): InterviewRecordListItemDto = InterviewRecordListItemDto(
+        id = entity.id,
+        companyName = entity.companyName,
+        roleName = entity.roleName,
+        interviewDate = entity.interviewDate,
+        interviewType = entity.interviewType,
+        transcriptStatus = entity.transcriptStatus,
+        transcriptErrorCode = entity.transcriptErrorCode,
+        transcriptRetryCount = entity.transcriptRetryCount,
+        transcriptNextRetryAt = entity.transcriptNextRetryAt,
+        analysisStatus = entity.analysisStatus,
+        linkedResumeVersionId = entity.linkedResumeVersionId,
+        interviewerProfileId = entity.interviewerProfileId,
+        questionCount = questionCount,
+        createdAt = entity.createdAt,
+    )
+
+    fun toDetailDto(
+        entity: InterviewRecordEntity,
+        questionCount: Int,
+        answerCount: Int,
+    ): InterviewRecordDetailDto = InterviewRecordDetailDto(
+        id = entity.id,
+        companyName = entity.companyName,
+        roleName = entity.roleName,
+        interviewDate = entity.interviewDate,
+        interviewType = entity.interviewType,
+        sourceAudioFileUrl = entity.sourceAudioFileUrl,
+        sourceAudioFileName = entity.sourceAudioFileName,
+        sourceAudioDurationMs = entity.sourceAudioDurationMs,
+        transcriptStatus = entity.transcriptStatus,
+        transcriptErrorCode = entity.transcriptErrorCode,
+        transcriptErrorMessage = entity.transcriptErrorMessage,
+        transcriptRetryCount = entity.transcriptRetryCount,
+        transcriptLastAttemptAt = entity.transcriptLastAttemptAt,
+        transcriptProcessingStartedAt = entity.transcriptProcessingStartedAt,
+        transcriptNextRetryAt = entity.transcriptNextRetryAt,
+        analysisStatus = entity.analysisStatus,
+        linkedResumeVersionId = entity.linkedResumeVersionId,
+        linkedJobPostingId = entity.linkedJobPostingId,
+        interviewerProfileId = entity.interviewerProfileId,
+        deterministicSummary = entity.deterministicSummary,
+        aiEnrichedSummary = entity.aiEnrichedSummary,
+        overallSummary = entity.overallSummary,
+        structuringStage = entity.structuringStage,
+        confirmedAt = entity.confirmedAt,
+        questionCount = questionCount,
+        answerCount = answerCount,
+        createdAt = entity.createdAt,
+        updatedAt = entity.updatedAt,
+    )
+
+    fun toTranscriptSegmentDto(entity: InterviewTranscriptSegmentEntity): InterviewTranscriptSegmentDto =
+        InterviewTranscriptSegmentDto(
+            id = entity.id,
+            startMs = entity.startMs,
+            endMs = entity.endMs,
+            timestampLabel = formatTimestampLabel(entity.startMs),
+            speakerType = entity.speakerType,
+            rawText = entity.rawText,
+            cleanedText = entity.cleanedText,
+            confirmedText = entity.confirmedText,
+            confidenceScore = entity.confidenceScore,
+            sequence = entity.sequence,
+        )
+
+    fun toQuestionDto(
+        entity: InterviewRecordQuestionEntity,
+        answer: InterviewRecordAnswerEntity?,
+        objectMapper: ObjectMapper,
+        segmentById: Map<Long, InterviewTranscriptSegmentEntity>,
+    ): InterviewRecordQuestionDto = InterviewRecordQuestionDto(
+        id = entity.id,
+        linkedQuestionId = entity.linkedQuestionId,
+        text = entity.text,
+        normalizedText = entity.normalizedText,
+        questionType = entity.questionType,
+        topicTags = decodeStringList(entity.topicTagsJson, objectMapper),
+        intentTags = decodeStringList(entity.intentTagsJson, objectMapper),
+        derivedFromResumeSection = entity.derivedFromResumeSection,
+        derivedFromResumeRecordType = entity.derivedFromResumeRecordType,
+        derivedFromResumeRecordId = entity.derivedFromResumeRecordId,
+        derivedFromJobPostingSection = entity.derivedFromJobPostingSection,
+        parentQuestionId = entity.parentQuestionId,
+        structuringSource = entity.structuringSource,
+        orderIndex = entity.orderIndex,
+        questionRange = toReplayRange(entity.segmentStartId, entity.segmentEndId, segmentById),
+        answerRange = answer?.let { toReplayRange(it.segmentStartId, it.segmentEndId, segmentById) },
+        questionAnswerRange = mergeReplayRanges(
+            toReplayRange(entity.segmentStartId, entity.segmentEndId, segmentById),
+            answer?.let { toReplayRange(it.segmentStartId, it.segmentEndId, segmentById) },
+        ),
+        answer = answer?.let { toAnswerDto(it, objectMapper, segmentById) },
+    )
+
+    fun toAnswerDto(
+        entity: InterviewRecordAnswerEntity,
+        objectMapper: ObjectMapper,
+        segmentById: Map<Long, InterviewTranscriptSegmentEntity>,
+    ): InterviewRecordQuestionAnswerDto =
+        InterviewRecordQuestionAnswerDto(
+            id = entity.id,
+            text = entity.text,
+            normalizedText = entity.normalizedText,
+            summary = entity.summary,
+            confidenceMarkers = decodeStringList(entity.confidenceMarkersJson, objectMapper),
+            weaknessTags = decodeStringList(entity.weaknessTagsJson, objectMapper),
+            strengthTags = decodeStringList(entity.strengthTagsJson, objectMapper),
+            structuringSource = entity.structuringSource,
+            orderIndex = entity.orderIndex,
+            replayRange = toReplayRange(entity.segmentStartId, entity.segmentEndId, segmentById),
+        )
+
+    fun toPlaybackDto(
+        entity: InterviewRecordEntity,
+        segments: List<InterviewTranscriptSegmentEntity>,
+    ): InterviewRecordPlaybackDto {
+        val audioDurationMs = entity.sourceAudioDurationMs ?: segments.maxOfOrNull { it.endMs + 1L }
+        val sessionRange = when {
+            segments.isEmpty() -> null
+            else -> toReplayRange(segments.first().startMs, segments.last().endMs)
+        }
+        return InterviewRecordPlaybackDto(
+            playbackAvailable = entity.sourceAudioFileUrl != null && sessionRange != null,
+            sourceAudioFileUrl = entity.sourceAudioFileUrl,
+            sourceAudioFileName = entity.sourceAudioFileName,
+            audioDurationMs = audioDurationMs,
+            sessionRange = sessionRange,
+        )
+    }
+
+    fun toFollowUpEdgeDto(entity: InterviewRecordFollowUpEdgeEntity): InterviewRecordFollowUpEdgeDto =
+        InterviewRecordFollowUpEdgeDto(
+            fromQuestionId = entity.fromQuestionId,
+            toQuestionId = entity.toQuestionId,
+            relationType = entity.relationType,
+            triggerType = entity.triggerType,
+        )
+
+    fun toAnalysisDto(
+        record: InterviewRecordEntity,
+        interviewRecordId: Long,
+        questions: List<InterviewRecordQuestionEntity>,
+        answers: List<InterviewRecordAnswerEntity>,
+        followUpCount: Int,
+        topicTags: List<String>,
+        overallSummary: String?,
+        objectMapper: ObjectMapper,
+    ): InterviewRecordAnalysisDto = InterviewRecordAnalysisDto(
+        interviewRecordId = interviewRecordId,
+        totalQuestions = questions.size,
+        totalAnswers = answers.size,
+        followUpCount = followUpCount,
+        questionTypeDistribution = questions.groupingBy { it.questionType }.eachCount().toSortedMap(),
+        weakAnswerQuestionIds = answers.filter { decodeStringList(it.weaknessTagsJson, objectMapper).isNotEmpty() }.map { it.interviewRecordQuestionId },
+        topicTags = topicTags,
+        structuringStage = record.structuringStage,
+        overallSummary = overallSummary,
+    )
+
+    fun toInterviewerProfileDto(entity: InterviewerProfileEntity, objectMapper: ObjectMapper): InterviewerProfileDto =
+        InterviewerProfileDto(
+            id = entity.id,
+            sourceInterviewRecordId = entity.sourceInterviewRecordId,
+            styleTags = decodeStringList(entity.styleTagsJson, objectMapper),
+            toneProfile = entity.toneProfile,
+            pressureLevel = entity.pressureLevel,
+            depthPreference = entity.depthPreference,
+            followUpPatterns = decodeStringList(entity.followUpPatternJson, objectMapper),
+            favoriteTopics = decodeStringList(entity.favoriteTopicsJson, objectMapper),
+            openingPattern = entity.openingPattern,
+            closingPattern = entity.closingPattern,
+            structuringSource = entity.structuringSource,
+        )
+
+    private fun decodeStringList(raw: String, objectMapper: ObjectMapper): List<String> =
+        runCatching { objectMapper.readValue(raw, object : TypeReference<List<String>>() {}) }
+            .getOrDefault(emptyList())
+
+    fun toReplayRange(
+        startSegmentId: Long?,
+        endSegmentId: Long?,
+        segmentById: Map<Long, InterviewTranscriptSegmentEntity>,
+    ): InterviewRecordReplayRangeDto? {
+        val startMs = startSegmentId?.let(segmentById::get)?.startMs
+        val endMs = endSegmentId?.let(segmentById::get)?.endMs
+        return toReplayRange(startMs, endMs)
+    }
+
+    fun mergeReplayRanges(
+        first: InterviewRecordReplayRangeDto?,
+        second: InterviewRecordReplayRangeDto?,
+    ): InterviewRecordReplayRangeDto? = when {
+        first == null -> second
+        second == null -> first
+        else -> toReplayRange(
+            startMs = minOf(first.startMs, second.startMs),
+            endMs = max(first.endMs, second.endMs),
+        )
+    }
+
+    fun toReplayRange(startMs: Long?, endMs: Long?): InterviewRecordReplayRangeDto? {
+        if (startMs == null || endMs == null) {
+            return null
+        }
+        return InterviewRecordReplayRangeDto(
+            startMs = startMs,
+            endMs = endMs,
+            durationMs = max(0L, endMs - startMs + 1L),
+            startTimestampLabel = formatTimestampLabel(startMs),
+            endTimestampLabel = formatTimestampLabel(endMs),
+        )
+    }
+
+    private fun formatTimestampLabel(timestampMs: Long): String {
+        val totalSeconds = max(0L, timestampMs) / 1_000L
+        val hours = totalSeconds / 3_600L
+        val minutes = (totalSeconds % 3_600L) / 60L
+        val seconds = totalSeconds % 60L
+        return if (hours > 0) {
+            "%d:%02d:%02d".format(hours, minutes, seconds)
+        } else {
+            "%02d:%02d".format(minutes, seconds)
+        }
+    }
+}

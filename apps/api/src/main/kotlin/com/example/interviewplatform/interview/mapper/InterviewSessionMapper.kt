@@ -1,0 +1,93 @@
+package com.example.interviewplatform.interview.mapper
+
+import com.example.interviewplatform.interview.dto.InterviewSessionQuestionDto
+import com.example.interviewplatform.interview.dto.InterviewSessionListItemDto
+import com.example.interviewplatform.interview.dto.InterviewResumeEvidenceDto
+import com.example.interviewplatform.interview.dto.InterviewSessionCoverageFacetSummaryDto
+import com.example.interviewplatform.interview.dto.InterviewSessionSummaryDto
+import com.example.interviewplatform.interview.entity.InterviewSessionQuestionEntity
+import com.example.interviewplatform.question.entity.QuestionEntity
+import java.time.Instant
+
+object InterviewSessionMapper {
+    fun toQuestionDto(
+        row: InterviewSessionQuestionEntity,
+        question: QuestionEntity?,
+        status: String,
+        tags: List<String>,
+        focusSkillNames: List<String>,
+        resumeEvidence: List<InterviewResumeEvidenceDto>,
+    ): InterviewSessionQuestionDto = InterviewSessionQuestionDto(
+        id = row.id,
+        questionId = row.questionId,
+        title = row.promptText ?: question?.title ?: "Interview Question",
+        promptText = row.promptText,
+        bodyText = row.bodyText,
+        difficulty = question?.difficultyLevel ?: "UNKNOWN",
+        orderIndex = row.orderIndex,
+        status = status,
+        sourceType = row.questionSourceType,
+        parentSessionQuestionId = row.parentSessionQuestionId,
+        isFollowUp = row.isFollowUp,
+        depth = row.depth,
+        categoryName = row.categoryName,
+        tags = tags,
+        focusSkillNames = focusSkillNames,
+        resumeContextSummary = row.resumeContextSummary,
+        resumeEvidence = resumeEvidence,
+        generationRationale = row.generationRationale,
+        generationStatus = row.generationStatus,
+        llmModel = row.llmModel,
+        llmPromptVersion = row.llmPromptVersion,
+        contentLocale = row.contentLocale,
+        answerAttemptId = row.answerAttemptId,
+    )
+
+    fun toSummaryDto(
+        totalQuestions: Int,
+        answeredQuestions: Int,
+        skippedQuestions: Int,
+        remainingQuestions: Int,
+        averageScore: Double?,
+        weakFacetSummaries: List<InterviewSessionCoverageFacetSummaryDto> = emptyList(),
+        skippedFacetSummaries: List<InterviewSessionCoverageFacetSummaryDto> = emptyList(),
+        facetSummaries: List<InterviewSessionCoverageFacetSummaryDto> = emptyList(),
+    ): InterviewSessionSummaryDto = InterviewSessionSummaryDto(
+        totalQuestions = totalQuestions,
+        answeredQuestions = answeredQuestions,
+        skippedQuestions = skippedQuestions,
+        remainingQuestions = remainingQuestions.coerceAtLeast(0),
+        averageScore = averageScore,
+        weakFacetSummaries = weakFacetSummaries,
+        skippedFacetSummaries = skippedFacetSummaries,
+        facetSummaries = facetSummaries,
+    )
+
+    fun toListItemDto(
+        id: Long,
+        sessionType: String,
+        interviewMode: String,
+        sourceInterviewRecordId: Long?,
+        replayMode: String?,
+        status: String,
+        resumeVersionId: Long?,
+        startedAt: Instant,
+        endedAt: Instant?,
+        questionCount: Int,
+        answeredCount: Int,
+        averageScore: Double?,
+    ): InterviewSessionListItemDto = InterviewSessionListItemDto(
+        id = id,
+        sessionType = sessionType,
+        interviewMode = interviewMode,
+        sourceInterviewRecordId = sourceInterviewRecordId,
+        replayMode = replayMode,
+        status = status,
+        resumeVersionId = resumeVersionId,
+        startedAt = startedAt,
+        endedAt = endedAt,
+        questionCount = questionCount,
+        answeredCount = answeredCount,
+        averageScore = averageScore,
+    )
+}
