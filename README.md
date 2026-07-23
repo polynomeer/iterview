@@ -55,6 +55,7 @@ Root helpers:
 ./scripts/dev_all.sh
 ./scripts/build_all.sh
 ./scripts/test_all.sh
+./scripts/verify_all.sh
 ```
 
 ## Verification
@@ -77,6 +78,7 @@ Monorepo CI:
 
 - root workflow: `.github/workflows/ci.yml`
 - verifies:
+  - root setup script in CI mode
   - `apps/api` build
   - `apps/web` test and build
 

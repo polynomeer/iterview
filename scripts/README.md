@@ -14,3 +14,4 @@ Current scripts:
 - `scripts/dev_all.sh`
 - `scripts/build_all.sh`
 - `scripts/test_all.sh`
+- `scripts/verify_all.sh`
