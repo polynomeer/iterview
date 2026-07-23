@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# common temp
+*.log
+.tmp/
+.cache/
+
+# root-level dependency/build artifacts
+node_modules/
+dist/
+build/
+out/
+
+# environment files
+.env
+.env.local
+.env.*.local
