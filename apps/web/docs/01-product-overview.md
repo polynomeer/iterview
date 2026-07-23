@@ -1,66 +1,18 @@
 # 01-product-overview
 
-## Product Summary
-This frontend serves an interview training product for experienced candidates. The current implementation already supports the core practice loop:
+Shared product direction now lives in:
 
-- receive a daily interview question
-- browse and filter practice questions
-- review question detail and learning materials
-- write an answer tied to the active resume version
-- review score and feedback
-- revisit weak questions through the review queue
-- track mastered questions in the archive
-- manage profile, target companies, and resume versions
-- save job postings, run resume-tailoring analyses, and export tailored resume PDFs
-- inspect a resume interview heatmap that maps practical interview questions back onto parsed resume anchors
+- `../../../docs/01-product-foundation.md`
 
-The updated product direction extends that loop into a resume-driven interview learning system:
+This directory should keep frontend-specific product detail only.
 
-- active resume content informs question selection and answer evaluation
-- answer results update skill-level readiness and gap signals
-- question detail expands into follow-up depth and question-tree context
-- curated model answers and related learning materials support deeper study after answering
-- low-confidence or low-scoring answers feed a review queue
-- home surfaces the next best action across today, retry, radar, and gaps
-- AI-driven mock interviews generate session history and interview-originated archive records
-- the product can be used in Korean or English without overwriting the original language of user content
+Frontend-specific follow-up documents:
 
-## Product Direction
-The product should help a user move through this learning loop:
-
-```text
-Resume version
--> extracted skills and experience evidence
--> resume-linked questions and follow-up tree
--> answer submission
--> skip when the current prompt should be bypassed
--> answer analysis and dimension scoring
--> skill radar and gap updates
--> review queue and next-question recommendation
-```
-
-This is an extension of the existing system, not a replacement for it. The current screen model remains valid and new intelligence should be added through the same route structure and typed API layer.
-
-## Core Experience Pillars
-### 1. Guided Daily Practice
-- keep today&apos;s main question prominent on home
-- separate retry and review work from fresh practice
-- make the next action obvious after each answer
-
-### 2. Resume-Driven Preparation
-- let users manage multiple resume containers and versions
-- treat one active resume version as the source of interview context
-- allow PDF resume upload as a new immutable resume version
-- expose version-level parsing status so the UI can distinguish `pending`, `completed`, and `failed`
-- expose parsed resume skills, experiences, projects, and risk hints as additive data
-- treat resume-derived projects as first-class cards with title, content, category, and tags when available
-- let users layer job-aware tailoring analyses, accepted suggestions, and PDF exports on top of immutable resume versions without overwriting the source document
-- let users open a resume interview heatmap that shows which parsed anchors drew the most practical interview pressure and follow-up depth
-
-### 3. Skill Intelligence
-- summarize progress by skill category, not only by question history
-- show gap analysis against the user&apos;s role, experience, and target companies
-- keep radar and gap summaries actionable, not decorative
+- `02-frontend-architecture.md`
+- `03-routes-and-flows.md`
+- `04-api-integration.md`
+- `05-implementation-plan.md`
+- `06-acceptance-criteria.md`
 
 ### 4. Knowledge Depth
 - represent follow-up questions as a tree or graph rooted in a primary question

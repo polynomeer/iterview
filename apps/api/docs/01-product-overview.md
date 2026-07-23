@@ -1,111 +1,18 @@
 # 01-product-overview
 
-## Product Summary
-This project is an interview preparation backend for experienced software engineers.
+Shared product direction now lives in:
 
-The updated product direction is:
-- resume-driven interview preparation
-- job-posting-aware resume analysis and tailoring
-- resume interview heatmaps that show which resume anchors triggered the most practical questions
-- layered resume overlays that can eventually distinguish whole-project questions from sentence-level question triggers
-- answer-driven learning and retry loops
-- skill radar and gap analysis
-- question tree and follow-up visualization
-- AI-driven mock interview sessions with resume-based follow-up questions
-- multiple interview modes including planner-driven full resume coverage
-- bilingual product delivery with Korean and English modes
-- curated model answers and related learning materials
-- personalized daily practice grounded in the user's role, target companies, and resume history
+- `../../../docs/01-product-foundation.md`
 
-The current implementation already provides the learning backbone:
-- user profile and settings
-- target companies
-- resume containers and immutable resume versions
-- question catalog and question detail
-- answer submission, scoring, and feedback persistence
-- user-question progress aggregation
-- retry queue, archive flow, daily card generation, and feed data
+This directory should keep backend-specific product detail only.
 
-The next product evolution should extend those capabilities rather than replace them.
+Backend-specific follow-up documents:
 
-## Core Product Loop
-The intended learning loop for this system is:
-
-```text
-Resume PDF Upload
--> Resume Version
--> Raw Text Parse
--> LLM Structured Extraction
--> Extract + Validate Signals
--> Question Selection
--> Interview Session or Practice Question
--> Answer Submission
--> Score + Feedback
--> Progress + Review Queue
--> Skill Radar + Gap Analysis
--> Next Recommended Question
-```
-
-This is an additive evolution of the current backend, not a new product line.
-
-## Product Pillars
-### 1. Resume Intelligence
-- accept resume PDF uploads and persist them as immutable resume versions
-- derive raw text from the uploaded PDF and preserve that extraction on the immutable version
-- use an LLM-backed extraction step to map raw resume text into normalized skills, experiences, and risk signals
-- validate and persist structured resume signals after the LLM extraction step completes
-- persist richer resume structure beyond skills and risks, including:
-  - profile headline and summary
-  - contact channels and public links
-  - core competency statements
-  - work experience timeline
-  - project and initiative records
-  - project-specific detailed content, tags, and category metadata
-  - education history
-  - awards and certifications
-  - quantified achievement claims
-- surface high-risk resume claims that likely trigger follow-up questions
-- keep version-specific extraction results so older resume snapshots remain queryable
-- support resume-based question recommendation without breaking the existing catalog flow
-
-### 2. Structured Question Learning
-- keep the current global question catalog
-- add follow-up relationships so a question can belong to a tree or graph
-- attach curated model answers that show strong answer structure without mixing them into user attempts
-- attach question-linked learning materials that explain concepts, tradeoffs, and background knowledge
-- let users understand both breadth and depth of their preparation
-
-### 2A. Resume Tailoring Workspace
-- accept one saved job posting as a reusable analysis context
-- parse job posting text or fetched link content into keywords, requirements, and responsibilities
-- compare one immutable `resumeVersionId` against one saved job posting without mutating the source resume version
-- persist analysis runs so users can revisit earlier company-specific recommendations
-- return concrete rewrite suggestions for headline, summary, projects, skills, and quantified achievements
-- let the frontend mark suggestions as accepted without overwriting the original resume version
-- persist one tailored resume document view per analysis so the frontend can render editing and preview screens without rebuilding heuristics
-- generate downloadable PDF exports from that tailored document and keep export history per analysis
-- map practical interview questions back onto parsed resume anchors such as projects, experiences, skills, competencies, and summary blocks
-- expose one heatmap read model that highlights frequently challenged resume anchors, follow-up density, and weak-defense hotspots
-- allow manual correction when one imported practical-interview question was linked to the wrong resume anchor
-- evolve the heatmap into a two-layer viewer:
-  - block-level anchor heat
-  - sentence or phrase-level hover overlays for precise question triggers
-
-### 3. Mock Interview Loop
-- support AI-driven mock interviews grounded in the active resume version
-- let the user explicitly choose which resume version to use before starting an interview
-- generate the opening interview question from the selected resume version rather than always starting from a fixed catalog prompt
-- allow one interview session to generate a main question plus follow-up questions within the same session
-- generate follow-up questions from the user's answer, resume evidence, and current session depth
-- support interview modes such as `quick_screen`, `mock_30`, `mock_60`, `free_interview`, and `full_coverage`
-- treat `full_coverage` as a planner-guided mode that tries to cover every interviewable resume evidence unit across the selected resume version
-- for `full_coverage`, prefer evidence-planned questioning over unconstrained generation so coverage completion can be measured reliably
-- store one session-level history record for each completed or in-progress interview
-- preserve each interview question and follow-up as a question-level record that can later appear in archive and review flows
-- store every asked interview turn in archive as a question-level item while still keeping the enclosing session in interview history
-- keep interview sessions additive to the existing practice loop rather than replacing practice questions
-### 4. Answer Analysis and Review
-- keep answer attempts append-only
+- `02-backend-architecture.md`
+- `03-db-schema.md`
+- `04-api-contracts.md`
+- `05-implementation-plan.md`
+- `06-acceptance-criteria.md`
 - keep scoring centralized in one service
 - enrich analysis output so weak patterns, follow-up readiness, and skill gaps can be derived from answer history
 - preserve current retry scheduling and archive semantics

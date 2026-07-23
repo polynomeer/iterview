@@ -81,10 +81,10 @@ Monorepo CI:
 
 ## Remaining Monorepo Tasks
 
-1. normalize duplicated docs and scripts between `apps/api` and `apps/web`
+1. continue reducing only the remaining duplicated app assets that are truly shared
 2. decide whether CI should remain per-app or be partially unified at the root
 3. add root-level developer helpers only for workflows that span both apps
-4. move only truly shared documentation into `docs/`
+4. keep app-specific implementation notes with the owning app
 
 ## Monorepo Notes
 

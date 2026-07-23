@@ -1,68 +1,10 @@
 # 05-implementation-plan
 
-## Planning Principles
-- keep the existing route structure and package boundaries
-- deliver additive backend and frontend changes in slices that preserve current behavior
-- prioritize the interview learning loop over isolated analytics screens
-- use optional fields and sectional UI rollout for new product intelligence
+Shared implementation sequencing now lives in:
 
-## Phase 1 - Baseline Foundation
-Status: already established in the current codebase.
+- `../../../docs/02-implementation-roadmap.md`
 
-1. initialize React + TypeScript + Vite
-2. add React Router and protected routes
-3. add React Query
-4. set up app providers and auth bootstrap
-5. centralize route constants, query keys, and endpoints
-6. create mobile-first shared layout and state components
-
-## Phase 2 - Existing Core Learning Loop
-Status: already established in the current codebase.
-
-1. implement HomePage
-2. implement PracticePage
-3. implement QuestionDetailPage
-4. implement AnswerEditorPage
-5. implement ResultAnalysisPage
-6. implement ReviewQueuePage
-7. implement ArchivePage
-8. implement FeedPage
-9. implement ProfilePage and ResumePage
-
-## Phase 3 - Resume Intelligence Extension
-1. extend resume version contracts with parse status and analysis metadata
-2. add typed resume-analysis DTOs and entity mappers
-3. surface extracted skills, experiences, and risk highlights in the resume area
-4. reuse active resume version across question ranking and answer analysis flows
-5. keep current resume list and activation behavior intact while richer analysis loads sectionally
-
-## Phase 4 - Skill Radar and Gap Analysis
-1. add skill radar preview data to home and profile contracts
-2. add gap analysis data focused on role, target company, and resume evidence
-3. create entity models for category scores, readiness score, and top gaps
-4. show compact previews on home first before introducing any dedicated deeper view
-5. ensure screens still work when radar or gap data is unavailable
-
-## Phase 5 - Question Tree and Follow-Up Depth
-1. extend question detail with related skill and tree summary support
-2. add a typed `GET /api/questions/{questionId}/tree` contract
-3. render a compact follow-up visualization on question detail
-4. support selection of follow-up nodes without breaking the existing question detail CTA
-5. track answered and unanswered depth states in a way that can later support graph UI
-
-## Phase 6 - Answer Analysis and Review Enrichment
-1. extend answer submit and result contracts with review reason, skill impact, and follow-up recommendations
-2. enrich review queue items with source answer and related skills
-3. show improvement context in result analysis before adding larger history visualizations
-4. keep archive classification rules intact so review and archive remain distinct
-5. render archive source badges for `Practice` and `Interview` when source metadata is available
-
-## Phase 6A - Interview History
-1. add interview history route and typed API integration
-2. add Interview-tab start flow with explicit resume-version selection for `resume_mock`
-3. render one session card per interview session
-4. render session detail with AI-generated opening question and answer-driven follow-up timeline
-5. allow archive and question-detail navigation from session records
+This document should stay focused on frontend-only implementation planning.
 6. show `Interview` source linkage in archive for every asked session turn
 7. add interview-mode selection, including planner-driven `full_coverage`
 8. render a full-coverage result experience with resume coverage progress and a resume-to-question map

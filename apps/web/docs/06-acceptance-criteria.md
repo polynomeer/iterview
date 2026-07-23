@@ -1,61 +1,10 @@
 # 06-acceptance-criteria
 
-## Home
-- page shows today&apos;s main question card
-- retry cards are displayed separately when available
-- summary stats are visible
-- learning materials are visible when provided
-- skill radar preview and gap preview can be rendered without disrupting the existing home layout
-- loading, auth-required, empty, and error states are handled
+Shared acceptance baseline now lives in:
 
-## Practice
-- question list renders from API
-- filters and search controls are visible
-- existing status values such as `new`, `retry`, `improving`, and `archived` remain supported
-- additive ranking context from active resume or gap analysis does not break standard browsing
-- user can navigate to question detail
+- `../../../docs/03-acceptance-baseline.md`
 
-## Question Detail
-- metadata, tags, companies, roles, and materials are shown
-- user progress summary is shown when available
-- answer history belongs to the current user only
-- follow-up tree or tree summary can be rendered when available
-- related skills can be shown as additive metadata
-- answer CTA remains visible and clear
-
-## Answer Editor
-- user can type an answer
-- current question context is visible while answering
-- active resume version is required for submission
-- submit action triggers API mutation
-- loading state prevents duplicate submit
-- error state is shown when submission fails
-- richer response fields from answer analysis do not block navigation to result analysis
-
-## Result Analysis
-- total score is visible
-- dimension scores are visible
-- feedback items are visible
-- detailed analysis narrative is visible when returned
-- model answer is shown as study/reference content when returned
-- retry or archive outcome is visible
-- next relevant action is clearly explained
-- skill impact, weak pattern summaries, and follow-up recommendations can be shown when available
-
-## Review Queue
-- queued review items are rendered
-- queue item actions support `skip` and `done`
-- queue rationale can include weak score, stale answer, or skill gap context
-- empty and error states are handled
-
-## Archive
-- archived question list is rendered
-- archive remains question-level
-- archive contains mastered questions only
-- `Practice` and `Interview` source badges can be rendered when source metadata is available
-- interview-originated questions from one session can all appear individually in archive
-- empty state is handled
-- archive metadata can include mastery reason without changing base behavior
+This document should stay focused on frontend-only acceptance detail.
 
 ## Interview History
 - interview session list can be rendered when available
