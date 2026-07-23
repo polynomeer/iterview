@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Iterview Web</title>
+    <script>
+      (() => {
+        const themeStorageKey = "iterview-theme";
+        const defaultTheme = "light";
+        const storedTheme = window.localStorage.getItem(themeStorageKey);
+        const nextTheme =
+          storedTheme === "light" || storedTheme === "dark" || storedTheme === "dracula"
+            ? storedTheme
+            : defaultTheme;
+
+        document.documentElement.dataset.theme = nextTheme;
+        document.documentElement.style.colorScheme = nextTheme === "light" ? "light" : "dark";
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+  </html>

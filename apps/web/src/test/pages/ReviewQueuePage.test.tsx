@@ -1,0 +1,55 @@
+import { screen } from "@testing-library/react";
+import { Route, Routes } from "react-router-dom";
+import { describe, expect, it, vi } from "vitest";
+import { ReviewQueuePage } from "../../pages/review-queue/ReviewQueuePage";
+import { useReviewQueueActionMutation } from "../../features/review-queue/api/useReviewQueueActionMutation";
+import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
+import { mockMatchMedia, renderWithProviders } from "../utils";
+
+vi.mock("../../features/review-queue/api/useReviewQueueQuery", () => ({
+  useReviewQueueQuery: vi.fn(),
+}));
+
+vi.mock("../../features/review-queue/api/useReviewQueueActionMutation", () => ({
+  useReviewQueueActionMutation: vi.fn(),
+}));
+
+describe("ReviewQueuePage", () => {
+  it("renders the queue items and desktop layout", () => {
+    mockMatchMedia(true);
+    vi.mocked(useReviewQueueQuery).mockReturnValue({
+      data: {
+        items: [
+          {
+            id: "queue-1",
+            questionId: "question-9",
+            questionTitle: "Explain how you debugged a latency spike",
+            reasonTypeLabel: "Scheduled review",
+            priorityLabel: "High priority",
+            scheduledLabel: "Today",
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+    vi.mocked(useReviewQueueActionMutation).mockReturnValue({
+      mutateAsync: vi.fn(),
+      isPending: false,
+      error: null,
+    } as never);
+
+    renderWithProviders(
+      <Routes>
+        <Route element={<ReviewQueuePage />} path="/review-queue" />
+      </Routes>,
+      { route: "/review-queue" },
+    );
+
+    expect(screen.getByText("Explain how you debugged a latency spike")).toBeInTheDocument();
+    expect(screen.getByText("Move items forward intentionally")).toBeInTheDocument();
+    expect(document.querySelector(".review-queue-layout--desktop")).not.toBeNull();
+  });
+});

@@ -1,0 +1,47 @@
+import type { ReactNode } from "react";
+type AnswerEditorLayoutProps = {
+  promptSection: ReactNode;
+  editorSection: ReactNode;
+  submitSection: ReactNode;
+  contextSection: ReactNode;
+};
+
+export function AnswerEditorMobileLayout({
+  promptSection,
+  editorSection,
+  submitSection,
+  contextSection,
+}: AnswerEditorLayoutProps) {
+  return (
+    <div className="page-stack">
+      {promptSection}
+      {contextSection}
+      {editorSection}
+      {submitSection}
+    </div>
+  );
+}
+
+export function AnswerEditorDesktopLayout({
+  promptSection,
+  editorSection,
+  submitSection,
+  contextSection,
+}: AnswerEditorLayoutProps) {
+  return (
+    <div className="answer-editor-layout answer-editor-layout--desktop">
+      <aside className="answer-editor-layout__context">
+        <div className="page-stack">
+          {promptSection}
+          {contextSection}
+        </div>
+      </aside>
+      <div className="answer-editor-layout__workspace">
+        <div className="page-stack">
+          {editorSection}
+          <div className="answer-editor-layout__submit-panel">{submitSection}</div>
+        </div>
+      </div>
+    </div>
+  );
+}

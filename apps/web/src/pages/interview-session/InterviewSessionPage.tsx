@@ -1,0 +1,447 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  canAdvanceInterviewSession,
+  getAnsweredQuestionCount,
+  getCurrentInterviewQuestion,
+  getSkippedQuestionCount,
+} from "../../entities/interview/model";
+import { ApiClientError } from "../../shared/api/errors";
+import { useAdvanceInterviewSessionMutation } from "../../features/interview/api/useAdvanceInterviewSessionMutation";
+import { useInterviewSessionCoverageQuery } from "../../features/interview/api/useInterviewSessionCoverageQuery";
+import { useInterviewSessionDetailQuery } from "../../features/interview/api/useInterviewSessionDetailQuery";
+import { useInterviewSessionResumeMapQuery } from "../../features/interview/api/useInterviewSessionResumeMapQuery";
+import { useSkipInterviewSessionQuestionMutation } from "../../features/interview/api/useSkipInterviewSessionQuestionMutation";
+import { useSubmitInterviewSessionAnswerMutation } from "../../features/interview/api/useSubmitInterviewSessionAnswerMutation";
+import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
+import { getActiveResumeVersionId } from "../../entities/resume/model";
+import { getErrorDetails } from "../../shared/api/errors";
+import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
+import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
+import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
+import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
+import { PageContainer } from "../../shared/ui/PageContainer";
+import { AnswerTextEditor } from "../../widgets/answer";
+import {
+  InterviewCoveragePanel,
+  InterviewFacetSummaryPanel,
+  InterviewQuestionTimeline,
+  InterviewResumeEvidenceBlock,
+} from "../../widgets/interview";
+
+export function InterviewSessionPage() {
+  const navigate = useNavigate();
+  const { t } = useLocale();
+  const { sessionId } = useParams<{ sessionId: string }>();
+  const [draft, setDraft] = useState("");
+  const sessionQuery = useInterviewSessionDetailQuery(sessionId);
+  const resumeListQuery = useResumeListQuery();
+  const submitMutation = useSubmitInterviewSessionAnswerMutation();
+  const advanceMutation = useAdvanceInterviewSessionMutation();
+  const skipMutation = useSkipInterviewSessionQuestionMutation();
+  const activeResumeVersionId = getActiveResumeVersionId(resumeListQuery.data);
+  const isFullCoverageSession = sessionQuery.data?.interviewMode === "full_coverage";
+  const coverageQuery = useInterviewSessionCoverageQuery(sessionId, isFullCoverageSession);
+  const resumeMapQuery = useInterviewSessionResumeMapQuery(sessionId, isFullCoverageSession);
+
+  useEffect(() => {
+    if (sessionId && sessionQuery.data?.status === "completed") {
+      navigate(routeConfig.interviewSessionResult.buildPath({ sessionId }));
+    }
+  }, [navigate, sessionId, sessionQuery.data?.status]);
+
+  if (!sessionId) {
+    return (
+      <PageContainer
+        description={t("interview.sessionMissingDescription")}
+        eyebrow={t("interview.pageEyebrow")}
+        title={t("interview.sessionUnavailableTitle")}
+      >
+        <EmptyStateCard
+          action={{
+            label: t("interview.startInterview"),
+            to: routeConfig.interview.buildPath(),
+          }}
+          body={t("interview.sessionMissingBody")}
+          title={t("interview.sessionMissingTitle")}
+        />
+      </PageContainer>
+    );
+  }
+
+  if (sessionQuery.isLoading) {
+    return (
+      <PageContainer
+        description={t("interview.sessionDescription")}
+        eyebrow={t("interview.pageEyebrow")}
+        title={t("interview.sessionWorkspaceTitle")}
+      >
+        <LoadingStateCard body={t("interview.sessionLoadingBody")} title={t("interview.sessionLoadingTitle")} />
+      </PageContainer>
+    );
+  }
+
+  if (sessionQuery.isError) {
+    return (
+      <PageContainer
+        description={t("interview.sessionUnavailableBody")}
+        eyebrow={t("interview.pageEyebrow")}
+        title={t("interview.sessionUnavailableTitle")}
+      >
+        <ErrorStateCard
+          body={sessionQuery.error instanceof Error ? sessionQuery.error.message : t("interview.sessionUnavailableBody")}
+          details={getErrorDetails(sessionQuery.error)}
+          onAction={() => {
+            void sessionQuery.refetch();
+          }}
+          title={t("interview.sessionUnavailableTitle")}
+        />
+      </PageContainer>
+    );
+  }
+
+  const activeSession = sessionQuery.data;
+  const currentQuestion = activeSession ? getCurrentInterviewQuestion(activeSession) : null;
+  const isFullCoverage = activeSession?.interviewMode === "full_coverage";
+
+  if (!activeSession || !currentQuestion) {
+    return (
+      <PageContainer
+        description={t("interview.noCurrentQuestionDescription")}
+        eyebrow={t("interview.noCurrentQuestionEyebrow")}
+        title={t("interview.sessionUnavailableTitle")}
+      >
+        <EmptyStateCard
+          action={{
+            label: t("interview.viewSessionResult"),
+            to: routeConfig.interviewSessionResult.buildPath({ sessionId }),
+          }}
+          body={t("interview.noCurrentQuestionBody")}
+          title={t("interview.noCurrentQuestionTitle")}
+        />
+      </PageContainer>
+    );
+  }
+
+  const currentSessionId = sessionId;
+  const sessionQuestion = currentQuestion;
+  const canAdvance = canAdvanceInterviewSession(activeSession);
+  const isCurrentQuestionActive = currentQuestion.status.toLowerCase() === "current";
+  const isFixedQuestionMode =
+    activeSession.interviewMode === "full_coverage" ||
+    activeSession.interviewMode === "quick_screen" ||
+    activeSession.interviewMode === "mock_30" ||
+    activeSession.interviewMode === "mock_60";
+  const usesFixedQuestionProgress =
+    isFixedQuestionMode &&
+    activeSession.summary.totalQuestions > 0 &&
+    activeSession.summary.totalQuestions >= activeSession.questions.length &&
+    activeSession.summary.totalQuestions >= currentQuestion.orderIndex + 1;
+  const statusRailItems = [
+    {
+      key: "question",
+      label: t("interview.metricQuestion"),
+      value: usesFixedQuestionProgress
+        ? `${currentQuestion.orderIndex + 1}/${activeSession.summary.totalQuestions}`
+        : String(activeSession.questions.length),
+      tone: "accent",
+    },
+    {
+      key: "mode",
+      label: t("interview.metricMode"),
+      value: activeSession.interviewModeLabel,
+      tone: "neutral",
+    },
+    {
+      key: "answered",
+      label: t("interview.metricAnswered"),
+      value: String(getAnsweredQuestionCount(activeSession)),
+      tone: "neutral",
+    },
+    {
+      key: "skipped",
+      label: t("interview.metricSkipped"),
+      value: String(getSkippedQuestionCount(activeSession)),
+      tone: "neutral",
+    },
+    {
+      key: "remaining",
+      label: t("interview.metricRemaining"),
+      value: String(activeSession.summary.remainingQuestions),
+      tone: "neutral",
+    },
+    {
+      key: "difficulty",
+      label: t("interview.metricDifficulty"),
+      value: currentQuestion.difficultyLabel,
+      tone: "neutral",
+    },
+    {
+      key: "status",
+      label: t("interview.metricStatus"),
+      value: currentQuestion.status,
+      tone: isCurrentQuestionActive ? "accent" : "neutral",
+    },
+  ] as const;
+
+  async function handleSubmitAnswer() {
+    if (draft.trim().length === 0) {
+      return;
+    }
+
+    const response = await submitMutation.mutateAsync({
+      sessionId: currentSessionId,
+      payload: {
+        sessionQuestionId: sessionQuestion.id,
+        answerMode: "text",
+        contentText: draft.trim(),
+        resumeVersionId: activeResumeVersionId,
+      },
+    });
+
+    setDraft("");
+
+    if (response.status === "completed") {
+      navigate(routeConfig.interviewSessionResult.buildPath({ sessionId: currentSessionId }));
+      return;
+    }
+
+    await Promise.all([
+      sessionQuery.refetch(),
+      isFullCoverage ? coverageQuery.refetch() : Promise.resolve(),
+      isFullCoverage ? resumeMapQuery.refetch() : Promise.resolve(),
+    ]);
+  }
+
+  async function handleSkipQuestion() {
+    await skipMutation.mutateAsync({
+      sessionId: currentSessionId,
+      payload: {
+        sessionQuestionId: sessionQuestion.id,
+      },
+    });
+
+    setDraft("");
+  }
+
+  async function handleAdvanceQuestion() {
+    if (!canAdvance) {
+      return;
+    }
+
+    try {
+      await advanceMutation.mutateAsync(currentSessionId);
+    } catch (error) {
+      if (error instanceof ApiClientError && error.status === 409) {
+        return;
+      }
+    }
+  }
+
+  function jumpToSessionQuestion(sessionQuestionId: string) {
+    const target = document.getElementById(`session-question-card-${sessionQuestionId}`);
+    target?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+  }
+
+  return (
+    <PageContainer
+      description={t("interview.sessionDescription")}
+      eyebrow={t("interview.pageEyebrow")}
+      title={t("interview.sessionWorkspaceTitle")}
+    >
+      <div className="page-stack interview-session-layout">
+        <div className="interview-session-layout__main">
+          <section className="page-card interview-session-current">
+          <span className="page-card__label">{t("interview.sessionProgress")}</span>
+          <h2 className="page-card__title">{currentQuestion.title}</h2>
+          {currentQuestion.bodyText ? (
+            <p className="page-card__body">{currentQuestion.bodyText}</p>
+          ) : (
+            <p className="page-card__body">{t("interview.currentQuestionFallback")}</p>
+          )}
+          {currentQuestion.resumeContextSummary ? (
+            <p className="resume-section__helper">{currentQuestion.resumeContextSummary}</p>
+          ) : null}
+          {currentQuestion.revisitLabel ? (
+            <p className="resume-section__helper interview-question-revisit-note">
+              {currentQuestion.revisitLabel}
+            </p>
+          ) : null}
+          <p className="resume-section__helper">{t("interview.mixedLanguageNote")}</p>
+          <InterviewResumeEvidenceBlock
+            items={currentQuestion.resumeEvidence}
+            localeLabel={
+              currentQuestion.contentLocale
+                ? currentQuestion.contentLocale === "ko"
+                  ? t("common.generatedInKorean")
+                  : t("common.generatedInEnglish")
+                : null
+            }
+          />
+          {currentQuestion.focusSkillNames.length > 0 ? (
+            <div className="chip-list">
+              {currentQuestion.focusSkillNames.map((skill) => (
+                <span className="detail-chip detail-chip--accent" key={skill}>
+                  {skill}
+                </span>
+              ))}
+            </div>
+          ) : null}
+          <div className="interview-session-current__rail">
+            <div className="interview-session-current__rail-items">
+              {statusRailItems.map((item) => (
+                <span
+                  className={`interview-session-current__rail-item ${
+                    item.tone === "accent"
+                      ? "interview-session-current__rail-item--accent"
+                      : ""
+                  }`}
+                  key={item.key}
+                >
+                  <span className="interview-session-current__rail-label">{item.label}</span>
+                  <strong className="interview-session-current__rail-value">{item.value}</strong>
+                </span>
+              ))}
+            </div>
+            {currentQuestion.questionId ? (
+              <Link
+                className="secondary-button interview-session-current__rail-link"
+                to={routeConfig.questionDetail.buildPath({ questionId: currentQuestion.questionId })}
+              >
+                Open related question
+              </Link>
+            ) : null}
+          </div>
+          </section>
+          <div className="interview-session-layout__answer-stack">
+            <AnswerTextEditor
+              disabled={submitMutation.isPending || advanceMutation.isPending || skipMutation.isPending}
+              onChange={setDraft}
+              value={draft}
+            />
+            <section className="page-card">
+              <span className="page-card__label">Session controls</span>
+              <h2 className="page-card__title">Submit and advance through the session</h2>
+              {submitMutation.isError ? (
+                <p className="page-card__body">
+                  {submitMutation.error instanceof Error ? submitMutation.error.message : "Answer submission failed."}
+                </p>
+              ) : null}
+              {advanceMutation.isError ? (
+                <p className="page-card__body">
+                  {advanceMutation.error instanceof ApiClientError && advanceMutation.error.status === 409
+                    ? "Answer or skip the current question before moving on."
+                    : advanceMutation.error instanceof Error
+                      ? advanceMutation.error.message
+                      : "Advancing to the next question failed."}
+                </p>
+              ) : null}
+              {skipMutation.isError ? (
+                <p className="page-card__body">
+                  {skipMutation.error instanceof Error ? skipMutation.error.message : "Skipping the current question failed."}
+                </p>
+              ) : null}
+              {!canAdvance && isCurrentQuestionActive ? (
+                <p className="resume-section__helper">
+                  Answer or skip the current question before moving on.
+                </p>
+              ) : null}
+              <div className="page-card__actions">
+                <button
+                  className="primary-button"
+                  disabled={draft.trim().length === 0 || submitMutation.isPending || skipMutation.isPending}
+                  onClick={() => {
+                    void handleSubmitAnswer();
+                  }}
+                  type="button"
+                >
+                  {t("interview.submitAnswer")}
+                </button>
+                <button
+                  className="secondary-button"
+                  disabled={skipMutation.isPending || submitMutation.isPending || !isCurrentQuestionActive}
+                  onClick={() => {
+                    void handleSkipQuestion();
+                  }}
+                  type="button"
+                >
+                  Skip question
+                </button>
+                {activeSession.summary.remainingQuestions > 0 ? (
+                  <button
+                    className="secondary-button"
+                    disabled={advanceMutation.isPending || skipMutation.isPending || !canAdvance}
+                    onClick={() => {
+                      void handleAdvanceQuestion();
+                    }}
+                    type="button"
+                  >
+                    {t("interview.nextQuestion")}
+                  </button>
+                ) : (
+                  <Link
+                    className="primary-button"
+                    to={routeConfig.interviewSessionResult.buildPath({ sessionId })}
+                  >
+                    {t("interview.finishSession")}
+                  </Link>
+                )}
+                <Link className="secondary-button" to={routeConfig.interview.buildPath()}>
+                  {t("interview.exitSession")}
+                </Link>
+              </div>
+            </section>
+          </div>
+        </div>
+        <InterviewQuestionTimeline
+          currentQuestionId={currentQuestion.id}
+          items={activeSession.questions}
+        />
+        {isFullCoverage ? (
+          <div className="interview-facet-panels">
+            <InterviewFacetSummaryPanel
+              emptyMessage="No weak facets are currently flagged in this session."
+              eyebrow="Weak facets"
+              helperText="These resume-backed points need stronger defense before the session moves on."
+              items={activeSession.summary.weakFacetSummaries}
+              title="Needs more defense"
+              tone="warning"
+            />
+            <InterviewFacetSummaryPanel
+              emptyMessage="No skipped facets are currently tracked in this session."
+              eyebrow="Skipped facets"
+              helperText="These areas were skipped or left incomplete and may return as recovery prompts."
+              items={activeSession.summary.skippedFacetSummaries}
+              title="Skipped recovery"
+              tone="accent"
+            />
+          </div>
+        ) : null}
+        {isFullCoverage ? (
+          coverageQuery.isLoading || resumeMapQuery.isLoading ? (
+            <LoadingStateCard
+              body="Loading resume coverage progress and the planner-driven evidence map."
+              title="Preparing coverage panel"
+            />
+          ) : coverageQuery.isError || resumeMapQuery.isError ? (
+            <ErrorStateCard
+              body="The coverage panel could not be loaded for this full coverage session."
+              details={getErrorDetails(coverageQuery.error ?? resumeMapQuery.error)}
+              onAction={() => {
+                void Promise.all([coverageQuery.refetch(), resumeMapQuery.refetch()]);
+              }}
+              title="Unable to load coverage details"
+            />
+          ) : (
+            <InterviewCoveragePanel
+              coverage={coverageQuery.data ?? null}
+              onJumpToQuestion={jumpToSessionQuestion}
+              resumeMap={resumeMapQuery.data ?? null}
+            />
+          )
+        ) : null}
+      </div>
+    </PageContainer>
+  );
+}
