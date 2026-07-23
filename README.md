@@ -46,6 +46,15 @@ npm install
 npm run dev
 ```
 
+Root helpers:
+
+```bash
+./scripts/dev_api.sh
+./scripts/dev_web.sh
+./scripts/build_all.sh
+./scripts/test_all.sh
+```
+
 ## Verification
 
 Backend:
