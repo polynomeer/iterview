@@ -13,7 +13,9 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <article className={`metric-card metric-card--${tone}`}>
-      <p className="metric-card__label">{label}</p>
+      <div className="metric-card__header">
+        <p className="metric-card__label">{label}</p>
+      </div>
       <strong className="metric-card__value">{value}</strong>
       {helperText ? <p className="metric-card__helper">{helperText}</p> : null}
     </article>

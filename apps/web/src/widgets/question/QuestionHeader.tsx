@@ -14,9 +14,10 @@ export function QuestionHeader({ question }: QuestionHeaderProps) {
     <section className="question-hero">
       <span className="page-card__label">{t("question.interviewQuestion")}</span>
       <h2 className="question-hero__title">{question.title}</h2>
-      <p className="question-hero__meta">
-        {question.category} · {question.difficulty}
-      </p>
+      <div className="question-hero__meta" role="list">
+        <span className="question-hero__meta-pill" role="listitem">{question.category}</span>
+        <span className="question-hero__meta-pill" role="listitem">{question.difficulty}</span>
+      </div>
       <p className="question-hero__body">{question.body}</p>
       <div className="page-card__actions">
         <Link

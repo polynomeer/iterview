@@ -10,11 +10,11 @@ export function FeedQuestionCard({ item }: FeedQuestionCardProps) {
   return (
     <article className="list-item-card">
       <div className="list-item-card__content">
-        <div className="list-item-card__meta">
-          <span>{item.categoryLabel}</span>
-          <span>{item.difficultyLabel}</span>
+        <div className="list-item-card__meta" role="list">
+          <span className="list-item-card__meta-pill" role="listitem">{item.categoryLabel}</span>
+          <span className="list-item-card__meta-pill" role="listitem">{item.difficultyLabel}</span>
           {item.companyLabels.map((company) => (
-            <span key={company}>{company}</span>
+            <span className="list-item-card__meta-pill" key={company} role="listitem">{company}</span>
           ))}
         </div>
         <h3 className="list-item-card__title">{item.title}</h3>

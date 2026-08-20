@@ -9,6 +9,7 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
   return (
     <section className="result-score-card">
       <span className="page-card__label">Overall score</span>
+      <p className="result-score-card__kicker">Interview evaluation</p>
       <div className="result-score-card__value">
         <ScoreBadge
           label="Score"

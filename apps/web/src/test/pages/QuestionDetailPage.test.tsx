@@ -164,7 +164,7 @@ describe("QuestionDetailPage", () => {
     );
 
     expect(screen.getByText("Walk through a difficult migration")).toBeInTheDocument();
-    expect(screen.getByText("Behavioral")).toBeInTheDocument();
+    expect(screen.getAllByText("Behavioral")).toHaveLength(2);
     expect(screen.getByText("migration")).toBeInTheDocument();
     expect(screen.getByText("Airbnb")).toBeInTheDocument();
     expect(screen.getByText("Migration notes")).toBeInTheDocument();

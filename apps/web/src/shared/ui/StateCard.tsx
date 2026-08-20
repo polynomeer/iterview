@@ -34,9 +34,15 @@ export function StateCard({
   action,
 }: StateCardProps) {
   const actionClassName = action?.variant === "secondary" ? "secondary-button" : "primary-button";
+  const semanticRole = tone === "error" ? "alert" : "status";
+  const liveMode = tone === "error" ? "assertive" : "polite";
 
   return (
-    <section className={`page-card state-card state-card--${tone} state-card--${size}`}>
+    <section
+      aria-live={liveMode}
+      className={`page-card state-card state-card--${tone} state-card--${size}`}
+      role={semanticRole}
+    >
       <span className="page-card__label">{label}</span>
       <h2 className="page-card__title">{title}</h2>
       <p className="page-card__body">{body}</p>

@@ -407,15 +407,23 @@ button {
 .metric-card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   padding: 16px;
   border: 1px solid var(--border-soft);
   border-radius: 20px;
   background: var(--surface-soft);
 }
 
+.metric-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .metric-card--accent {
   background: var(--surface-accent-soft);
+  border-color: var(--border-info);
 }
 
 .metric-card--muted {
@@ -434,11 +442,14 @@ button {
 .metric-card__value {
   font-size: 1.6rem;
   line-height: 1.1;
+  letter-spacing: -0.04em;
 }
 
 .metric-card__helper {
   margin: 0;
   color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 .question-status-badge {
@@ -512,6 +523,7 @@ button {
   color: var(--chip-text);
   line-height: 1.25;
   font-weight: 600;
+  border: 1px solid var(--border-soft);
 }
 
 .interview-session-history__grid {
@@ -1454,6 +1466,7 @@ button {
   margin: 8px 0 0;
   padding-left: 18px;
   color: var(--text-muted);
+  line-height: 1.6;
 }
 
 .feedback-notice__details li + li,
@@ -1566,8 +1579,23 @@ button {
 }
 
 .question-hero__meta {
-  margin: 0 0 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.question-hero__meta-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--hero-meta);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .question-hero__body {
@@ -1614,6 +1642,12 @@ button {
   font-size: 3rem;
   font-weight: 800;
   line-height: 1;
+}
+
+.result-score-card__kicker {
+  margin: 14px 0 0;
+  color: var(--result-hero-subtitle);
+  font-size: 0.9rem;
 }
 
 .result-score-card__title {
@@ -1749,6 +1783,7 @@ button {
   color: var(--accent-strong);
   font-size: 0.86rem;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 .archive-list-item__score {
@@ -2106,23 +2141,27 @@ button {
   text-transform: capitalize;
 }
 
+.list-item-card__meta-pill,
 .question-source-meta span {
   display: inline-flex;
   align-items: center;
   min-height: 28px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: var(--surface-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-soft);
 }
 
 .list-item-card__title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.04rem;
+  line-height: 1.35;
 }
 
 .list-item-card__body {
   margin: 0;
   color: var(--text-muted);
+  line-height: 1.6;
 }
 
 .list-item-card__body--danger {
@@ -2137,6 +2176,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin-top: 2px;
 }
 
 .list-item-card__helper {

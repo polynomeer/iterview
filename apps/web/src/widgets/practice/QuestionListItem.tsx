@@ -11,10 +11,10 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
   return (
     <article className="list-item-card">
       <div className="list-item-card__content">
-        <div className="list-item-card__meta">
-          <span>{item.categoryLabel}</span>
-          <span>{item.companyLabel}</span>
-          <span>{item.difficultyLabel}</span>
+        <div className="list-item-card__meta" role="list">
+          <span className="list-item-card__meta-pill" role="listitem">{item.categoryLabel}</span>
+          <span className="list-item-card__meta-pill" role="listitem">{item.companyLabel}</span>
+          <span className="list-item-card__meta-pill" role="listitem">{item.difficultyLabel}</span>
           {item.statusLabel ? <QuestionStatusBadge status={item.statusLabel.toLowerCase()} /> : null}
         </div>
         <h3 className="list-item-card__title">{item.title}</h3>
@@ -25,7 +25,7 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
         {item.resumeRelevanceLabel ? (
           <p className="practice-list-item__progress">
             Resume relevance: {item.resumeRelevanceLabel}
-            {item.resumeRelevanceReason ? ` · ${item.resumeRelevanceReason}` : ""}
+            {item.resumeRelevanceReason ? ` / ${item.resumeRelevanceReason}` : ""}
           </p>
         ) : null}
         {(item.relatedSkillLabels ?? []).length > 0 ? (

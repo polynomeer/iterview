@@ -26,9 +26,9 @@ export function InsightCard({
       <h2 className="page-card__title">{title}</h2>
       <p className="page-card__body">{body}</p>
       {meta.length > 0 ? (
-        <div className="insight-card__meta">
+        <div className="insight-card__meta" role="list">
           {meta.map((item) => (
-            <span key={item} className="insight-card__chip">
+            <span key={item} className="insight-card__chip" role="listitem">
               {item}
             </span>
           ))}
