@@ -1,81 +1,153 @@
 # 01-product-overview
 
-Shared product direction now lives in:
+This document explains the product from the frontend's point of view.
 
-- `../../../docs/01-product-foundation.md`
+The shared cross-app product direction lives in root [`../../../docs/01-product-foundation.md`](../../../docs/01-product-foundation.md). This file narrows the focus to one question:
 
-This directory should keep frontend-specific product detail only.
+How should the web application present the `iterview` learning loop so that users always understand their next action, their weak points, and their progress?
 
-Frontend-specific follow-up documents:
+## Frontend View Of The Product
 
-- `02-frontend-architecture.md`
-- `03-routes-and-flows.md`
-- `04-api-integration.md`
-- `05-implementation-plan.md`
-- `06-acceptance-criteria.md`
+From the frontend perspective, `iterview` is a guided resume-defense workspace.
 
-### 4. Knowledge Depth
-- represent follow-up questions as a tree or graph rooted in a primary question
-- expose model answers separately from user answer history
-- expose related learning materials as study support, not as part of the user's score
-- help users see what they answered, what they skipped, and where depth is missing
-- preserve the existing question detail screen as the main entry point
+The UI should make the user journey feel coherent:
 
-### 5. Review and Improvement
-- use answer scores, weak dimensions, confidence, and staleness to form a review queue
-- show how a retry answer improved over prior attempts
-- keep archive question-level even when the question came from an interview session
-- show `Practice` and `Interview` source badges in archive when source metadata is available
+```text
+home
+-> resume source-of-truth review
+-> question tree exploration
+-> DFS answer simulation
+-> feedback review
+-> next weak branch or resume follow-up
+```
 
-### 6. Interview History
-- let users start a mock interview from the Interview tab by selecting a specific resume version
-- use the selected resume version as the grounding context for the first AI interview question
-- support interview modes such as quick screen, 30-minute mock, 60-minute mock, free interview, and `full_coverage`
-- store and render one history card per mock interview session
-- let users open a session detail view to review the full question and follow-up flow
-- generate follow-up questions from the user's answer and project/experience evidence in the selected resume context during the same session
-- when available, show a compact `Based on your resume` snippet on the question card so users can see which project or experience evidence triggered the question
-- in `full_coverage`, aim to cover all currently interviewable project and experience evidence units rather than every parsed resume section
-- after completion, show a resume viewer where hovering one resume sentence or structured evidence item reveals related questions and clicking it jumps back to the linked question card
-- keep session history distinct from archive so archive remains question-level
-- keep every asked interview question and follow-up visible as question-level archive entries with `Interview` source treatment
+Every major screen should reinforce that loop rather than compete with it.
 
-### 7. Practical Interview Replay
-- allow users to upload one real interview recording and process it into reusable learning assets
-- keep raw transcript, cleaned transcript, and confirmed transcript as separate review layers
-- expose structured question, answer, and follow-up relationships from the imported interview
-- derive interviewer-style traits and use them to start a replay-oriented simulation later
-- keep imported real-interview questions discoverable as question-level study assets instead of burying them inside one long transcript screen
-- let replay simulation reuse the existing interview-session UI while anchoring question strategy in one imported real interview record
+## Current Frontend Scope
 
-### 7. Bilingual Experience
-- support `ko` and `en` product modes for the surrounding UI
-- keep uploaded resumes, answer text, and other user-authored source content in the original language
-- allow AI-generated interview questions, follow-ups, and analysis text to follow the selected system language
-- support mixed-language screens where UI and generated text are localized but resume evidence or answers remain in the original language
+The current application already includes route areas for:
+- home and daily guidance
+- practice list and question detail
+- answer editor and result analysis
+- review queue and archive
+- feed and profile settings
+- resume management
+- resume analysis, resume heatmap, and resume tailoring flows
+- skills dashboard
+- mock interview, interview session, and interview result screens
+- practical interview list and review flows
+- login and signup
+
+## Product Principles The Frontend Must Preserve
+
+### 1. Home Must Answer "What Should I Do Next?"
+
+- the first screen should surface today's most valuable action
+- review work, weak areas, and interview preparation should feel prioritized rather than scattered
+- analytics should support action, not become the product's main burden
+
+### 2. Question Detail Must Be The Main Learning Surface
+
+- question detail should remain the core place to understand what the user is practicing
+- depth features such as follow-up trees, DFS traversal state, or study materials should extend that screen, not replace it
+- users should always be able to move clearly from a question to writing or reviewing an answer
+
+### 3. Result Analysis Must Explain Improvement
+
+- result screens should show what was strong, what was weak, and what to do next
+- retry recommendations should feel justified
+- when skill or resume context is added, it should clarify the feedback rather than overload the page
+
+### 4. Resume Context Should Stay Visible
+
+- resume versions are not just files; they are learning context for practice and interview flows
+- the user should be able to inspect the source of truth behind a resume claim before or after answering
+- resume analysis and interview surfaces should help users understand which resume evidence they can or cannot defend yet
+- resume-linked insights should stay explainable in the UI
+
+### 5. Interview Flows Must Stay Connected To The Core Loop
+
+- interview sessions are an extension of the same practice system
+- interview history should remain separate from archive
+- question-level learning assets from interview sessions should still feed later practice and review
+
+### 6. New Features Should Be Additive
+
+- preserve working route structures
+- tolerate additive backend fields and endpoints
+- avoid forcing a redesign of stable flows when a new capability can fit into existing pages
+
+## Frontend Product Extensions In Scope
+
+### Knowledge Depth
+
+- follow-up question trees rooted in one primary question
+- DFS-style traversal that lets the user keep drilling until a branch reaches leaf-level detail
+- model answers and learning materials presented as study support
+- visibility into what was answered, skipped, or still shallow
+
+### Resume Source Of Truth
+
+- detailed claim, metric, decision, and evidence capture for resume content
+- fast navigation from a resume claim to the interview questions it should trigger
+- explicit visibility into which parts of the resume are still under-specified
+
+### Review And Improvement
+
+- review queue prioritization based on score, weakness, and staleness
+- retry comparisons that show whether an answer actually improved
+- archive views that distinguish `Practice` and `Interview` sources where available
+
+### Interview History
+
+- interview start flow grounded in an explicit resume version
+- interview modes such as quick screen, 30-minute mock, 60-minute mock, free interview, and `full_coverage`
+- session detail review with question and follow-up traceability
+- post-session resume coverage views that connect resume evidence back to interview turns
+
+### Practical Interview Replay
+
+- upload and inspect one real interview recording
+- review raw, cleaned, and confirmed transcript layers separately
+- browse structured questions, answers, and follow-up relations extracted from that interview
+- seed replay-oriented simulation from the imported interview style
+
+### Bilingual Experience
+
+- Korean and English UI support
+- mixed-language screens where the interface is localized but user-authored content remains original
+- AI-generated guidance and analysis that follow the selected system language
 
 ## MVP Frontend Responsibilities
-- render the existing learning loop clearly on mobile-first layouts
+
+- render the learning loop clearly on mobile-first screens
 - keep route-level logic in `pages`
-- keep server state in React Query and API contracts in `shared/api` and `shared/types`
-- support typed, backward-compatible REST responses
-- tolerate additive response fields for radar, gaps, question tree, and review insights
-- preserve loading, empty, error, and auth-required states on main screens
+- keep server state in React Query
+- keep contracts typed through `shared/api` and `shared/types`
+- preserve loading, empty, error, and auth-required states on major routes
+- remain backward-compatible with additive API responses
 
 ## Integration Principles
+
 - do not remove working features that already map to the current codebase
-- extend existing endpoints before introducing new top-level resources
-- prefer optional additive fields in responses so older clients keep working
-- keep terminology aligned with the frontend today:
+- extend existing endpoints before introducing unrelated new top-level concepts
+- prefer optional additive response fields so older clients can continue working
+- keep current terminology stable:
   - `review queue` for retry work
   - `result analysis` for answer evaluation
   - `archive` for mastered questions
   - `resume version` for the active interview context
 
-## Out of Scope
-- lounge and discussion flows
+## Out Of Scope Unless Requested
+
+- lounge or social discussion flows
 - public answer comparison
 - GitHub sync UI
-- admin screens
+- admin tooling
 
-Mock interview and company-style interview mode should now be treated as additive extensions of the same resume -> question -> answer -> review loop, with interview history separated from archive and Interview-tab start flow grounded in an explicit resume selection.
+## Where To Read Next
+
+- architecture: [`02-frontend-architecture.md`](02-frontend-architecture.md)
+- routes and flows: [`03-routes-and-flows.md`](03-routes-and-flows.md)
+- API integration: [`04-api-integration.md`](04-api-integration.md)
+- docs index: [`README.md`](README.md)

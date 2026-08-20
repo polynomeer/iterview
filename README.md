@@ -1,53 +1,123 @@
 # iterview
 
-Interview training platform monorepo root.
+`iterview` is an interview training platform monorepo built to do two things well:
+- turn one resume into a deep interview question tree and walk it to the leaves
+- build a detailed source of truth for every resume claim before the real interview
 
-## Layout
+This repository is designed to make sense to two audiences quickly:
+- developers who want to run, extend, or review the product
+- hiring managers or collaborators who want to understand what the product solves and how it is structured
+
+## What The Product Does
+
+At its core, `iterview` treats interview preparation as a resume-defense system.
+
+The product starts from one resume version, expands it into a question tree, and helps the user practice every branch until they can defend the underlying evidence at atomic detail.
+
+```text
+resume version
+-> resume source of truth
+-> root interview question
+-> follow-up and tail-question expansion
+-> DFS traversal across the full question tree
+-> answer simulation and feedback
+-> coverage gaps and resume-defense review
+```
+
+The current product direction expands that foundation with:
+- resume upload and immutable version history
+- structured resume source-of-truth authoring and analysis
+- question trees and follow-up exploration grounded in one resume
+- answer simulation, scoring, and review loops for each node in the tree
+- interview-session flows grounded in a selected resume version
+- bilingual product support for Korean and English
+
+## Repository Map
 
 ```text
 iterview/
   apps/
-    api/    # Spring Boot backend
-    web/    # React/Vite frontend
-  docs/
-  scripts/
-  AGENTS.md
+    api/     Kotlin + Spring Boot backend
+    web/     React + Vite frontend
+  docs/      cross-app product and monorepo documents
+  scripts/   cross-app developer helpers
 ```
 
-## Current State
+Start here if you are new:
+- repository and workflow overview: [`docs/README.md`](docs/README.md)
+- shared product direction: [`docs/01-product-foundation.md`](docs/01-product-foundation.md)
+- monorepo conventions: [`docs/monorepo-conventions.md`](docs/monorepo-conventions.md)
+- backend app guide: [`apps/api/README.md`](apps/api/README.md)
+- frontend app guide: [`apps/web/README.md`](apps/web/README.md)
 
-This repository is the monorepo root for:
-- `apps/api`
-- `apps/web`
+## Current Capabilities
 
-The existing backend and frontend have been imported as peer apps.
-The root-level onboarding, verification, and CI flow are in place.
+The monorepo already contains working backend and frontend applications for:
+- sign up, login, and current-user bootstrap
+- profile and target-company settings
+- resume upload, version activation, and resume-centered workflows
+- question catalog, question detail, question trees, and follow-up exploration
+- answer submission, scoring, and result analysis
+- review queue, archive, daily card, and feed
+- skill intelligence views
+- mock interview and practical interview surfaces
+- resume tailoring and analysis-related flows
 
-## Principles
+## Tech Stack
 
-- keep backend and frontend as peer apps under `apps/`
-- move shared documentation and developer scripts to the root only when they are truly cross-app
-- preserve each app's own build system
-- avoid mixing Gradle and Node concerns at the root unless there is a strong operational reason
+### Backend
+- Kotlin
+- Spring Boot
+- Spring Data JPA
+- Flyway
+- PostgreSQL
+- OpenAPI / Swagger
 
-## Local Development
+### Frontend
+- React 19
+- TypeScript
+- Vite
+- React Router
+- TanStack Query
+- Vitest + Testing Library
 
-Backend:
+## Quick Start
+
+### 1. Clone and install
+
+```bash
+git clone <your-fork-or-origin>
+cd iterview
+./scripts/setup_all.sh
+```
+
+### 2. Start the backend
 
 ```bash
 cd apps/api
+docker compose up -d postgres
 ./gradlew bootRun
 ```
 
-Frontend:
+### 3. Start the frontend
+
+In a second terminal:
 
 ```bash
 cd apps/web
-npm install
 npm run dev
 ```
 
-Root helpers:
+Default local URLs:
+- frontend: Vite local dev URL printed in the terminal, usually `http://localhost:5173`
+- backend API: `http://localhost:8080`
+- backend Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+## Cross-App Scripts
+
+The root `scripts/` directory exists only for workflows that span both apps.
+
+Common commands:
 
 ```bash
 ./scripts/setup_all.sh
@@ -59,36 +129,53 @@ Root helpers:
 ./scripts/verify_all.sh
 ```
 
-## Verification
+More detail: [`scripts/README.md`](scripts/README.md)
 
-Backend:
+## App-Level Documentation
 
-```bash
-cd apps/api
-./gradlew build
-```
+### Backend
+- app guide: [`apps/api/README.md`](apps/api/README.md)
+- backend docs index: [`apps/api/docs/README.md`](apps/api/docs/README.md)
+- backend architecture: [`apps/api/docs/02-backend-architecture.md`](apps/api/docs/02-backend-architecture.md)
+- API contracts: [`apps/api/docs/04-api-contracts.md`](apps/api/docs/04-api-contracts.md)
 
-Frontend:
+### Frontend
+- app guide: [`apps/web/README.md`](apps/web/README.md)
+- frontend docs index: [`apps/web/docs/README.md`](apps/web/docs/README.md)
+- frontend architecture: [`apps/web/docs/02-frontend-architecture.md`](apps/web/docs/02-frontend-architecture.md)
+- API integration notes: [`apps/web/docs/04-api-integration.md`](apps/web/docs/04-api-integration.md)
 
-```bash
-cd apps/web
-npm run build
-```
+## How To Read This Repository
 
-Monorepo CI:
+If you are evaluating the product:
+- read this `README`
+- read [`docs/01-product-foundation.md`](docs/01-product-foundation.md)
+- skim the backend and frontend app guides
 
-- root workflow: `.github/workflows/ci.yml`
-- verifies:
-  - root setup script in CI mode
-  - `apps/api` build
-  - `apps/web` test and build
+If you are onboarding as a developer:
+- run the quick start steps
+- use the app-level `README`s as your operational source of truth
+- use the app-specific `docs/` folders for deeper architecture and planning context
 
-## Monorepo Status
+If you are working on monorepo-wide changes:
+- keep cross-app policy in root `docs/`
+- keep runtime and implementation detail inside the owning app
 
-- current status and open operational risks: `docs/monorepo-status.md`
-- root CI is unified in `.github/workflows/ci.yml`
-- app-specific implementation notes stay in each app's `docs/`
+## Current Status
 
-## Monorepo Notes
+This repository is already organized as a two-app monorepo with shared documentation and shared verification scripts at the root.
 
-- monorepo ownership and cleanup rules: `docs/monorepo-conventions.md`
+Operational status and known risks are tracked in:
+- [`docs/monorepo-status.md`](docs/monorepo-status.md)
+
+## Contribution Expectations
+
+Repository rules are intentionally simple:
+- keep backend and frontend as peer apps under `apps/`
+- preserve app-specific build systems
+- move files to the root only when they are truly shared
+- keep API contracts and frontend integration docs aligned
+
+The authoritative repository guidance lives in:
+- [`AGENTS.md`](AGENTS.md)
+- [`docs/monorepo-conventions.md`](docs/monorepo-conventions.md)

@@ -1,44 +1,135 @@
 # 01-product-overview
 
-Shared product direction now lives in:
+This document explains the product from the backend's point of view.
 
-- `../../../docs/01-product-foundation.md`
+The shared cross-app product direction lives in root [`../../../docs/01-product-foundation.md`](../../../docs/01-product-foundation.md). This file should answer a narrower question:
 
-This directory should keep backend-specific product detail only.
+How should backend services and data models support the `iterview` learning loop without breaking the current platform shape?
 
-Backend-specific follow-up documents:
+## Backend View Of The Product
 
-- `02-backend-architecture.md`
-- `03-db-schema.md`
-- `04-api-contracts.md`
-- `05-implementation-plan.md`
-- `06-acceptance-criteria.md`
-- keep scoring centralized in one service
-- enrich analysis output so weak patterns, follow-up readiness, and skill gaps can be derived from answer history
-- preserve current retry scheduling and archive semantics
+From the backend perspective, `iterview` is a persistence and orchestration layer for a repeatable resume-defense system.
 
-### 5. Skill and Readiness Insights
-- calculate skill-category performance from answer history
-- compare user progress against role and career-stage benchmarks
-- feed those insights back into home recommendations, review queue prioritization, and resume defense preparation
+The core loop is:
 
-### 6. Bilingual Product Experience
-- support `ko` and `en` as the initial product languages
-- preserve all user-authored and user-uploaded source data in its original form without translated persistence
-- localize UI labels, system messages, and static/reference data by the selected language
-- generate AI-created interview questions, follow-ups, and analysis text in the selected system language
-- allow mixed-language screens where original resume or answer text remains in the source language while the product UI is rendered in another language
+```text
+user profile + active resume version
+-> source-of-truth records for resume claims
+-> root question selection
+-> follow-up expansion and DFS traversal
+-> answer submission
+-> score + feedback persistence
+-> branch coverage, retry scheduling, or archive decision
+-> home and review surfaces reflect the updated state
+```
 
-### 7. Practical Interview Replay
-- accept real interview audio uploads and keep the raw asset, transcript, cleaned transcript, and user-confirmed transcript separately
-- segment one real interview into speaker-tagged timeline units, structured questions, structured answers, and follow-up edges
-- derive interviewer-style metadata such as pressure level, preferred topics, depth preference, and follow-up habits from the imported interview
-- let one imported interview become a reusable simulation source without collapsing it into the same table as ordinary practice answers
-- support replay-oriented interview sessions that reuse the existing interactive interview flow while grounding question strategy in one imported real interview record
-- preserve imported real-interview questions as archive-visible question-level assets so they can feed later practice, review, and replay flows
+That loop must remain the stable center of the system even as the product adds richer resume intelligence, interview simulations, skill insights, and replay-based analysis.
 
-## Current Scope vs Extension Scope
+## Current Backend Scope
+
+The implemented and actively owned backend scope includes:
+- authentication and current-user bootstrap
+- user profile, preferences, and target-company settings
+- resume container and immutable resume-version lifecycle
+- resume file intake and parsed resume workflows
+- question catalog and question detail APIs
+- answer submission, answer history, score persistence, and feedback persistence
+- review queue, archive, daily card, and feed APIs
+- interview-session APIs and practical interview processing support
+- skill-related APIs and resume-tailoring related backend surfaces
+
+## Product Principles The Backend Must Preserve
+
+### 1. Resume Context Is Foundational
+
+- a user's active resume version is part of the learning context, not just an uploaded file
+- resume intelligence should remain attributable to one specific resume version
+- richer analysis features should extend current resume records instead of inventing a disconnected parallel model
+
+### 2. Resume Source Of Truth Must Be Persisted
+
+- the backend should support detailed records for claims, evidence, metrics, and clarifications tied to resume content
+- source-of-truth artifacts should be traceable to a resume version and, where appropriate, a finer-grained resume entity
+- later interview questions and evaluations should be able to point back to the source-of-truth context they rely on
+
+### 3. DFS Question Traversal Must Be Representable
+
+- follow-up questions should be modelable as a graph or tree rooted in one primary prompt
+- traversal state should make it possible to know which nodes were visited, answered, skipped, or still unresolved
+- the system should support drilling to leaf-level clarifications rather than flattening every question into one list
+
+### 4. Answer History Is Evidence, Not A Cache
+
+- answer attempts are immutable historical records
+- scores and feedback should remain traceable to a specific attempt
+- later analytics should derive from answer history rather than overwrite it
+
+### 5. Review State Must Be Durable
+
+- retry scheduling should be persisted
+- archive decisions should be explicit
+- review status should not be reconstructed ad hoc from raw answer data on every read
+
+### 6. Home Should Stay Action-Oriented
+
+- daily-card and home endpoints should keep answering "what should I do next?"
+- new intelligence features should feed that experience instead of replacing it with generic analytics
+
+### 7. New Features Should Be Additive
+
+- prefer new tables, nullable columns, or additive response fields over breaking changes
+- reuse current aggregates where possible
+- keep existing frontend flows working while new surfaces are introduced
+
+## Backend Product Extensions In Scope
+
+The current repository direction already points toward these additive extensions.
+
+### Resume Intelligence
+
+- structured extraction from parsed resume content
+- richer project, experience, and credential records
+- confidence and traceability for extracted resume signals
+- resume-risk and resume-strength summaries
+- source-of-truth records for claims, metrics, trade-offs, and evidence
+
+### Skill And Readiness Signals
+
+- skill-category aggregation from answer history
+- readiness and benchmark-style summaries
+- home and review prioritization that can incorporate skill gaps
+
+### Question Depth
+
+- follow-up question trees
+- traversal state for DFS-oriented interview practice
+- learning materials and model-answer style reference content
+- stronger relationships between a root question and related practice depth
+
+### Interview Workflows
+
+- resume-grounded mock interview sessions
+- session history and result review
+- coverage-oriented interview modes
+- question-level linkage from interview turns back into archive and study flows
+
+### Practical Interview Replay
+
+- uploaded real interview recordings
+- transcript, cleaned transcript, and user-confirmed transcript kept as separate assets
+- structured extraction of questions, answers, and follow-up relationships from real interviews
+- interviewer-style metadata that can seed later replay simulations
+
+### Bilingual Product Support
+
+- Korean and English as system languages
+- user-authored content preserved in its original language
+- generated text and localized labels aligned with the effective locale
+
+## Current Scope Vs Planned Extension Scope
+
 ### Implemented Today
+
 - authentication and current-user profile APIs
 - resume list, create, version upload, and activation APIs
 - question list and detail APIs
@@ -47,61 +138,40 @@ Backend-specific follow-up documents:
 - scoring, retry scheduling, and archive decisions
 
 ### Planned Additive Extensions
-- LLM-backed structured extraction from parsed resume raw text
-- extraction confidence, traceability, and failure visibility for resume signal mapping
-- richer resume extraction snapshots for skills, experiences, and resume risks
-- saved job-posting parsing and resume-to-JD analysis runs
-- persisted resume rewrite suggestions and acceptance state for one analysis run
-- richer structured resume sections for profile, contacts, education, awards, certifications, and project-level achievements
-- richer project records extracted from resume PDFs, including title, content, tags, and category classification
-- question relationship modeling for follow-up trees
-- interview-session history, interview question snapshots, and archive source metadata
-- interview modes, resume-evidence coverage planning, and resume-question map results
-- practical interview replay records, transcript editing, interviewer-profile extraction, and replay-simulation seeds
-- question-linked model answers and richer learning material metadata
-- richer answer analysis beyond the current score + feedback rows
-- skill radar, gap analysis, and benchmark APIs
-- stronger home dashboard summaries tied to readiness and risk
 
-### Explicitly Out of Scope Unless Requested
-- live voice or streaming interview features
-- public answer publishing or comparison
+- richer resume extraction snapshots for skills, experiences, and risks
+- saved job-posting parsing and resume-to-job analysis runs
+- persisted resume rewrite suggestions and acceptance state
+- question relationship modeling for follow-up trees
+- question-linked model answers and learning material metadata
+- richer answer analysis beyond score plus feedback rows
+- stronger skill radar, gap analysis, and benchmark APIs
+- practical interview replay records and replay-simulation seeds
+
+### Explicitly Out Of Scope Unless Requested
+
+- live voice or streaming interview systems
+- public answer publishing or social comparison
 - GitHub sync
 - community or lounge features
 - admin moderation tooling
 
-## Product Rules
+## Product Rules The Backend Should Treat As Stable
+
 - questions are global shared assets
 - answer attempts remain immutable after submission
 - resume versions remain immutable historical records
-- extracted resume skills, experiences, and risks are always scoped to one resume version
-- raw text parsing and structured field extraction are separate pipeline stages and may complete independently
-- structured resume sections should preserve the user document’s original grouping so career timeline and supporting credentials stay explainable
-- user progress is cached aggregate state per user-question pair
-- retry scheduling is persisted, not recomputed ad hoc on every read
-- archived questions must stay out of the active retry loop unless explicitly reset
-- archive remains question-level, even when the question originated from an interview session
-- archive items should preserve whether they came from `practice` or `interview`
-- interview history remains session-level and must not replace archive
-- a resume-based interview session must remain attributable to the chosen `resumeVersionId` for its full lifetime
-- full resume coverage should be measured against structured resume evidence units, not raw character-by-character text
-- full-coverage results should prefer a structured resume viewer over raw PDF-coordinate highlighting for the first implementation
-- resume interview results should highlight asked or defended resume evidence blocks and let the user inspect the linked interview questions from those highlights
-- practical interview uploads should preserve raw transcript, cleaned transcript, and user-confirmed transcript independently rather than overwriting earlier stages
-- real interview records and replay simulations should remain distinct from ordinary mock sessions, while still contributing question-level assets into archive and study flows
-- user-authored or uploaded original data must remain stored and retrievable in the original language
-- UI language, system-generated text language, and static/reference-data language should follow the effective locale for the request or user setting
-- generated interview questions, follow-ups, and analysis text should persist the locale they were generated in
-- new intelligence features should reuse current progress, answer, and resume records where possible
-- model answers and learning materials are global reference content, not user-generated answer attempts
+- extracted resume intelligence is scoped to one resume version
+- source-of-truth artifacts are scoped to one resume version or one resume claim lineage
+- retry scheduling is persisted state
+- archive remains question-level, even when the source was an interview turn
+- interview history remains session-level and should not replace archive
+- user-authored source data stays available in the original language
+- generated or localized text should carry locale-aware behavior
 
-## User Value
-The updated product should help a user answer three questions every time they open the app:
-- What should I practice today?
-- Where am I weak relative to my resume and target role?
-- Which follow-up questions am I still not ready to defend?
+## Where To Read Next
 
-It should also answer these interview-specific questions:
-- Which parts of my resume have not been covered in mock interviews yet?
-- When I hover one project or sentence from my resume, which interview questions were asked about it?
-- When I click one highlighted resume block after the interview, can I jump back to the exact interview turn that covered it?
+- architecture: [`02-backend-architecture.md`](02-backend-architecture.md)
+- database model: [`03-db-schema.md`](03-db-schema.md)
+- API contracts: [`04-api-contracts.md`](04-api-contracts.md)
+- docs index: [`README.md`](README.md)
