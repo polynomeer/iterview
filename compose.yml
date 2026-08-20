@@ -3,7 +3,6 @@ name: iterview
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: iterview-postgres
     restart: unless-stopped
     ports:
       - "5432:5432"
@@ -21,7 +20,6 @@ services:
 
   api:
     image: gradle:8.10.2-jdk21
-    container_name: iterview-api
     restart: unless-stopped
     working_dir: /workspace/apps/api
     command: ./gradlew bootRun --no-daemon
@@ -43,7 +41,6 @@ services:
 
   web:
     image: node:20-alpine
-    container_name: iterview-web
     restart: unless-stopped
     working_dir: /workspace/apps/web
     command:
