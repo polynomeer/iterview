@@ -1,0 +1,71 @@
+name: iterview
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: iterview-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-iterview}
+      POSTGRES_USER: ${POSTGRES_USER:-iterview}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-iterview}
+    volumes:
+      - iterview-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-iterview} -d ${POSTGRES_DB:-iterview}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: gradle:8.10.2-jdk21
+    container_name: iterview-api
+    restart: unless-stopped
+    working_dir: /workspace/apps/api
+    command: ./gradlew bootRun --no-daemon
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-iterview}
+      DB_USERNAME: ${POSTGRES_USER:-iterview}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-iterview}
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: local
+      GRADLE_USER_HOME: /home/gradle/.gradle
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/workspace
+      - iterview-gradle-cache:/home/gradle/.gradle
+
+  web:
+    image: node:20-alpine
+    container_name: iterview-web
+    restart: unless-stopped
+    working_dir: /workspace/apps/web
+    command:
+      - sh
+      - -lc
+      - |
+        if [ ! -d node_modules ] || [ -z "$(ls -A node_modules 2>/dev/null)" ]; then
+          npm ci
+        fi
+        npm run dev -- --host 0.0.0.0 --port 5173
+    environment:
+      API_PROXY_TARGET: http://api:8080
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/workspace
+      - iterview-web-node-modules:/workspace/apps/web/node_modules
+
+volumes:
+  iterview-postgres-data:
+  iterview-gradle-cache:
+  iterview-web-node-modules:

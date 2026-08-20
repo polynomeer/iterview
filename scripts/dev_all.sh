@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-API_DIR="$ROOT_DIR/apps/api"
-WEB_DIR="$ROOT_DIR/apps/web"
+COMPOSE_FILE="$ROOT_DIR/compose.yml"
+DOCKER_START_TIMEOUT_SECONDS="${DOCKER_START_TIMEOUT_SECONDS:-120}"
 
 usage() {
   cat <<'EOF'
@@ -11,13 +11,13 @@ Usage:
   ./scripts/dev_all.sh
 
 Behavior:
-  - starts the api with ./gradlew bootRun
-  - starts the web with npm run dev
-  - forwards termination signals to both child processes
+  - ensures the Docker daemon is running
+  - starts the iterview Docker Compose stack when needed
+  - follows logs from postgres, api, and web containers
 
 Notes:
-  - run npm install in apps/web first if dependencies are missing
-  - stop with Ctrl+C
+  - the compose project name is iterview
+  - stop log streaming with Ctrl+C, containers keep running
 EOF
 }
 
@@ -26,47 +26,82 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   exit 0
 fi
 
-if [[ ! -d "$API_DIR" || ! -d "$WEB_DIR" ]]; then
-  echo "Expected apps/api and apps/web under $ROOT_DIR" >&2
+if [[ ! -f "$COMPOSE_FILE" ]]; then
+  echo "Missing $COMPOSE_FILE" >&2
   exit 1
 fi
 
-if [[ ! -f "$WEB_DIR/package.json" ]]; then
-  echo "Missing apps/web/package.json" >&2
-  exit 1
-fi
-
-cleanup() {
-  local exit_code=$?
-
-  if [[ -n "${API_PID:-}" ]] && kill -0 "$API_PID" 2>/dev/null; then
-    kill "$API_PID" 2>/dev/null || true
-  fi
-
-  if [[ -n "${WEB_PID:-}" ]] && kill -0 "$WEB_PID" 2>/dev/null; then
-    kill "$WEB_PID" 2>/dev/null || true
-  fi
-
-  wait "${API_PID:-}" 2>/dev/null || true
-  wait "${WEB_PID:-}" 2>/dev/null || true
-
-  exit "$exit_code"
+docker_compose() {
+  (
+    cd "$ROOT_DIR"
+    docker compose -f "$COMPOSE_FILE" "$@"
+  )
 }
 
-trap cleanup INT TERM EXIT
+docker_daemon_ready() {
+  docker info >/dev/null 2>&1
+}
 
-echo "[api] ./gradlew bootRun"
-(
-  cd "$API_DIR"
-  ./gradlew bootRun
-) &
-API_PID=$!
+ensure_docker_cli() {
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "Docker CLI is not installed or not on PATH." >&2
+    exit 1
+  fi
+}
 
-echo "[web] npm run dev"
-(
-  cd "$WEB_DIR"
-  npm run dev
-) &
-WEB_PID=$!
+start_docker_daemon() {
+  if docker_daemon_ready; then
+    return
+  fi
 
-wait -n "$API_PID" "$WEB_PID"
+  case "$(uname -s)" in
+    Darwin)
+      if command -v open >/dev/null 2>&1; then
+        echo "[docker] starting Docker Desktop"
+        open -a Docker >/dev/null 2>&1 || true
+      fi
+      ;;
+    Linux)
+      if command -v systemctl >/dev/null 2>&1; then
+        echo "[docker] starting Docker service"
+        systemctl --user start docker >/dev/null 2>&1 || systemctl start docker >/dev/null 2>&1 || true
+      fi
+      ;;
+  esac
+
+  local waited=0
+  until docker_daemon_ready; do
+    if (( waited >= DOCKER_START_TIMEOUT_SECONDS )); then
+      echo "Docker daemon did not become ready within ${DOCKER_START_TIMEOUT_SECONDS}s." >&2
+      exit 1
+    fi
+
+    sleep 2
+    waited=$((waited + 2))
+  done
+}
+
+service_is_running() {
+  local service_name="$1"
+  docker_compose ps --services --status running | grep -qx "$service_name"
+}
+
+ensure_stack_running() {
+  if service_is_running postgres && service_is_running api && service_is_running web; then
+    echo "[docker] iterview stack is already running"
+    return
+  fi
+
+  echo "[docker] starting iterview stack"
+  docker_compose up -d --remove-orphans
+}
+
+ensure_docker_cli
+start_docker_daemon
+ensure_stack_running
+
+echo "[docker] project: iterview"
+echo "[docker] frontend: http://localhost:5173"
+echo "[docker] backend:  http://localhost:8080"
+
+docker_compose logs -f --tail=100 postgres api web
