@@ -30,8 +30,8 @@ export function Header() {
     <header className="app-header">
       <div className="app-header__brand">
         <div>
-          <span className="app-header__eyebrow">Interview Operating System</span>
-          <strong className="app-header__title">Iterview</strong>
+          <span className="app-header__eyebrow">Interview practice</span>
+          <strong className="app-header__title">iterview</strong>
         </div>
       </div>
       <div className="app-header__actions">

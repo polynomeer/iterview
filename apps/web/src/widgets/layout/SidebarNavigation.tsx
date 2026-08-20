@@ -38,9 +38,9 @@ export function SidebarNavigation() {
     <aside className="sidebar-navigation">
       <div className="sidebar-navigation__brand">
         <span className="sidebar-navigation__eyebrow">Interview practice</span>
-        <strong className="sidebar-navigation__title">Iterview</strong>
+        <strong className="sidebar-navigation__title">iterview</strong>
         <p className="sidebar-navigation__summary">
-          Train on today&apos;s question, review weak spots, and tighten your resume story.
+          Practice answers, review signals, and refine your resume story.
         </p>
       </div>
 
