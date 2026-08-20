@@ -29,7 +29,10 @@ export function Header() {
   return (
     <header className="app-header">
       <div className="app-header__brand">
-        <strong className="app-header__eyebrow">Iterview</strong>
+        <div>
+          <span className="app-header__eyebrow">Interview Operating System</span>
+          <strong className="app-header__title">Iterview</strong>
+        </div>
       </div>
       <div className="app-header__actions">
         {isAuthenticated && currentUser ? (
@@ -48,7 +51,10 @@ export function Header() {
                   </span>
                 )}
               </span>
-              {displayName}
+              <span className="app-header__action-copy">
+                <strong>{displayName}</strong>
+                <span className="app-header__action-meta">Profile</span>
+              </span>
             </Link>
             <button className="app-header__action app-header__action--secondary" onClick={logout} type="button">
               {t("common.logout")}

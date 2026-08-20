@@ -17,12 +17,16 @@ export function ResumeMobileLayout({
   libraryIntro,
 }: ResumeLayoutProps) {
   return (
-    <div className="page-stack">
-      {overviewCard}
-      {profileCard}
-      {notices}
-      {libraryIntro}
-      {listContent}
+    <div className="resume-layout resume-layout--mobile">
+      <section className="resume-layout__workspace-main">{overviewCard}</section>
+      <section className="resume-layout__workspace-side">{profileCard}</section>
+      <section className="resume-layout__document">
+        <div className="page-stack">
+          {notices}
+          {libraryIntro}
+          {listContent}
+        </div>
+      </section>
     </div>
   );
 }
@@ -42,7 +46,7 @@ export function ResumeDesktopLayout({
         </div>
         <div className="resume-layout__workspace-side">
           {profileCard}
-          <SectionPanel variant="muted">
+          <SectionPanel className="workspace-note-card" variant="muted">
             <span className="page-card__label">Resume workflow</span>
             <h2 className="page-card__title">Create, upload, then inspect one version at a time</h2>
             <p className="page-card__body">

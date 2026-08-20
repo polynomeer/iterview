@@ -16,7 +16,7 @@ type HomeLayoutProps = {
 
 function ReviewQueuePanel() {
   return (
-    <SectionPanel className="home-layout__review-panel">
+    <SectionPanel className="home-layout__review-panel home-layout__review-panel--contrast">
       <span className="page-card__label">Review queue</span>
       <h2 className="page-card__title">Move through scheduled follow-up practice</h2>
       <p className="page-card__body">
@@ -42,16 +42,24 @@ export function HomeMobileLayout({
   resumeRiskSection,
 }: HomeLayoutProps) {
   return (
-    <div className="page-stack">
-      {todaySection}
-      {nextActionSection}
-      {summarySection}
-      <ReviewQueuePanel />
-      {retrySection}
-      {radarSection}
-      {weakSkillsSection}
-      {resumeRiskSection}
-      {materialsSection}
+    <div className="home-layout home-layout--mobile">
+      <section className="home-layout__hero">{todaySection}</section>
+      <section className="home-layout__cluster home-layout__cluster--feature">
+        {nextActionSection}
+        {summarySection}
+      </section>
+      <section className="home-layout__cluster home-layout__cluster--feature">
+        <ReviewQueuePanel />
+        {retrySection}
+      </section>
+      <section className="home-layout__cluster">
+        {radarSection}
+        {weakSkillsSection}
+      </section>
+      <section className="home-layout__cluster">
+        {resumeRiskSection}
+        {materialsSection}
+      </section>
     </div>
   );
 }
@@ -68,9 +76,9 @@ export function HomeDesktopLayout({
 }: HomeLayoutProps) {
   return (
     <div className="home-layout home-layout--desktop">
-      <div className="home-layout__hero">{todaySection}</div>
+      <section className="home-layout__hero">{todaySection}</section>
       <div className="home-layout__top-strip">
-        <div className="page-stack home-layout__top-card">
+        <div className="page-stack home-layout__top-card home-layout__top-card--primary">
           {nextActionSection}
         </div>
         {summarySection ? <div className="page-stack home-layout__top-card">{summarySection}</div> : null}
@@ -79,11 +87,11 @@ export function HomeDesktopLayout({
         </div>
       </div>
       <div className="home-layout__content">
-        <div className="page-stack home-layout__main-panel">
+        <div className="page-stack home-layout__main-panel home-layout__column home-layout__column--main">
           {retrySection}
           {radarSection}
         </div>
-        <div className="page-stack home-layout__side-panel">
+        <div className="page-stack home-layout__side-panel home-layout__column home-layout__column--side">
           {weakSkillsSection}
           {resumeRiskSection}
           {materialsSection}

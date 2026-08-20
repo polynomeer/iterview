@@ -23,15 +23,21 @@ export function ResultAnalysisMobileLayout({
   recommendationSection,
 }: ResultAnalysisLayoutProps) {
   return (
-    <div className="page-stack">
+    <div className="result-analysis-layout result-analysis-layout--mobile">
       {scoreSection}
-      {dimensionSection}
-      {detailedFeedbackSection}
-      {insightSection}
-      {modelAnswerSection}
-      {feedbackSection}
-      {recommendationSection}
-      {nextActionSection}
+      <div className="result-analysis-layout__group">
+        {dimensionSection}
+        {detailedFeedbackSection}
+      </div>
+      <div className="result-analysis-layout__group">
+        {insightSection}
+        {nextActionSection}
+      </div>
+      <div className="result-analysis-layout__group">
+        {recommendationSection}
+        {modelAnswerSection}
+        {feedbackSection}
+      </div>
     </div>
   );
 }
@@ -61,7 +67,7 @@ export function ResultAnalysisDesktopLayout({
           {modelAnswerSection}
         </div>
       </ContentGrid>
-      <div className="result-analysis-layout__feedback">{feedbackSection}</div>
+      <div className="result-analysis-layout__feedback workspace-band">{feedbackSection}</div>
     </div>
   );
 }

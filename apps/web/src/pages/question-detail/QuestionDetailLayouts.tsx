@@ -18,13 +18,17 @@ export function QuestionDetailMobileLayout({
   recommendedSection,
 }: QuestionDetailLayoutProps) {
   return (
-    <div className="page-stack">
-      {headerSection}
-      {metadataSection}
-      {progressSection}
-      {recommendedSection}
-      {answerHistorySection}
-      {materialsSection}
+    <div className="question-detail-layout question-detail-layout--mobile">
+      <section className="question-detail-layout__hero">{headerSection}</section>
+      <section className="question-detail-layout__sidebar">
+        {metadataSection}
+        {progressSection}
+      </section>
+      <section className="question-detail-layout__main">
+        {recommendedSection}
+        {answerHistorySection}
+        {materialsSection}
+      </section>
     </div>
   );
 }
@@ -41,14 +45,14 @@ export function QuestionDetailDesktopLayout({
     <div className="question-detail-layout question-detail-layout--desktop">
       <div className="question-detail-layout__hero">{headerSection}</div>
       <div className="question-detail-layout__main">
-        <div className="page-stack">
+        <div className="page-stack question-detail-layout__cluster">
           {recommendedSection}
           {materialsSection}
           {answerHistorySection}
         </div>
       </div>
       <aside className="question-detail-layout__sidebar">
-        <div className="page-stack">
+        <div className="page-stack question-detail-layout__cluster">
           {metadataSection}
           {progressSection}
         </div>

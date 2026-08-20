@@ -153,10 +153,12 @@ export function InterviewPage() {
 
       {!(resumeListQuery.isLoading || latestResumeQuery.isLoading) &&
       !(resumeListQuery.isError && latestResumeQuery.isError) ? (
-        <div className="page-stack">
+        <div className="interview-page-layout">
           {!sessionListQuery.isLoading && !sessionListQuery.isError && sessionListQuery.data ? (
             sessionListQuery.data.length > 0 ? (
-              <InterviewSessionHistoryList items={sessionListQuery.data} />
+              <section className="interview-page-layout__hero">
+                <InterviewSessionHistoryList items={sessionListQuery.data} />
+              </section>
             ) : (
               <EmptyStateCard
                 action={{ label: t("interview.startLabel"), to: routeConfig.interview.buildPath() }}
@@ -165,82 +167,83 @@ export function InterviewPage() {
               />
             )
           ) : null}
-          <section className="page-card">
-            <span className="page-card__label">{t("interview.startLabel")}</span>
-            <h2 className="page-card__title">{t("interview.startTitle")}</h2>
-            <p className="page-card__body">{t("interview.startBody")}</p>
-            <div className="stats-grid">
-              <MetricCard label={t("interview.availableResumeVersions")} value={String(resumeVersionChoices.length)} />
-              <MetricCard
-                label={t("interview.interviewModeMetric")}
-                tone="accent"
-                value={interviewModeOptions.find((option) => option.id === selectedInterviewMode)?.label ?? t("interview.modeMock30")}
-              />
-              <MetricCard label={t("interview.seedCount")} tone="muted" value={String(questionCount)} />
-            </div>
-            <div className="page-card__actions">
-              <button
-                className="primary-button"
-                disabled={resumeVersionChoices.length === 0}
-                onClick={() => setStartFormOpen((current) => !current)}
-                type="button"
-              >
-                {startFormOpen ? t("interview.hideStartForm") : t("interview.startInterview")}
-              </button>
-            </div>
-            {resumeVersionChoices.length === 0 ? (
-              <EmptyStateCard
-                action={{ label: t("common.openResumes"), to: routeConfig.resume.buildPath() }}
-                body={t("interview.noResumeBody")}
-                title={t("interview.noResumeTitle")}
-              />
-            ) : null}
-            {startFormOpen && resumeVersionChoices.length > 0 ? (
-              <div className="page-stack">
-                <div className="page-card page-card--inset">
-                  <div className="section-heading">
-                    <div>
-                      <p className="section-heading__eyebrow">{t("interview.resumeSelectionEyebrow")}</p>
-                      <h3 className="page-card__title">{t("interview.chooseResumeTitle")}</h3>
+          <div className="interview-page-layout__workspace">
+            <section className="page-card interview-page-layout__start">
+              <span className="page-card__label">{t("interview.startLabel")}</span>
+              <h2 className="page-card__title">{t("interview.startTitle")}</h2>
+              <p className="page-card__body">{t("interview.startBody")}</p>
+              <div className="stats-grid">
+                <MetricCard label={t("interview.availableResumeVersions")} value={String(resumeVersionChoices.length)} />
+                <MetricCard
+                  label={t("interview.interviewModeMetric")}
+                  tone="accent"
+                  value={interviewModeOptions.find((option) => option.id === selectedInterviewMode)?.label ?? t("interview.modeMock30")}
+                />
+                <MetricCard label={t("interview.seedCount")} tone="muted" value={String(questionCount)} />
+              </div>
+              <div className="page-card__actions">
+                <button
+                  className="primary-button"
+                  disabled={resumeVersionChoices.length === 0}
+                  onClick={() => setStartFormOpen((current) => !current)}
+                  type="button"
+                >
+                  {startFormOpen ? t("interview.hideStartForm") : t("interview.startInterview")}
+                </button>
+              </div>
+              {resumeVersionChoices.length === 0 ? (
+                <EmptyStateCard
+                  action={{ label: t("common.openResumes"), to: routeConfig.resume.buildPath() }}
+                  body={t("interview.noResumeBody")}
+                  title={t("interview.noResumeTitle")}
+                />
+              ) : null}
+              {startFormOpen && resumeVersionChoices.length > 0 ? (
+                <div className="page-stack interview-page-layout__setup">
+                  <div className="page-card page-card--inset">
+                    <div className="section-heading">
+                      <div>
+                        <p className="section-heading__eyebrow">{t("interview.resumeSelectionEyebrow")}</p>
+                        <h3 className="page-card__title">{t("interview.chooseResumeTitle")}</h3>
+                      </div>
+                    </div>
+                    <div className="stack-list">
+                      {resumeVersionChoices.map((choice) => {
+                        const isSelected = choice.versionId === selectedResumeVersionId;
+
+                        return (
+                          <button
+                            aria-pressed={isSelected}
+                            className={`list-item-card interview-resume-choice${isSelected ? " list-item-card--selected" : ""}`}
+                            key={choice.versionId}
+                            onClick={() => setSelectedResumeVersionId(choice.versionId)}
+                            type="button"
+                          >
+                            <div className="list-item-card__content">
+                              <div className="list-item-card__meta">
+                                <span>{choice.resumeTitle}</span>
+                                <span>{choice.versionNumberLabel}</span>
+                                <span>{choice.uploadedAtLabel ?? t("interview.uploadedDateUnknown")}</span>
+                                {choice.isActive ? (
+                                  <span className="question-status-badge question-status-badge--positive">{t("interview.active")}</span>
+                                ) : null}
+                              </div>
+                              <h3 className="list-item-card__title">{choice.resumeTitle}</h3>
+                              <p className="list-item-card__body">
+                                {choice.versionNumberLabel}
+                                {choice.parsingStatus ? ` / ${choice.parsingStatusLabel}` : ""}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
-                  <div className="stack-list">
-                    {resumeVersionChoices.map((choice) => {
-                      const isSelected = choice.versionId === selectedResumeVersionId;
-
-                      return (
-                        <button
-                          aria-pressed={isSelected}
-                          className={`list-item-card interview-resume-choice${isSelected ? " list-item-card--selected" : ""}`}
-                          key={choice.versionId}
-                          onClick={() => setSelectedResumeVersionId(choice.versionId)}
-                          type="button"
-                        >
-                          <div className="list-item-card__content">
-                            <div className="list-item-card__meta">
-                              <span>{choice.resumeTitle}</span>
-                              <span>{choice.versionNumberLabel}</span>
-                              <span>{choice.uploadedAtLabel ?? t("interview.uploadedDateUnknown")}</span>
-                              {choice.isActive ? (
-                                <span className="question-status-badge question-status-badge--positive">{t("interview.active")}</span>
-                              ) : null}
-                            </div>
-                            <h3 className="list-item-card__title">{choice.resumeTitle}</h3>
-                            <p className="list-item-card__body">
-                              {choice.versionNumberLabel}
-                              {choice.parsingStatus ? ` · ${choice.parsingStatusLabel}` : ""}
-                            </p>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-                <section className="page-card page-card--inset">
-                  <span className="page-card__label">{t("interview.sessionSetupLabel")}</span>
-                  <h3 className="page-card__title">{t("interview.sessionSetupTitle")}</h3>
-                  <p className="page-card__body">{t("interview.sessionSetupBody")}</p>
-                  <div className="stack-list">
+                  <section className="page-card page-card--inset">
+                    <span className="page-card__label">{t("interview.sessionSetupLabel")}</span>
+                    <h3 className="page-card__title">{t("interview.sessionSetupTitle")}</h3>
+                    <p className="page-card__body">{t("interview.sessionSetupBody")}</p>
+                    <div className="stack-list">
                     {interviewModeOptions.map((option) => {
                       const isSelected = option.id === selectedInterviewMode;
 
@@ -265,65 +268,68 @@ export function InterviewPage() {
                         </button>
                       );
                     })}
+                    </div>
+                    <div className="page-card__actions">
+                      <button
+                        className={questionCount === 3 ? "primary-button" : "secondary-button"}
+                        onClick={() => setQuestionCount(3)}
+                        type="button"
+                      >
+                        3 questions
+                      </button>
+                      <button
+                        className={questionCount === 5 ? "primary-button" : "secondary-button"}
+                        onClick={() => setQuestionCount(5)}
+                        type="button"
+                      >
+                        5 questions
+                      </button>
+                      <button
+                        className="primary-button"
+                        disabled={createSessionMutation.isPending || !selectedResumeVersionId}
+                        onClick={() => {
+                          void handleStartSession();
+                        }}
+                        type="button"
+                      >
+                        {createSessionMutation.isPending ? t("common.saving") : t("interview.confirmAndStart")}
+                      </button>
+                    </div>
+                  </section>
+                </div>
+              ) : null}
+            </section>
+            {resumeVersionChoices.length > 0 ? (
+              <aside className="interview-page-layout__rail">
+                <section className="page-card">
+                  <div className="section-heading">
+                    <div>
+                      <p className="section-heading__eyebrow">{t("interview.resumeContextEyebrow")}</p>
+                      <h2 className="page-card__title">{t("interview.groundingVersionsTitle")}</h2>
+                    </div>
                   </div>
-                  <div className="page-card__actions">
-                    <button
-                      className={questionCount === 3 ? "primary-button" : "secondary-button"}
-                      onClick={() => setQuestionCount(3)}
-                      type="button"
-                    >
-                      3 questions
-                    </button>
-                    <button
-                      className={questionCount === 5 ? "primary-button" : "secondary-button"}
-                      onClick={() => setQuestionCount(5)}
-                      type="button"
-                    >
-                      5 questions
-                    </button>
-                    <button
-                      className="primary-button"
-                      disabled={createSessionMutation.isPending || !selectedResumeVersionId}
-                      onClick={() => {
-                        void handleStartSession();
-                      }}
-                      type="button"
-                    >
-                      {createSessionMutation.isPending ? t("common.saving") : t("interview.confirmAndStart")}
-                    </button>
+                  <div className="stack-list">
+                    {resumeVersionChoices.slice(0, 5).map((choice) => (
+                      <article className="list-item-card" key={choice.versionId}>
+                        <div className="list-item-card__content">
+                          <div className="list-item-card__meta">
+                            <span>{choice.resumeTitle}</span>
+                            <span>{choice.versionNumberLabel}</span>
+                            {choice.uploadedAtLabel ? <span>{choice.uploadedAtLabel}</span> : null}
+                            {choice.isActive ? (
+                              <span className="question-status-badge question-status-badge--positive">{t("interview.active")}</span>
+                            ) : null}
+                          </div>
+                          <h3 className="list-item-card__title">{choice.resumeTitle}</h3>
+                          <p className="list-item-card__body">{choice.parsingStatusLabel}</p>
+                        </div>
+                      </article>
+                    ))}
                   </div>
                 </section>
-              </div>
+              </aside>
             ) : null}
-          </section>
-          {resumeVersionChoices.length > 0 ? (
-            <section className="page-card">
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">{t("interview.resumeContextEyebrow")}</p>
-                  <h2 className="page-card__title">{t("interview.groundingVersionsTitle")}</h2>
-                </div>
-              </div>
-              <div className="stack-list">
-                {resumeVersionChoices.slice(0, 5).map((choice) => (
-                  <article className="list-item-card" key={choice.versionId}>
-                    <div className="list-item-card__content">
-                      <div className="list-item-card__meta">
-                        <span>{choice.resumeTitle}</span>
-                        <span>{choice.versionNumberLabel}</span>
-                        {choice.uploadedAtLabel ? <span>{choice.uploadedAtLabel}</span> : null}
-                        {choice.isActive ? (
-                          <span className="question-status-badge question-status-badge--positive">{t("interview.active")}</span>
-                        ) : null}
-                      </div>
-                      <h3 className="list-item-card__title">{choice.resumeTitle}</h3>
-                      <p className="list-item-card__body">{choice.parsingStatusLabel}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
-          ) : null}
+          </div>
         </div>
       ) : null}
     </PageContainer>

@@ -11,9 +11,9 @@ export function ArchiveMobileLayout({
   listContent,
 }: ArchiveLayoutProps) {
   return (
-    <div className="page-stack">
-      {filterControls}
-      {listContent}
+    <div className="archive-layout archive-layout--mobile">
+      <section className="archive-layout__rail">{filterControls}</section>
+      <section className="archive-layout__content">{listContent}</section>
     </div>
   );
 }
@@ -25,13 +25,13 @@ export function ArchiveDesktopLayout({
   return (
     <div className="archive-layout archive-layout--desktop">
       <SplitLayout
-        main={listContent}
+        main={<div className="archive-layout__content">{listContent}</div>}
         aside={
-          <div className="page-stack">
+          <div className="page-stack archive-layout__rail">
             <FilterPanel description="Archive filters stay visible while you scan mastered questions and reopen summaries.">
               {filterControls}
             </FilterPanel>
-            <SectionPanel variant="muted">
+            <SectionPanel className="workspace-note-card" variant="muted">
               <span className="page-card__label">Archive browsing</span>
               <h2 className="page-card__title">Use the extra space for denser review</h2>
               <p className="page-card__body">

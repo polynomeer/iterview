@@ -107,8 +107,8 @@ export function InterviewResultPage() {
       eyebrow={t("result.pageEyebrow")}
       title={t("result.pageTitle")}
     >
-      <div className="page-stack">
-        <section className="page-card">
+      <div className="interview-result-layout">
+        <section className="page-card interview-result-layout__hero">
           <span className="page-card__label">{t("result.summaryLabel")}</span>
           <h2 className="page-card__title">Session {sessionId}</h2>
           <p className="page-card__body">{t("result.summaryBody")}</p>
@@ -120,6 +120,7 @@ export function InterviewResultPage() {
             <MetricCard label={t("result.averageScore")} tone="muted" value={session.summary.averageScoreLabel ?? "-"} />
           </div>
         </section>
+        <div className="interview-result-layout__content">
         {shouldRenderFullCoverageResult ? (
           coverageQuery.isLoading || resumeMapQuery.isLoading || resultSectionsQuery.isLoading ? (
             <LoadingStateCard
@@ -149,7 +150,7 @@ export function InterviewResultPage() {
             />
           ) : null
         ) : (
-            <section className="page-card">
+            <section className="page-card interview-result-layout__recap">
               <div className="section-heading">
                 <div>
                 <p className="section-heading__eyebrow">{t("result.recapEyebrow")}</p>
@@ -192,7 +193,8 @@ export function InterviewResultPage() {
             </div>
           </section>
         )}
-        <section className="page-card">
+        </div>
+        <section className="page-card interview-result-layout__actions">
           <div className="page-card__actions">
             <Link className="primary-button" to={routeConfig.interview.buildPath()}>
               {t("result.startAnotherSession")}

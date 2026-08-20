@@ -2,14 +2,6 @@ import { NavLink } from "react-router-dom";
 import { secondaryDesktopRoutes, tabRoutes } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 
-const sidebarIcons: Record<string, string> = {
-  "/": "⌂",
-  "/practice": "◫",
-  "/archive": "✓",
-  "/feed": "≈",
-  "/profile": "◌",
-};
-
 export function SidebarNavigation() {
   const { t } = useLocale();
 
@@ -45,11 +37,15 @@ export function SidebarNavigation() {
   return (
     <aside className="sidebar-navigation">
       <div className="sidebar-navigation__brand">
-        <strong className="sidebar-navigation__eyebrow">Iterview</strong>
+        <span className="sidebar-navigation__eyebrow">Interview practice</span>
+        <strong className="sidebar-navigation__title">Iterview</strong>
+        <p className="sidebar-navigation__summary">
+          Train on today&apos;s question, review weak spots, and tighten your resume story.
+        </p>
       </div>
 
       <nav aria-label="Primary" className="sidebar-navigation__nav">
-        {tabRoutes.map((route) => (
+        {tabRoutes.map((route, index) => (
           <NavLink
             key={route.path}
             className={({ isActive }) =>
@@ -58,9 +54,12 @@ export function SidebarNavigation() {
             to={route.buildPath()}
           >
             <span aria-hidden="true" className="sidebar-navigation__icon">
-              {sidebarIcons[route.path]}
+              {(index + 1).toString().padStart(2, "0")}
             </span>
-            <span>{getRouteLabel(route.path)}</span>
+            <span className="sidebar-navigation__link-copy">
+              <strong>{getRouteLabel(route.path)}</strong>
+              <span>Primary workspace</span>
+            </span>
           </NavLink>
         ))}
       </nav>
@@ -76,7 +75,10 @@ export function SidebarNavigation() {
               }
               to={route.buildPath()}
             >
-              <span>{getRouteLabel(route.path)}</span>
+              <span className="sidebar-navigation__link-copy">
+                <strong>{getRouteLabel(route.path)}</strong>
+                <span>Deep-dive workspace</span>
+              </span>
             </NavLink>
           ))}
         </nav>

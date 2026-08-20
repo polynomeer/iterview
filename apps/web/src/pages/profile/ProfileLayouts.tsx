@@ -12,10 +12,9 @@ type ProfileLayoutProps = {
 
 function AccountCluster({ children }: { children: ReactNode }) {
   return (
-    <SectionPanel className="profile-section-cluster">
+    <SectionPanel className="profile-section-cluster profile-section-cluster--account">
       <div className="section-heading profile-section-cluster__header">
         <div>
-          <p className="section-heading__eyebrow">Account</p>
           <h2 className="page-card__title">Keep profile details separate from workspace tools</h2>
         </div>
       </div>
@@ -34,10 +33,9 @@ function PreferencesCluster({
   desktop: boolean;
 }) {
   return (
-    <SectionPanel className="profile-section-cluster">
+    <SectionPanel className="profile-section-cluster profile-section-cluster--preferences">
       <div className="section-heading profile-section-cluster__header">
         <div>
-          <p className="section-heading__eyebrow">Preferences</p>
           <h2 className="page-card__title">Group practice defaults and appearance</h2>
           {desktop ? (
             <p className="page-card__body">
@@ -63,10 +61,9 @@ function PreferencesCluster({
 
 function FocusCluster({ children }: { children: ReactNode }) {
   return (
-    <SectionPanel className="profile-section-cluster">
+    <SectionPanel className="profile-section-cluster profile-section-cluster--focus">
       <div className="section-heading profile-section-cluster__header">
         <div>
-          <p className="section-heading__eyebrow">Career focus</p>
           <h2 className="page-card__title">Manage target companies separately from account edits</h2>
         </div>
       </div>
@@ -124,7 +121,7 @@ export function ProfileDesktopLayout({
         <DetailSidebar>
           <div className="page-stack profile-layout__rail">
             {resumeCard}
-            <SectionPanel className="profile-workspace-note" variant="muted">
+            <SectionPanel className="profile-workspace-note workspace-note-card" variant="muted">
               <span className="page-card__label">Workspace depth</span>
               <h2 className="page-card__title">Keep resume tools one step away from account settings</h2>
               <p className="page-card__body">
