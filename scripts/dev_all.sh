@@ -12,7 +12,8 @@ Usage:
 
 Behavior:
   - ensures the Docker daemon is running
-  - starts the iterview Docker Compose stack when needed
+  - stops the existing iterview Docker Compose stack when present
+  - starts a fresh iterview Docker Compose stack
   - follows logs from postgres, api, and web containers
 
 Notes:
@@ -81,24 +82,17 @@ start_docker_daemon() {
   done
 }
 
-service_is_running() {
-  local service_name="$1"
-  docker_compose ps --services --status running | grep -qx "$service_name"
-}
+restart_stack() {
+  echo "[docker] stopping existing iterview stack"
+  docker_compose down --remove-orphans
 
-ensure_stack_running() {
-  if service_is_running postgres && service_is_running api && service_is_running web; then
-    echo "[docker] iterview stack is already running"
-    return
-  fi
-
-  echo "[docker] starting iterview stack"
+  echo "[docker] starting fresh iterview stack"
   docker_compose up -d --remove-orphans
 }
 
 ensure_docker_cli
 start_docker_daemon
-ensure_stack_running
+restart_stack
 
 echo "[docker] project: iterview"
 echo "[docker] frontend: http://localhost:5173"
