@@ -11,6 +11,7 @@ import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { SectionPanel } from "../../shared/ui/layout";
 
 export function PracticalInterviewListPage() {
   const navigate = useNavigate();
@@ -108,212 +109,199 @@ export function PracticalInterviewListPage() {
       ) : null}
 
       {!recordListQuery.isLoading && !recordListQuery.isError ? (
-        <div className="page-stack">
-          <section className="page-card">
-            <span className="page-card__label">Workspace</span>
-            <h2 className="page-card__title">Upload and review real interview transcripts</h2>
-            <p className="page-card__body">
-              The backend review payload already includes provenance, lane ordering, blockers, and replay presets. The frontend only needs to render and route those decisions.
-            </p>
-            <div className="stats-grid">
-              <MetricCard
-                label="Imported records"
-                value={String(recordListQuery.data?.length ?? 0)}
-              />
-              <MetricCard
-                label="Resume versions"
-                tone="accent"
-                value={String(resumeChoices.length)}
-              />
-              <MetricCard
-                label="Upload"
-                tone="muted"
-                value={file ? file.name : "Choose file"}
-              />
-            </div>
-            <div className="page-card__actions">
-              <button
-                className="primary-button"
-                onClick={() => setUploadOpen((current) => !current)}
-                type="button"
-              >
-                {uploadOpen ? "Hide upload form" : "Upload interview"}
-              </button>
-            </div>
-          </section>
-
-          {uploadOpen ? (
-            <section className="page-card page-card--inset">
-              <span className="page-card__label">Upload</span>
-              <h2 className="page-card__title">Create an interview record</h2>
-              <div className="form-grid">
-                <label className="form-field">
-                  <span className="form-field__label">Audio file</span>
-                  <input
-                    accept=".mp3,.m4a,.wav,.aac,.ogg,.webm"
-                    className="form-input"
-                    onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-                    type="file"
-                  />
-                  <span className="form-field__hint">
-                    Upload the interview audio. The server can extract a transcript automatically if you do not paste one below.
-                  </span>
-                </label>
-                <label className="form-field">
-                  <span className="form-field__label">Company</span>
-                  <input
-                    className="form-input"
-                    onChange={(event) => setCompanyName(event.target.value)}
-                    type="text"
-                    value={companyName}
-                  />
-                </label>
-                <label className="form-field">
-                  <span className="form-field__label">Role</span>
-                  <input
-                    className="form-input"
-                    onChange={(event) => setRoleName(event.target.value)}
-                    type="text"
-                    value={roleName}
-                  />
-                </label>
-                <label className="form-field">
-                  <span className="form-field__label">Interview date</span>
-                  <input
-                    className="form-input"
-                    onChange={(event) => setInterviewDate(event.target.value)}
-                    type="date"
-                    value={interviewDate}
-                  />
-                </label>
-                <label className="form-field">
-                  <span className="form-field__label">Interview type</span>
-                  <select
-                    className="form-input"
-                    onChange={(event) => setInterviewType(event.target.value)}
-                    value={interviewType}
-                  >
-                    <option value="onsite">Onsite</option>
-                    <option value="phone">Phone</option>
-                    <option value="virtual">Virtual</option>
-                    <option value="behavioral">Behavioral</option>
-                    <option value="system_design">System design</option>
-                  </select>
-                </label>
-                <label className="form-field">
-                  <span className="form-field__label">Linked resume version</span>
-                  <select
-                    className="form-input"
-                    onChange={(event) => setSelectedResumeVersionId(event.target.value)}
-                    value={selectedResumeVersionId}
-                  >
-                    <option value="">None</option>
-                    {resumeChoices.map((choice) => (
-                      <option key={choice.versionId} value={choice.versionId}>
-                        {choice.resumeTitle} · {choice.versionNumberLabel}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="form-field form-field--full">
-                  <span className="form-field__label">Transcript text override</span>
-                  <textarea
-                    className="form-input form-input--textarea"
-                    onChange={(event) => setTranscriptText(event.target.value)}
-                    placeholder="Optional: paste a transcript if you already have one."
-                    rows={5}
-                    value={transcriptText}
-                  />
-                  <span className="form-field__hint">
-                    Optional. If omitted, the server will try to extract a transcript from the audio and continue processing.
-                  </span>
-                </label>
+        <div className="practical-list-layout">
+          <div className="practical-list-layout__hero">
+            <section className="page-card">
+              <span className="page-card__label">Workspace</span>
+              <h2 className="page-card__title">Upload and review real interview transcripts</h2>
+              <p className="page-card__body">
+                The backend review payload already includes provenance, lane ordering, blockers, and replay presets. The frontend only needs to render and route those decisions.
+              </p>
+              <div className="stats-grid">
+                <MetricCard label="Imported records" value={String(recordListQuery.data?.length ?? 0)} />
+                <MetricCard label="Resume versions" tone="accent" value={String(resumeChoices.length)} />
+                <MetricCard label="Upload" tone="muted" value={file ? file.name : "Choose file"} />
               </div>
-              {createRecordMutation.isError ? (
-                <ErrorStateCard
-                  body={
-                    createRecordMutation.error instanceof Error
-                      ? createRecordMutation.error.message
-                      : "The interview record could not be created."
-                  }
-                  details={getErrorDetails(createRecordMutation.error)}
-                  onAction={() => createRecordMutation.reset()}
-                  title="Unable to create interview record"
-                />
-              ) : null}
               <div className="page-card__actions">
                 <button
                   className="primary-button"
-                  disabled={!file || createRecordMutation.isPending}
-                  onClick={() => {
-                    void handleCreateRecord();
-                  }}
+                  onClick={() => setUploadOpen((current) => !current)}
                   type="button"
                 >
-                  {createRecordMutation.isPending ? "Uploading..." : "Create record"}
+                  {uploadOpen ? "Hide upload form" : "Upload interview"}
                 </button>
               </div>
             </section>
-          ) : null}
+            <SectionPanel className="workspace-note-card workspace-note-card--accent practical-list-layout__hero-note" variant="muted">
+              <span className="page-card__label">Import flow</span>
+              <h2 className="page-card__title">Treat each upload as the start of a replayable review workspace</h2>
+              <p className="page-card__body">
+                Company, role, linked resume version, and transcript source should stay visible enough that imported records feel like structured evidence, not loose files.
+              </p>
+            </SectionPanel>
+          </div>
 
-          {recordListQuery.data && recordListQuery.data.length > 0 ? (
-            <section className="page-card">
-              <span className="page-card__label">Imported records</span>
-              <h2 className="page-card__title">Open a review workspace</h2>
-              <div className="stack-list">
-                {recordListQuery.data.map((record) => (
-                  <button
-                    className="list-item-card practical-record-row"
-                    key={record.id}
-                    onClick={() => {
-                      navigate(routeConfig.practicalInterviewDetail.buildPath({ recordId: record.id }));
-                    }}
-                    type="button"
-                  >
-                    <div className="list-item-card__content">
-                      <div className="list-item-card__meta">
-                        <span>{record.interviewTypeLabel}</span>
-                        {record.interviewDateLabel ? <span>{record.interviewDateLabel}</span> : null}
-                        <span>{record.questionCount} questions</span>
-                      </div>
-                      <h3 className="list-item-card__title">{record.title}</h3>
-                      <div className="chip-list practical-record-row__chips">
-                        <span
-                          className={`question-status-badge question-status-badge--${record.transcriptStatusTone}`}
-                        >
-                          Transcript {record.transcriptStatusLabel}
-                        </span>
-                        <span className="question-status-badge question-status-badge--accent">
-                          Analysis {record.analysisStatusLabel}
-                        </span>
-                        {record.transcriptRetryCount > 0 ? (
-                          <span className="detail-chip detail-chip--warning">
-                            Retry {record.transcriptRetryCount}
-                          </span>
-                        ) : null}
-                      </div>
-                      <p className="list-item-card__body practical-record-row__body">
-                        {record.transcriptStatus === "failed"
-                          ? record.transcriptErrorLabel ??
-                            "Automatic transcription failed. Open the record to retry or inspect the status."
-                          : record.transcriptNextRetryAtLabel
-                            ? `Next retry ${record.transcriptNextRetryAtLabel}`
-                            : "Open transcript review, structured questions, follow-up threads, and replay readiness from one workspace."}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          ) : (
-            !recordListQuery.isLoading &&
-            !recordListQuery.isError && (
-              <EmptyStateCard
-                body="No imported interview records exist yet. Upload the first interview to open the review flow."
-                title="No practical interviews yet"
-              />
-            )
-          )}
+          <div className="practical-list-layout__workspace">
+            <div className="page-stack practical-list-layout__main">
+              {uploadOpen ? (
+                <section className="page-card page-card--inset">
+                  <span className="page-card__label">Upload</span>
+                  <h2 className="page-card__title">Create an interview record</h2>
+                  <div className="form-grid">
+                    <label className="form-field">
+                      <span className="form-field__label">Audio file</span>
+                      <input
+                        accept=".mp3,.m4a,.wav,.aac,.ogg,.webm"
+                        className="form-input"
+                        onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+                        type="file"
+                      />
+                      <span className="form-field__hint">
+                        Upload the interview audio. The server can extract a transcript automatically if you do not paste one below.
+                      </span>
+                    </label>
+                    <label className="form-field">
+                      <span className="form-field__label">Company</span>
+                      <input className="form-input" onChange={(event) => setCompanyName(event.target.value)} type="text" value={companyName} />
+                    </label>
+                    <label className="form-field">
+                      <span className="form-field__label">Role</span>
+                      <input className="form-input" onChange={(event) => setRoleName(event.target.value)} type="text" value={roleName} />
+                    </label>
+                    <label className="form-field">
+                      <span className="form-field__label">Interview date</span>
+                      <input className="form-input" onChange={(event) => setInterviewDate(event.target.value)} type="date" value={interviewDate} />
+                    </label>
+                    <label className="form-field">
+                      <span className="form-field__label">Interview type</span>
+                      <select className="form-input" onChange={(event) => setInterviewType(event.target.value)} value={interviewType}>
+                        <option value="onsite">Onsite</option>
+                        <option value="phone">Phone</option>
+                        <option value="virtual">Virtual</option>
+                        <option value="behavioral">Behavioral</option>
+                        <option value="system_design">System design</option>
+                      </select>
+                    </label>
+                    <label className="form-field">
+                      <span className="form-field__label">Linked resume version</span>
+                      <select className="form-input" onChange={(event) => setSelectedResumeVersionId(event.target.value)} value={selectedResumeVersionId}>
+                        <option value="">None</option>
+                        {resumeChoices.map((choice) => (
+                          <option key={choice.versionId} value={choice.versionId}>
+                            {choice.resumeTitle} · {choice.versionNumberLabel}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="form-field form-field--full">
+                      <span className="form-field__label">Transcript text override</span>
+                      <textarea
+                        className="form-input form-input--textarea"
+                        onChange={(event) => setTranscriptText(event.target.value)}
+                        placeholder="Optional: paste a transcript if you already have one."
+                        rows={5}
+                        value={transcriptText}
+                      />
+                      <span className="form-field__hint">
+                        Optional. If omitted, the server will try to extract a transcript from the audio and continue processing.
+                      </span>
+                    </label>
+                  </div>
+                  {createRecordMutation.isError ? (
+                    <ErrorStateCard
+                      body={
+                        createRecordMutation.error instanceof Error
+                          ? createRecordMutation.error.message
+                          : "The interview record could not be created."
+                      }
+                      details={getErrorDetails(createRecordMutation.error)}
+                      onAction={() => createRecordMutation.reset()}
+                      title="Unable to create interview record"
+                    />
+                  ) : null}
+                  <div className="page-card__actions">
+                    <button
+                      className="primary-button"
+                      disabled={!file || createRecordMutation.isPending}
+                      onClick={() => {
+                        void handleCreateRecord();
+                      }}
+                      type="button"
+                    >
+                      {createRecordMutation.isPending ? "Uploading..." : "Create record"}
+                    </button>
+                  </div>
+                </section>
+              ) : null}
+
+              {recordListQuery.data && recordListQuery.data.length > 0 ? (
+                <section className="page-card">
+                  <span className="page-card__label">Imported records</span>
+                  <h2 className="page-card__title">Open a review workspace</h2>
+                  <div className="stack-list">
+                    {recordListQuery.data.map((record) => (
+                      <button
+                        className="list-item-card practical-record-row"
+                        key={record.id}
+                        onClick={() => {
+                          navigate(routeConfig.practicalInterviewDetail.buildPath({ recordId: record.id }));
+                        }}
+                        type="button"
+                      >
+                        <div className="list-item-card__content">
+                          <div className="list-item-card__meta">
+                            <span>{record.interviewTypeLabel}</span>
+                            {record.interviewDateLabel ? <span>{record.interviewDateLabel}</span> : null}
+                            <span>{record.questionCount} questions</span>
+                          </div>
+                          <h3 className="list-item-card__title">{record.title}</h3>
+                          <div className="chip-list practical-record-row__chips">
+                            <span className={`question-status-badge question-status-badge--${record.transcriptStatusTone}`}>
+                              Transcript {record.transcriptStatusLabel}
+                            </span>
+                            <span className="question-status-badge question-status-badge--accent">
+                              Analysis {record.analysisStatusLabel}
+                            </span>
+                            {record.transcriptRetryCount > 0 ? (
+                              <span className="detail-chip detail-chip--warning">
+                                Retry {record.transcriptRetryCount}
+                              </span>
+                            ) : null}
+                          </div>
+                          <p className="list-item-card__body practical-record-row__body">
+                            {record.transcriptStatus === "failed"
+                              ? record.transcriptErrorLabel ??
+                                "Automatic transcription failed. Open the record to retry or inspect the status."
+                              : record.transcriptNextRetryAtLabel
+                                ? `Next retry ${record.transcriptNextRetryAtLabel}`
+                                : "Open transcript review, structured questions, follow-up threads, and replay readiness from one workspace."}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              ) : (
+                !recordListQuery.isLoading &&
+                !recordListQuery.isError && (
+                  <EmptyStateCard
+                    body="No imported interview records exist yet. Upload the first interview to open the review flow."
+                    title="No practical interviews yet"
+                  />
+                )
+              )}
+            </div>
+
+            <aside className="practical-list-layout__side">
+              <SectionPanel className="workspace-note-card" variant="muted">
+                <span className="page-card__label">Review output</span>
+                <h2 className="page-card__title">Each record should lead into one focused analysis surface</h2>
+                <p className="page-card__body">
+                  The next screen should let you inspect transcript quality, structured questions, follow-up threads, and replay readiness without searching across multiple tools.
+                </p>
+              </SectionPanel>
+            </aside>
+          </div>
         </div>
       ) : null}
     </PageContainer>

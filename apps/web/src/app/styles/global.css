@@ -2609,6 +2609,23 @@ button {
   text-align: left;
 }
 
+.practical-list-layout,
+.practical-list-layout__hero,
+.practical-list-layout__workspace,
+.practical-list-layout__main,
+.practical-list-layout__side,
+.practical-review-layout,
+.practical-review-layout__hero,
+.practical-review-layout__hero-side {
+  display: grid;
+  gap: 18px;
+}
+
+.practical-list-layout__hero-note,
+.practical-review-layout__hero-note {
+  border-style: dashed;
+}
+
 .practical-record-row__chips {
   margin-top: 8px;
 }
@@ -2843,6 +2860,29 @@ button {
 }
 
 @media (min-width: 1024px) {
+  .practical-list-layout__hero {
+    grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
+    align-items: start;
+  }
+
+  .practical-list-layout__workspace {
+    grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
+    gap: 22px;
+    align-items: start;
+  }
+
+  .practical-list-layout__side,
+  .practical-review-layout__hero-side {
+    position: sticky;
+    top: 108px;
+  }
+
+  .practical-review-layout__hero {
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: 22px;
+    align-items: start;
+  }
+
   .practical-review-brief__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

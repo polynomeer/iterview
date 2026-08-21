@@ -19,6 +19,7 @@ import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { SectionPanel } from "../../shared/ui/layout";
 
 const REVIEW_TABS = ["transcript", "question", "thread"] as const;
 type ReviewTab = (typeof REVIEW_TABS)[number];
@@ -1009,8 +1010,9 @@ export function PracticalInterviewReviewPage() {
       eyebrow="Practical Interview"
       title={detail.title}
     >
-      <div className="page-stack">
-        <section className="page-card">
+      <div className="page-stack practical-review-layout">
+        <div className="practical-review-layout__hero">
+          <section className="page-card practical-review-layout__overview">
           <span className="page-card__label">Review overview</span>
           <h2 className="page-card__title">
             {review.overallSummary ?? detail.overallSummary ?? detail.title}
@@ -1121,24 +1123,35 @@ export function PracticalInterviewReviewPage() {
               ))}
             </div>
           ) : null}
-        </section>
+          </section>
 
-        <ReplayPlayer
-          activeRangeLabel={activeReplayLabel}
-          audioRef={audioRef}
-          chapters={chapterItems}
-          currentTimeMs={currentTimeMs}
-          isPlaying={isPlayingAudio}
-          onPlaybackRateChange={setPlaybackRate}
-          onPlayRange={(range, label) => {
-            void playRange(range, label);
-          }}
-          onSeekToMs={seekToMs}
-          onTogglePlay={toggleAudioPlayback}
-          playback={playback}
-          playbackRate={playbackRate}
-          transcriptTimeline={transcriptTimeline}
-        />
+          <div className="practical-review-layout__hero-side">
+            <SectionPanel className="workspace-note-card workspace-note-card--accent practical-review-layout__hero-note" variant="muted">
+              <span className="page-card__label">Analysis flow</span>
+              <h2 className="page-card__title">Keep replay context and lane priorities above the detailed edits</h2>
+              <p className="page-card__body">
+                The transcript editor should stay tactical. Readiness, blockers, provenance, and launch decisions belong in a stable briefing layer above it.
+              </p>
+            </SectionPanel>
+
+            <ReplayPlayer
+              activeRangeLabel={activeReplayLabel}
+              audioRef={audioRef}
+              chapters={chapterItems}
+              currentTimeMs={currentTimeMs}
+              isPlaying={isPlayingAudio}
+              onPlaybackRateChange={setPlaybackRate}
+              onPlayRange={(range, label) => {
+                void playRange(range, label);
+              }}
+              onSeekToMs={seekToMs}
+              onTogglePlay={toggleAudioPlayback}
+              playback={playback}
+              playbackRate={playbackRate}
+              transcriptTimeline={transcriptTimeline}
+            />
+          </div>
+        </div>
 
         <section className="page-card practical-review-brief">
           <div className="section-heading">
