@@ -17,11 +17,11 @@ export function PracticeMobileLayout({
   return (
     <div className="practice-layout practice-layout--mobile">
       <section className="practice-layout__search">{searchControl}</section>
-      <section className="practice-layout__cluster practice-layout__cluster--support">
-        {reviewQueueCard}
-        {filterControls}
-      </section>
       <section className="practice-layout__results">{resultsContent}</section>
+      <section className="practice-layout__cluster practice-layout__cluster--support">
+        {filterControls}
+        {reviewQueueCard}
+      </section>
     </div>
   );
 }
@@ -43,15 +43,15 @@ export function PracticeDesktopLayout({
         }
         aside={
           <div className="page-stack practice-layout__cluster practice-layout__cluster--rail">
+            {reviewQueueCard}
             <FilterPanel description="Keep filters pinned while scanning a larger desktop result set.">
               {filterControls}
             </FilterPanel>
-            {reviewQueueCard}
             <SectionPanel className="workspace-note-card" variant="muted">
-              <span className="page-card__label">Desktop browsing</span>
-              <h2 className="page-card__title">Scan, filter, and act without context switching</h2>
+              <span className="page-card__label">Practice workflow</span>
+              <h2 className="page-card__title">Filter once, then move through the queue with less branching</h2>
               <p className="page-card__body">
-                Desktop keeps the search and results in the main workspace while filters stay visible in a dedicated rail.
+                Keep retry pressure and filters visible in one side rail while the main column stays focused on picking the next question.
               </p>
             </SectionPanel>
           </div>

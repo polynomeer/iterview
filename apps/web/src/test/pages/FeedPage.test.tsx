@@ -113,7 +113,9 @@ describe("FeedPage", () => {
       { route: "/feed" },
     );
 
-    expect(screen.getByText("Browse the current question landscape")).toBeInTheDocument();
+    expect(
+      screen.getByText("Read the market before choosing the next branch to practice"),
+    ).toBeInTheDocument();
     expect(document.querySelector(".feed-layout--desktop")).not.toBeNull();
   });
 });
