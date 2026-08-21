@@ -1,612 +1,117 @@
 # 08-frontend-api
 
-## Goal
-Provide a frontend-facing API reference for the currently implemented interview intelligence flows without mixing documentation concerns into business logic.
+This document explains the backend contract from the frontend's point of view.
 
-## Available Sources
-Use these in order:
+## Contract Principles For Frontend Consumers
 
-1. Runtime OpenAPI JSON
-   - `GET /v3/api-docs`
-2. Runtime Swagger UI
-   - `GET /swagger-ui.html`
-   - enabled by default in `local`
-3. Checked-in frontend snapshot
-   - [`docs/openapi/frontend-integration.yaml`](/Users/hammac/Projects/iterview-api/docs/openapi/frontend-integration.yaml)
+- route and resource grouping should map to actual user journeys
+- additive fields are preferred over breaking replacements
+- machine-readable identifiers and enums should remain stable across locales
+- optional intelligence fields should not break baseline screens when absent
 
-## Scope of the Frontend Snapshot
-The checked-in OAS file focuses on the endpoints the current frontend is most likely to consume for the updated product direction:
+## Frontend-Critical Endpoint Groups
 
-- home aggregation
-- profile and profile image upload
-- resume intelligence
-- question detail, tree, and follow-ups
-- future question reference content such as model answers and curated learning materials
-- answer history and answer analysis
-- skill radar, gap, and progress APIs
-- review queue APIs
-- interview session APIs
+### Auth bootstrap
 
-It is intentionally additive. Existing baseline endpoints such as auth, profile, and feed still exist and remain available from the live `/v3/api-docs` document.
+Needed for:
+- route guards
+- session restoration
+- login and signup flows
 
-## Integration Notes
-- Authenticated endpoints use bearer JWT auth.
-- Product locale initially supports `ko` and `en`.
-- Clients should send `Accept-Language` when they need an explicit localized response.
-- Stored user preference may also affect localized fields returned by the backend.
-- Original user-authored source content such as resume excerpts and answer text remains in the original language even when surrounding UI-facing fields are localized.
-- Machine-readable fields such as `status`, `sourceType`, and error `code` remain locale-neutral.
-- The backend path names are `/api/skills/radar` and `/api/skills/gaps`.
-- Resume PDF upload is `POST /api/resumes/{resumeId}/versions/upload` with `multipart/form-data`.
-- Resume version polling is `GET /api/resume-versions/{versionId}`.
-- Saved job posting context is:
-  - `POST /api/job-postings`
-  - `GET /api/job-postings`
-  - `GET /api/job-postings/{jobPostingId}`
-- Resume extraction status is `GET /api/resume-versions/{versionId}/extraction`.
-- Resume file download is authenticated at `GET /api/resume-versions/{versionId}/file`.
-- Resume re-extraction is `POST /api/resume-versions/{versionId}/re-extract`.
-- The current resume flow guarantees raw PDF parsing and versioned storage. Structured field mapping now returns explicit extraction metadata, and OpenAI-backed extraction is used when configured.
-- `llmExtractionStatus` is additive metadata. Clients should handle at least `pending`, `completed`, `skipped`, `fallback`, and `failed`.
-- Implemented rich resume reads are:
-  - `GET /api/resume-versions/{versionId}/profile`
-  - `GET /api/resume-versions/{versionId}/contacts`
-  - `GET /api/resume-versions/{versionId}/competencies`
-  - `GET /api/resume-versions/{versionId}/skills`
-  - `GET /api/resume-versions/{versionId}/experiences`
-  - `GET /api/resume-versions/{versionId}/projects`
-  - `GET /api/resume-versions/{versionId}/achievements`
-  - `GET /api/resume-versions/{versionId}/education`
-  - `GET /api/resume-versions/{versionId}/certifications`
-  - `GET /api/resume-versions/{versionId}/awards`
-  - `GET /api/resume-versions/{versionId}/risks`
-- Resume tailoring analysis reads and writes are:
-  - `POST /api/resume-versions/{versionId}/analyses`
-  - `GET /api/resume-versions/{versionId}/analyses`
-  - `GET /api/resume-versions/{versionId}/analyses/{analysisId}`
-  - `PATCH /api/resume-versions/{versionId}/analyses/{analysisId}/suggestions/{suggestionId}`
-  - `POST /api/resume-versions/{versionId}/analyses/{analysisId}/exports`
-  - `GET /api/resume-versions/{versionId}/analyses/{analysisId}/exports`
-  - `GET /api/resume-versions/{versionId}/analyses/{analysisId}/exports/{exportId}/file`
-- Resume interview heatmap reads and writes are:
-  - `GET /api/resume-versions/{versionId}/question-heatmap`
-  - `GET /api/resume-versions/{versionId}/question-heatmap/overlay-targets`
-  - `POST /api/resume-versions/{versionId}/question-heatmap/links`
-  - `PATCH /api/resume-versions/{versionId}/question-heatmap/links/{linkId}`
-- Resume editor workspace reads and writes are:
-  - `GET /api/resume-versions/{versionId}/editor`
-  - `PUT /api/resume-versions/{versionId}/editor/document`
-  - `POST /api/resume-versions/{versionId}/editor/import-markdown`
-  - `POST /api/resume-versions/{versionId}/editor/comments`
-  - `PATCH /api/resume-versions/{versionId}/editor/comments/{commentId}`
-  - `POST /api/resume-versions/{versionId}/editor/comments/{commentId}/replies`
-  - `POST /api/resume-versions/{versionId}/editor/presence`
-  - `POST /api/resume-versions/{versionId}/editor/question-cards`
-  - `PATCH /api/resume-versions/{versionId}/editor/question-cards/{cardId}`
-  - `POST /api/resume-versions/{versionId}/editor/auto-question-suggestions`
-  - `POST /api/resume-versions/{versionId}/editor/rewrite-suggestions`
-  - `GET /api/resume-versions/{versionId}/editor/print-preview`
-  - `GET /api/resume-versions/{versionId}/editor/revisions`
-  - `GET /api/resume-versions/{versionId}/editor/revisions/{revisionId}`
-  - `GET /api/resume-versions/{versionId}/editor/tracked-changes`
-  - `POST /api/resume-versions/{versionId}/editor/merge-preview`
-- resume analysis runs are additive read/write models layered on top of immutable resume versions
-- current backend scope for resume tailoring is:
-  - save and parse one job posting
-  - compare one resume version to that job posting
-  - persist summary metrics, tailored document content, and section-level rewrite suggestions
-  - persist suggestion acceptance state
-- persist export history and generate PDF exports from one tailored analysis
-- `JobPostingDto` now also carries:
-  - `fetchStatus`
-  - `fetchedTitle`
-  - `fetchErrorMessage`
-  - `fetchedAt`
-- `ResumeAnalysisDto` now also carries:
-  - `generationSource`
-  - `llmModel`
-  - `analysisNotes`
-  - `tailoredDocument`
-  - `exports`
-- `ResumeQuestionHeatmapDto` now exposes:
-  - `appliedFilters`
-  - `filterSummary`
-  - `summary`
-  - `items`
-- `ResumeQuestionHeatmapOverlayTargetListDto` now also exposes:
-  - `appliedFilters`
-  - `filterSummary`
-- `ResumeQuestionHeatmapItemDto` now also exposes:
-  - `overlayTargets`
-- `ResumeEditorBlockDto` now also exposes:
-  - `inlineMarks`
-- `ResumeEditorCommentThreadDto` now also exposes:
-  - `replyCount`
-  - `replies`
-- `ResumeEditorCommentSummaryDto` now also exposes:
-  - `totalReplyCount`
-- `ResumeEditorPrintPreviewDto` now exposes:
-  - `title`
-  - `pageEstimate`
-  - `plainText`
-  - `sections`
-  - `pages`
-- `ResumeEditorWorkspaceDto` now also exposes:
-  - `revisionNo`
-  - `activePresence`
-  - `latestRevision`
-- editor document writes can send:
-  - `baseRevisionNo`
-  - `changeSource`
-- `POST /editor/presence` is the lightweight heartbeat API for collaborative cursors/presence pills
-- `GET /editor/revisions` and `GET /editor/revisions/{revisionId}` are the additive history APIs for revision panels and rollback previews
-- `GET /editor/tracked-changes` is the additive diff API for track-changes or revision compare UI
-- `POST /editor/merge-preview` is the additive stale-write recovery API for server-assisted merge flows
-- markdown import accepts one markdown payload and either replaces or appends to the current workspace document
-- comment replies are additive thread messages and do not move the original selection anchor
-- comment and question-card anchors now preserve richer recovery metadata under the same `selectionAnchor` shape
-- tracked changes now also include `beforeTextLines` and `afterTextLines`
-- merge preview conflicts now also include `baseTextLines`, `currentTextLines`, and `proposedTextLines`
-- print preview and PDF export now use one shared line-estimation strategy, so preview page hints should be treated as closer to export output than before
-- each heatmap item currently exposes:
-  - anchor identity such as `anchorType`, `anchorRecordId`, and `anchorKey`
-  - `label`
-  - `snippet`
-  - `heatScore`
-  - `normalizedHeatLevel`
-  - `directQuestionCount`
-  - `followUpCount`
-  - `distinctInterviewCount`
-  - `pressureQuestionCount`
-  - `weaknessCount`
-  - `recentQuestionAt`
-  - `overlayTargets`
-  - `linkedQuestions`
-- `ResumeQuestionHeatmapOverlayTargetListDto` exposes flattened overlay targets for hover-driven resume viewers
-- each overlay target currently exposes:
-  - `targetKey`
-  - `targetType`
-  - `fieldPath`
-  - `textSnippet`
-  - `textStartOffset`
-  - `textEndOffset`
-  - `sentenceIndex`
-  - `paragraphIndex`
-  - `heatScore`
-  - `normalizedHeatLevel`
-  - `questionCount`
-  - `followUpCount`
-  - `pressureQuestionCount`
-  - `weaknessCount`
-  - `linkedQuestions`
-- each heatmap-linked question now also exposes:
-  - `linkSource`
-  - `confidenceScore`
-- current heatmap scope query values are:
-  - `all`
-  - `main`
-  - `follow_up`
-- manual remap links are additive override rows; they do not mutate the imported practical-interview question itself
-- current overlay coverage supports:
-  - `block` targets for whole-project or whole-anchor questions
-  - `sentence` targets for sentence-specific hover cards
-- micro overlay coverage now also supports:
-  - `phrase` targets for clause-level hover cards
-  - `keyword` targets for stack or term-focused hover chips
-- current additive heatmap filters are:
-  - `scope`
-  - `weakOnly`
-  - `companyName`
-  - `interviewDateFrom`
-  - `interviewDateTo`
-  - `targetType`
-- `targetType` supports:
-  - `block`
-  - `sentence`
-  - `phrase`
-  - `keyword`
-- current precomputed heatmap filter summary exposes at least:
-  - `totalQuestions`
-  - `weakQuestionCount`
-  - `pressureQuestionCount`
-  - `followUpQuestionCount`
-  - `distinctInterviewCount`
-  - `distinctCompanyCount`
-  - `companyNames`
-  - `availableTargetTypes`
-  - `targetTypeCounts`
-  - `earliestInterviewDate`
-  - `latestInterviewDate`
-- manual remap payloads now also accept:
-  - `overlayTargetType`
-  - `overlayFieldPath`
-  - `overlaySentenceIndex`
-  - `overlayTextSnippet`
-- frontend should support both whole-block questions and sentence-specific question cards in the same viewer
-- frontend should also treat `phrase` and `keyword` as valid overlay target types rather than unsupported noise
-- for `targetType`-filtered reads, frontend should treat `filterSummary` as the source of truth for chip counts and applied filter badges
-- `GET /api/resume-versions/{versionId}/editor` is the current document-centered workspace contract layered on top of one immutable resume version
-- the workspace response currently includes:
-  - `supportedViewModes`
-  - `document`
-  - `comments`
-  - `questionCards`
-  - `commentSummary`
-  - `questionCardSummary`
-  - `heatmapAvailable`
-  - `heatmapSummary`
-- `document.blocks[]` is the current annotation unit and `blockId` should be treated as the stable comment/question-card target
-- each block also carries `sourceAnchorType`, `sourceAnchorRecordId`, `sourceAnchorKey`, and `fieldPath` so editor annotations can align with heatmap overlays
-- current editor suggestion endpoints are deterministic helper APIs; they return candidate questions or rewrite guidance but do not persist them automatically
+Critical endpoints:
+- `POST /api/auth/signup`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
 
-## Local Heatmap Demo
-- the backend does not render the hover UI by itself; the current sentence/phrase/keyword overlay viewer must be implemented in the frontend
-- for local integration, `local` profile startup now seeds one demo account:
-  - email: `demo-heatmap@iterview.local`
-  - password: `demo1234!`
-- seeded resume title:
-  - `Heatmap Overlay Demo Resume`
-- recommended verification flow:
-  - `POST /api/auth/login`
-  - `GET /api/resumes`
-  - find the resume titled `Heatmap Overlay Demo Resume`
-  - fetch its active version
-  - `GET /api/resume-versions/{versionId}/question-heatmap`
-  - `GET /api/resume-versions/{versionId}/question-heatmap/overlay-targets?targetType=sentence`
-- the seeded local demo intentionally includes:
-  - one whole-project `block` question
-  - one sentence-remapped overlay question
-  - one follow-up chain
-  - one Redis keyword-focused question
-  - one older interview from another company for filter demos
-- The current project endpoint should be treated as the stable base for resume-derived project cards.
-- Implemented project payload fields now include:
-  - `contentText`
-  - `projectCategoryCode`
-  - `projectCategoryName`
-  - `tags`
-- Frontend should render projects as richer cards rather than only short experience subrows.
-- Question detail includes generic `learningMaterials`, additive `referenceAnswers`, and additive `practicalInterviewContext` for imported real interview assets.
-- Dedicated question reference-content reads are:
-  - `GET /api/questions/{questionId}/reference-answers`
-  - `GET /api/questions/{questionId}/learning-materials`
-- Dedicated user-add flows are:
-  - `POST /api/questions/{questionId}/reference-answers`
-  - `POST /api/questions/{questionId}/learning-materials`
-- If shared reference content is missing for the active locale, question detail and dedicated reference-content reads may lazily generate and persist default AI answers/materials on the backend.
-- `QuestionReferenceAnswerDto` now also carries:
-  - `sourceLabel`
-  - `contentLocale`
-  - `isUserGenerated`
-- `LearningMaterialDto` now also carries:
-  - `sourceType`
-  - `sourceLabel`
-  - `contentLocale`
-  - `isUserGenerated`
-- For imported real interview assets, `GET /api/questions/{questionId}/reference-answers` may append one imported answer row with:
-  - `sourceType = real_interview_import`
-  - `title = Imported real interview answer summary`
-- Imported real interview question assets are private. Frontend should treat their question detail reads as authenticated owner-only flows.
-- The skill APIs recalculate and persist score snapshots server-side; frontend clients should treat them as read APIs.
-- `POST /api/questions/{questionId}/answers` now also returns additive `analysis` payload for richer result screens, including:
-  - `detailedFeedback`
-  - `strengthPoints`
-  - `improvementPoints`
-  - `missedPoints`
-  - `modelAnswer`
-  - `llmModel`
-  - `contentLocale`
-- `GET /api/answer-attempts/{answerAttemptId}` also includes additive `analysis` so detailed result views can reuse the persisted deep feedback.
-- Interview sessions are minimal turn-based APIs. They do not imply realtime or streaming behavior.
-- Interview history is now available from `GET /api/interview-sessions` as session-level summaries.
-- `POST /api/interview-sessions` now also supports `sessionType = replay_mock` with:
-  - required `sourceInterviewRecordId`
-  - optional `replayMode`
-- Archive payloads now include additive source fields so the frontend can render `Practice` and `Interview` badges without changing archive list semantics.
-- Archive now also includes imported practical interview question assets with:
-  - `sourceType = real_interview`
-  - `sourceLabel = Real Interview`
-  - `sourceInterviewRecordId`
-  - `sourceInterviewQuestionId`
-- Imported practical interview questions are now also backed by private generated question assets:
-  - `GET /api/interview-records/{recordId}/questions` includes `linkedQuestionId`
-  - archive `questionId` for `real_interview` items now points to the linked question asset id, so frontend can deep-link into the normal question detail route
-- Asked interview turns are now mirrored into archive as question-level records, while interview history remains session-level.
-- Session question payloads now include follow-up metadata:
-  - `sourceType`
-  - `parentSessionQuestionId`
-  - `isFollowUp`
-  - `depth`
-  - `categoryName`
-- Resume interview sessions may now return AI-generated follow-up snapshots with:
-  - `bodyText`
-  - `tags`
-  - `focusSkillNames`
-  - `resumeContextSummary`
-  - `generationRationale`
-  - `generationStatus`
-  - `llmModel`
-  - `llmPromptVersion`
-- Implemented additive session-question metadata for resume-grounded evidence:
-  - `resumeEvidence`
-  - each item may include:
-    - `type`
-    - `section`
-    - `label`
-    - `snippet`
-    - `sourceRecordType`
-    - `sourceRecordId`
-    - `confidence`
-- Current interview generation scope is narrower than the full resume model:
-  - opener and follow-up generation currently use `project` and `experience` evidence only
-  - profile summary, contacts, competencies, awards, certifications, and education are not currently used as interview question sources
-- Resume interview creation should expose one explicit `resumeVersionId` selector in the frontend start flow rather than silently relying on whichever version happens to be active.
-- implemented interview-start configuration now accepts `interviewMode` values such as `quick_screen`, `mock_30`, `mock_60`, `free_interview`, and `full_coverage`
-- implemented session list/detail payloads now also include:
-  - `sourceInterviewRecordId`
-  - `replayMode`
-- The opening question for a resume-based interview may also be AI-generated from the selected resume version and should be rendered from session snapshot fields the same way as AI follow-ups.
-- Frontend should not assume every follow-up maps to a global `questionId`; AI-generated follow-ups may rely on snapshot fields only.
-- for `replay_mock`, the first session rows may also have:
-  - `questionId = null`
-  - `sourceType = replay_seed`
-  - `generationStatus = replay_imported`
-  - replay-oriented `bodyText` that summarizes the imported answer/interviewer tone
-- after a replay-seeded question is answered, the backend may return AI-generated interviewer-style follow-up turns with:
-  - `sourceType = replay_ai_follow_up`
-  - `generationStatus = replay_ai_generated`
-  - `questionId` populated from a private generated question asset even if the original replay seed started with `questionId = null`
-  - `bodyText` and `generationRationale` aligned to the imported interviewer profile and imported interview examples
-- Recommended rendering fallback for session questions:
-  - use `title` as the primary visible prompt
-  - use `bodyText` as supporting interviewer framing when present
-  - use `questionId` only for deep-linking or fetching catalog question detail when non-null
-  - use `sourceType` and `generationStatus` together to distinguish seeded, catalog follow-up, and AI-generated turns
-- Recommended interview-start flow:
-  - fetch resume containers or latest resume summary before opening the Interview start sheet
-  - present one explicit resume-version selector for `resume_mock`
-  - send the selected `resumeVersionId` in `POST /api/interview-sessions`
-  - navigate to `/interviews/{sessionId}` and render the returned opening question immediately
-- Recommended archive badge mapping:
-  - `sourceType = practice` -> `Practice`
-  - `sourceType = interview` -> `Interview`
-  - `sourceType = real_interview` -> `Real Interview`
-  - `isFollowUp = true` may be rendered as a secondary follow-up badge, not a replacement for source type
-- For interview-originated archive rows, use `sourceSessionId` as the backlink anchor and `sourceSessionQuestionId` as the stable turn identifier.
-- Recommended interview timeline rendering:
-  - order by `orderIndex`
-  - use `parentSessionQuestionId` and `depth` for indentation or connector lines
-  - show `focusSkillNames` and `resumeContextSummary` as secondary evidence, not as the main prompt content
-  - when `resumeEvidence` is present, render one compact `Based on your resume` block on the question card
-  - default to showing at most the first one or two evidence items
-  - use `section` or `label` as a small badge or eyebrow label
-  - use `snippet` as the visible quoted evidence text
-  - never replace the question title with the evidence snippet
-  - do not require deep-link behavior for the first implementation; `sourceRecordType` and `sourceRecordId` are forward-compatible metadata
-- recommended session progression behavior:
-  - treat `POST /api/interview-sessions/{sessionId}/next-question` as an advance action only
-  - if the current question is still unanswered, prompt the user to submit an answer or skip the question first
-  - use `POST /api/interview-sessions/{sessionId}/skip-question` when the user wants to bypass the current prompt
-  - after answer or skip, `next-question` may resolve the next queued question or lazily generate the next `full_coverage` question
-  - for `full_coverage`, `summary.weakFacetSummaries` and `summary.skippedFacetSummaries` are additive helpers for in-session side panels or progress callouts
-  - once all `unasked` evidence has been consumed, the backend will usually revisit `weak` facets before `skipped` facets and will only then fall back to already-defended evidence
-  - weak-facet revisit questions may sound more like re-validation or evidence challenge prompts than first-pass overview questions
-- implemented full-coverage result support:
-  - `GET /api/interview-sessions/{sessionId}/coverage`
-  - `GET /api/interview-sessions/{sessionId}/resume-map`
-  - use these to render a result-time resume viewer where one hovered or clicked resume evidence item can reveal related interview questions
-- recommended full-coverage frontend behavior:
-  - explain that coverage is measured against interviewable resume evidence units, not every raw character
-  - one parsed project or experience block may map to multiple evidence snippets and therefore multiple interview turns over time
-  - show overall coverage percent plus per-section completion
-  - handle `coverageStatus` values such as `unasked`, `asked`, `defended`, `weak`, and `skipped`
-  - do not assume the session ends immediately when coverage reaches 100%; the backend may continue with extra deep-dive questions
-  - extra deep-dive turns generated after coverage completion may carry `generationStatus = coverage_extended`
-  - prefer a structured resume viewer based on parsed experiences and projects instead of first attempting raw PDF overlays
-  - use `sourceRecordType` + `sourceRecordId` from `resume-map` as the join key back into parsed resume sections
-  - use `displayOrder` from `coverage` or `resume-map` to keep highlighted resume blocks aligned with parsed resume section ordering
-  - `facetSummaries` are additive record-level summaries grouped by `sourceRecordType` + `sourceRecordId`
-  - `weakFacetSummaries` can drive "needs more defense" panels without recomputing weak facets from raw evidence items
-  - `skippedFacetSummaries` can drive separate skipped-area panels or badges in the result view
-  - `facet` is additive metadata and can be used for debug labels or richer question grouping, but should not be required for the basic UI
-  - in the result view, hovering a highlighted resume block should show related questions in a lightweight preview
-  - clicking a highlighted resume block should pin the related questions and allow navigation or scrolling back to the relevant question card
-  - use `primaryQuestionCount` and `followUpQuestionCount` to summarize how many turns are attached before expanding the full related-question list
-  - use `relatedQuestions[].orderIndex`, `status`, and `isFollowUp` to render the preview in timeline order without fetching another intermediate mapping structure
-  - treat current result highlighting scope as `project` and `experience` only
-- The home payload is backward compatible. Newly added fields are optional and can be ignored by older clients.
-- Mixed-language rendering is expected and should be handled gracefully:
-  - UI chrome and localized labels may be English
-  - AI-generated question text may be English
-  - resume evidence snippets may still be Korean original text
+### Home and feed
 
-Implemented practical interview record foundation:
-- real-interview records now have dedicated resources:
-  - `POST /api/interview-records`
-  - `GET /api/interview-records`
-  - `GET /api/interview-records/{recordId}`
-  - `GET /api/interview-records/{recordId}/transcript`
-  - `PATCH /api/interview-records/{recordId}/transcript/segments/{segmentId}`
-  - `POST /api/interview-records/{recordId}/retry-transcription`
-  - `GET /api/interview-records/{recordId}/questions`
-  - `GET /api/interview-records/{recordId}/review`
-  - `PATCH /api/interview-records/{recordId}/review`
-  - `GET /api/interview-records/{recordId}/analysis`
-  - `GET /api/interview-records/{recordId}/interviewer-profile`
-  - `POST /api/interview-records/{recordId}/confirm`
-- keep imported real-interview records distinct from interactive mock-session resources
-- transcript review screens should expose `rawTranscript`, `cleanedTranscript`, `confirmedTranscript`, and ordered `segments`
-- transcript, question, and review reads now also expose additive replay metadata so one shared audio player can be driven directly from backend ranges
-- `POST /api/interview-records` is `multipart/form-data` with:
-  - required `file`
-  - optional `companyName`, `roleName`, `interviewDate`, `interviewType`, `linkedResumeVersionId`, `linkedJobPostingId`, `transcriptText`
-- when transcript text is present at upload time, the backend performs deterministic structuring immediately and may also apply optional AI refinement before returning completed transcript/analysis status
-- when transcript text is omitted, the backend now attempts automatic transcript extraction from the uploaded audio before running the same structuring pipeline
-- practical interview transcription now uses explicit lifecycle statuses:
-  - `pending`
-  - `processing`
-  - `failed`
-  - `confirmed`
-- if automatic extraction is not available in the runtime environment, the created record currently comes back as:
-  - `transcriptStatus = failed`
-  - `transcriptErrorCode = transcription_not_configured`
-- record detail and transcript reads now also expose:
-  - `transcriptErrorCode`
-  - `transcriptErrorMessage`
-  - `transcriptRetryCount`
-  - `transcriptLastAttemptAt`
-  - `transcriptProcessingStartedAt`
-  - `transcriptNextRetryAt`
-- `POST /api/interview-records/{recordId}/retry-transcription` re-queues extraction for non-confirmed records when the runtime has transcription configured
-- record detail now exposes provenance fields for review UIs:
-  - `deterministicSummary`
-  - `aiEnrichedSummary`
-  - `overallSummary`
-  - `structuringStage`
-- structured question review should consume:
-  - root `playback`
-  - `questionType`
-  - `topicTags`
-  - `intentTags`
-  - `structuringSource`
-  - `questionRange`
-  - `answerRange`
-  - `questionAnswerRange`
-  - nested answer snapshot fields such as `summary`, `confidenceMarkers`, `weaknessTags`, and `strengthTags`
-- answer snapshots also expose `structuringSource` and `replayRange`
-- interviewer-profile screens can now consume:
-  - `styleTags`
-  - `toneProfile`
-  - `pressureLevel`
-  - `depthPreference`
-  - `followUpPatterns`
-  - `favoriteTopics`
-  - `openingPattern`
-  - `closingPattern`
-  - `structuringSource`
-- `GET /api/interview-records/{recordId}/analysis` now also exposes `structuringStage`
-- `GET /api/interview-records/{recordId}/review` exposes review provenance:
-  - `playback`
-    - use this for the shared interview player on review screens
-  - `structuringStage`
-  - `requiresConfirmation`
-  - `deterministicSummary`
-  - `aiEnrichedSummary`
-  - `overallSummary`
-  - `confirmedAt`
-  - `totalSegmentCount`
-  - `editedSegmentCount`
-    - this is the current pending diff count against the cleaned baseline; once edits are rebuilt and confirmed it may return to `0`
-  - `totalQuestionCount`
-  - `changedQuestionCount`
-  - `weakAnswerCount`
-  - `followUpQuestionCount`
-  - `questionSourceCounts`
-  - `answerSourceCounts`
-  - `interviewerProfileSource`
-  - `questionFilterSummary`
-    - use this for review-table tabs or filter badges like `All`, `Weak`, `Follow-up`, `Weak Follow-up`, `Confirmed`
-  - `questionDistributionSummary`
-    - use this for practical interview review chips such as question type and topic tag breakdown without recomputing counts on the client
-  - `questionOriginSummary`
-    - use this for source-group tabs or badges such as `Resume-linked`, `JD-linked`, `Hybrid`, `General`
-  - `replayReadiness`
-    - use this for practical interview replay CTA state and empty-state messaging without recomputing readiness on the client
-  - `reviewLaneSummary`
-    - use this for top-level transcript/question/thread dashboard cards without recomputing lane progress on the client
-    - each lane also carries additive `sortOrder`, `highlightVariant`, `badgeText`, `summaryText`, `recommendedTab`, `defaultExpanded`, `analyticsKey`, `trackingContext`, `helpText`, `whyItMatters`, `accessibilityLabel`, `screenReaderSummary`, `severity`, `highestPriority`, `primaryAction`, `primaryActionLabel`, `primaryActionTarget`, `primaryActionTargetPayload`, `secondaryAction`, `secondaryActionLabel`, `secondaryActionTarget`, `secondaryActionTargetPayload`, `emptyStateMessage`, `emptyStateCtaAction`, `emptyStateCtaLabel`, `emptyStateCtaTarget`, `emptyStateCtaTargetPayload`, `completionMessage`, `completionCtaAction`, `completionCtaLabel`, `completionCtaTarget`, `completionCtaTargetPayload`, `blockingReasons[]`, and `blockingReasonDetails[]` so lane cards can render CTA buttons, target the right panel/tab focus, apply default filters/focus payloads, show richer disabled-state explanations, header copy, initial expansion state, initial tab focus, analytics payloads, helper copy, accessibility copy, empty-state actions, completion actions, and lane ordering without duplicating backend rules
-  - `transcriptIssueSummary`
-    - use this for transcript review priority panels such as `edited`, `speaker override`, or `low confidence`
-    - `segmentActions[]` is additive quick-action metadata for jumping from a flagged transcript row into the related question or follow-up thread without rebuilding anchors on the client
-    - `seekRange` is included on each segment action so issue rows can seek the shared player directly
-    - each segment action may also carry `deepLink` and `replayLaunchPreset` so transcript-first review UIs can open question detail or replay directly from the issue row
-    - `severity`, `priority`, and `reviewerLane` are additive triage metadata for sorting transcript issues and routing them into transcript, question, or thread review lanes
-    - `triageReason` and `ctaLabel` are additive copy helpers for top-priority cards and transcript issue buttons
-    - `reviewerLaneCounts` and `topPrioritySegmentActions[]` are additive dashboard aggregates for review-summary headers and `look here first` panels
-    - `resolvedIssueCount`, `unresolvedIssueCount`, and `confirmationReadiness` are additive progress fields for transcript review completion banners or confirm gating
-  - `answerQualitySummary`
-    - use this for practical interview answer-quality panels such as `weak`, `quantified`, `structured`, or `trade-off aware`
-  - `timelineNavigation`
-    - use this for transcript viewer, question table, and follow-up thread panel cross-navigation without recomputing anchors on the client
-    - each item also includes `questionRange`, `answerRange`, and `questionAnswerRange`
-  - `actionRecommendations`
-    - use this for primary CTA selection and disabled-state messaging in practical interview review
-    - `primaryActionLabel`, `primaryActionTarget`, `primaryActionTargetPayload`, `availableActionLabels`, `availableActionTargets`, `availableActionTargetPayloads`, and `blockingReasonDetails[]` are additive and let the review header CTA reuse the same route/panel/filter semantics as lane cards, while also rendering blocker chips/cards with server-provided labels, severity, ordering, and action targets
-  - `replayLaunchPreset`
-    - use this to prefill the replay-start modal or direct `POST /api/interview-sessions` call for `replay_mock`
-    - `recommendedReplayModeLabel`, `availableReplayModeLabels`, `presetTitle`, `presetDescription`, and `launchButtonLabel` are additive display helpers so replay launch UI can render recommended-copy without duplicating mode-label rules
-  - `replayReadiness`
-    - `recommendedReplayModeLabel`, `statusBadgeText`, `statusVariant`, `statusSummary`, `primaryCtaLabel`, and `blockedCtaLabel` are additive display helpers so readiness cards can render replay-ready vs blocked copy without re-deriving backend blocker state
-    - `blockerDetails[]` is additive richer blocker metadata for blocked replay cards, including label, description, severity, ordering, and recommended next action target copy
-  - `provenanceComparisonSummary`
-    - use this for deterministic vs AI vs confirmed diff panels without inferring current source precedence on the client
-  - `questionSummaries[]`
-    - use this for practical interview question review tables instead of recomputing follow-up/weak/confirmed state on the client
-    - each summary also carries `deepLink` metadata for direct question-detail, archive-source, and replay-mock actions
-    - `topicTags` is included so row-level tag filtering does not require a second `questions` fetch
-    - `originType`, `derivedFromResumeSection`, and `derivedFromJobPostingSection` are included so origin badges do not require a second `questions` fetch
-    - `confidenceMarkers` is included so confidence/uncertainty badges do not require a second `questions` fetch
-    - replay-aware review tables can use `questionRange`, `answerRange`, and `questionAnswerRange` directly
-  - `followUpThreads[]`
-    - use this for threaded review panels or grouped follow-up badges without reconstructing parent-child chains on the client
-    - thread rows now also include answer-quality counters such as `answeredQuestionCount`, `quantifiedQuestionCount`, `structuredQuestionCount`, `tradeoffAwareQuestionCount`, and `uncertainQuestionCount`
-    - `recommendedAction` can drive per-thread CTA labels such as `review weak chain` or `replay chain`
-    - `replayLaunchPreset` can drive `replay this chain` actions without building a second preset client-side
-    - `threadRange` can drive thread-level preview playback before or outside replay session launch
-- shared replay ranges include:
-  - `startMs`
-  - `endMs`
-  - `durationMs`
-  - `startTimestampLabel`
-  - `endTimestampLabel`
-- `PATCH /api/interview-records/{recordId}/review` supports bulk review editing:
-  - `edits[]`
-  - each edit may update `speakerType`, `cleanedText`, and `confirmedText` for one `segmentId`
-  - `confirmAfterApply=true` lets the frontend apply edits and finalize confirmation in a single submit
-- `POST /api/interview-records/{recordId}/confirm` finalizes the currently reviewed structured output as the confirmed version
-- current provenance values:
-  - `deterministic`
-  - `ai_enriched`
-  - `confirmed`
-- `replay_mock` is still planned, but frontend should already model imported interview records as reusable assets that can later seed replay flows
-- the initial replay seeding flow is now implemented, but interviewer-profile-driven dynamic replay follow-ups are still planned
+Critical endpoints:
+- `GET /api/home`
+- `GET /api/feed`
 
-## Recommended Frontend Usage
-- During local integration, point Swagger or codegen tooling at `/v3/api-docs`.
-- For PR review, schema discussion, or frontend mocking, use the checked-in snapshot file.
-- If the runtime API and snapshot diverge, treat the runtime `/v3/api-docs` as the operational source and update the snapshot in the same backend change.
+### Practice and question detail
 
-## Resume Editor V2
+Critical endpoints:
+- `GET /api/questions`
+- `GET /api/questions/{questionId}`
+- `GET /api/questions/{questionId}/tree`
+- `GET /api/questions/{questionId}/reference-answers`
+- `GET /api/questions/{questionId}/learning-materials`
+- `GET /api/questions/{questionId}/recommended-followups`
+- `GET /api/questions/resume-based`
 
-The runtime editor API now supports additive v2 rich-document behavior while preserving the v1 block and markdown fallback.
+### Answer and result analysis
 
-Live additive editor upgrades:
+Critical endpoints:
+- `POST /api/questions/{questionId}/answers`
+- `GET /api/questions/{questionId}/answers`
+- `GET /api/answer-attempts/{answerAttemptId}`
+- `GET /api/answer-attempts/{answerAttemptId}/analysis`
 
-- `GET /api/resume-versions/{versionId}/editor` now returns:
-  - `documentModel = rich_tree`
-  - `document.rootNodeId`
-  - `document.nodes[]`
-  - `document.tableOfContents[]`
-  - `selectionCapabilities`
-  - `contextMenuActions`
-- `PATCH /api/resume-versions/{versionId}/editor/document/operations` is live for granular rich-document writes
-- `PUT /editor/document` remains live for coarse full-document replacement
-- comment, question-card, and suggestion request payloads now accept additive `selectionAnchor`
-- tracked changes and merge preview now include richer node-aware metadata
+### Review queue and archive
 
-Live additive DTOs:
+Critical endpoints:
+- `GET /api/review-queue`
+- `POST /api/review-queue/{queueId}/skip`
+- `POST /api/review-queue/{queueId}/done`
+- `GET /api/archive`
 
-- `ResumeEditorSelectionCapabilitiesDto`
-- `ResumeEditorNodeDto`
-- `ResumeEditorTextRunDto`
-- `ResumeEditorTableOfContentsItemDto`
-- `ResumeEditorSelectionAnchorDto`
-- `ResumeEditorDocumentOperationDto`
-- `PatchResumeEditorDocumentOperationsRequest`
+### Resume surfaces
 
-Frontend integration expectation for v2:
+Critical endpoints:
+- `GET /api/resumes`
+- `GET /api/resumes/latest`
+- `POST /api/resumes/{resumeId}/versions/upload`
+- `GET /api/resume-versions/{versionId}`
+- extraction subresources such as `/skills`, `/projects`, `/risks`
+- `POST /api/resume-versions/{versionId}/activate`
 
-1. if the workspace exposes `documentModel = rich_tree`, render one document-centered editor surface and treat `nodes[]` as the richer semantic model
-2. keep `blocks[]` and `markdownSource` as migration-safe fallback paths
-3. prefer `selectionAnchor` over raw `blockId` for comments, question cards, and suggestion flows
-4. prefer `PATCH /editor/document/operations` for contextual granular edits and keep `PUT /editor/document` for full replace flows
+### Resume tailoring, heatmap, and editor
+
+Needed for:
+- job-posting management
+- version-scoped analysis lists and details
+- export flows
+- heatmap rendering and remap actions
+- editor workspace and revisions
+
+### Interview and replay
+
+Critical endpoints:
+- `POST /api/interview-sessions`
+- `GET /api/interview-sessions/{sessionId}`
+- `POST /api/interview-sessions/{sessionId}/answers`
+- `GET /api/interview-records/{recordId}`
+- `GET /api/interview-records/{recordId}/review`
+- `PATCH /api/interview-records/{recordId}/review`
+
+## Frontend Integration Expectations
+
+The backend should continue to support these expectations:
+- question-detail views can grow richer without changing the route model
+- result-analysis views can consume optional deeper analysis fields
+- home can receive new recommendation or risk sections additively
+- resume screens can read granular extraction resources independently
+- interview pages can render snapshot-driven content without needing extra catalog fetches
+- practical interview review screens can trust backend-derived ordering and playback ranges
+
+## Failure And Loading Semantics
+
+The backend should make these states distinguishable:
+- not authenticated
+- empty but valid result set
+- pending processing
+- failed processing with retry possibility
+- partially available additive data
+
+This is especially important for:
+- resume parsing
+- resume analyses and exports
+- practical interview transcription
+- interview generation and coverage data
+
+## Contract Hygiene Rules
+
+- when a new field is optional, document it as optional
+- when a new subresource is introduced, prefer a clearly named endpoint
+- when one screen depends on locale-aware generated text, preserve machine-readable source fields independently

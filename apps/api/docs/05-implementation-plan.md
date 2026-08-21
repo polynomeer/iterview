@@ -1,246 +1,121 @@
 # 05-implementation-plan
 
-Shared implementation sequencing now lives in:
-
+Shared implementation sequencing lives in:
 - `../../../docs/02-implementation-roadmap.md`
 
-This document should stay focused on backend-only implementation planning.
+This document narrows the focus to backend delivery.
 
-Acceptance intent:
-- the heatmap is additive and does not rewrite immutable resume snapshots
-- manual remaps do not mutate imported practical interview question text
-- practical interview review and resume review can share the same parsed anchor ids
+## Planning Principles
 
-## Phase 1D - Sentence-Level Resume Overlay
-1. introduce parsed resume overlay targets inside each anchor block
-2. support mixed overlay layers:
-   - `block` for whole-project or whole-experience questions
-   - `sentence` for precise sentence-triggered questions
-   - `phrase` for clause-level overlays
-   - `keyword` for stack or term-focused overlays
-3. add sentence segmentation for parsed resume fields such as:
-   - `project.summaryText`
-   - `project.contentText`
-   - `experience.summaryText`
-   - `experience.impactText`
-   - `profile.summaryText`
-4. persist text-range aware question links separately from current anchor-level links
-5. expose additive read data that lets the frontend:
-   - tint the whole anchor block
-   - hover one sentence and preview linked question cards
-   - distinguish project-wide questions from sentence-specific questions
-6. keep anchor-level heat summary as the stable first-layer model
+- preserve the existing answer and review loop
+- evolve schema through additive Flyway migrations
+- keep new domain logic inside existing domain boundaries
+- reuse current aggregates before inventing new ones
+- preserve deterministic local-development behavior even when AI features are available
 
-Acceptance intent:
-- whole-project questions and sentence-specific questions can coexist in one resume viewer
-- hoverable sentence overlays do not require raw PDF coordinate extraction
-- manual correction can eventually happen at sentence-range level without mutating source resume text
+## Recommended Backend Delivery Layers
 
-Current step status:
-- implemented:
-  - `resume_document_overlay_targets` persistence
-  - block and sentence target generation during resume extraction and re-extraction
-  - public read API for overlay targets
-  - question-to-overlay linking
+### Layer 1. Core loop stability
 
-## Phase 1E - Resume Editor Workspace
-1. add Flyway migration for:
-   - `resume_editor_workspaces`
-   - `resume_editor_comment_threads`
-   - `resume_editor_question_cards`
-2. keep `resume_versions` immutable and add an editor-layer workspace on top
-3. expose additive APIs for:
-   - `GET /api/resume-versions/{versionId}/editor`
-   - `PUT /api/resume-versions/{versionId}/editor/document`
-   - `POST /api/resume-versions/{versionId}/editor/import-markdown`
-   - `POST /api/resume-versions/{versionId}/editor/comments`
-   - `PATCH /api/resume-versions/{versionId}/editor/comments/{commentId}`
-   - `POST /api/resume-versions/{versionId}/editor/comments/{commentId}/replies`
-   - `POST /api/resume-versions/{versionId}/editor/presence`
-   - `POST /api/resume-versions/{versionId}/editor/question-cards`
-   - `PATCH /api/resume-versions/{versionId}/editor/question-cards/{cardId}`
-   - `POST /api/resume-versions/{versionId}/editor/auto-question-suggestions`
-   - `POST /api/resume-versions/{versionId}/editor/rewrite-suggestions`
-   - `GET /api/resume-versions/{versionId}/editor/print-preview`
-   - `GET /api/resume-versions/{versionId}/editor/revisions`
-   - `GET /api/resume-versions/{versionId}/editor/revisions/{revisionId}`
-4. lazily bootstrap the first editor document from parsed resume snapshots
-5. persist block-based document JSON and markdown-compatible source together
-6. persist comment threads and question cards as additive annotations
-7. persist multi-reply comment conversations separately from the original thread anchor
-8. support markdown import and inline mark persistence for headings, bullets, quotes, links, and inline emphasis
-9. expose deterministic suggestion endpoints for question generation and rewrite guidance
-10. expose one print-preview read model for editor-driven export flows
-11. surface heatmap availability inside the workspace read
-12. persist revision history and optimistic-write metadata for editor document updates
-13. expose lightweight collaborative presence heartbeats without mutating document content
-14. expose deterministic revision compare and 3-way merge preview for stale-write recovery
+Keep healthy:
+- auth
+- profile and settings
+- resume selection
+- question discovery
+- answer submission
+- review queue and archive
+- home and feed
 
-Acceptance intent:
-- editor writes do not overwrite immutable source versions
-- comments and question cards stay attached to block/selection coordinates
-- resume editor and heatmap can share the same parsed anchor model
-  - additive `overlayTargets` on heatmap reads
-  - phrase and keyword overlay target generation
-  - sentence-level and micro-target manual remap through existing heatmap link APIs
-  - richer additive filter params:
-    - `weakOnly`
-    - `companyName`
-    - `interviewDateFrom`
-    - `interviewDateTo`
-- remaining recommended next steps:
-  - PDF-coordinate overlay if a future resume canvas viewer needs positional rendering
-  - if PDF-coordinate overlay is needed later, introduce a parser output that persists page-aware text positions before trying to expose canvas coordinates
+### Layer 2. Resume intelligence depth
 
-## Phase 2 - Question Tree and Follow-Up Relationships
-1. add Flyway migration for `question_relationships`
-2. seed follow-up relationships for high-value core questions
-3. implement `GET /api/questions/{questionId}/tree`
-4. derive node status from current user progress and answer history
-5. add question reference-content schema for:
-   - `question_reference_answers`
-   - richer learning-material metadata or question-specific ordering
-6. expose read APIs for model answers and curated learning materials
-7. keep `GET /api/questions/{questionId}` as the stable base detail API
+Expand:
+- PDF ingestion lifecycle
+- raw text and structured extraction
+- structured resume subresources
+- extraction status and re-extraction controls
 
-Acceptance intent:
-- current question list/detail clients do not break
-- question tree is a separate read model
-- model answers remain separate from user-submitted `answer_attempts`
+### Layer 3. Question and analysis enrichment
 
-## Phase 3 - Richer Answer Analysis and Review Signals
-1. add Flyway migration for `answer_analyses`
-2. persist richer dimensions after answer submission or in a follow-up analysis step
-3. connect review prioritization to:
-   - low total score
-   - repeated weakness
-   - resume risk linkage
-   - follow-up depth gaps
-4. keep `answer_scores` as the backward-compatible scoring contract
-5. extend answer detail with optional analysis fields only when the API change is ready
+Expand:
+- question trees
+- reference answers
+- learning materials
+- richer answer analyses
 
-Acceptance intent:
-- existing answer submission behavior remains intact
-- review queue becomes more informative without changing its core lifecycle
+### Layer 4. Skill and readiness APIs
 
-## Phase 4 - Skill Radar and Gap Analysis
-1. add Flyway migrations for:
-   - `skill_category_scores`
-   - `career_benchmarks`
-   - optionally `question_skill_mappings`
-2. introduce `skill` domain package with service, repository, dto, and controller layers
-3. implement:
-   - `GET /api/skills/radar`
-   - `GET /api/skills/gaps`
-   - optional `GET /api/skills/progress`
-4. calculate category scores from existing answer, progress, and analysis data
-5. compare against job role and experience-based benchmarks
+Expand:
+- radar
+- gaps
+- progress
+- additive review-priority signals
 
-Acceptance intent:
-- radar and gap analysis are grounded in persisted answer behavior, not mock-only numbers
+### Layer 5. Interview-session depth
 
-## Phase 5 - Home Dashboard Evolution
-1. keep the current `GET /api/home` structure as the base contract
-2. add optional fields for:
-   - skill radar preview
-   - weak-skill highlights
-   - resume risk preview
-3. adjust daily recommendation logic to prefer:
-   - pending retry items
-   - high-gap skill categories
-   - high-risk resume defense questions
-4. preserve the current daily card and retry preview behavior
+Expand:
+- resume-grounded session creation
+- follow-up generation metadata
+- coverage tracking
+- result-time resume map
 
-Acceptance intent:
-- old clients can ignore the new fields
-- new clients can render the updated learning dashboard
+### Layer 6. Practical interview replay
 
-## Phase 5A - Interview History and Archive Source Metadata
-1. extend interview session APIs with session-history reads
-2. require or resolve one explicit `resumeVersionId` at interview start for `resume_mock`
-3. generate the opening interview question from the selected resume version through an interview-specific LLM boundary
-4. persist enriched session question snapshots for opening questions and follow-up questions that do not exist in the global catalog
-5. add an interview-specific LLM generation boundary for answer-driven resume-grounded follow-up prompts
-6. validate generated question payloads before inserting them into an active session
-7. persist generation metadata (`generationStatus`, rationale, model, prompt version) with each inserted opening or follow-up question
-8. keep deterministic fallback behavior when the LLM is disabled or returns unusable output
-9. add `resumeEvidence` snapshot support so each opener or follow-up can include one or more short resume excerpts that justify why the question was asked
-10. store evidence as compact snippet metadata rather than recomputing it from raw resume text at read time
-11. add question-level archive source metadata so archived questions can distinguish:
-   - `practice`
-   - `interview`
-12. keep archive question-level and avoid replacing it with a session-only archive
-13. ensure every asked interview turn is eligible for archive persistence
-14. ensure follow-up interview turns can be revisited from both interview history and archive
-15. introduce additive `interviewMode` planning so `quick_screen`, timed mocks, `free_interview`, and `full_coverage` can share the same base session model
-16. for `full_coverage`, create a session-scoped evidence inventory and use a coverage planner to choose the next evidence target before asking the next question
-17. add a structured full-coverage result view contract so parsed resume experiences and projects can be highlighted and mapped back to related interview turns
-17. persist question-to-evidence links so the final result screen can map resume evidence items back to related session questions
+Expand:
+- imported audio lifecycle
+- transcription retryability
+- structured question extraction
+- interviewer profile derivation
+- replay-seed creation
 
-Acceptance intent:
-- one interview session appears once in interview history
-- each question and follow-up from that session can still appear as a question-level archived item
-- archive source metadata is additive and backward compatible
-- resume-selected interview sessions stay pinned to the chosen resume version for their full lifetime
-- question cards can later show a `Based on your resume` block without needing to recalculate evidence from the current resume state
-- `full_coverage` can measure completion against resume evidence units rather than loosely estimated topic breadth
-- the first result-time resume map should reuse parsed resume section APIs plus `resume-map` joins instead of requiring PDF coordinate extraction
+### Layer 7. Resume tailoring and editor depth
 
-## Phase 6 - Seed and Test Hardening
-1. extend seed/reference data for:
-   - skill categories
-   - benchmarks
-   - follow-up question relationships
-   - model answers
-   - curated learning materials
-2. add unit tests for:
-   - skill score calculation
-   - gap ranking
-   - question tree node status mapping
-   - review priority computation
-3. add repository integration tests for new query-heavy paths
-4. add API integration tests for new endpoints
-5. add contract coverage for interview snapshot evidence serialization and empty-evidence fallback behavior
+Expand:
+- job-posting persistence
+- analysis runs and export generation
+- heatmap overrides
+- editor workspaces and revisions
 
-## Phase 7 - Localization and Bilingual Delivery
-1. add `preferred_language` support to user settings and current-user reads
-2. add locale resolution that prefers explicit request locale over stored user preference and falls back to `ko`
-3. introduce translation storage for static/reference data such as:
-   - categories
-   - skills
-   - tags
-   - question catalog text
-   - learning material titles and descriptions
-4. keep user-authored and uploaded source content stored only in the original language
-5. add `content_locale` metadata to AI-generated text such as interview openers, follow-ups, and analysis summaries
-6. localize error messages and human-readable labels without changing machine-readable codes or enums
-7. keep mixed-language rendering safe so original resume evidence and answer content can remain in the source language while surrounding UI and generated text use the selected locale
+## Implementation Rules By Concern
 
-Acceptance intent:
-- user original content is never replaced by translated persistence
-- UI-facing labels and system-generated text can switch between Korean and English
-- static/reference data can be served in the selected locale with deterministic fallback
+### Schema changes
 
-## Sequencing Rules
-- do not bundle schema, API, and UI assumptions into one oversized change
-- commit after each completed vertical slice
-- every migration set should have corresponding repository or API coverage
+- one migration per coherent concept
+- prefer forward-only additive evolution
+- preserve core record provenance
 
-## Planned Full-Scope Practical Interview Work
-18. add `interview_records`, transcript segments, structured question/answer rows, and interviewer-profile storage without collapsing them into the ordinary answer-attempt flow
-19. add the staged processing pipeline for audio upload, transcription, cleanup, structuring, resume/JD linkage, and interviewer-profile extraction
-20. add transcript review and correction APIs so raw, cleaned, and confirmed transcript layers remain distinct
-21. add real-interview analysis reads for question flow, topic distribution, weak-answer zones, and interviewer-style summaries
-22. extend the interview session domain with `replay_mock` so imported real interviews can launch dynamic replay simulations through the existing session engine
-23. extend archive source metadata so imported real-interview questions and replay-simulation questions remain distinguishable from practice and ordinary mock interviews
-24. add frontend-facing contracts for real-interview detail, transcript review, interviewer profile, and replay simulation start flows
-25. expose additive replay timestamp metadata on transcript, question, and review reads so one shared player can drive transcript seek, question-card clips, and thread review
-- keep Swagger/OpenAPI docs in sync with each new endpoint
+### Service changes
 
-## Explicit Deferred Work
-These should not be implemented unless requested:
-1. live or streaming mock interview sessions beyond the current additive session CRUD/progression flow
-2. voice transcription pipeline
-3. streaming AI interactions
-4. public sharing or comparison features
-5. admin tooling
+- place business rules in domain services
+- keep controller code thin
+- avoid making `common` a dumping ground for domain logic
+
+### AI-backed features
+
+- keep provider configuration explicit
+- persist enough metadata for traceability
+- maintain fallback behavior when possible
+- do not make local development unusable without AI credentials
+
+### Read models
+
+- richer multi-table payloads are acceptable in service code
+- denormalized tables should be introduced only when they buy clarity or performance
+
+## Suggested Future Order
+
+1. richer resume extraction surfaces
+2. richer answer analysis persistence
+3. question tree and study material expansion
+4. stronger skill and gap signals
+5. deeper interview coverage and result mapping
+6. replay and interviewer-profile refinement
+7. richer editor document primitives if backend model maturity justifies it
+
+## Done Criteria For A Backend Slice
+
+A slice is complete only when:
+- its data model is coherent
+- its endpoints are documented
+- its behavior is testable or operationally verifiable
+- its terminology matches the rest of the repository
+

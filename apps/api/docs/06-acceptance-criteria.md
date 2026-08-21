@@ -1,99 +1,79 @@
 # 06-acceptance-criteria
 
-Shared acceptance baseline now lives in:
-
+Shared acceptance baseline lives in:
 - `../../../docs/03-acceptance-baseline.md`
 
-This document should stay focused on backend-only acceptance detail.
+This document adds backend-specific detail.
 
-## Review Queue and Learning Loop
-- low-quality answers create or update a pending retry item
-- archived questions do not produce active retry items
-- review queue actions keep valid state transitions
-- review prioritization can be extended with resume risk and skill gap inputs without breaking existing queue semantics
-- the home flow still prioritizes pending retry items before general recommendation
+## Runtime Acceptance
 
-## Skill Radar and Gap Analysis
-- skill radar scores are derived from persisted answer and progress data
-- benchmark comparison is based on job role and experience context
-- gap analysis can identify weak categories in a stable, ranked form
-- users can retrieve current radar and gap data without affecting existing home or question APIs
+- the application starts with the expected local profile defaults
+- Swagger and OpenAPI are reachable in local development when enabled
+- the service remains buildable and testable through Gradle
+- Flyway migrations apply successfully on a clean database
 
-## Home Dashboard
-- home endpoint returns at least one daily question when available
-- retry questions remain separate from the primary daily question
-- summary stats remain included
-- optional new fields for weak skills, radar preview, or resume risks are backward compatible
+## Domain Acceptance
 
-## Interview Sessions
-- users can create a session without bypassing the existing question-answer-review flow
-- `resume_mock` interview creation can require explicit resume-version selection without breaking other session types
-- session questions keep stable ordering and expose current, queued, and answered states
-- interview history is visible at the session level
-- interview history can show which resume version grounded the session
-- follow-up questions remain attributable to the parent session question
-- the opening question for a resume-based interview can be AI-generated from the selected resume version and still be stored as a stable session snapshot
-- session answer submission reuses standard answer scoring, feedback persistence, and retry scheduling
-- a session can complete without mutating historical answer attempts
-- minimal session support remains additive and does not imply live or realtime interview behavior
-- archive remains question-level even for interview-originated questions
-- archive items can distinguish `practice` and `interview` origin through additive metadata
-- every asked interview question and follow-up can later appear as a question-level archive item linked back to the parent session
-- `resume_mock` can insert AI-generated follow-up questions without mutating prior session questions
-- generated follow-up snapshots preserve prompt text, optional body text, focus skills, resume context summary, and generation rationale
-- generated opener and follow-up snapshots can also preserve one or more compact `resumeEvidence` snippets that explain why the question was asked
-- each evidence item can identify the resume section or parsed record type it came from, such as project, experience, award, certification, or education
-- evidence snippets remain short supporting context and do not replace the main prompt text
-- missing or empty `resumeEvidence` must not break session rendering or session persistence
-- generated follow-up prompts can use the immediately preceding answer as grounding input
-- invalid or empty LLM follow-up output does not break the session; the service falls back safely
-- additive interview modes can coexist on the same session domain without breaking current `resume_mock`, `review_mock`, or `topic_mock` behavior
-- `full_coverage` can report coverage against session-scoped resume evidence items
-- a full-coverage result can map resume evidence items back to related asked questions for hover and click interactions on the result screen
-- a completed full-coverage result can render a structured resume viewer where experience or project blocks are visually highlighted by `coverageStatus`
-- hovering one highlighted resume block can reveal one or more related interview turns without losing the current result context
-- clicking one related interview turn can focus or scroll to the linked session question card
-- AI-generated interview and analysis text can be produced in the selected system language while original resume evidence remains in the source language
-- a practical interview upload can preserve raw transcript, cleaned transcript, and user-confirmed transcript without overwriting earlier processing stages
-- a practical interview record can expose structured question, answer, and follow-up-edge data that remain queryable independently of replay simulation
-- a practical interview transcript, question list, and review payload can expose millisecond replay ranges that drive one shared audio player without client-side segment recomputation
-- imported real-interview questions can become archive-visible question assets with additive source metadata such as `real_interview`
-- `replay_mock` sessions can preserve one imported interviewer profile while still generating dynamic answer-dependent follow-up questions
+### Auth and user
 
-## Data and Schema Quality
-- every schema change uses Flyway
-- all table and column names remain snake_case
-- DTOs stay separate from entities
-- answer attempts remain immutable after submission
-- resume versions remain immutable records
-- user-question progress remains the cached aggregate for per-question learning state
-- curated model answers do not reuse `answer_attempts` storage
-- LLM extraction metadata is stored separately from user-authored resume content where possible
-- localization metadata is stored separately from original user-authored content
+- signup, login, and authenticated bootstrap work
+- profile and settings updates persist correctly
+- target-company replacement remains deterministic
+- preferred language persists and is available for downstream behavior
 
-## Localization
-- the product supports at least Korean and English modes
-- user-authored or uploaded source content remains persisted in the original language
-- UI language can switch independently of the original language of resume or answer content
-- system-generated text can be generated and stored in the selected locale
-- static and reference data can be served in the selected locale with fallback
-- machine-readable fields remain stable across locales
-- localized error messages do not change stable error codes
+### Resume
 
-## Test Coverage
-Minimum required tests across the evolving product:
-- scoring service unit tests
-- retry scheduling unit tests
-- archive decision unit tests
-- skill score and gap calculation unit tests when that domain is introduced
-- repository integration tests for critical queries
-- controller/API tests for core flows and new additive endpoints
+- resume containers and immutable versions remain coherent
+- file upload metadata and parse status are stable
+- extraction subresources can evolve additively without breaking base version reads
+- re-extraction and activation flows preserve version history semantics
 
-## Definition of Done
-A documentation or implementation slice is complete only if:
-- the product language is consistent with the current codebase
-- backward compatibility expectations are explicit
-- API contracts match implemented behavior for current endpoints
-- new planned endpoints are clearly labeled as not yet implemented
-- code builds
-- relevant tests pass
+### Question and answer
+
+- question list and detail remain available
+- answer submission persists immutable attempts
+- answer analysis remains traceable to one attempt
+- additive learning content does not corrupt the core question model
+
+### Review and archive
+
+- retry scheduling remains durable
+- queue mutations such as skip and done are explicit
+- archive remains question-level
+- archive can safely carry source metadata such as practice or interview
+
+### Interview
+
+- session creation works with explicit resume context where required
+- session question snapshots remain reviewable after generation
+- session answers reuse the core answer pipeline
+- coverage and resume-map outputs remain tied to session evidence
+- session history remains distinct from archive
+
+### Practical interview replay
+
+- uploaded records preserve raw processing context
+- transcript lifecycle states are explicit
+- transcript corrections do not overwrite raw source irreversibly
+- replay-supporting outputs remain additive rather than replacing base interview concepts
+
+### Resume analysis, heatmap, and editor
+
+- analyses remain scoped to one resume version
+- export generation remains attributable to one analysis
+- heatmap overrides do not mutate source interview records
+- editor workspace artifacts do not overwrite immutable source resume versions
+
+## Contract Acceptance
+
+- new fields are additive by default
+- endpoint grouping remains coherent
+- OpenAPI reflects meaningful contract changes
+- frontend-facing payloads remain explainable without hidden state assumptions
+
+## Operational Acceptance
+
+- local setup remains documented
+- environment-variable requirements remain clear
+- root verification scripts continue to work after backend changes
+
