@@ -20,14 +20,16 @@ export function QuestionDetailMobileLayout({
   return (
     <div className="question-detail-layout question-detail-layout--mobile">
       <section className="question-detail-layout__hero">{headerSection}</section>
+      <section className="question-detail-layout__main">
+        {recommendedSection}
+        {materialsSection}
+      </section>
       <section className="question-detail-layout__sidebar">
         {metadataSection}
         {progressSection}
       </section>
-      <section className="question-detail-layout__main">
-        {recommendedSection}
+      <section className="question-detail-layout__history">
         {answerHistorySection}
-        {materialsSection}
       </section>
     </div>
   );
@@ -44,11 +46,15 @@ export function QuestionDetailDesktopLayout({
   return (
     <div className="question-detail-layout question-detail-layout--desktop">
       <div className="question-detail-layout__hero">{headerSection}</div>
-      <div className="question-detail-layout__main">
+      <div className="question-detail-layout__main question-detail-layout__main--primary">
         <div className="page-stack question-detail-layout__cluster">
           {recommendedSection}
-          {materialsSection}
           {answerHistorySection}
+        </div>
+      </div>
+      <div className="question-detail-layout__study-rail">
+        <div className="page-stack question-detail-layout__cluster">
+          {materialsSection}
         </div>
       </div>
       <aside className="question-detail-layout__sidebar">

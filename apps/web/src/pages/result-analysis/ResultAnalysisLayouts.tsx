@@ -24,20 +24,20 @@ export function ResultAnalysisMobileLayout({
 }: ResultAnalysisLayoutProps) {
   return (
     <div className="result-analysis-layout result-analysis-layout--mobile">
-      {scoreSection}
-      <div className="result-analysis-layout__group">
-        {dimensionSection}
-        {detailedFeedbackSection}
-      </div>
-      <div className="result-analysis-layout__group">
-        {insightSection}
+      <section className="result-analysis-layout__hero">{scoreSection}</section>
+      <section className="result-analysis-layout__group result-analysis-layout__group--priority">
         {nextActionSection}
-      </div>
-      <div className="result-analysis-layout__group">
         {recommendationSection}
+      </section>
+      <section className="result-analysis-layout__group result-analysis-layout__group--analysis">
+        {dimensionSection}
+        {insightSection}
+        {detailedFeedbackSection}
+      </section>
+      <section className="result-analysis-layout__group result-analysis-layout__group--support">
         {modelAnswerSection}
         {feedbackSection}
-      </div>
+      </section>
     </div>
   );
 }
@@ -54,20 +54,24 @@ export function ResultAnalysisDesktopLayout({
 }: ResultAnalysisLayoutProps) {
   return (
     <div className="result-analysis-layout result-analysis-layout--desktop">
-      <div className="result-analysis-layout__hero">{scoreSection}</div>
+      <div className="result-analysis-layout__hero result-analysis-layout__hero-grid">
+        <div className="result-analysis-layout__hero-score">{scoreSection}</div>
+        <div className="result-analysis-layout__hero-action">
+          {nextActionSection}
+          {recommendationSection}
+        </div>
+      </div>
       <ContentGrid columns="two">
         <div className="page-stack result-analysis-layout__panel">
           {dimensionSection}
-          {detailedFeedbackSection}
           {insightSection}
+          {detailedFeedbackSection}
         </div>
         <div className="page-stack result-analysis-layout__panel">
-          {nextActionSection}
-          {recommendationSection}
           {modelAnswerSection}
+          {feedbackSection}
         </div>
       </ContentGrid>
-      <div className="result-analysis-layout__feedback workspace-band">{feedbackSection}</div>
     </div>
   );
 }

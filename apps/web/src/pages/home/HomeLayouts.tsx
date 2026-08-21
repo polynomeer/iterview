@@ -44,19 +44,19 @@ export function HomeMobileLayout({
   return (
     <div className="home-layout home-layout--mobile">
       <section className="home-layout__hero">{todaySection}</section>
-      <section className="home-layout__cluster home-layout__cluster--feature">
+      <section className="home-layout__band home-layout__band--primary">
         {nextActionSection}
         {summarySection}
       </section>
-      <section className="home-layout__cluster home-layout__cluster--feature">
+      <section className="home-layout__band home-layout__band--practice">
         <ReviewQueuePanel />
         {retrySection}
       </section>
-      <section className="home-layout__cluster">
+      <section className="home-layout__band home-layout__band--intelligence">
         {radarSection}
         {weakSkillsSection}
       </section>
-      <section className="home-layout__cluster">
+      <section className="home-layout__band home-layout__band--resume">
         {resumeRiskSection}
         {materialsSection}
       </section>
@@ -77,24 +77,26 @@ export function HomeDesktopLayout({
   return (
     <div className="home-layout home-layout--desktop">
       <section className="home-layout__hero">{todaySection}</section>
-      <div className="home-layout__top-strip">
-        <div className="page-stack home-layout__top-card home-layout__top-card--primary">
-          {nextActionSection}
+      <div className="home-layout__workspace">
+        <div className="home-layout__main-column">
+          <section className="home-layout__band home-layout__band--primary">
+            {nextActionSection}
+            {summarySection}
+          </section>
+          <section className="home-layout__band home-layout__band--intelligence">
+            {radarSection}
+            {weakSkillsSection}
+          </section>
+          <section className="home-layout__band home-layout__band--resume">
+            {resumeRiskSection}
+            {materialsSection}
+          </section>
         </div>
-        {summarySection ? <div className="page-stack home-layout__top-card">{summarySection}</div> : null}
-        <div className="page-stack home-layout__top-card">
-          <ReviewQueuePanel />
-        </div>
-      </div>
-      <div className="home-layout__content">
-        <div className="page-stack home-layout__main-panel home-layout__column home-layout__column--main">
-          {retrySection}
-          {radarSection}
-        </div>
-        <div className="page-stack home-layout__side-panel home-layout__column home-layout__column--side">
-          {weakSkillsSection}
-          {resumeRiskSection}
-          {materialsSection}
+        <div className="home-layout__side-column">
+          <section className="home-layout__band home-layout__band--practice">
+            <ReviewQueuePanel />
+            {retrySection}
+          </section>
         </div>
       </div>
     </div>
