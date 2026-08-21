@@ -455,15 +455,16 @@ button {
 .question-status-badge {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 7px 12px;
+  min-height: 28px;
+  padding: 6px 11px;
   border-radius: 999px;
-  background: var(--surface-muted);
+  border: 1px solid color-mix(in srgb, var(--border-soft) 86%, transparent);
+  background: color-mix(in srgb, var(--surface-muted) 84%, var(--surface-base));
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 .question-status-badge--positive {
@@ -1337,15 +1338,16 @@ button {
 }
 
 .form-field__label {
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-weight: 600;
   line-height: 1.35;
+  letter-spacing: -0.01em;
 }
 
 .form-field__hint {
   color: var(--text-muted);
-  font-size: 0.88rem;
-  line-height: 1.5;
+  font-size: 0.84rem;
+  line-height: 1.45;
 }
 
 .form-field__input,
@@ -1479,28 +1481,29 @@ button {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .section-heading__eyebrow {
-  margin: 0 0 6px;
-  font-size: 0.76rem;
+  margin: 0 0 5px;
+  font-size: 0.72rem;
   line-height: 1.35;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
 }
 
 .section-heading__count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  min-height: 36px;
-  padding: 0 10px;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0 9px;
   border-radius: 999px;
-  background: var(--surface-muted);
-  color: var(--accent-strong);
+  border: 1px solid color-mix(in srgb, var(--border-soft) 84%, transparent);
+  background: color-mix(in srgb, var(--surface-muted) 84%, var(--surface-base));
+  color: var(--text-main);
   font-weight: 700;
 }
 
@@ -2137,7 +2140,9 @@ button {
   flex-wrap: wrap;
   gap: 8px;
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
   text-transform: capitalize;
 }
 
@@ -2145,10 +2150,10 @@ button {
 .question-source-meta span {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
-  padding: 4px 10px;
+  min-height: 26px;
+  padding: 4px 9px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
+  background: color-mix(in srgb, var(--surface-muted) 84%, var(--surface-base));
   border: 1px solid var(--border-soft);
 }
 
@@ -2583,19 +2588,20 @@ button {
 .chip-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
   margin-block: 2px;
 }
 
 .detail-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
-  padding: 5px 12px;
+  min-height: 30px;
+  padding: 4px 11px;
   border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border-soft) 84%, transparent);
   background: var(--chip-background);
   color: var(--chip-text);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   line-height: 1.25;
 }
@@ -2806,10 +2812,10 @@ button {
 
 .practical-review-meta {
   display: grid;
-  gap: 8px;
+  gap: 7px;
   margin: 4px 0 14px;
-  padding: 12px 14px;
-  border-radius: 16px;
+  padding: 11px 13px;
+  border-radius: 14px;
   border: 1px solid color-mix(in srgb, var(--border-soft) 82%, transparent);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--surface-muted) 80%, transparent), color-mix(in srgb, var(--surface-soft) 70%, transparent)),
@@ -2831,13 +2837,13 @@ button {
 
 .practical-review-meta__label {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
 }
 
 .practical-review-meta__value {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
 }
 
