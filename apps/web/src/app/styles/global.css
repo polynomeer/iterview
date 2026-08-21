@@ -5215,10 +5215,18 @@ button {
   gap: 18px;
 }
 
+.interview-session-layout__hero,
 .interview-session-layout__main,
 .interview-session-layout__answer-stack {
   display: grid;
   gap: 18px;
+}
+
+.interview-session-layout__hero-side {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  align-content: start;
 }
 
 .interview-session-current {
@@ -5658,13 +5666,22 @@ button {
     gap: 22px;
   }
 
-  .interview-session-layout__main {
-    grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
+  .interview-session-layout__hero {
+    grid-template-columns: minmax(0, 1.14fr) minmax(300px, 0.86fr);
     align-items: start;
     gap: 22px;
   }
 
+  .interview-session-layout__main {
+    gap: 22px;
+  }
+
   .interview-session-layout__answer-stack {
+    position: sticky;
+    top: 108px;
+  }
+
+  .interview-session-layout__hero-side {
     position: sticky;
     top: 108px;
   }

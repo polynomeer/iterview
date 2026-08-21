@@ -22,6 +22,7 @@ import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { SectionPanel } from "../../shared/ui/layout";
 import { AnswerTextEditor } from "../../widgets/answer";
 import {
   InterviewCoveragePanel,
@@ -251,70 +252,97 @@ export function InterviewSessionPage() {
       title={t("interview.sessionWorkspaceTitle")}
     >
       <div className="page-stack interview-session-layout">
-        <div className="interview-session-layout__main">
-          <section className="page-card interview-session-current">
-          <span className="page-card__label">{t("interview.sessionProgress")}</span>
-          <h2 className="page-card__title">{currentQuestion.title}</h2>
-          {currentQuestion.bodyText ? (
-            <p className="page-card__body">{currentQuestion.bodyText}</p>
-          ) : (
-            <p className="page-card__body">{t("interview.currentQuestionFallback")}</p>
-          )}
-          {currentQuestion.resumeContextSummary ? (
-            <p className="resume-section__helper">{currentQuestion.resumeContextSummary}</p>
-          ) : null}
-          {currentQuestion.revisitLabel ? (
-            <p className="resume-section__helper interview-question-revisit-note">
-              {currentQuestion.revisitLabel}
-            </p>
-          ) : null}
-          <p className="resume-section__helper">{t("interview.mixedLanguageNote")}</p>
-          <InterviewResumeEvidenceBlock
-            items={currentQuestion.resumeEvidence}
-            localeLabel={
-              currentQuestion.contentLocale
-                ? currentQuestion.contentLocale === "ko"
-                  ? t("common.generatedInKorean")
-                  : t("common.generatedInEnglish")
-                : null
-            }
-          />
-          {currentQuestion.focusSkillNames.length > 0 ? (
-            <div className="chip-list">
-              {currentQuestion.focusSkillNames.map((skill) => (
-                <span className="detail-chip detail-chip--accent" key={skill}>
-                  {skill}
-                </span>
-              ))}
+        <div className="interview-session-layout__hero">
+          <div className="interview-session-layout__main">
+            <section className="page-card interview-session-current">
+              <span className="page-card__label">{t("interview.sessionProgress")}</span>
+              <h2 className="page-card__title">{currentQuestion.title}</h2>
+              {currentQuestion.bodyText ? (
+                <p className="page-card__body">{currentQuestion.bodyText}</p>
+              ) : (
+                <p className="page-card__body">{t("interview.currentQuestionFallback")}</p>
+              )}
+              {currentQuestion.resumeContextSummary ? (
+                <p className="resume-section__helper">{currentQuestion.resumeContextSummary}</p>
+              ) : null}
+              {currentQuestion.revisitLabel ? (
+                <p className="resume-section__helper interview-question-revisit-note">
+                  {currentQuestion.revisitLabel}
+                </p>
+              ) : null}
+              <p className="resume-section__helper">{t("interview.mixedLanguageNote")}</p>
+              <InterviewResumeEvidenceBlock
+                items={currentQuestion.resumeEvidence}
+                localeLabel={
+                  currentQuestion.contentLocale
+                    ? currentQuestion.contentLocale === "ko"
+                      ? t("common.generatedInKorean")
+                      : t("common.generatedInEnglish")
+                    : null
+                }
+              />
+              {currentQuestion.focusSkillNames.length > 0 ? (
+                <div className="chip-list">
+                  {currentQuestion.focusSkillNames.map((skill) => (
+                    <span className="detail-chip detail-chip--accent" key={skill}>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+              <div className="interview-session-current__rail">
+                <div className="interview-session-current__rail-items">
+                  {statusRailItems.map((item) => (
+                    <span
+                      className={`interview-session-current__rail-item ${
+                        item.tone === "accent"
+                          ? "interview-session-current__rail-item--accent"
+                          : ""
+                      }`}
+                      key={item.key}
+                    >
+                      <span className="interview-session-current__rail-label">{item.label}</span>
+                      <strong className="interview-session-current__rail-value">{item.value}</strong>
+                    </span>
+                  ))}
+                </div>
+                {currentQuestion.questionId ? (
+                  <Link
+                    className="secondary-button interview-session-current__rail-link"
+                    to={routeConfig.questionDetail.buildPath({ questionId: currentQuestion.questionId })}
+                  >
+                    Open related question
+                  </Link>
+                ) : null}
+              </div>
+            </section>
+            <div className="interview-session-layout__hero-side">
+              <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
+                <span className="page-card__label">Active branch</span>
+                <h2 className="page-card__title">Answer the current node with enough evidence that the next follow-up has nowhere vague to hide</h2>
+                <p className="page-card__body">
+                  Treat each response as a checkpoint in the question tree. The goal is not to sound longer, but to make the next branch more specific, testable, and grounded in the resume.
+                </p>
+              </SectionPanel>
+              {isFullCoverage ? (
+                <SectionPanel className="workspace-note-card" variant="muted">
+                  <span className="page-card__label">Coverage pass</span>
+                  <h2 className="page-card__title">This session is traversing the full resume evidence map</h2>
+                  <p className="page-card__body">
+                    Weak facets and skipped facets are signals for where the DFS review must return, not just score penalties to glance at later.
+                  </p>
+                </SectionPanel>
+              ) : null}
             </div>
-          ) : null}
-          <div className="interview-session-current__rail">
-            <div className="interview-session-current__rail-items">
-              {statusRailItems.map((item) => (
-                <span
-                  className={`interview-session-current__rail-item ${
-                    item.tone === "accent"
-                      ? "interview-session-current__rail-item--accent"
-                      : ""
-                  }`}
-                  key={item.key}
-                >
-                  <span className="interview-session-current__rail-label">{item.label}</span>
-                  <strong className="interview-session-current__rail-value">{item.value}</strong>
-                </span>
-              ))}
-            </div>
-            {currentQuestion.questionId ? (
-              <Link
-                className="secondary-button interview-session-current__rail-link"
-                to={routeConfig.questionDetail.buildPath({ questionId: currentQuestion.questionId })}
-              >
-                Open related question
-              </Link>
-            ) : null}
           </div>
-          </section>
           <div className="interview-session-layout__answer-stack">
+            <SectionPanel className="workspace-note-card" variant="muted">
+              <span className="page-card__label">Answer draft</span>
+              <h2 className="page-card__title">Keep the draft close to the evidence and the next branch decision</h2>
+              <p className="page-card__body">
+                Answer, skip, or advance deliberately. This panel should feel like the execution surface for the branch you are currently defending.
+              </p>
+            </SectionPanel>
             <AnswerTextEditor
               disabled={submitMutation.isPending || advanceMutation.isPending || skipMutation.isPending}
               onChange={setDraft}
