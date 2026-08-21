@@ -1,85 +1,120 @@
 # Monorepo Conventions
 
-## Goal
+This document defines how to keep the repository simple as it grows.
 
-This document defines what belongs at the monorepo root and what should remain inside each app.
+The goal is not theoretical purity. The goal is operational clarity.
 
-Current apps:
+## Repository Model
+
+`iterview` is a two-app monorepo:
 - `apps/api`
 - `apps/web`
 
-## Root Ownership
+The root exists to explain, coordinate, and verify both apps together. It should not become a second application layer.
 
-Keep a file or directory at the root only if it satisfies at least one of these:
-- it is used directly by both apps
-- it documents cross-app workflows
-- it coordinates cross-app CI or local development
-- it represents repository-wide policy
+## Root Ownership Rules
+
+Keep something at the repository root only when at least one of these is true:
+- both apps depend on it directly
+- it documents a cross-app workflow
+- it coordinates repository-wide CI or local development
+- it represents repository-wide policy or orientation
 
 Examples that belong at the root:
-- root `README.md`
-- root `AGENTS.md`
-- root `.github/workflows/ci.yml`
-- root `scripts/` for cross-app orchestration
-- root `docs/` for monorepo policy and integration notes
+- `README.md`
+- `AGENTS.md`
+- `.github/workflows/ci.yml`
+- `docs/` for shared product and repository guidance
+- `scripts/` for cross-app setup and verification
 
-## App Ownership
+## App Ownership Rules
 
-Keep a file inside an app if it is coupled to that app's runtime, toolchain, or delivery process.
+Keep something inside an app when it is coupled to that app's runtime, toolchain, or delivery flow.
 
-Examples that should stay inside `apps/api`:
-- Gradle files
-- Flyway migrations
+Examples that should stay in `apps/api`:
+- Gradle wrapper and build files
 - Spring configuration
-- API-only implementation docs
-- backend-only CI, if it cannot yet be replaced safely
+- Flyway migrations
+- backend-only scripts
+- API-only design and schema docs
 
-Examples that should stay inside `apps/web`:
+Examples that should stay in `apps/web`:
 - `package.json`
 - Vite and TypeScript configuration
-- frontend-only implementation docs
-- frontend-only tests and assets
+- frontend tests
+- UI assets
+- route, state, and component design docs
 
-## Duplicate Directories
+## Documentation Rules
 
-### `.github`
-- prefer one root workflow when a check is logically repo-wide
-- keep app-local workflows only when they are materially different or still needed during migration
-- remove duplicated app-local workflows only after root CI is proven sufficient
+### Root `docs/`
+
+Use root `docs/` for:
+- product intent shared by backend and frontend
+- monorepo policy
+- acceptance baseline
+- cross-app sequencing
+
+### App `docs/`
+
+Use app-local `docs/` for:
+- domain architecture
+- route architecture
+- schema design
+- API contracts
+- app-local implementation planning
+
+### Avoid duplication
+
+- prefer links over copy-paste
+- if the same concept must be explained at two levels, give the root doc the high-level framing and the app doc the implementation framing
+
+## Script Rules
+
+### Root scripts
+
+Root `scripts/` should only orchestrate workflows across apps:
+- repository setup
+- repository dev helpers
+- repository build, test, and verify commands
+
+### App scripts
+
+App-local scripts should stay app-local when they serve only one runtime, such as:
+- data seeding
+- imports
+- app-local maintenance
+
+## CI Rules
+
+- prefer one root workflow when the check is logically repository-wide
+- keep app-local workflows only if they provide unique coverage that root CI does not yet replace
+- do not duplicate the same verification in multiple places without a clear reason
 
 Current decision:
 - root CI owns standard build and test verification for `apps/api` and `apps/web`
-- duplicated per-app `ci.yml` files should be removed when they do not add unique coverage
 
-### `docs`
-- move only cross-app documents to root `docs/`
-- keep deep implementation docs close to the owning app
-- prefer links from root docs rather than copying content
+## Task Tracking Rules
 
-### `scripts`
-- root `scripts/` should orchestrate apps
-- app `scripts/` should remain app-specific
-- avoid copying the same script into all three places
+- app-specific backlogs should stay inside the app
+- root-level tracking should be reserved for monorepo-wide work or shared product direction
 
-### `tasks`
-- keep delivery backlogs inside the owning app while the work is still app-specific
-- create root-level task tracking only for monorepo-wide work
+## Change Rules
 
-## Current State
-
-Completed decisions:
-1. root CI owns standard build and test verification for `apps/api` and `apps/web`
-2. truly shared product and roadmap documents live in root `docs/`
-3. root helper scripts exist only for cross-app setup, dev, build, test, and verify flows
-
-Operational follow-up is tracked in:
-
-- `docs/monorepo-status.md`
+When changing repository structure:
+- move one concern at a time
+- prefer simple directory ownership over clever indirection
+- keep verification and docs updated in the same change set
 
 ## Non-Goals
 
 Do not do these by default:
-- flatten both apps into one shared source tree
+- flatten backend and frontend into one shared source tree
 - create a root Gradle build for the frontend
-- create a root npm workspace unless there is a clear multi-package need
-- rewrite every path and document immediately after import
+- create a root npm workspace without a real multi-package need
+- move every app-local detail to the root for visibility
+
+## Operational Reference
+
+Current operational follow-up lives in:
+- `docs/monorepo-status.md`
