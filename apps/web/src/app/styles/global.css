@@ -5174,12 +5174,13 @@ button {
 .question-detail-layout__cluster,
 .question-detail-layout__study-rail,
 .interview-page-layout__workspace,
- .interview-page-layout__main,
+.interview-page-layout__main,
+.interview-page-layout__hero-side,
 .interview-page-layout__setup,
- .interview-result-layout__hero-grid,
- .interview-result-layout__content,
- .interview-result-layout__main,
- .interview-result-layout__side {
+.interview-result-layout__hero-grid,
+.interview-result-layout__content,
+.interview-result-layout__main,
+.interview-result-layout__side {
   display: grid;
   gap: 18px;
 }
@@ -5201,6 +5202,11 @@ button {
 .interview-result-layout__actions,
 .interview-result-layout__side,
 .question-detail-layout__study-rail {
+  min-width: 0;
+}
+
+.interview-page-layout__hero-side,
+.interview-page-layout__snapshot {
   min-width: 0;
 }
 
@@ -5257,6 +5263,14 @@ button {
 
 .interview-result-layout__content > * {
   min-width: 0;
+}
+
+.interview-page-layout__hero-side {
+  align-content: start;
+}
+
+.interview-page-layout__snapshot .list-item-card {
+  background: color-mix(in srgb, var(--surface-soft) 86%, var(--surface-base));
 }
 
 .interview-page-layout__setup {
@@ -5604,6 +5618,12 @@ button {
     align-items: start;
   }
 
+  .interview-page-layout__hero-side,
+  .interview-page-layout__rail {
+    position: sticky;
+    top: 108px;
+  }
+
   .interview-page-layout__workspace {
     grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
     gap: 22px;
@@ -5612,8 +5632,6 @@ button {
   .interview-page-layout__rail {
     display: grid;
     gap: 18px;
-    position: sticky;
-    top: 108px;
   }
 
   .interview-result-layout {

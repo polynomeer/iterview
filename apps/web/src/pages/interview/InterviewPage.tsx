@@ -71,6 +71,11 @@ export function InterviewPage() {
     () => getResumeVersionChoices(effectiveResumeList),
     [effectiveResumeList],
   );
+  const selectedInterviewModeOption =
+    interviewModeOptions.find((option) => option.id === selectedInterviewMode) ??
+    interviewModeOptions[1];
+  const selectedResumeChoice =
+    resumeVersionChoices.find((choice) => choice.versionId === selectedResumeVersionId) ?? null;
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -155,69 +160,122 @@ export function InterviewPage() {
       {!(resumeListQuery.isLoading || latestResumeQuery.isLoading) &&
       !(resumeListQuery.isError && latestResumeQuery.isError) ? (
         <div className="interview-page-layout">
-          {!sessionListQuery.isLoading && !sessionListQuery.isError && sessionListQuery.data ? (
-            <section className="interview-page-layout__hero">
-              {sessionListQuery.data.length > 0 ? (
-                <InterviewSessionHistoryList items={sessionListQuery.data} />
-              ) : (
-                <EmptyStateCard
-                  action={{ label: t("interview.startLabel"), to: routeConfig.interview.buildPath() }}
-                  body={t("interview.emptyHistoryBody")}
-                  title={t("interview.emptyHistoryTitle")}
+          <section className="interview-page-layout__hero">
+            <section className="page-card interview-page-layout__start">
+              <span className="page-card__label">{t("interview.startLabel")}</span>
+              <h2 className="page-card__title">{t("interview.startTitle")}</h2>
+              <p className="page-card__body">{t("interview.startBody")}</p>
+              <div className="stats-grid">
+                <MetricCard
+                  helperText="Choose one stable context before starting."
+                  label={t("interview.availableResumeVersions")}
+                  value={String(resumeVersionChoices.length)}
                 />
-              )}
+                <MetricCard
+                  helperText="Keep the questioning mode explicit."
+                  label={t("interview.interviewModeMetric")}
+                  tone="accent"
+                  value={selectedInterviewModeOption.label}
+                />
+                <MetricCard
+                  helperText="Short runs work best for quick calibration."
+                  label={t("interview.seedCount")}
+                  tone="muted"
+                  value={String(questionCount)}
+                />
+              </div>
+              <div className="page-card__actions">
+                <button
+                  className="primary-button"
+                  disabled={resumeVersionChoices.length === 0}
+                  onClick={() => setStartFormOpen((current) => !current)}
+                  type="button"
+                >
+                  {startFormOpen ? t("interview.hideStartForm") : t("interview.startInterview")}
+                </button>
+              </div>
+              {resumeVersionChoices.length === 0 ? (
+                <EmptyStateCard
+                  action={{ label: t("common.openResumes"), to: routeConfig.resume.buildPath() }}
+                  body={t("interview.noResumeBody")}
+                  title={t("interview.noResumeTitle")}
+                />
+              ) : null}
+            </section>
+            <div className="interview-page-layout__hero-side">
               <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
-                <span className="page-card__label">Interview workflow</span>
-                <h2 className="page-card__title">Open one grounded session, then let the follow-ups go deeper</h2>
+                <span className="page-card__label">Core objective</span>
+                <h2 className="page-card__title">Run resume-based interviews as a full DFS review, not a shallow prompt sampler</h2>
                 <p className="page-card__body">
-                  Start from one active resume version, keep the mode explicit, and use coverage runs when the goal is to walk the full question tree instead of sampling prompts.
+                  Each session should expose the exact claim being tested, the follow-up branch that opened next, and whether your answer held up when the questioning drilled toward atomic facts.
                 </p>
               </SectionPanel>
-            </section>
-          ) : null}
+              <section className="page-card interview-page-layout__snapshot">
+                <div className="section-heading">
+                  <div>
+                    <p className="section-heading__eyebrow">Live setup</p>
+                    <h2 className="page-card__title">Current interview boundary</h2>
+                  </div>
+                </div>
+                <div className="stack-list">
+                  <article className="list-item-card">
+                    <div className="list-item-card__content">
+                      <div className="list-item-card__meta">
+                        <span>Resume source</span>
+                        {selectedResumeChoice?.isActive ? (
+                          <span className="question-status-badge question-status-badge--positive">{t("interview.active")}</span>
+                        ) : null}
+                      </div>
+                      <h3 className="list-item-card__title">
+                        {selectedResumeChoice?.resumeTitle ?? t("interview.noResumeTitle")}
+                      </h3>
+                      <p className="list-item-card__body">
+                        {selectedResumeChoice
+                          ? `${selectedResumeChoice.versionNumberLabel} · ${selectedResumeChoice.parsingStatusLabel}`
+                          : t("interview.noResumeBody")}
+                      </p>
+                    </div>
+                  </article>
+                  <article className="list-item-card">
+                    <div className="list-item-card__content">
+                      <div className="list-item-card__meta">
+                        <span>Question traversal</span>
+                        {selectedInterviewMode === "full_coverage" ? (
+                          <span className="question-status-badge question-status-badge--accent">{t("interview.coverageBadge")}</span>
+                        ) : null}
+                      </div>
+                      <h3 className="list-item-card__title">{selectedInterviewModeOption.label}</h3>
+                      <p className="list-item-card__body">{selectedInterviewModeOption.description}</p>
+                    </div>
+                  </article>
+                  <article className="list-item-card">
+                    <div className="list-item-card__content">
+                      <div className="list-item-card__meta">
+                        <span>Pass shape</span>
+                      </div>
+                      <h3 className="list-item-card__title">{`${questionCount} seed questions`}</h3>
+                      <p className="list-item-card__body">
+                        Keep the starting surface constrained enough that each branch can actually be defended and revisited.
+                      </p>
+                    </div>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </section>
           <div className="interview-page-layout__workspace">
             <div className="interview-page-layout__main">
-              <section className="page-card interview-page-layout__start">
-                <span className="page-card__label">{t("interview.startLabel")}</span>
-                <h2 className="page-card__title">{t("interview.startTitle")}</h2>
-                <p className="page-card__body">{t("interview.startBody")}</p>
-                <div className="stats-grid">
-                  <MetricCard
-                    helperText="Choose one stable context before starting."
-                    label={t("interview.availableResumeVersions")}
-                    value={String(resumeVersionChoices.length)}
-                  />
-                  <MetricCard
-                    helperText="Keep the questioning mode explicit."
-                    label={t("interview.interviewModeMetric")}
-                    tone="accent"
-                    value={interviewModeOptions.find((option) => option.id === selectedInterviewMode)?.label ?? t("interview.modeMock30")}
-                  />
-                  <MetricCard
-                    helperText="Short runs work best for quick calibration."
-                    label={t("interview.seedCount")}
-                    tone="muted"
-                    value={String(questionCount)}
-                  />
-                </div>
-                <div className="page-card__actions">
-                  <button
-                    className="primary-button"
-                    disabled={resumeVersionChoices.length === 0}
-                    onClick={() => setStartFormOpen((current) => !current)}
-                    type="button"
-                  >
-                    {startFormOpen ? t("interview.hideStartForm") : t("interview.startInterview")}
-                  </button>
-                </div>
-                {resumeVersionChoices.length === 0 ? (
+              {!sessionListQuery.isLoading && !sessionListQuery.isError && sessionListQuery.data ? (
+                sessionListQuery.data.length > 0 ? (
+                  <InterviewSessionHistoryList items={sessionListQuery.data} />
+                ) : (
                   <EmptyStateCard
-                    action={{ label: t("common.openResumes"), to: routeConfig.resume.buildPath() }}
-                    body={t("interview.noResumeBody")}
-                    title={t("interview.noResumeTitle")}
+                    action={{ label: t("interview.startLabel"), to: routeConfig.interview.buildPath() }}
+                    body={t("interview.emptyHistoryBody")}
+                    title={t("interview.emptyHistoryTitle")}
                   />
-                ) : null}
-              </section>
+                )
+              ) : null}
               {startFormOpen && resumeVersionChoices.length > 0 ? (
                 <div className="page-stack interview-page-layout__setup">
                   <div className="page-card page-card--inset">
@@ -326,6 +384,13 @@ export function InterviewPage() {
                   <h2 className="page-card__title">Use one defendable resume version as the interview boundary</h2>
                   <p className="page-card__body">
                     This rail should make it obvious which version is active, which claims were parsed cleanly, and what evidence you will need to defend when the follow-up chain keeps drilling down.
+                  </p>
+                </SectionPanel>
+                <SectionPanel className="workspace-note-card" variant="muted">
+                  <span className="page-card__label">DFS review</span>
+                  <h2 className="page-card__title">Walk every follow-up branch until the answer reaches atomic evidence</h2>
+                  <p className="page-card__body">
+                    Coverage mode is not just a longer mock. It is the mode for traversing the whole question tree, documenting weak branches, and tightening your source of truth before the real interview.
                   </p>
                 </SectionPanel>
                 <section className="page-card">
