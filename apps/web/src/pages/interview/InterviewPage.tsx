@@ -13,6 +13,7 @@ import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { SectionPanel } from "../../shared/ui/layout";
 import { InterviewSessionHistoryList } from "../../widgets/interview";
 
 export function InterviewPage() {
@@ -155,49 +156,68 @@ export function InterviewPage() {
       !(resumeListQuery.isError && latestResumeQuery.isError) ? (
         <div className="interview-page-layout">
           {!sessionListQuery.isLoading && !sessionListQuery.isError && sessionListQuery.data ? (
-            sessionListQuery.data.length > 0 ? (
-              <section className="interview-page-layout__hero">
+            <section className="interview-page-layout__hero">
+              {sessionListQuery.data.length > 0 ? (
                 <InterviewSessionHistoryList items={sessionListQuery.data} />
-              </section>
-            ) : (
-              <EmptyStateCard
-                action={{ label: t("interview.startLabel"), to: routeConfig.interview.buildPath() }}
-                body={t("interview.emptyHistoryBody")}
-                title={t("interview.emptyHistoryTitle")}
-              />
-            )
+              ) : (
+                <EmptyStateCard
+                  action={{ label: t("interview.startLabel"), to: routeConfig.interview.buildPath() }}
+                  body={t("interview.emptyHistoryBody")}
+                  title={t("interview.emptyHistoryTitle")}
+                />
+              )}
+              <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
+                <span className="page-card__label">Interview workflow</span>
+                <h2 className="page-card__title">Open one grounded session, then let the follow-ups go deeper</h2>
+                <p className="page-card__body">
+                  Start from one active resume version, keep the mode explicit, and use coverage runs when the goal is to walk the full question tree instead of sampling prompts.
+                </p>
+              </SectionPanel>
+            </section>
           ) : null}
           <div className="interview-page-layout__workspace">
-            <section className="page-card interview-page-layout__start">
-              <span className="page-card__label">{t("interview.startLabel")}</span>
-              <h2 className="page-card__title">{t("interview.startTitle")}</h2>
-              <p className="page-card__body">{t("interview.startBody")}</p>
-              <div className="stats-grid">
-                <MetricCard label={t("interview.availableResumeVersions")} value={String(resumeVersionChoices.length)} />
-                <MetricCard
-                  label={t("interview.interviewModeMetric")}
-                  tone="accent"
-                  value={interviewModeOptions.find((option) => option.id === selectedInterviewMode)?.label ?? t("interview.modeMock30")}
-                />
-                <MetricCard label={t("interview.seedCount")} tone="muted" value={String(questionCount)} />
-              </div>
-              <div className="page-card__actions">
-                <button
-                  className="primary-button"
-                  disabled={resumeVersionChoices.length === 0}
-                  onClick={() => setStartFormOpen((current) => !current)}
-                  type="button"
-                >
-                  {startFormOpen ? t("interview.hideStartForm") : t("interview.startInterview")}
-                </button>
-              </div>
-              {resumeVersionChoices.length === 0 ? (
-                <EmptyStateCard
-                  action={{ label: t("common.openResumes"), to: routeConfig.resume.buildPath() }}
-                  body={t("interview.noResumeBody")}
-                  title={t("interview.noResumeTitle")}
-                />
-              ) : null}
+            <div className="interview-page-layout__main">
+              <section className="page-card interview-page-layout__start">
+                <span className="page-card__label">{t("interview.startLabel")}</span>
+                <h2 className="page-card__title">{t("interview.startTitle")}</h2>
+                <p className="page-card__body">{t("interview.startBody")}</p>
+                <div className="stats-grid">
+                  <MetricCard
+                    helperText="Choose one stable context before starting."
+                    label={t("interview.availableResumeVersions")}
+                    value={String(resumeVersionChoices.length)}
+                  />
+                  <MetricCard
+                    helperText="Keep the questioning mode explicit."
+                    label={t("interview.interviewModeMetric")}
+                    tone="accent"
+                    value={interviewModeOptions.find((option) => option.id === selectedInterviewMode)?.label ?? t("interview.modeMock30")}
+                  />
+                  <MetricCard
+                    helperText="Short runs work best for quick calibration."
+                    label={t("interview.seedCount")}
+                    tone="muted"
+                    value={String(questionCount)}
+                  />
+                </div>
+                <div className="page-card__actions">
+                  <button
+                    className="primary-button"
+                    disabled={resumeVersionChoices.length === 0}
+                    onClick={() => setStartFormOpen((current) => !current)}
+                    type="button"
+                  >
+                    {startFormOpen ? t("interview.hideStartForm") : t("interview.startInterview")}
+                  </button>
+                </div>
+                {resumeVersionChoices.length === 0 ? (
+                  <EmptyStateCard
+                    action={{ label: t("common.openResumes"), to: routeConfig.resume.buildPath() }}
+                    body={t("interview.noResumeBody")}
+                    title={t("interview.noResumeTitle")}
+                  />
+                ) : null}
+              </section>
               {startFormOpen && resumeVersionChoices.length > 0 ? (
                 <div className="page-stack interview-page-layout__setup">
                   <div className="page-card page-card--inset">
@@ -244,30 +264,30 @@ export function InterviewPage() {
                     <h3 className="page-card__title">{t("interview.sessionSetupTitle")}</h3>
                     <p className="page-card__body">{t("interview.sessionSetupBody")}</p>
                     <div className="stack-list">
-                    {interviewModeOptions.map((option) => {
-                      const isSelected = option.id === selectedInterviewMode;
+                      {interviewModeOptions.map((option) => {
+                        const isSelected = option.id === selectedInterviewMode;
 
-                      return (
-                        <button
-                          aria-pressed={isSelected}
-                          className={`list-item-card interview-resume-choice${isSelected ? " list-item-card--selected" : ""}`}
-                          key={option.id}
-                          onClick={() => setSelectedInterviewMode(option.id)}
-                          type="button"
-                        >
-                          <div className="list-item-card__content">
-                            <div className="list-item-card__meta">
-                              <span>{option.label}</span>
-                              {option.id === "full_coverage" ? (
-                                <span className="question-status-badge question-status-badge--accent">{t("interview.coverageBadge")}</span>
-                              ) : null}
+                        return (
+                          <button
+                            aria-pressed={isSelected}
+                            className={`list-item-card interview-resume-choice${isSelected ? " list-item-card--selected" : ""}`}
+                            key={option.id}
+                            onClick={() => setSelectedInterviewMode(option.id)}
+                            type="button"
+                          >
+                            <div className="list-item-card__content">
+                              <div className="list-item-card__meta">
+                                <span>{option.label}</span>
+                                {option.id === "full_coverage" ? (
+                                  <span className="question-status-badge question-status-badge--accent">{t("interview.coverageBadge")}</span>
+                                ) : null}
+                              </div>
+                              <h3 className="list-item-card__title">{option.label}</h3>
+                              <p className="list-item-card__body">{option.description}</p>
                             </div>
-                            <h3 className="list-item-card__title">{option.label}</h3>
-                            <p className="list-item-card__body">{option.description}</p>
-                          </div>
-                        </button>
-                      );
-                    })}
+                          </button>
+                        );
+                      })}
                     </div>
                     <div className="page-card__actions">
                       <button
@@ -298,9 +318,16 @@ export function InterviewPage() {
                   </section>
                 </div>
               ) : null}
-            </section>
+            </div>
             {resumeVersionChoices.length > 0 ? (
               <aside className="interview-page-layout__rail">
+                <SectionPanel className="workspace-note-card" variant="muted">
+                  <span className="page-card__label">Source of truth</span>
+                  <h2 className="page-card__title">Use one defendable resume version as the interview boundary</h2>
+                  <p className="page-card__body">
+                    This rail should make it obvious which version is active, which claims were parsed cleanly, and what evidence you will need to defend when the follow-up chain keeps drilling down.
+                  </p>
+                </SectionPanel>
                 <section className="page-card">
                   <div className="section-heading">
                     <div>

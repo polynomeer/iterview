@@ -5066,8 +5066,12 @@ button {
 .question-detail-layout__cluster,
 .question-detail-layout__study-rail,
 .interview-page-layout__workspace,
+ .interview-page-layout__main,
 .interview-page-layout__setup,
-.interview-result-layout__content {
+ .interview-result-layout__hero-grid,
+ .interview-result-layout__content,
+ .interview-result-layout__main,
+ .interview-result-layout__side {
   display: grid;
   gap: 18px;
 }
@@ -5087,6 +5091,7 @@ button {
 
 .interview-page-layout__rail,
 .interview-result-layout__actions,
+.interview-result-layout__side,
 .question-detail-layout__study-rail {
   min-width: 0;
 }
@@ -5144,6 +5149,20 @@ button {
 
 .interview-result-layout__content > * {
   min-width: 0;
+}
+
+.interview-page-layout__setup {
+  padding-top: 2px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.interview-result-layout__brief {
+  border-style: dashed;
+}
+
+.interview-result-layout__actions {
+  background: var(--surface-base);
+  box-shadow: var(--shadow-soft);
 }
 
 .resume-editor-topbar,
@@ -5293,6 +5312,11 @@ button {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
   }
+
+  .interview-result-layout__hero-grid {
+    grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
+    align-items: start;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -5418,12 +5442,20 @@ button {
     gap: 22px;
   }
 
+  .interview-page-layout__hero {
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+    gap: 22px;
+    align-items: start;
+  }
+
   .interview-page-layout__workspace {
     grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
     gap: 22px;
   }
 
   .interview-page-layout__rail {
+    display: grid;
+    gap: 18px;
     position: sticky;
     top: 108px;
   }
@@ -5432,8 +5464,20 @@ button {
     gap: 22px;
   }
 
+  .interview-result-layout__content {
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+    gap: 22px;
+  }
+
+  .interview-result-layout__side {
+    display: grid;
+    gap: 18px;
+    position: sticky;
+    top: 108px;
+  }
+
   .interview-result-layout__actions {
-    width: min(100%, 960px);
+    width: min(100%, 320px);
   }
 
   .interview-session-layout {
