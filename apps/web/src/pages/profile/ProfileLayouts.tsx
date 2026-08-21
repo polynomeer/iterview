@@ -82,8 +82,18 @@ export function ProfileMobileLayout({
 }: ProfileLayoutProps) {
   return (
     <div className="profile-layout">
-      <div className="profile-layout__hero">{summaryCard}</div>
+      <div className="profile-layout__hero">
+        {summaryCard}
+        <SectionPanel className="workspace-note-card" variant="muted">
+          <span className="page-card__label">Workspace map</span>
+          <h2 className="page-card__title">Keep account edits separate from resume and interview work</h2>
+          <p className="page-card__body">
+            This screen should behave like a calm settings workspace, not a mixed dashboard with account controls and practice context competing for attention.
+          </p>
+        </SectionPanel>
+      </div>
       <div className="profile-layout__main page-stack">
+        <div className="profile-layout__rail">{resumeCard}</div>
         <AccountCluster>{profileForm}</AccountCluster>
         <PreferencesCluster
           desktop={false}
@@ -91,7 +101,6 @@ export function ProfileMobileLayout({
           themeSettingsCard={themeSettingsCard}
         />
         <FocusCluster>{targetCompaniesForm}</FocusCluster>
-        <div className="profile-layout__rail">{resumeCard}</div>
       </div>
     </div>
   );
@@ -107,7 +116,16 @@ export function ProfileDesktopLayout({
 }: ProfileLayoutProps) {
   return (
     <div className="profile-layout profile-layout--desktop">
-      <div className="profile-layout__hero">{summaryCard}</div>
+      <div className="profile-layout__hero">
+        {summaryCard}
+        <SectionPanel className="profile-workspace-note workspace-note-card" variant="muted">
+          <span className="page-card__label">Workspace depth</span>
+          <h2 className="page-card__title">Keep resume tools one step away from account settings</h2>
+          <p className="page-card__body">
+            Use this rail as a launcher into resume, analysis, and interview workspaces without crowding the main settings surface.
+          </p>
+        </SectionPanel>
+      </div>
       <div className="profile-layout__workspace">
         <div className="profile-layout__main page-stack">
           <AccountCluster>{profileForm}</AccountCluster>
@@ -121,13 +139,6 @@ export function ProfileDesktopLayout({
         <DetailSidebar>
           <div className="page-stack profile-layout__rail">
             {resumeCard}
-            <SectionPanel className="profile-workspace-note workspace-note-card" variant="muted">
-              <span className="page-card__label">Workspace depth</span>
-              <h2 className="page-card__title">Keep resume tools one step away from account settings</h2>
-              <p className="page-card__body">
-                Use this rail as a launcher into resume, analysis, and interview workspaces without crowding the main settings surface.
-              </p>
-            </SectionPanel>
           </div>
         </DetailSidebar>
       </div>
