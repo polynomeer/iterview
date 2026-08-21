@@ -1,34 +1,57 @@
+import { Suspense, lazy, type ReactNode } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HomePage } from "../pages/home/HomePage";
-import { PracticePage } from "../pages/practice/PracticePage";
-import { SkillsPage } from "../pages/skills/SkillsPage";
-import { ReviewQueuePage } from "../pages/review-queue/ReviewQueuePage";
-import { QuestionDetailPage } from "../pages/question-detail/QuestionDetailPage";
-import { QuestionTreePage } from "../pages/question-tree/QuestionTreePage";
-import { AnswerEditorPage } from "../pages/answer-editor/AnswerEditorPage";
-import { ResultAnalysisPage } from "../pages/result-analysis/ResultAnalysisPage";
-import { ArchivePage } from "../pages/archive/ArchivePage";
-import { FeedPage } from "../pages/feed/FeedPage";
-import { ProfilePage } from "../pages/profile/ProfilePage";
-import { ResumePage } from "../pages/resume/ResumePage";
-import { ResumeAnalysisPage } from "../pages/resume-analysis/ResumeAnalysisPage";
-import { ResumeTailorLandingPage } from "../pages/resume-tailor/ResumeTailorLandingPage";
-import { ResumeTailorJobPostingsPage } from "../pages/resume-tailor/ResumeTailorJobPostingsPage";
-import { ResumeTailorAnalysisListPage } from "../pages/resume-tailor/ResumeTailorAnalysisListPage";
-import { ResumeTailorAnalysisDetailPage } from "../pages/resume-tailor/ResumeTailorAnalysisDetailPage";
-import { ResumeHeatmapPage } from "../pages/resume-heatmap/ResumeHeatmapPage";
-import { ResumeHeatmapAnchorPage } from "../pages/resume-heatmap/ResumeHeatmapAnchorPage";
-import { ResumeEditorPage } from "../pages/resume-editor/ResumeEditorPage";
-import { InterviewPage } from "../pages/interview/InterviewPage";
-import { InterviewSessionPage } from "../pages/interview-session/InterviewSessionPage";
-import { InterviewResultPage } from "../pages/interview-result/InterviewResultPage";
-import { PracticalInterviewListPage } from "../pages/practical-interviews/PracticalInterviewListPage";
-import { PracticalInterviewReviewPage } from "../pages/practical-interviews/PracticalInterviewReviewPage";
-import { LoginPage } from "../pages/login/LoginPage";
-import { SignupPage } from "../pages/signup/SignupPage";
 import { routeConfig } from "../shared/config/routes";
+import { LoadingStateCard } from "../shared/ui/LoadingStateCard";
+import { PageContainer } from "../shared/ui/PageContainer";
 import { AppLayout } from "../widgets/layout/AppLayout";
 import { ProtectedRoute } from "./router/ProtectedRoute";
+
+const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({ default: module.HomePage })));
+const PracticePage = lazy(() => import("../pages/practice/PracticePage").then((module) => ({ default: module.PracticePage })));
+const SkillsPage = lazy(() => import("../pages/skills/SkillsPage").then((module) => ({ default: module.SkillsPage })));
+const ReviewQueuePage = lazy(() => import("../pages/review-queue/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
+const QuestionDetailPage = lazy(() => import("../pages/question-detail/QuestionDetailPage").then((module) => ({ default: module.QuestionDetailPage })));
+const QuestionTreePage = lazy(() => import("../pages/question-tree/QuestionTreePage").then((module) => ({ default: module.QuestionTreePage })));
+const AnswerEditorPage = lazy(() => import("../pages/answer-editor/AnswerEditorPage").then((module) => ({ default: module.AnswerEditorPage })));
+const ResultAnalysisPage = lazy(() => import("../pages/result-analysis/ResultAnalysisPage").then((module) => ({ default: module.ResultAnalysisPage })));
+const ArchivePage = lazy(() => import("../pages/archive/ArchivePage").then((module) => ({ default: module.ArchivePage })));
+const FeedPage = lazy(() => import("../pages/feed/FeedPage").then((module) => ({ default: module.FeedPage })));
+const ProfilePage = lazy(() => import("../pages/profile/ProfilePage").then((module) => ({ default: module.ProfilePage })));
+const ResumePage = lazy(() => import("../pages/resume/ResumePage").then((module) => ({ default: module.ResumePage })));
+const ResumeAnalysisPage = lazy(() => import("../pages/resume-analysis/ResumeAnalysisPage").then((module) => ({ default: module.ResumeAnalysisPage })));
+const ResumeTailorLandingPage = lazy(() => import("../pages/resume-tailor/ResumeTailorLandingPage").then((module) => ({ default: module.ResumeTailorLandingPage })));
+const ResumeTailorJobPostingsPage = lazy(() => import("../pages/resume-tailor/ResumeTailorJobPostingsPage").then((module) => ({ default: module.ResumeTailorJobPostingsPage })));
+const ResumeTailorAnalysisListPage = lazy(() => import("../pages/resume-tailor/ResumeTailorAnalysisListPage").then((module) => ({ default: module.ResumeTailorAnalysisListPage })));
+const ResumeTailorAnalysisDetailPage = lazy(() => import("../pages/resume-tailor/ResumeTailorAnalysisDetailPage").then((module) => ({ default: module.ResumeTailorAnalysisDetailPage })));
+const ResumeHeatmapPage = lazy(() => import("../pages/resume-heatmap/ResumeHeatmapPage").then((module) => ({ default: module.ResumeHeatmapPage })));
+const ResumeHeatmapAnchorPage = lazy(() => import("../pages/resume-heatmap/ResumeHeatmapAnchorPage").then((module) => ({ default: module.ResumeHeatmapAnchorPage })));
+const ResumeEditorPage = lazy(() => import("../pages/resume-editor/ResumeEditorPage").then((module) => ({ default: module.ResumeEditorPage })));
+const InterviewPage = lazy(() => import("../pages/interview/InterviewPage").then((module) => ({ default: module.InterviewPage })));
+const InterviewSessionPage = lazy(() => import("../pages/interview-session/InterviewSessionPage").then((module) => ({ default: module.InterviewSessionPage })));
+const InterviewResultPage = lazy(() => import("../pages/interview-result/InterviewResultPage").then((module) => ({ default: module.InterviewResultPage })));
+const PracticalInterviewListPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewListPage").then((module) => ({ default: module.PracticalInterviewListPage })));
+const PracticalInterviewReviewPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewReviewPage").then((module) => ({ default: module.PracticalInterviewReviewPage })));
+const LoginPage = lazy(() => import("../pages/login/LoginPage").then((module) => ({ default: module.LoginPage })));
+const SignupPage = lazy(() => import("../pages/signup/SignupPage").then((module) => ({ default: module.SignupPage })));
+
+function RouteLoadingFallback() {
+  return (
+    <PageContainer
+      description="Loading the next workspace and preparing the route-level bundle for this screen."
+      eyebrow="Navigation"
+      title="Opening page"
+    >
+      <LoadingStateCard
+        body="The requested page is being loaded."
+        title="Preparing screen"
+      />
+    </PageContainer>
+  );
+}
+
+function withSuspense(node: ReactNode) {
+  return <Suspense fallback={<RouteLoadingFallback />}>{node}</Suspense>;
+}
 
 const router = createBrowserRouter([
   {
@@ -36,144 +59,144 @@ const router = createBrowserRouter([
     children: [
       {
         path: routeConfig.home.path,
-        element: <HomePage />,
+        element: withSuspense(<HomePage />),
       },
       {
         path: routeConfig.practice.path,
-        element: <PracticePage />,
+        element: withSuspense(<PracticePage />),
       },
       {
         path: routeConfig.questionDetail.path,
-        element: <QuestionDetailPage />,
+        element: withSuspense(<QuestionDetailPage />),
       },
       {
         path: routeConfig.questionTree.path,
-        element: <QuestionTreePage />,
+        element: withSuspense(<QuestionTreePage />),
       },
       {
         path: routeConfig.feed.path,
-        element: <FeedPage />,
+        element: withSuspense(<FeedPage />),
       },
       {
         element: <ProtectedRoute />,
         children: [
           {
             path: routeConfig.skills.path,
-            element: <SkillsPage />,
+            element: withSuspense(<SkillsPage />),
           },
           {
             path: routeConfig.reviewQueue.path,
-            element: <ReviewQueuePage />,
+            element: withSuspense(<ReviewQueuePage />),
           },
           {
             path: routeConfig.answerEditor.path,
-            element: <AnswerEditorPage />,
+            element: withSuspense(<AnswerEditorPage />),
           },
           {
             path: routeConfig.resultAnalysis.path,
-            element: <ResultAnalysisPage />,
+            element: withSuspense(<ResultAnalysisPage />),
           },
           {
             path: routeConfig.archive.path,
-            element: <ArchivePage />,
+            element: withSuspense(<ArchivePage />),
           },
           {
             path: routeConfig.profile.path,
-            element: <ProfilePage />,
+            element: withSuspense(<ProfilePage />),
           },
           {
             path: routeConfig.resume.path,
-            element: <ResumePage />,
+            element: withSuspense(<ResumePage />),
           },
           {
             path: routeConfig.resumeAnalysis.path,
-            element: <ResumeAnalysisPage />,
+            element: withSuspense(<ResumeAnalysisPage />),
           },
           {
             path: routeConfig.resumeHeatmap.path,
-            element: <ResumeHeatmapPage />,
+            element: withSuspense(<ResumeHeatmapPage />),
           },
           {
             path: routeConfig.resumeEditor.path,
-            element: <ResumeEditorPage />,
+            element: withSuspense(<ResumeEditorPage />),
           },
           {
             path: routeConfig.resumeHeatmapAnchor.path,
-            element: <ResumeHeatmapAnchorPage />,
+            element: withSuspense(<ResumeHeatmapAnchorPage />),
           },
           {
             path: routeConfig.resumeTailor.path,
-            element: <ResumeTailorLandingPage />,
+            element: withSuspense(<ResumeTailorLandingPage />),
           },
           {
             path: routeConfig.resumeTailorJobPostings.path,
-            element: <ResumeTailorJobPostingsPage />,
+            element: withSuspense(<ResumeTailorJobPostingsPage />),
           },
           {
             path: routeConfig.resumeTailorAnalysisList.path,
-            element: <ResumeTailorAnalysisListPage />,
+            element: withSuspense(<ResumeTailorAnalysisListPage />),
           },
           {
             path: routeConfig.resumeTailorAnalysisDetail.path,
-            element: <ResumeTailorAnalysisDetailPage />,
+            element: withSuspense(<ResumeTailorAnalysisDetailPage />),
           },
           {
             path: routeConfig.interview.path,
-            element: <InterviewPage />,
+            element: withSuspense(<InterviewPage />),
           },
           {
             path: routeConfig.practicalInterviews.path,
-            element: <PracticalInterviewListPage />,
+            element: withSuspense(<PracticalInterviewListPage />),
           },
           {
             path: routeConfig.practicalInterviewUpload.path,
-            element: <PracticalInterviewListPage />,
+            element: withSuspense(<PracticalInterviewListPage />),
           },
           {
             path: routeConfig.practicalInterviewDetail.path,
-            element: <PracticalInterviewReviewPage />,
+            element: withSuspense(<PracticalInterviewReviewPage />),
           },
           {
             path: routeConfig.practicalInterviewTranscript.path,
-            element: <PracticalInterviewReviewPage />,
+            element: withSuspense(<PracticalInterviewReviewPage />),
           },
           {
             path: routeConfig.practicalInterviewQuestion.path,
-            element: <PracticalInterviewReviewPage />,
+            element: withSuspense(<PracticalInterviewReviewPage />),
           },
           {
             path: routeConfig.practicalInterviewSimulate.path,
-            element: <PracticalInterviewReviewPage />,
+            element: withSuspense(<PracticalInterviewReviewPage />),
           },
           {
             path: "/interview",
-            element: <InterviewPage />,
+            element: withSuspense(<InterviewPage />),
           },
           {
             path: routeConfig.interviewSession.path,
-            element: <InterviewSessionPage />,
+            element: withSuspense(<InterviewSessionPage />),
           },
           {
             path: "/interview/sessions/:sessionId",
-            element: <InterviewSessionPage />,
+            element: withSuspense(<InterviewSessionPage />),
           },
           {
             path: routeConfig.interviewSessionResult.path,
-            element: <InterviewResultPage />,
+            element: withSuspense(<InterviewResultPage />),
           },
           {
             path: "/interview/sessions/:sessionId/result",
-            element: <InterviewResultPage />,
+            element: withSuspense(<InterviewResultPage />),
           },
         ],
       },
       {
         path: routeConfig.login.path,
-        element: <LoginPage />,
+        element: withSuspense(<LoginPage />),
       },
       {
         path: routeConfig.signup.path,
-        element: <SignupPage />,
+        element: withSuspense(<SignupPage />),
       },
     ],
   },

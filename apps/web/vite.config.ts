@@ -8,6 +8,40 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.indexOf("node_modules") !== -1) {
+              if (id.indexOf("@tanstack/react-query") !== -1) {
+                return "react-query";
+              }
+
+              if (id.indexOf("react") !== -1 || id.indexOf("scheduler") !== -1) {
+                return "react-vendor";
+              }
+            }
+
+            if (
+              id.indexOf("/src/pages/resume-editor/") !== -1 ||
+              id.indexOf("/src/widgets/resume-editor/") !== -1
+            ) {
+              return "resume-editor";
+            }
+
+            if (id.indexOf("/src/pages/practical-interviews/") !== -1) {
+              return "practical-interviews";
+            }
+
+            if (id.indexOf("/src/pages/resume-tailor/") !== -1) {
+              return "resume-tailor";
+            }
+
+            return undefined;
+          },
+        },
+      },
+    },
     server: {
       proxy: {
         "/api": {
