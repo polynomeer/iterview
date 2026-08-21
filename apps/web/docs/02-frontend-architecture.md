@@ -1,172 +1,256 @@
 # 02-frontend-architecture
 
-## Recommended Structure
+This document explains how the web application is structured and why new features should fit the current frontend architecture instead of bypassing it.
+
+## Architectural Summary
+
+The frontend is a React and Vite application organized into layered folders:
+
 ```text
 src/
-- app
-- pages
-- features
-- entities
-- widgets
-- shared
+  app/
+  pages/
+  features/
+  entities/
+  widgets/
+  shared/
 ```
 
-The current project structure already matches the intended frontend architecture and should be preserved. New product concepts should be integrated as additive modules inside this structure.
+This is intentionally close to a feature-sliced mental model without overcomplicating the repository.
 
-## Package Responsibilities
-### app
+## Layer Responsibilities
+
+### `app`
+
+Owns:
 - router setup
 - global providers
 - auth bootstrap
-- query client
-- app shell and protected routes
-- global i18n provider and locale bootstrap
+- query client wiring
+- locale bootstrap
+- app shell
 
-### pages
-Route-level screens and route-specific composition:
-- `HomePage`
-- `PracticePage`
-- `QuestionDetailPage`
-- `AnswerEditorPage`
-- `ResultAnalysisPage`
-- `ReviewQueuePage`
-- `ArchivePage`
-- `FeedPage`
-- `ProfilePage`
-- `ResumePage`
+Current runtime entrypoints include:
+- `src/app/router.tsx`
+- `src/app/providers/*`
 
-New product concepts should continue to enter through existing pages first:
-- home for radar preview, weak-skill preview, and next-step guidance
-- question detail for follow-up tree and related skill context
-- result analysis for answer analysis, skill impact, and review recommendation
-- resume for parsed resume insights tied to the active version
+### `pages`
 
-### features
-Feature-specific hooks, query adapters, and action logic.
+Owns:
+- route-level screens
+- high-level branching for loading, empty, error, and auth-required states
+- page-specific orchestration across features and widgets
 
-Current slices already cover:
-- auth
+Current page areas include:
 - home
 - practice
-- question
-- answer
-- result
-- review-queue
+- question detail
+- question tree
+- answer editor
+- result analysis
 - archive
-- interview history
-- interview start flow with resume-version selection
+- review queue
 - feed
 - profile
 - resume
+- resume analysis
+- resume heatmap
+- resume editor
+- resume tailor
+- skills
+- interview
+- interview session
+- interview result
+- practical interviews
+- login
+- signup
 
-Recommended additive slices:
-- `skill-radar`
-- `gap-analysis`
-- `question-tree`
-- `resume-analysis`
-- `practical-interview`
-- `replay-simulation`
+### `features`
 
-These should remain thin orchestration layers around typed API calls and entity mappers.
+Owns:
+- action-oriented logic
+- API hooks
+- query orchestration
+- state transitions close to one product behavior
 
-### entities
-Shared domain display models and mapping logic.
+Examples:
+- `features/auth`
+- `features/answer`
+- `features/interview`
+- `features/practical-interview`
+- `features/resume-editor`
 
-Current entities already model:
+### `entities`
+
+Owns:
+- UI-safe domain models
+- API-to-UI mapping logic
+- display-friendly derived fields
+
+Examples:
+- `entities/question`
+- `entities/result`
+- `entities/resume`
+- `entities/skill-intelligence`
+
+### `widgets`
+
+Owns:
+- reusable screen composition blocks
+- larger display units that combine multiple entities or features
+- layout-adjacent sections that should not live in `shared/ui`
+
+Examples:
 - home cards
-- questions
-- results
+- interview panels
+- resume panels
+- layout navigation blocks
+
+### `shared`
+
+Owns:
+- API client infrastructure
+- config and route constants
+- auth helpers
+- locale helpers
+- theme and UI primitives
+- generic utility functions
+- shared types
+
+## Architectural Rules
+
+### 1. Route logic belongs in `pages`
+
+Pages should own:
+- route params
+- top-level branching
+- page composition
+
+They should not become a dumping ground for low-level API access or repeated mapping logic.
+
+### 2. API access belongs in `features` and `shared/api`
+
+- endpoint definitions should stay centralized
+- query keys should stay centralized
+- feature hooks should wrap endpoint usage
+- raw fetch logic should not spread across pages
+
+### 3. UI-safe mapping belongs in `entities`
+
+API payloads are not always ideal view models.
+
+Entities should absorb:
+- optional-field defaults
+- derived labels
+- stable UI-facing shapes for additive backend evolution
+
+### 4. Reusable display composition belongs in `widgets`
+
+If a block is bigger than a primitive but smaller than a route, it probably belongs in `widgets`.
+
+### 5. Truly generic code belongs in `shared`
+
+Avoid placing product-specific concepts in `shared` just because they are reused twice.
+
+## Current Route Inventory
+
+The router currently exposes these primary route groups:
+- `/`
+- `/practice`
+- `/questions/:questionId`
+- `/questions/:questionId/tree`
+- `/questions/:questionId/answer`
+- `/answer-attempts/:answerAttemptId/result`
+- `/feed`
+- `/skills`
+- `/review-queue`
+- `/archive`
+- `/profile`
+- `/profile/resumes`
+- `/profile/resumes/analysis`
+- `/resume-versions/:versionId/heatmap`
+- `/resume-versions/:versionId/heatmap/anchors/:anchorType/:anchorId`
+- `/resume-versions/:versionId/editor`
+- `/resume-tailor/*`
+- `/interviews`
+- `/interviews/:sessionId`
+- `/interviews/:sessionId/result`
+- `/practical-interviews/*`
+- `/login`
+- `/signup`
+
+## State Management Strategy
+
+The current frontend implicitly uses a layered state model:
+
+### Server state
+
+Handled primarily through React Query and feature-level API hooks.
+
+Examples:
+- question detail
 - answer history
 - review queue
-- archive
-- feed
-- profile
-- resume
+- resume extraction subresources
+- interview session detail
 
-Recommended additive entities:
-- `skill-radar`
-- `skill-gap`
-- `question-tree`
-- `resume-insight`
-- `interview-start`
-- `interview-record`
-- `interviewer-profile`
-- `replay-session`
+### URL state
 
-Entity models should explicitly map API DTOs into UI-safe shapes and provide defaults for optional additive fields.
+Handled through route params, query params, and route-specific navigation.
 
-### widgets
-Screen composition units and reusable display blocks.
+Examples:
+- selected question
+- selected interview record
+- selected resume version
+- analysis detail routes
 
-Current widgets already support the main learning loop. New widgets should fit the same pattern:
-- `SkillRadarPreviewCard`
-- `SkillGapList`
-- `QuestionTreePanel`
-- `ResumeInsightCard`
-- `ImprovementSummaryCard`
+### Local UI state
 
-### shared
-- typed HTTP client
-- endpoint constants
-- query keys
-- auth storage and provider
-- route constants
-- UI primitives and responsive layout utilities
-- formatting helpers and collection guards
-- i18n message dictionaries and locale helpers
+Handled inside page, widget, or feature components when not worth promoting.
 
-## Architectural Priorities
-### Route Ownership
-- keep route-level data loading and state branching in `pages`
-- keep reusable view composition in `widgets`
-- keep DTO-to-model mapping in `entities`
+Examples:
+- active tab
+- filter drawer visibility
+- temporary draft text
 
-### Typed API Integration
-- endpoint strings remain centralized in `src/shared/api/endpoints.ts`
-- request and response DTOs remain centralized in `src/shared/types`
-- new radar, gap, and tree fields should be optional until all backend contracts are finalized
-- locale-aware requests should be centralized so `X-App-Locale` or equivalent locale headers are not scattered through feature code
+## Integration Rules
 
-### Backward Compatibility
-- existing pages should continue to render when newer fields are absent
-- mappers should normalize both minimal current responses and richer future responses
-- additive sections should degrade to empty-state or hidden-state behavior without breaking the main workflow
-- original user-authored content should never be replaced in the UI model by translated fallback text
+### Backend contract evolution
 
-### Mobile-First UX
-- primary action should stay visible on every major screen
-- side panels on desktop should collapse into stacked sections on mobile
-- graph or radar views must have accessible fallback summaries for small screens
+The frontend should tolerate additive backend fields.
 
-## State Management
-- React Query for server state
-- local component state for transient form or filter state
-- persistent local state only for small UX helpers such as answer drafts
-- avoid introducing cross-app client state for skill radar or question tree unless caching needs become demonstrably global
-- persistent locale state may be stored for user preference and bootstrap fallback
-- authenticated bootstrap should hydrate the active locale from `settings.preferredLanguage` when available
+That means:
+- optional data should have safe defaults
+- components should render partial data gracefully
+- pages should not assume every intelligence field is always present
 
-## Error Handling
-Every major page should handle:
-- loading
-- empty
-- error
-- success
-- auth-required when the route or data needs authentication
+### Locale behavior
 
-For additive features such as skill radar or question tree, prefer sectional fallback instead of failing the full page when only one secondary resource is unavailable.
+The app already contains centralized locale and i18n support under `shared/i18n`.
 
-## Localization Rules
-- initial supported locales are `ko` and `en`
-- UI chrome, navigation, badges, and empty/error states should use the active locale
-- original user content such as resume evidence snippets, resume source sections, and answer text should remain in the original language
-- mixed-language rendering is valid and expected
-- generated interview question fields such as `title`, `bodyText`, and `generationRationale` may carry `contentLocale`, but that field is metadata only and should not trigger client translation
-- frontend should treat machine-readable API fields as locale-neutral and translate display-only UI strings separately
+Important behavior:
+- UI chrome may be localized
+- user-authored source content remains in the original language
+- generated interview or analysis text may follow the selected app locale
 
-## Data Flow Summary
-1. `pages` trigger feature queries and mutations.
-2. `shared/api` sends typed REST requests.
-3. `entities` map DTOs into UI models.
-4. `widgets` render screen sections.
-5. mutations invalidate query keys so the learning loop stays current across home, result analysis, review queue, archive, and resume-driven contexts.
+### Protected routes
+
+Authenticated routes are wrapped through `ProtectedRoute`.
+
+This makes auth handling explicit at the route layer rather than hidden in arbitrary page logic.
+
+## Frontend Strengths
+
+The current architecture is already well suited for the product because:
+- the route surface is broad but logically grouped
+- features can grow additively
+- resume, interview, and replay workflows already have dedicated slices
+- app-wide concerns such as auth and locale are centralized
+
+## Frontend Risks To Watch
+
+- bypassing entity mapping and leaking raw API shapes into many pages
+- moving too much product-specific logic into `shared`
+- duplicating route-level branching inside widgets
+- overfitting UI state to one backend payload shape when additive evolution is expected
+
