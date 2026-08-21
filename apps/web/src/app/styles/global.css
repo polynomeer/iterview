@@ -4810,33 +4810,51 @@ button {
 }
 
 .page-container__intro {
+  display: grid;
   align-items: flex-start;
   gap: 14px;
   padding: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .page-container__intro-copy {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   max-width: 760px;
+}
+
+.page-container__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 28px;
+  padding: 5px 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--surface-soft);
 }
 
 .page-container__title {
   font-size: clamp(1.85rem, 3vw, 3rem);
-  line-height: 1;
+  line-height: 1.04;
   letter-spacing: -0.04em;
-  max-width: 14ch;
+  max-width: 15ch;
 }
 
 .page-container__description {
   margin: 0;
-  max-width: 58ch;
+  max-width: 60ch;
   color: var(--text-muted);
-  font-size: 0.98rem;
-  line-height: 1.6;
+  font-size: 0.96rem;
+  line-height: 1.65;
 }
 
 .page-container__inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
   padding-bottom: 0;
 }
 
@@ -4846,7 +4864,7 @@ button {
 }
 
 .page-card {
-  padding: 20px;
+  padding: 22px;
   border-radius: 18px;
   background: var(--surface-base);
   border: 1px solid var(--border-soft);
@@ -4858,44 +4876,51 @@ button {
 .page-card--inset,
 .state-card--section,
 .theme-option {
-  background: var(--surface-soft);
+  background: color-mix(in srgb, var(--surface-soft) 88%, var(--surface-base));
 }
 
 .page-card__label {
   min-height: 28px;
-  margin-bottom: 14px;
-  padding: 5px 9px;
+  margin-bottom: 12px;
+  padding: 5px 10px;
   border: 1px solid var(--border-soft);
   border-radius: 999px;
-  background: transparent;
-  font-size: 0.68rem;
+  background: color-mix(in srgb, var(--surface-soft) 94%, transparent);
+  color: var(--text-muted);
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .page-card__title {
-  font-size: 1.08rem;
-  line-height: 1.2;
+  font-size: 1.1rem;
+  line-height: 1.24;
   letter-spacing: -0.03em;
 }
 
 .page-card__body {
   margin-top: 10px;
-  line-height: 1.6;
+  max-width: 64ch;
+  line-height: 1.62;
 }
 
 .primary-button,
 .secondary-button {
   min-height: 44px;
-  padding: 0 16px;
+  padding: 0 15px;
   border-radius: 12px;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--surface-strong) 74%, transparent);
   transition:
     transform 160ms ease,
     background 160ms ease,
-    border-color 160ms ease;
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
 }
 
 .primary-button:active,
@@ -4909,6 +4934,34 @@ button {
 .secondary-button {
   background: var(--surface-strong);
   border-color: var(--border-soft);
+}
+
+.primary-button:hover,
+.primary-button:focus-visible {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 12px 24px color-mix(in srgb, var(--shadow-soft) 20%, transparent);
+}
+
+.secondary-button:hover,
+.secondary-button:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 18%, var(--border-soft));
+  background: color-mix(in srgb, var(--surface-strong) 88%, var(--surface-soft));
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--shadow-soft) 14%, transparent);
+}
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  outline-offset: 2px;
+}
+
+.state-card {
+  gap: 0;
+}
+
+.state-card .page-card__body {
+  max-width: 58ch;
 }
 
 .bottom-tab-bar {
@@ -5249,8 +5302,31 @@ button {
   border-radius: 16px;
 }
 
+.metric-card {
+  gap: 10px;
+  padding: 15px 16px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface-soft) 90%, var(--surface-base));
+}
+
+.metric-card__label {
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+}
+
+.metric-card__value {
+  font-size: 1.52rem;
+}
+
+.metric-card__helper {
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .list-item-card {
-  padding: 14px;
+  padding: 15px;
+  background: color-mix(in srgb, var(--surface-soft) 90%, var(--surface-base));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 24%, transparent);
 }
 
 .list-item-card__meta-pill,
@@ -5258,6 +5334,17 @@ button {
 .detail-chip,
 .insight-card__chip {
   background: var(--surface-muted);
+}
+
+.list-item-card:hover,
+.list-item-card:focus-visible {
+  background: color-mix(in srgb, var(--surface-soft) 80%, var(--surface-base));
+}
+
+.list-item-card--selected {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .result-analysis-layout__hero-grid,
@@ -5283,7 +5370,14 @@ button {
   }
 
   .page-container__intro {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
     padding-inline: 4px;
+  }
+
+  .page-container__inline-actions {
+    justify-content: flex-end;
+    width: auto;
   }
 
   .practice-layout__cluster--support,
