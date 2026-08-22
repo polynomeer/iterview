@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { getActiveResumeVersion } from "../../entities/resume/model";
 import { useActiveResumeAnalysisQuery } from "../../features/resume/api/useActiveResumeAnalysisQuery";
 import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
@@ -7,6 +8,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
+import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import {
   ActiveResumeOverviewCard,
@@ -18,6 +20,7 @@ import {
 export function ResumeAnalysisPage() {
   const resumeListQuery = useResumeListQuery();
   const latestResumeQuery = useLatestResumeQuery();
+  const { isDesktop } = useLayoutMode();
   const effectiveResumeList = latestResumeQuery.data ?? resumeListQuery.data;
   const activeResumeVersion = getActiveResumeVersion(effectiveResumeList);
   const analysisQuery = useActiveResumeAnalysisQuery(activeResumeVersion?.id ?? null);
@@ -26,6 +29,11 @@ export function ResumeAnalysisPage() {
 
   return (
     <PageContainer
+      actions={
+        <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
+          Open resume workspace
+        </Link>
+      }
       description="Review parsed resume insights, extracted evidence, and risk signals around the active resume version."
       eyebrow="Resume Analysis"
       title="Resume intelligence"
@@ -56,8 +64,6 @@ export function ResumeAnalysisPage() {
       !(resumeListQuery.isError && latestResumeQuery.isError) &&
       effectiveResumeList ? (
         <div className="page-stack">
-          <ActiveResumeOverviewCard resumeList={effectiveResumeList} />
-
           {!activeResumeVersion ? (
             <EmptyStateCard
               action={{
@@ -95,11 +101,136 @@ export function ResumeAnalysisPage() {
               title="Unable to load resume insights"
             />
           ) : analysisQuery.data ? (
-            <>
-              <ResumeSkillsCard skills={analysisQuery.data.skills} />
-              <ResumeExperienceList experiences={analysisQuery.data.experiences} />
-              <ResumeRiskList risks={analysisQuery.data.risks} />
-            </>
+            (() => {
+              const highRiskCount = analysisQuery.data.risks.filter((risk) =>
+                risk.severityLabel.toLowerCase().includes("high"),
+              ).length;
+              const workspaceSummary = (
+                <section className="page-card resume-analysis-workspace-surface">
+                  <div className="resume-analysis-workspace-surface__header">
+                    <div className="resume-analysis-workspace-surface__intro">
+                      <div className="resume-analysis-workspace-surface__eyebrow-row">
+                        <span className="page-card__label">Source of truth</span>
+                        <span className="question-status-badge question-status-badge--accent">Defense lane</span>
+                      </div>
+                      <p className="resume-analysis-workspace-surface__breadcrumbs">
+                        Claim quality
+                        <span>/</span>
+                        Evidence density
+                        <span>/</span>
+                        Follow-up survivability
+                      </p>
+                      <h2 className="resume-analysis-workspace-surface__title">
+                        Inspect whether the active resume can survive DFS-style follow-up questioning
+                      </h2>
+                      <p className="resume-analysis-workspace-surface__body">
+                        This page should not behave like a passive parser output. Use it to find thin claims, weak
+                        evidence blocks, and the exact parts of the resume that need stronger grounding before an
+                        interview session drills into them.
+                      </p>
+                    </div>
+                    <div className="resume-analysis-workspace-surface__stats">
+                      <article className="resume-analysis-workspace-surface__stat">
+                        <span>Skills mapped</span>
+                        <strong>{analysisQuery.data.skills.length}</strong>
+                      </article>
+                      <article className="resume-analysis-workspace-surface__stat">
+                        <span>Experience blocks</span>
+                        <strong>{analysisQuery.data.experiences.length}</strong>
+                      </article>
+                      <article className="resume-analysis-workspace-surface__stat">
+                        <span>Defense risks</span>
+                        <strong>{analysisQuery.data.risks.length}</strong>
+                      </article>
+                      <article className="resume-analysis-workspace-surface__stat">
+                        <span>High-risk claims</span>
+                        <strong>{highRiskCount}</strong>
+                      </article>
+                    </div>
+                  </div>
+                  <div className="resume-analysis-workspace-surface__chips">
+                    <span className="detail-chip">{activeResumeVersion.versionNumberLabel}</span>
+                    <span className="detail-chip detail-chip--accent">{activeResumeVersion.parsingStatusLabel}</span>
+                    <span className="detail-chip">{activeResumeVersion.extractionStatusLabel}</span>
+                    <span className="detail-chip">{activeResumeVersion.fileNameLabel}</span>
+                  </div>
+                </section>
+              );
+
+              return (
+                <div className={`resume-analysis-layout ${isDesktop ? "resume-analysis-layout--desktop" : "resume-analysis-layout--mobile"}`}>
+                  <section className="resume-analysis-layout__workspace-summary">{workspaceSummary}</section>
+                  <div className="resume-analysis-layout__main page-stack">
+                    <section className="page-card resume-analysis-priority-card">
+                      <div className="section-heading">
+                        <div>
+                          <p className="section-heading__eyebrow">Priority read</p>
+                          <h2 className="page-card__title">Start with the claims most likely to fail under follow-up</h2>
+                        </div>
+                      </div>
+                      <div className="resume-analysis-priority-card__signals">
+                        <article className="resume-analysis-priority-card__signal">
+                          <span>Immediate fix target</span>
+                          <strong>
+                            {analysisQuery.data.risks[0]
+                              ? `Focus: ${analysisQuery.data.risks[0].title}`
+                              : "No urgent claim risk detected"}
+                          </strong>
+                        </article>
+                        <article className="resume-analysis-priority-card__signal">
+                          <span>Evidence coverage</span>
+                          <strong>
+                            {analysisQuery.data.experiences.length > 0
+                              ? `${analysisQuery.data.experiences.length} experience blocks are ready for drill-down`
+                              : "No extracted experience blocks yet"}
+                          </strong>
+                        </article>
+                      </div>
+                    </section>
+                    <ResumeRiskList risks={analysisQuery.data.risks} />
+                    <ResumeExperienceList experiences={analysisQuery.data.experiences} />
+                    <ResumeSkillsCard skills={analysisQuery.data.skills} />
+                  </div>
+                  <aside className="resume-analysis-layout__rail page-stack">
+                    <ActiveResumeOverviewCard resumeList={effectiveResumeList} />
+                    <section className="page-card section-panel section-panel--muted resume-analysis-guide">
+                      <span className="page-card__label">Defense guide</span>
+                      <h2 className="page-card__title">Read this analysis like interview pressure, not resume QA</h2>
+                      <p className="page-card__body">
+                        A strong resume source of truth is one where every highlighted claim can be expanded into
+                        concrete decisions, constraints, metrics, and tradeoffs when the question tree keeps drilling
+                        deeper.
+                      </p>
+                      <div className="resume-analysis-guide__rules">
+                        <div className="resume-analysis-guide__rule">
+                          <strong>1. Find vague claims first</strong>
+                          <span>Risk items usually point to claims that sound impressive but will collapse under detail.</span>
+                        </div>
+                        <div className="resume-analysis-guide__rule">
+                          <strong>2. Check the evidence block</strong>
+                          <span>Experiences and parsed skills should expose enough context to explain how the claim happened.</span>
+                        </div>
+                        <div className="resume-analysis-guide__rule">
+                          <strong>3. Repair before mock practice</strong>
+                          <span>Tighten the source text before spending another session on answers built on weak inputs.</span>
+                        </div>
+                      </div>
+                      <div className="page-card__actions">
+                        <Link
+                          className="secondary-button"
+                          to={routeConfig.resumeEditor.buildPath({ versionId: activeResumeVersion.id })}
+                        >
+                          Edit source of truth
+                        </Link>
+                        <Link className="primary-button" to={routeConfig.resume.buildPath()}>
+                          Review active resume
+                        </Link>
+                      </div>
+                    </section>
+                  </aside>
+                </div>
+              );
+            })()
           ) : null}
         </div>
       ) : null}

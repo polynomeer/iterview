@@ -7253,6 +7253,168 @@ button {
   line-height: 1.6;
 }
 
+.resume-analysis-layout {
+  display: grid;
+  gap: 22px;
+}
+
+.resume-analysis-layout__workspace-summary {
+  grid-column: 1 / -1;
+}
+
+.resume-analysis-workspace-surface {
+  display: grid;
+  gap: 18px;
+  padding: clamp(22px, 3vw, 30px);
+  border-radius: 30px;
+  border: 1px solid color-mix(in srgb, #d8cab7 10%, transparent);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 24%, transparent), transparent 48%),
+    linear-gradient(145deg, #151313 0%, #1d1817 45%, #0f0d0d 100%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+    0 26px 60px rgba(10, 6, 5, 0.26);
+}
+
+.resume-analysis-workspace-surface__header {
+  display: grid;
+  gap: 18px;
+}
+
+.resume-analysis-workspace-surface__intro {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-analysis-workspace-surface__eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.resume-analysis-workspace-surface__breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  color: rgba(255, 247, 240, 0.62);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-analysis-workspace-surface__title {
+  margin: 0;
+  color: #fff8f0;
+  font-size: clamp(1.6rem, 2.2vw, 2.3rem);
+  line-height: 1.08;
+  max-width: 14ch;
+  text-wrap: balance;
+}
+
+.resume-analysis-workspace-surface__body {
+  margin: 0;
+  max-width: 72ch;
+  color: rgba(255, 247, 240, 0.76);
+  line-height: 1.7;
+}
+
+.resume-analysis-workspace-surface__stats {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.resume-analysis-workspace-surface__stat {
+  display: grid;
+  gap: 4px;
+  min-height: 92px;
+  padding: 14px 15px;
+  border-radius: 20px;
+  background: color-mix(in srgb, white 7%, transparent);
+  border: 1px solid color-mix(in srgb, white 10%, transparent);
+}
+
+.resume-analysis-workspace-surface__stat span {
+  color: rgba(255, 247, 240, 0.62);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-analysis-workspace-surface__stat strong {
+  color: #fff8f0;
+  font-size: 1.08rem;
+  line-height: 1.3;
+}
+
+.resume-analysis-workspace-surface__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.resume-analysis-priority-card {
+  display: grid;
+  gap: 16px;
+}
+
+.resume-analysis-priority-card__signals {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-analysis-priority-card__signal {
+  display: grid;
+  gap: 4px;
+  padding: 14px 15px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface-soft) 88%, var(--surface-base));
+  border: 1px solid var(--border-soft);
+}
+
+.resume-analysis-priority-card__signal span {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-analysis-priority-card__signal strong {
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.resume-analysis-guide {
+  display: grid;
+  gap: 16px;
+}
+
+.resume-analysis-guide__rules {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-analysis-guide__rule {
+  display: grid;
+  gap: 4px;
+  padding: 14px 15px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-info-soft) 92%, var(--surface-base)), var(--surface-soft));
+  border: 1px solid color-mix(in srgb, var(--border-info) 76%, transparent);
+}
+
+.resume-analysis-guide__rule strong {
+  color: var(--text-main);
+}
+
+.resume-analysis-guide__rule span {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
 .interview-page-layout__hero,
 .interview-page-layout__workspace {
   align-items: start;
@@ -7337,7 +7499,8 @@ button {
   }
 
   .result-analysis-workspace-surface__header,
-  .result-score-card__hero {
+  .result-score-card__hero,
+  .resume-analysis-workspace-surface__header {
     grid-template-columns: 1fr;
   }
 }
@@ -7351,5 +7514,20 @@ button {
   .result-score-card__hero {
     grid-template-columns: minmax(0, 0.86fr) minmax(260px, 1fr);
     align-items: stretch;
+  }
+
+  .resume-analysis-layout--desktop {
+    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.72fr);
+    align-items: start;
+  }
+
+  .resume-analysis-layout__rail {
+    position: sticky;
+    top: 108px;
+  }
+
+  .resume-analysis-workspace-surface__header {
+    grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
+    align-items: end;
   }
 }
