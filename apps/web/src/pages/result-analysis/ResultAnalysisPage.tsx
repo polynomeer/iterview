@@ -73,6 +73,86 @@ export function ResultAnalysisPage() {
 
       {!resultQuery.isLoading && !resultQuery.isError && resultQuery.data
         ? (() => {
+            const weakestDimension = resultQuery.data.dimensions.reduce<(typeof resultQuery.data.dimensions)[number] | null>(
+              (currentWeakest, dimension) => {
+                const dimensionValue = Number(dimension.value);
+                const currentValue = currentWeakest ? Number(currentWeakest.value) : Number.POSITIVE_INFINITY;
+
+                if (Number.isNaN(dimensionValue)) {
+                  return currentWeakest;
+                }
+
+                return !currentWeakest || dimensionValue < currentValue ? dimension : currentWeakest;
+              },
+              null,
+            );
+            const strongestSignals =
+              resultQuery.data.strengthPoints.length +
+              resultQuery.data.feedbackItems.filter((item) => item.tone === "positive").length;
+            const improvementSignals =
+              resultQuery.data.improvementPoints.length +
+              resultQuery.data.weakPatterns.length +
+              resultQuery.data.missedPoints.length;
+            const workspaceSummary = (
+              <section className="page-card result-analysis-workspace-surface">
+                <div className="result-analysis-workspace-surface__header">
+                  <div className="result-analysis-workspace-surface__intro">
+                    <div className="result-analysis-workspace-surface__eyebrow-row">
+                      <span className="page-card__label">Result workspace</span>
+                      <span className="question-status-badge question-status-badge--accent">Review loop</span>
+                    </div>
+                    <p className="result-analysis-workspace-surface__breadcrumbs">
+                      Score verdict
+                      <span>/</span>
+                      Weakest dimension
+                      <span>/</span>
+                      Next simulation
+                    </p>
+                    <h2 className="result-analysis-workspace-surface__title">
+                      Turn this evaluation into the next stronger answer
+                    </h2>
+                    <p className="result-analysis-workspace-surface__body">
+                      Read the verdict, isolate the weakest branch, and decide whether the next loop should be an
+                      immediate retry or a deeper follow-up question.
+                    </p>
+                  </div>
+                  <div className="result-analysis-workspace-surface__stats">
+                    <article className="result-analysis-workspace-surface__stat">
+                      <span>Total score</span>
+                      <strong>{`${resultQuery.data.totalScore} / 100`}</strong>
+                    </article>
+                    <article className="result-analysis-workspace-surface__stat">
+                      <span>Weakest dimension</span>
+                      <strong>{weakestDimension ? `${weakestDimension.label} ${weakestDimension.value}` : "Pending"}</strong>
+                    </article>
+                    <article className="result-analysis-workspace-surface__stat">
+                      <span>Improvement signals</span>
+                      <strong>{improvementSignals}</strong>
+                    </article>
+                    <article className="result-analysis-workspace-surface__stat">
+                      <span>Next prompts</span>
+                      <strong>{resultQuery.data.followUpRecommendations.length}</strong>
+                    </article>
+                  </div>
+                </div>
+                <div className="result-analysis-workspace-surface__chips">
+                  {resultQuery.data.progressStatusLabel ? (
+                    <span className="detail-chip">{`Status ${resultQuery.data.progressStatusLabel}`}</span>
+                  ) : null}
+                  {resultQuery.data.archiveDecisionLabel ? (
+                    <span className="detail-chip detail-chip--accent">
+                      {`Decision ${resultQuery.data.archiveDecisionLabel}`}
+                    </span>
+                  ) : null}
+                  {resultQuery.data.nextReviewLabel ? (
+                    <span className="detail-chip">Next review {resultQuery.data.nextReviewLabel}</span>
+                  ) : (
+                    <span className="detail-chip">Retry ready</span>
+                  )}
+                  <span className="detail-chip">Strength signals {strongestSignals}</span>
+                </div>
+              </section>
+            );
             const nextActionCard = (
               <NextActionCard
                 answerPath={routeConfig.answerEditor.buildPath({ questionId: resultQuery.data.questionId })}
@@ -87,6 +167,7 @@ export function ResultAnalysisPage() {
             if (!isDesktop) {
               return (
                 <ResultAnalysisMobileLayout
+                  workspaceSummary={workspaceSummary}
                   detailedFeedbackSection={<DetailedFeedbackSection result={resultQuery.data} />}
                   dimensionSection={<DimensionScoreList dimensions={resultQuery.data.dimensions} />}
                   feedbackSection={<FeedbackList items={resultQuery.data.feedbackItems} />}
@@ -103,6 +184,7 @@ export function ResultAnalysisPage() {
 
             return (
               <ResultAnalysisDesktopLayout
+                workspaceSummary={workspaceSummary}
                 detailedFeedbackSection={<DetailedFeedbackSection result={resultQuery.data} />}
                 dimensionSection={<DimensionScoreList dimensions={resultQuery.data.dimensions} />}
                 feedbackSection={<FeedbackList items={resultQuery.data.feedbackItems} />}

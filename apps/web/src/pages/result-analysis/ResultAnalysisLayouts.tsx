@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { ContentGrid } from "../../shared/ui/layout";
 
 type ResultAnalysisLayoutProps = {
+  workspaceSummary: ReactNode;
   scoreSection: ReactNode;
   dimensionSection: ReactNode;
   detailedFeedbackSection: ReactNode;
@@ -13,6 +14,7 @@ type ResultAnalysisLayoutProps = {
 };
 
 export function ResultAnalysisMobileLayout({
+  workspaceSummary,
   scoreSection,
   dimensionSection,
   detailedFeedbackSection,
@@ -24,6 +26,7 @@ export function ResultAnalysisMobileLayout({
 }: ResultAnalysisLayoutProps) {
   return (
     <div className="result-analysis-layout result-analysis-layout--mobile">
+      <section className="result-analysis-layout__workspace-summary">{workspaceSummary}</section>
       <section className="result-analysis-layout__hero">{scoreSection}</section>
       <section className="result-analysis-layout__group result-analysis-layout__group--priority">
         {nextActionSection}
@@ -43,6 +46,7 @@ export function ResultAnalysisMobileLayout({
 }
 
 export function ResultAnalysisDesktopLayout({
+  workspaceSummary,
   scoreSection,
   dimensionSection,
   detailedFeedbackSection,
@@ -54,6 +58,7 @@ export function ResultAnalysisDesktopLayout({
 }: ResultAnalysisLayoutProps) {
   return (
     <div className="result-analysis-layout result-analysis-layout--desktop">
+      <section className="result-analysis-layout__workspace-summary">{workspaceSummary}</section>
       <div className="result-analysis-layout__hero result-analysis-layout__hero-grid">
         <div className="result-analysis-layout__hero-score">{scoreSection}</div>
         <div className="result-analysis-layout__hero-action">

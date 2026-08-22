@@ -20,44 +20,42 @@ export function NextActionCard({
   const showArchiveAction = archiveDecisionLabel?.toLowerCase().includes("archive") ?? false;
 
   return (
-    <section className="page-card">
+    <section className="page-card result-next-action-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Next step</p>
           <h2 className="page-card__title">What to do after this result</h2>
         </div>
       </div>
-      <div className="stack-list">
+      <div className="result-next-action-card__signals">
         {progressStatusLabel ? (
-          <article className="list-item-card">
-            <div className="list-item-card__content">
-              <div className="list-item-card__meta">
-                <span>Status</span>
-              </div>
-              <h3 className="list-item-card__title">{progressStatusLabel}</h3>
-            </div>
+          <article className="result-next-action-card__signal">
+            <span>Status</span>
+            <strong>{progressStatusLabel}</strong>
           </article>
         ) : null}
         {archiveDecisionLabel ? (
-          <article className="list-item-card">
-            <div className="list-item-card__content">
-              <div className="list-item-card__meta">
-                <span>Decision</span>
-              </div>
-              <h3 className="list-item-card__title">{archiveDecisionLabel}</h3>
-            </div>
+          <article className="result-next-action-card__signal">
+            <span>Decision</span>
+            <strong>{archiveDecisionLabel}</strong>
           </article>
         ) : null}
         {nextReviewLabel ? (
-          <article className="list-item-card">
-            <div className="list-item-card__content">
-              <div className="list-item-card__meta">
-                <span>Next review</span>
-              </div>
-              <h3 className="list-item-card__title">{nextReviewLabel}</h3>
-            </div>
+          <article className="result-next-action-card__signal">
+            <span>Next review</span>
+            <strong>{nextReviewLabel}</strong>
           </article>
         ) : null}
+      </div>
+      <div className="result-next-action-card__playbook">
+        <div className="result-next-action-card__playbook-step">
+          <strong>1. Re-read the weakest branch</strong>
+          <span>Focus the dimension or feedback point with the least evidence before editing the whole answer.</span>
+        </div>
+        <div className="result-next-action-card__playbook-step">
+          <strong>2. Decide retry vs. depth</strong>
+          <span>Immediate retry for phrasing issues, follow-up tree exploration for weak source-of-truth issues.</span>
+        </div>
       </div>
       <div className="page-card__actions">
         <Link className="secondary-button" to={questionPath}>
