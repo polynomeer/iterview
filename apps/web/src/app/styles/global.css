@@ -79,6 +79,18 @@
   --tabbar-background: rgba(255, 255, 255, 0.92);
 }
 
+@media (max-width: 1023px) {
+  .interview-session-workspace-surface__branches,
+  .interview-session-workspace-surface__stats,
+  .question-detail-workspace-surface__stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .interview-session-answer-surface__header {
+    flex-direction: column;
+  }
+}
+
 :root[data-theme="dark"] {
   --theme-color-scheme: dark;
   --app-background:
@@ -5168,6 +5180,10 @@ button {
   gap: 18px;
 }
 
+.question-detail-layout__workspace-summary {
+  min-width: 0;
+}
+
 .question-detail-layout__main,
 .question-detail-layout__history,
 .question-detail-layout__sidebar,
@@ -5205,6 +5221,17 @@ button {
   min-width: 0;
 }
 
+.question-detail-workspace-surface__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.question-detail-layout__workspace-summary .detail-chip {
+  background: rgba(148, 163, 184, 0.12);
+}
+
 .interview-page-layout__hero-side,
 .interview-page-layout__snapshot {
   min-width: 0;
@@ -5227,6 +5254,154 @@ button {
   gap: 18px;
   min-width: 0;
   align-content: start;
+}
+
+.interview-session-workspace-surface,
+.question-detail-workspace-surface {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.18), transparent 38%),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
+}
+
+.interview-session-workspace-surface__header,
+.question-detail-workspace-surface__header {
+  display: grid;
+  gap: 24px;
+}
+
+.interview-session-workspace-surface__eyebrow-row,
+.question-detail-workspace-surface__eyebrow-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.interview-session-workspace-surface__breadcrumbs,
+.question-detail-workspace-surface__breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  color: rgba(148, 163, 184, 0.78);
+  font-size: 0.84rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.interview-session-workspace-surface__title,
+.question-detail-workspace-surface__title {
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: #f8fafc;
+}
+
+.interview-session-workspace-surface__body,
+.question-detail-workspace-surface__body {
+  max-width: 70ch;
+  margin: 0;
+  color: rgba(226, 232, 240, 0.78);
+}
+
+.interview-session-workspace-surface__stats,
+.question-detail-workspace-surface__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.interview-session-workspace-surface__stat,
+.question-detail-workspace-surface__stat {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px;
+  background: rgba(9, 17, 32, 0.72);
+}
+
+.interview-session-workspace-surface__stat-label,
+.question-detail-workspace-surface__stat span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-session-workspace-surface__stat-value,
+.question-detail-workspace-surface__stat strong {
+  color: #f8fafc;
+  font-size: 1.3rem;
+  letter-spacing: -0.04em;
+}
+
+.interview-session-workspace-surface__branches {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.interview-session-workspace-surface__branch {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px;
+  background: rgba(10, 18, 34, 0.76);
+  color: #dbe4ee;
+  text-align: left;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+  cursor: pointer;
+}
+
+.interview-session-workspace-surface__branch:hover,
+.interview-session-workspace-surface__branch:focus-visible {
+  border-color: rgba(45, 212, 191, 0.44);
+  background: rgba(13, 24, 44, 0.92);
+  transform: translateY(-1px);
+}
+
+.interview-session-workspace-surface__branch--active {
+  border-color: rgba(45, 212, 191, 0.52);
+  background: linear-gradient(180deg, rgba(12, 27, 46, 0.92), rgba(9, 19, 35, 0.92));
+}
+
+.interview-session-workspace-surface__branch-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.16);
+  color: #bbf7d0;
+  font-weight: 700;
+}
+
+.interview-session-workspace-surface__branch-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.interview-session-workspace-surface__branch-copy strong {
+  color: #f8fafc;
+  font-size: 0.95rem;
+}
+
+.interview-session-workspace-surface__branch-copy span {
+  color: rgba(148, 163, 184, 0.74);
+  font-size: 0.82rem;
 }
 
 .interview-session-current {
@@ -5267,6 +5442,54 @@ button {
 
 .interview-session-current__rail-link {
   align-self: start;
+}
+
+.interview-session-answer-surface {
+  display: grid;
+  gap: 18px;
+}
+
+.interview-session-answer-surface__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.interview-session-answer-surface__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+
+.interview-session-answer-surface__meta span {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(15, 23, 42, 0.64);
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.interview-session-side-panel__list {
+  display: grid;
+  gap: 12px;
+}
+
+.interview-session-side-panel__item {
+  display: grid;
+  gap: 3px;
+}
+
+.interview-session-side-panel__item strong {
+  color: #f8fafc;
+}
+
+.interview-session-side-panel__item span {
+  color: rgba(203, 213, 225, 0.78);
+  font-size: 0.92rem;
 }
 
 .interview-result-layout__content > * {
@@ -5600,6 +5823,10 @@ button {
     align-items: start;
   }
 
+  .question-detail-layout__workspace-summary {
+    grid-column: 1 / -1;
+  }
+
   .question-detail-layout__hero {
     grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1.16fr) minmax(300px, 0.84fr);
@@ -5684,6 +5911,11 @@ button {
   .interview-session-layout__hero-side {
     position: sticky;
     top: 108px;
+  }
+
+  .interview-session-workspace-surface__header {
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    align-items: end;
   }
 
   .resume-editor-workspace {

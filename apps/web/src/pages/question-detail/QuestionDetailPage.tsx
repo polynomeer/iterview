@@ -426,9 +426,74 @@ export function QuestionDetailPage() {
                 />
               );
 
+            const progress = questionDetailQuery.data.userProgressSummary;
+            const promptDensity = questionDetailQuery.data.body.split(/\s+/).filter(Boolean).length;
+            const supportCount =
+              referenceAnswers.length +
+              learningMaterials.length +
+              (answerHistoryQuery.data?.items.length ?? 0);
+            const workspaceSummary = (
+              <section className="page-card question-detail-workspace-surface">
+                <div className="question-detail-workspace-surface__header">
+                  <div className="question-detail-workspace-surface__intro">
+                    <div className="question-detail-workspace-surface__eyebrow-row">
+                      <span className="page-card__label">Question workspace</span>
+                      <span className="question-status-badge question-status-badge--accent">
+                        {questionDetailQuery.data.difficulty}
+                      </span>
+                    </div>
+                    <p className="question-detail-workspace-surface__breadcrumbs">
+                      {questionDetailQuery.data.category}
+                      <span>/</span>
+                      {questionDetailQuery.data.roles[0] ?? "Practice path"}
+                      <span>/</span>
+                      {questionDetailQuery.data.companies[0] ?? "Interview prep"}
+                    </p>
+                    <h2 className="question-detail-workspace-surface__title">Preparation snapshot</h2>
+                    <p className="question-detail-workspace-surface__body">
+                      {questionDetailQuery.data.title}. Read the prompt as a branch root, then keep evidence, model
+                      answers, and prior attempts in view until the source of truth is explicit enough to defend under
+                      follow-up pressure.
+                    </p>
+                  </div>
+                  <div className="question-detail-workspace-surface__stats">
+                    <article className="question-detail-workspace-surface__stat">
+                      <span>Attempts</span>
+                      <strong>{progress?.attemptsCount ?? 0}</strong>
+                    </article>
+                    <article className="question-detail-workspace-surface__stat">
+                      <span>Best score</span>
+                      <strong>{progress?.bestScoreLabel ?? "Not started"}</strong>
+                    </article>
+                    <article className="question-detail-workspace-surface__stat">
+                      <span>Support items</span>
+                      <strong>{supportCount}</strong>
+                    </article>
+                    <article className="question-detail-workspace-surface__stat">
+                      <span>Prompt words</span>
+                      <strong>{promptDensity}</strong>
+                    </article>
+                  </div>
+                </div>
+                <div className="question-detail-workspace-surface__chips">
+                  {questionDetailQuery.data.tags.slice(0, 4).map((tag) => (
+                    <span className="detail-chip" key={tag}>
+                      {`Topic ${tag}`}
+                    </span>
+                  ))}
+                  {questionDetailQuery.data.companies.slice(0, 3).map((company) => (
+                    <span className="detail-chip detail-chip--accent" key={company}>
+                      {`Company ${company}`}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            );
+
             if (!isDesktop) {
               return (
                 <QuestionDetailMobileLayout
+                  workspaceSummary={workspaceSummary}
                   answerHistorySection={answerHistorySection}
                   headerSection={<QuestionHeader question={questionDetailQuery.data} />}
                   materialsSection={
@@ -457,7 +522,8 @@ export function QuestionDetailPage() {
             }
 
             return (
-                <QuestionDetailDesktopLayout
+              <QuestionDetailDesktopLayout
+                workspaceSummary={workspaceSummary}
                   answerHistorySection={answerHistorySection}
                   headerSection={<QuestionHeader question={questionDetailQuery.data} />}
                   materialsSection={
@@ -481,7 +547,7 @@ export function QuestionDetailPage() {
                   metadataSection={<QuestionMetaSection question={questionDetailQuery.data} />}
                   progressSection={progressSection}
                   recommendedSection={recommendedSection}
-                />
+              />
             );
           })()
         : null}

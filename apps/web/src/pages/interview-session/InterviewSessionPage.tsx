@@ -129,6 +129,13 @@ export function InterviewSessionPage() {
   const sessionQuestion = currentQuestion;
   const canAdvance = canAdvanceInterviewSession(activeSession);
   const isCurrentQuestionActive = currentQuestion.status.toLowerCase() === "current";
+  const answeredQuestionCount = getAnsweredQuestionCount(activeSession);
+  const skippedQuestionCount = getSkippedQuestionCount(activeSession);
+  const branchDepthLabel = `Depth ${currentQuestion.depth + 1}`;
+  const coveragePercent =
+    activeSession.summary.totalQuestions > 0
+      ? Math.round((answeredQuestionCount / activeSession.summary.totalQuestions) * 100)
+      : 0;
   const isFixedQuestionMode =
     activeSession.interviewMode === "full_coverage" ||
     activeSession.interviewMode === "quick_screen" ||
@@ -252,6 +259,68 @@ export function InterviewSessionPage() {
       title={t("interview.sessionWorkspaceTitle")}
     >
       <div className="page-stack interview-session-layout">
+        <section className="page-card interview-session-workspace-surface">
+          <div className="interview-session-workspace-surface__header">
+            <div className="interview-session-workspace-surface__intro">
+              <div className="interview-session-workspace-surface__eyebrow-row">
+                <span className="page-card__label">Active branch</span>
+                <span className="question-status-badge question-status-badge--accent">{branchDepthLabel}</span>
+              </div>
+              <p className="interview-session-workspace-surface__breadcrumbs">
+                {activeSession.interviewModeLabel}
+                <span>/</span>
+                {currentQuestion.categoryName ?? "Interview path"}
+                <span>/</span>
+                {currentQuestion.isFollowUp ? "Generated branch" : "Root branch"}
+              </p>
+              <h2 className="interview-session-workspace-surface__title">Current branch focus</h2>
+              <p className="interview-session-workspace-surface__body">
+                {currentQuestion.title}. Follow the current DFS branch until the claim is specific, evidence-backed,
+                and no longer vague enough to generate a shallow escape route.
+              </p>
+            </div>
+            <div className="interview-session-workspace-surface__stats">
+              <article className="interview-session-workspace-surface__stat">
+                <span className="interview-session-workspace-surface__stat-label">Coverage</span>
+                <strong className="interview-session-workspace-surface__stat-value">{coveragePercent}%</strong>
+              </article>
+              <article className="interview-session-workspace-surface__stat">
+                <span className="interview-session-workspace-surface__stat-label">Answered</span>
+                <strong className="interview-session-workspace-surface__stat-value">{answeredQuestionCount}</strong>
+              </article>
+              <article className="interview-session-workspace-surface__stat">
+                <span className="interview-session-workspace-surface__stat-label">Skip count</span>
+                <strong className="interview-session-workspace-surface__stat-value">{skippedQuestionCount}</strong>
+              </article>
+              <article className="interview-session-workspace-surface__stat">
+                <span className="interview-session-workspace-surface__stat-label">Remaining</span>
+                <strong className="interview-session-workspace-surface__stat-value">
+                  {activeSession.summary.remainingQuestions}
+                </strong>
+              </article>
+            </div>
+          </div>
+          <div className="interview-session-workspace-surface__branches" role="list">
+            {activeSession.questions.slice(0, 4).map((question) => (
+              <button
+                className={`interview-session-workspace-surface__branch ${
+                  question.id === currentQuestion.id ? "interview-session-workspace-surface__branch--active" : ""
+                }`}
+                key={question.id}
+                onClick={() => {
+                  jumpToSessionQuestion(question.id);
+                }}
+                type="button"
+              >
+                <span className="interview-session-workspace-surface__branch-step">{question.orderIndex + 1}</span>
+                <span className="interview-session-workspace-surface__branch-copy">
+                  <strong>{question.title}</strong>
+                  <span>{`Source ${question.orderIndex + 1}`}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
         <div className="interview-session-layout__hero">
           <div className="interview-session-layout__main">
             <section className="page-card interview-session-current">
@@ -319,10 +388,29 @@ export function InterviewSessionPage() {
             <div className="interview-session-layout__hero-side">
               <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
                 <span className="page-card__label">Active branch</span>
-                <h2 className="page-card__title">Answer the current node with enough evidence that the next follow-up has nowhere vague to hide</h2>
+                <h2 className="page-card__title">
+                  Answer the current node with enough evidence that the next follow-up has nowhere vague to hide
+                </h2>
                 <p className="page-card__body">
                   Treat each response as a checkpoint in the question tree. The goal is not to sound longer, but to make the next branch more specific, testable, and grounded in the resume.
                 </p>
+              </SectionPanel>
+              <SectionPanel className="workspace-note-card interview-session-side-panel" variant="muted">
+                <span className="page-card__label">Branch rules</span>
+                <div className="interview-session-side-panel__list">
+                  <div className="interview-session-side-panel__item">
+                    <strong>1. Claim</strong>
+                    <span>State the decision in one sentence.</span>
+                  </div>
+                  <div className="interview-session-side-panel__item">
+                    <strong>2. Evidence</strong>
+                    <span>Attach resume facts, numbers, or constraints.</span>
+                  </div>
+                  <div className="interview-session-side-panel__item">
+                    <strong>3. Trade-off</strong>
+                    <span>Show what you accepted and why.</span>
+                  </div>
+                </div>
               </SectionPanel>
               {isFullCoverage ? (
                 <SectionPanel className="workspace-note-card" variant="muted">
@@ -336,21 +424,25 @@ export function InterviewSessionPage() {
             </div>
           </div>
           <div className="interview-session-layout__answer-stack">
-            <SectionPanel className="workspace-note-card" variant="muted">
-              <span className="page-card__label">Answer draft</span>
-              <h2 className="page-card__title">Keep the draft close to the evidence and the next branch decision</h2>
+            <section className="page-card interview-session-answer-surface">
+              <div className="interview-session-answer-surface__header">
+                <div>
+                  <span className="page-card__label">Answer draft</span>
+                  <h2 className="page-card__title">Keep the draft close to the evidence and the next branch decision</h2>
+                </div>
+                <div className="interview-session-answer-surface__meta">
+                  <span>{currentQuestion.difficultyLabel}</span>
+                  <span>{currentQuestion.status}</span>
+                </div>
+              </div>
               <p className="page-card__body">
                 Answer, skip, or advance deliberately. This panel should feel like the execution surface for the branch you are currently defending.
               </p>
-            </SectionPanel>
-            <AnswerTextEditor
-              disabled={submitMutation.isPending || advanceMutation.isPending || skipMutation.isPending}
-              onChange={setDraft}
-              value={draft}
-            />
-            <section className="page-card">
-              <span className="page-card__label">Session controls</span>
-              <h2 className="page-card__title">Submit and advance through the session</h2>
+              <AnswerTextEditor
+                disabled={submitMutation.isPending || advanceMutation.isPending || skipMutation.isPending}
+                onChange={setDraft}
+                value={draft}
+              />
               {submitMutation.isError ? (
                 <p className="page-card__body">
                   {submitMutation.error instanceof Error ? submitMutation.error.message : "Answer submission failed."}
