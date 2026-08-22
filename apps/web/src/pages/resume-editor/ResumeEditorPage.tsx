@@ -2652,10 +2652,67 @@ export function ResumeEditorPage() {
       title={workspaceQuery.data.sourceFileName}
     >
       <div className="page-stack">
+        <section className="page-card resume-editor-workspace-surface">
+          <div className="resume-editor-workspace-surface__header">
+            <div className="resume-editor-workspace-surface__intro">
+              <div className="resume-editor-workspace-surface__eyebrow-row">
+                <span className="page-card__label">Source-of-truth authoring</span>
+                <span className="question-status-badge question-status-badge--accent">Draft lane</span>
+              </div>
+              <p className="resume-editor-workspace-surface__breadcrumbs">
+                Resume claim
+                <span>/</span>
+                Evidence detail
+                <span>/</span>
+                Follow-up survivability
+              </p>
+              <h2 className="resume-editor-workspace-surface__title">
+                Tighten the resume until each line can survive deeper interview questioning
+              </h2>
+              <p className="resume-editor-workspace-surface__body">
+                This workspace is not just document editing. Every revision should make the active resume more
+                defensible when question cards, comment threads, and DFS-style follow-ups pressure the weakest claim.
+              </p>
+            </div>
+            <div className="resume-editor-workspace-surface__stats">
+              <article className="resume-editor-workspace-surface__stat">
+                <span>Revision</span>
+                <strong>{workspaceQuery.data.revisionNo}</strong>
+              </article>
+              <article className="resume-editor-workspace-surface__stat">
+                <span>Source context</span>
+                <strong>{sourceContextCards.length}</strong>
+              </article>
+              <article className="resume-editor-workspace-surface__stat">
+                <span>Review signals</span>
+                <strong>
+                  {workspaceQuery.data.commentSummary.totalCount + workspaceQuery.data.questionCardSummary.totalCount}
+                </strong>
+              </article>
+              <article className="resume-editor-workspace-surface__stat">
+                <span>View modes</span>
+                <strong>{workspaceQuery.data.supportedViewModes.length}</strong>
+              </article>
+            </div>
+          </div>
+          <div className="resume-editor-workspace-surface__chips">
+            <span className="detail-chip">{workspaceQuery.data.workspaceStatusLabel}</span>
+            <span className="detail-chip detail-chip--accent">
+              {workspaceQuery.data.documentModel === "rich_tree" ? "Rich tree" : "Blocks"}
+            </span>
+            {workspaceQuery.data.selectionCapabilities.supportsOperations ? (
+              <span className="detail-chip">Operations enabled</span>
+            ) : null}
+            {workspaceQuery.data.selectionCapabilities.supportsInlineSelections ? (
+              <span className="detail-chip">Inline selections enabled</span>
+            ) : null}
+          </div>
+        </section>
+
         <section className="page-card resume-editor-topbar">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">Draft workspace</p>
+              <p className="section-heading__eyebrow">Draft controls</p>
               <h2 className="page-card__title">Resume editor workspace</h2>
             </div>
             <div className="page-card__actions">
@@ -2702,7 +2759,8 @@ export function ResumeEditorPage() {
             </div>
           </div>
           <p className="resume-tailor-muted">
-            The source resume version stays immutable. This screen edits only the draft workspace.
+            The source resume version stays immutable. Use this control strip to manage the draft layer, view mode,
+            and save cadence while the authoring surface below stays focused on claim quality.
           </p>
           {saveMessage ? <p className="resume-tailor-muted">{saveMessage}</p> : null}
           <div className="filter-chip-row resume-editor-tabbar">
