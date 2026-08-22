@@ -22,9 +22,9 @@ export function ResumeMobileLayout({
         {overviewCard}
         <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
           <span className="page-card__label">Source of truth</span>
-          <h2 className="page-card__title">Treat each resume version as interview evidence, not just a file</h2>
+          <h2 className="page-card__title">Treat each resume version as evidence, not storage</h2>
           <p className="page-card__body">
-            Keep one active version, inspect parsed claims, and tighten the evidence you will have to defend later in the question tree.
+            Keep one active version, inspect extracted claims, and tighten every line you may need to defend when the question tree drills deeper.
           </p>
         </SectionPanel>
       </section>
@@ -54,9 +54,9 @@ export function ResumeDesktopLayout({
           {overviewCard}
           <SectionPanel className="workspace-note-card workspace-note-card--accent resume-layout__source-note" variant="muted">
             <span className="page-card__label">Source of truth</span>
-            <h2 className="page-card__title">Build one defendable resume context before you enter mock interviews</h2>
+            <h2 className="page-card__title">Build one defendable resume context before mock interviews begin</h2>
             <p className="page-card__body">
-              The goal here is not upload volume. It is one active version with evidence, parsing quality, and extracted claims that can support deeper follow-up questions.
+              The goal is not upload volume. It is one active version with evidence, extraction quality, and claim coverage strong enough to support deeper follow-up questions.
             </p>
           </SectionPanel>
         </div>
@@ -66,7 +66,7 @@ export function ResumeDesktopLayout({
             <span className="page-card__label">Resume workflow</span>
             <h2 className="page-card__title">Create, upload, activate, then inspect one version at a time</h2>
             <p className="page-card__body">
-              Keep the active interview context stable while you inspect structured extraction, risks, and resume sections below.
+              Stabilize one active interview context while you inspect structured extraction, risks, and section-level evidence below.
             </p>
           </SectionPanel>
         </div>

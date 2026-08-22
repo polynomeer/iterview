@@ -5335,7 +5335,9 @@ button {
 }
 
 .home-workspace-surface,
-.feed-workspace-surface {
+.feed-workspace-surface,
+.profile-workspace-surface,
+.resume-workspace-surface {
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.14);
@@ -5346,13 +5348,17 @@ button {
 }
 
 .home-workspace-surface__header,
-.feed-workspace-surface__header {
+.feed-workspace-surface__header,
+.profile-workspace-surface__header,
+.resume-workspace-surface__header {
   display: grid;
   gap: 24px;
 }
 
 .home-workspace-surface__eyebrow-row,
-.feed-workspace-surface__eyebrow-row {
+.feed-workspace-surface__eyebrow-row,
+.profile-workspace-surface__eyebrow-row,
+.resume-workspace-surface__eyebrow-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -5360,7 +5366,9 @@ button {
 }
 
 .home-workspace-surface__breadcrumbs,
-.feed-workspace-surface__breadcrumbs {
+.feed-workspace-surface__breadcrumbs,
+.profile-workspace-surface__breadcrumbs,
+.resume-workspace-surface__breadcrumbs {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -5372,7 +5380,9 @@ button {
 }
 
 .home-workspace-surface__title,
-.feed-workspace-surface__title {
+.feed-workspace-surface__title,
+.profile-workspace-surface__title,
+.resume-workspace-surface__title {
   margin: 0;
   font-size: clamp(1.9rem, 3vw, 2.8rem);
   line-height: 1.02;
@@ -5381,21 +5391,27 @@ button {
 }
 
 .home-workspace-surface__body,
-.feed-workspace-surface__body {
+.feed-workspace-surface__body,
+.profile-workspace-surface__body,
+.resume-workspace-surface__body {
   max-width: 70ch;
   margin: 0;
   color: rgba(226, 232, 240, 0.78);
 }
 
 .home-workspace-surface__stats,
-.feed-workspace-surface__stats {
+.feed-workspace-surface__stats,
+.profile-workspace-surface__stats,
+.resume-workspace-surface__stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
 .home-workspace-surface__stat,
-.feed-workspace-surface__stat {
+.feed-workspace-surface__stat,
+.profile-workspace-surface__stat,
+.resume-workspace-surface__stat {
   display: grid;
   gap: 6px;
   padding: 16px 18px;
@@ -5405,7 +5421,9 @@ button {
 }
 
 .home-workspace-surface__stat span,
-.feed-workspace-surface__stat span {
+.feed-workspace-surface__stat span,
+.profile-workspace-surface__stat span,
+.resume-workspace-surface__stat span {
   color: rgba(148, 163, 184, 0.84);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
@@ -5413,13 +5431,17 @@ button {
 }
 
 .home-workspace-surface__stat strong,
-.feed-workspace-surface__stat strong {
+.feed-workspace-surface__stat strong,
+.profile-workspace-surface__stat strong,
+.resume-workspace-surface__stat strong {
   color: #f8fafc;
   font-size: 1.3rem;
   letter-spacing: -0.04em;
 }
 
-.home-workspace-surface__chips {
+.home-workspace-surface__chips,
+.profile-workspace-surface__chips,
+.resume-workspace-surface__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -6061,7 +6083,9 @@ button {
   .review-queue-workspace-surface__header,
   .archive-workspace-surface__header,
   .home-workspace-surface__header,
-  .feed-workspace-surface__header {
+  .feed-workspace-surface__header,
+  .profile-workspace-surface__header,
+  .resume-workspace-surface__header {
     grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
     align-items: end;
   }

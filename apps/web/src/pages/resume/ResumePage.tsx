@@ -74,6 +74,16 @@ export function ResumePage() {
   const previousExtractionStatusRef = useRef<string | null>(null);
   const selectedVersionQuery = useResumeVersionDetailQuery(selectedVersionId, true);
   const selectedExtractionQuery = useResumeVersionExtractionQuery(selectedVersionId, true);
+  const resumeCount = resumeListQuery.data?.items.length ?? 0;
+  const versionCount =
+    resumeListQuery.data?.items.reduce((count, resume) => count + resume.versions.length, 0) ?? 0;
+  const activeResume = resumeListQuery.data ? getActiveResumeVersion(resumeListQuery.data) : null;
+  const activeVersionLabel = activeResume?.versionNumberLabel ?? "No active version";
+  const extractionReadinessLabel = selectedExtractionQuery.data?.isUsable
+    ? "Ready"
+    : selectedVersionQuery.data?.parsingStatus === "completed"
+      ? "Parsing done"
+      : "In progress";
   const canLoadSnapshots =
     selectedVersionQuery.data?.parsingStatus === "completed" &&
     selectedExtractionQuery.data?.extractionStatus !== "pending" &&
@@ -261,6 +271,62 @@ export function ResumePage() {
       eyebrow="Resume"
       title="Resume management"
     >
+      <section className="page-card resume-workspace-surface">
+        <div className="resume-workspace-surface__header">
+          <div className="resume-workspace-surface__intro">
+            <div className="resume-workspace-surface__eyebrow-row">
+              <span className="page-card__label">Resume workspace</span>
+              <span className="question-status-badge question-status-badge--accent">Evidence lane</span>
+            </div>
+            <p className="resume-workspace-surface__breadcrumbs">
+              Containers
+              <span>/</span>
+              Active version
+              <span>/</span>
+              Parsed evidence
+            </p>
+            <h2 className="resume-workspace-surface__title">Build one defendable source of truth</h2>
+            <p className="resume-workspace-surface__body">
+              Resume uploads are not just files. Each active version becomes interview evidence that should survive DFS-style
+              follow-up questioning down to the smallest claim.
+            </p>
+          </div>
+          <div className="resume-workspace-surface__stats">
+            <article className="resume-workspace-surface__stat">
+              <span>Containers</span>
+              <strong>{resumeCount}</strong>
+            </article>
+            <article className="resume-workspace-surface__stat">
+              <span>Versions</span>
+              <strong>{versionCount}</strong>
+            </article>
+            <article className="resume-workspace-surface__stat">
+              <span>Active focus</span>
+              <strong>{activeVersionLabel}</strong>
+            </article>
+            <article className="resume-workspace-surface__stat">
+              <span>Extraction</span>
+              <strong>{extractionReadinessLabel}</strong>
+            </article>
+          </div>
+        </div>
+        <div className="resume-workspace-surface__chips">
+          {selectedVersionQuery.data?.fileNameLabel ? (
+            <span className="detail-chip">{selectedVersionQuery.data.fileNameLabel}</span>
+          ) : null}
+          {selectedExtractionQuery.data?.extractionStatusLabel ? (
+            <span className="detail-chip detail-chip--accent">
+              {`Status ${selectedExtractionQuery.data.extractionStatusLabel}`}
+            </span>
+          ) : null}
+          {snapshotsQuery.data?.projects.length ? (
+            <span className="detail-chip">{`Projects ${snapshotsQuery.data.projects.length}`}</span>
+          ) : null}
+          {snapshotsQuery.data?.risks.length ? (
+            <span className="detail-chip">{`Risks ${snapshotsQuery.data.risks.length}`}</span>
+          ) : null}
+        </div>
+      </section>
       {isCreateResumeOpen ? (
         <div
           aria-modal="true"
@@ -317,7 +383,7 @@ export function ResumePage() {
         const profileCard = (
           <section className="page-card">
             <span className="page-card__label">Profile</span>
-            <h2 className="page-card__title">Profile and analysis</h2>
+            <h2 className="page-card__title">Profile and analysis launchers</h2>
             <div className="page-card__actions">
               <Link className="secondary-button" to={routeConfig.profile.buildPath()}>
                 Back to profile
@@ -856,17 +922,17 @@ export function ResumePage() {
                 listContent={listContent}
                 notices={notices}
                 overviewCard={overviewCard}
-              profileCard={profileCard}
-            />
-          );
+                profileCard={profileCard}
+              />
+            );
         }
 
-            return (
-              <ResumeDesktopLayout
-                libraryIntro={libraryIntro}
-                listContent={listContent}
-                notices={notices}
-                overviewCard={overviewCard}
+        return (
+          <ResumeDesktopLayout
+            libraryIntro={libraryIntro}
+            listContent={listContent}
+            notices={notices}
+            overviewCard={overviewCard}
             profileCard={profileCard}
           />
         );

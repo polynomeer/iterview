@@ -45,6 +45,14 @@ export function ProfilePage() {
   const [profileImageStatus, setProfileImageStatus] = useState<string | null>(null);
   const [settingsStatus, setSettingsStatus] = useState<string | null>(null);
   const [targetCompaniesStatus, setTargetCompaniesStatus] = useState<string | null>(null);
+  const currentProfile = currentUserQuery.data
+    ? mapCurrentUserDtoToProfileModel(currentUserQuery.data)
+    : null;
+  const targetCompanyCount = targetCompanies.length;
+  const normalizedDailyQuestionCount = dailyQuestionCount || "0";
+  const scoreThresholdLabel = targetScoreThreshold ? `${targetScoreThreshold}%` : "Not set";
+  const languageLabel = preferredLanguage === "ko" ? "Korean" : "English";
+  const roleLabel = currentProfile?.jobRole ?? "Not set";
 
   useEffect(() => {
     if (!currentUserQuery.data) {
@@ -123,6 +131,52 @@ export function ProfilePage() {
       eyebrow={t("profile.pageEyebrow")}
       title={t("profile.pageTitle")}
     >
+      <section className="page-card profile-workspace-surface">
+        <div className="profile-workspace-surface__header">
+          <div className="profile-workspace-surface__intro">
+            <div className="profile-workspace-surface__eyebrow-row">
+              <span className="page-card__label">Profile workspace</span>
+              <span className="question-status-badge question-status-badge--accent">Control surface</span>
+            </div>
+            <p className="profile-workspace-surface__breadcrumbs">
+              Identity
+              <span>/</span>
+              Practice defaults
+              <span>/</span>
+              Resume launchers
+            </p>
+            <h2 className="profile-workspace-surface__title">Keep account controls calm and separate</h2>
+            <p className="profile-workspace-surface__body">
+              This page should feel like a setup console for interview practice: confirm who you are, define scoring defaults,
+              and keep resume work one step away from account edits.
+            </p>
+          </div>
+          <div className="profile-workspace-surface__stats">
+            <article className="profile-workspace-surface__stat">
+              <span>Primary role</span>
+              <strong>{roleLabel}</strong>
+            </article>
+            <article className="profile-workspace-surface__stat">
+              <span>Target companies</span>
+              <strong>{targetCompanyCount}</strong>
+            </article>
+            <article className="profile-workspace-surface__stat">
+              <span>Daily load</span>
+              <strong>{normalizedDailyQuestionCount}</strong>
+            </article>
+            <article className="profile-workspace-surface__stat">
+              <span>Target score</span>
+              <strong>{scoreThresholdLabel}</strong>
+            </article>
+          </div>
+        </div>
+        <div className="profile-workspace-surface__chips">
+          <span className="detail-chip">{`Language ${languageLabel}`}</span>
+          {retryEnabled ? <span className="detail-chip detail-chip--accent">Retry queue enabled</span> : null}
+          {currentProfile?.jobRole ? <span className="detail-chip">{currentProfile.jobRole}</span> : null}
+          {passScoreThreshold ? <span className="detail-chip">{`Pass line ${passScoreThreshold}%`}</span> : null}
+        </div>
+      </section>
       {currentUserQuery.isLoading ? (
         <LoadingStateCard
           body={t("profile.loadingBody")}
@@ -147,6 +201,7 @@ export function ProfilePage() {
 
       {!currentUserQuery.isLoading && !currentUserQuery.isError && currentUserQuery.data
         ? (() => {
+            const profileModel = currentProfile ?? mapCurrentUserDtoToProfileModel(currentUserQuery.data);
             const summaryCard = (
               <ProfileSummaryCard
                 imageErrorDetails={getErrorDetails(uploadProfileImageMutation.error)}
@@ -160,7 +215,7 @@ export function ProfilePage() {
                 onImageSelect={(file) => {
                   void handleUploadProfileImage(file);
                 }}
-                profile={mapCurrentUserDtoToProfileModel(currentUserQuery.data)}
+                profile={profileModel}
               />
             );
             const resumeCard = (
