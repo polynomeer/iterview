@@ -131,6 +131,62 @@ export function AnswerEditorPage() {
 
       {!questionDetailQuery.isLoading && !questionDetailQuery.isError && questionDetailQuery.data ? (
         (() => {
+          const supportCount =
+            questionDetailQuery.data.learningMaterials.length +
+            (questionDetailQuery.data.relatedSkills ?? []).length;
+          const treeNodeCount = questionTreeQuery.data?.nodes.length ?? 0;
+          const workspaceSummary = (
+            <section className="page-card answer-editor-workspace-surface">
+              <div className="answer-editor-workspace-surface__header">
+                <div className="answer-editor-workspace-surface__intro">
+                  <div className="answer-editor-workspace-surface__eyebrow-row">
+                    <span className="page-card__label">Answer workspace</span>
+                    <span className="question-status-badge question-status-badge--accent">
+                      Draft lane
+                    </span>
+                  </div>
+                  <p className="answer-editor-workspace-surface__breadcrumbs">
+                    Prompt context
+                    <span>/</span>
+                    Evidence anchor
+                    <span>/</span>
+                    Submission decision
+                  </p>
+                  <h2 className="answer-editor-workspace-surface__title">Write one answer the next follow-up cannot easily break</h2>
+                  <p className="answer-editor-workspace-surface__body">
+                    Keep the current node, the active resume context, and the follow-up tree close enough that the draft
+                    stays specific instead of drifting into generic interview language.
+                  </p>
+                </div>
+                <div className="answer-editor-workspace-surface__stats">
+                  <article className="answer-editor-workspace-surface__stat">
+                    <span>Draft chars</span>
+                    <strong>{trimmedDraft.length || 0}</strong>
+                  </article>
+                  <article className="answer-editor-workspace-surface__stat">
+                    <span>Resume source</span>
+                    <strong>{activeResumeVersionId ? "Resume linked" : t("common.optional")}</strong>
+                  </article>
+                  <article className="answer-editor-workspace-surface__stat">
+                    <span>Tree nodes</span>
+                    <strong>{treeNodeCount}</strong>
+                  </article>
+                  <article className="answer-editor-workspace-surface__stat">
+                    <span>Support items</span>
+                    <strong>{supportCount}</strong>
+                  </article>
+                </div>
+              </div>
+              <div className="answer-editor-workspace-surface__chips">
+                <span className="detail-chip">{questionDetailQuery.data.difficulty}</span>
+                {(questionDetailQuery.data.relatedSkills ?? []).slice(0, 3).map((skill) => (
+                  <span className="detail-chip detail-chip--accent" key={skill}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </section>
+          );
           const promptSection = <QuestionPromptCard question={questionDetailQuery.data} />;
           const editorSection = (
             <AnswerTextEditor
@@ -153,13 +209,13 @@ export function AnswerEditorPage() {
             />
           );
           const contextSection = (
-            <SectionPanel as="aside" className="answer-editor-context" variant="muted">
-              <span className="page-card__label">{t("answer.contextLabel")}</span>
-              <h2 className="page-card__title">{t("answer.contextTitle")}</h2>
-              <div className="stats-grid">
-                <article className="stat-tile">
-                  <p className="stat-tile__label">{t("answer.resumeStatus")}</p>
-                  <strong className="stat-tile__value stat-tile__value--small">
+              <SectionPanel as="aside" className="answer-editor-context" variant="muted">
+                <span className="page-card__label">{t("answer.contextLabel")}</span>
+                <h2 className="page-card__title">Keep decision context beside the draft</h2>
+                <div className="stats-grid">
+                  <article className="stat-tile">
+                    <p className="stat-tile__label">{t("answer.resumeStatus")}</p>
+                    <strong className="stat-tile__value stat-tile__value--small">
                     {resumeListQuery.isLoading
                       ? t("common.loading")
                       : activeResumeVersionId
@@ -187,22 +243,39 @@ export function AnswerEditorPage() {
                     {questionTreeQuery.data ? String(questionTreeQuery.data.nodes.length) : "-"}
                   </strong>
                 </article>
-              </div>
-              <p className="page-card__body">{t("answer.contextBody")}</p>
-              <div className="page-card__actions">
-                <Link
-                  className="secondary-button"
-                  to={routeConfig.questionTree.buildPath({ questionId })}
-                >
-                  {t("answer.openFollowUpTree")}
-                </Link>
-              </div>
-            </SectionPanel>
+                </div>
+                <p className="page-card__body">
+                  {t("answer.contextBody")}
+                </p>
+                <div className="answer-editor-context__rules">
+                  <div className="answer-editor-context__rule">
+                    <strong>1. Claim</strong>
+                    <span>Answer the exact prompt before expanding into background.</span>
+                  </div>
+                  <div className="answer-editor-context__rule">
+                    <strong>2. Evidence</strong>
+                    <span>Anchor at least one concrete fact, number, or constraint from your real work.</span>
+                  </div>
+                  <div className="answer-editor-context__rule">
+                    <strong>3. Next branch</strong>
+                    <span>Write as if the next follow-up will test the weakest unsupported line.</span>
+                  </div>
+                </div>
+                <div className="page-card__actions">
+                  <Link
+                    className="secondary-button"
+                    to={routeConfig.questionTree.buildPath({ questionId })}
+                  >
+                    {t("answer.openFollowUpTree")}
+                  </Link>
+                </div>
+              </SectionPanel>
           );
 
           if (!isDesktop) {
             return (
               <AnswerEditorMobileLayout
+                workspaceSummary={workspaceSummary}
                 contextSection={contextSection}
                 editorSection={editorSection}
                 promptSection={promptSection}
@@ -213,6 +286,7 @@ export function AnswerEditorPage() {
 
           return (
             <AnswerEditorDesktopLayout
+              workspaceSummary={workspaceSummary}
               contextSection={contextSection}
               editorSection={editorSection}
               promptSection={promptSection}
