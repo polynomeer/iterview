@@ -78,44 +78,123 @@ export function SignupPage() {
       eyebrow={t("auth.signupEyebrow")}
       title={t("auth.signupTitle")}
     >
-      <section className="page-card">
-        <span className="page-card__label">{t("auth.authFlowLabel")}</span>
-        <h2 className="page-card__title">{t("auth.signupCardTitle")}</h2>
-        <p className="page-card__body">{t("auth.signupCardBody")}</p>
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label className="form-field">
-            <span className="form-field__label">{t("common.email")}</span>
-            <input
-              autoComplete="email"
-              className="form-field__input"
-              name="email"
-              onChange={(event) => setEmail(event.target.value)}
-              type="email"
-              value={email}
-            />
-          </label>
-          <label className="form-field">
-            <span className="form-field__label">{t("common.password")}</span>
-            <input
-              autoComplete="new-password"
-              className="form-field__input"
-              name="password"
-              onChange={(event) => setPassword(event.target.value)}
-              type="password"
-              value={password}
-            />
-          </label>
-          {errorMessage ? <FeedbackNotice details={errorDetails} message={errorMessage} tone="error" /> : null}
-          <div className="page-card__actions">
-            <button className="primary-button" disabled={signupMutation.isPending} type="submit">
-              {signupMutation.isPending ? t("auth.creatingAccount") : t("common.signUp")}
-            </button>
-            <Link className="secondary-button" to={routeConfig.login.buildPath()}>
-              {t("auth.alreadyHaveAccount")}
-            </Link>
+      <div className="auth-access-layout">
+        <section className="auth-access-surface">
+          <div className="auth-access-surface__header">
+            <div className="auth-access-surface__intro">
+              <div className="auth-access-surface__eyebrow-row">
+                <span className="page-card__label">{t("auth.authFlowLabel")}</span>
+                <span className="question-status-badge question-status-badge--accent">
+                  Workspace access
+                </span>
+              </div>
+              <p className="auth-access-surface__breadcrumbs">
+                Account setup
+                <span>/</span>
+                Practice continuity
+                <span>/</span>
+                Resume-first loop
+              </p>
+              <h2 className="auth-access-surface__title">{t("auth.signupCardTitle")}</h2>
+              <p className="auth-access-surface__body">{t("auth.signupCardBody")}</p>
+            </div>
+            <div className="auth-access-surface__stats">
+              <article className="auth-access-surface__stat">
+                <span>First destination</span>
+                <strong>One connected workspace</strong>
+              </article>
+              <article className="auth-access-surface__stat">
+                <span>After signup</span>
+                <strong>Start with resume and practice context</strong>
+              </article>
+            </div>
           </div>
-        </form>
-      </section>
+          <div className="auth-access-surface__chips">
+            <span className="detail-chip">Interview and review stay connected</span>
+            <span className="detail-chip detail-chip--accent">No marketing-style detour</span>
+          </div>
+        </section>
+
+        <div className="auth-access-grid">
+          <section className="page-card auth-access-form-card">
+            <span className="page-card__label">{t("auth.authFlowLabel")}</span>
+            <h2 className="page-card__title">{t("auth.signupCardTitle")}</h2>
+            <p className="page-card__body">
+              Create access to the same workspace system used for practice, interview review, and
+              source-of-truth preparation.
+            </p>
+            <form className="auth-form" onSubmit={handleSubmit}>
+              <label className="form-field">
+                <span className="form-field__label">{t("common.email")}</span>
+                <input
+                  autoComplete="email"
+                  className="form-field__input"
+                  name="email"
+                  onChange={(event) => setEmail(event.target.value)}
+                  type="email"
+                  value={email}
+                />
+              </label>
+              <label className="form-field">
+                <span className="form-field__label">{t("common.password")}</span>
+                <input
+                  autoComplete="new-password"
+                  className="form-field__input"
+                  name="password"
+                  onChange={(event) => setPassword(event.target.value)}
+                  type="password"
+                  value={password}
+                />
+              </label>
+              {errorMessage ? (
+                <FeedbackNotice details={errorDetails} message={errorMessage} tone="error" />
+              ) : null}
+              <div className="page-card__actions">
+                <button className="primary-button" disabled={signupMutation.isPending} type="submit">
+                  {signupMutation.isPending ? t("auth.creatingAccount") : t("common.signUp")}
+                </button>
+                <Link className="secondary-button" to={routeConfig.login.buildPath()}>
+                  {t("auth.alreadyHaveAccount")}
+                </Link>
+              </div>
+            </form>
+          </section>
+
+          <aside className="auth-access-side">
+            <section className="page-card page-card--muted auth-access-note-card">
+              <span className="page-card__label">What opens next</span>
+              <h2 className="page-card__title">Account creation should shorten time to practice</h2>
+              <p className="page-card__body">
+                Signup is only useful if it gets you into resume-grounded questioning and review
+                quickly.
+              </p>
+            </section>
+            <section className="page-card page-card--muted auth-access-note-card">
+              <span className="page-card__label">Workspace promise</span>
+              <div className="stack-list">
+                <article className="list-item-card">
+                  <div className="list-item-card__content">
+                    <h3 className="list-item-card__title">Source-of-truth first</h3>
+                    <p className="list-item-card__body">
+                      Resume versions, heatmap links, and follow-up practice all converge in the
+                      same system after signup.
+                    </p>
+                  </div>
+                </article>
+                <article className="list-item-card">
+                  <div className="list-item-card__content">
+                    <h3 className="list-item-card__title">DFS-style preparation</h3>
+                    <p className="list-item-card__body">
+                      The goal is not account creation itself, but reaching atomic follow-up
+                      practice faster.
+                    </p>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </div>
     </PageContainer>
   );
 }
