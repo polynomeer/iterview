@@ -25,18 +25,36 @@ export function Header() {
     currentUser?.nickname?.trim() ||
     currentUser?.name ||
     currentUser?.email;
+  const profileMeta =
+    currentUser?.profile?.jobRole?.trim() ||
+    currentUser?.jobRole?.trim() ||
+    "Interview profile";
   const profileImageUrl = currentUser?.profile?.profileImageUrl?.trim() ?? "";
   return (
     <header className="app-header">
       <div className="app-header__brand">
         <div>
-          <span className="app-header__eyebrow">Interview practice</span>
-          <strong className="app-header__title">iterview</strong>
+          <span className="app-header__eyebrow">Interview Workspace</span>
+          <strong className="app-header__title">Interview Workspace</strong>
         </div>
+      </div>
+      <div className="app-header__search">
+        <input
+          aria-label="Search workspace"
+          className="app-header__search-input"
+          placeholder="Search (⌘K)"
+          type="search"
+        />
       </div>
       <div className="app-header__actions">
         {isAuthenticated && currentUser ? (
           <>
+            <button className="app-header__icon-action" type="button">
+              ⌂
+            </button>
+            <button className="app-header__icon-action" type="button">
+              ○
+            </button>
             <Link className="app-header__action" to={routeConfig.profile.buildPath()}>
               <span className="app-header__avatar" aria-hidden="true">
                 {profileImageUrl ? (
@@ -53,7 +71,7 @@ export function Header() {
               </span>
               <span className="app-header__action-copy">
                 <strong>{displayName}</strong>
-                <span className="app-header__action-meta">Profile</span>
+                <span className="app-header__action-meta">{profileMeta}</span>
               </span>
             </Link>
             <button className="app-header__action app-header__action--secondary" onClick={logout} type="button">
