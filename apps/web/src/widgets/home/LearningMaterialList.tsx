@@ -6,11 +6,14 @@ type LearningMaterialListProps = {
 
 export function LearningMaterialList({ materials }: LearningMaterialListProps) {
   return (
-    <section className="page-card">
+    <section className="page-card home-collection-card home-collection-card--materials">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Learning materials</p>
           <h2 className="page-card__title">Resources for today&apos;s practice</h2>
+          <p className="page-card__body home-collection-card__body">
+            Keep only the material that directly strengthens the current answer path.
+          </p>
         </div>
       </div>
       <div className="stack-list">

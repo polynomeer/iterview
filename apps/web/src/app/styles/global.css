@@ -6085,7 +6085,7 @@ button {
 }
 
 .home-layout {
-  gap: 20px;
+  gap: 24px;
 }
 
 .home-layout__hero > *:first-child .page-card,
@@ -6099,27 +6099,167 @@ button {
 .home-layout__side-column,
 .home-layout__band {
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .home-layout__band {
-  padding-top: 2px;
-  border-top: 1px solid var(--border-soft);
+  padding: 18px;
+  border: 1px solid var(--border-soft);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-soft) 78%, transparent), transparent),
+    color-mix(in srgb, var(--surface-base) 94%, var(--surface-soft));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .home-layout__band:first-of-type {
-  padding-top: 0;
-  border-top: 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.home-layout__band--primary {
+  background:
+    radial-gradient(circle at top left, rgba(120, 198, 176, 0.12), transparent 46%),
+    color-mix(in srgb, var(--surface-base) 92%, var(--surface-soft));
+}
+
+.home-layout__band--practice {
+  background:
+    radial-gradient(circle at top right, rgba(255, 164, 81, 0.1), transparent 48%),
+    color-mix(in srgb, var(--surface-base) 94%, var(--surface-muted));
+}
+
+.home-layout__band--intelligence {
+  background:
+    radial-gradient(circle at top left, rgba(98, 153, 255, 0.09), transparent 44%),
+    color-mix(in srgb, var(--surface-base) 95%, var(--surface-soft));
+}
+
+.home-layout__band--resume {
+  background:
+    radial-gradient(circle at top left, rgba(215, 122, 53, 0.08), transparent 42%),
+    color-mix(in srgb, var(--surface-base) 95%, var(--surface-soft));
 }
 
 .home-layout__review-panel--contrast {
-  background: var(--surface-muted);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    color-mix(in srgb, var(--surface-muted) 88%, var(--surface-base));
+}
+
+.home-layout__review-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-layout__review-panel-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
 }
 
 .home-layout__workspace > *,
 .home-layout__main-column > *,
-.home-layout__side-column > * {
+.home-layout__side-column > *,
+.home-layout__band > * {
   min-width: 0;
+}
+
+.summary-stats-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-soft) 92%, var(--surface-base));
+}
+
+.summary-stats-card__body,
+.home-collection-card__body {
+  margin-top: 8px;
+}
+
+.home-next-action-card {
+  display: grid;
+  gap: 18px;
+  border-color: rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at top left, rgba(120, 198, 176, 0.18), transparent 42%),
+    linear-gradient(145deg, #141816 0%, #1b211e 52%, #0e1210 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 22px 50px rgba(9, 12, 10, 0.18);
+}
+
+.home-next-action-card__header,
+.home-next-action-card__highlights {
+  display: grid;
+  gap: 14px;
+}
+
+.home-next-action-card__eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.home-next-action-card__breadcrumbs,
+.today-question-card__breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  color: rgba(226, 232, 240, 0.62);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-next-action-card__highlight {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.home-next-action-card__highlight span {
+  color: rgba(226, 232, 240, 0.62);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-next-action-card__highlight strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.home-next-action-card__footer,
+.today-question-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-collection-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.home-collection-card--retry {
+  border-color: color-mix(in srgb, var(--brand-primary) 18%, var(--border-soft));
+}
+
+.home-collection-card--resume {
+  border-color: rgba(255, 164, 81, 0.16);
+}
+
+.home-collection-card--materials {
+  border-color: rgba(122, 162, 255, 0.14);
 }
 
 .practice-layout,

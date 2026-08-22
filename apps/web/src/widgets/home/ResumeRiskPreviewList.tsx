@@ -7,11 +7,14 @@ type ResumeRiskPreviewListProps = {
 
 export function ResumeRiskPreviewList({ items }: ResumeRiskPreviewListProps) {
   return (
-    <section className="page-card">
+    <section className="page-card home-collection-card home-collection-card--resume">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Resume risks</p>
           <h2 className="page-card__title">Claims worth tightening before interview day</h2>
+          <p className="page-card__body home-collection-card__body">
+            These are the statements most likely to trigger deep follow-up pressure in interview.
+          </p>
         </div>
         <span className="section-heading__count">{items.length}</span>
       </div>

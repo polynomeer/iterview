@@ -7,12 +7,16 @@ type SummaryStatsCardProps = {
 
 export function SummaryStatsCard({ stats }: SummaryStatsCardProps) {
   return (
-    <section className="page-card">
+    <section className="page-card summary-stats-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Summary</p>
           <h2 className="page-card__title">Your current momentum</h2>
+          <p className="page-card__body summary-stats-card__body">
+            Keep the short-term signal visible before diving into retry work or resume cleanup.
+          </p>
         </div>
+        <span className="section-heading__count section-heading__count--text">{stats.length} signals</span>
       </div>
       <div className="stats-grid">
         {stats.map((stat) => (

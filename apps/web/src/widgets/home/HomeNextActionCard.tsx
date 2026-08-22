@@ -75,9 +75,33 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
 
   return (
     <section className="page-card home-next-action-card">
-      <span className="page-card__label">{nextAction.label}</span>
-      <h2 className="page-card__title">{nextAction.title}</h2>
-      <p className="page-card__body">{nextAction.body}</p>
+      <div className="home-next-action-card__header">
+        <div className="home-next-action-card__intro">
+          <div className="home-next-action-card__eyebrow-row">
+            <span className="page-card__label">{nextAction.label}</span>
+            <span className="detail-chip detail-chip--accent">Next action</span>
+          </div>
+          <p className="home-next-action-card__breadcrumbs">
+            Decide now
+            <span>/</span>
+            Act in one path
+            <span>/</span>
+            Avoid context drift
+          </p>
+          <h2 className="page-card__title">{nextAction.title}</h2>
+          <p className="page-card__body">{nextAction.body}</p>
+        </div>
+        <div className="home-next-action-card__highlights">
+          <article className="home-next-action-card__highlight">
+            <span>Primary lane</span>
+            <strong>{nextAction.primaryAction.label}</strong>
+          </article>
+          <article className="home-next-action-card__highlight">
+            <span>Fallback lane</span>
+            <strong>{nextAction.secondaryAction.label}</strong>
+          </article>
+        </div>
+      </div>
       <div className="page-card__actions">
         <Link className="primary-button" to={nextAction.primaryAction.to}>
           {nextAction.primaryAction.label}
@@ -85,6 +109,10 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
         <Link className="secondary-button" to={nextAction.secondaryAction.to}>
           {nextAction.secondaryAction.label}
         </Link>
+      </div>
+      <div className="home-next-action-card__footer">
+        <span className="detail-chip">Single clear next move</span>
+        <span className="detail-chip">Keep the practice session focused</span>
       </div>
     </section>
   );
