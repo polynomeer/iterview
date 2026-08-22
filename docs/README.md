@@ -14,9 +14,11 @@ Use these files when you want to understand product intent, monorepo policy, or 
    The baseline definition of done across the product.
 4. [`04-design-refresh-strategy.md`](04-design-refresh-strategy.md)
    Shared UX and visual-system reset strategy for the product redesign.
-5. [`monorepo-conventions.md`](monorepo-conventions.md)
+5. [`05-workspace-redesign-workplan.md`](05-workspace-redesign-workplan.md)
+   Shared execution plan for moving from page polish to a graph-based interview workspace.
+6. [`monorepo-conventions.md`](monorepo-conventions.md)
    What belongs at the root versus inside each app.
-6. [`monorepo-status.md`](monorepo-status.md)
+7. [`monorepo-status.md`](monorepo-status.md)
    Current operational status, known risks, and verification path.
 
 ## What Belongs Here
