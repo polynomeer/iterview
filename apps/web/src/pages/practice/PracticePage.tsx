@@ -70,6 +70,64 @@ export function PracticePage() {
       eyebrow="Practice"
       title="Practice question discovery"
     >
+      <section className="page-card practice-workspace-surface">
+        <div className="practice-workspace-surface__header">
+          <div className="practice-workspace-surface__intro">
+            <div className="practice-workspace-surface__eyebrow-row">
+              <span className="page-card__label">Practice workspace</span>
+              <span className="question-status-badge question-status-badge--accent">Discovery mode</span>
+            </div>
+            <p className="practice-workspace-surface__breadcrumbs">
+              Question set
+              <span>/</span>
+              Filtered discovery
+              <span>/</span>
+              Next branch selection
+            </p>
+            <h2 className="practice-workspace-surface__title">Practice control tower</h2>
+            <p className="practice-workspace-surface__body">
+              Narrow the queue until the next prompt is worth a full answer pass, not just another random click
+              through the catalog.
+            </p>
+          </div>
+          <div className="practice-workspace-surface__stats">
+            <article className="practice-workspace-surface__stat">
+              <span>Visible questions</span>
+              <strong>{practiceQuery.data?.items.length ?? 0}</strong>
+            </article>
+            <article className="practice-workspace-surface__stat">
+              <span>Categories</span>
+              <strong>{practiceQuery.data?.filters.categories.length ?? 0}</strong>
+            </article>
+            <article className="practice-workspace-surface__stat">
+              <span>Companies</span>
+              <strong>{practiceQuery.data?.filters.companies.length ?? 0}</strong>
+            </article>
+            <article className="practice-workspace-surface__stat">
+              <span>Active filters</span>
+              <strong>
+                {[filterState.category, filterState.company, filterState.difficulty, filterState.status, filterState.search]
+                  .filter(Boolean)
+                  .length}
+              </strong>
+            </article>
+          </div>
+        </div>
+        <div className="practice-workspace-surface__chips">
+          {filterState.search ? <span className="detail-chip detail-chip--accent">{`Search ${filterState.search}`}</span> : null}
+          {filterState.category ? <span className="detail-chip">{`Category ${filterState.category}`}</span> : null}
+          {filterState.company ? <span className="detail-chip">{`Company ${filterState.company}`}</span> : null}
+          {filterState.difficulty ? <span className="detail-chip">{`Level ${filterState.difficulty}`}</span> : null}
+          {filterState.status ? <span className="detail-chip">{`Status ${filterState.status}`}</span> : null}
+          {!filterState.search &&
+          !filterState.category &&
+          !filterState.company &&
+          !filterState.difficulty &&
+          !filterState.status ? (
+            <span className="detail-chip">No filters pinned yet</span>
+          ) : null}
+        </div>
+      </section>
       {(() => {
         const searchControl = (
           <SearchInput

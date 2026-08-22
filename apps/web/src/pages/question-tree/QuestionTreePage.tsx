@@ -15,6 +15,12 @@ export function QuestionTreePage() {
   const { t } = useLocale();
   const questionDetailQuery = useQuestionDetailQuery(questionId);
   const questionTreeQuery = useQuestionTreeQuery(questionId);
+  const totalNodes = questionTreeQuery.data?.nodes.length ?? 0;
+  const deepestDepth = questionTreeQuery.data?.nodes.reduce((max, node) => Math.max(max, node.depth), 0) ?? 0;
+  const followupCount = questionTreeQuery.data?.nodes.filter((node) => !node.isRoot).length ?? 0;
+  const relationshipCount = questionTreeQuery.data
+    ? new Set(questionTreeQuery.data.nodes.map((node) => node.relationshipType).filter(Boolean)).size
+    : 0;
 
   if (!questionId) {
     return (
@@ -99,6 +105,46 @@ export function QuestionTreePage() {
       !questionTreeQuery.isError &&
       questionTreeQuery.data ? (
         <div className="page-stack">
+          <section className="page-card question-tree-workspace-surface">
+            <div className="question-tree-workspace-surface__header">
+              <div className="question-tree-workspace-surface__intro">
+                <div className="question-tree-workspace-surface__eyebrow-row">
+                  <span className="page-card__label">Question map</span>
+                  <span className="question-status-badge question-status-badge--accent">DFS ready</span>
+                </div>
+                <p className="question-tree-workspace-surface__breadcrumbs">
+                  Root prompt
+                  <span>/</span>
+                  Follow-up hierarchy
+                  <span>/</span>
+                  Branch coverage
+                </p>
+                <h2 className="question-tree-workspace-surface__title">Question tree workspace</h2>
+                <p className="question-tree-workspace-surface__body">
+                  Keep the full branching map in view so each answer can be traced back to what it unlocks next,
+                  what it depends on, and where the resume-backed source of truth still looks weak.
+                </p>
+              </div>
+              <div className="question-tree-workspace-surface__stats">
+                <article className="question-tree-workspace-surface__stat">
+                  <span>Nodes</span>
+                  <strong>{totalNodes}</strong>
+                </article>
+                <article className="question-tree-workspace-surface__stat">
+                  <span>Follow-ups</span>
+                  <strong>{followupCount}</strong>
+                </article>
+                <article className="question-tree-workspace-surface__stat">
+                  <span>Deepest depth</span>
+                  <strong>{deepestDepth}</strong>
+                </article>
+                <article className="question-tree-workspace-surface__stat">
+                  <span>Relations</span>
+                  <strong>{relationshipCount}</strong>
+                </article>
+              </div>
+            </div>
+          </section>
           <section className="page-card">
             <span className="page-card__label">{t("questionTree.rootQuestionLabel")}</span>
             <h2 className="page-card__title">{questionDetailQuery.data.title}</h2>

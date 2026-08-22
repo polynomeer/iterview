@@ -13,7 +13,7 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
   const { t } = useLocale();
 
   return (
-    <section className="page-card">
+    <section className="page-card question-tree-surface">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{t("questionTree.hierarchyEyebrow")}</p>
@@ -22,7 +22,7 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
         <span className="section-heading__count">{tree.nodes.length}</span>
       </div>
       <div className="question-tree">
-        {tree.nodes.map((node) => (
+        {tree.nodes.map((node, index) => (
           <article
             className={`question-tree__node${node.isRoot ? " question-tree__node--root" : ""}`}
             key={node.id}
@@ -30,6 +30,7 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
           >
             <div className="question-tree__line" />
             <div className="question-tree__content">
+              <div className="question-tree__node-step">{index + 1}</div>
               <div className="question-tree__meta">
                 <QuestionStatusBadge status={node.status} />
                 <span>{t("questionTree.depth")} {node.depth}</span>
