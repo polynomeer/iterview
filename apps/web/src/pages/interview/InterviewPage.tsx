@@ -350,6 +350,10 @@ export function InterviewPage() {
     resumeVersionChoices.find((choice) => choice.versionId === selectedResumeVersionId) ?? null;
   const selectedInspector = WORKSPACE_INSPECTOR[selectedGraphNodeId] ?? WORKSPACE_INSPECTOR.mvcc;
   const completedSessionCount = sessionListQuery.data?.filter((item) => item.status === "completed").length ?? 0;
+  const sessionCount = sessionListQuery.data?.length ?? 0;
+  const selectedResumeSummary = selectedResumeChoice
+    ? `${selectedResumeChoice.resumeTitle} ${selectedResumeChoice.versionNumberLabel}`
+    : t("interview.noResumeTitle");
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -433,25 +437,64 @@ export function InterviewPage() {
         <div className="interview-workspace-page">
           <section className="page-card interview-workspace-surface">
             <div className="interview-workspace-surface__header">
-              <div className="interview-workspace-surface__breadcrumbs">
-                <span>Backend</span>
-                <span>Database</span>
-                <span>Transaction</span>
-                <span>Isolation Level</span>
-                <strong>{selectedInspector.title}</strong>
+              <div className="interview-workspace-surface__intro">
+                <div className="interview-workspace-surface__eyebrow-row">
+                  <span className="page-card__label">Interview workspace</span>
+                  <span className="question-status-badge question-status-badge--accent">Entry surface</span>
+                </div>
+                <p className="interview-workspace-surface__breadcrumbs">
+                  Resume boundary
+                  <span>/</span>
+                  DFS branch focus
+                  <span>/</span>
+                  Session launch
+                </p>
+                <h2 className="interview-workspace-surface__title">Enter one defendable interview path</h2>
+                <p className="interview-workspace-surface__body">
+                  Start from a stable resume version, inspect the branch you are about to defend, and launch the session
+                  only after the traversal mode is explicit.
+                </p>
               </div>
-              <div className="interview-workspace-surface__controls">
-                <button className="secondary-button" type="button">Map View</button>
-                <button className="primary-button" type="button">DFS Focus</button>
-                <button className="secondary-button" type="button">All Paths</button>
+              <div className="interview-workspace-surface__stats">
+                <article className="interview-workspace-surface__stat">
+                  <span>Resume versions</span>
+                  <strong>{resumeVersionChoices.length}</strong>
+                </article>
+                <article className="interview-workspace-surface__stat">
+                  <span>Active mode</span>
+                  <strong>{selectedInterviewModeOption.label}</strong>
+                </article>
+                <article className="interview-workspace-surface__stat">
+                  <span>Completed sessions</span>
+                  <strong>{completedSessionCount}</strong>
+                </article>
+                <article className="interview-workspace-surface__stat">
+                  <span>Seed count</span>
+                  <strong>{questionCount}</strong>
+                </article>
               </div>
+            </div>
+            <div className="interview-workspace-surface__chips">
+              <span className="detail-chip">{selectedResumeSummary}</span>
+              <span className="detail-chip detail-chip--accent">{selectedInspector.title}</span>
+              {selectedInterviewMode === "full_coverage" ? (
+                <span className="detail-chip">{t("interview.coverageBadge")}</span>
+              ) : null}
+              {sessionCount > 0 ? <span className="detail-chip">{`History ${sessionCount}`}</span> : null}
             </div>
 
             <div className="interview-workspace-surface__body">
               <div className="interview-graph-panel">
-                <div className="interview-graph-panel__toolbar">
-                  <button className="secondary-button" type="button">Filter</button>
-                  <button className="secondary-button" type="button">Fit View</button>
+                <div className="interview-graph-panel__header">
+                  <div>
+                    <p className="section-heading__eyebrow">Branch map</p>
+                    <h3 className="page-card__title">Preview the branch before the session starts</h3>
+                  </div>
+                  <div className="interview-graph-panel__toolbar">
+                    <button className="secondary-button" type="button">Map View</button>
+                    <button className="primary-button" type="button">DFS Focus</button>
+                    <button className="secondary-button" type="button">All Paths</button>
+                  </div>
                 </div>
                 <div className="interview-graph-panel__canvas">
                   {WORKSPACE_COLUMNS.map((column, columnIndex) => (
@@ -483,7 +526,7 @@ export function InterviewPage() {
               <aside className="interview-workspace-inspector">
                 <div className="interview-workspace-inspector__panel">
                   <div className="interview-workspace-inspector__eyebrow-row">
-                    <span className="question-status-badge question-status-badge--neutral">Question Details</span>
+                    <span className="question-status-badge question-status-badge--neutral">Branch inspector</span>
                     {selectedInspector.badge ? (
                       <span className="question-status-badge question-status-badge--accent">{selectedInspector.badge}</span>
                     ) : null}
@@ -559,7 +602,7 @@ export function InterviewPage() {
                   onClick={() => setStartFormOpen(true)}
                   type="button"
                 >
-                  Start Answering
+                  Open session setup
                 </button>
               </aside>
             </div>
@@ -569,7 +612,7 @@ export function InterviewPage() {
                 <div className="section-heading">
                   <div>
                     <p className="section-heading__eyebrow">Today&apos;s Path</p>
-                    <h3 className="page-card__title">Resume-grounded retries</h3>
+                    <h3 className="page-card__title">Resume-grounded starting lanes</h3>
                   </div>
                   <span className="section-heading__count">3</span>
                 </div>
@@ -627,7 +670,7 @@ export function InterviewPage() {
                 <div className="section-heading">
                   <div>
                     <p className="section-heading__eyebrow">Upcoming Review</p>
-                    <h3 className="page-card__title">Queued branches</h3>
+                    <h3 className="page-card__title">Queued branches after this launch</h3>
                   </div>
                   <span className="section-heading__count">{completedSessionCount || 5}</span>
                 </div>
@@ -701,7 +744,7 @@ export function InterviewPage() {
               <div className="interview-page-layout__hero-side">
                 <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
                   <span className="page-card__label">Core objective</span>
-                  <h2 className="page-card__title">Run resume-based interviews as a full DFS review, not a shallow prompt sampler</h2>
+                  <h2 className="page-card__title">Launch sessions as DFS review, not shallow prompt sampling</h2>
                   <p className="page-card__body">
                     Each session should expose the exact claim being tested, the follow-up branch that opened next, and whether your answer held up when the questioning drilled toward atomic facts.
                   </p>

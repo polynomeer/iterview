@@ -6090,6 +6090,11 @@ button {
     align-items: end;
   }
 
+  .interview-workspace-surface__header {
+    grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
+    align-items: end;
+  }
+
   .practice-layout__results {
     width: min(100%, 980px);
   }
@@ -6543,8 +6548,10 @@ button {
 .interview-workspace-inspector,
 .interview-workspace-deck,
 .interview-workspace-surface__header,
-.interview-workspace-surface__controls,
+.interview-workspace-surface__intro,
+.interview-workspace-surface__stats,
 .interview-graph-panel,
+.interview-graph-panel__header,
 .interview-graph-panel__toolbar,
 .interview-graph-panel__canvas,
 .interview-graph-panel__lane {
@@ -6565,34 +6572,82 @@ button {
 }
 
 .interview-workspace-surface__header {
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  padding-bottom: 12px;
+  padding-bottom: 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.interview-workspace-surface__eyebrow-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
 .interview-workspace-surface__breadcrumbs {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin: 0;
   color: rgba(165, 183, 210, 0.76);
-  font-size: 0.94rem;
+  font-size: 0.84rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.interview-workspace-surface__breadcrumbs span::after {
-  content: "›";
-  margin-left: 10px;
-  color: rgba(110, 131, 165, 0.66);
-}
-
-.interview-workspace-surface__breadcrumbs strong {
-  color: #67a3ff;
-  font-weight: 600;
+.interview-workspace-surface__title {
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: #f8fafc;
 }
 
 .interview-workspace-surface__body {
+  max-width: 70ch;
+  margin: 0;
+  color: rgba(226, 232, 240, 0.78);
+}
+
+.interview-workspace-surface__stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.interview-workspace-surface__stat {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px;
+  background: rgba(9, 17, 32, 0.72);
+}
+
+.interview-workspace-surface__stat span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-workspace-surface__stat strong {
+  color: #f8fafc;
+  font-size: 1.3rem;
+  letter-spacing: -0.04em;
+}
+
+.interview-workspace-surface__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.interview-workspace-surface > .interview-workspace-surface__body {
   grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.8fr);
   align-items: start;
+}
+
+.interview-graph-panel__header {
+  align-items: end;
 }
 
 .interview-graph-panel__canvas {
@@ -6810,6 +6865,10 @@ button {
   .interview-workspace-surface__header,
   .interview-workspace-surface__body,
   .interview-workspace-deck {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-workspace-surface__stats {
     grid-template-columns: 1fr;
   }
 
