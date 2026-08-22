@@ -54,10 +54,10 @@ export function QuestionDetailDesktopLayout({
       <div className="question-detail-layout__hero">
         {headerSection}
         <SectionPanel className="workspace-note-card workspace-note-card--accent question-detail-layout__hero-note" variant="muted">
-          <span className="page-card__label">Preparation flow</span>
-          <h2 className="page-card__title">Anchor on the prompt, then defend it with evidence and past attempts</h2>
+          <span className="page-card__label">Node workflow</span>
+          <h2 className="page-card__title">Anchor on the prompt, then inspect context before writing the next answer</h2>
           <p className="page-card__body">
-            The main prompt should stay dominant, while study materials, answer history, and follow-up branches remain close enough to support a deeper practice pass.
+            The main node stays dominant. Evidence, answer history, and follow-up branches stay near it so the question detail screen behaves like an inspector, not a detached reading page.
           </p>
         </SectionPanel>
       </div>
@@ -72,9 +72,9 @@ export function QuestionDetailDesktopLayout({
           {materialsSection}
           <SectionPanel className="workspace-note-card" variant="muted">
             <span className="page-card__label">Study rail</span>
-            <h2 className="page-card__title">Keep source material beside the question instead of below it</h2>
+            <h2 className="page-card__title">Keep source material beside the node instead of below the page</h2>
             <p className="page-card__body">
-              Notes, references, and learning resources should feel like a supporting rail, not a separate page that breaks the answer-preparation flow.
+              Notes, references, and learning resources should act like a support rail that sharpens the next answer, not a separate page that breaks answer preparation.
             </p>
           </SectionPanel>
         </div>
@@ -83,6 +83,13 @@ export function QuestionDetailDesktopLayout({
         <div className="page-stack question-detail-layout__cluster">
           {progressSection}
           {metadataSection}
+          <SectionPanel className="workspace-note-card question-detail-layout__inspector-note" variant="muted">
+            <span className="page-card__label">Inspector lane</span>
+            <h2 className="page-card__title">Use this rail to decide whether the node is ready for another pass</h2>
+            <p className="page-card__body">
+              Progress, metadata, company context, and related roles belong in one decision lane so the next answer can stay specific instead of drifting into generic prep.
+            </p>
+          </SectionPanel>
         </div>
       </aside>
     </div>

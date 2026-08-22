@@ -432,6 +432,7 @@ export function QuestionDetailPage() {
               referenceAnswers.length +
               learningMaterials.length +
               (answerHistoryQuery.data?.items.length ?? 0);
+            const recommendedCount = recommendedItems.length;
             const workspaceSummary = (
               <section className="page-card question-detail-workspace-surface">
                 <div className="question-detail-workspace-surface__header">
@@ -449,11 +450,11 @@ export function QuestionDetailPage() {
                       <span>/</span>
                       {questionDetailQuery.data.companies[0] ?? "Interview prep"}
                     </p>
-                    <h2 className="question-detail-workspace-surface__title">Preparation snapshot</h2>
+                    <h2 className="question-detail-workspace-surface__title">Question node briefing</h2>
                     <p className="question-detail-workspace-surface__body">
-                      {questionDetailQuery.data.title}. Read the prompt as a branch root, then keep evidence, model
-                      answers, and prior attempts in view until the source of truth is explicit enough to defend under
-                      follow-up pressure.
+                      {questionDetailQuery.data.title}. Treat this prompt as a branch root: read the node, inspect the
+                      context, and keep support material and prior attempts close enough that the next answer can be
+                      defended under follow-up pressure.
                     </p>
                   </div>
                   <div className="question-detail-workspace-surface__stats">
@@ -466,12 +467,12 @@ export function QuestionDetailPage() {
                       <strong>{progress?.bestScoreLabel ?? "Not started"}</strong>
                     </article>
                     <article className="question-detail-workspace-surface__stat">
-                      <span>Support items</span>
-                      <strong>{supportCount}</strong>
+                      <span>Follow-ups</span>
+                      <strong>{recommendedCount}</strong>
                     </article>
                     <article className="question-detail-workspace-surface__stat">
-                      <span>Prompt words</span>
-                      <strong>{promptDensity}</strong>
+                      <span>Support items</span>
+                      <strong>{supportCount || promptDensity}</strong>
                     </article>
                   </div>
                 </div>
@@ -486,6 +487,9 @@ export function QuestionDetailPage() {
                       {`Company ${company}`}
                     </span>
                   ))}
+                  {progress?.status ? (
+                    <span className="detail-chip">{`Progress ${progress.status}`}</span>
+                  ) : null}
                 </div>
               </section>
             );
