@@ -25,6 +25,10 @@ export function HomePage() {
   const { isDesktop } = useLayoutMode();
   const homeData = homeQuery.data;
   const isUnauthorized = homeQuery.error instanceof ApiClientError && homeQuery.error.status === 401;
+  const summaryCount = homeData?.summaryStats?.length ?? 0;
+  const retryCount = homeData?.retryQuestions?.length ?? 0;
+  const materialCount = homeData?.learningMaterials?.length ?? 0;
+  const riskCount = homeData?.resumeRiskPreview?.length ?? 0;
   const isEmpty =
     homeData !== undefined &&
     homeData.todayQuestion === null &&
@@ -41,6 +45,52 @@ export function HomePage() {
       eyebrow="Home"
       title="Your daily interview practice starts here"
     >
+      <section className="page-card home-workspace-surface">
+        <div className="home-workspace-surface__header">
+          <div className="home-workspace-surface__intro">
+            <div className="home-workspace-surface__eyebrow-row">
+              <span className="page-card__label">Daily workspace</span>
+              <span className="question-status-badge question-status-badge--accent">Focus mode</span>
+            </div>
+            <p className="home-workspace-surface__breadcrumbs">
+              Today&apos;s prompt
+              <span>/</span>
+              Retry pressure
+              <span>/</span>
+              Resume defense
+            </p>
+            <h2 className="home-workspace-surface__title">Daily command center</h2>
+            <p className="home-workspace-surface__body">
+              Keep the main question, the retry queue, and the current resume risks in one place so the next hour of
+              practice moves in a single direction.
+            </p>
+          </div>
+          <div className="home-workspace-surface__stats">
+            <article className="home-workspace-surface__stat">
+              <span>Today card</span>
+              <strong>{homeData?.todayQuestion ? 1 : 0}</strong>
+            </article>
+            <article className="home-workspace-surface__stat">
+              <span>Retries</span>
+              <strong>{retryCount}</strong>
+            </article>
+            <article className="home-workspace-surface__stat">
+              <span>Materials</span>
+              <strong>{materialCount}</strong>
+            </article>
+            <article className="home-workspace-surface__stat">
+              <span>Resume risks</span>
+              <strong>{riskCount}</strong>
+            </article>
+          </div>
+        </div>
+        <div className="home-workspace-surface__chips">
+          <span className="detail-chip">{`Summary ${summaryCount}`}</span>
+          {homeData?.todayQuestion ? <span className="detail-chip detail-chip--accent">Daily prompt active</span> : null}
+          {retryCount > 0 ? <span className="detail-chip">Retry queue live</span> : null}
+          {materialCount > 0 ? <span className="detail-chip">Learning support loaded</span> : null}
+        </div>
+      </section>
       {homeQuery.isLoading ? (
         <LoadingStateCard
           body="Fetching today&apos;s question, retry queue, learning materials, and progress summary."

@@ -14,6 +14,10 @@ export function FeedPage() {
   const feedQuery = useFeedQuery();
   const { isDesktop } = useLayoutMode();
   const isUnauthorized = feedQuery.error instanceof ApiClientError && feedQuery.error.status === 401;
+  const sectionCount = feedQuery.data?.sections.length ?? 0;
+  const itemCount = feedQuery.data?.sections.reduce((sum, section) => sum + section.items.length, 0) ?? 0;
+  const companySignalCount =
+    feedQuery.data?.sections.find((section) => section.id === "companyRelated")?.items.length ?? 0;
   const sections = feedQuery.data?.sections.map((section) => (
     <FeedSection key={section.id} layout={isDesktop ? "grid" : "stack"} section={section} />
   )) ?? [];
@@ -24,6 +28,46 @@ export function FeedPage() {
       eyebrow="Feed"
       title="Feed"
     >
+      <section className="page-card feed-workspace-surface">
+        <div className="feed-workspace-surface__header">
+          <div className="feed-workspace-surface__intro">
+            <div className="feed-workspace-surface__eyebrow-row">
+              <span className="page-card__label">Discovery workspace</span>
+              <span className="question-status-badge question-status-badge--accent">Scan mode</span>
+            </div>
+            <p className="feed-workspace-surface__breadcrumbs">
+              Popular signal
+              <span>/</span>
+              Trending signal
+              <span>/</span>
+              Company signal
+            </p>
+            <h2 className="feed-workspace-surface__title">Question market scan</h2>
+            <p className="feed-workspace-surface__body">
+              Use the feed to compare what is currently surfacing across general demand, active trends, and company
+              context before deciding which branch is worth practicing next.
+            </p>
+          </div>
+          <div className="feed-workspace-surface__stats">
+            <article className="feed-workspace-surface__stat">
+              <span>Sections</span>
+              <strong>{sectionCount}</strong>
+            </article>
+            <article className="feed-workspace-surface__stat">
+              <span>Visible cards</span>
+              <strong>{itemCount}</strong>
+            </article>
+            <article className="feed-workspace-surface__stat">
+              <span>Company linked</span>
+              <strong>{companySignalCount}</strong>
+            </article>
+            <article className="feed-workspace-surface__stat">
+              <span>Primary lane</span>
+              <strong>{feedQuery.data?.sections[0] ? "Lead section set" : "None"}</strong>
+            </article>
+          </div>
+        </div>
+      </section>
       {feedQuery.isLoading ? (
         <LoadingStateCard
           body="Loading the current feed sections."
