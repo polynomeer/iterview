@@ -9,7 +9,6 @@ import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
-import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { SectionPanel } from "../../shared/ui/layout";
 
@@ -31,6 +30,19 @@ export function PracticalInterviewListPage() {
     () => getResumeVersionChoices(resumeListQuery.data),
     [resumeListQuery.data],
   );
+  const importedRecordCount = recordListQuery.data?.length ?? 0;
+  const processingRecordCount =
+    recordListQuery.data?.filter(
+      (record) =>
+        record.transcriptStatus === "pending" || record.transcriptStatus === "processing",
+    ).length ?? 0;
+  const retryRecordCount =
+    recordListQuery.data?.filter((record) => record.transcriptRetryCount > 0).length ?? 0;
+  const readyReviewCount =
+    recordListQuery.data?.filter(
+      (record) =>
+        record.transcriptStatus === "completed" || record.analysisStatus === "completed",
+    ).length ?? 0;
 
   useEffect(() => {
     if (!selectedResumeVersionId && resumeChoices.length > 0) {
@@ -110,43 +122,143 @@ export function PracticalInterviewListPage() {
 
       {!recordListQuery.isLoading && !recordListQuery.isError ? (
         <div className="practical-list-layout">
-          <div className="practical-list-layout__hero">
-            <section className="page-card">
-              <span className="page-card__label">Workspace</span>
-              <h2 className="page-card__title">Upload and review real interview transcripts</h2>
-              <p className="page-card__body">
-                The backend review payload already includes provenance, lane ordering, blockers, and replay presets. The frontend only needs to render and route those decisions.
-              </p>
-              <div className="stats-grid">
-                <MetricCard label="Imported records" value={String(recordListQuery.data?.length ?? 0)} />
-                <MetricCard label="Resume versions" tone="accent" value={String(resumeChoices.length)} />
-                <MetricCard label="Upload" tone="muted" value={file ? file.name : "Choose file"} />
+          <section className="practical-list-workspace-surface">
+            <div className="practical-list-workspace-surface__header">
+              <div className="practical-list-workspace-surface__intro">
+                <div className="practical-list-workspace-surface__eyebrow-row">
+                  <p className="practical-list-workspace-surface__breadcrumbs">
+                    <span>Practical interviews</span>
+                    <span>/</span>
+                    <span>Import queue</span>
+                  </p>
+                  <span className="question-status-badge question-status-badge--neutral">
+                    Replay-ready workflow
+                  </span>
+                </div>
+                <h2 className="practical-list-workspace-surface__title">
+                  Import and route real interview evidence into one review loop
+                </h2>
+                <p className="practical-list-workspace-surface__body">
+                  Each upload should become a structured review workspace with transcript quality,
+                  linked resume context, and follow-up replay paths already visible before deep
+                  analysis starts.
+                </p>
               </div>
-              <div className="page-card__actions">
-                <button
-                  className="primary-button"
-                  onClick={() => setUploadOpen((current) => !current)}
-                  type="button"
-                >
-                  {uploadOpen ? "Hide upload form" : "Upload interview"}
-                </button>
+              <div className="practical-list-workspace-surface__stats">
+                <article className="practical-list-workspace-surface__stat">
+                  <span>Imported records</span>
+                  <strong>{importedRecordCount}</strong>
+                </article>
+                <article className="practical-list-workspace-surface__stat">
+                  <span>Ready for review</span>
+                  <strong>{readyReviewCount}</strong>
+                </article>
+                <article className="practical-list-workspace-surface__stat">
+                  <span>Processing now</span>
+                  <strong>{processingRecordCount}</strong>
+                </article>
+                <article className="practical-list-workspace-surface__stat">
+                  <span>Resume versions</span>
+                  <strong>{resumeChoices.length}</strong>
+                </article>
+              </div>
+            </div>
+            <div className="practical-list-workspace-surface__chips">
+              <span className="detail-chip">
+                Upload state: {file ? file.name : "No file selected"}
+              </span>
+              <span className="detail-chip">
+                Retry queue: {retryRecordCount} record{retryRecordCount === 1 ? "" : "s"}
+              </span>
+              <span className="detail-chip">
+                Next action: {uploadOpen ? "complete import form" : "open upload or continue review"}
+              </span>
+            </div>
+          </section>
+
+          <div className="practical-list-priority-board">
+            <section className="page-card practical-list-priority-board__main">
+              <div className="section-heading">
+                <div>
+                  <p className="section-heading__eyebrow">Import flow</p>
+                  <h2 className="page-card__title">What this workspace is for</h2>
+                </div>
+              </div>
+              <div className="practical-list-priority-board__steps">
+                <article className="practical-list-priority-step">
+                  <div className="practical-list-priority-step__index">1</div>
+                  <div className="practical-list-priority-step__body">
+                    <strong>Capture one interview artifact</strong>
+                    <span>
+                      Bring in audio and transcript context without losing company, role, and date.
+                    </span>
+                  </div>
+                </article>
+                <article className="practical-list-priority-step">
+                  <div className="practical-list-priority-step__index">2</div>
+                  <div className="practical-list-priority-step__body">
+                    <strong>Link it to source-of-truth</strong>
+                    <span>
+                      Attach the correct resume version so later weakness analysis maps back to real
+                      claims.
+                    </span>
+                  </div>
+                </article>
+                <article className="practical-list-priority-step">
+                  <div className="practical-list-priority-step__index">3</div>
+                  <div className="practical-list-priority-step__body">
+                    <strong>Open one focused review surface</strong>
+                    <span>
+                      Move into transcript, question, and thread review without hunting across
+                      routes.
+                    </span>
+                  </div>
+                </article>
               </div>
             </section>
-            <SectionPanel className="workspace-note-card workspace-note-card--accent practical-list-layout__hero-note" variant="muted">
-              <span className="page-card__label">Import flow</span>
-              <h2 className="page-card__title">Treat each upload as the start of a replayable review workspace</h2>
-              <p className="page-card__body">
-                Company, role, linked resume version, and transcript source should stay visible enough that imported records feel like structured evidence, not loose files.
-              </p>
+
+            <SectionPanel
+              className="workspace-note-card workspace-note-card--accent practical-list-priority-board__side"
+              variant="muted"
+            >
+              <span className="page-card__label">Coverage signals</span>
+              <h2 className="page-card__title">Current queue health</h2>
+              <div className="practical-list-signal-list">
+                <div className="practical-list-signal-list__item">
+                  <span>Processing</span>
+                  <strong>{processingRecordCount} records are still waiting for transcript readiness.</strong>
+                </div>
+                <div className="practical-list-signal-list__item">
+                  <span>Replay ready</span>
+                  <strong>{readyReviewCount} records can already be opened as review workspaces.</strong>
+                </div>
+                <div className="practical-list-signal-list__item">
+                  <span>Resume context</span>
+                  <strong>
+                    {resumeChoices.length > 0
+                      ? "Resume-linked imports can feed heatmap and source-of-truth repair later."
+                      : "No parsed resume version is ready yet, so imports will stay isolated."}
+                  </strong>
+                </div>
+              </div>
             </SectionPanel>
           </div>
 
           <div className="practical-list-layout__workspace">
             <div className="page-stack practical-list-layout__main">
               {uploadOpen ? (
-                <section className="page-card page-card--inset">
+                <section className="page-card page-card--inset practical-import-form-card">
                   <span className="page-card__label">Upload</span>
                   <h2 className="page-card__title">Create an interview record</h2>
+                  <p className="page-card__body">
+                    Keep import metadata explicit now so the downstream review page can explain what
+                    happened, where it came from, and which resume claims it should challenge.
+                  </p>
+                  <div className="practical-import-form-card__summary">
+                    <span className="detail-chip">Audio required</span>
+                    <span className="detail-chip">Resume link optional</span>
+                    <span className="detail-chip">Transcript paste optional</span>
+                  </div>
                   <div className="form-grid">
                     <label className="form-field">
                       <span className="form-field__label">Audio file</span>
@@ -157,24 +269,44 @@ export function PracticalInterviewListPage() {
                         type="file"
                       />
                       <span className="form-field__hint">
-                        Upload the interview audio. The server can extract a transcript automatically if you do not paste one below.
+                        Upload the interview audio. The server can extract a transcript
+                        automatically if you do not paste one below.
                       </span>
                     </label>
                     <label className="form-field">
                       <span className="form-field__label">Company</span>
-                      <input className="form-input" onChange={(event) => setCompanyName(event.target.value)} type="text" value={companyName} />
+                      <input
+                        className="form-input"
+                        onChange={(event) => setCompanyName(event.target.value)}
+                        type="text"
+                        value={companyName}
+                      />
                     </label>
                     <label className="form-field">
                       <span className="form-field__label">Role</span>
-                      <input className="form-input" onChange={(event) => setRoleName(event.target.value)} type="text" value={roleName} />
+                      <input
+                        className="form-input"
+                        onChange={(event) => setRoleName(event.target.value)}
+                        type="text"
+                        value={roleName}
+                      />
                     </label>
                     <label className="form-field">
                       <span className="form-field__label">Interview date</span>
-                      <input className="form-input" onChange={(event) => setInterviewDate(event.target.value)} type="date" value={interviewDate} />
+                      <input
+                        className="form-input"
+                        onChange={(event) => setInterviewDate(event.target.value)}
+                        type="date"
+                        value={interviewDate}
+                      />
                     </label>
                     <label className="form-field">
                       <span className="form-field__label">Interview type</span>
-                      <select className="form-input" onChange={(event) => setInterviewType(event.target.value)} value={interviewType}>
+                      <select
+                        className="form-input"
+                        onChange={(event) => setInterviewType(event.target.value)}
+                        value={interviewType}
+                      >
                         <option value="onsite">Onsite</option>
                         <option value="phone">Phone</option>
                         <option value="virtual">Virtual</option>
@@ -184,7 +316,11 @@ export function PracticalInterviewListPage() {
                     </label>
                     <label className="form-field">
                       <span className="form-field__label">Linked resume version</span>
-                      <select className="form-input" onChange={(event) => setSelectedResumeVersionId(event.target.value)} value={selectedResumeVersionId}>
+                      <select
+                        className="form-input"
+                        onChange={(event) => setSelectedResumeVersionId(event.target.value)}
+                        value={selectedResumeVersionId}
+                      >
                         <option value="">None</option>
                         {resumeChoices.map((choice) => (
                           <option key={choice.versionId} value={choice.versionId}>
@@ -203,7 +339,8 @@ export function PracticalInterviewListPage() {
                         value={transcriptText}
                       />
                       <span className="form-field__hint">
-                        Optional. If omitted, the server will try to extract a transcript from the audio and continue processing.
+                        Optional. If omitted, the server will try to extract a transcript from the
+                        audio and continue processing.
                       </span>
                     </label>
                   </div>
@@ -230,21 +367,37 @@ export function PracticalInterviewListPage() {
                     >
                       {createRecordMutation.isPending ? "Uploading..." : "Create record"}
                     </button>
+                    <button
+                      className="secondary-button"
+                      onClick={() => setUploadOpen(false)}
+                      type="button"
+                    >
+                      Close form
+                    </button>
                   </div>
                 </section>
               ) : null}
 
               {recordListQuery.data && recordListQuery.data.length > 0 ? (
-                <section className="page-card">
-                  <span className="page-card__label">Imported records</span>
-                  <h2 className="page-card__title">Open a review workspace</h2>
+                <section className="page-card practical-record-list-card">
+                  <div className="section-heading">
+                    <div>
+                      <p className="section-heading__eyebrow">Imported records</p>
+                      <h2 className="page-card__title">Open a review workspace</h2>
+                    </div>
+                    <div className="chip-list">
+                      <span className="detail-chip">Newest imports stay actionable here</span>
+                    </div>
+                  </div>
                   <div className="stack-list">
                     {recordListQuery.data.map((record) => (
                       <button
                         className="list-item-card practical-record-row"
                         key={record.id}
                         onClick={() => {
-                          navigate(routeConfig.practicalInterviewDetail.buildPath({ recordId: record.id }));
+                          navigate(
+                            routeConfig.practicalInterviewDetail.buildPath({ recordId: record.id }),
+                          );
                         }}
                         type="button"
                       >
@@ -256,7 +409,9 @@ export function PracticalInterviewListPage() {
                           </div>
                           <h3 className="list-item-card__title">{record.title}</h3>
                           <div className="chip-list practical-record-row__chips">
-                            <span className={`question-status-badge question-status-badge--${record.transcriptStatusTone}`}>
+                            <span
+                              className={`question-status-badge question-status-badge--${record.transcriptStatusTone}`}
+                            >
                               Transcript {record.transcriptStatusLabel}
                             </span>
                             <span className="question-status-badge question-status-badge--accent">
@@ -294,11 +449,29 @@ export function PracticalInterviewListPage() {
 
             <aside className="practical-list-layout__side">
               <SectionPanel className="workspace-note-card" variant="muted">
-                <span className="page-card__label">Review output</span>
-                <h2 className="page-card__title">Each record should lead into one focused analysis surface</h2>
+                <span className="page-card__label">Next surface</span>
+                <h2 className="page-card__title">Each record should open one focused review system</h2>
                 <p className="page-card__body">
-                  The next screen should let you inspect transcript quality, structured questions, follow-up threads, and replay readiness without searching across multiple tools.
+                  The next screen should keep transcript quality, structured questions, follow-up
+                  threads, and replay readiness aligned, not spread across unrelated tools.
                 </p>
+              </SectionPanel>
+              <SectionPanel className="workspace-note-card" variant="muted">
+                <span className="page-card__label">Queue habit</span>
+                <h2 className="page-card__title">Process imports before they go stale</h2>
+                <p className="page-card__body">
+                  Records waiting on retries or transcript cleanup should be reviewed quickly so
+                  their weak claims still map cleanly into the DFS interview practice loop.
+                </p>
+                <div className="page-card__actions">
+                  <button
+                    className="primary-button"
+                    onClick={() => setUploadOpen((current) => !current)}
+                    type="button"
+                  >
+                    {uploadOpen ? "Hide upload form" : "Upload interview"}
+                  </button>
+                </div>
               </SectionPanel>
             </aside>
           </div>

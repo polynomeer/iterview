@@ -2646,6 +2646,171 @@ button {
   text-align: left;
 }
 
+.practical-list-workspace-surface {
+  display: grid;
+  gap: 18px;
+  padding: clamp(22px, 3vw, 30px);
+  border-radius: 30px;
+  border: 1px solid color-mix(in srgb, #d8cab7 10%, transparent);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, #7fb0db 18%, transparent), transparent 48%),
+    linear-gradient(145deg, #12161b 0%, #171d24 44%, #0b0f14 100%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
+    0 26px 60px rgba(6, 10, 16, 0.28);
+}
+
+.practical-list-workspace-surface__header {
+  display: grid;
+  gap: 18px;
+}
+
+.practical-list-workspace-surface__intro {
+  display: grid;
+  gap: 10px;
+}
+
+.practical-list-workspace-surface__eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.practical-list-workspace-surface__breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  color: rgba(226, 232, 240, 0.62);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practical-list-workspace-surface__title {
+  margin: 0;
+  color: #f8fafc;
+  font-size: clamp(1.7rem, 2.5vw, 2.5rem);
+  line-height: 1.04;
+  max-width: 14ch;
+  text-wrap: balance;
+}
+
+.practical-list-workspace-surface__body {
+  margin: 0;
+  max-width: 72ch;
+  color: rgba(226, 232, 240, 0.78);
+  line-height: 1.7;
+}
+
+.practical-list-workspace-surface__stats {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.practical-list-workspace-surface__stat {
+  display: grid;
+  gap: 4px;
+  min-height: 92px;
+  padding: 14px 15px;
+  border-radius: 20px;
+  background: color-mix(in srgb, white 7%, transparent);
+  border: 1px solid color-mix(in srgb, white 10%, transparent);
+}
+
+.practical-list-workspace-surface__stat span {
+  color: rgba(226, 232, 240, 0.62);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practical-list-workspace-surface__stat strong {
+  color: #f8fafc;
+  font-size: 1.08rem;
+  line-height: 1.3;
+}
+
+.practical-list-workspace-surface__chips,
+.practical-import-form-card__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.practical-list-priority-board {
+  display: grid;
+  gap: 16px;
+}
+
+.practical-list-priority-board__steps,
+.practical-list-signal-list {
+  display: grid;
+  gap: 12px;
+}
+
+.practical-list-priority-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in srgb, var(--surface-soft) 90%, var(--surface-base));
+}
+
+.practical-list-priority-step__index {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-strong);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.practical-list-priority-step__body {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.practical-list-priority-step__body strong {
+  color: var(--text-main);
+  line-height: 1.35;
+}
+
+.practical-list-priority-step__body span {
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.practical-list-signal-list__item {
+  display: grid;
+  gap: 4px;
+  padding: 14px 15px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface-soft) 88%, var(--surface-base));
+  border: 1px solid var(--border-soft);
+}
+
+.practical-list-signal-list__item span {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practical-list-signal-list__item strong {
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
 .practical-list-layout,
 .practical-list-layout__hero,
 .practical-list-layout__workspace,
@@ -2669,6 +2834,11 @@ button {
 
 .practical-record-row__body {
   margin-top: 2px;
+}
+
+.practical-import-form-card,
+.practical-record-list-card {
+  gap: 16px;
 }
 
 .practical-lane-card--warning,
@@ -2897,6 +3067,11 @@ button {
 }
 
 @media (min-width: 1024px) {
+  .practical-list-priority-board {
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.85fr);
+    align-items: start;
+  }
+
   .practical-list-layout__hero {
     grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
     align-items: start;
@@ -2938,6 +3113,21 @@ button {
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 767px) {
+  .practical-list-priority-step {
+    grid-template-columns: 1fr;
+  }
+
+  .practical-list-priority-step__index {
+    width: 36px;
+    height: 36px;
+  }
+
+  .practical-list-workspace-surface__title {
+    max-width: 100%;
   }
 }
 
