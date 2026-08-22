@@ -5662,6 +5662,12 @@ button {
   margin-top: 24px;
 }
 
+.interview-session-workspace-surface__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .interview-session-workspace-surface__branch {
   display: flex;
   align-items: center;
@@ -5761,12 +5767,40 @@ button {
 .interview-session-answer-surface {
   display: grid;
   gap: 18px;
+  scroll-margin-top: 120px;
 }
 
 .interview-session-answer-surface__header {
   display: flex;
   justify-content: space-between;
   gap: 16px;
+}
+
+.interview-session-answer-surface__guidance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.interview-session-answer-surface__guidance-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.interview-session-answer-surface__guidance-card span {
+  color: rgba(148, 163, 184, 0.82);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-session-answer-surface__guidance-card strong {
+  color: #f8fafc;
+  line-height: 1.45;
 }
 
 .interview-session-answer-surface__meta {
@@ -6878,6 +6912,10 @@ button {
   }
 
   .interview-workspace-inspector__metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-session-answer-surface__guidance {
     grid-template-columns: 1fr;
   }
 }

@@ -136,6 +136,8 @@ export function InterviewSessionPage() {
     activeSession.summary.totalQuestions > 0
       ? Math.round((answeredQuestionCount / activeSession.summary.totalQuestions) * 100)
       : 0;
+  const weakFacetCount = activeSession.summary.weakFacetSummaries.length;
+  const skippedFacetCount = activeSession.summary.skippedFacetSummaries.length;
   const isFixedQuestionMode =
     activeSession.interviewMode === "full_coverage" ||
     activeSession.interviewMode === "quick_screen" ||
@@ -263,7 +265,7 @@ export function InterviewSessionPage() {
           <div className="interview-session-workspace-surface__header">
             <div className="interview-session-workspace-surface__intro">
               <div className="interview-session-workspace-surface__eyebrow-row">
-                <span className="page-card__label">Active branch</span>
+                <span className="page-card__label">Session branch</span>
                 <span className="question-status-badge question-status-badge--accent">{branchDepthLabel}</span>
               </div>
               <p className="interview-session-workspace-surface__breadcrumbs">
@@ -273,7 +275,7 @@ export function InterviewSessionPage() {
                 <span>/</span>
                 {currentQuestion.isFollowUp ? "Generated branch" : "Root branch"}
               </p>
-              <h2 className="interview-session-workspace-surface__title">Current branch focus</h2>
+              <h2 className="interview-session-workspace-surface__title">Defend the current branch before moving sideways</h2>
               <p className="interview-session-workspace-surface__body">
                 {currentQuestion.title}. Follow the current DFS branch until the claim is specific, evidence-backed,
                 and no longer vague enough to generate a shallow escape route.
@@ -293,12 +295,23 @@ export function InterviewSessionPage() {
                 <strong className="interview-session-workspace-surface__stat-value">{skippedQuestionCount}</strong>
               </article>
               <article className="interview-session-workspace-surface__stat">
-                <span className="interview-session-workspace-surface__stat-label">Remaining</span>
+                <span className="interview-session-workspace-surface__stat-label">Weak facets</span>
                 <strong className="interview-session-workspace-surface__stat-value">
-                  {activeSession.summary.remainingQuestions}
+                  {weakFacetCount}
                 </strong>
               </article>
             </div>
+          </div>
+          <div className="interview-session-workspace-surface__chips">
+            <span className="detail-chip">{currentQuestion.threadLabel ?? branchDepthLabel}</span>
+            <span className="detail-chip detail-chip--accent">{`Source ${currentQuestion.sourceLabel}`}</span>
+            {currentQuestion.contentLocale ? (
+              <span className="detail-chip">
+                {currentQuestion.contentLocale === "ko" ? t("common.generatedInKorean") : t("common.generatedInEnglish")}
+              </span>
+            ) : null}
+            {activeSession.startedAt ? <span className="detail-chip">{activeSession.startedAt}</span> : null}
+            {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
           <div className="interview-session-workspace-surface__branches" role="list">
             {activeSession.questions.slice(0, 4).map((question) => (
@@ -315,7 +328,13 @@ export function InterviewSessionPage() {
                 <span className="interview-session-workspace-surface__branch-step">{question.orderIndex + 1}</span>
                 <span className="interview-session-workspace-surface__branch-copy">
                   <strong>{question.title}</strong>
-                  <span>{`Source ${question.orderIndex + 1}`}</span>
+                  <span>
+                    {question.id === currentQuestion.id
+                      ? "Current node"
+                      : question.status === "answered"
+                        ? "Defended node"
+                        : "Queued node"}
+                  </span>
                 </span>
               </button>
             ))}
@@ -324,7 +343,7 @@ export function InterviewSessionPage() {
         <div className="interview-session-layout__hero">
           <div className="interview-session-layout__main">
             <section className="page-card interview-session-current">
-              <span className="page-card__label">{t("interview.sessionProgress")}</span>
+              <span className="page-card__label">Current defense node</span>
               <h2 className="page-card__title">{currentQuestion.title}</h2>
               {currentQuestion.bodyText ? (
                 <p className="page-card__body">{currentQuestion.bodyText}</p>
@@ -412,6 +431,23 @@ export function InterviewSessionPage() {
                   </div>
                 </div>
               </SectionPanel>
+              <SectionPanel className="workspace-note-card interview-session-side-panel" variant="muted">
+                <span className="page-card__label">Next branch</span>
+                <div className="interview-session-side-panel__list">
+                  <div className="interview-session-side-panel__item">
+                    <strong>{canAdvance ? "Advance is unlocked" : "Advance is blocked"}</strong>
+                    <span>
+                      {canAdvance
+                        ? "This branch has enough input to move deeper or sideways."
+                        : "Submit or skip this node before the session can reveal the next follow-up."}
+                    </span>
+                  </div>
+                  <div className="interview-session-side-panel__item">
+                    <strong>Weak facet watch</strong>
+                    <span>{weakFacetCount > 0 ? `${weakFacetCount} weak facets still need defense.` : "No weak facets are currently flagged."}</span>
+                  </div>
+                </div>
+              </SectionPanel>
               {isFullCoverage ? (
                 <SectionPanel className="workspace-note-card" variant="muted">
                   <span className="page-card__label">Coverage pass</span>
@@ -438,6 +474,16 @@ export function InterviewSessionPage() {
               <p className="page-card__body">
                 Answer, skip, or advance deliberately. This panel should feel like the execution surface for the branch you are currently defending.
               </p>
+              <div className="interview-session-answer-surface__guidance">
+                <article className="interview-session-answer-surface__guidance-card">
+                  <span>Branch goal</span>
+                  <strong>Make the next follow-up narrower than this one.</strong>
+                </article>
+                <article className="interview-session-answer-surface__guidance-card">
+                  <span>Evidence rule</span>
+                  <strong>Use one concrete resume fact, number, or constraint.</strong>
+                </article>
+              </div>
               <AnswerTextEditor
                 disabled={submitMutation.isPending || advanceMutation.isPending || skipMutation.isPending}
                 onChange={setDraft}
