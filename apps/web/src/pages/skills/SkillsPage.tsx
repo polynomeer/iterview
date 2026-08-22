@@ -28,6 +28,19 @@ export function SkillsPage() {
   const gapUnsupported = gapQuery.error instanceof ApiClientError && gapQuery.error.status === 404;
   const fallbackRadarItems = homeFallbackQuery.data?.skillRadarPreview ?? [];
   const fallbackGapItems = homeFallbackQuery.data?.skillGapPreview ?? [];
+  const radarCategoryCount = radarQuery.data?.categories.length ?? 0;
+  const trackedProgressCount = progressQuery.data?.items.length ?? 0;
+  const topGapItem = gapQuery.data?.items[0] ?? null;
+  const weakestProgressItem =
+    progressQuery.data?.items.reduce((weakest, item) => {
+      if (!weakest) {
+        return item;
+      }
+
+      const weakestWeakCount = Number.parseInt(weakest.weakQuestionCountLabel, 10) || 0;
+      const itemWeakCount = Number.parseInt(item.weakQuestionCountLabel, 10) || 0;
+      return itemWeakCount > weakestWeakCount ? item : weakest;
+    }, progressQuery.data.items[0]) ?? null;
 
   return (
     <PageContainer
@@ -81,33 +94,132 @@ export function SkillsPage() {
       ((radarQuery.data && radarQuery.data.categories.length > 0) ||
         (gapQuery.data && gapQuery.data.items.length > 0) ||
         (progressQuery.data && progressQuery.data.items.length > 0)) ? (
-        <div className="page-stack">
-          <section className="page-card">
-            <div className="section-heading">
-              <div>
-                <p className="section-heading__eyebrow">Readiness</p>
-                <h2 className="page-card__title">Current interview readiness snapshot</h2>
+        <div className="page-stack skills-workspace">
+          <section className="skills-workspace-surface">
+            <div className="skills-workspace-surface__header">
+              <div className="skills-workspace-surface__intro">
+                <div className="skills-workspace-surface__eyebrow-row">
+                  <p className="skills-workspace-surface__breadcrumbs">
+                    <span>Skills</span>
+                    <span>/</span>
+                    <span>Readiness workspace</span>
+                  </p>
+                  <span className="question-status-badge question-status-badge--accent">
+                    Practice companion
+                  </span>
+                </div>
+                <h2 className="skills-workspace-surface__title">
+                  Turn raw skill signals into the next practice target
+                </h2>
+                <p className="skills-workspace-surface__body">
+                  Radar, gap analysis, and progress only matter if they narrow what you should
+                  defend next in the interview DFS loop.
+                </p>
+              </div>
+              <div className="skills-workspace-surface__stats">
+                <article className="skills-workspace-surface__stat">
+                  <span>Radar updated</span>
+                  <strong>{radarQuery.data?.updatedAtLabel ?? "-"}</strong>
+                </article>
+                <article className="skills-workspace-surface__stat">
+                  <span>Radar categories</span>
+                  <strong>{radarCategoryCount}</strong>
+                </article>
+                <article className="skills-workspace-surface__stat">
+                  <span>Tracked progress</span>
+                  <strong>{trackedProgressCount}</strong>
+                </article>
+                <article className="skills-workspace-surface__stat">
+                  <span>Gap items</span>
+                  <strong>{gapQuery.data?.items.length ?? 0}</strong>
+                </article>
               </div>
             </div>
-            <div className="stats-grid">
-              <MetricCard
-                helperText={radarQuery.data?.updatedAtLabel ?? undefined}
-                label="Radar updated"
-                tone="accent"
-                value={radarQuery.data?.updatedAtLabel ?? "-"}
-              />
-              <MetricCard
-                label="Radar categories"
-                tone="muted"
-                value={String(radarQuery.data?.categories.length ?? 0)}
-              />
-              <MetricCard
-                label="Tracked progress"
-                tone="muted"
-                value={String(progressQuery.data?.items.length ?? 0)}
-              />
+            <div className="skills-workspace-surface__chips">
+              {topGapItem ? <span className="detail-chip">Top gap: {topGapItem.label}</span> : null}
+              {weakestProgressItem ? (
+                <span className="detail-chip">
+                  Weak-question load: {weakestProgressItem.label}
+                </span>
+              ) : null}
+              <span className="detail-chip detail-chip--accent">
+                Goal: choose one branch to practice next
+              </span>
             </div>
           </section>
+
+          <section className="skills-priority-board">
+            <article className="page-card skills-priority-board__main">
+              <div className="section-heading">
+                <div>
+                  <p className="section-heading__eyebrow">Priority board</p>
+                  <h2 className="page-card__title">What this signal set should drive</h2>
+                </div>
+              </div>
+              <div className="skills-priority-list">
+                <article className="skills-priority-item">
+                  <div className="skills-priority-item__rank">1</div>
+                  <div className="skills-priority-item__body">
+                    <strong>Find the weakest defendable branch</strong>
+                    <span>
+                      Use gap and weak-question load together, not as separate dashboards.
+                    </span>
+                  </div>
+                </article>
+                <article className="skills-priority-item">
+                  <div className="skills-priority-item__rank">2</div>
+                  <div className="skills-priority-item__body">
+                    <strong>Map it back to real interview evidence</strong>
+                    <span>
+                      Prefer skills that already produced weak answers or unstable follow-ups.
+                    </span>
+                  </div>
+                </article>
+                <article className="skills-priority-item">
+                  <div className="skills-priority-item__rank">3</div>
+                  <div className="skills-priority-item__body">
+                    <strong>Convert it into the next practice run</strong>
+                    <span>
+                      This page should shorten the path to actual question practice, not become an
+                      analytics dead end.
+                    </span>
+                  </div>
+                </article>
+              </div>
+            </article>
+
+            <article className="page-card page-card--muted skills-priority-board__side">
+              <div className="section-heading">
+                <div>
+                  <p className="section-heading__eyebrow">Current focus</p>
+                  <h2 className="page-card__title">Most actionable signal</h2>
+                </div>
+              </div>
+              <div className="skills-signal-list">
+                <div className="skills-signal-list__item">
+                  <span>Top gap</span>
+                  <strong>
+                    {topGapItem
+                      ? `${topGapItem.label} · ${topGapItem.gapScoreLabel}`
+                      : "No explicit gap item is available yet."}
+                  </strong>
+                </div>
+                <div className="skills-signal-list__item">
+                  <span>Weak-question load</span>
+                  <strong>
+                    {weakestProgressItem
+                      ? `${weakestProgressItem.label} · weak questions ${weakestProgressItem.weakQuestionCountLabel}`
+                      : "No answered progress snapshot is available yet."}
+                  </strong>
+                </div>
+                <div className="skills-signal-list__item">
+                  <span>Next action</span>
+                  <strong>Open practice and reinforce one weak branch before broadening coverage.</strong>
+                </div>
+              </div>
+            </article>
+          </section>
+
           {radarQuery.data ? <SkillRadarChart radar={radarQuery.data} /> : null}
           {radarQuery.data ? <SkillCategorySummaryCard radar={radarQuery.data} /> : null}
           {gapQuery.data ? <GapAnalysisSection gapModel={gapQuery.data} /> : null}
