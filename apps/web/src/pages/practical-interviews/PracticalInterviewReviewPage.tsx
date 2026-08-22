@@ -738,6 +738,10 @@ export function PracticalInterviewReviewPage() {
     review.questionSummaries.find((item) => item.id === selectedQuestionId) ?? null;
   const selectedThread =
     review.followUpThreads.find((item) => item.id === selectedThreadRootQuestionId) ?? null;
+  const laneNeedsReviewTotal = review.laneItems.reduce(
+    (count, lane) => count + lane.needsReviewCount,
+    0,
+  );
   const playback = review.playback ?? transcript.playback ?? questions.playback ?? null;
   const activePlaybackSegmentSequence = useMemo(
     () =>
@@ -1012,117 +1016,145 @@ export function PracticalInterviewReviewPage() {
     >
       <div className="page-stack practical-review-layout">
         <div className="practical-review-layout__hero">
-          <section className="page-card practical-review-layout__overview">
-          <span className="page-card__label">Review overview</span>
-          <h2 className="page-card__title">
-            {review.overallSummary ?? detail.overallSummary ?? detail.title}
-          </h2>
-          <p className="page-card__body">
-            {detail.aiEnrichedSummary ??
-              detail.deterministicSummary ??
-              "Use the lane dashboard below to review transcript quality, structured questions, and replay readiness."}
-          </p>
-          <div className="chip-list">
-            <span className="question-status-badge question-status-badge--accent">
-              {detail.structuringStageLabel}
-            </span>
-            <span
-              className={`question-status-badge ${
-                review.requiresConfirmation
-                  ? "question-status-badge--warning"
-                  : "question-status-badge--positive"
-              }`}
-            >
-              {review.requiresConfirmation ? "Confirmation required" : "Ready to confirm"}
-            </span>
-            {detail.confirmedAtLabel ? (
-              <span className="question-status-badge question-status-badge--neutral">
-                Confirmed {detail.confirmedAtLabel}
+          <section className="practical-review-workspace-surface practical-review-layout__overview">
+            <div className="practical-review-workspace-surface__header">
+              <div className="practical-review-workspace-surface__intro">
+                <div className="practical-review-workspace-surface__eyebrow-row">
+                  <p className="practical-review-workspace-surface__breadcrumbs">
+                    <span>Practical interviews</span>
+                    <span>/</span>
+                    <span>Review workspace</span>
+                  </p>
+                  <span className="question-status-badge question-status-badge--accent">
+                    {detail.structuringStageLabel}
+                  </span>
+                </div>
+                <span className="page-card__label">Review overview</span>
+                <h2 className="practical-review-workspace-surface__title">
+                  {review.overallSummary ?? detail.overallSummary ?? detail.title}
+                </h2>
+                <p className="practical-review-workspace-surface__body">
+                  {detail.aiEnrichedSummary ??
+                    detail.deterministicSummary ??
+                    "Use the lane dashboard below to review transcript quality, structured questions, and replay readiness."}
+                </p>
+              </div>
+              <div className="practical-review-workspace-surface__stats">
+                <article className="practical-review-workspace-surface__stat">
+                  <span>Segments</span>
+                  <strong>{review.totalSegmentCount}</strong>
+                </article>
+                <article className="practical-review-workspace-surface__stat">
+                  <span>Questions</span>
+                  <strong>{review.totalQuestionCount}</strong>
+                </article>
+                <article className="practical-review-workspace-surface__stat">
+                  <span>Lanes needing review</span>
+                  <strong>{laneNeedsReviewTotal}</strong>
+                </article>
+                <article className="practical-review-workspace-surface__stat">
+                  <span>Weak answers</span>
+                  <strong>{review.weakAnswerCount}</strong>
+                </article>
+              </div>
+            </div>
+            <div className="practical-review-workspace-surface__chips">
+              <span
+                className={`question-status-badge ${
+                  review.requiresConfirmation
+                    ? "question-status-badge--warning"
+                    : "question-status-badge--positive"
+                }`}
+              >
+                {review.requiresConfirmation ? "Confirmation required" : "Ready to confirm"}
               </span>
-            ) : null}
-          </div>
-          <div className="stats-grid">
-            <MetricCard label="Segments" value={String(review.totalSegmentCount)} />
-            <MetricCard label="Questions" value={String(review.totalQuestionCount)} />
-            <MetricCard label="Changed questions" tone="accent" value={String(review.changedQuestionCount)} />
-            <MetricCard label="Weak answers" tone="muted" value={String(review.weakAnswerCount)} />
-            <MetricCard label="Follow-ups" tone="muted" value={String(review.followUpQuestionCount)} />
-          </div>
-          {(updateReviewMutation.isSuccess || confirmMutation.isSuccess) && (
-            <FeedbackNotice
-              message={
-                confirmMutation.isSuccess
-                  ? "The practical interview review was confirmed."
-                  : "Transcript edits were applied to the practical interview review."
-              }
-              tone="success"
-            />
-          )}
-          {(updateReviewMutation.isError || confirmMutation.isError || createReplayMutation.isError) && (
-            <ErrorStateCard
-              body={
-                updateReviewMutation.error instanceof Error
-                  ? updateReviewMutation.error.message
-                  : confirmMutation.error instanceof Error
-                    ? confirmMutation.error.message
-                    : createReplayMutation.error instanceof Error
-                      ? createReplayMutation.error.message
-                      : "The requested review action failed."
-              }
-              details={getErrorDetails(
-                updateReviewMutation.error ?? confirmMutation.error ?? createReplayMutation.error,
-              )}
-              title="Unable to complete the review action"
-            />
-          )}
-          <div className="page-card__actions">
-            <button
-              className="primary-button"
-              onClick={() =>
-                applyTarget(
-                  review.actionRecommendations.primaryActionTarget,
-                  review.actionRecommendations.primaryActionTargetPayload,
-                )
-              }
-              type="button"
-            >
-              {review.actionRecommendations.primaryActionLabel ?? "Continue review"}
-            </button>
-            <button
-              className="secondary-button"
-              disabled={dirtyEditCount > 0 || !review.actionRecommendations.canConfirm || confirmMutation.isPending}
-              onClick={() => {
-                void handleConfirm();
-              }}
-              type="button"
-            >
-              {confirmMutation.isPending ? "Confirming..." : "Confirm review"}
-            </button>
-            {review.actionRecommendations.canReplay && review.replayLaunchPreset ? (
+              <span className="detail-chip">Changed questions {review.changedQuestionCount}</span>
+              <span className="detail-chip">Follow-ups {review.followUpQuestionCount}</span>
+              {detail.confirmedAtLabel ? (
+                <span className="question-status-badge question-status-badge--neutral">
+                  Confirmed {detail.confirmedAtLabel}
+                </span>
+              ) : null}
+            </div>
+            {(updateReviewMutation.isSuccess || confirmMutation.isSuccess) && (
+              <FeedbackNotice
+                message={
+                  confirmMutation.isSuccess
+                    ? "The practical interview review was confirmed."
+                    : "Transcript edits were applied to the practical interview review."
+                }
+                tone="success"
+              />
+            )}
+            {(updateReviewMutation.isError || confirmMutation.isError || createReplayMutation.isError) && (
+              <ErrorStateCard
+                body={
+                  updateReviewMutation.error instanceof Error
+                    ? updateReviewMutation.error.message
+                    : confirmMutation.error instanceof Error
+                      ? confirmMutation.error.message
+                      : createReplayMutation.error instanceof Error
+                        ? createReplayMutation.error.message
+                        : "The requested review action failed."
+                }
+                details={getErrorDetails(
+                  updateReviewMutation.error ?? confirmMutation.error ?? createReplayMutation.error,
+                )}
+                title="Unable to complete the review action"
+              />
+            )}
+            <div className="page-card__actions">
               <button
-                className="secondary-button"
-                onClick={() => openReplayLauncher(review.replayLaunchPreset)}
+                className="primary-button"
+                onClick={() =>
+                  applyTarget(
+                    review.actionRecommendations.primaryActionTarget,
+                    review.actionRecommendations.primaryActionTargetPayload,
+                  )
+                }
                 type="button"
               >
-                {review.replayLaunchPreset.launchButtonLabel}
+                {review.actionRecommendations.primaryActionLabel ?? "Continue review"}
               </button>
-            ) : null}
-          </div>
-          {!review.actionRecommendations.canConfirm ? (
-            <div className="stack-list">
-              {review.actionRecommendations.blockingReasonDetails.map((detail) => (
-                <article className="list-item-card" key={detail.id}>
-                  <div className="list-item-card__content">
-                    <div className="list-item-card__meta">
-                      <span>{detail.label}</span>
-                      <span>{detail.severity}</span>
-                    </div>
-                    <p className="list-item-card__body">{detail.description}</p>
-                  </div>
-                </article>
-              ))}
+              <button
+                className="secondary-button"
+                disabled={
+                  dirtyEditCount > 0 ||
+                  !review.actionRecommendations.canConfirm ||
+                  confirmMutation.isPending
+                }
+                onClick={() => {
+                  void handleConfirm();
+                }}
+                type="button"
+              >
+                {confirmMutation.isPending ? "Confirming..." : "Confirm review"}
+              </button>
+              {review.actionRecommendations.canReplay && review.replayLaunchPreset ? (
+                <button
+                  className="secondary-button"
+                  onClick={() => openReplayLauncher(review.replayLaunchPreset)}
+                  type="button"
+                >
+                  {review.replayLaunchPreset.launchButtonLabel}
+                </button>
+              ) : null}
             </div>
-          ) : null}
+            {!review.actionRecommendations.canConfirm ? (
+              <div className="stack-list">
+                {review.actionRecommendations.blockingReasonDetails.map((detail) => (
+                  <article className="list-item-card" key={detail.id}>
+                    <div className="list-item-card__content">
+                      <div className="list-item-card__meta">
+                        <span>{detail.label}</span>
+                        <span>{detail.severity}</span>
+                      </div>
+                      <p className="list-item-card__body">{detail.description}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : null}
           </section>
 
           <div className="practical-review-layout__hero-side">
@@ -1284,8 +1316,17 @@ export function PracticalInterviewReviewPage() {
           />
         ) : null}
 
-        <section className="page-card">
-          <div className="page-card__actions">
+        <section className="page-card practical-review-tabs-card">
+          <div className="section-heading">
+            <div>
+              <span className="page-card__label">Lane switcher</span>
+              <h2 className="page-card__title">Move through transcript, question, and thread review</h2>
+            </div>
+            <p className="page-card__body practical-review-tabs-card__summary">
+              Keep the active lane focused while preserving replay context and selected evidence.
+            </p>
+          </div>
+          <div className="page-card__actions practical-review-tabs-card__actions">
             {REVIEW_TABS.map((tab) => (
               <button
                 className={activeTab === tab ? "primary-button" : "secondary-button"}
