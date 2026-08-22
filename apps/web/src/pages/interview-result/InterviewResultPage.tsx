@@ -102,6 +102,18 @@ export function InterviewResultPage() {
     );
   }
 
+  const answeredCount = getAnsweredQuestionCount(session);
+  const skippedCount = session.summary.skippedQuestions;
+  const averageScoreLabel = session.summary.averageScoreLabel ?? "-";
+  const weakFacetCount =
+    shouldRenderFullCoverageResult && coverageQuery.data
+      ? coverageQuery.data.weakFacetSummaries.length
+      : 0;
+  const skippedFacetCount =
+    shouldRenderFullCoverageResult && coverageQuery.data
+      ? coverageQuery.data.skippedFacetSummaries.length
+      : 0;
+
   return (
     <PageContainer
       description={t("result.pageDescription")}
@@ -109,6 +121,52 @@ export function InterviewResultPage() {
       title={t("result.pageTitle")}
     >
       <div className="interview-result-layout">
+        <section className="page-card interview-result-workspace-surface">
+          <div className="interview-result-workspace-surface__header">
+            <div className="interview-result-workspace-surface__intro">
+              <div className="interview-result-workspace-surface__eyebrow-row">
+                <span className="page-card__label">Result workspace</span>
+                <span className="question-status-badge question-status-badge--accent">Branch review</span>
+              </div>
+              <p className="interview-result-workspace-surface__breadcrumbs">
+                Session recap
+                <span>/</span>
+                Weak branch recovery
+                <span>/</span>
+                Next DFS pass
+              </p>
+              <h2 className="interview-result-workspace-surface__title">Review what actually held up under pressure</h2>
+              <p className="interview-result-workspace-surface__body">
+                This result is not the end of the flow. Use it to identify which branches were defendable, which evidence
+                stayed shallow, and what the next pass must revisit.
+              </p>
+            </div>
+            <div className="interview-result-workspace-surface__stats">
+              <article className="interview-result-workspace-surface__stat">
+                <span>Answered</span>
+                <strong>{answeredCount}</strong>
+              </article>
+              <article className="interview-result-workspace-surface__stat">
+                <span>Skipped</span>
+                <strong>{skippedCount}</strong>
+              </article>
+              <article className="interview-result-workspace-surface__stat">
+                <span>Average score</span>
+                <strong>{averageScoreLabel}</strong>
+              </article>
+              <article className="interview-result-workspace-surface__stat">
+                <span>Weak branches</span>
+                <strong>{weakFacetCount}</strong>
+              </article>
+            </div>
+          </div>
+          <div className="interview-result-workspace-surface__chips">
+            <span className="detail-chip">{session.interviewModeLabel}</span>
+            <span className="detail-chip detail-chip--accent">{`Session ${sessionId}`}</span>
+            {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
+            {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
+          </div>
+        </section>
         <div className="interview-result-layout__hero-grid">
           <section className="page-card interview-result-layout__hero">
             <span className="page-card__label">{t("result.summaryLabel")}</span>
@@ -116,15 +174,15 @@ export function InterviewResultPage() {
             <p className="page-card__body">{t("result.summaryBody")}</p>
             <div className="stats-grid">
               <MetricCard label={t("result.questions")} tone="muted" value={String(session.summary.totalQuestions)} />
-              <MetricCard label={t("result.answered")} tone="accent" value={String(getAnsweredQuestionCount(session))} />
-              <MetricCard label={t("result.skipped")} tone="muted" value={String(session.summary.skippedQuestions)} />
+              <MetricCard label={t("result.answered")} tone="accent" value={String(answeredCount)} />
+              <MetricCard label={t("result.skipped")} tone="muted" value={String(skippedCount)} />
               <MetricCard label={t("result.status")} tone="muted" value={session.status} />
-              <MetricCard label={t("result.averageScore")} tone="muted" value={session.summary.averageScoreLabel ?? "-"} />
+              <MetricCard label={t("result.averageScore")} tone="muted" value={averageScoreLabel} />
             </div>
           </section>
           <SectionPanel className="workspace-note-card workspace-note-card--accent interview-result-layout__brief" variant="muted">
             <span className="page-card__label">Result review</span>
-            <h2 className="page-card__title">Use the session result as evidence of what you can defend under pressure</h2>
+            <h2 className="page-card__title">Use this review to choose the next branch, not just to read the score</h2>
             <p className="page-card__body">
               Strong sessions should reveal which resume claims were actually defended, which branches stayed shallow, and where the next DFS pass should continue.
             </p>
@@ -212,6 +270,31 @@ export function InterviewResultPage() {
               <p className="page-card__body">
                 Re-run weak branches, revisit skipped evidence, and keep the next session scoped enough that you can tell whether the answer improved or only became longer.
               </p>
+            </SectionPanel>
+            <SectionPanel className="workspace-note-card interview-result-layout__next-rail" variant="muted">
+              <span className="page-card__label">Recovery plan</span>
+              <div className="interview-result-layout__next-list">
+                <div className="interview-result-layout__next-item">
+                  <strong>Weak branch recovery</strong>
+                  <span>
+                    {weakFacetCount > 0
+                      ? `${weakFacetCount} weak branches still need stronger evidence.`
+                      : "No weak branches are flagged in this result."}
+                  </span>
+                </div>
+                <div className="interview-result-layout__next-item">
+                  <strong>Skipped facet recovery</strong>
+                  <span>
+                    {skippedFacetCount > 0
+                      ? `${skippedFacetCount} skipped facets should return in the next session.`
+                      : "No skipped facets are currently waiting for recovery."}
+                  </span>
+                </div>
+                <div className="interview-result-layout__next-item">
+                  <strong>Scope rule</strong>
+                  <span>Keep the next pass narrow enough that branch depth improves, not just answer length.</span>
+                </div>
+              </div>
             </SectionPanel>
             <section className="page-card interview-result-layout__actions">
               <div className="page-card__actions">
