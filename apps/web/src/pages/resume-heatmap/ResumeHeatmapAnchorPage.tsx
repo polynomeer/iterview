@@ -260,7 +260,7 @@ export function ResumeHeatmapAnchorPage() {
       eyebrow="Resume Heatmap"
       title={selectedAnchor.label}
     >
-      <div className="page-stack">
+      <div className="page-stack resume-heatmap-anchor-workspace">
         {createLinkMutation.error instanceof Error ? (
           <FeedbackNotice
             details={getErrorDetails(createLinkMutation.error)}
@@ -276,25 +276,120 @@ export function ResumeHeatmapAnchorPage() {
           />
         ) : null}
 
-        <section className="page-card page-card--muted">
-          <span className="page-card__label">Detailed anchor review</span>
-          <h2 className="page-card__title">{anchorPreview?.title ?? selectedAnchor.label}</h2>
-          {anchorPreview?.description ? (
-            <div className="resume-heatmap-document__body">
-              {splitDocumentBlocks(anchorPreview.description).map((block, index) => (
-                <p className="resume-heatmap-document__paragraph" key={`${selectedAnchor.id}-${index}`}>
-                  {block}
+        <section className="resume-heatmap-anchor-workspace-surface">
+          <div className="resume-heatmap-anchor-workspace-surface__header">
+            <div className="resume-heatmap-anchor-workspace-surface__intro">
+              <div className="resume-heatmap-anchor-workspace-surface__eyebrow-row">
+                <p className="resume-heatmap-anchor-workspace-surface__breadcrumbs">
+                  <span>Resume heatmap</span>
+                  <span>/</span>
+                  <span>{selectedAnchor.anchorTypeLabel}</span>
+                  <span>/</span>
+                  <span>Repair workspace</span>
                 </p>
-              ))}
+                <span className="question-status-badge question-status-badge--neutral">
+                  Heat {selectedAnchor.heatScoreLabel}
+                </span>
+              </div>
+              <h2 className="resume-heatmap-anchor-workspace-surface__title">
+                {anchorPreview?.title ?? selectedAnchor.label}
+              </h2>
+              <p className="resume-heatmap-anchor-workspace-surface__body">
+                Detailed anchor review is where one resume claim is decomposed into routed
+                highlights, linked questions, and manual remaps until the source-of-truth is
+                precise enough to survive DFS-style follow-up questioning.
+              </p>
             </div>
-          ) : null}
-          <div className="resume-heatmap-inline-summary">
-            <span className="detail-chip">{selectedAnchor.anchorTypeLabel}</span>
-            <span className="detail-chip">Heat {selectedAnchor.heatScoreLabel}</span>
-            <span className="detail-chip">Questions {selectedAnchor.directQuestionCount}</span>
-            <span className="detail-chip">Follow-ups {selectedAnchor.followUpCount}</span>
-            <span className="detail-chip">Weak {selectedAnchor.weaknessCount}</span>
+            <div className="resume-heatmap-anchor-workspace-surface__stats">
+              <article className="resume-heatmap-anchor-workspace-surface__stat">
+                <span>Questions</span>
+                <strong>{selectedAnchor.directQuestionCount}</strong>
+              </article>
+              <article className="resume-heatmap-anchor-workspace-surface__stat">
+                <span>Follow-ups</span>
+                <strong>{selectedAnchor.followUpCount}</strong>
+              </article>
+              <article className="resume-heatmap-anchor-workspace-surface__stat">
+                <span>Weak answers</span>
+                <strong>{selectedAnchor.weaknessCount}</strong>
+              </article>
+              <article className="resume-heatmap-anchor-workspace-surface__stat">
+                <span>Highlights</span>
+                <strong>{overlayTargets.length}</strong>
+              </article>
+            </div>
           </div>
+          <div className="resume-heatmap-anchor-workspace-surface__chips">
+            <span className="detail-chip">{selectedAnchor.anchorTypeLabel}</span>
+            <span className="detail-chip">
+              {selectedOverlayTarget
+                ? `Focused target: ${selectedOverlayTarget.targetTypeLabel}`
+                : "Focused target: anchor-level review"}
+            </span>
+            <span className="detail-chip">
+              {displayedQuestions.length} linked questions in current scope
+            </span>
+          </div>
+        </section>
+
+        <section className="resume-heatmap-anchor-plan">
+          <article className="page-card page-card--muted">
+            <span className="page-card__label">Detailed anchor review</span>
+            <h2 className="page-card__title">{anchorPreview?.title ?? selectedAnchor.label}</h2>
+            {anchorPreview?.description ? (
+              <div className="resume-heatmap-document__body">
+                {splitDocumentBlocks(anchorPreview.description).map((block, index) => (
+                  <p
+                    className="resume-heatmap-document__paragraph"
+                    key={`${selectedAnchor.id}-${index}`}
+                  >
+                    {block}
+                  </p>
+                ))}
+              </div>
+            ) : null}
+            <div className="resume-heatmap-inline-summary">
+              <span className="detail-chip">{selectedAnchor.anchorTypeLabel}</span>
+              <span className="detail-chip">Heat {selectedAnchor.heatScoreLabel}</span>
+              <span className="detail-chip">Questions {selectedAnchor.directQuestionCount}</span>
+              <span className="detail-chip">Follow-ups {selectedAnchor.followUpCount}</span>
+              <span className="detail-chip">Weak {selectedAnchor.weaknessCount}</span>
+            </div>
+          </article>
+
+          <article className="page-card resume-heatmap-anchor-plan__signals">
+            <div className="section-heading">
+              <div>
+                <p className="section-heading__eyebrow">Repair plan</p>
+                <h2 className="page-card__title">What to fix on this anchor</h2>
+              </div>
+            </div>
+            <div className="resume-heatmap-signal-list">
+              <div className="resume-heatmap-signal-list__item">
+                <span>Primary risk</span>
+                <strong>
+                  {selectedAnchor.weaknessCount > 0
+                    ? "Weak answers indicate the current source-of-truth is not specific enough."
+                    : "No weak answers in this slice, so verify breadth and consistency instead."}
+                </strong>
+              </div>
+              <div className="resume-heatmap-signal-list__item">
+                <span>Follow-up depth</span>
+                <strong>
+                  {selectedAnchor.followUpCount} chained follow-ups were already observed on this
+                  claim.
+                </strong>
+              </div>
+              <div className="resume-heatmap-signal-list__item">
+                <span>Current focus</span>
+                <strong>
+                  {selectedOverlayTarget
+                    ? selectedOverlayTarget.textSnippet ?? selectedOverlayTarget.fieldPath ?? "Selected highlight"
+                    : "Select a routed highlight to narrow the claim to sentence or keyword level."}
+                </strong>
+              </div>
+            </div>
+          </article>
         </section>
 
         {overlayTargets.length > 0 ? (

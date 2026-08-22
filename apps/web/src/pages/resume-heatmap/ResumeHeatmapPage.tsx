@@ -9,7 +9,6 @@ import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
-import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import type { ResumeQuestionHeatmapFiltersDto } from "../../shared/types/resumeHeatmap";
 import {
@@ -339,6 +338,32 @@ export function ResumeHeatmapPage() {
     return [...groups.entries()];
   }, [sections]);
 
+  const prioritySections = useMemo(
+    () =>
+      [...sections]
+        .sort((left, right) => {
+          const leftScore =
+            left.weaknessCount * 5 +
+            left.followUpCount * 3 +
+            left.pressureQuestionCount * 2 +
+            left.directQuestionCount;
+          const rightScore =
+            right.weaknessCount * 5 +
+            right.followUpCount * 3 +
+            right.pressureQuestionCount * 2 +
+            right.directQuestionCount;
+
+          return rightScore - leftScore;
+        })
+        .slice(0, 3),
+    [sections],
+  );
+
+  const overlayTargetCount = useMemo(
+    () => sections.reduce((count, section) => count + section.overlayTargets.length, 0),
+    [sections],
+  );
+
   function updateFilters(nextFilters: ResumeQuestionHeatmapFiltersDto) {
     const next = writeFiltersToSearchParams(searchParams, nextFilters);
     next.delete("selectedAnchor");
@@ -454,59 +479,151 @@ export function ResumeHeatmapPage() {
       eyebrow="Resume Heatmap"
       title={versionQuery.data.fileNameLabel}
     >
-      <div className="page-stack">
-        <section className="page-card">
-          <div className="section-heading">
-            <div>
-              <p className="section-heading__eyebrow">Resume-centered review</p>
-              <h2 className="page-card__title">Interview heatmap overview</h2>
+      <div className="page-stack resume-heatmap-workspace">
+        <section className="resume-heatmap-workspace-surface">
+          <div className="resume-heatmap-workspace-surface__header">
+            <div className="resume-heatmap-workspace-surface__intro">
+              <div className="resume-heatmap-workspace-surface__eyebrow-row">
+                <p className="resume-heatmap-workspace-surface__breadcrumbs">
+                  <span>Resume intelligence</span>
+                  <span>/</span>
+                  <span>Question routing</span>
+                </p>
+                <span className="question-status-badge question-status-badge--neutral">
+                  Parsing: {versionQuery.data.parsingStatusLabel}
+                </span>
+              </div>
+              <h2 className="resume-heatmap-workspace-surface__title">
+                Interview heatmap overview
+              </h2>
+              <p className="resume-heatmap-workspace-surface__body">
+                Resume heatmap is not a decorative chart. It is the repair queue for source-of-truth
+                claims that triggered repeated follow-ups, weak answers, and pressure questions.
+              </p>
             </div>
-            <div className="resume-status-badges">
-              <span className="question-status-badge question-status-badge--neutral">
-                Parsing: {versionQuery.data.parsingStatusLabel}
-              </span>
+            <div className="resume-heatmap-workspace-surface__stats">
+              <article className="resume-heatmap-workspace-surface__stat">
+                <span>Repair targets</span>
+                <strong>{heatmapQuery.data.summary.totalAnchors}</strong>
+              </article>
+              <article className="resume-heatmap-workspace-surface__stat">
+                <span>Linked questions</span>
+                <strong>{heatmapQuery.data.summary.totalLinkedQuestions}</strong>
+              </article>
+              <article className="resume-heatmap-workspace-surface__stat">
+                <span>Weak answers</span>
+                <strong>{heatmapQuery.data.filterSummary.weakQuestionCount}</strong>
+              </article>
+              <article className="resume-heatmap-workspace-surface__stat">
+                <span>Routed highlights</span>
+                <strong>{overlayTargetCount}</strong>
+              </article>
             </div>
           </div>
-          <p className="page-card__body">
-            The original resume text stays unchanged. Highlighting and question mapping are additive review layers over this immutable resume version.
-          </p>
-          <div className="stats-grid">
-            <MetricCard label="Anchors" value={String(heatmapQuery.data.summary.totalAnchors)} />
-            <MetricCard
-              label="Linked questions"
-              tone="accent"
-              value={String(heatmapQuery.data.summary.totalLinkedQuestions)}
-            />
-            <MetricCard
-              label="Weak questions"
-              tone="muted"
-              value={String(heatmapQuery.data.filterSummary.weakQuestionCount)}
-            />
-            <MetricCard
-              label="Pressure"
-              tone="muted"
-              value={String(heatmapQuery.data.filterSummary.pressureQuestionCount)}
-            />
-            <MetricCard
-              label="Follow-ups"
-              tone="muted"
-              value={String(heatmapQuery.data.filterSummary.followUpQuestionCount)}
-            />
-            <MetricCard
-              label="Hottest anchor"
-              tone="muted"
-              value={heatmapQuery.data.summary.hottestAnchorLabel ?? "Not available"}
-            />
+          <div className="resume-heatmap-workspace-surface__chips">
+            <span className="detail-chip">
+              Weakest anchor: {heatmapQuery.data.summary.weakestAnchorLabel ?? "Not available"}
+            </span>
+            <span className="detail-chip">
+              Most follow-ups:{" "}
+              {heatmapQuery.data.summary.mostFollowedUpAnchorLabel ?? "Not available"}
+            </span>
+            <span className="detail-chip">
+              Hottest anchor: {heatmapQuery.data.summary.hottestAnchorLabel ?? "Not available"}
+            </span>
           </div>
+        </section>
+
+        <section className="resume-heatmap-priority-board">
+          <article className="page-card resume-heatmap-priority-board__main">
+            <div className="section-heading">
+              <div>
+                <p className="section-heading__eyebrow">Repair queue</p>
+                <h3 className="page-card__title">Start with the most fragile claims</h3>
+              </div>
+            </div>
+            <div className="resume-heatmap-priority-board__list">
+              {prioritySections.map((section, index) => (
+                <article className="resume-heatmap-priority-item" key={section.id}>
+                  <div className="resume-heatmap-priority-item__rank">{index + 1}</div>
+                  <div className="resume-heatmap-priority-item__body">
+                    <div className="resume-heatmap-document__header">
+                      <div>
+                        <p className="section-heading__eyebrow">
+                          {section.groupLabel} · {section.anchorTypeLabel}
+                        </p>
+                        <h4 className="page-card__title">{section.title}</h4>
+                      </div>
+                      <span className="question-status-badge question-status-badge--neutral">
+                        Heat {section.heatScoreLabel}
+                      </span>
+                    </div>
+                    <p className="resume-tailor-muted">
+                      Weak {section.weaknessCount} · Follow-ups {section.followUpCount} · Pressure{" "}
+                      {section.pressureQuestionCount} · Questions {section.directQuestionCount}
+                    </p>
+                    <div className="page-card__actions">
+                      <Link
+                        className="secondary-button"
+                        to={routeConfig.resumeHeatmapAnchor.buildPath({
+                          versionId,
+                          anchorType: section.anchorType,
+                          anchorId: section.anchorRecordId ?? section.anchorKey ?? section.id,
+                        })}
+                      >
+                        Open repair workspace
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </article>
+
+          <article className="page-card page-card--muted resume-heatmap-priority-board__side">
+            <div className="section-heading">
+              <div>
+                <p className="section-heading__eyebrow">Coverage signals</p>
+                <h3 className="page-card__title">What this pass should answer</h3>
+              </div>
+            </div>
+            <div className="resume-heatmap-signal-list">
+              <div className="resume-heatmap-signal-list__item">
+                <span>Weak answers</span>
+                <strong>
+                  {heatmapQuery.data.filterSummary.weakQuestionCount} answers need stronger
+                  evidence and clearer reasoning.
+                </strong>
+              </div>
+              <div className="resume-heatmap-signal-list__item">
+                <span>Pressure moments</span>
+                <strong>
+                  {heatmapQuery.data.filterSummary.pressureQuestionCount} questions pushed beyond
+                  surface-level claims.
+                </strong>
+              </div>
+              <div className="resume-heatmap-signal-list__item">
+                <span>Company coverage</span>
+                <strong>
+                  {heatmapQuery.data.filterSummary.distinctCompanyCount} interview contexts are
+                  currently mapped into this version.
+                </strong>
+              </div>
+            </div>
+          </article>
         </section>
 
         <section className="page-card page-card--muted">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">Filters</p>
-              <h2 className="page-card__title">Question routing filters</h2>
+              <p className="section-heading__eyebrow">Resume-centered review</p>
+              <h2 className="page-card__title">Filters and routing controls</h2>
             </div>
           </div>
+          <p className="page-card__body">
+            Keep the original resume untouched while changing the analysis lens. Narrow the queue
+            to a specific interview pattern before drilling into each anchor.
+          </p>
           <div className="filter-chip-row">
             {HEATMAP_SCOPES.map((item) => (
               <button
