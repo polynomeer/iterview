@@ -47,6 +47,15 @@ export function ArchivePage() {
 
       return true;
     }) ?? [];
+  const followupCount = filteredItems.filter((item) => item.isFollowUp).length;
+  const sessionLinkedCount = filteredItems.filter((item) => Boolean(item.sourceSessionId)).length;
+  const filterCount = [
+    filterState.category,
+    filterState.company,
+    filterState.tag,
+    filterState.sourceInterviewRecordId,
+    filterState.sourceInterviewQuestionId,
+  ].filter(Boolean).length;
 
   function updateFilters(next: ArchiveFilterState) {
     const nextSearchParams = new URLSearchParams();
@@ -72,6 +81,46 @@ export function ArchivePage() {
       eyebrow="Archive"
       title="Archive"
     >
+      <section className="page-card archive-workspace-surface">
+        <div className="archive-workspace-surface__header">
+          <div className="archive-workspace-surface__intro">
+            <div className="archive-workspace-surface__eyebrow-row">
+              <span className="page-card__label">Archive workspace</span>
+              <span className="question-status-badge question-status-badge--accent">Library mode</span>
+            </div>
+            <p className="archive-workspace-surface__breadcrumbs">
+              Mastered questions
+              <span>/</span>
+              Session backtrace
+              <span>/</span>
+              Source review
+            </p>
+            <h2 className="archive-workspace-surface__title">Review library</h2>
+            <p className="archive-workspace-surface__body">
+              Treat the archive as a compact shelf of proven answers you can reopen, compare, and trace back to the
+              exact session where the reasoning became solid.
+            </p>
+          </div>
+          <div className="archive-workspace-surface__stats">
+            <article className="archive-workspace-surface__stat">
+              <span>Visible items</span>
+              <strong>{filteredItems.length}</strong>
+            </article>
+            <article className="archive-workspace-surface__stat">
+              <span>Follow-ups</span>
+              <strong>{followupCount}</strong>
+            </article>
+            <article className="archive-workspace-surface__stat">
+              <span>Session linked</span>
+              <strong>{sessionLinkedCount}</strong>
+            </article>
+            <article className="archive-workspace-surface__stat">
+              <span>Active filters</span>
+              <strong>{filterCount}</strong>
+            </article>
+          </div>
+        </div>
+      </section>
       {(() => {
         const filterControls =
           archiveQuery.data &&

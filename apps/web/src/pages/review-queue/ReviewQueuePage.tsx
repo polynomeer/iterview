@@ -20,6 +20,14 @@ export function ReviewQueuePage() {
   const [pendingItemId, setPendingItemId] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<"skip" | "done" | null>(null);
   const [actionStatus, setActionStatus] = useState<string | null>(null);
+  const queueItems = reviewQueueQuery.data?.items ?? [];
+  const highPriorityCount = queueItems.filter((item) =>
+    (item.priorityLabel ?? "").toLowerCase().includes("high"),
+  ).length;
+  const scheduledTodayCount = queueItems.filter((item) =>
+    (item.scheduledLabel ?? "").toLowerCase().includes("today"),
+  ).length;
+  const itemsWithResultCount = queueItems.filter((item) => Boolean(item.sourceAnswerAttemptId)).length;
 
   async function handleSkip(queueItemId: string) {
     setActionStatus(null);
@@ -87,6 +95,46 @@ export function ReviewQueuePage() {
       eyebrow="Review Queue"
       title="Review queue"
     >
+      <section className="page-card review-queue-workspace-surface">
+        <div className="review-queue-workspace-surface__header">
+          <div className="review-queue-workspace-surface__intro">
+            <div className="review-queue-workspace-surface__eyebrow-row">
+              <span className="page-card__label">Queue workspace</span>
+              <span className="question-status-badge question-status-badge--accent">Action mode</span>
+            </div>
+            <p className="review-queue-workspace-surface__breadcrumbs">
+              Retry loop
+              <span>/</span>
+              Scheduled follow-up
+              <span>/</span>
+              Intentional execution
+            </p>
+            <h2 className="review-queue-workspace-surface__title">Review control tower</h2>
+            <p className="review-queue-workspace-surface__body">
+              Clear the highest-signal retries first, then return to open practice with fewer unresolved weak points in
+              the queue.
+            </p>
+          </div>
+          <div className="review-queue-workspace-surface__stats">
+            <article className="review-queue-workspace-surface__stat">
+              <span>Queued items</span>
+              <strong>{queueItems.length}</strong>
+            </article>
+            <article className="review-queue-workspace-surface__stat">
+              <span>High priority</span>
+              <strong>{highPriorityCount}</strong>
+            </article>
+            <article className="review-queue-workspace-surface__stat">
+              <span>Due today</span>
+              <strong>{scheduledTodayCount}</strong>
+            </article>
+            <article className="review-queue-workspace-surface__stat">
+              <span>With results</span>
+              <strong>{itemsWithResultCount}</strong>
+            </article>
+          </div>
+        </div>
+      </section>
       {actionStatus ? <FeedbackNotice message={actionStatus} tone="success" /> : null}
 
       {reviewQueueQuery.isLoading ? (
