@@ -120,6 +120,12 @@ export function ArchivePage() {
             </article>
           </div>
         </div>
+        <div className="archive-workspace-surface__chips">
+          <span className="detail-chip">{`Archive size ${filteredItems.length}`}</span>
+          {followupCount > 0 ? <span className="detail-chip detail-chip--accent">Follow-up paths saved</span> : null}
+          {sessionLinkedCount > 0 ? <span className="detail-chip">Session trace available</span> : null}
+          {filterCount > 0 ? <span className="detail-chip">{`Filtered ${filterCount}`}</span> : null}
+        </div>
       </section>
       {(() => {
         const filterControls =

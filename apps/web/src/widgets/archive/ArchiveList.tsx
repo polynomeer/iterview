@@ -8,11 +8,14 @@ type ArchiveListProps = {
 
 export function ArchiveList({ items, layout = "stack" }: ArchiveListProps) {
   return (
-    <section className="page-card">
+    <section className="page-card archive-list-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Archive</p>
           <h2 className="page-card__title">Mastered questions</h2>
+          <p className="page-card__body">
+            Reopen only the answers that already proved stable enough to keep as reusable interview material.
+          </p>
         </div>
         <span className="section-heading__count">{items.length}</span>
       </div>

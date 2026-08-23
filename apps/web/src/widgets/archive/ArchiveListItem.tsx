@@ -11,7 +11,7 @@ export function ArchiveListItem({ item }: ArchiveListItemProps) {
   const { t } = useLocale();
 
   return (
-    <article className="list-item-card">
+    <article className="list-item-card archive-list-item">
       <div className="list-item-card__content">
         <div className="list-item-card__meta">
           <span>{item.archivedStatusLabel}</span>
@@ -28,6 +28,11 @@ export function ArchiveListItem({ item }: ArchiveListItemProps) {
         {item.bestScoreLabel ? (
           <p className="archive-list-item__score">{item.bestScoreLabel}</p>
         ) : null}
+        <div className="archive-list-item__chips">
+          {item.totalAttemptCountLabel ? <span className="detail-chip">{item.totalAttemptCountLabel}</span> : null}
+          {item.archivedAtLabel ? <span className="detail-chip">{item.archivedAtLabel}</span> : null}
+          {item.sourceLabel ? <span className="detail-chip detail-chip--accent">{item.sourceLabel}</span> : null}
+        </div>
         <p className="resume-section__helper">
           {[item.totalAttemptCountLabel, item.archivedAtLabel, item.sourceLabel].filter(Boolean).join(" · ")}
         </p>

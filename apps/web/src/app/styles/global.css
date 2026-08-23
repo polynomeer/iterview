@@ -2138,6 +2138,13 @@ button {
   font-weight: 600;
 }
 
+.archive-list-item__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
 .settings-toggle {
   display: flex;
   align-items: center;
@@ -6315,6 +6322,39 @@ button {
   gap: 18px;
 }
 
+.archive-workspace-note {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-soft) 92%, var(--surface-base));
+}
+
+.archive-workspace-note__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.archive-filter-bar,
+.archive-list-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.archive-filter-bar--embedded {
+  display: grid;
+  gap: 16px;
+}
+
+.archive-list-item {
+  border-color: rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 95%, var(--surface-soft));
+}
+
 .practice-layout__cluster,
 .result-analysis-layout__group,
 .feed-layout__hero,
@@ -6522,6 +6562,13 @@ button {
   color: #f8fafc;
   font-size: 1.3rem;
   letter-spacing: -0.04em;
+}
+
+.archive-workspace-surface__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
 }
 
 .home-workspace-surface,

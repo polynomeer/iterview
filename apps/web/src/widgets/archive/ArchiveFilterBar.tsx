@@ -39,6 +39,7 @@ function FilterSelect({ label, value, options, onChange }: FilterSelectProps) {
 }
 
 export function ArchiveFilterBar({ filters, value, onChange, embedded = false }: ArchiveFilterBarProps) {
+  const activeCount = [value.category, value.company, value.tag].filter(Boolean).length;
   const controls = (
     <div className="practice-filter-grid">
       <FilterSelect
@@ -63,16 +64,31 @@ export function ArchiveFilterBar({ filters, value, onChange, embedded = false }:
   );
 
   if (embedded) {
-    return <div className="practice-filter-bar practice-filter-bar--embedded">{controls}</div>;
+    return (
+      <div className="practice-filter-bar practice-filter-bar--embedded archive-filter-bar archive-filter-bar--embedded">
+        <div className="section-heading">
+          <div>
+            <p className="section-heading__eyebrow">Filters</p>
+            <h2 className="page-card__title">Refine archived questions</h2>
+          </div>
+          <span className="section-heading__count section-heading__count--text">{activeCount} active</span>
+        </div>
+        {controls}
+      </div>
+    );
   }
 
   return (
-    <section className="page-card">
+    <section className="page-card archive-filter-bar">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Filters</p>
           <h2 className="page-card__title">Refine archived questions</h2>
+          <p className="page-card__body">
+            Narrow the library only when you need a specific company, category, or tag trail.
+          </p>
         </div>
+        <span className="section-heading__count section-heading__count--text">{activeCount} active</span>
       </div>
       {controls}
     </section>
