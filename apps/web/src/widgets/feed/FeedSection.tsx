@@ -11,10 +11,19 @@ type FeedSectionProps = {
 
 export function FeedSection({ section, layout = "stack" }: FeedSectionProps) {
   const { t } = useLocale();
+  const helperTextById: Record<string, string> = {
+    popular: "High-frequency questions that keep appearing across broad interview demand.",
+    trending: "Questions rising in attention right now and worth checking before they cool off.",
+    companyRelated: "Prompts linked to company context so your next practice branch stays targeted.",
+  };
 
   return (
-    <section className="page-card">
-      <SectionHeader count={section.items.length} title={section.title} />
+    <section className="page-card feed-section-card">
+      <SectionHeader
+        count={section.items.length}
+        helperText={helperTextById[section.id]}
+        title={section.title}
+      />
       {section.items.length > 0 ? (
         <div className={layout === "grid" ? "card-grid card-grid--single-column" : "stack-list"}>
           {section.items.map((item) => (

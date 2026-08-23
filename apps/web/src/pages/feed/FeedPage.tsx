@@ -67,6 +67,12 @@ export function FeedPage() {
             </article>
           </div>
         </div>
+        <div className="feed-workspace-surface__chips">
+          <span className="detail-chip">{`Sections ${sectionCount}`}</span>
+          {itemCount > 0 ? <span className="detail-chip detail-chip--accent">{`Visible cards ${itemCount}`}</span> : null}
+          {companySignalCount > 0 ? <span className="detail-chip">Company-linked prompts</span> : null}
+          {feedQuery.data?.sections[0] ? <span className="detail-chip">Lead section ready</span> : null}
+        </div>
       </section>
       {feedQuery.isLoading ? (
         <LoadingStateCard

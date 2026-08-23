@@ -2131,6 +2131,13 @@ button {
   line-height: 1.5;
 }
 
+.feed-question-card__note {
+  margin: 10px 0 0;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
 .archive-list-item__score {
   margin: 0;
   color: var(--text-link);
@@ -6373,6 +6380,36 @@ button {
   background: var(--surface-muted);
 }
 
+.feed-workspace-note {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    color-mix(in srgb, var(--surface-muted) 88%, var(--surface-base));
+}
+
+.feed-workspace-note__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.feed-workspace-note__body {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.feed-section-card,
+.feed-question-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.feed-question-card {
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
 .practice-layout__results,
 .feed-layout__sections {
   min-width: 0;
@@ -6677,6 +6714,7 @@ button {
 }
 
 .home-workspace-surface__chips,
+.feed-workspace-surface__chips,
 .profile-workspace-surface__chips,
 .resume-workspace-surface__chips {
   display: flex;

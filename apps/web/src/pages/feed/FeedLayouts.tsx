@@ -22,11 +22,18 @@ export function FeedDesktopLayout({ sections }: FeedLayoutProps) {
   return (
     <div className="feed-layout feed-layout--desktop">
       <div className="feed-layout__hero">
-        <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
-          <span className="page-card__label">Discovery</span>
+        <SectionPanel className="workspace-note-card workspace-note-card--accent feed-workspace-note" variant="muted">
+          <div className="feed-workspace-note__header">
+            <span className="page-card__label">Discovery</span>
+            <span className="detail-chip detail-chip--accent">Lead signal</span>
+          </div>
           <h2 className="page-card__title">Read the market before choosing the next branch to practice</h2>
           <p className="page-card__body">
             Popular, trending, and company-related groups should feel like distinct signals, not one endless question stream.
+          </p>
+          <p className="feed-workspace-note__body">
+            Start with the lead section, then compare only the adjacent signals needed to decide
+            your next answer path.
           </p>
         </SectionPanel>
         {featuredSection}

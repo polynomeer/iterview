@@ -8,7 +8,7 @@ type FeedQuestionCardProps = {
 
 export function FeedQuestionCard({ item }: FeedQuestionCardProps) {
   return (
-    <article className="list-item-card">
+    <article className="list-item-card feed-question-card">
       <div className="list-item-card__content">
         <div className="list-item-card__meta" role="list">
           <span className="list-item-card__meta-pill" role="listitem">{item.categoryLabel}</span>
@@ -30,6 +30,9 @@ export function FeedQuestionCard({ item }: FeedQuestionCardProps) {
         {item.progressSummaryLabel ? (
           <p className="practice-list-item__progress">{item.progressSummaryLabel}</p>
         ) : null}
+        <p className="feed-question-card__note">
+          Compare this prompt against the current section signal before adding it to your next practice block.
+        </p>
       </div>
       <div className="list-item-card__actions">
         <Link
