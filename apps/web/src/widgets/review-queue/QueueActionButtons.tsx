@@ -12,7 +12,7 @@ export function QueueActionButtons({
   pendingAction = null,
 }: QueueActionButtonsProps) {
   return (
-    <div className="page-card__actions">
+    <div className="page-card__actions review-queue-action-buttons">
       <button
         className="secondary-button"
         disabled={disabled}

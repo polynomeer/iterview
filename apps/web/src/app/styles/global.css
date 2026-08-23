@@ -6362,6 +6362,47 @@ button {
     color-mix(in srgb, var(--surface-base) 95%, var(--surface-soft));
 }
 
+.review-queue-note-card,
+.review-queue-list-card,
+.review-queue-item-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.review-queue-note-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.review-queue-note-card__body,
+.review-queue-item-card__note {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.review-queue-item-card {
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
+.review-queue-item-card__chips,
+.review-queue-item-card__footer {
+  display: grid;
+  gap: 12px;
+}
+
+.review-queue-item-card__chips {
+  grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+}
+
+.review-queue-action-buttons {
+  justify-content: flex-start;
+}
+
 .practice-layout__cluster,
 .result-analysis-layout__group,
 .feed-layout__hero,
@@ -6599,6 +6640,13 @@ button {
   color: #f8fafc;
   font-size: 1.3rem;
   letter-spacing: -0.04em;
+}
+
+.review-queue-workspace-surface__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
 }
 
 .archive-workspace-surface__chips {

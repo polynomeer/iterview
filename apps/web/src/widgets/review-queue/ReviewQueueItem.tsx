@@ -20,7 +20,7 @@ export function ReviewQueueItem({
   const disabled = pendingAction !== null;
 
   return (
-    <article className="list-item-card">
+    <article className="list-item-card review-queue-item-card">
       <div className="list-item-card__content">
         <div className="list-item-card__meta">
           <span>{item.reasonTypeLabel}</span>
@@ -30,6 +30,10 @@ export function ReviewQueueItem({
         </div>
         <h3 className="list-item-card__title">{item.questionTitle}</h3>
         <p className="list-item-card__body">{item.reasonDetail}</p>
+        <div className="review-queue-item-card__chips">
+          {item.priorityLabel ? <span className="detail-chip detail-chip--accent">{item.priorityLabel}</span> : null}
+          {item.scheduledLabel ? <span className="detail-chip">{item.scheduledLabel}</span> : null}
+        </div>
         {(item.relatedSkillLabels ?? []).length > 0 ? (
           <div className="chip-list">
             {(item.relatedSkillLabels ?? []).map((skill) => (
@@ -62,12 +66,17 @@ export function ReviewQueueItem({
           </Link>
         ) : null}
       </div>
-      <QueueActionButtons
-        disabled={disabled}
-        onDone={onDone}
-        onSkip={onSkip}
-        pendingAction={pendingAction}
-      />
+      <div className="review-queue-item-card__footer">
+        <p className="review-queue-item-card__note">
+          Resolve now only if you can finish the answer loop; otherwise defer intentionally.
+        </p>
+        <QueueActionButtons
+          disabled={disabled}
+          onDone={onDone}
+          onSkip={onSkip}
+          pendingAction={pendingAction}
+        />
+      </div>
     </article>
   );
 }

@@ -134,6 +134,12 @@ export function ReviewQueuePage() {
             </article>
           </div>
         </div>
+        <div className="review-queue-workspace-surface__chips">
+          <span className="detail-chip">{`Queue ${queueItems.length}`}</span>
+          {highPriorityCount > 0 ? <span className="detail-chip detail-chip--accent">High-priority items</span> : null}
+          {scheduledTodayCount > 0 ? <span className="detail-chip">Due in current cycle</span> : null}
+          {itemsWithResultCount > 0 ? <span className="detail-chip">Result context available</span> : null}
+        </div>
       </section>
       {actionStatus ? <FeedbackNotice message={actionStatus} tone="success" /> : null}
 
