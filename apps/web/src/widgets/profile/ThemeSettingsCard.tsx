@@ -16,7 +16,11 @@ export function ThemeSettingsCard({ className, value, onChange }: ThemeSettingsC
         <div>
           <p className="section-heading__eyebrow">{t("profile.themeEyebrow")}</p>
           <h2 className="page-card__title">{t("profile.themeTitle")}</h2>
+          <p className="page-card__body">
+            Choose the visual mode for long review sessions without touching the practice logic.
+          </p>
         </div>
+        <span className="section-heading__count section-heading__count--text">Local only</span>
       </div>
       <div className="theme-option-list" role="radiogroup" aria-label={t("profile.themeEyebrow")}>
         {themeOptions.map((option) => {

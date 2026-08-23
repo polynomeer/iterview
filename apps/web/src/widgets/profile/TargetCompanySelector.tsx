@@ -41,7 +41,12 @@ export function TargetCompanySelector({
         <div>
           <p className="section-heading__eyebrow">Target companies</p>
           <h2 className="page-card__title">Track the companies you are aiming for</h2>
+          <p className="page-card__body">
+            Keep this list tight so later practice branches can stay grounded in real company
+            targets.
+          </p>
         </div>
+        <span className="section-heading__count section-heading__count--text">{companies.length} saved</span>
       </div>
       <div className="auth-form">
         <label className="form-field">
@@ -56,7 +61,7 @@ export function TargetCompanySelector({
         <div className="chip-list">
           {companies.map((company) => (
             <button
-              className="detail-chip detail-chip--accent"
+              className="detail-chip detail-chip--accent target-company-chip"
               key={company}
               onClick={() => onChange(companies.filter((item) => item !== company))}
               type="button"

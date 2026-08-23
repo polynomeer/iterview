@@ -220,12 +220,23 @@ export function ProfilePage() {
             );
             const resumeCard = (
               <SectionPanel className="profile-workspace-card" variant="muted">
-                <span className="page-card__label">{t("profile.workspaceLabel")}</span>
-                <h2 className="page-card__title">{t("profile.workspaceTitle")}</h2>
-                <p className="page-card__body">{t("profile.workspaceBody")}</p>
+                <div className="profile-workspace-card__header">
+                  <div>
+                    <span className="page-card__label">{t("profile.workspaceLabel")}</span>
+                    <h2 className="page-card__title">{t("profile.workspaceTitle")}</h2>
+                    <p className="page-card__body">{t("profile.workspaceBody")}</p>
+                  </div>
+                  <span className="detail-chip detail-chip--accent">Launchers</span>
+                </div>
                 <div className="profile-workspace-groups">
                   <div className="profile-workspace-group">
-                    <span className="profile-workspace-group__label">Resume workspace</span>
+                    <div className="profile-workspace-group__header">
+                      <span className="profile-workspace-group__label">Resume workspace</span>
+                      <p className="profile-workspace-group__body">
+                        Move into source-of-truth review, resume evidence checks, and skills mapped
+                        from resume claims.
+                      </p>
+                    </div>
                     <div className="page-card__actions">
                       <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
                         {t("profile.resumes")}
@@ -239,7 +250,13 @@ export function ProfilePage() {
                     </div>
                   </div>
                   <div className="profile-workspace-group">
-                    <span className="profile-workspace-group__label">Interview workspace</span>
+                    <div className="profile-workspace-group__header">
+                      <span className="profile-workspace-group__label">Interview workspace</span>
+                      <p className="profile-workspace-group__body">
+                        Jump directly into the mock interview flow after the setup surface is
+                        stable.
+                      </p>
+                    </div>
                     <div className="page-card__actions">
                       <Link className="primary-button" to={routeConfig.interview.buildPath()}>
                         {t("profile.interviewSession")}

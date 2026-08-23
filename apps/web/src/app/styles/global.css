@@ -2829,6 +2829,23 @@ button {
   margin-bottom: 18px;
 }
 
+.profile-summary-card {
+  display: grid;
+  gap: 18px;
+  background:
+    radial-gradient(circle at top left, rgba(120, 198, 176, 0.12), transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-soft) 92%, var(--surface-base)), var(--surface-base));
+}
+
+.profile-summary-card__topline,
+.profile-summary-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .profile-summary-card__identity {
   min-width: 0;
   flex: 1;
@@ -3808,11 +3825,17 @@ button {
 }
 
 .profile-section-cluster {
+  display: grid;
   gap: 18px;
 }
 
 .profile-section-cluster__header {
   margin-bottom: 0;
+  align-items: start;
+}
+
+.profile-section-cluster__header .detail-chip {
+  justify-self: start;
 }
 
 .profile-section-cluster .content-grid,
@@ -3821,9 +3844,17 @@ button {
 }
 
 .profile-workspace-card {
+  display: grid;
+  gap: 18px;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--surface-card) 86%, transparent), color-mix(in srgb, var(--surface-soft) 88%, transparent));
   border-color: var(--border-strong);
+}
+
+.profile-workspace-card__header,
+.profile-workspace-group__header {
+  display: grid;
+  gap: 10px;
 }
 
 .profile-workspace-groups {
@@ -3834,12 +3865,16 @@ button {
 
 .profile-workspace-group {
   display: grid;
-  gap: 12px;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(9, 17, 32, 0.28);
 }
 
 .profile-workspace-group + .profile-workspace-group {
-  padding-top: 16px;
-  border-top: 1px solid var(--border-soft);
+  padding-top: 0;
+  border-top: 0;
 }
 
 .profile-workspace-group__label {
@@ -3849,6 +3884,11 @@ button {
   letter-spacing: 0.08em;
   line-height: 1.4;
   text-transform: uppercase;
+}
+
+.profile-workspace-group__body {
+  margin: 0;
+  color: var(--text-muted);
 }
 
 .profile-workspace-note {
@@ -6614,6 +6654,10 @@ button {
 .profile-section-cluster {
   position: relative;
   overflow: hidden;
+  border-color: rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
 }
 
 .profile-section-cluster::before {
@@ -6627,6 +6671,11 @@ button {
 .profile-section-cluster__header {
   position: relative;
   padding-left: 14px;
+}
+
+.target-company-chip {
+  border: 0;
+  cursor: pointer;
 }
 
 .profile-layout__main,

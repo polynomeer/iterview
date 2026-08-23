@@ -32,8 +32,11 @@ export function ProfileSummaryCard({
   const initials = getInitials(profile.displayName || profile.email || "IU");
 
   return (
-    <section className="page-card">
-      <span className="page-card__label">{t("profile.summaryLabel")}</span>
+    <section className="page-card profile-summary-card">
+      <div className="profile-summary-card__topline">
+        <span className="page-card__label">{t("profile.summaryLabel")}</span>
+        <span className="detail-chip">Current account</span>
+      </div>
       <div className="profile-summary-card__header">
         <div className="profile-avatar">
           {profile.profileImageUrl ? (
@@ -100,6 +103,9 @@ export function ProfileSummaryCard({
             {profile.profileImageContentType || t("profile.imageTypeHint")}
           </p>
         </article>
+      </div>
+      <div className="profile-summary-card__footer">
+        <span className="detail-chip">Identity stays separate from practice state</span>
       </div>
     </section>
   );
