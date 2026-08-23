@@ -21,15 +21,38 @@ export function SubmitActionBar({
   onSubmit,
 }: SubmitActionBarProps) {
   const { t } = useLocale();
+  const readinessItems = [
+    {
+      label: "Prompt answered",
+      state: validationMessage ? "Needs work" : "Ready",
+    },
+    {
+      label: "Submission lane",
+      state: isPending ? "Submitting" : "Standing by",
+    },
+  ];
 
   return (
-    <section className="page-card">
-      <div className="section-heading">
-        <div>
-          <p className="section-heading__eyebrow">{t("answer.submitEyebrow")}</p>
-          <h2 className="page-card__title">{t("answer.submitTitle")}</h2>
+    <section className="page-card answer-submit-card">
+      <div className="answer-submit-card__header">
+        <div className="section-heading">
+          <div>
+            <p className="section-heading__eyebrow">{t("answer.submitEyebrow")}</p>
+            <h2 className="page-card__title">{t("answer.submitTitle")}</h2>
+          </div>
+        </div>
+        <div className="answer-submit-card__summary" aria-label="Submission readiness">
+          {readinessItems.map((item) => (
+            <article className="answer-submit-card__summary-item" key={item.label}>
+              <span>{item.label}</span>
+              <strong>{item.state}</strong>
+            </article>
+          ))}
         </div>
       </div>
+      <p className="answer-submit-card__body">
+        Submit only after the current draft answers the exact node and names the fact the next branch is most likely to probe.
+      </p>
       {infoMessage ? <FeedbackNotice message={infoMessage} tone="info" /> : null}
       {validationMessage ? <FeedbackNotice message={validationMessage} tone="error" /> : null}
       {errorMessage ? <FeedbackNotice details={errorDetails} message={errorMessage} tone="error" /> : null}

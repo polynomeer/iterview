@@ -191,6 +191,7 @@ export function AnswerEditorPage() {
           const editorSection = (
             <AnswerTextEditor
               disabled={submitAnswerMutation.isPending}
+              mode="workspace"
               onChange={setDraft}
               value={draft}
             />
