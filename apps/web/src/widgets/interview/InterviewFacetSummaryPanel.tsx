@@ -26,7 +26,7 @@ export function InterviewFacetSummaryPanel({
   const safeItems = items ?? [];
 
   return (
-    <section className="page-card">
+    <section className={`page-card interview-facet-summary-panel interview-facet-summary-panel--${tone}`}>
       <span className="page-card__label">{eyebrow}</span>
       <h2 className="page-card__title">{title}</h2>
       <p className="page-card__body">{helperText}</p>

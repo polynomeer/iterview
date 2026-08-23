@@ -407,17 +407,37 @@ export function InterviewSessionPage() {
               </div>
             </section>
             <div className="interview-session-layout__hero-side">
-              <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
-                <span className="page-card__label">Active branch</span>
+              <SectionPanel className="workspace-note-card workspace-note-card--accent interview-session-side-summary" variant="muted">
+                <div className="interview-session-side-summary__topline">
+                  <span className="page-card__label">Active branch</span>
+                  <span className="question-status-badge question-status-badge--accent">DFS defense</span>
+                </div>
                 <h2 className="page-card__title">
                   Answer the current node with enough evidence that the next follow-up has nowhere vague to hide
                 </h2>
                 <p className="page-card__body">
                   Treat each response as a checkpoint in the question tree. The goal is not to sound longer, but to make the next branch more specific, testable, and grounded in the resume.
                 </p>
+                <div className="interview-session-side-summary__stats">
+                  <article className="interview-session-side-summary__stat">
+                    <span>Branch depth</span>
+                    <strong>{branchDepthLabel}</strong>
+                  </article>
+                  <article className="interview-session-side-summary__stat">
+                    <span>Weak facets</span>
+                    <strong>{weakFacetCount}</strong>
+                  </article>
+                  <article className="interview-session-side-summary__stat">
+                    <span>Skipped facets</span>
+                    <strong>{skippedFacetCount}</strong>
+                  </article>
+                </div>
               </SectionPanel>
               <SectionPanel className="workspace-note-card interview-session-side-panel" variant="muted">
-                <span className="page-card__label">Branch rules</span>
+                <div className="interview-session-side-panel__header">
+                  <span className="page-card__label">Branch rules</span>
+                  <p className="interview-session-side-panel__eyebrow-note">Claim, evidence, trade-off</p>
+                </div>
                 <div className="interview-session-side-panel__list">
                   <div className="interview-session-side-panel__item">
                     <strong>1. Claim</strong>
@@ -434,7 +454,10 @@ export function InterviewSessionPage() {
                 </div>
               </SectionPanel>
               <SectionPanel className="workspace-note-card interview-session-side-panel" variant="muted">
-                <span className="page-card__label">Next branch</span>
+                <div className="interview-session-side-panel__header">
+                  <span className="page-card__label">Next branch</span>
+                  <p className="interview-session-side-panel__eyebrow-note">Unlock conditions</p>
+                </div>
                 <div className="interview-session-side-panel__list">
                   <div className="interview-session-side-panel__item">
                     <strong>{canAdvance ? "Advance is unlocked" : "Advance is blocked"}</strong>
@@ -451,7 +474,7 @@ export function InterviewSessionPage() {
                 </div>
               </SectionPanel>
               {isFullCoverage ? (
-                <SectionPanel className="workspace-note-card" variant="muted">
+                <SectionPanel className="workspace-note-card interview-session-side-panel interview-session-side-panel--coverage" variant="muted">
                   <span className="page-card__label">Coverage pass</span>
                   <h2 className="page-card__title">This session is traversing the full resume evidence map</h2>
                   <p className="page-card__body">
@@ -598,24 +621,35 @@ export function InterviewSessionPage() {
           items={activeSession.questions}
         />
         {isFullCoverage ? (
-          <div className="interview-facet-panels">
-            <InterviewFacetSummaryPanel
-              emptyMessage="No weak facets are currently flagged in this session."
-              eyebrow="Weak facets"
-              helperText="These resume-backed points need stronger defense before the session moves on."
-              items={activeSession.summary.weakFacetSummaries}
-              title="Needs more defense"
-              tone="warning"
-            />
-            <InterviewFacetSummaryPanel
-              emptyMessage="No skipped facets are currently tracked in this session."
-              eyebrow="Skipped facets"
-              helperText="These areas were skipped or left incomplete and may return as recovery prompts."
-              items={activeSession.summary.skippedFacetSummaries}
-              title="Skipped recovery"
-              tone="accent"
-            />
-          </div>
+          <section className="page-card interview-facet-panels-shell">
+            <div className="interview-facet-panels-shell__header">
+              <div>
+                <span className="page-card__label">Coverage recovery</span>
+                <h2 className="page-card__title">Track which resume facts still need another pass</h2>
+              </div>
+              <p className="page-card__body">
+                Weak and skipped facets are not end-of-session leftovers. They are the branches the DFS pass still needs to revisit deliberately.
+              </p>
+            </div>
+            <div className="interview-facet-panels">
+              <InterviewFacetSummaryPanel
+                emptyMessage="No weak facets are currently flagged in this session."
+                eyebrow="Weak facets"
+                helperText="These resume-backed points need stronger defense before the session moves on."
+                items={activeSession.summary.weakFacetSummaries}
+                title="Needs more defense"
+                tone="warning"
+              />
+              <InterviewFacetSummaryPanel
+                emptyMessage="No skipped facets are currently tracked in this session."
+                eyebrow="Skipped facets"
+                helperText="These areas were skipped or left incomplete and may return as recovery prompts."
+                items={activeSession.summary.skippedFacetSummaries}
+                title="Skipped recovery"
+                tone="accent"
+              />
+            </div>
+          </section>
         ) : null}
         {isFullCoverage ? (
           coverageQuery.isLoading || resumeMapQuery.isLoading ? (

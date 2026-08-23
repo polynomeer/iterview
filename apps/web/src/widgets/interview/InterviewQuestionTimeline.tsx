@@ -16,7 +16,7 @@ export function InterviewQuestionTimeline({
   const { t } = useLocale();
 
   return (
-    <section className="page-card">
+    <section className="page-card interview-timeline-workspace">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{t("interview.questionTimelineEyebrow")}</p>
@@ -24,7 +24,10 @@ export function InterviewQuestionTimeline({
         </div>
         <span className="section-heading__count">{items.length}</span>
       </div>
-      <div className="stack-list">
+      <p className="page-card__body interview-timeline-workspace__intro">
+        Review the branch order, evidence anchors, and generated follow-ups as one continuous defense path rather than isolated prompts.
+      </p>
+      <div className="stack-list interview-timeline-workspace__stack">
         {items.map((item) => {
           const canOpenQuestion = Boolean(item.questionId);
           const isAiFollowUp = item.sourceType === "ai_follow_up";
