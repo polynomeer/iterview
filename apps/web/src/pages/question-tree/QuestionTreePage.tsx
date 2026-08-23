@@ -144,11 +144,34 @@ export function QuestionTreePage() {
                 </article>
               </div>
             </div>
+            <div className="question-tree-workspace-surface__guidance">
+              <article className="question-tree-workspace-surface__guidance-card">
+                <span>Traversal rule</span>
+                <strong>Read every node as a DFS checkpoint, not a loose list of follow-ups.</strong>
+              </article>
+              <article className="question-tree-workspace-surface__guidance-card">
+                <span>Weak line watch</span>
+                <strong>Any vague answer here becomes the branch the next question is most likely to attack.</strong>
+              </article>
+            </div>
           </section>
-          <section className="page-card">
-            <span className="page-card__label">{t("questionTree.rootQuestionLabel")}</span>
+          <section className="page-card question-tree-root-brief">
+            <div className="question-tree-root-brief__topline">
+              <span className="page-card__label">{t("questionTree.rootQuestionLabel")}</span>
+              <span className="question-status-badge">Root node</span>
+            </div>
             <h2 className="page-card__title">{questionDetailQuery.data.title}</h2>
             <p className="page-card__body">{t("questionTree.rootQuestionBody")}</p>
+            <div className="question-tree-root-brief__supporting">
+              <article className="question-tree-root-brief__supporting-item">
+                <span>Category</span>
+                <strong>{questionDetailQuery.data.category}</strong>
+              </article>
+              <article className="question-tree-root-brief__supporting-item">
+                <span>Difficulty</span>
+                <strong>{questionDetailQuery.data.difficulty}</strong>
+              </article>
+            </div>
           </section>
           <QuestionTreeView tree={questionTreeQuery.data} />
         </div>

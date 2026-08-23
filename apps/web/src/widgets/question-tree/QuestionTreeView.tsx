@@ -21,6 +21,9 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
         </div>
         <span className="section-heading__count">{tree.nodes.length}</span>
       </div>
+      <p className="page-card__body question-tree-surface__intro">
+        Move from the root to the deepest branch with the assumption that each child question is probing the weakest unsupported line above it.
+      </p>
       <div className="question-tree">
         {tree.nodes.map((node, index) => (
           <article
@@ -30,7 +33,19 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
           >
             <div className="question-tree__line" />
             <div className="question-tree__content">
-              <div className="question-tree__node-step">{index + 1}</div>
+              <div className="question-tree__content-topline">
+                <div className="question-tree__node-step">{index + 1}</div>
+                <div className="question-tree__summary">
+                  <article className="question-tree__summary-item">
+                    <span>Depth</span>
+                    <strong>{node.depth}</strong>
+                  </article>
+                  <article className="question-tree__summary-item">
+                    <span>Type</span>
+                    <strong>{node.isRoot ? t("questionTree.root") : node.relationshipType ?? "node"}</strong>
+                  </article>
+                </div>
+              </div>
               <div className="question-tree__meta">
                 <QuestionStatusBadge status={node.status} />
                 <span>{t("questionTree.depth")} {node.depth}</span>

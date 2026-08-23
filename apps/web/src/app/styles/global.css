@@ -1024,6 +1024,13 @@ button {
   background: var(--surface-soft);
 }
 
+.question-tree__content-topline {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .question-tree__meta {
   display: flex;
   flex-wrap: wrap;
@@ -1043,6 +1050,35 @@ button {
   color: #bbf7d0;
   font-size: 0.85rem;
   font-weight: 700;
+}
+
+.question-tree__summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  flex: 1;
+}
+
+.question-tree__summary-item {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(148, 163, 184, 0.05);
+}
+
+.question-tree__summary-item span {
+  color: var(--text-subtle);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.question-tree__summary-item strong {
+  color: var(--text-main);
+  font-size: 0.96rem;
+  letter-spacing: -0.03em;
 }
 
 .skill-radar-chart {
@@ -6757,6 +6793,42 @@ button {
   letter-spacing: -0.04em;
 }
 
+.question-tree-workspace-surface__guidance,
+.question-tree-root-brief__supporting {
+  display: grid;
+  gap: 10px;
+}
+
+.question-tree-workspace-surface__guidance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.question-tree-workspace-surface__guidance-card,
+.question-tree-root-brief__supporting-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.question-tree-workspace-surface__guidance-card span,
+.question-tree-root-brief__supporting-item span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.question-tree-workspace-surface__guidance-card strong,
+.question-tree-root-brief__supporting-item strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
 .practice-workspace-surface__chips {
   display: flex;
   flex-wrap: wrap;
@@ -6766,6 +6838,27 @@ button {
 
 .question-tree-surface {
   border-color: rgba(148, 163, 184, 0.14);
+}
+
+.question-tree-surface__intro {
+  max-width: 70ch;
+}
+
+.question-tree-root-brief {
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
+}
+
+.question-tree-root-brief__topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .review-queue-workspace-surface,
