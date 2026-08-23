@@ -6878,6 +6878,39 @@ button {
   background: rgba(148, 163, 184, 0.12);
 }
 
+.question-detail-layout__note-header,
+.question-hero__topline,
+.question-progress-card__chips,
+.question-hero__chips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.question-detail-section-card,
+.question-history-card,
+.question-recommended-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.question-detail-section-card--recommended {
+  border-color: rgba(14, 165, 233, 0.16);
+}
+
+.question-history-card,
+.question-recommended-card {
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
+.question-hero__note {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
 .interview-page-layout__hero-side,
 .interview-page-layout__snapshot {
   min-width: 0;

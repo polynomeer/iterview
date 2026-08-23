@@ -11,17 +11,20 @@ export function RecommendedQuestionSection({ items }: RecommendedQuestionSection
   const { t } = useLocale();
 
   return (
-    <section className="page-card">
+    <section className="page-card question-detail-section-card question-detail-section-card--recommended">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{t("question.recommendedEyebrow")}</p>
           <h2 className="page-card__title">{t("question.recommendedTitle")}</h2>
+          <p className="page-card__body">
+            Open these only when the current node is understood well enough to branch deeper.
+          </p>
         </div>
         <span className="section-heading__count">{items.length}</span>
       </div>
       <div className="stack-list">
         {items.map((item) => (
-          <article className="list-item-card" key={item.id}>
+          <article className="list-item-card question-recommended-card" key={item.id}>
             <div className="list-item-card__content">
               <h3 className="list-item-card__title">{item.title}</h3>
               {item.reason ? <p className="list-item-card__body">{item.reason}</p> : null}

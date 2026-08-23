@@ -12,17 +12,20 @@ export function AnswerHistorySection({ history }: AnswerHistorySectionProps) {
   const { t } = useLocale();
 
   return (
-    <section className="page-card">
+    <section className="page-card question-detail-section-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{t("answer.historyEyebrow")}</p>
           <h2 className="page-card__title">{t("answer.historyTitle")}</h2>
+          <p className="page-card__body">
+            Compare only the most recent attempts you can still learn from instead of rereading every past answer.
+          </p>
         </div>
         <span className="section-heading__count">{history.items.length}</span>
       </div>
       <div className="stack-list">
         {history.items.map((item) => (
-          <article className="list-item-card" key={item.answerAttemptId}>
+          <article className="list-item-card question-history-card" key={item.answerAttemptId}>
             <div className="list-item-card__content">
               <div className="list-item-card__meta">
                 <span>{item.submittedAtLabel}</span>

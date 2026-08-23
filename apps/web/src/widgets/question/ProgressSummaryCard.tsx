@@ -6,11 +6,14 @@ type ProgressSummaryCardProps = {
 
 export function ProgressSummaryCard({ progress }: ProgressSummaryCardProps) {
   return (
-    <section className="page-card">
+    <section className="page-card question-detail-section-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Progress</p>
           <h2 className="page-card__title">Your current status on this question</h2>
+          <p className="page-card__body">
+            Read this timeline as answer readiness, not just activity history.
+          </p>
         </div>
         <span className="section-heading__count section-heading__count--text">{progress.status}</span>
       </div>
@@ -39,6 +42,11 @@ export function ProgressSummaryCard({ progress }: ProgressSummaryCardProps) {
             <strong className="stat-tile__value stat-tile__value--small">{progress.masteryLevelLabel}</strong>
           </article>
         ) : null}
+      </div>
+      <div className="question-progress-card__chips">
+        <span className="detail-chip">{`Attempts ${progress.attemptsCount}`}</span>
+        <span className="detail-chip detail-chip--accent">{`Best ${progress.bestScoreLabel}`}</span>
+        {progress.nextReviewLabel ? <span className="detail-chip">{`Next ${progress.nextReviewLabel}`}</span> : null}
       </div>
     </section>
   );

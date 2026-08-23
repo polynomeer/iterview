@@ -6,11 +6,14 @@ type QuestionMetaSectionProps = {
 
 export function QuestionMetaSection({ question }: QuestionMetaSectionProps) {
   return (
-    <section className="page-card">
+    <section className="page-card question-detail-section-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Metadata</p>
           <h2 className="page-card__title">Context for this prompt</h2>
+          <p className="page-card__body">
+            Use this rail to keep the answer specific to category, company, and role constraints.
+          </p>
         </div>
       </div>
       <div className="stats-grid">
