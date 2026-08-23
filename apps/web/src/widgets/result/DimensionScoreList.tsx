@@ -17,12 +17,17 @@ export function DimensionScoreList({ dimensions }: DimensionScoreListProps) {
     numericValues.length > 0 ? Math.min(...numericValues.map((dimension) => dimension.numericValue)) : null;
 
   return (
-    <section className="page-card">
+    <section className="page-card result-analysis-section-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Dimension scores</p>
           <h2 className="page-card__title">How the answer was evaluated</h2>
+          <p className="page-card__body">
+            Use the lowest dimension as the first edit target before touching stronger parts of the
+            answer.
+          </p>
         </div>
+        <span className="section-heading__count section-heading__count--text">{dimensions.length} checks</span>
       </div>
       <div className="stack-list">
         {dimensions.map((dimension) => (

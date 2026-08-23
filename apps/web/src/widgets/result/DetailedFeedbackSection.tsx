@@ -40,11 +40,15 @@ export function DetailedFeedbackSection({ result }: DetailedFeedbackSectionProps
     result.missedPoints.length > 0;
 
   return (
-    <section className="page-card">
+    <section className="page-card result-analysis-section-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Detailed feedback</p>
           <h2 className="page-card__title">How to improve this answer</h2>
+          <p className="page-card__body">
+            Read this as the main improvement narrative, then use the smaller cards below as
+            supporting evidence.
+          </p>
         </div>
       </div>
 

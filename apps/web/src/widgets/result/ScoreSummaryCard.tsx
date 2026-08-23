@@ -13,7 +13,7 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
   ];
 
   return (
-    <section className="result-score-card">
+    <section className="result-score-card result-score-card--workspace">
       <div className="result-score-card__topline">
         <span className="page-card__label">Overall score</span>
         <span className="result-score-card__eyebrow-pill">Evaluation readout</span>
@@ -42,6 +42,10 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
         Use this verdict as a branch decision, not a final grade. The next iteration should target the weakest
         reasoning step instead of rewriting everything.
       </p>
+      <div className="result-score-card__chips">
+        <span className="detail-chip">Question verdict</span>
+        {result.progressStatusLabel ? <span className="detail-chip detail-chip--accent">{result.progressStatusLabel}</span> : null}
+      </div>
     </section>
   );
 }

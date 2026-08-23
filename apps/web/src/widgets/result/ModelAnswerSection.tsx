@@ -10,11 +10,14 @@ export function ModelAnswerSection({ result }: ModelAnswerSectionProps) {
   }
 
   return (
-    <section className="page-card">
+    <section className="page-card result-analysis-section-card">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Model answer</p>
           <h2 className="page-card__title">Suggested strong answer</h2>
+          <p className="page-card__body">
+            Compare this against your own answer structure instead of copying sentences directly.
+          </p>
         </div>
       </div>
       <div className="result-model-answer">

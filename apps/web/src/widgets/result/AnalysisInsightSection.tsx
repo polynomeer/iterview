@@ -23,11 +23,15 @@ export function AnalysisInsightSection({ result }: AnalysisInsightSectionProps) 
         }))}
         title="How this answer moved your skill profile"
       />
-      <section className="page-card">
+      <section className="page-card result-analysis-section-card">
         <div className="section-heading">
           <div>
             <p className="section-heading__eyebrow">Weak patterns</p>
             <h2 className="page-card__title">What to improve in the next retry</h2>
+            <p className="page-card__body">
+              Treat repeated weak patterns as the highest-signal reason to branch deeper or revise
+              the source-of-truth.
+            </p>
           </div>
         </div>
         {!hasWeakPatterns ? (

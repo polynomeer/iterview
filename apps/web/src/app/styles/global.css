@@ -8322,6 +8322,19 @@ button {
   line-height: 1.65;
 }
 
+.result-score-card__chips,
+.result-next-action-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.result-score-card--workspace {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 10%, transparent),
+    0 22px 48px rgba(10, 6, 5, 0.16);
+}
+
 .score-row__content {
   display: grid;
   gap: 10px;
@@ -8377,6 +8390,9 @@ button {
 .result-next-action-card {
   display: grid;
   gap: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-soft) 94%, var(--surface-base));
 }
 
 .result-next-action-card__signals {
@@ -8426,6 +8442,29 @@ button {
 .result-next-action-card__playbook-step span {
   color: var(--text-muted);
   line-height: 1.6;
+}
+
+.result-analysis-section-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.result-analysis-section-card--recommendations {
+  border-color: rgba(180, 83, 9, 0.14);
+}
+
+.result-followup-card {
+  border-color: rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
+    color-mix(in srgb, var(--surface-base) 95%, var(--surface-soft));
+}
+
+.result-followup-card__body {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  line-height: 1.55;
 }
 
 .resume-analysis-layout {
