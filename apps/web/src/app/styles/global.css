@@ -7264,13 +7264,52 @@ button {
 .interview-session-answer-surface {
   display: grid;
   gap: 18px;
+  padding: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
   scroll-margin-top: 120px;
 }
 
 .interview-session-answer-surface__header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
   gap: 16px;
+}
+
+.interview-session-answer-surface__topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.interview-session-answer-surface__summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.interview-session-answer-surface__summary-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 15, 29, 0.52);
+}
+
+.interview-session-answer-surface__summary-card span {
+  color: rgba(148, 163, 184, 0.82);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-session-answer-surface__summary-card strong {
+  color: #f8fafc;
+  font-size: 1.1rem;
+  letter-spacing: -0.03em;
 }
 
 .interview-session-answer-surface__guidance {
@@ -7316,6 +7355,23 @@ button {
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.interview-session-answer-surface__helper {
+  margin: 0;
+}
+
+.interview-session-answer-surface__actions,
+.interview-session-answer-surface__primary-actions,
+.interview-session-answer-surface__secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.interview-session-answer-surface__actions {
+  justify-content: space-between;
+  align-items: center;
 }
 
 .interview-session-side-panel__list {

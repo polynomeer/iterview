@@ -20,6 +20,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
+import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { SectionPanel } from "../../shared/ui/layout";
@@ -148,6 +149,7 @@ export function InterviewSessionPage() {
     activeSession.summary.totalQuestions > 0 &&
     activeSession.summary.totalQuestions >= activeSession.questions.length &&
     activeSession.summary.totalQuestions >= currentQuestion.orderIndex + 1;
+  const trimmedDraftLength = draft.trim().length;
   const statusRailItems = [
     {
       key: "question",
@@ -463,17 +465,35 @@ export function InterviewSessionPage() {
             <section className="page-card interview-session-answer-surface">
               <div className="interview-session-answer-surface__header">
                 <div>
-                  <span className="page-card__label">Answer draft</span>
+                  <div className="interview-session-answer-surface__topline">
+                    <span className="page-card__label">Answer draft</span>
+                    <span className="question-status-badge question-status-badge--accent">Execution lane</span>
+                  </div>
                   <h2 className="page-card__title">Keep the draft close to the evidence and the next branch decision</h2>
                 </div>
                 <div className="interview-session-answer-surface__meta">
                   <span>{currentQuestion.difficultyLabel}</span>
                   <span>{currentQuestion.status}</span>
+                  <span>{branchDepthLabel}</span>
                 </div>
               </div>
               <p className="page-card__body">
                 Answer, skip, or advance deliberately. This panel should feel like the execution surface for the branch you are currently defending.
               </p>
+              <div className="interview-session-answer-surface__summary">
+                <article className="interview-session-answer-surface__summary-card">
+                  <span>Draft chars</span>
+                  <strong>{trimmedDraftLength}</strong>
+                </article>
+                <article className="interview-session-answer-surface__summary-card">
+                  <span>Advance state</span>
+                  <strong>{canAdvance ? "Unlocked" : "Blocked"}</strong>
+                </article>
+                <article className="interview-session-answer-surface__summary-card">
+                  <span>Remaining nodes</span>
+                  <strong>{activeSession.summary.remainingQuestions}</strong>
+                </article>
+              </div>
               <div className="interview-session-answer-surface__guidance">
                 <article className="interview-session-answer-surface__guidance-card">
                   <span>Branch goal</span>
@@ -486,76 +506,89 @@ export function InterviewSessionPage() {
               </div>
               <AnswerTextEditor
                 disabled={submitMutation.isPending || advanceMutation.isPending || skipMutation.isPending}
+                mode="workspace"
                 onChange={setDraft}
                 value={draft}
               />
               {submitMutation.isError ? (
-                <p className="page-card__body">
-                  {submitMutation.error instanceof Error ? submitMutation.error.message : "Answer submission failed."}
-                </p>
+                <FeedbackNotice
+                  details={getErrorDetails(submitMutation.error)}
+                  message={submitMutation.error instanceof Error ? submitMutation.error.message : "Answer submission failed."}
+                  tone="error"
+                />
               ) : null}
               {advanceMutation.isError ? (
-                <p className="page-card__body">
-                  {advanceMutation.error instanceof ApiClientError && advanceMutation.error.status === 409
-                    ? "Answer or skip the current question before moving on."
-                    : advanceMutation.error instanceof Error
-                      ? advanceMutation.error.message
-                      : "Advancing to the next question failed."}
-                </p>
+                <FeedbackNotice
+                  details={getErrorDetails(advanceMutation.error)}
+                  message={
+                    advanceMutation.error instanceof ApiClientError && advanceMutation.error.status === 409
+                      ? "Answer or skip the current question before moving on."
+                      : advanceMutation.error instanceof Error
+                        ? advanceMutation.error.message
+                        : "Advancing to the next question failed."
+                  }
+                  tone="error"
+                />
               ) : null}
               {skipMutation.isError ? (
-                <p className="page-card__body">
-                  {skipMutation.error instanceof Error ? skipMutation.error.message : "Skipping the current question failed."}
-                </p>
+                <FeedbackNotice
+                  details={getErrorDetails(skipMutation.error)}
+                  message={skipMutation.error instanceof Error ? skipMutation.error.message : "Skipping the current question failed."}
+                  tone="error"
+                />
               ) : null}
               {!canAdvance && isCurrentQuestionActive ? (
-                <p className="resume-section__helper">
+                <p className="resume-section__helper interview-session-answer-surface__helper">
                   Answer or skip the current question before moving on.
                 </p>
               ) : null}
-              <div className="page-card__actions">
-                <button
-                  className="primary-button"
-                  disabled={draft.trim().length === 0 || submitMutation.isPending || skipMutation.isPending}
-                  onClick={() => {
-                    void handleSubmitAnswer();
-                  }}
-                  type="button"
-                >
-                  {t("interview.submitAnswer")}
-                </button>
-                <button
-                  className="secondary-button"
-                  disabled={skipMutation.isPending || submitMutation.isPending || !isCurrentQuestionActive}
-                  onClick={() => {
-                    void handleSkipQuestion();
-                  }}
-                  type="button"
-                >
-                  Skip question
-                </button>
-                {activeSession.summary.remainingQuestions > 0 ? (
+              <div className="interview-session-answer-surface__actions">
+                <div className="interview-session-answer-surface__primary-actions">
                   <button
-                    className="secondary-button"
-                    disabled={advanceMutation.isPending || skipMutation.isPending || !canAdvance}
+                    className="primary-button"
+                    disabled={trimmedDraftLength === 0 || submitMutation.isPending || skipMutation.isPending}
                     onClick={() => {
-                      void handleAdvanceQuestion();
+                      void handleSubmitAnswer();
                     }}
                     type="button"
                   >
-                    {t("interview.nextQuestion")}
+                    {t("interview.submitAnswer")}
                   </button>
-                ) : (
-                  <Link
-                    className="primary-button"
-                    to={routeConfig.interviewSessionResult.buildPath({ sessionId })}
+                  <button
+                    className="secondary-button"
+                    disabled={skipMutation.isPending || submitMutation.isPending || !isCurrentQuestionActive}
+                    onClick={() => {
+                      void handleSkipQuestion();
+                    }}
+                    type="button"
                   >
-                    {t("interview.finishSession")}
+                    Skip question
+                  </button>
+                </div>
+                <div className="interview-session-answer-surface__secondary-actions">
+                  {activeSession.summary.remainingQuestions > 0 ? (
+                    <button
+                      className="secondary-button"
+                      disabled={advanceMutation.isPending || skipMutation.isPending || !canAdvance}
+                      onClick={() => {
+                        void handleAdvanceQuestion();
+                      }}
+                      type="button"
+                    >
+                      {t("interview.nextQuestion")}
+                    </button>
+                  ) : (
+                    <Link
+                      className="primary-button"
+                      to={routeConfig.interviewSessionResult.buildPath({ sessionId })}
+                    >
+                      {t("interview.finishSession")}
+                    </Link>
+                  )}
+                  <Link className="secondary-button" to={routeConfig.interview.buildPath()}>
+                    {t("interview.exitSession")}
                   </Link>
-                )}
-                <Link className="secondary-button" to={routeConfig.interview.buildPath()}>
-                  {t("interview.exitSession")}
-                </Link>
+                </div>
               </div>
             </section>
           </div>
