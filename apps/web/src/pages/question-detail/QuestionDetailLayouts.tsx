@@ -62,6 +62,16 @@ export function QuestionDetailDesktopLayout({
           <p className="page-card__body">
             The main node stays dominant. Evidence, answer history, and follow-up branches stay near it so the question detail screen behaves like an inspector, not a detached reading page.
           </p>
+          <div className="question-detail-layout__note-rules">
+            <div className="question-detail-layout__note-rule">
+              <strong>1. Core claim</strong>
+              <span>Decide the main answer line before opening the deeper tree.</span>
+            </div>
+            <div className="question-detail-layout__note-rule">
+              <strong>2. Evidence check</strong>
+              <span>Keep resume facts and support material in view while tightening the branch.</span>
+            </div>
+          </div>
         </SectionPanel>
       </div>
       <div className="question-detail-layout__main question-detail-layout__main--primary">
@@ -98,6 +108,16 @@ export function QuestionDetailDesktopLayout({
             <p className="page-card__body">
               Progress, metadata, company context, and related roles belong in one decision lane so the next answer can stay specific instead of drifting into generic prep.
             </p>
+            <div className="question-detail-layout__note-rules">
+              <div className="question-detail-layout__note-rule">
+                <strong>Retry signal</strong>
+                <span>Return to this node when the answer is broad, weakly sourced, or under-scoped.</span>
+              </div>
+              <div className="question-detail-layout__note-rule">
+                <strong>Next action</strong>
+                <span>Choose whether to answer now, study support first, or open the follow-up tree.</span>
+              </div>
+            </div>
           </SectionPanel>
         </div>
       </aside>

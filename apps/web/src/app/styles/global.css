@@ -7170,6 +7170,68 @@ button {
     color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
 }
 
+.question-hero--detail-workspace,
+.question-detail-section-card--inspector,
+.question-detail-layout__hero-note,
+.question-detail-layout__inspector-note {
+  display: grid;
+  gap: 14px;
+}
+
+.question-hero--detail-workspace {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 30%),
+    linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
+}
+
+.question-hero__supporting,
+.question-detail-section-card__supporting,
+.question-detail-layout__note-rules {
+  display: grid;
+  gap: 10px;
+}
+
+.question-hero__supporting {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.question-detail-section-card__supporting {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.question-hero__supporting-item,
+.question-detail-section-card__supporting-item,
+.question-detail-layout__note-rule {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.question-hero__supporting-item span,
+.question-detail-section-card__supporting-item span {
+  color: var(--text-subtle);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.question-hero__supporting-item strong,
+.question-detail-section-card__supporting-item strong,
+.question-detail-layout__note-rule strong {
+  color: var(--text-main);
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.question-detail-layout__note-rule span {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
 .question-detail-section-card--recommended {
   border-color: rgba(14, 165, 233, 0.16);
 }
@@ -7945,6 +8007,10 @@ button {
     grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1.16fr) minmax(300px, 0.84fr);
     align-items: start;
+  }
+
+  .question-hero__supporting {
+    grid-template-columns: 1fr;
   }
 
   .question-detail-layout__study-rail {

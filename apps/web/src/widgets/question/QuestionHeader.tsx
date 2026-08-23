@@ -9,9 +9,10 @@ type QuestionHeaderProps = {
 
 export function QuestionHeader({ question }: QuestionHeaderProps) {
   const { t } = useLocale();
+  const relatedSkills = question.relatedSkills ?? [];
 
   return (
-    <section className="question-hero">
+    <section className="question-hero question-hero--detail-workspace">
       <div className="question-hero__topline">
         <span className="page-card__label">{t("question.interviewQuestion")}</span>
         <span className="detail-chip detail-chip--accent">Ready to answer</span>
@@ -22,6 +23,20 @@ export function QuestionHeader({ question }: QuestionHeaderProps) {
         <span className="question-hero__meta-pill" role="listitem">{question.difficulty}</span>
       </div>
       <p className="question-hero__body">{question.body}</p>
+      <div className="question-hero__supporting">
+        <article className="question-hero__supporting-item">
+          <span>Company targets</span>
+          <strong>{question.companies.length}</strong>
+        </article>
+        <article className="question-hero__supporting-item">
+          <span>Role anchors</span>
+          <strong>{question.roles.length}</strong>
+        </article>
+        <article className="question-hero__supporting-item">
+          <span>Skill anchors</span>
+          <strong>{relatedSkills.length}</strong>
+        </article>
+      </div>
       <div className="question-hero__chips">
         {question.companies.slice(0, 2).map((company) => (
           <span className="detail-chip" key={company}>{`Target ${company}`}</span>

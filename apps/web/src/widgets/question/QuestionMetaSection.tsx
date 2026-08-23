@@ -6,7 +6,7 @@ type QuestionMetaSectionProps = {
 
 export function QuestionMetaSection({ question }: QuestionMetaSectionProps) {
   return (
-    <section className="page-card question-detail-section-card">
+    <section className="page-card question-detail-section-card question-detail-section-card--inspector">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Metadata</p>
@@ -32,6 +32,16 @@ export function QuestionMetaSection({ question }: QuestionMetaSectionProps) {
         <article className="stat-tile">
           <p className="stat-tile__label">Materials</p>
           <strong className="stat-tile__value stat-tile__value--small">{question.learningMaterials.length}</strong>
+        </article>
+      </div>
+      <div className="question-detail-section-card__supporting">
+        <article className="question-detail-section-card__supporting-item">
+          <span>Tag density</span>
+          <strong>{question.tags.length}</strong>
+        </article>
+        <article className="question-detail-section-card__supporting-item">
+          <span>Skill anchors</span>
+          <strong>{(question.relatedSkills ?? []).length}</strong>
         </article>
       </div>
       <div className="detail-chip-section">
