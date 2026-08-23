@@ -7078,6 +7078,69 @@ button {
   min-width: 0;
 }
 
+.interview-result-layout__hero,
+.interview-result-layout__brief,
+.interview-result-layout__next-pass,
+.interview-result-layout__next-rail,
+.interview-result-layout__actions,
+.interview-result-layout__recap {
+  display: grid;
+  gap: 14px;
+}
+
+.interview-result-layout__hero-topline,
+.interview-result-layout__brief-topline,
+.interview-result-layout__next-pass-topline,
+.interview-result-layout__next-topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.interview-result-layout__hero-supporting {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.interview-result-layout__hero-supporting-item,
+.interview-result-layout__brief-rule {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.interview-result-layout__hero-supporting-item span,
+.interview-result-layout__next-note {
+  margin: 0;
+  color: var(--text-subtle);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-result-layout__hero-supporting-item strong,
+.interview-result-layout__brief-rule strong {
+  color: var(--text-main);
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.interview-result-layout__brief-rules {
+  display: grid;
+  gap: 10px;
+}
+
+.interview-result-layout__brief-rule span {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
 .question-detail-workspace-surface__chips {
   display: flex;
   flex-wrap: wrap;
@@ -7518,6 +7581,17 @@ button {
   box-shadow: var(--shadow-soft);
 }
 
+.interview-result-layout__recap-intro {
+  max-width: 68ch;
+}
+
+.interview-result-layout__recap-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
+}
+
 .interview-result-layout__next-list {
   display: grid;
   gap: 12px;
@@ -7526,6 +7600,10 @@ button {
 .interview-result-layout__next-item {
   display: grid;
   gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(148, 163, 184, 0.05);
 }
 
 .interview-result-layout__next-item strong {
@@ -7923,6 +8001,10 @@ button {
 
   .interview-result-layout__actions {
     width: min(100%, 320px);
+  }
+
+  .interview-result-layout__hero-supporting {
+    grid-template-columns: 1fr;
   }
 
   .interview-session-layout {
