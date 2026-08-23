@@ -113,6 +113,16 @@ export function PracticePage() {
             </article>
           </div>
         </div>
+        <div className="practice-workspace-surface__guidance">
+          <article className="practice-workspace-surface__guidance-card">
+            <span>Selection rule</span>
+            <strong>Pick the next question because it sharpens one branch, not because it is simply available.</strong>
+          </article>
+          <article className="practice-workspace-surface__guidance-card">
+            <span>Retry signal</span>
+            <strong>Scheduled review items should usually be cleared before starting a fresh prompt.</strong>
+          </article>
+        </div>
         <div className="practice-workspace-surface__chips">
           {filterState.search ? <span className="detail-chip detail-chip--accent">{`Search ${filterState.search}`}</span> : null}
           {filterState.category ? <span className="detail-chip">{`Category ${filterState.category}`}</span> : null}
@@ -140,12 +150,25 @@ export function PracticePage() {
         );
 
         const reviewQueueCard = (
-          <SectionPanel>
-            <span className="page-card__label">Review queue</span>
+          <SectionPanel className="practice-review-queue-card" variant="muted">
+            <div className="practice-review-queue-card__topline">
+              <span className="page-card__label">Review queue</span>
+              <span className="question-status-badge">Retry first</span>
+            </div>
             <h2 className="page-card__title">Need to handle scheduled retries first?</h2>
             <p className="page-card__body">
               Jump into the review queue to skip or complete items before choosing a fresh practice question.
             </p>
+            <div className="practice-review-queue-card__points">
+              <div className="practice-review-queue-card__point">
+                <strong>Retry lane</strong>
+                <span>Finish scheduled recovery before opening a broad new branch.</span>
+              </div>
+              <div className="practice-review-queue-card__point">
+                <strong>Scope control</strong>
+                <span>Use this queue to keep practice depth tighter than random catalog browsing.</span>
+              </div>
+            </div>
             <div className="page-card__actions">
               <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
                 Open review queue

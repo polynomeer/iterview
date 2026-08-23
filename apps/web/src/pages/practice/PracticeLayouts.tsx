@@ -44,15 +44,31 @@ export function PracticeDesktopLayout({
         aside={
           <div className="page-stack practice-layout__cluster practice-layout__cluster--rail">
             {reviewQueueCard}
-            <FilterPanel description="Keep filters pinned while scanning a larger desktop result set.">
+            <FilterPanel
+              description="Keep filters pinned while scanning a larger desktop result set."
+              title="Practice control rail"
+            >
               {filterControls}
             </FilterPanel>
-            <SectionPanel className="workspace-note-card" variant="muted">
-              <span className="page-card__label">Practice workflow</span>
+            <SectionPanel className="workspace-note-card practice-workflow-note" variant="muted">
+              <div className="practice-workflow-note__topline">
+                <span className="page-card__label">Practice workflow</span>
+                <span className="detail-chip">Control rail</span>
+              </div>
               <h2 className="page-card__title">Filter once, then move through the queue with less branching</h2>
               <p className="page-card__body">
                 Keep retry pressure and filters visible in one side rail while the main column stays focused on picking the next question.
               </p>
+              <div className="practice-workflow-note__steps">
+                <div className="practice-workflow-note__step">
+                  <strong>1. Reduce noise</strong>
+                  <span>Pin category, company, or status until the list becomes worth reviewing carefully.</span>
+                </div>
+                <div className="practice-workflow-note__step">
+                  <strong>2. Commit to one node</strong>
+                  <span>Start only the question that clearly improves the next answer or branch defense.</span>
+                </div>
+              </div>
             </SectionPanel>
           </div>
         }

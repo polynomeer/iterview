@@ -9,7 +9,7 @@ type QuestionListItemProps = {
 
 export function QuestionListItem({ item }: QuestionListItemProps) {
   return (
-    <article className="list-item-card">
+    <article className="list-item-card practice-list-item-card">
       <div className="list-item-card__content">
         <div className="list-item-card__meta" role="list">
           <span className="list-item-card__meta-pill" role="listitem">{item.categoryLabel}</span>
@@ -19,6 +19,20 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
         </div>
         <h3 className="list-item-card__title">{item.title}</h3>
         <p className="list-item-card__body">{item.prompt}</p>
+        <div className="practice-list-item-card__supporting">
+          {item.progressSummaryLabel ? (
+            <article className="practice-list-item-card__supporting-item">
+              <span>Progress</span>
+              <strong>{item.progressSummaryLabel}</strong>
+            </article>
+          ) : null}
+          {item.resumeRelevanceLabel ? (
+            <article className="practice-list-item-card__supporting-item">
+              <span>Resume relevance</span>
+              <strong>{item.resumeRelevanceLabel}</strong>
+            </article>
+          ) : null}
+        </div>
         {item.progressSummaryLabel ? (
           <p className="practice-list-item__progress">{item.progressSummaryLabel}</p>
         ) : null}

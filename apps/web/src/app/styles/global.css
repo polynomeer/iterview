@@ -6793,6 +6793,49 @@ button {
   letter-spacing: -0.04em;
 }
 
+.practice-workspace-surface__guidance,
+.practice-review-queue-card__points,
+.practice-workflow-note__steps {
+  display: grid;
+  gap: 10px;
+}
+
+.practice-workspace-surface__guidance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.practice-workspace-surface__guidance-card,
+.practice-review-queue-card__point,
+.practice-workflow-note__step,
+.practice-list-item-card__supporting-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.practice-workspace-surface__guidance-card span,
+.practice-review-queue-card__point span,
+.practice-workflow-note__step span,
+.practice-list-item-card__supporting-item span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practice-workspace-surface__guidance-card strong,
+.practice-review-queue-card__point strong,
+.practice-workflow-note__step strong,
+.practice-list-item-card__supporting-item strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
 .question-tree-workspace-surface__guidance,
 .question-tree-root-brief__supporting {
   display: grid;
@@ -6834,6 +6877,39 @@ button {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 24px;
+}
+
+.practice-question-list,
+.practice-review-queue-card,
+.practice-workflow-note {
+  display: grid;
+  gap: 14px;
+}
+
+.practice-question-list__intro {
+  max-width: 68ch;
+}
+
+.practice-review-queue-card__topline,
+.practice-workflow-note__topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.practice-list-item-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
+}
+
+.practice-list-item-card__supporting {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .question-tree-surface {
@@ -8026,6 +8102,11 @@ button {
   .resume-workspace-surface__header {
     grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
     align-items: end;
+  }
+
+  .practice-workspace-surface__guidance,
+  .practice-list-item-card__supporting {
+    grid-template-columns: 1fr;
   }
 
   .interview-workspace-surface__header {
