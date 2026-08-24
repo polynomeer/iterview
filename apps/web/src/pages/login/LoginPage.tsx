@@ -113,6 +113,16 @@ export function LoginPage() {
             <span className="detail-chip">Review history stays attached</span>
             <span className="detail-chip detail-chip--accent">No separate onboarding detour</span>
           </div>
+          <div className="auth-access-surface__guidance">
+            <article className="auth-access-surface__guidance-card">
+              <span>Re-entry rule</span>
+              <strong>Use login when you already have interview history, answer drafts, or resume evidence to continue from.</strong>
+            </article>
+            <article className="auth-access-surface__guidance-card">
+              <span>Next destination</span>
+              <strong>After sign-in, move straight back into source-of-truth updates, review recovery, or the next practice branch.</strong>
+            </article>
+          </div>
         </section>
 
         <div className="auth-access-grid">
@@ -123,6 +133,16 @@ export function LoginPage() {
               Re-enter the workspace and continue your interview, review, and source-of-truth flow
               without resetting context.
             </p>
+            <div className="auth-access-form-card__summary">
+              <article className="auth-access-form-card__summary-item">
+                <span>What opens</span>
+                <strong>Practice history, review queue, and active resume context</strong>
+              </article>
+              <article className="auth-access-form-card__summary-item">
+                <span>Best next step</span>
+                <strong>Resume the branch that last produced unstable follow-up answers</strong>
+              </article>
+            </div>
             <form className="auth-form" onSubmit={handleSubmit}>
               <label className="form-field">
                 <span className="form-field__label">{t("common.email")}</span>
@@ -190,6 +210,19 @@ export function LoginPage() {
                     </p>
                   </div>
                 </article>
+              </div>
+            </section>
+            <section className="page-card page-card--muted auth-access-note-card">
+              <span className="page-card__label">Quick path</span>
+              <div className="skills-signal-list">
+                <div className="skills-signal-list__item">
+                  <span>1. Re-enter</span>
+                  <strong>Recover your last known interview or review context.</strong>
+                </div>
+                <div className="skills-signal-list__item">
+                  <span>2. Stabilize</span>
+                  <strong>Check weak answers before starting a broader new run.</strong>
+                </div>
               </div>
             </section>
           </aside>

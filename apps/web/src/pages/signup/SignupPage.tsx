@@ -113,6 +113,16 @@ export function SignupPage() {
             <span className="detail-chip">Interview and review stay connected</span>
             <span className="detail-chip detail-chip--accent">No marketing-style detour</span>
           </div>
+          <div className="auth-access-surface__guidance">
+            <article className="auth-access-surface__guidance-card">
+              <span>Start rule</span>
+              <strong>Create an account only to enter one persistent workspace for resume-backed DFS interview practice.</strong>
+            </article>
+            <article className="auth-access-surface__guidance-card">
+              <span>First move</span>
+              <strong>After signup, ground the workspace in a resume version so later follow-up questions always have a source of truth.</strong>
+            </article>
+          </div>
         </section>
 
         <div className="auth-access-grid">
@@ -123,6 +133,16 @@ export function SignupPage() {
               Create access to the same workspace system used for practice, interview review, and
               source-of-truth preparation.
             </p>
+            <div className="auth-access-form-card__summary">
+              <article className="auth-access-form-card__summary-item">
+                <span>What opens</span>
+                <strong>Resume authoring, practice loops, and result review in one connected flow</strong>
+              </article>
+              <article className="auth-access-form-card__summary-item">
+                <span>Best first step</span>
+                <strong>Set up resume context before trying to broaden skill coverage or mock depth</strong>
+              </article>
+            </div>
             <form className="auth-form" onSubmit={handleSubmit}>
               <label className="form-field">
                 <span className="form-field__label">{t("common.email")}</span>
@@ -190,6 +210,19 @@ export function SignupPage() {
                     </p>
                   </div>
                 </article>
+              </div>
+            </section>
+            <section className="page-card page-card--muted auth-access-note-card">
+              <span className="page-card__label">Quick path</span>
+              <div className="skills-signal-list">
+                <div className="skills-signal-list__item">
+                  <span>1. Ground context</span>
+                  <strong>Connect your resume so the question tree can start from real claims.</strong>
+                </div>
+                <div className="skills-signal-list__item">
+                  <span>2. Enter practice</span>
+                  <strong>Move into one branch and defend it down to atomic follow-up depth.</strong>
+                </div>
               </div>
             </section>
           </aside>

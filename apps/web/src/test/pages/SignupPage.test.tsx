@@ -69,6 +69,9 @@ describe("SignupPage", () => {
       { route: "/signup" },
     );
 
+    expect(screen.getByText("Start rule")).toBeInTheDocument();
+    expect(screen.getByText("What opens")).toBeInTheDocument();
+    expect(screen.getByText("Quick path")).toBeInTheDocument();
     await user.clear(screen.getByRole("textbox", { name: "Email" }));
     await user.type(screen.getByRole("textbox", { name: "Email" }), "new@example.com");
     await user.clear(screen.getByLabelText("Password"));
