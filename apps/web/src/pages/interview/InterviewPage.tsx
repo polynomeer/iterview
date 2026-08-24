@@ -482,6 +482,20 @@ export function InterviewPage() {
               ) : null}
               {sessionCount > 0 ? <span className="detail-chip">{`History ${sessionCount}`}</span> : null}
             </div>
+            <div className="interview-workspace-surface__guidance">
+              <article className="interview-workspace-surface__guidance-card">
+                <span>Boundary</span>
+                <strong>Lock one resume version before the session opens a new branch</strong>
+              </article>
+              <article className="interview-workspace-surface__guidance-card">
+                <span>Traversal</span>
+                <strong>Choose a mode that matches whether you want calibration or full DFS coverage</strong>
+              </article>
+              <article className="interview-workspace-surface__guidance-card">
+                <span>Next move</span>
+                <strong>Inspect the weak node first, then open setup only when the branch target is explicit</strong>
+              </article>
+            </div>
 
             <div className="interview-workspace-surface__body">
               <div className="interview-graph-panel">
@@ -723,6 +737,20 @@ export function InterviewPage() {
                     value={String(questionCount)}
                   />
                 </div>
+                <div className="interview-page-layout__start-summary">
+                  <article className="interview-page-layout__start-summary-item">
+                    <span>Selected boundary</span>
+                    <strong>{selectedResumeChoice?.versionNumberLabel ?? t("interview.noResumeTitle")}</strong>
+                  </article>
+                  <article className="interview-page-layout__start-summary-item">
+                    <span>Interview path</span>
+                    <strong>{selectedInterviewModeOption.label}</strong>
+                  </article>
+                  <article className="interview-page-layout__start-summary-item">
+                    <span>Immediate action</span>
+                    <strong>{startFormOpen ? "Confirm the setup and launch" : "Open setup and verify the path"}</strong>
+                  </article>
+                </div>
                 <div className="page-card__actions">
                   <button
                     className="primary-button"
@@ -756,6 +784,10 @@ export function InterviewPage() {
                       <h2 className="page-card__title">Current interview boundary</h2>
                     </div>
                   </div>
+                  <p className="interview-page-layout__snapshot-note">
+                    This snapshot should answer three questions immediately: which resume version is active, which mode
+                    will control the traversal, and how wide the first pass will be.
+                  </p>
                   <div className="stack-list">
                     <article className="list-item-card">
                       <div className="list-item-card__content">
@@ -805,6 +837,25 @@ export function InterviewPage() {
 
             <div className="interview-page-layout__workspace">
               <div className="interview-page-layout__main">
+                <section className="page-card interview-page-layout__history-brief">
+                  <div className="interview-page-layout__history-brief-topline">
+                    <div>
+                      <p className="section-heading__eyebrow">Launch brief</p>
+                      <h2 className="page-card__title">Start from the narrowest defendable context</h2>
+                    </div>
+                    <span className="question-status-badge question-status-badge--accent">Workspace entry</span>
+                  </div>
+                  <div className="interview-page-layout__history-brief-rules">
+                    <article className="interview-page-layout__history-brief-rule">
+                      <span>Before launch</span>
+                      <strong>Verify the resume version and the exact branch you expect to defend</strong>
+                    </article>
+                    <article className="interview-page-layout__history-brief-rule">
+                      <span>During DFS</span>
+                      <strong>Let follow-up questions keep drilling until the claim reaches source-of-truth detail</strong>
+                    </article>
+                  </div>
+                </section>
                 {!sessionListQuery.isLoading && !sessionListQuery.isError && sessionListQuery.data ? (
                   sessionListQuery.data.length > 0 ? (
                     <InterviewSessionHistoryList items={sessionListQuery.data} />
@@ -825,6 +876,22 @@ export function InterviewPage() {
                           <h3 className="page-card__title">{t("interview.chooseResumeTitle")}</h3>
                         </div>
                       </div>
+                      <p className="interview-page-layout__setup-note">
+                        Pick the single version you want to treat as source of truth for this run. Everything the
+                        interviewer asks should be answerable from this boundary.
+                      </p>
+                      {selectedResumeChoice ? (
+                        <div className="interview-page-layout__setup-summary">
+                          <article className="interview-page-layout__setup-summary-item">
+                            <span>Active version</span>
+                            <strong>{selectedResumeChoice.versionNumberLabel}</strong>
+                          </article>
+                          <article className="interview-page-layout__setup-summary-item">
+                            <span>Parsing state</span>
+                            <strong>{selectedResumeChoice.parsingStatusLabel}</strong>
+                          </article>
+                        </div>
+                      ) : null}
                       <div className="stack-list">
                         {resumeVersionChoices.map((choice) => {
                           const isSelected = choice.versionId === selectedResumeVersionId;
@@ -861,6 +928,26 @@ export function InterviewPage() {
                       <span className="page-card__label">{t("interview.sessionSetupLabel")}</span>
                       <h3 className="page-card__title">{t("interview.sessionSetupTitle")}</h3>
                       <p className="page-card__body">{t("interview.sessionSetupBody")}</p>
+                      <div className="interview-page-layout__setup-summary">
+                        <article className="interview-page-layout__setup-summary-item">
+                          <span>Chosen mode</span>
+                          <strong>{selectedInterviewModeOption.label}</strong>
+                        </article>
+                        <article className="interview-page-layout__setup-summary-item">
+                          <span>Seed scope</span>
+                          <strong>{`${questionCount} questions`}</strong>
+                        </article>
+                      </div>
+                      <div className="interview-page-layout__setup-playbook">
+                        <article className="interview-page-layout__setup-playbook-step">
+                          <span>1. Lock the context</span>
+                          <strong>Do not mix claims from different resume versions in one pass</strong>
+                        </article>
+                        <article className="interview-page-layout__setup-playbook-step">
+                          <span>2. Choose the pass shape</span>
+                          <strong>Use coverage mode only when you intend to traverse the full follow-up tree</strong>
+                        </article>
+                      </div>
                       <div className="stack-list">
                         {interviewModeOptions.map((option) => {
                           const isSelected = option.id === selectedInterviewMode;
@@ -926,6 +1013,16 @@ export function InterviewPage() {
                     <p className="page-card__body">
                       This rail should make it obvious which version is active, which claims were parsed cleanly, and what evidence you will need to defend when the follow-up chain keeps drilling down.
                     </p>
+                    <div className="interview-page-layout__rail-rules">
+                      <article className="interview-page-layout__rail-rule">
+                        <span>Boundary rule</span>
+                        <strong>One session should map to one resume truth source</strong>
+                      </article>
+                      <article className="interview-page-layout__rail-rule">
+                        <span>Answer rule</span>
+                        <strong>Every claim should lead back to concrete project evidence or operational detail</strong>
+                      </article>
+                    </div>
                   </SectionPanel>
                   <SectionPanel className="workspace-note-card" variant="muted">
                     <span className="page-card__label">DFS review</span>
@@ -933,6 +1030,16 @@ export function InterviewPage() {
                     <p className="page-card__body">
                       Coverage mode is not just a longer mock. It is the mode for traversing the whole question tree, documenting weak branches, and tightening your source of truth before the real interview.
                     </p>
+                    <div className="interview-page-layout__rail-rules">
+                      <article className="interview-page-layout__rail-rule">
+                        <span>Coverage mode</span>
+                        <strong>Use it to finish the tree, not to collect a larger but shallower score</strong>
+                      </article>
+                      <article className="interview-page-layout__rail-rule">
+                        <span>Weak branch cue</span>
+                        <strong>Carry failed follow-ups forward into the next session until they become stable</strong>
+                      </article>
+                    </div>
                   </SectionPanel>
                   <section className="page-card">
                     <div className="section-heading">

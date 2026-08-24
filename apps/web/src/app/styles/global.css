@@ -7902,6 +7902,35 @@ button {
   align-content: start;
 }
 
+.interview-page-layout__snapshot-note,
+.interview-page-layout__setup-note {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.interview-page-layout__start-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.interview-page-layout__history-brief {
+  display: grid;
+  gap: 14px;
+  border-style: dashed;
+}
+
+.interview-page-layout__history-brief-topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.interview-page-layout__setup-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .interview-page-layout__snapshot .list-item-card {
   background: color-mix(in srgb, var(--surface-soft) 86%, var(--surface-base));
 }
@@ -8792,6 +8821,57 @@ button {
   gap: 10px;
 }
 
+.interview-workspace-surface__guidance,
+.interview-page-layout__start-summary,
+.interview-page-layout__history-brief-rules,
+.interview-page-layout__setup-summary,
+.interview-page-layout__setup-playbook,
+.interview-page-layout__rail-rules {
+  display: grid;
+  gap: 10px;
+}
+
+.interview-workspace-surface__guidance {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.interview-workspace-surface__guidance-card,
+.interview-page-layout__start-summary-item,
+.interview-page-layout__history-brief-rule,
+.interview-page-layout__setup-summary-item,
+.interview-page-layout__setup-playbook-step,
+.interview-page-layout__rail-rule {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.interview-workspace-surface__guidance-card span,
+.interview-page-layout__start-summary-item span,
+.interview-page-layout__history-brief-rule span,
+.interview-page-layout__setup-summary-item span,
+.interview-page-layout__setup-playbook-step span,
+.interview-page-layout__rail-rule span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-workspace-surface__guidance-card strong,
+.interview-page-layout__start-summary-item strong,
+.interview-page-layout__history-brief-rule strong,
+.interview-page-layout__setup-summary-item strong,
+.interview-page-layout__setup-playbook-step strong,
+.interview-page-layout__rail-rule strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
 .interview-workspace-surface > .interview-workspace-surface__body {
   grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.8fr);
   align-items: start;
@@ -9484,6 +9564,12 @@ button {
   }
 
   .interview-workspace-surface__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-workspace-surface__guidance,
+  .interview-page-layout__start-summary,
+  .interview-page-layout__setup-summary {
     grid-template-columns: 1fr;
   }
 
