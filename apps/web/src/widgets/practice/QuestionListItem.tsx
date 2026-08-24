@@ -33,14 +33,18 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
             </article>
           ) : null}
         </div>
-        {item.progressSummaryLabel ? (
-          <p className="practice-list-item__progress">{item.progressSummaryLabel}</p>
-        ) : null}
-        {item.resumeRelevanceLabel ? (
-          <p className="practice-list-item__progress">
-            Resume relevance: {item.resumeRelevanceLabel}
-            {item.resumeRelevanceReason ? ` / ${item.resumeRelevanceReason}` : ""}
-          </p>
+        {item.progressSummaryLabel || item.resumeRelevanceLabel ? (
+          <div className="practice-list-item-card__notes">
+            {item.progressSummaryLabel ? (
+              <p className="practice-list-item__progress">{item.progressSummaryLabel}</p>
+            ) : null}
+            {item.resumeRelevanceLabel ? (
+              <p className="practice-list-item__progress">
+                Resume relevance: {item.resumeRelevanceLabel}
+                {item.resumeRelevanceReason ? ` / ${item.resumeRelevanceReason}` : ""}
+              </p>
+            ) : null}
+          </div>
         ) : null}
         {(item.relatedSkillLabels ?? []).length > 0 ? (
           <div className="chip-list">

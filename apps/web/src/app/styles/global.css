@@ -2353,8 +2353,50 @@ button {
   gap: 12px;
 }
 
+.practice-filter-panel,
+.practice-question-list,
+.practice-review-queue-card,
+.practice-workflow-note {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
+  box-shadow: var(--shadow-soft);
+}
+
+.practice-filter-panel::before,
+.practice-question-list::before,
+.practice-review-queue-card::before,
+.practice-workflow-note::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(125, 211, 252, 0.08), transparent 34%);
+  pointer-events: none;
+}
+
+.practice-filter-panel > *,
+.practice-question-list > *,
+.practice-review-queue-card > *,
+.practice-workflow-note > * {
+  position: relative;
+  z-index: 1;
+}
+
 .practice-filter-bar--embedded .section-heading {
   margin-bottom: 12px;
+}
+
+.practice-filter-bar--embedded {
+  padding: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 98%, var(--surface-soft));
 }
 
 .practice-filter {
@@ -2374,9 +2416,8 @@ button {
 
 .practice-list-item__progress {
   margin: 0;
-  color: var(--accent-strong);
+  color: var(--text-muted);
   font-size: 0.86rem;
-  font-weight: 600;
   line-height: 1.5;
 }
 
@@ -7190,16 +7231,50 @@ button {
 }
 
 .practice-list-item-card {
+  padding: 18px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
     color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
 }
 
+.practice-list-item-card .list-item-card__content {
+  gap: 10px;
+}
+
+.practice-list-item-card .list-item-card__meta {
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.practice-list-item-card .list-item-card__title {
+  line-height: 1.34;
+  letter-spacing: -0.03em;
+}
+
+.practice-list-item-card .list-item-card__body {
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
 .practice-list-item-card__supporting {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.practice-list-item-card__notes {
+  display: grid;
+  gap: 6px;
+}
+
+.practice-list-item-card .list-item-card__actions {
+  align-items: stretch;
+}
+
+.practice-list-item-card .list-item-card__actions .secondary-button,
+.practice-list-item-card .list-item-card__actions .primary-button {
+  min-height: 38px;
 }
 
 .question-tree-surface {

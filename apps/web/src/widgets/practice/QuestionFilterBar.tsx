@@ -79,7 +79,7 @@ export function QuestionFilterBar({
   }
 
   return (
-    <section className="page-card">
+    <section className="page-card practice-filter-panel">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">Filters</p>
