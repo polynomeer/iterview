@@ -108,6 +108,8 @@ describe("InterviewPage", () => {
     expect(
       screen.getByText("Choose the resume version and language context for this mock"),
     ).toBeInTheDocument();
+    expect(screen.getByText("Today's recovery")).toBeInTheDocument();
+    expect(screen.getByText("Jump to weakest branch")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Start Interview" }));
 

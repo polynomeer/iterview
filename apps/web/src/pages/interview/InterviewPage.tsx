@@ -496,6 +496,23 @@ export function InterviewPage() {
                 <strong>Inspect the weak node first, then open setup only when the branch target is explicit</strong>
               </article>
             </div>
+            <div className="interview-workspace-surface__actions">
+              <button
+                className="primary-button"
+                disabled={resumeVersionChoices.length === 0}
+                onClick={() => setStartFormOpen(true)}
+                type="button"
+              >
+                Open session setup
+              </button>
+              <button
+                className="secondary-button"
+                onClick={() => setSelectedGraphNodeId("read-uncommitted")}
+                type="button"
+              >
+                Jump to weakest branch
+              </button>
+            </div>
 
             <div className="interview-workspace-surface__body">
               <div className="interview-graph-panel">
@@ -749,6 +766,16 @@ export function InterviewPage() {
                   <article className="interview-page-layout__start-summary-item">
                     <span>Immediate action</span>
                     <strong>{startFormOpen ? "Confirm the setup and launch" : "Open setup and verify the path"}</strong>
+                  </article>
+                </div>
+                <div className="interview-page-layout__start-rules">
+                  <article className="interview-page-layout__start-rule">
+                    <span>Today&apos;s recovery</span>
+                    <strong>{selectedInspector.title} is the first branch to defend before widening coverage.</strong>
+                  </article>
+                  <article className="interview-page-layout__start-rule">
+                    <span>Before launch</span>
+                    <strong>Keep the resume boundary, interview mode, and question seed count explicit so the DFS path stays explainable.</strong>
                   </article>
                 </div>
                 <div className="page-card__actions">

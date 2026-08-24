@@ -9134,6 +9134,7 @@ button {
 
 .interview-workspace-surface__guidance,
 .interview-page-layout__start-summary,
+.interview-page-layout__start-rules,
 .interview-page-layout__history-brief-rules,
 .interview-page-layout__setup-summary,
 .interview-page-layout__setup-playbook,
@@ -9146,8 +9147,15 @@ button {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.interview-workspace-surface__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .interview-workspace-surface__guidance-card,
 .interview-page-layout__start-summary-item,
+.interview-page-layout__start-rule,
 .interview-page-layout__history-brief-rule,
 .interview-page-layout__setup-summary-item,
 .interview-page-layout__setup-playbook-step,
@@ -9162,6 +9170,7 @@ button {
 
 .interview-workspace-surface__guidance-card span,
 .interview-page-layout__start-summary-item span,
+.interview-page-layout__start-rule span,
 .interview-page-layout__history-brief-rule span,
 .interview-page-layout__setup-summary-item span,
 .interview-page-layout__setup-playbook-step span,
@@ -9174,6 +9183,7 @@ button {
 
 .interview-workspace-surface__guidance-card strong,
 .interview-page-layout__start-summary-item strong,
+.interview-page-layout__start-rule strong,
 .interview-page-layout__history-brief-rule strong,
 .interview-page-layout__setup-summary-item strong,
 .interview-page-layout__setup-playbook-step strong,
@@ -9924,8 +9934,13 @@ button {
 
   .interview-workspace-surface__guidance,
   .interview-page-layout__start-summary,
+  .interview-page-layout__start-rules,
   .interview-page-layout__setup-summary {
     grid-template-columns: 1fr;
+  }
+
+  .interview-workspace-surface__actions > * {
+    width: 100%;
   }
 
   .interview-graph-panel__canvas {
