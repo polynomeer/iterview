@@ -134,6 +134,16 @@ export function ReviewQueuePage() {
             </article>
           </div>
         </div>
+        <div className="review-queue-workspace-surface__guidance">
+          <article className="review-queue-workspace-surface__guidance-card">
+            <span>Execution rule</span>
+            <strong>Clear the smallest high-signal retry before opening fresh practice work.</strong>
+          </article>
+          <article className="review-queue-workspace-surface__guidance-card">
+            <span>Defer rule</span>
+            <strong>Skip only when you are choosing a later slot intentionally, not when the branch feels vague.</strong>
+          </article>
+        </div>
         <div className="review-queue-workspace-surface__chips">
           <span className="detail-chip">{`Queue ${queueItems.length}`}</span>
           {highPriorityCount > 0 ? <span className="detail-chip detail-chip--accent">High-priority items</span> : null}

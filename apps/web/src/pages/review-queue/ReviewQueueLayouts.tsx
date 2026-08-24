@@ -37,6 +37,16 @@ export function ReviewQueueDesktopLayout({
           <p className="review-queue-note-card__body">
             Treat this queue as a short operational list, not as another browsing page.
           </p>
+          <div className="review-queue-note-card__rules">
+            <div className="review-queue-note-card__rule">
+              <strong>1. Inspect</strong>
+              <span>Read priority, schedule, and latest result context before acting.</span>
+            </div>
+            <div className="review-queue-note-card__rule">
+              <strong>2. Resolve</strong>
+              <span>Either finish the answer loop now or deliberately move the branch later.</span>
+            </div>
+          </div>
         </SectionPanel>
         <SectionPanel className="review-queue-note-card" variant="muted">
           <div className="review-queue-note-card__header">
@@ -50,6 +60,16 @@ export function ReviewQueueDesktopLayout({
           <p className="review-queue-note-card__body">
             The goal is fast triage: inspect, act, then return to focused answer work.
           </p>
+          <div className="review-queue-note-card__rules">
+            <div className="review-queue-note-card__rule">
+              <strong>Priority first</strong>
+              <span>High-priority and due-today items should dominate the first pass.</span>
+            </div>
+            <div className="review-queue-note-card__rule">
+              <strong>Loop closure</strong>
+              <span>Use result context only to tighten the retry, not to re-read old work indefinitely.</span>
+            </div>
+          </div>
         </SectionPanel>
       </ContentGrid>
       <div className="page-stack">

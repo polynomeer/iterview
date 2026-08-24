@@ -6583,8 +6583,47 @@ button {
   line-height: 1.55;
 }
 
+.review-queue-note-card__rules,
+.review-queue-workspace-surface__guidance,
+.review-queue-item-card__supporting {
+  display: grid;
+  gap: 10px;
+}
+
+.review-queue-note-card__rule,
+.review-queue-workspace-surface__guidance-card,
+.review-queue-item-card__supporting-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.review-queue-note-card__rule span,
+.review-queue-workspace-surface__guidance-card span,
+.review-queue-item-card__supporting-item span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.review-queue-note-card__rule strong,
+.review-queue-workspace-surface__guidance-card strong,
+.review-queue-item-card__supporting-item strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
 .review-queue-item-card {
   border-color: rgba(148, 163, 184, 0.14);
+}
+
+.review-queue-list-card__intro {
+  max-width: 68ch;
 }
 
 .review-queue-item-card__chips,
@@ -7020,6 +7059,11 @@ button {
   color: #f8fafc;
   font-size: 1.3rem;
   letter-spacing: -0.04em;
+}
+
+.review-queue-workspace-surface__guidance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
 }
 
 .review-queue-workspace-surface__chips {

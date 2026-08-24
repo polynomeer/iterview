@@ -31,7 +31,10 @@ export function ReviewQueueList({
         </div>
         <span className="section-heading__count">{items.length}</span>
       </div>
-      <div className={layout === "grid" ? "card-grid" : "stack-list"}>
+      <p className="page-card__body review-queue-list-card__intro">
+        Work top-down: handle the items that are both urgent and answerable before spending time browsing lower-signal retries.
+      </p>
+      <div className={layout === "grid" ? "card-grid review-queue-list-card__grid" : "stack-list review-queue-list-card__stack"}>
         {items.map((item) => (
           <ReviewQueueItem
             item={item}

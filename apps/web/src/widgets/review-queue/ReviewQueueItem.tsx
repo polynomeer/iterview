@@ -30,6 +30,20 @@ export function ReviewQueueItem({
         </div>
         <h3 className="list-item-card__title">{item.questionTitle}</h3>
         <p className="list-item-card__body">{item.reasonDetail}</p>
+        <div className="review-queue-item-card__supporting">
+          {item.priorityLabel ? (
+            <article className="review-queue-item-card__supporting-item">
+              <span>Priority</span>
+              <strong>{item.priorityLabel}</strong>
+            </article>
+          ) : null}
+          {item.scheduledLabel ? (
+            <article className="review-queue-item-card__supporting-item">
+              <span>Scheduled</span>
+              <strong>{item.scheduledLabel}</strong>
+            </article>
+          ) : null}
+        </div>
         <div className="review-queue-item-card__chips">
           {item.priorityLabel ? <span className="detail-chip detail-chip--accent">{item.priorityLabel}</span> : null}
           {item.scheduledLabel ? <span className="detail-chip">{item.scheduledLabel}</span> : null}
