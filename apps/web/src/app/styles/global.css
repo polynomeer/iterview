@@ -6894,10 +6894,6 @@ button {
 .interview-session-side-panel {
   display: grid;
   gap: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
 }
 
 .interview-session-side-summary__topline,
@@ -7564,6 +7560,63 @@ button {
   box-shadow: var(--shadow-soft);
 }
 
+.interview-page-layout__start,
+.interview-page-layout__history-brief,
+.interview-page-layout__setup > .page-card,
+.interview-session-current,
+.interview-session-side-summary,
+.interview-session-side-panel,
+.interview-result-layout__hero,
+.interview-result-layout__brief,
+.interview-result-layout__next-pass,
+.interview-result-layout__next-rail,
+.interview-result-layout__actions,
+.interview-result-layout__recap {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+  box-shadow: var(--shadow-soft);
+}
+
+.interview-page-layout__start::before,
+.interview-page-layout__history-brief::before,
+.interview-page-layout__setup > .page-card::before,
+.interview-session-current::before,
+.interview-session-side-summary::before,
+.interview-session-side-panel::before,
+.interview-result-layout__hero::before,
+.interview-result-layout__brief::before,
+.interview-result-layout__next-pass::before,
+.interview-result-layout__next-rail::before,
+.interview-result-layout__actions::before,
+.interview-result-layout__recap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(125, 211, 252, 0.08), transparent 34%);
+  pointer-events: none;
+}
+
+.interview-page-layout__start > *,
+.interview-page-layout__history-brief > *,
+.interview-page-layout__setup > .page-card > *,
+.interview-session-current > *,
+.interview-session-side-summary > *,
+.interview-session-side-panel > *,
+.interview-result-layout__hero > *,
+.interview-result-layout__brief > *,
+.interview-result-layout__next-pass > *,
+.interview-result-layout__next-rail > *,
+.interview-result-layout__actions > *,
+.interview-result-layout__recap > * {
+  position: relative;
+  z-index: 1;
+}
+
 .interview-page-layout__hero > * {
   min-width: 0;
 }
@@ -8071,7 +8124,6 @@ button {
 }
 
 .interview-session-current {
-  padding: 20px;
   border-radius: 18px;
 }
 
@@ -8298,11 +8350,6 @@ button {
 
 .interview-result-layout__brief {
   border-style: dashed;
-}
-
-.interview-result-layout__actions {
-  background: var(--surface-base);
-  box-shadow: var(--shadow-soft);
 }
 
 .interview-result-layout__recap-intro {
