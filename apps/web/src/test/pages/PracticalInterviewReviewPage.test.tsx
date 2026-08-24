@@ -578,10 +578,12 @@ describe("PracticalInterviewReviewPage", () => {
       { route: "/practical-interviews/record-1" },
     );
 
+    expect(screen.getByText("Review rule")).toBeInTheDocument();
+    expect(screen.getByText("Open first")).toBeInTheDocument();
     expect(screen.getByText("Server-prioritized lanes")).toBeInTheDocument();
     expect(screen.getByText("Replay ready")).toBeInTheDocument();
     expect(screen.getByText("Keep replay context above the transcript")).toBeInTheDocument();
-    expect(screen.getByText("Transcript needs final review")).toBeInTheDocument();
+    expect(screen.getAllByText("Transcript needs final review")).toHaveLength(2);
     const replaySection = screen.getByText("Audio replay").closest("section");
     expect(replaySection).not.toBeNull();
     const replayScope = within(replaySection!);

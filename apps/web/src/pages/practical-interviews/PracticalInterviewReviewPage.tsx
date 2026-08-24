@@ -742,6 +742,9 @@ export function PracticalInterviewReviewPage() {
     (count, lane) => count + lane.needsReviewCount,
     0,
   );
+  const primaryReviewLane =
+    [...review.laneItems].sort((left, right) => left.sortOrder - right.sortOrder)[0] ?? null;
+  const replayBlockerCount = review.replayReadiness.blockerDetails.length;
   const playback = review.playback ?? transcript.playback ?? questions.playback ?? null;
   const activePlaybackSegmentSequence = useMemo(
     () =>
@@ -1076,6 +1079,22 @@ export function PracticalInterviewReviewPage() {
                 </span>
               ) : null}
             </div>
+            <div className="practical-review-workspace-surface__guidance">
+              <article className="practical-review-workspace-surface__guidance-card">
+                <span>Review rule</span>
+                <strong>
+                  Stabilize the lane that can distort all downstream interpretation before you broaden into questions or threads.
+                </strong>
+              </article>
+              <article className="practical-review-workspace-surface__guidance-card">
+                <span>Next recovery</span>
+                <strong>
+                  {primaryReviewLane
+                    ? `${primaryReviewLane.badgeText} is the first recovery surface because ${primaryReviewLane.whyItMatters.toLowerCase()}`
+                    : "Open the most unstable lane first, then verify replay readiness."}
+                </strong>
+              </article>
+            </div>
             {(updateReviewMutation.isSuccess || confirmMutation.isSuccess) && (
               <FeedbackNotice
                 message={
@@ -1194,6 +1213,24 @@ export function PracticalInterviewReviewPage() {
             <p className="page-card__body practical-review-brief__summary">
               Transcript stays primary. Replay readiness, lane priorities, provenance, and supporting payloads are grouped here so the rest of the review can focus on the interview itself.
             </p>
+          </div>
+          <div className="practical-review-brief__summary-grid">
+            <article className="practical-review-brief__summary-card">
+              <span>Open first</span>
+              <strong>{primaryReviewLane ? primaryReviewLane.summaryText : "No lane priority available"}</strong>
+            </article>
+            <article className="practical-review-brief__summary-card">
+              <span>Replay blockers</span>
+              <strong>
+                {replayBlockerCount > 0
+                  ? `${replayBlockerCount} blocker${replayBlockerCount === 1 ? "" : "s"} should be cleared before replay.`
+                  : "Replay can start once the active lane review is stable."}
+              </strong>
+            </article>
+            <article className="practical-review-brief__summary-card">
+              <span>Weak-answer load</span>
+              <strong>{review.weakAnswerCount} answers still need recovery-oriented inspection.</strong>
+            </article>
           </div>
           <div className="practical-review-brief__grid">
             <section className="page-card page-card--inset practical-review-brief__card">

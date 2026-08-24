@@ -3590,6 +3590,42 @@ button {
   gap: 10px;
 }
 
+.practical-review-workspace-surface__guidance,
+.practical-review-brief__summary-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.practical-review-workspace-surface__guidance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.practical-review-workspace-surface__guidance-card,
+.practical-review-brief__summary-card {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.practical-review-workspace-surface__guidance-card span,
+.practical-review-brief__summary-card span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practical-review-workspace-surface__guidance-card strong,
+.practical-review-brief__summary-card strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+}
+
 .practical-lane-card--warning,
 .practical-transcript-segment--selected,
 .practical-question-row--selected,
@@ -3702,6 +3738,10 @@ button {
 
 .practical-review-brief__summary {
   max-width: 62ch;
+}
+
+.practical-review-brief__summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .practical-review-brief__grid {
@@ -3885,6 +3925,11 @@ button {
   .practical-list-priority-step__index {
     width: 36px;
     height: 36px;
+  }
+
+  .practical-review-workspace-surface__guidance,
+  .practical-review-brief__summary-grid {
+    grid-template-columns: 1fr;
   }
 
   .practical-list-workspace-surface__guidance {
