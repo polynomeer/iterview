@@ -346,11 +346,15 @@ describe("InterviewSessionPage", () => {
     expect(screen.getByText("Needs more defense")).toBeInTheDocument();
     expect(screen.getByText("Skipped recovery")).toBeInTheDocument();
     expect(screen.getByText(/Weak facets: tradeoffs/i)).toBeInTheDocument();
+    expect(screen.getByText("Generated follow-up under defense")).toBeInTheDocument();
+    expect(screen.getByText("Answer or skip must close this node first")).toBeInTheDocument();
     expect(screen.getByText("Overall coverage")).toBeInTheDocument();
     expect(screen.getByText("Skipped")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Skip question" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Next question" })).toBeDisabled();
     expect(screen.getByText("Answer or skip the current question before moving on.")).toBeInTheDocument();
+    expect(screen.getByText("Start with the exact claim this node is testing.")).toBeInTheDocument();
+    expect(screen.getByText("2 source-of-truth snippets attached")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Explain the scaling trade-off" })).toBeInTheDocument();
   });
 

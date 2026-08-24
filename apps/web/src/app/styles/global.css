@@ -7907,6 +7907,13 @@ button {
   gap: 10px;
 }
 
+.interview-session-workspace-surface__snapshot,
+.interview-session-answer-surface__draft-status {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .interview-session-workspace-surface__guidance,
 .interview-session-current__summary,
 .interview-session-side-summary__signals,
@@ -7924,6 +7931,31 @@ button {
 
 .interview-session-workspace-surface__guidance {
   margin-top: 24px;
+}
+
+.interview-session-workspace-surface__snapshot-card,
+.interview-session-answer-surface__draft-status-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 15, 29, 0.58);
+}
+
+.interview-session-workspace-surface__snapshot-card span,
+.interview-session-answer-surface__draft-status-card span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-session-workspace-surface__snapshot-card strong,
+.interview-session-answer-surface__draft-status-card strong {
+  color: #f8fafc;
+  line-height: 1.45;
+  letter-spacing: -0.03em;
 }
 
 .interview-session-workspace-surface__guidance-card,
@@ -8119,6 +8151,10 @@ button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+.interview-session-answer-surface__draft-status {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .interview-session-answer-surface__guidance-card {
@@ -9936,6 +9972,17 @@ button {
   .interview-page-layout__start-summary,
   .interview-page-layout__start-rules,
   .interview-page-layout__setup-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-session-workspace-surface__snapshot,
+  .interview-session-workspace-surface__guidance,
+  .interview-session-current__summary,
+  .interview-session-side-summary__signals,
+  .interview-session-answer-surface__draft-status,
+  .interview-session-answer-surface__guidance,
+  .interview-session-answer-surface__playbook,
+  .interview-session-answer-surface__summary {
     grid-template-columns: 1fr;
   }
 

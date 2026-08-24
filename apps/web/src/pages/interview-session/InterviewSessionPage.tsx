@@ -150,6 +150,30 @@ export function InterviewSessionPage() {
     activeSession.summary.totalQuestions >= activeSession.questions.length &&
     activeSession.summary.totalQuestions >= currentQuestion.orderIndex + 1;
   const trimmedDraftLength = draft.trim().length;
+  const answerDraftStatus =
+    trimmedDraftLength === 0
+      ? "Start with the exact claim this node is testing."
+      : trimmedDraftLength < 140
+        ? "Add one concrete resume fact or number before moving on."
+        : "Draft is long enough to pressure-test for evidence and trade-offs.";
+  const evidenceAnchorCount = currentQuestion.resumeEvidence.length;
+  const branchSnapshotItems = [
+    {
+      label: "Current branch",
+      value: currentQuestion.isFollowUp ? "Generated follow-up under defense" : "Root claim under defense",
+    },
+    {
+      label: "Next unlock",
+      value: canAdvance ? "Branch can reveal the next node" : "Answer or skip must close this node first",
+    },
+    {
+      label: "Recovery signal",
+      value:
+        weakFacetCount > 0
+          ? `${weakFacetCount} weak facet${weakFacetCount > 1 ? "s" : ""} still need a tighter answer`
+          : "No weak facets are forcing a retry right now",
+    },
+  ] as const;
   const statusRailItems = [
     {
       key: "question",
@@ -314,6 +338,14 @@ export function InterviewSessionPage() {
             ) : null}
             {activeSession.startedAt ? <span className="detail-chip">{activeSession.startedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
+          </div>
+          <div className="interview-session-workspace-surface__snapshot">
+            {branchSnapshotItems.map((item) => (
+              <article className="interview-session-workspace-surface__snapshot-card" key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </article>
+            ))}
           </div>
           <div className="interview-session-workspace-surface__guidance">
             <article className="interview-session-workspace-surface__guidance-card">
@@ -545,6 +577,20 @@ export function InterviewSessionPage() {
                 <article className="interview-session-answer-surface__summary-card">
                   <span>Remaining nodes</span>
                   <strong>{activeSession.summary.remainingQuestions}</strong>
+                </article>
+              </div>
+              <div className="interview-session-answer-surface__draft-status">
+                <article className="interview-session-answer-surface__draft-status-card">
+                  <span>Draft checkpoint</span>
+                  <strong>{answerDraftStatus}</strong>
+                </article>
+                <article className="interview-session-answer-surface__draft-status-card">
+                  <span>Resume anchors</span>
+                  <strong>
+                    {evidenceAnchorCount > 0
+                      ? `${evidenceAnchorCount} source-of-truth snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
+                      : "No explicit source-of-truth snippet is attached yet"}
+                  </strong>
                 </article>
               </div>
               <div className="interview-session-answer-surface__guidance">
