@@ -154,6 +154,16 @@ export function ResumeAnalysisPage() {
                     <span className="detail-chip">{activeResumeVersion.extractionStatusLabel}</span>
                     <span className="detail-chip">{activeResumeVersion.fileNameLabel}</span>
                   </div>
+                  <div className="resume-analysis-workspace-surface__guidance">
+                    <article className="resume-analysis-workspace-surface__guidance-card">
+                      <span>First read</span>
+                      <strong>Start with the claim most likely to fail when the interviewer asks for concrete trade-offs</strong>
+                    </article>
+                    <article className="resume-analysis-workspace-surface__guidance-card">
+                      <span>Repair order</span>
+                      <strong>Fix thin source text before spending another session on answers built from it</strong>
+                    </article>
+                  </div>
                 </section>
               );
 
@@ -186,6 +196,20 @@ export function ResumeAnalysisPage() {
                           </strong>
                         </article>
                       </div>
+                      <div className="resume-analysis-priority-card__playbook">
+                        <article className="resume-analysis-priority-card__playbook-step">
+                          <span>1. Pick the weakest claim</span>
+                          <strong>
+                            {analysisQuery.data.risks[0]
+                              ? `Rework "${analysisQuery.data.risks[0].title}" until it can be defended with one concrete example`
+                              : "No urgent claim failure is blocking the next mock pass"}
+                          </strong>
+                        </article>
+                        <article className="resume-analysis-priority-card__playbook-step">
+                          <span>2. Trace the evidence</span>
+                          <strong>Make sure the supporting experience block contains metrics, constraints, and decisions instead of summaries only</strong>
+                        </article>
+                      </div>
                     </section>
                     <ResumeRiskList risks={analysisQuery.data.risks} />
                     <ResumeExperienceList experiences={analysisQuery.data.experiences} />
@@ -201,6 +225,20 @@ export function ResumeAnalysisPage() {
                         concrete decisions, constraints, metrics, and tradeoffs when the question tree keeps drilling
                         deeper.
                       </p>
+                      <div className="resume-analysis-guide__signals">
+                        <article className="resume-analysis-guide__signal">
+                          <span>Immediate repair target</span>
+                          <strong>
+                            {analysisQuery.data.risks[0]
+                              ? analysisQuery.data.risks[0].title
+                              : "No high-priority claim repair is currently flagged"}
+                          </strong>
+                        </article>
+                        <article className="resume-analysis-guide__signal">
+                          <span>Before next interview</span>
+                          <strong>Make the risky claim and its evidence block readable without extra explanation</strong>
+                        </article>
+                      </div>
                       <div className="resume-analysis-guide__rules">
                         <div className="resume-analysis-guide__rule">
                           <strong>1. Find vague claims first</strong>

@@ -120,7 +120,7 @@ describe("ResumeAnalysisPage", () => {
 
     expect(screen.getByText("Source of truth")).toBeInTheDocument();
     expect(screen.getByText("Defense guide")).toBeInTheDocument();
-    expect(screen.getByText("Refactor leadership claim is still vague")).toBeInTheDocument();
+    expect(screen.getAllByText("Refactor leadership claim is still vague")).toHaveLength(2);
     expect(screen.getByText("Interview analytics platform")).toBeInTheDocument();
     expect(screen.getAllByText("Spring Boot").length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "Edit source of truth" })).toHaveAttribute(

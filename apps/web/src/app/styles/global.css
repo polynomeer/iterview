@@ -9528,6 +9528,50 @@ button {
   gap: 10px;
 }
 
+.resume-analysis-workspace-surface__guidance,
+.resume-analysis-priority-card__playbook,
+.resume-analysis-guide__signals {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-analysis-workspace-surface__guidance,
+.resume-analysis-guide__signals {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.resume-analysis-workspace-surface__guidance {
+  margin-top: 24px;
+}
+
+.resume-analysis-workspace-surface__guidance-card,
+.resume-analysis-priority-card__playbook-step,
+.resume-analysis-guide__signal {
+  display: grid;
+  gap: 4px;
+  padding: 14px 15px;
+  border-radius: 18px;
+  background: color-mix(in srgb, white 7%, transparent);
+  border: 1px solid color-mix(in srgb, white 10%, transparent);
+}
+
+.resume-analysis-workspace-surface__guidance-card span,
+.resume-analysis-priority-card__playbook-step span,
+.resume-analysis-guide__signal span {
+  color: rgba(255, 247, 240, 0.62);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-analysis-workspace-surface__guidance-card strong,
+.resume-analysis-priority-card__playbook-step strong,
+.resume-analysis-guide__signal strong {
+  color: #fff8f0;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
 .resume-analysis-priority-card {
   display: grid;
   gap: 16px;
