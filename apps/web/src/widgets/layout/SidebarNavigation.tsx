@@ -19,7 +19,7 @@ export function SidebarNavigation() {
   const manageLinks = [
     { label: "Target Companies", to: routeConfig.resumeTailorJobPostings.buildPath(), badge: null },
     { label: "Notes", to: routeConfig.notes.buildPath(), badge: null },
-    { label: "Bookmarks", to: routeConfig.practicalInterviews.buildPath(), badge: null },
+    { label: "Bookmarks", to: routeConfig.bookmarks.buildPath(), badge: null },
   ] as const;
 
   return (

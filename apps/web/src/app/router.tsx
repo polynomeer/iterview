@@ -17,6 +17,7 @@ const ResultAnalysisPage = lazy(() => import("../pages/result-analysis/ResultAna
 const ArchivePage = lazy(() => import("../pages/archive/ArchivePage").then((module) => ({ default: module.ArchivePage })));
 const FeedPage = lazy(() => import("../pages/feed/FeedPage").then((module) => ({ default: module.FeedPage })));
 const NotesPage = lazy(() => import("../pages/notes/NotesPage").then((module) => ({ default: module.NotesPage })));
+const BookmarksPage = lazy(() => import("../pages/bookmarks/BookmarksPage").then((module) => ({ default: module.BookmarksPage })));
 const ProfilePage = lazy(() => import("../pages/profile/ProfilePage").then((module) => ({ default: module.ProfilePage })));
 const ResumePage = lazy(() => import("../pages/resume/ResumePage").then((module) => ({ default: module.ResumePage })));
 const ResumeAnalysisPage = lazy(() => import("../pages/resume-analysis/ResumeAnalysisPage").then((module) => ({ default: module.ResumeAnalysisPage })));
@@ -104,6 +105,10 @@ const router = createBrowserRouter([
           {
             path: routeConfig.notes.path,
             element: withSuspense(<NotesPage />),
+          },
+          {
+            path: routeConfig.bookmarks.path,
+            element: withSuspense(<BookmarksPage />),
           },
           {
             path: routeConfig.profile.path,
