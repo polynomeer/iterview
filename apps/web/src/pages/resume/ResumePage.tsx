@@ -326,6 +326,16 @@ export function ResumePage() {
             <span className="detail-chip">{`Risks ${snapshotsQuery.data.risks.length}`}</span>
           ) : null}
         </div>
+        <div className="resume-workspace-surface__guidance">
+          <article className="resume-workspace-surface__guidance-card">
+            <span>Active boundary</span>
+            <strong>Keep one version active as the interview source of truth until its claims are stable enough to defend</strong>
+          </article>
+          <article className="resume-workspace-surface__guidance-card">
+            <span>Next step</span>
+            <strong>Upload, parse, activate, then inspect risks before using a new version in mock sessions</strong>
+          </article>
+        </div>
       </section>
       {isCreateResumeOpen ? (
         <div
@@ -418,6 +428,24 @@ export function ResumePage() {
                   + Create resume
                 </button>
               </div>
+            </div>
+            <div className="resume-library__summary">
+              <article className="resume-library__summary-item">
+                <span>Selected container</span>
+                <strong>
+                  {selectedResumeId
+                    ? resumeListQuery.data?.items.find((resume) => resume.id === selectedResumeId)?.title ?? "Resume"
+                    : "No container selected"}
+                </strong>
+              </article>
+              <article className="resume-library__summary-item">
+                <span>Selected version</span>
+                <strong>{selectedVersionQuery.data?.fileNameLabel ?? "Choose or upload a version"}</strong>
+              </article>
+              <article className="resume-library__summary-item">
+                <span>Interview readiness</span>
+                <strong>{extractionReadinessLabel}</strong>
+              </article>
             </div>
           </section>
         );
@@ -749,6 +777,22 @@ export function ResumePage() {
                                   ? "This version cannot become active until you upload a version that parses successfully."
                                   : "Activation becomes available after parsing completes successfully."}
                           </p>
+                        </div>
+                        <div className="resume-version-activation-panel__summary">
+                          <article className="resume-version-activation-panel__summary-item">
+                            <span>Activation state</span>
+                            <strong>
+                              {selectedVersionQuery.data.isActive
+                                ? "Already driving interview evaluation"
+                                : selectedVersionQuery.data.canActivate
+                                  ? "Ready to become the active interview context"
+                                  : "Blocked until parsing completes cleanly"}
+                            </strong>
+                          </article>
+                          <article className="resume-version-activation-panel__summary-item">
+                            <span>Before activate</span>
+                            <strong>Confirm parsing, extraction, and the evidence sections you expect to defend</strong>
+                          </article>
                         </div>
                         <div className="page-card__actions">
                           <button

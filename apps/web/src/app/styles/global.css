@@ -7259,6 +7259,51 @@ button {
   margin-top: 24px;
 }
 
+.resume-workspace-surface__guidance,
+.resume-library__summary,
+.resume-version-activation-panel__summary {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-workspace-surface__guidance,
+.resume-library__summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.resume-workspace-surface__guidance {
+  margin-top: 24px;
+}
+
+.resume-workspace-surface__guidance-card,
+.resume-library__summary-item,
+.resume-version-activation-panel__summary-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.resume-workspace-surface__guidance-card span,
+.resume-library__summary-item span,
+.resume-version-activation-panel__summary-item span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-workspace-surface__guidance-card strong,
+.resume-library__summary-item strong,
+.resume-version-activation-panel__summary-item strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+}
+
 .feed-layout__hero {
   align-items: start;
 }

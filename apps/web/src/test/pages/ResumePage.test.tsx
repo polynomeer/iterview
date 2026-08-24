@@ -214,7 +214,7 @@ describe("ResumePage", () => {
       { route: "/profile/resumes" },
     );
 
-    expect(screen.getByText("Backend Resume")).toBeInTheDocument();
+    expect(screen.getAllByText("Backend Resume")).toHaveLength(2);
     expect(screen.getByText("Candidate overview")).toBeInTheDocument();
     expect(screen.getByText("Interview analytics platform")).toBeInTheDocument();
     expect(screen.getByText("Backend Platform")).toBeInTheDocument();
