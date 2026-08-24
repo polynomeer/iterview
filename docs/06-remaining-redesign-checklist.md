@@ -2,7 +2,7 @@
 
 This checklist converts the current redesign status of `iterview` into a concrete remaining-work list.
 
-Current status baseline on August 22, 2026:
+Current status baseline on August 24, 2026:
 - completed: workspace shell direction and graph-oriented product framing
 - completed: `Home`, `Feed`, `Practice`, `Question Tree`, `Review Queue`, `Archive`, `Profile`, and `Resume` redesign passes
 - partially aligned: interview and question workspaces
@@ -121,28 +121,65 @@ Mark each line only when the changed scope is:
 - [ ] Redesign `apps/web/src/pages/signup/SignupPage.tsx`
 - [ ] Align with the product tone without turning auth into a marketing page
 
-## F. Shared Design System Cleanup
+## F. Newly Required Workspace Surfaces
 
-### F1. Shared Surface Patterns
+### F1. Notes Workspace
+- [ ] Add a dedicated `NotesPage` route and page implementation
+- [ ] Keep pinned notes, recent notes, and active note editing in one workspace
+- [ ] Preserve links to questions, resume context, and related skills inside the right rail
+
+### F2. Bookmarks Workspace
+- [ ] Add a dedicated `BookmarksPage` route and page implementation
+- [ ] Support saved questions, paths, materials, and companies as filterable bookmark types
+- [ ] Make the inspector actionable for replay, review, and path continuation
+
+### F3. Scheduled Reviews Workspace
+- [ ] Add a dedicated `ScheduledReviewsPage` route and page implementation
+- [ ] Provide calendar, timeline, and queue views for spaced repetition work
+- [ ] Show projected mastery impact and rescheduling actions in-context
+
+### F4. Target Companies Workspace
+- [ ] Add a dedicated `TargetCompaniesPage` route and page implementation
+- [ ] Separate company-target tracking from resume-tailor job-posting ingestion
+- [ ] Show readiness, focus topics, and recommended next preparation paths by company
+
+### F5. Settings Workspace
+- [ ] Add a dedicated `SettingsPage` route and page implementation
+- [ ] Move study preferences, personalization, and notification controls out of generic profile surfaces
+- [ ] Keep configuration health and recommended tweaks visible in a persistent side rail
+
+### F6. Weak Nodes Review Mode
+- [ ] Add a weak-node review mode or subpage under review surfaces
+- [ ] Make remediation graph-first instead of list-only
+- [ ] Link weak nodes directly to connected questions, dimensions, and resume evidence
+
+### F7. Global Command Palette
+- [ ] Add a workspace-wide command/search overlay
+- [ ] Search across questions, skills, experiences, companies, notes, and commands
+- [ ] Keep it route-independent and available from the primary workspace shell
+
+## G. Shared Design System Cleanup
+
+### G1. Shared Surface Patterns
 - [ ] Audit top workspace surfaces for repeated CSS that should be shared
 - [ ] Consolidate repeated hero, stat, chip, and muted-note patterns
 - [ ] Reduce per-page one-off styling where the pattern is already stable
 
-### F2. Token Discipline
+### G2. Token Discipline
 - [ ] Audit spacing drift
 - [ ] Audit radius drift
 - [ ] Audit border and shadow drift
 - [ ] Audit accent-color drift
 - [ ] Keep one consistent dark workspace language across all redesigned pages
 
-### F3. Navigation And Structure
+### G3. Navigation And Structure
 - [ ] Re-check global navigation labels against the workspace-first hierarchy
 - [ ] Make sure practice, review, and resume context read as one connected system
 - [ ] Reduce leftover route-first cues where they weaken the product mental model
 
-## G. Verification Checklist
+## H. Verification Checklist
 
-### G1. Per Work Unit
+### H1. Per Work Unit
 - [ ] Run page-specific tests after each redesign unit
 - [ ] Run `npm run build` for the web app after each redesign unit
 - [ ] Check desktop layout behavior
@@ -150,18 +187,21 @@ Mark each line only when the changed scope is:
 - [ ] Check sticky rails and overflow behavior
 - [ ] Check text duplication against test expectations
 
-### G2. Final Acceptance Pass
+### H2. Final Acceptance Pass
 - [ ] Verify daily practice journey
 - [ ] Verify question exploration journey
 - [ ] Verify review and retry journey
 - [ ] Verify resume source-of-truth authoring journey
 - [ ] Verify interview session to result continuity
 - [ ] Verify the product reads as one interview workspace rather than a set of disconnected pages
+- [ ] Verify notes, bookmarks, scheduling, and company-target surfaces behave as real workspaces
+- [ ] Verify the command palette can navigate across every major workspace family
 
 ## Suggested Execution Order
 
 1. Interview flow: `InterviewPage` -> `InterviewSessionPage` -> `InterviewResultPage`
 2. Question/answer flow: `QuestionDetailPage` -> `AnswerEditorPage` -> `ResultAnalysisPage`
 3. Resume source-of-truth flow: `ResumeAnalysisPage` -> `ResumeEditorPage` -> `ResumeHeatmap*` -> `ResumeTailor*`
-4. Secondary surfaces: `SkillsPage` -> `PracticalInterview*` -> `LoginPage` -> `SignupPage`
-5. Shared system cleanup and final acceptance pass
+4. New workspace surfaces: `NotesPage` -> `BookmarksPage` -> `ScheduledReviewsPage` -> `TargetCompaniesPage` -> `SettingsPage` -> `WeakNodes`
+5. Secondary surfaces: `SkillsPage` -> `PracticalInterview*` -> `LoginPage` -> `SignupPage`
+6. Shared system cleanup and final acceptance pass

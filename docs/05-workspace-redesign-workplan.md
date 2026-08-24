@@ -4,10 +4,21 @@ This document translates the redesign references added on August 22, 2026 into a
 
 Reference inputs:
 - [`iterview-redesign-concept.md`](iterview-redesign-concept.md)
-- [`references/design/workspace.png`](references/design/workspace.png)
+- [`references/design/workspace-main.png`](references/design/workspace-main.png)
+- [`references/design/today.png`](references/design/today.png)
 - [`references/design/question-map.png`](references/design/question-map.png)
+- [`references/design/question-map-detail.png`](references/design/question-map-detail.png)
+- [`references/design/question-inspector.png`](references/design/question-inspector.png)
+- [`references/design/result-analysis.png`](references/design/result-analysis.png)
 - [`references/design/review.png`](references/design/review.png)
+- [`references/design/scheduled-reviews.png`](references/design/scheduled-reviews.png)
+- [`references/design/weak-notes.png`](references/design/weak-notes.png)
 - [`references/design/resume.png`](references/design/resume.png)
+- [`references/design/notes.png`](references/design/notes.png)
+- [`references/design/bookmarks.png`](references/design/bookmarks.png)
+- [`references/design/target-companies.png`](references/design/target-companies.png)
+- [`references/design/settings.png`](references/design/settings.png)
+- [`references/design/pop-up.png`](references/design/pop-up.png)
 
 Those files are treated as design references, not as implementation instructions. This plan adapts their direction to the actual purpose, architecture, and delivery constraints of `iterview`.
 
@@ -215,6 +226,36 @@ Primary interactions:
 - pivot from skill or experience into graph nodes
 - identify missing source-of-truth material
 
+### Workspace Mode 6. Knowledge Notes
+
+Purpose:
+- capture reusable source-of-truth fragments, trade-off explanations, and linked interview knowledge without leaving the main prep system
+
+Primary interactions:
+- browse pinned and recent notes
+- edit one note while preserving question and resume linkage
+- jump from note to connected questions, resume evidence, and skill clusters
+
+### Workspace Mode 7. Saved Knowledge
+
+Purpose:
+- keep bookmarks, saved questions, saved paths, and saved materials actionable rather than buried inside unrelated flows
+
+Primary interactions:
+- filter saved entities by type, topic, and source
+- inspect why an item was saved and how strong it currently is
+- re-open practice, review, or graph traversal from the saved state
+
+### Workspace Mode 8. Review Scheduling
+
+Purpose:
+- turn spaced repetition and retry work into a visible calendar and queue rather than a passive list
+
+Primary interactions:
+- inspect upcoming review sessions by day, cluster, and queue
+- reschedule, complete, or quick-review from the same surface
+- understand expected mastery impact before starting a review block
+
 ## Required Information Architecture Shift
 
 The redesign should gradually move the app from route-first IA to workspace-first IA.
@@ -252,9 +293,53 @@ career context
   -> experience map
   -> skill map
   -> target companies
+
+knowledge
+  -> notes
+  -> bookmarks
+  -> connected materials
+
+settings
+  -> study preferences
+  -> personalization
+  -> notification and review behavior
 ```
 
 This does not mean every route disappears. It means the user-facing product hierarchy should stop feeling page-fragmented.
+
+## Additional Surface Decisions From The New Reference Set
+
+The expanded reference set added after the initial plan closes a few IA gaps that should now be treated as explicit redesign scope.
+
+### 1. Some navigation items must become real pages
+
+The following surfaces are not just card variations. Their references show distinct list, detail, and inspector behavior that justify first-class routes:
+- notes
+- bookmarks
+- target companies
+- scheduled reviews
+- settings/preferences
+
+### 2. Weakness review must split from generic review queue
+
+`weak-notes.png` shows that weak-area remediation has its own graph, impact, and recommended-step logic.
+
+That means the redesign should support:
+- a weak-nodes review mode or subpage
+- graph-first remediation context
+- direct linkage from weak nodes to resume evidence and connected questions
+
+### 3. Search should become a workspace command surface
+
+`pop-up.png` is not a standalone route. It is a global command/search layer spanning:
+- questions
+- skills
+- experiences
+- companies
+- notes
+- commands
+
+This should be planned as a cross-workspace overlay, not a page hidden inside one section.
 
 ## Workstreams
 
