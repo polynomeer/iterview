@@ -4,7 +4,10 @@ This document translates the redesign references added on August 22, 2026 into a
 
 Reference inputs:
 - [`iterview-redesign-concept.md`](iterview-redesign-concept.md)
-- [`iterview-redesign-sample.png`](iterview-redesign-sample.png)
+- [`references/design/workspace.png`](references/design/workspace.png)
+- [`references/design/question-map.png`](references/design/question-map.png)
+- [`references/design/review.png`](references/design/review.png)
+- [`references/design/resume.png`](references/design/resume.png)
 
 Those files are treated as design references, not as implementation instructions. This plan adapts their direction to the actual purpose, architecture, and delivery constraints of `iterview`.
 
@@ -584,4 +587,3 @@ This document extends, not replaces:
 Use this file when the question is:
 
 > "What exactly are we rebuilding the redesign toward, and in what order?"
-

@@ -21,6 +21,11 @@ Use these files when you want to understand product intent, monorepo policy, or 
 7. [`monorepo-status.md`](monorepo-status.md)
    Current operational status, known risks, and verification path.
 
+## Reference Assets
+
+Design image references that support the shared redesign documents live under:
+- [`references/design/`](references/design/)
+
 ## What Belongs Here
 
 Keep documentation in root `docs/` only when it is truly shared:
