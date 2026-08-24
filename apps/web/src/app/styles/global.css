@@ -7788,12 +7788,39 @@ button {
     color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
 }
 
+.question-detail-section-card,
+.question-detail-layout__hero-note,
+.question-detail-layout__inspector-note {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: var(--shadow-soft);
+}
+
+.question-detail-section-card::before,
+.question-detail-layout__hero-note::before,
+.question-detail-layout__inspector-note::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(125, 211, 252, 0.08), transparent 34%);
+  pointer-events: none;
+}
+
 .question-hero--detail-workspace,
 .question-detail-section-card--inspector,
 .question-detail-layout__hero-note,
 .question-detail-layout__inspector-note {
   display: grid;
   gap: 14px;
+}
+
+.question-detail-section-card > *,
+.question-detail-layout__hero-note > *,
+.question-detail-layout__inspector-note > * {
+  position: relative;
+  z-index: 1;
 }
 
 .question-hero--detail-workspace {
@@ -7857,6 +7884,46 @@ button {
 .question-history-card,
 .question-recommended-card {
   border-color: rgba(148, 163, 184, 0.14);
+}
+
+.question-history-card,
+.question-recommended-card {
+  padding: 18px;
+  border-width: 1px;
+}
+
+.question-history-card .list-item-card__content,
+.question-recommended-card .list-item-card__content {
+  gap: 10px;
+}
+
+.question-history-card .list-item-card__title,
+.question-recommended-card .list-item-card__title {
+  line-height: 1.34;
+  letter-spacing: -0.03em;
+}
+
+.question-history-card .list-item-card__body,
+.question-recommended-card .list-item-card__body {
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.question-history-card .list-item-card__meta,
+.question-recommended-card .list-item-card__meta {
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.question-history-card .list-item-card__actions,
+.question-recommended-card .list-item-card__actions {
+  align-items: stretch;
+}
+
+.question-history-card .list-item-card__actions .primary-button,
+.question-recommended-card .list-item-card__actions .secondary-button,
+.question-recommended-card .list-item-card__actions .primary-button {
+  min-height: 38px;
 }
 
 .question-hero__note {
