@@ -3360,6 +3360,42 @@ button {
   gap: 10px;
 }
 
+.practical-list-workspace-surface__guidance,
+.practical-import-form-card__guidance {
+  display: grid;
+  gap: 10px;
+}
+
+.practical-list-workspace-surface__guidance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.practical-list-workspace-surface__guidance-card,
+.practical-import-form-card__guidance-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.practical-list-workspace-surface__guidance-card span,
+.practical-import-form-card__guidance-item span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practical-list-workspace-surface__guidance-card strong,
+.practical-import-form-card__guidance-item strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+}
+
 .practical-list-priority-board {
   display: grid;
   gap: 16px;
@@ -3849,6 +3885,10 @@ button {
   .practical-list-priority-step__index {
     width: 36px;
     height: 36px;
+  }
+
+  .practical-list-workspace-surface__guidance {
+    grid-template-columns: 1fr;
   }
 
   .practical-list-workspace-surface__title {

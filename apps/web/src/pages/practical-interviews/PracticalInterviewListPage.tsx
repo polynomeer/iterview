@@ -174,6 +174,20 @@ export function PracticalInterviewListPage() {
                 Next action: {uploadOpen ? "complete import form" : "open upload or continue review"}
               </span>
             </div>
+            <div className="practical-list-workspace-surface__guidance">
+              <article className="practical-list-workspace-surface__guidance-card">
+                <span>Import rule</span>
+                <strong>Bring one interview in with explicit company, role, and transcript context so review does not start from an ambiguous artifact.</strong>
+              </article>
+              <article className="practical-list-workspace-surface__guidance-card">
+                <span>Recovery priority</span>
+                <strong>
+                  {processingRecordCount > 0
+                    ? "Finish transcript-ready records first, then clean up retries before importing more."
+                    : "Open the freshest completed record first and turn it into a focused recovery review."}
+                </strong>
+              </article>
+            </div>
           </section>
 
           <div className="practical-list-priority-board">
@@ -258,6 +272,16 @@ export function PracticalInterviewListPage() {
                     <span className="detail-chip">Audio required</span>
                     <span className="detail-chip">Resume link optional</span>
                     <span className="detail-chip">Transcript paste optional</span>
+                  </div>
+                  <div className="practical-import-form-card__guidance">
+                    <article className="practical-import-form-card__guidance-item">
+                      <span>Best use</span>
+                      <strong>Import a single interview when you are ready to inspect weak answers, transcript quality, and resume alignment together.</strong>
+                    </article>
+                    <article className="practical-import-form-card__guidance-item">
+                      <span>Before submit</span>
+                      <strong>Choose the resume version that actually grounded that interview, otherwise later weakness analysis will drift from source of truth.</strong>
+                    </article>
                   </div>
                   <div className="form-grid">
                     <label className="form-field">
@@ -463,6 +487,16 @@ export function PracticalInterviewListPage() {
                   Records waiting on retries or transcript cleanup should be reviewed quickly so
                   their weak claims still map cleanly into the DFS interview practice loop.
                 </p>
+                <div className="practical-list-signal-list">
+                  <div className="practical-list-signal-list__item">
+                    <span>1. Stabilize queue</span>
+                    <strong>Resolve processing and retry records before building a larger backlog.</strong>
+                  </div>
+                  <div className="practical-list-signal-list__item">
+                    <span>2. Open recovery</span>
+                    <strong>Use the next completed record to launch one focused review and replay cycle.</strong>
+                  </div>
+                </div>
                 <div className="page-card__actions">
                   <button
                     className="primary-button"

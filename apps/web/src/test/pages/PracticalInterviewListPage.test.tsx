@@ -85,10 +85,13 @@ describe("PracticalInterviewListPage", () => {
     expect(screen.getByText("Transcript Processing")).toBeInTheDocument();
     expect(screen.getByText("Retry 1")).toBeInTheDocument();
     expect(screen.getByText("Next retry Mar 16, 2026, 9:45 AM")).toBeInTheDocument();
+    expect(screen.getByText("Import rule")).toBeInTheDocument();
+    expect(screen.getByText("Queue habit")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Upload interview" }));
 
     expect(screen.getByText("Create an interview record")).toBeInTheDocument();
+    expect(screen.getByText("Best use")).toBeInTheDocument();
     expect(screen.getByLabelText("Company")).toBeInTheDocument();
     expect(screen.getByLabelText("Linked resume version")).toBeInTheDocument();
     expect(
