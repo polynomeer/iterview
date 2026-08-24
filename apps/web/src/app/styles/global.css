@@ -549,14 +549,29 @@ button {
   gap: 12px;
 }
 
+.interview-session-history {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
+  box-shadow: var(--shadow-soft);
+}
+
 .interview-session-history__item {
   display: block;
   padding: 18px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 98%, var(--surface-soft));
 }
 
 .interview-session-history__item .list-item-card__content {
   min-width: 0;
-  gap: 8px;
+  gap: 10px;
 }
 
 .interview-session-history__header {
@@ -573,13 +588,15 @@ button {
 }
 
 .interview-session-history__item .list-item-card__title {
-  font-size: 1.04rem;
-  line-height: 1.3;
+  font-size: 1.08rem;
+  line-height: 1.34;
+  letter-spacing: -0.03em;
 }
 
 .interview-session-history__item .list-item-card__body {
   font-size: 0.94rem;
-  line-height: 1.45;
+  line-height: 1.55;
+  color: var(--text-muted);
 }
 
 .interview-session-history__item .insight-card__meta {
@@ -597,9 +614,9 @@ button {
 }
 
 .interview-session-history__actions .primary-button {
-  min-height: 34px;
-  padding-inline: 12px;
-  font-size: 0.88rem;
+  min-height: 38px;
+  padding-inline: 14px;
+  font-size: 0.9rem;
   white-space: nowrap;
 }
 
@@ -2468,6 +2485,12 @@ button {
 
 .interview-resume-choice {
   width: 100%;
+  display: block;
+  padding: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 98%, var(--surface-soft));
   text-align: left;
   appearance: none;
   cursor: pointer;
@@ -8363,6 +8386,29 @@ button {
     color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
 }
 
+.interview-result-layout__recap-card .list-item-card__content {
+  gap: 10px;
+}
+
+.interview-result-layout__recap-card .list-item-card__title {
+  line-height: 1.34;
+  letter-spacing: -0.03em;
+}
+
+.interview-result-layout__recap-card .list-item-card__body {
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.interview-result-layout__recap-card .list-item-card__actions {
+  align-items: stretch;
+}
+
+.interview-result-layout__recap-card .list-item-card__actions .secondary-button,
+.interview-result-layout__recap-card .list-item-card__actions .primary-button {
+  min-height: 38px;
+}
+
 .interview-result-layout__next-list {
   display: grid;
   gap: 12px;
@@ -9414,6 +9460,21 @@ button {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 98%, var(--surface-soft));
+}
+
+.interview-workspace-inspector__question .list-item-card__content {
+  gap: 8px;
+}
+
+.interview-workspace-inspector__question .list-item-card__title {
+  line-height: 1.34;
+  letter-spacing: -0.03em;
 }
 
 .interview-workspace-inspector__cta {

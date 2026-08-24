@@ -11,7 +11,7 @@ export function InterviewSessionHistoryList({ items }: InterviewSessionHistoryLi
   const { t } = useLocale();
 
   return (
-    <section className="page-card">
+    <section className="page-card interview-session-history">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{t("interview.historyEyebrow")}</p>
