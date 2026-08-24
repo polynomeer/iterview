@@ -119,8 +119,11 @@ describe("SkillsPage", () => {
     expect(screen.getByText("Most actionable signal")).toBeInTheDocument();
     expect(screen.getByText("Top gap: System Design")).toBeInTheDocument();
     expect(screen.getByText("Weak-question load: System Design")).toBeInTheDocument();
+    expect(screen.getByText("Primary branch today")).toBeInTheDocument();
+    expect(screen.getByText("Open practice workspace")).toBeInTheDocument();
     expect(screen.getByText("Current skill profile")).toBeInTheDocument();
     expect(screen.getByText("Weak skills and benchmark gaps")).toBeInTheDocument();
     expect(screen.getByText("Answered volume and weak-question load")).toBeInTheDocument();
+    expect(screen.getByText("Total weak questions")).toBeInTheDocument();
   });
 });

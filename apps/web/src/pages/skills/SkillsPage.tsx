@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { mapHomeResponseDtoToModel } from "../../entities/home/model";
 import { useSkillProgressQuery } from "../../features/skills/api/useSkillProgressQuery";
 import { useSkillGapQuery } from "../../features/skills/api/useSkillGapQuery";
@@ -41,6 +42,14 @@ export function SkillsPage() {
       const itemWeakCount = Number.parseInt(item.weakQuestionCountLabel, 10) || 0;
       return itemWeakCount > weakestWeakCount ? item : weakest;
     }, progressQuery.data.items[0]) ?? null;
+  const totalAnsweredQuestions =
+    progressQuery.data?.items.reduce((sum, item) => {
+      return sum + (Number.parseInt(item.answeredQuestionCountLabel, 10) || 0);
+    }, 0) ?? 0;
+  const totalWeakQuestions =
+    progressQuery.data?.items.reduce((sum, item) => {
+      return sum + (Number.parseInt(item.weakQuestionCountLabel, 10) || 0);
+    }, 0) ?? 0;
 
   return (
     <PageContainer
@@ -146,6 +155,32 @@ export function SkillsPage() {
                 Goal: choose one branch to practice next
               </span>
             </div>
+            <div className="skills-workspace-surface__guidance">
+              <article className="skills-workspace-surface__guidance-card">
+                <span>Primary branch today</span>
+                <strong>
+                  {topGapItem
+                    ? `${topGapItem.label} should become the next defended branch.`
+                    : "Wait for a clearer gap signal before broadening practice."}
+                </strong>
+              </article>
+              <article className="skills-workspace-surface__guidance-card">
+                <span>Before you broaden</span>
+                <strong>
+                  {weakestProgressItem
+                    ? `Stabilize ${weakestProgressItem.label} first, because weak follow-up load is still the heaviest there.`
+                    : "Build one answered streak so the page can identify unstable follow-up depth."}
+                </strong>
+              </article>
+            </div>
+            <div className="skills-workspace-surface__actions">
+              <Link className="primary-button" to={routeConfig.practice.buildPath()}>
+                Open practice workspace
+              </Link>
+              <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
+                Open review queue
+              </Link>
+            </div>
           </section>
 
           <section className="skills-priority-board">
@@ -231,6 +266,24 @@ export function SkillsPage() {
                   <h2 className="page-card__title">Answered volume and weak-question load</h2>
                 </div>
                 <span className="section-heading__count">{progressQuery.data.items.length}</span>
+              </div>
+              <div className="skills-progress-summary">
+                <article className="skills-progress-summary__item">
+                  <span>Total answered</span>
+                  <strong>{totalAnsweredQuestions}</strong>
+                </article>
+                <article className="skills-progress-summary__item">
+                  <span>Total weak questions</span>
+                  <strong>{totalWeakQuestions}</strong>
+                </article>
+                <article className="skills-progress-summary__item">
+                  <span>Priority recovery</span>
+                  <strong>
+                    {weakestProgressItem
+                      ? `${weakestProgressItem.label} needs the next retry block.`
+                      : "No weak-answer hotspot is available yet."}
+                  </strong>
+                </article>
               </div>
               <div className="stack-list">
                 {progressQuery.data.items.map((item) => (

@@ -633,6 +633,14 @@ button {
   .skills-workspace-surface__title {
     max-width: 100%;
   }
+
+  .skills-workspace-surface__guidance {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-workspace-surface__actions > * {
+    width: 100%;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -766,6 +774,48 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.skills-workspace-surface__guidance,
+.skills-progress-summary {
+  display: grid;
+  gap: 10px;
+}
+
+.skills-workspace-surface__guidance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.skills-workspace-surface__guidance-card,
+.skills-progress-summary__item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.skills-workspace-surface__guidance-card span,
+.skills-progress-summary__item span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.skills-workspace-surface__guidance-card strong,
+.skills-progress-summary__item strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+}
+
+.skills-workspace-surface__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .skills-priority-board {
