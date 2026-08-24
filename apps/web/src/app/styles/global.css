@@ -6541,6 +6541,44 @@ button {
   flex-wrap: wrap;
 }
 
+.archive-workspace-note__rules,
+.archive-list-card__summary,
+.archive-list-item__supporting {
+  display: grid;
+  gap: 10px;
+}
+
+.archive-workspace-note__rule,
+.archive-list-card__summary-item,
+.archive-list-item__supporting-item,
+.archive-workspace-surface__guidance-card {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.archive-workspace-note__rule span,
+.archive-list-card__summary-item span,
+.archive-list-item__supporting-item span,
+.archive-workspace-surface__guidance-card span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.archive-workspace-note__rule strong,
+.archive-list-card__summary-item strong,
+.archive-list-item__supporting-item strong,
+.archive-workspace-surface__guidance-card strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
 .archive-filter-bar,
 .archive-list-card {
   background:
@@ -6558,6 +6596,25 @@ button {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent),
     color-mix(in srgb, var(--surface-base) 95%, var(--surface-soft));
+}
+
+.archive-list-card__intro {
+  display: grid;
+  gap: 14px;
+}
+
+.archive-list-card__lead {
+  max-width: 68ch;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.archive-list-card__summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.archive-list-item__supporting {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .review-queue-note-card,
@@ -7063,6 +7120,13 @@ button {
 
 .review-queue-workspace-surface__guidance {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.archive-workspace-surface__guidance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   margin-top: 24px;
 }
 
@@ -8150,6 +8214,12 @@ button {
 
   .practice-workspace-surface__guidance,
   .practice-list-item-card__supporting {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-workspace-surface__guidance,
+  .archive-list-card__summary,
+  .archive-list-item__supporting {
     grid-template-columns: 1fr;
   }
 

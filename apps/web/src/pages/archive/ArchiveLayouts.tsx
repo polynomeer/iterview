@@ -24,6 +24,16 @@ export function ArchiveMobileLayout({
           <p className="page-card__body">
             Filtering comes after the mastered list on mobile so the screen stays focused on what you can reopen, revisit, or map back to interview sessions.
           </p>
+          <div className="archive-workspace-note__rules">
+            <article className="archive-workspace-note__rule">
+              <span>Keep</span>
+              <strong>Only reusable answers with stable reasoning</strong>
+            </article>
+            <article className="archive-workspace-note__rule">
+              <span>Reopen</span>
+              <strong>Trace difficult wins back to the source session before interviews</strong>
+            </article>
+          </div>
         </SectionPanel>
       </section>
     </div>
@@ -49,6 +59,16 @@ export function ArchiveDesktopLayout({
               <p className="page-card__body">
                 Desktop should keep filters and reopened-session context visible while the main column stays focused on high-signal summaries.
               </p>
+              <div className="archive-workspace-note__rules">
+                <article className="archive-workspace-note__rule">
+                  <span>Shelf quality</span>
+                  <strong>Archive only answers you can defend without rereading the prompt</strong>
+                </article>
+                <article className="archive-workspace-note__rule">
+                  <span>Session linkage</span>
+                  <strong>Use linked sessions to recover the follow-up chain, not just the final score</strong>
+                </article>
+              </div>
             </SectionPanel>
             <FilterPanel description="Archive filters stay visible while you scan mastered questions and reopen summaries.">
               {filterControls}

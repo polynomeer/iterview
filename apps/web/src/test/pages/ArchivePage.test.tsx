@@ -80,7 +80,7 @@ describe("ArchivePage", () => {
 
     expect(screen.getByText("Mastered questions")).toBeInTheDocument();
     expect(screen.getByText("Design a search index")).toBeInTheDocument();
-    expect(screen.getByText("Best score 95")).toBeInTheDocument();
+    expect(screen.getAllByText("Best score 95")).toHaveLength(2);
     expect(screen.getByText("Interview")).toBeInTheDocument();
     expect(screen.getByText("Follow-up")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View session" })).toHaveAttribute(

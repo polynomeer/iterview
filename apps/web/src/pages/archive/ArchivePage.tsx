@@ -126,6 +126,16 @@ export function ArchivePage() {
           {sessionLinkedCount > 0 ? <span className="detail-chip">Session trace available</span> : null}
           {filterCount > 0 ? <span className="detail-chip">{`Filtered ${filterCount}`}</span> : null}
         </div>
+        <div className="archive-workspace-surface__guidance">
+          <article className="archive-workspace-surface__guidance-card">
+            <span>Open with intent</span>
+            <strong>Reuse answers that already held up under repeated probing</strong>
+          </article>
+          <article className="archive-workspace-surface__guidance-card">
+            <span>Trace the source</span>
+            <strong>Jump back to the exact mock session when you need the original context</strong>
+          </article>
+        </div>
       </section>
       {(() => {
         const filterControls =

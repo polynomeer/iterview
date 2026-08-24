@@ -9,6 +9,14 @@ type ArchiveListItemProps = {
 
 export function ArchiveListItem({ item }: ArchiveListItemProps) {
   const { t } = useLocale();
+  const evidencePoints = [
+    item.totalAttemptCountLabel
+      ? { label: "Attempts", value: item.totalAttemptCountLabel }
+      : null,
+    item.archivedAtLabel ? { label: "Archived", value: item.archivedAtLabel } : null,
+    item.sourceLabel ? { label: "Source", value: item.sourceLabel } : null,
+    item.bestScoreLabel ? { label: "Signal", value: item.bestScoreLabel } : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>;
 
   return (
     <article className="list-item-card archive-list-item">
@@ -39,6 +47,14 @@ export function ArchiveListItem({ item }: ArchiveListItemProps) {
         {item.sourceSessionId ? (
           <p className="resume-section__helper">{t("archive.sessionSourceAvailable")}</p>
         ) : null}
+        <div className="archive-list-item__supporting">
+          {evidencePoints.map((point) => (
+            <article className="archive-list-item__supporting-item" key={`${item.id}-${point.label}`}>
+              <span>{point.label}</span>
+              <strong>{point.value}</strong>
+            </article>
+          ))}
+        </div>
       </div>
       <div className="list-item-card__actions">
         <Link
