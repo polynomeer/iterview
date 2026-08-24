@@ -108,6 +108,9 @@ describe("InterviewPage", () => {
     expect(
       screen.getByText("Choose the resume version and language context for this mock"),
     ).toBeInTheDocument();
+    expect(screen.getByText("Current branch target")).toBeInTheDocument();
+    expect(screen.getByText("Start with one scoped branch before broadening coverage")).toBeInTheDocument();
+    expect(screen.getByText("Resume version is locked before the next DFS pass starts")).toBeInTheDocument();
     expect(screen.getByText("Today's recovery")).toBeInTheDocument();
     expect(screen.getByText("Jump to weakest branch")).toBeInTheDocument();
 

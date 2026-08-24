@@ -9182,6 +9182,7 @@ button {
   gap: 10px;
 }
 
+.interview-workspace-surface__snapshot,
 .interview-workspace-surface__guidance,
 .interview-page-layout__start-summary,
 .interview-page-layout__start-rules,
@@ -9193,6 +9194,7 @@ button {
   gap: 10px;
 }
 
+.interview-workspace-surface__snapshot,
 .interview-workspace-surface__guidance {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -9203,6 +9205,7 @@ button {
   gap: 12px;
 }
 
+.interview-workspace-surface__snapshot-card,
 .interview-workspace-surface__guidance-card,
 .interview-page-layout__start-summary-item,
 .interview-page-layout__start-rule,
@@ -9218,6 +9221,7 @@ button {
   background: rgba(148, 163, 184, 0.06);
 }
 
+.interview-workspace-surface__snapshot-card span,
 .interview-workspace-surface__guidance-card span,
 .interview-page-layout__start-summary-item span,
 .interview-page-layout__start-rule span,
@@ -9231,6 +9235,7 @@ button {
   text-transform: uppercase;
 }
 
+.interview-workspace-surface__snapshot-card strong,
 .interview-workspace-surface__guidance-card strong,
 .interview-page-layout__start-summary-item strong,
 .interview-page-layout__start-rule strong,
@@ -9241,6 +9246,7 @@ button {
   color: #f8fafc;
   font-size: 1rem;
   letter-spacing: -0.03em;
+  line-height: 1.45;
 }
 
 .interview-workspace-surface > .interview-workspace-surface__body {
@@ -10008,6 +10014,10 @@ button {
 
   .interview-workspace-surface__actions > * {
     width: 100%;
+  }
+
+  .interview-workspace-surface__snapshot {
+    grid-template-columns: 1fr;
   }
 
   .interview-graph-panel__canvas {

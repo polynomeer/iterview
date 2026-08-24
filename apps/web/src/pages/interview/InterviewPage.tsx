@@ -354,6 +354,26 @@ export function InterviewPage() {
   const selectedResumeSummary = selectedResumeChoice
     ? `${selectedResumeChoice.resumeTitle} ${selectedResumeChoice.versionNumberLabel}`
     : t("interview.noResumeTitle");
+  const entrySnapshotItems = [
+    {
+      label: "Current branch target",
+      value: selectedInspector.title,
+    },
+    {
+      label: "Launch posture",
+      value:
+        selectedInterviewMode === "full_coverage"
+          ? "Traverse the full resume graph with recovery in mind"
+          : "Start with one scoped branch before broadening coverage",
+    },
+    {
+      label: "Resume boundary",
+      value:
+        selectedResumeChoice !== null
+          ? "Resume version is locked before the next DFS pass starts"
+          : "Choose one resume version before opening the branch",
+    },
+  ] as const;
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -481,6 +501,14 @@ export function InterviewPage() {
                 <span className="detail-chip">{t("interview.coverageBadge")}</span>
               ) : null}
               {sessionCount > 0 ? <span className="detail-chip">{`History ${sessionCount}`}</span> : null}
+            </div>
+            <div className="interview-workspace-surface__snapshot">
+              {entrySnapshotItems.map((item) => (
+                <article className="interview-workspace-surface__snapshot-card" key={item.label}>
+                  <span>{item.label}</span>
+                  <strong>{item.value}</strong>
+                </article>
+              ))}
             </div>
             <div className="interview-workspace-surface__guidance">
               <article className="interview-workspace-surface__guidance-card">
