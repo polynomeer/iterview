@@ -334,7 +334,7 @@ describe("InterviewSessionPage", () => {
 
     expect(screen.getByText("Session question flow")).toBeInTheDocument();
     expect(screen.getByText("AI follow-up")).toBeInTheDocument();
-    expect(screen.getAllByText("Tied to your backend platform project.")).toHaveLength(2);
+    expect(screen.getAllByText("Tied to your backend platform project.")).toHaveLength(3);
     expect(screen.getAllByText("Explain the scaling trade-off").length).toBeGreaterThanOrEqual(2);
     expect(screen.getAllByText("Based on your resume")).toHaveLength(2);
     expect(screen.getAllByText("English generated").length).toBeGreaterThanOrEqual(1);

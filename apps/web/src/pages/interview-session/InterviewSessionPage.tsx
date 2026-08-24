@@ -315,6 +315,16 @@ export function InterviewSessionPage() {
             {activeSession.startedAt ? <span className="detail-chip">{activeSession.startedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
+          <div className="interview-session-workspace-surface__guidance">
+            <article className="interview-session-workspace-surface__guidance-card">
+              <span>Current node</span>
+              <strong>Finish this claim with enough evidence that the next follow-up becomes narrower</strong>
+            </article>
+            <article className="interview-session-workspace-surface__guidance-card">
+              <span>Branch discipline</span>
+              <strong>Stay on the active path until the answer reaches concrete resume-backed detail</strong>
+            </article>
+          </div>
           <div className="interview-session-workspace-surface__branches" role="list">
             {activeSession.questions.slice(0, 4).map((question) => (
               <button
@@ -380,6 +390,16 @@ export function InterviewSessionPage() {
                   ))}
                 </div>
               ) : null}
+              <div className="interview-session-current__summary">
+                <article className="interview-session-current__summary-item">
+                  <span>Resume anchor</span>
+                  <strong>{currentQuestion.resumeContextSummary ?? "No explicit resume anchor attached yet"}</strong>
+                </article>
+                <article className="interview-session-current__summary-item">
+                  <span>Follow-up role</span>
+                  <strong>{currentQuestion.isFollowUp ? "Defend the generated branch before expanding sideways" : "Establish the root claim before deeper probing begins"}</strong>
+                </article>
+              </div>
               <div className="interview-session-current__rail">
                 <div className="interview-session-current__rail-items">
                   {statusRailItems.map((item) => (
@@ -430,6 +450,16 @@ export function InterviewSessionPage() {
                   <article className="interview-session-side-summary__stat">
                     <span>Skipped facets</span>
                     <strong>{skippedFacetCount}</strong>
+                  </article>
+                </div>
+                <div className="interview-session-side-summary__signals">
+                  <article className="interview-session-side-summary__signal">
+                    <span>Advance state</span>
+                    <strong>{canAdvance ? "Ready to unlock the next node" : "Current node still blocks the next branch"}</strong>
+                  </article>
+                  <article className="interview-session-side-summary__signal">
+                    <span>Recovery focus</span>
+                    <strong>{weakFacetCount > 0 ? "Tighten weak resume facets before broadening scope" : "No weak facets are currently forcing a retry"}</strong>
                   </article>
                 </div>
               </SectionPanel>
@@ -525,6 +555,16 @@ export function InterviewSessionPage() {
                 <article className="interview-session-answer-surface__guidance-card">
                   <span>Evidence rule</span>
                   <strong>Use one concrete resume fact, number, or constraint.</strong>
+                </article>
+              </div>
+              <div className="interview-session-answer-surface__playbook">
+                <article className="interview-session-answer-surface__playbook-step">
+                  <span>1. State the claim</span>
+                  <strong>Answer the exact decision or trade-off this node is testing before adding side context</strong>
+                </article>
+                <article className="interview-session-answer-surface__playbook-step">
+                  <span>2. Lock the evidence</span>
+                  <strong>Attach the project fact, metric, or constraint that proves the answer came from your source of truth</strong>
                 </article>
               </div>
               <AnswerTextEditor
