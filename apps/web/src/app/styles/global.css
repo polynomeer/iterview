@@ -6864,6 +6864,30 @@ button {
     color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
 }
 
+.review-queue-note-card,
+.review-queue-list-card {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: var(--shadow-soft);
+}
+
+.review-queue-note-card::before,
+.review-queue-list-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(125, 211, 252, 0.08), transparent 34%);
+  pointer-events: none;
+}
+
+.review-queue-note-card > *,
+.review-queue-list-card > * {
+  position: relative;
+  z-index: 1;
+}
+
 .review-queue-note-card__header {
   display: flex;
   align-items: center;
@@ -6915,7 +6939,36 @@ button {
 }
 
 .review-queue-item-card {
+  padding: 18px;
   border-color: rgba(148, 163, 184, 0.14);
+}
+
+.review-queue-item-card .list-item-card__content {
+  gap: 10px;
+}
+
+.review-queue-item-card .list-item-card__meta {
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.review-queue-item-card .list-item-card__title {
+  line-height: 1.34;
+  letter-spacing: -0.03em;
+}
+
+.review-queue-item-card .list-item-card__body {
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.review-queue-item-card .list-item-card__actions {
+  align-items: stretch;
+}
+
+.review-queue-item-card .list-item-card__actions .secondary-button,
+.review-queue-item-card .list-item-card__actions .primary-button {
+  min-height: 38px;
 }
 
 .review-queue-list-card__intro {
@@ -6930,6 +6983,11 @@ button {
 
 .review-queue-item-card__chips {
   grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+}
+
+.review-queue-item-card__footer {
+  padding-top: 4px;
+  border-top: 1px solid var(--border-soft);
 }
 
 .review-queue-action-buttons {
