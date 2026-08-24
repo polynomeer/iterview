@@ -7606,7 +7606,9 @@ button {
 .interview-result-layout__hero-decision,
 .interview-result-layout__next-pass-signals,
 .interview-result-layout__next-playbook,
-.interview-result-layout__actions-summary {
+.interview-result-layout__actions-summary,
+.interview-result-workspace-surface__snapshot,
+.interview-result-layout__actions-checklist {
   display: grid;
   gap: 10px;
 }
@@ -7614,8 +7616,13 @@ button {
 .interview-result-workspace-surface__guidance,
 .interview-result-layout__hero-decision,
 .interview-result-layout__next-pass-signals,
-.interview-result-layout__actions-summary {
+.interview-result-layout__actions-summary,
+.interview-result-layout__actions-checklist {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.interview-result-workspace-surface__snapshot {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .interview-result-layout__hero-supporting-item,
@@ -7624,7 +7631,9 @@ button {
 .interview-result-layout__hero-decision-item,
 .interview-result-layout__next-pass-signal,
 .interview-result-layout__next-playbook-step,
-.interview-result-layout__actions-summary-item {
+.interview-result-layout__actions-summary-item,
+.interview-result-workspace-surface__snapshot-card,
+.interview-result-layout__actions-checklist-item {
   display: grid;
   gap: 4px;
   padding: 12px 14px;
@@ -7639,7 +7648,9 @@ button {
 .interview-result-layout__hero-decision-item span,
 .interview-result-layout__next-pass-signal span,
 .interview-result-layout__next-playbook-step span,
-.interview-result-layout__actions-summary-item span {
+.interview-result-layout__actions-summary-item span,
+.interview-result-workspace-surface__snapshot-card span,
+.interview-result-layout__actions-checklist-item span {
   margin: 0;
   color: var(--text-subtle);
   font-size: 0.76rem;
@@ -7653,10 +7664,13 @@ button {
 .interview-result-layout__hero-decision-item strong,
 .interview-result-layout__next-pass-signal strong,
 .interview-result-layout__next-playbook-step strong,
-.interview-result-layout__actions-summary-item strong {
+.interview-result-layout__actions-summary-item strong,
+.interview-result-workspace-surface__snapshot-card strong,
+.interview-result-layout__actions-checklist-item strong {
   color: var(--text-main);
   font-size: 1rem;
   letter-spacing: -0.03em;
+  line-height: 1.45;
 }
 
 .interview-result-layout__brief-rules {
@@ -9976,13 +9990,19 @@ button {
   }
 
   .interview-session-workspace-surface__snapshot,
+  .interview-result-workspace-surface__snapshot,
   .interview-session-workspace-surface__guidance,
+  .interview-result-workspace-surface__guidance,
   .interview-session-current__summary,
   .interview-session-side-summary__signals,
   .interview-session-answer-surface__draft-status,
   .interview-session-answer-surface__guidance,
   .interview-session-answer-surface__playbook,
-  .interview-session-answer-surface__summary {
+  .interview-session-answer-surface__summary,
+  .interview-result-layout__hero-decision,
+  .interview-result-layout__next-pass-signals,
+  .interview-result-layout__actions-summary,
+  .interview-result-layout__actions-checklist {
     grid-template-columns: 1fr;
   }
 

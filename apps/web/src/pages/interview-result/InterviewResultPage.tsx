@@ -113,6 +113,52 @@ export function InterviewResultPage() {
     shouldRenderFullCoverageResult && coverageQuery.data
       ? coverageQuery.data.skippedFacetSummaries.length
       : 0;
+  const unresolvedBranchCount = weakFacetCount + skippedFacetCount;
+  const resultSnapshotItems = [
+    {
+      label: "Next pass shape",
+      value:
+        unresolvedBranchCount > 0
+          ? "Run a narrow recovery pass before opening breadth again"
+          : "Move to an adjacent branch while keeping evidence depth high",
+    },
+    {
+      label: "Recovery pressure",
+      value:
+        weakFacetCount > 0
+          ? `${weakFacetCount} weak branch${weakFacetCount > 1 ? "es" : ""} still fail under follow-up pressure`
+          : "No weak branches are currently forcing a retry",
+    },
+    {
+      label: "Skipped debt",
+      value:
+        skippedFacetCount > 0
+          ? `${skippedFacetCount} skipped facet${skippedFacetCount > 1 ? "s are" : " is"} waiting for the next pass`
+          : "No skipped facets are carrying over into the next run",
+    },
+  ] as const;
+  const actionChecklistItems = [
+    {
+      label: "Primary target",
+      value:
+        weakFacetCount > 0
+          ? "Start with weak branch recovery."
+          : skippedFacetCount > 0
+            ? "Start with skipped facet recovery."
+            : "Open one neighboring branch with the same evidence discipline.",
+    },
+    {
+      label: "Required input",
+      value:
+        unresolvedBranchCount > 0
+          ? "Bring the missing metric, constraint, or source-of-truth sentence before restarting."
+          : "Bring one sharper resume fact so the next branch still gets narrower under pressure.",
+    },
+    {
+      label: "Stop condition",
+      value: "Do not broaden scope until the reopened branch becomes concrete enough to resist another follow-up.",
+    },
+  ] as const;
 
   return (
     <PageContainer
@@ -165,6 +211,14 @@ export function InterviewResultPage() {
             <span className="detail-chip detail-chip--accent">{`Session ${sessionId}`}</span>
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
+          </div>
+          <div className="interview-result-workspace-surface__snapshot">
+            {resultSnapshotItems.map((item) => (
+              <article className="interview-result-workspace-surface__snapshot-card" key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </article>
+            ))}
           </div>
           <div className="interview-result-workspace-surface__guidance">
             <article className="interview-result-workspace-surface__guidance-card">
@@ -398,6 +452,14 @@ export function InterviewResultPage() {
                   <span>Do not do</span>
                   <strong>Do not restart broad coverage if the unresolved branch is still shallow</strong>
                 </article>
+              </div>
+              <div className="interview-result-layout__actions-checklist">
+                {actionChecklistItems.map((item) => (
+                  <article className="interview-result-layout__actions-checklist-item" key={item.label}>
+                    <span>{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </article>
+                ))}
               </div>
               <div className="page-card__actions">
                 <Link className="primary-button" to={routeConfig.interview.buildPath()}>
