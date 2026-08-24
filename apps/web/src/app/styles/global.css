@@ -10148,6 +10148,9 @@ button {
 }
 
 .resume-analysis-workspace-surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: grid;
   gap: 18px;
   padding: clamp(22px, 3vw, 30px);
@@ -10159,6 +10162,23 @@ button {
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, white 12%, transparent),
     0 26px 60px rgba(10, 6, 5, 0.26);
+}
+
+.resume-analysis-workspace-surface::after {
+  content: "";
+  position: absolute;
+  inset: auto -14% -46% 38%;
+  height: 236px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 26%, transparent), transparent 72%);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.resume-analysis-workspace-surface > * {
+  position: relative;
+  z-index: 1;
 }
 
 .resume-analysis-workspace-surface__header {
@@ -10213,12 +10233,15 @@ button {
 
 .resume-analysis-workspace-surface__stat {
   display: grid;
-  gap: 4px;
-  min-height: 92px;
-  padding: 14px 15px;
-  border-radius: 20px;
-  background: color-mix(in srgb, white 7%, transparent);
-  border: 1px solid color-mix(in srgb, white 10%, transparent);
+  gap: 6px;
+  min-height: 98px;
+  padding: 16px 16px 17px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, white 8%, transparent), transparent),
+    color-mix(in srgb, #130f0f 84%, white 4%);
+  border: 1px solid color-mix(in srgb, white 12%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
 }
 
 .resume-analysis-workspace-surface__stat span {
@@ -10260,11 +10283,15 @@ button {
 .resume-analysis-priority-card__playbook-step,
 .resume-analysis-guide__signal {
   display: grid;
-  gap: 4px;
-  padding: 14px 15px;
-  border-radius: 18px;
-  background: color-mix(in srgb, white 7%, transparent);
-  border: 1px solid color-mix(in srgb, white 10%, transparent);
+  gap: 6px;
+  min-height: 98px;
+  padding: 15px 15px 16px;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, white 7%, transparent), transparent),
+    color-mix(in srgb, #130f0f 84%, white 4%);
+  border: 1px solid color-mix(in srgb, white 11%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
 }
 
 .resume-analysis-workspace-surface__guidance-card span,
@@ -10286,21 +10313,31 @@ button {
 
 .resume-analysis-priority-card {
   display: grid;
-  gap: 16px;
+  gap: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-soft) 94%, var(--surface-base));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 8%, transparent),
+    0 22px 48px rgba(7, 4, 3, 0.14);
 }
 
 .resume-analysis-priority-card__signals {
   display: grid;
   gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .resume-analysis-priority-card__signal {
   display: grid;
-  gap: 4px;
-  padding: 14px 15px;
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--surface-soft) 88%, var(--surface-base));
-  border: 1px solid var(--border-soft);
+  gap: 5px;
+  min-height: 86px;
+  padding: 15px 15px 16px;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-soft) 88%, var(--surface-base));
+  border: 1px solid color-mix(in srgb, white 7%, var(--border-soft));
 }
 
 .resume-analysis-priority-card__signal span {
@@ -10318,7 +10355,9 @@ button {
 
 .resume-analysis-guide {
   display: grid;
-  gap: 16px;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
 }
 
 .resume-analysis-guide__rules {
@@ -10328,11 +10367,13 @@ button {
 
 .resume-analysis-guide__rule {
   display: grid;
-  gap: 4px;
-  padding: 14px 15px;
-  border-radius: 18px;
+  gap: 6px;
+  min-height: 96px;
+  padding: 15px 15px 16px;
+  border-radius: 20px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--surface-info-soft) 92%, var(--surface-base)), var(--surface-soft));
   border: 1px solid color-mix(in srgb, var(--border-info) 76%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
 }
 
 .resume-analysis-guide__rule strong {
