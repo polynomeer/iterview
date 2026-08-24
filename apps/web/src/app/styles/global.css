@@ -7382,8 +7382,29 @@ button {
   gap: 10px;
 }
 
+.interview-result-workspace-surface__guidance,
+.interview-result-layout__hero-decision,
+.interview-result-layout__next-pass-signals,
+.interview-result-layout__next-playbook,
+.interview-result-layout__actions-summary {
+  display: grid;
+  gap: 10px;
+}
+
+.interview-result-workspace-surface__guidance,
+.interview-result-layout__hero-decision,
+.interview-result-layout__next-pass-signals,
+.interview-result-layout__actions-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .interview-result-layout__hero-supporting-item,
-.interview-result-layout__brief-rule {
+.interview-result-layout__brief-rule,
+.interview-result-workspace-surface__guidance-card,
+.interview-result-layout__hero-decision-item,
+.interview-result-layout__next-pass-signal,
+.interview-result-layout__next-playbook-step,
+.interview-result-layout__actions-summary-item {
   display: grid;
   gap: 4px;
   padding: 12px 14px;
@@ -7393,7 +7414,12 @@ button {
 }
 
 .interview-result-layout__hero-supporting-item span,
-.interview-result-layout__next-note {
+.interview-result-layout__next-note,
+.interview-result-workspace-surface__guidance-card span,
+.interview-result-layout__hero-decision-item span,
+.interview-result-layout__next-pass-signal span,
+.interview-result-layout__next-playbook-step span,
+.interview-result-layout__actions-summary-item span {
   margin: 0;
   color: var(--text-subtle);
   font-size: 0.76rem;
@@ -7402,7 +7428,12 @@ button {
 }
 
 .interview-result-layout__hero-supporting-item strong,
-.interview-result-layout__brief-rule strong {
+.interview-result-layout__brief-rule strong,
+.interview-result-workspace-surface__guidance-card strong,
+.interview-result-layout__hero-decision-item strong,
+.interview-result-layout__next-pass-signal strong,
+.interview-result-layout__next-playbook-step strong,
+.interview-result-layout__actions-summary-item strong {
   color: var(--text-main);
   font-size: 1rem;
   letter-spacing: -0.03em;
@@ -7660,6 +7691,10 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.interview-result-workspace-surface__guidance {
+  margin-top: 24px;
 }
 
 .interview-session-workspace-surface__branch {
@@ -7981,6 +8016,11 @@ button {
 .interview-result-layout__next-item span {
   color: rgba(203, 213, 225, 0.78);
   font-size: 0.92rem;
+}
+
+.interview-result-layout__next-playbook-step strong,
+.interview-result-layout__actions-summary-item strong {
+  line-height: 1.45;
 }
 
 .resume-editor-topbar,

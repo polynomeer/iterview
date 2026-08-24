@@ -166,6 +166,16 @@ export function InterviewResultPage() {
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
+          <div className="interview-result-workspace-surface__guidance">
+            <article className="interview-result-workspace-surface__guidance-card">
+              <span>Keep</span>
+              <strong>Carry forward only the branches that still fail under follow-up pressure</strong>
+            </article>
+            <article className="interview-result-workspace-surface__guidance-card">
+              <span>Recover</span>
+              <strong>Use weak and skipped facets to define the smallest worthwhile next pass</strong>
+            </article>
+          </div>
         </section>
         <div className="interview-result-layout__hero-grid">
           <section className="page-card interview-result-layout__hero">
@@ -194,6 +204,24 @@ export function InterviewResultPage() {
               <article className="interview-result-layout__hero-supporting-item">
                 <span>Skipped recovery</span>
                 <strong>{skippedFacetCount}</strong>
+              </article>
+            </div>
+            <div className="interview-result-layout__hero-decision">
+              <article className="interview-result-layout__hero-decision-item">
+                <span>Primary recovery</span>
+                <strong>
+                  {weakFacetCount > 0
+                    ? `${weakFacetCount} weak branches should be revisited first`
+                    : "No weak branches are currently blocking the next pass"}
+                </strong>
+              </article>
+              <article className="interview-result-layout__hero-decision-item">
+                <span>Pass shape</span>
+                <strong>
+                  {skippedFacetCount > 0
+                    ? "Run a narrow recovery session before expanding breadth again"
+                    : "You can expand to adjacent branches once evidence stays concrete"}
+                </strong>
               </article>
             </div>
           </section>
@@ -306,6 +334,16 @@ export function InterviewResultPage() {
               <p className="page-card__body">
                 Re-run weak branches, revisit skipped evidence, and keep the next session scoped enough that you can tell whether the answer improved or only became longer.
               </p>
+              <div className="interview-result-layout__next-pass-signals">
+                <article className="interview-result-layout__next-pass-signal">
+                  <span>Weak recovery queue</span>
+                  <strong>{weakFacetCount > 0 ? `${weakFacetCount} branches waiting` : "No weak branches queued"}</strong>
+                </article>
+                <article className="interview-result-layout__next-pass-signal">
+                  <span>Skipped evidence queue</span>
+                  <strong>{skippedFacetCount > 0 ? `${skippedFacetCount} skipped facets waiting` : "No skipped facets queued"}</strong>
+                </article>
+              </div>
             </SectionPanel>
             <SectionPanel className="workspace-note-card interview-result-layout__next-rail" variant="muted">
               <div className="interview-result-layout__next-topline">
@@ -334,6 +372,16 @@ export function InterviewResultPage() {
                   <span>Keep the next pass narrow enough that branch depth improves, not just answer length.</span>
                 </div>
               </div>
+              <div className="interview-result-layout__next-playbook">
+                <article className="interview-result-layout__next-playbook-step">
+                  <span>1. Pick one failed area</span>
+                  <strong>Choose either weak recovery or skipped recovery as the dominant goal for the next run</strong>
+                </article>
+                <article className="interview-result-layout__next-playbook-step">
+                  <span>2. Re-enter with evidence</span>
+                  <strong>Bring the missing resume fact, constraint, or metric that the earlier answer could not defend</strong>
+                </article>
+              </div>
             </SectionPanel>
             <section className="page-card interview-result-layout__actions">
               <span className="page-card__label">Actions</span>
@@ -341,6 +389,16 @@ export function InterviewResultPage() {
               <p className="page-card__body">
                 Launch another session only after choosing whether you are retesting weak branches, skipped facets, or the same branch with tighter evidence.
               </p>
+              <div className="interview-result-layout__actions-summary">
+                <article className="interview-result-layout__actions-summary-item">
+                  <span>Recommended action</span>
+                  <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Start a narrow recovery pass" : "Continue to a neighboring branch"}</strong>
+                </article>
+                <article className="interview-result-layout__actions-summary-item">
+                  <span>Do not do</span>
+                  <strong>Do not restart broad coverage if the unresolved branch is still shallow</strong>
+                </article>
+              </div>
               <div className="page-card__actions">
                 <Link className="primary-button" to={routeConfig.interview.buildPath()}>
                   {t("result.startAnotherSession")}
