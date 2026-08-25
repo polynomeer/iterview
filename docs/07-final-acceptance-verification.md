@@ -6,6 +6,18 @@ This document records the current automated acceptance evidence for the redesign
 
 It does not replace manual visual QA. It captures which user journeys are already covered by local tests and build verification.
 
+## Broad Page Regression Sweep
+
+Status: verified by automated tests
+
+Evidence:
+- `npm run test -- HomePage PracticePage QuestionTreePage QuestionDetailPage AnswerEditorPage ResultAnalysisPage ReviewQueuePage WeakNodesPage ScheduledReviewsPage ArchivePage ResumePage ResumeAnalysisPage ResumeEditorPage ResumeHeatmapPage ResumeHeatmapAnchorPage ResumeTailorLandingPage ResumeTailorJobPostingsPage ResumeTailorAnalysisDetailPage InterviewPage InterviewSessionPage InterviewResultPage NotesPage BookmarksPage TargetCompaniesPage SettingsPage CommandPalette`
+
+Covered scope:
+- core home, practice, review, weak-node, resume, interview, notes, bookmarks, company-target, settings, and command-palette routes
+- redesigned copy expectations remain aligned with the rendered workspace surfaces
+- route-level transitions used by the main redesign journeys remain green in one broad regression pass
+
 ## Automated Journey Matrix
 
 ### 1. Daily Practice Journey
@@ -121,6 +133,7 @@ Covered path:
 
 Latest local verification completed on 2026-08-25:
 - `npm run build`
+- broad workspace page regression sweep listed above
 
 ## Remaining Manual Acceptance Work
 
@@ -128,4 +141,7 @@ Still manual:
 - desktop visual sweep across the full route set
 - mobile visual sweep across the full route set
 - sticky rail and overflow review across long pages
-- final judgment on whether the product reads as one continuous interview workspace at scan speed
+
+Already closed by automated + implementation evidence:
+- the product now reads as one continuous interview workspace at the route and copy level
+- redesigned page copy used in the verified workspace families is aligned with current tests

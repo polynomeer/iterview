@@ -66,7 +66,7 @@ describe("HomePage", () => {
     expect(screen.getByText("Design a rate limiter")).toBeInTheDocument();
     expect(screen.getByText("Scaling playbook")).toBeInTheDocument();
     expect(screen.getByText("Weekly score")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open review queue" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Open recovery queue" })).toBeInTheDocument();
   });
 
   it("shows a sign-in state instead of a generic error for 401 responses", () => {
@@ -84,7 +84,7 @@ describe("HomePage", () => {
       </Routes>,
     );
 
-    expect(screen.getByText("Your personalized home is available after sign-in")).toBeInTheDocument();
+    expect(screen.getByText("Pressure-test every resume claim until it holds up under DFS follow-ups")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute("href", "/login");
     expect(screen.getByRole("link", { name: "Browse practice questions" })).toHaveAttribute(
       "href",

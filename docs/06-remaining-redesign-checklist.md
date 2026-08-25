@@ -180,8 +180,8 @@ Mark each line only when the changed scope is:
 ## H. Verification Checklist
 
 ### H1. Per Work Unit
-- [ ] Run page-specific tests after each redesign unit
-  Current status: builds were run consistently, but page-specific test coverage is still incomplete.
+- [x] Run page-specific tests after each redesign unit
+  Current status: the redesigned workspace families now have focused page tests and a broad route-level regression sweep.
 - [x] Run `npm run build` for the web app after each redesign unit
 - [ ] Check desktop layout behavior
   Current status: desktop hierarchy was checked repeatedly during implementation, but a single final sweep is still pending.
@@ -189,7 +189,8 @@ Mark each line only when the changed scope is:
   Current status: mobile stacking rules were updated repeatedly during implementation, but a single final sweep is still pending.
 - [ ] Check sticky rails and overflow behavior
   Current status: key sticky rails were reviewed during redesign work, but a final cross-page pass is still pending.
-- [ ] Check text duplication against test expectations
+- [x] Check text duplication against test expectations
+  Current status: stale page expectations were aligned to the redesigned copy across the verified workspace families.
 
 ### H2. Final Acceptance Pass
 - [x] Verify daily practice journey
