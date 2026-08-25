@@ -39,9 +39,9 @@ export function ResumeTailorAnalysisListPage() {
 
   return (
     <PageContainer
-      description="Review existing persisted tailoring runs for one immutable resume version and create a new job-aware analysis when needed."
-      eyebrow="Resume Tailor"
-      title="Resume version analyses"
+      description="Choose target company context for one immutable resume version, then run or reopen a role-specific tailoring analysis."
+      eyebrow="Tailor flow"
+      title="Create or reopen the next role-specific analysis"
     >
       {versionQuery.isLoading ? (
         <LoadingStateCard
@@ -63,19 +63,59 @@ export function ResumeTailorAnalysisListPage() {
         />
       ) : versionQuery.data ? (
         <div className="page-stack">
-          <section className="page-card">
-            <span className="page-card__label">Source version</span>
-            <h2 className="page-card__title">{versionQuery.data.versionNumberLabel}</h2>
-            <p className="page-card__body">
-              Tailoring runs are layered on top of this immutable uploaded version. Accepting
-              suggestions never overwrites the original source resume.
-            </p>
-            <div className="chip-list">
-              <span className="question-status-badge question-status-badge--neutral">
-                Parsing {versionQuery.data.parsingStatusLabel}
-              </span>
+          <section className="page-card resume-tailor-workspace-surface">
+            <div className="resume-tailor-workspace-surface__header">
+              <div className="resume-tailor-workspace-surface__intro">
+                <div className="resume-tailor-workspace-surface__eyebrow-row">
+                  <span className="page-card__label">Analysis queue</span>
+                  <span className="question-status-badge question-status-badge--accent">Step 3 of 4</span>
+                </div>
+                <p className="resume-tailor-workspace-surface__breadcrumbs">
+                  Source resume
+                  <span>/</span>
+                  Target role
+                  <span>/</span>
+                  Tailor analysis
+                </p>
+                <h2 className="resume-tailor-workspace-surface__title">Create one job-aware analysis or reopen the best existing run</h2>
+                <p className="resume-tailor-workspace-surface__body">
+                  Every analysis stays layered on top of this immutable source version. The goal here is not to spawn many runs,
+                  but to pick the one company context that most clearly sharpens the resume.
+                </p>
+              </div>
+              <div className="resume-tailor-workspace-surface__stats">
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Version</span>
+                  <strong>{versionQuery.data.versionNumberLabel}</strong>
+                </article>
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Saved postings</span>
+                  <strong>{selectableJobPostings.length}</strong>
+                </article>
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Persisted runs</span>
+                  <strong>{analysesQuery.data?.length ?? 0}</strong>
+                </article>
+              </div>
+            </div>
+            <div className="resume-tailor-workspace-surface__guidance" aria-label="Analysis queue guidance">
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Context rule</span>
+                <strong>Choose the posting that exposes the sharpest mismatch, not the safest fit.</strong>
+              </article>
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Run rule</span>
+                <strong>Create a new analysis only when existing runs no longer answer the current role.</strong>
+              </article>
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Exit rule</span>
+                <strong>Move to the detail workspace once one run is worth accepting or rejecting suggestions in.</strong>
+              </article>
+            </div>
+            <div className="resume-tailor-workspace-surface__chips">
+              <span className="detail-chip">Parsing {versionQuery.data.parsingStatusLabel}</span>
               {versionQuery.data.extractionStatusLabel ? (
-                <span className="question-status-badge question-status-badge--accent">
+                <span className="detail-chip detail-chip--accent">
                   Extraction {versionQuery.data.extractionStatusLabel}
                 </span>
               ) : null}
@@ -84,7 +124,7 @@ export function ResumeTailorAnalysisListPage() {
 
           <section className="page-card">
             <span className="page-card__label">Create</span>
-            <h2 className="page-card__title">Create one tailoring analysis</h2>
+            <h2 className="page-card__title">Create one role-specific tailoring analysis</h2>
             <div className="form-grid">
               <label className="form-field">
                 <span className="form-field__label">Saved job posting</span>
@@ -145,7 +185,7 @@ export function ResumeTailorAnalysisListPage() {
             <div className="section-heading">
               <div>
                 <p className="section-heading__eyebrow">History</p>
-                <h2 className="page-card__title">Persisted analyses</h2>
+                <h2 className="page-card__title">Persisted analyses for this source version</h2>
               </div>
               <span className="section-heading__count">{analysesQuery.data?.length ?? 0}</span>
             </div>

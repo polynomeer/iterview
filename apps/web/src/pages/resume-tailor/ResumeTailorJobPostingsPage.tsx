@@ -160,20 +160,21 @@ export function ResumeTailorJobPostingsPage() {
         </>
       }
       description="Curate target companies and saved job postings so resume tailoring and DFS interview drills stay aligned to real hiring signals."
-      eyebrow="Target Companies"
-      title="Company target board"
+      eyebrow="Tailor flow"
+      title="Capture the company context before tailoring the resume"
     >
       <section className="page-card target-companies-workspace-surface">
         <div className="target-companies-workspace-surface__header">
           <div className="target-companies-workspace-surface__intro">
             <div className="target-companies-workspace-surface__eyebrow-row">
-              <span className="page-card__label">Backend / Target companies</span>
+              <span className="page-card__label">Target companies</span>
+              <span className="detail-chip">Step 2 of 4</span>
               <span className="question-status-badge question-status-badge--accent">Company-aware prep</span>
             </div>
-            <h2 className="target-companies-workspace-surface__title">Track where your strongest stories fit before you start tailoring or drilling deeper</h2>
+            <h2 className="target-companies-workspace-surface__title">Capture the role context that should shape the next tailored resume pass</h2>
             <p className="target-companies-workspace-surface__body">
-              Save postings with enough structure to compare priorities, spot recurring themes, and keep each company
-              tied to concrete follow-up questions rather than generic interview prep.
+              Save postings with enough structure to compare priorities, spot recurring themes, and keep each company tied
+              to concrete follow-up pressure instead of generic interview prep.
             </p>
           </div>
           <div className="target-companies-workspace-surface__stats">

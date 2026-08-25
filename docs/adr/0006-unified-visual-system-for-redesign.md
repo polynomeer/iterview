@@ -50,6 +50,7 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - External signal surfaces should frame feed browsing as a short branch-selection step, not as a separate endless discovery mode.
 - Question-detail and answer-drafting surfaces should behave like one node-inspector workflow, keeping prompt, evidence, and submission pressure visible without splitting them into detached reading and writing pages.
 - Resume source-of-truth surfaces should split cleanly between authoring and repair prioritization, so editing and heatmap review feel like two steps of the same claim-hardening workflow.
+- Multi-step workspace families should expose their current stage explicitly so hub, setup, execution, and review screens read as one continuous flow instead of disconnected routes.
 - Analysis surfaces should distinguish source-of-truth inspection from answer-result review so users know whether they are repairing resume inputs or answer outputs.
 - Notes and archive surfaces should distinguish reusable explanation fragments from proven answer libraries so users know whether they are preparing new material or reopening validated material.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.

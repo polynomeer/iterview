@@ -57,9 +57,9 @@ export function ResumeTailorAnalysisDetailPage() {
 
   return (
     <PageContainer
-      description="Review the saved tailoring analysis, accept or reject rewrite suggestions, inspect the persisted tailored document preview, and manage server-side PDF exports."
-      eyebrow="Resume Tailor"
-      title="Tailored resume analysis"
+      description="Review one saved tailoring analysis, accept the rewrites that strengthen the role-specific story, and export the hardened preview."
+      eyebrow="Tailor flow"
+      title="Accept or reject the role-specific rewrite path"
     >
       {analysisQuery.isLoading ? (
         <LoadingStateCard
@@ -81,43 +81,62 @@ export function ResumeTailorAnalysisDetailPage() {
         />
       ) : analysisQuery.data ? (
         <div className="page-stack">
-          <section className="page-card">
-            <span className="page-card__label">Analysis</span>
-            <h2 className="page-card__title">{analysisQuery.data.matchSummary}</h2>
-            <p className="page-card__body">
-              This workspace is layered on top of the immutable original resume version. Accepted
-              suggestions only change the saved tailored preview document and export outputs.
-            </p>
-            <div className="chip-list">
-              <span className="question-status-badge question-status-badge--accent">
-                {analysisQuery.data.statusLabel}
-              </span>
-              <span className="question-status-badge question-status-badge--neutral">
-                {analysisQuery.data.generationSourceLabel}
-              </span>
-              {analysisQuery.data.recommendedFormatType ? (
-                <span className="question-status-badge question-status-badge--neutral">
-                  {analysisQuery.data.recommendedFormatTypeLabel}
-                </span>
-              ) : null}
+          <section className="page-card resume-tailor-workspace-surface">
+            <div className="resume-tailor-workspace-surface__header">
+              <div className="resume-tailor-workspace-surface__intro">
+                <div className="resume-tailor-workspace-surface__eyebrow-row">
+                  <span className="page-card__label">Analysis workspace</span>
+                  <span className="question-status-badge question-status-badge--accent">Step 4 of 4</span>
+                </div>
+                <p className="resume-tailor-workspace-surface__breadcrumbs">
+                  Source resume
+                  <span>/</span>
+                  Target role
+                  <span>/</span>
+                  Accepted rewrite
+                </p>
+                <h2 className="resume-tailor-workspace-surface__title">{analysisQuery.data.matchSummary}</h2>
+                <p className="resume-tailor-workspace-surface__body">
+                  Use this workspace to decide which suggestions actually harden the story for the target role. Accepted changes
+                  affect only the tailored preview and export outputs, never the original source version.
+                </p>
+              </div>
+              <div className="resume-tailor-workspace-surface__stats">
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Overall score</span>
+                  <strong>{analysisQuery.data.overallScoreLabel}</strong>
+                </article>
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Suggestions</span>
+                  <strong>{analysisQuery.data.suggestions.length}</strong>
+                </article>
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Exports</span>
+                  <strong>{(exportsQuery.data ?? analysisQuery.data.exports).length}</strong>
+                </article>
+              </div>
             </div>
-            <div className="stats-grid">
-              <MetricCard label="Overall score" value={analysisQuery.data.overallScoreLabel} />
-              <MetricCard
-                label="Suggestions"
-                tone="accent"
-                value={String(analysisQuery.data.suggestions.length)}
-              />
-              <MetricCard
-                label="Exports"
-                tone="muted"
-                value={String((exportsQuery.data ?? analysisQuery.data.exports).length)}
-              />
-              <MetricCard
-                label="Created"
-                tone="muted"
-                value={analysisQuery.data.createdAtLabel ?? "Unknown"}
-              />
+            <div className="resume-tailor-workspace-surface__guidance" aria-label="Analysis detail guidance">
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Accept rule</span>
+                <strong>Accept only the rewrites that make the role-specific claim more concrete.</strong>
+              </article>
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Preview rule</span>
+                <strong>Read the persisted preview as the final interview-facing document, not as suggestion notes.</strong>
+              </article>
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Export rule</span>
+                <strong>Generate PDF only after the accepted path clearly beats the original wording.</strong>
+              </article>
+            </div>
+            <div className="resume-tailor-workspace-surface__chips">
+              <span className="detail-chip detail-chip--accent">{analysisQuery.data.statusLabel}</span>
+              <span className="detail-chip">{analysisQuery.data.generationSourceLabel}</span>
+              {analysisQuery.data.recommendedFormatType ? (
+                <span className="detail-chip">{analysisQuery.data.recommendedFormatTypeLabel}</span>
+              ) : null}
+              <span className="detail-chip">{analysisQuery.data.createdAtLabel ?? "Created date unavailable"}</span>
             </div>
           </section>
 

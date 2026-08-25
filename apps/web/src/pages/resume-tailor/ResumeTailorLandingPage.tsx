@@ -33,9 +33,9 @@ export function ResumeTailorLandingPage() {
 
   return (
     <PageContainer
-      description="Pick an immutable resume version, connect it to a saved job posting, review tailored analyses, and export server-generated PDFs."
-      eyebrow="Resume Tailor"
-      title="Resume tailoring workspace"
+      description="Choose the source resume, connect company context, and move into one tailoring analysis that hardens the resume for a specific role."
+      eyebrow="Tailor flow"
+      title="Start the role-specific source-of-truth flow"
     >
       {resumeListQuery.isLoading ? (
         <LoadingStateCard
@@ -61,25 +61,59 @@ export function ResumeTailorLandingPage() {
 
       {!resumeListQuery.isLoading && !resumeListQuery.isError ? (
         <div className="page-stack">
-          <section className="page-card">
-            <span className="page-card__label">Workspace</span>
-            <h2 className="page-card__title">Tailor one immutable resume version at a time</h2>
-            <p className="page-card__body">
-              Analyses, tailored previews, suggestion acceptance, and PDF exports are saved on top
-              of the selected resume version. Your original uploaded resume version stays unchanged.
-            </p>
-            <div className="stats-grid">
-              <MetricCard label="Resume versions" value={String(resumeChoices.length)} />
-              <MetricCard
-                label="Saved job postings"
-                tone="accent"
-                value={String(jobPostingsQuery.data?.length ?? 0)}
-              />
-              <MetricCard
-                label="Analyses"
-                tone="muted"
-                value={String(analysesQuery.data?.length ?? 0)}
-              />
+          <section className="page-card resume-tailor-workspace-surface">
+            <div className="resume-tailor-workspace-surface__header">
+              <div className="resume-tailor-workspace-surface__intro">
+                <div className="resume-tailor-workspace-surface__eyebrow-row">
+                  <span className="page-card__label">Tailor hub</span>
+                  <span className="question-status-badge question-status-badge--accent">Step 1 of 4</span>
+                </div>
+                <p className="resume-tailor-workspace-surface__breadcrumbs">
+                  Source resume
+                  <span>/</span>
+                  Target company
+                  <span>/</span>
+                  Tailor analysis
+                </p>
+                <h2 className="resume-tailor-workspace-surface__title">Choose one immutable resume version, then tailor it toward one real role</h2>
+                <p className="resume-tailor-workspace-surface__body">
+                  Treat tailoring as role-specific source-of-truth hardening. The original resume stays unchanged while analyses,
+                  accepted rewrites, and exports accumulate on top of one selected version.
+                </p>
+              </div>
+              <div className="resume-tailor-workspace-surface__stats">
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Resume versions</span>
+                  <strong>{resumeChoices.length}</strong>
+                </article>
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Saved postings</span>
+                  <strong>{jobPostingsQuery.data?.length ?? 0}</strong>
+                </article>
+                <article className="resume-tailor-workspace-surface__stat">
+                  <span>Analyses</span>
+                  <strong>{analysesQuery.data?.length ?? 0}</strong>
+                </article>
+              </div>
+            </div>
+            <div className="resume-tailor-workspace-surface__guidance" aria-label="Tailor hub guidance">
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Version rule</span>
+                <strong>Start from one defendable source resume, not a fresh document copy.</strong>
+              </article>
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Context rule</span>
+                <strong>Pick company context before generating another generic analysis.</strong>
+              </article>
+              <article className="resume-tailor-workspace-surface__guidance-card">
+                <span>Exit rule</span>
+                <strong>Move forward only when one version and one target role are obvious.</strong>
+              </article>
+            </div>
+            <div className="resume-tailor-workspace-surface__chips">
+              <span className="detail-chip">Original source preserved</span>
+              <span className="detail-chip detail-chip--accent">Role-specific flow</span>
+              <span className="detail-chip">Export path included</span>
             </div>
             <div className="page-card__actions">
               {selectedVersionId ? (
@@ -106,7 +140,7 @@ export function ResumeTailorLandingPage() {
             <>
               <section className="page-card">
                 <span className="page-card__label">Version</span>
-                <h2 className="page-card__title">Choose the source resume version</h2>
+                <h2 className="page-card__title">Choose the source resume version for this flow</h2>
                 <label className="form-field">
                   <span className="form-field__label">Resume version</span>
                   <select
@@ -128,7 +162,7 @@ export function ResumeTailorLandingPage() {
                 <div className="section-heading">
                   <div>
                     <p className="section-heading__eyebrow">Analyses</p>
-                    <h2 className="page-card__title">Recent analyses for this resume version</h2>
+                    <h2 className="page-card__title">Recent role-specific analyses for this version</h2>
                   </div>
                   <span className="section-heading__count">{analysesQuery.data?.length ?? 0}</span>
                 </div>
@@ -198,7 +232,7 @@ export function ResumeTailorLandingPage() {
                 <div className="section-heading">
                   <div>
                     <p className="section-heading__eyebrow">Job Postings</p>
-                    <h2 className="page-card__title">Saved target roles</h2>
+                    <h2 className="page-card__title">Saved target roles that can drive the next analysis</h2>
                   </div>
                   <span className="section-heading__count">{jobPostingsQuery.data?.length ?? 0}</span>
                 </div>
