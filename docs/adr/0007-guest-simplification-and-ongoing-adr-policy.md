@@ -14,6 +14,11 @@ Two repository-wide rules are adopted:
 1. Guest-facing shared UI should emphasize product purpose and a small number of entry actions, not simulated workspace density.
 2. Future shared decisions must be recorded as ADRs proactively, not only when someone asks for them later.
 
+Shared shell behavior should also follow this guest-first simplification rule:
+
+- when a page already contains a full guest-facing hero or mission surface, the generic page intro should be removed instead of repeated above it
+- common shell framing should defer to the strongest page-level message instead of competing with it
+
 The ADR rule applies to:
 - product-definition changes
 - cross-app design-system changes
