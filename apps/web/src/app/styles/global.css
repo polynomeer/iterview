@@ -12548,3 +12548,145 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+.answer-editor-insight-surface,
+.review-queue-insight-surface,
+.notes-insight-surface,
+.interview-launch-insight-surface,
+.interview-session-insight-surface,
+.interview-result-insight-surface,
+.practical-review-insight-surface,
+.question-detail-insight-surface {
+  display: grid;
+  gap: 1rem;
+  border-color: rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.answer-editor-insight-surface__header,
+.review-queue-insight-surface__header,
+.notes-insight-surface__header,
+.interview-launch-insight-surface__header,
+.interview-session-insight-surface__header,
+.interview-result-insight-surface__header,
+.practical-review-insight-surface__header,
+.question-detail-insight-surface__header,
+.answer-editor-insight-surface__lanes,
+.review-queue-insight-surface__lanes,
+.notes-insight-surface__lanes,
+.interview-launch-insight-surface__lanes,
+.interview-session-insight-surface__lanes,
+.interview-result-insight-surface__lanes,
+.practical-review-insight-surface__lanes,
+.question-detail-insight-surface__actions {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.answer-editor-insight-surface__stats,
+.review-queue-insight-surface__stats,
+.notes-insight-surface__stats,
+.interview-launch-insight-surface__stats,
+.interview-session-insight-surface__stats,
+.interview-result-insight-surface__stats,
+.practical-review-insight-surface__stats,
+.question-detail-insight-surface__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.answer-editor-insight-surface__stats article,
+.review-queue-insight-surface__stats article,
+.notes-insight-surface__stats article,
+.interview-launch-insight-surface__stats article,
+.interview-session-insight-surface__stats article,
+.interview-result-insight-surface__stats article,
+.practical-review-insight-surface__stats article,
+.question-detail-insight-surface__stats article,
+.answer-editor-insight-surface__lane,
+.review-queue-insight-surface__lane,
+.notes-insight-surface__lane,
+.interview-launch-insight-surface__lane,
+.interview-session-insight-surface__lane,
+.interview-result-insight-surface__lane,
+.practical-review-insight-surface__lane,
+.question-detail-insight-surface__action {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.05);
+}
+
+.answer-editor-insight-surface__stats span,
+.review-queue-insight-surface__stats span,
+.notes-insight-surface__stats span,
+.interview-launch-insight-surface__stats span,
+.interview-session-insight-surface__stats span,
+.interview-result-insight-surface__stats span,
+.practical-review-insight-surface__stats span,
+.question-detail-insight-surface__stats span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.answer-editor-insight-surface__stats strong,
+.review-queue-insight-surface__stats strong,
+.notes-insight-surface__stats strong,
+.interview-launch-insight-surface__stats strong,
+.interview-session-insight-surface__stats strong,
+.interview-result-insight-surface__stats strong,
+.practical-review-insight-surface__stats strong,
+.question-detail-insight-surface__stats strong,
+.answer-editor-insight-surface__lane strong,
+.review-queue-insight-surface__lane strong,
+.notes-insight-surface__lane strong,
+.interview-launch-insight-surface__lane strong,
+.interview-session-insight-surface__lane strong,
+.interview-result-insight-surface__lane strong,
+.practical-review-insight-surface__lane strong,
+.question-detail-insight-surface__action strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.answer-editor-insight-surface__stats p,
+.review-queue-insight-surface__stats p,
+.notes-insight-surface__stats p,
+.interview-launch-insight-surface__stats p,
+.interview-session-insight-surface__stats p,
+.interview-result-insight-surface__stats p,
+.practical-review-insight-surface__stats p,
+.question-detail-insight-surface__stats p,
+.answer-editor-insight-surface__lane span,
+.review-queue-insight-surface__lane span,
+.notes-insight-surface__lane span,
+.interview-launch-insight-surface__lane span,
+.interview-session-insight-surface__lane span,
+.interview-result-insight-surface__lane span,
+.practical-review-insight-surface__lane span,
+.question-detail-insight-surface__action span {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.72);
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .answer-editor-insight-surface__stats,
+  .review-queue-insight-surface__stats,
+  .notes-insight-surface__stats,
+  .interview-launch-insight-surface__stats,
+  .interview-session-insight-surface__stats,
+  .interview-result-insight-surface__stats,
+  .practical-review-insight-surface__stats,
+  .question-detail-insight-surface__stats {
+    grid-template-columns: 1fr;
+  }
+}
