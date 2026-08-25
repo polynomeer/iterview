@@ -42,3 +42,5 @@ Each ADR should include:
    Simplifies the guest experience and formalizes ongoing ADR creation as a repository rule.
 8. [`0008-separate-target-company-tracking-from-job-posting-intake.md`](0008-separate-target-company-tracking-from-job-posting-intake.md)
    Separates company preparation tracking from resume-tailor job posting ingestion.
+9. [`0009-separate-scheduled-review-planning-from-active-review-queue.md`](0009-separate-scheduled-review-planning-from-active-review-queue.md)
+   Separates spaced-repetition planning from the active retry execution queue.

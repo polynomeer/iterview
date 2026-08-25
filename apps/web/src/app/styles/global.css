@@ -12553,6 +12553,221 @@ button {
   color: rgba(228, 233, 255, 0.68);
 }
 
+.scheduled-reviews-workspace-surface {
+  padding: clamp(1.5rem, 2vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.18), transparent 34%),
+    linear-gradient(145deg, rgba(10, 17, 22, 0.96), rgba(8, 12, 18, 0.98));
+}
+
+.scheduled-reviews-workspace-surface__header {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.scheduled-reviews-workspace-surface__intro {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 52rem;
+}
+
+.scheduled-reviews-workspace-surface__eyebrow-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.scheduled-reviews-workspace-surface__title {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.08;
+}
+
+.scheduled-reviews-workspace-surface__body {
+  margin: 0;
+  color: rgba(228, 255, 246, 0.74);
+  line-height: 1.7;
+}
+
+.scheduled-reviews-workspace-surface__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.9rem;
+}
+
+.scheduled-reviews-workspace-surface__stats article,
+.scheduled-reviews-workspace-surface__guidance-card,
+.scheduled-reviews-calendar,
+.scheduled-reviews-timeline,
+.scheduled-reviews-queue,
+.scheduled-reviews-detail-rail {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(10, 17, 22, 0.94), rgba(8, 12, 18, 0.98));
+}
+
+.scheduled-reviews-workspace-surface__stats article {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+}
+
+.scheduled-reviews-workspace-surface__stats span,
+.scheduled-reviews-workspace-surface__guidance-card span,
+.scheduled-review-day-card span,
+.scheduled-review-timeline-card__meta span,
+.scheduled-reviews-detail-rail__meta span {
+  color: rgba(205, 235, 225, 0.64);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.scheduled-reviews-workspace-surface__stats strong {
+  font-size: 1.5rem;
+}
+
+.scheduled-reviews-workspace-surface__guidance {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.scheduled-reviews-workspace-surface__guidance-card {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+}
+
+.scheduled-reviews-workspace-surface__guidance-card strong {
+  color: #f7fffc;
+  line-height: 1.5;
+}
+
+.scheduled-reviews-layout {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.scheduled-reviews-calendar,
+.scheduled-reviews-timeline,
+.scheduled-reviews-queue,
+.scheduled-reviews-detail-rail {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1.15rem, 1.8vw, 1.5rem);
+}
+
+.scheduled-reviews-calendar__grid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(8.8rem, 1fr));
+}
+
+.scheduled-review-day-card {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.scheduled-review-day-card strong,
+.scheduled-review-timeline-card h3,
+.scheduled-review-queue-card__header strong {
+  color: #f7fffc;
+}
+
+.scheduled-review-day-card p,
+.scheduled-review-day-card small,
+.scheduled-review-timeline-card p,
+.scheduled-review-queue-card__header p,
+.scheduled-reviews-detail-rail__panel .page-card__body {
+  margin: 0;
+  color: rgba(219, 241, 233, 0.74);
+  line-height: 1.6;
+}
+
+.scheduled-review-day-card__bar {
+  height: 0.5rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(16, 185, 129, 0.92), rgba(96, 165, 250, 0.88)),
+    rgba(255, 255, 255, 0.08);
+  width: var(--scheduled-review-load);
+}
+
+.scheduled-review-day-card--focus {
+  box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.22);
+}
+
+.scheduled-review-day-card--steady {
+  box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.18);
+}
+
+.scheduled-reviews-timeline__stack,
+.scheduled-reviews-queue__list,
+.scheduled-reviews-detail-rail__panel {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.scheduled-review-timeline-card,
+.scheduled-review-queue-card {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  text-align: left;
+  color: inherit;
+}
+
+.scheduled-review-timeline-card {
+  cursor: pointer;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.scheduled-review-timeline-card:hover,
+.scheduled-review-timeline-card:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+.scheduled-review-timeline-card--active {
+  border-color: rgba(16, 185, 129, 0.44);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.scheduled-review-timeline-card__topline,
+.scheduled-review-queue-card__header,
+.scheduled-review-queue-card__actions,
+.scheduled-review-queue-card__meta,
+.scheduled-reviews-detail-rail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scheduled-review-queue-card__body {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.scheduled-reviews-detail-rail__panel {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
 @media (min-width: 900px) {
   .target-companies-board__toolbar {
     grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.9fr);
@@ -12573,24 +12788,44 @@ button {
     grid-template-columns: minmax(0, 1.45fr) minmax(20rem, 0.82fr);
     align-items: start;
   }
+
+  .scheduled-reviews-layout--desktop {
+    grid-template-columns: minmax(0, 1.45fr) minmax(20rem, 0.82fr);
+    align-items: start;
+  }
 }
 
 @media (min-width: 1024px) {
   .resume-tailor-workspace-surface__header,
-  .target-companies-workspace-surface__header {
+  .target-companies-workspace-surface__header,
+  .scheduled-reviews-workspace-surface__header {
     grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
     align-items: end;
   }
 }
 
 @media (max-width: 720px) {
+  .scheduled-reviews-workspace-surface__guidance,
+  .scheduled-reviews-calendar__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scheduled-review-queue-card__header,
+  .scheduled-review-queue-card__actions,
+  .scheduled-review-queue-card__meta,
+  .scheduled-reviews-detail-rail__meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .target-company-card__readiness {
     justify-items: start;
   }
 
   .target-company-detail-rail__bar-row,
   .target-company-detail-rail__panel-header,
-  .target-company-detail-rail__action-card {
+  .target-company-detail-rail__action-card,
+  .scheduled-review-queue-card__actions {
     grid-template-columns: minmax(0, 1fr);
   }
 }

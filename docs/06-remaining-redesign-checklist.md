@@ -134,9 +134,9 @@ Mark each line only when the changed scope is:
 - [x] Make the inspector actionable for replay, review, and path continuation
 
 ### F3. Scheduled Reviews Workspace
-- [ ] Add a dedicated `ScheduledReviewsPage` route and page implementation
-- [ ] Provide calendar, timeline, and queue views for spaced repetition work
-- [ ] Show projected mastery impact and rescheduling actions in-context
+- [x] Add a dedicated `ScheduledReviewsPage` route and page implementation
+- [x] Provide calendar, timeline, and queue views for spaced repetition work
+- [x] Show projected mastery impact and rescheduling actions in-context
 
 ### F4. Target Companies Workspace
 - [x] Add a dedicated `TargetCompaniesPage` route and page implementation
@@ -207,7 +207,7 @@ The practical remaining scope is now:
 
 1. shared CSS and token cleanup across the stabilized workspace families
 2. final acceptance verification across the main user journeys
-3. decision on whether the still-unbuilt workspace surfaces in section F3, F5, F6, and F7 belong in the current delivery scope
+3. decision on whether the still-unbuilt workspace surfaces in section F5, F6, and F7 belong in the current delivery scope
 
 Everything else in this checklist has either been implemented directly or adapted into adjacent shipped flows.
 
@@ -215,4 +215,4 @@ Everything else in this checklist has either been implemented directly or adapte
 
 1. Shared system cleanup: stable workspace families -> repeated CSS -> token audit
 2. Final acceptance pass: practice -> review -> resume authoring -> interview continuity
-3. Scope decision: `ScheduledReviewsPage` -> `SettingsPage` -> `WeakNodes` -> command palette
+3. Scope decision: `SettingsPage` -> `WeakNodes` -> command palette

@@ -36,6 +36,7 @@ export const routeConfig = {
   practice: createStaticRoute("/practice", "Practice"),
   skills: createStaticRoute("/skills", "Skills", true),
   reviewQueue: createStaticRoute("/review-queue", "Review Queue", true),
+  scheduledReviews: createStaticRoute("/scheduled-reviews", "Scheduled Reviews", true),
   questionDetail: createDynamicRoute(
     "/questions/:questionId",
     "Question Detail",
@@ -159,6 +160,7 @@ export const tabRoutes = [
 export const secondaryDesktopRoutes = [
   routeConfig.skills,
   routeConfig.interview,
+  routeConfig.scheduledReviews,
   routeConfig.resumeTailor,
   routeConfig.practicalInterviews,
   routeConfig.resumeAnalysis,

@@ -10,6 +10,7 @@ export function SidebarNavigation() {
         { label: "Interview Workspace", to: routeConfig.interview.buildPath() },
         { label: "Question Map", to: routeConfig.practice.buildPath() },
         { label: "Review Queue", to: routeConfig.reviewQueue.buildPath() },
+        { label: "Scheduled Reviews", to: routeConfig.scheduledReviews.buildPath() },
         { label: "Archive", to: routeConfig.archive.buildPath() },
       ]
     : [

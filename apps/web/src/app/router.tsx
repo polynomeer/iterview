@@ -10,6 +10,7 @@ const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({
 const PracticePage = lazy(() => import("../pages/practice/PracticePage").then((module) => ({ default: module.PracticePage })));
 const SkillsPage = lazy(() => import("../pages/skills/SkillsPage").then((module) => ({ default: module.SkillsPage })));
 const ReviewQueuePage = lazy(() => import("../pages/review-queue/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
+const ScheduledReviewsPage = lazy(() => import("../pages/scheduled-reviews/ScheduledReviewsPage").then((module) => ({ default: module.ScheduledReviewsPage })));
 const QuestionDetailPage = lazy(() => import("../pages/question-detail/QuestionDetailPage").then((module) => ({ default: module.QuestionDetailPage })));
 const QuestionTreePage = lazy(() => import("../pages/question-tree/QuestionTreePage").then((module) => ({ default: module.QuestionTreePage })));
 const AnswerEditorPage = lazy(() => import("../pages/answer-editor/AnswerEditorPage").then((module) => ({ default: module.AnswerEditorPage })));
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
           {
             path: routeConfig.reviewQueue.path,
             element: withSuspense(<ReviewQueuePage />),
+          },
+          {
+            path: routeConfig.scheduledReviews.path,
+            element: withSuspense(<ScheduledReviewsPage />),
           },
           {
             path: routeConfig.answerEditor.path,
