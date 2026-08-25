@@ -745,6 +745,12 @@ export function PracticalInterviewReviewPage() {
   const primaryReviewLane =
     [...review.laneItems].sort((left, right) => left.sortOrder - right.sortOrder)[0] ?? null;
   const replayBlockerCount = review.replayReadiness.blockerDetails.length;
+  const reviewSignal =
+    replayBlockerCount > 0
+      ? "Clear replay blockers"
+      : primaryReviewLane
+        ? `Open ${primaryReviewLane.badgeText}`
+        : "Stabilize active lane";
   const playback = review.playback ?? transcript.playback ?? questions.playback ?? null;
   const activePlaybackSegmentSequence = useMemo(
     () =>
@@ -1175,6 +1181,54 @@ export function PracticalInterviewReviewPage() {
               </div>
             ) : null}
           </section>
+
+          <SectionPanel className="practical-review-insight-surface" variant="muted">
+            <div className="practical-review-insight-surface__header">
+              <div>
+                <span className="page-card__label">Review insight</span>
+                <h2 className="page-card__title">Resolve the lane that distorts replay and question structure before widening the review</h2>
+                <p className="page-card__body">
+                  This layer should tell you what to stabilize first: transcript fidelity, structured questions, follow-up thread integrity, or replay readiness. Treat everything below as tactical work after that decision.
+                </p>
+              </div>
+              <span className="detail-chip detail-chip--accent">{reviewSignal}</span>
+            </div>
+            <div className="practical-review-insight-surface__stats">
+              <article>
+                <span>Primary lane</span>
+                <strong>{primaryReviewLane?.badgeText ?? "No lane"}</strong>
+                <p>
+                  {primaryReviewLane
+                    ? `${primaryReviewLane.needsReviewCount} item${primaryReviewLane.needsReviewCount === 1 ? "" : "s"} need review in this lane.`
+                    : "No server-prioritized lane is available."}
+                </p>
+              </article>
+              <article>
+                <span>Replay state</span>
+                <strong>{replayBlockerCount > 0 ? review.replayReadiness.statusBadgeText : "Replay clear"}</strong>
+                <p>{replayBlockerCount > 0 ? `${replayBlockerCount} blocker${replayBlockerCount === 1 ? "" : "s"} still gate replay launch.` : "Replay can start once the selected lane is stable."}</p>
+              </article>
+              <article>
+                <span>Weak answer load</span>
+                <strong>{review.weakAnswerCount}</strong>
+                <p>answers that still need recovery-oriented replay or thread inspection</p>
+              </article>
+            </div>
+            <div className="practical-review-insight-surface__lanes">
+              <div className="practical-review-insight-surface__lane">
+                <strong>Stabilize interpretation</strong>
+                <span>Fix the lane that can make every downstream question or thread read unreliable.</span>
+              </div>
+              <div className="practical-review-insight-surface__lane">
+                <strong>Recheck replayability</strong>
+                <span>Clear blockers before opening replay mock flows or thread-based re-simulation.</span>
+              </div>
+              <div className="practical-review-insight-surface__lane">
+                <strong>Recover the weakest answer</strong>
+                <span>Use the weakest structured answer as the first target for deliberate re-practice.</span>
+              </div>
+            </div>
+          </SectionPanel>
 
           <div className="practical-review-layout__hero-side">
             <SectionPanel className="workspace-note-card workspace-note-card--accent practical-review-layout__hero-note" variant="muted">

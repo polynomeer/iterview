@@ -3667,6 +3667,59 @@ button {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.practical-review-insight-surface {
+  display: grid;
+  gap: 1rem;
+  border-color: rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.practical-review-insight-surface__header,
+.practical-review-insight-surface__lanes {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.practical-review-insight-surface__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.practical-review-insight-surface__stats article,
+.practical-review-insight-surface__lane {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.practical-review-insight-surface__stats span {
+  color: var(--text-subtle);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practical-review-insight-surface__stats strong,
+.practical-review-insight-surface__lane strong {
+  color: var(--text-main);
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+  line-height: 1.45;
+}
+
+.practical-review-insight-surface__stats p,
+.practical-review-insight-surface__lane span {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
 .practical-review-workspace-surface__guidance-card,
 .practical-review-brief__summary-card {
   display: grid;
@@ -3809,6 +3862,12 @@ button {
 
 .practical-review-brief__summary-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .practical-review-insight-surface__stats {
+    grid-template-columns: 1fr;
+  }
 }
 
 .practical-review-brief__grid {
