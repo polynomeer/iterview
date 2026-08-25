@@ -73,6 +73,7 @@ export function PracticePage() {
     <PageContainer
       description="Browse the question set, refine it with filters, and jump into the next prompt that matches your practice goal."
       eyebrow="Practice"
+      introVariant="minimal"
       title="Practice question discovery"
     >
       <section className="page-card practice-workspace-surface">

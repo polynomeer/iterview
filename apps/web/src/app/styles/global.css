@@ -10184,11 +10184,12 @@ button {
 
 .app-shell__workspace {
   min-width: 0;
-  padding: 16px 18px 36px;
+  padding: 20px 24px 40px;
 }
 
 .app-shell__content--desktop {
   min-width: 0;
+  padding-top: 8px;
 }
 
 .sidebar-navigation {
@@ -10381,7 +10382,7 @@ button {
 .sidebar-navigation__progress-chart span:nth-child(7) { height: 64px; }
 
 .top-toolbar {
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .app-header {
@@ -10389,7 +10390,7 @@ button {
   grid-template-columns: auto minmax(280px, 520px) auto;
   align-items: center;
   gap: 16px;
-  padding: 0 2px 14px;
+  padding: 0 4px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -10481,19 +10482,49 @@ button {
   padding-bottom: 18px;
 }
 
+.page-container__intro--minimal {
+  gap: 10px;
+  padding-bottom: 12px;
+}
+
+.page-container--minimal .page-container__intro-copy {
+  gap: 8px;
+  max-width: 680px;
+}
+
 .page-container__eyebrow {
   background: rgba(15, 27, 47, 0.82);
   border-color: rgba(255, 255, 255, 0.08);
   color: rgba(165, 182, 206, 0.86);
 }
 
+.page-container--minimal .page-container__eyebrow {
+  min-height: 24px;
+  padding: 4px 9px;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .page-container__title {
   color: #f8fbff;
+}
+
+.page-container--minimal .page-container__title {
+  max-width: 18ch;
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  line-height: 1.08;
 }
 
 .page-container__description {
   color: rgba(187, 201, 222, 0.76);
   max-width: 68ch;
+}
+
+.page-container--minimal .page-container__description {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  max-width: 62ch;
 }
 
 .interview-workspace-page,

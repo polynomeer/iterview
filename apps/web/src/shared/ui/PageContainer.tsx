@@ -5,6 +5,7 @@ type PageContainerProps = PropsWithChildren<{
   title: string;
   description: string;
   actions?: ReactNode;
+  introVariant?: "default" | "minimal";
 }>;
 
 export function PageContainer({
@@ -13,10 +14,11 @@ export function PageContainer({
   title,
   description,
   actions,
+  introVariant = "default",
 }: PageContainerProps) {
   return (
-    <section className="page-container">
-      <header className="page-container__intro">
+    <section className={`page-container page-container--${introVariant}`}>
+      <header className={`page-container__intro page-container__intro--${introVariant}`}>
         <div className="page-container__intro-copy">
           <span className="page-container__eyebrow">{eyebrow}</span>
           <h1 className="page-container__title">{title}</h1>

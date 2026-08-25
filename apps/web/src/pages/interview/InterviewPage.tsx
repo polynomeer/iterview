@@ -421,6 +421,7 @@ export function InterviewPage() {
     <PageContainer
       description={t("interview.pageDescription")}
       eyebrow={t("interview.pageEyebrow")}
+      introVariant="minimal"
       title={t("interview.pageTitle")}
     >
       {resumeListQuery.isLoading || latestResumeQuery.isLoading || sessionListQuery.isLoading ? (

@@ -79,6 +79,7 @@ export function ArchivePage() {
     <PageContainer
       description="Review the questions you have already mastered, filter them, and reopen their latest result summary when needed."
       eyebrow="Archive"
+      introVariant="minimal"
       title="Archive"
     >
       <section className="page-card archive-workspace-surface">

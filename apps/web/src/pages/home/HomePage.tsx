@@ -49,6 +49,7 @@ export function HomePage() {
     <PageContainer
       description={pageDescription}
       eyebrow="Home"
+      introVariant="minimal"
       title={pageTitle}
     >
       {!isUnauthorized ? (

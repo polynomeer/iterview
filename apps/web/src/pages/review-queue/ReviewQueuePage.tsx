@@ -152,6 +152,7 @@ export function ReviewQueuePage() {
     <PageContainer
       description="Work through the retry queue, skip items for later, or mark them done and return to focused practice."
       eyebrow="Review Queue"
+      introVariant="minimal"
       title="Review queue"
     >
       <section className="page-card review-queue-workspace-surface">
