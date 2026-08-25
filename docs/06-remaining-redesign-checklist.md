@@ -2,11 +2,11 @@
 
 This checklist converts the current redesign status of `iterview` into a concrete remaining-work list.
 
-Current status baseline on August 24, 2026:
+Current status baseline on August 25, 2026:
 - completed: workspace shell direction and graph-oriented product framing
-- completed: `Home`, `Feed`, `Practice`, `Question Tree`, `Review Queue`, `Archive`, `Profile`, and `Resume` redesign passes
-- partially aligned: interview and question workspaces
-- still pending: end-to-end interview flow unification, source-of-truth authoring flow unification, and shared system cleanup
+- completed: `Home`, `Feed`, `Practice`, `Question Tree`, `Review Queue`, `Archive`, `Profile`, `Resume`, `Interview*`, `QuestionDetail`, `AnswerEditor`, `ResultAnalysis`, `ResumeAnalysis`, `ResumeEditor`, `ResumeHeatmap*`, `ResumeTailor*`, `Skills`, `PracticalInterview*`, `Login`, and `Signup` redesign passes
+- completed: major source-of-truth, review, and branch-recovery workspace alignment
+- still pending: shared system cleanup, final acceptance verification, and any net-new workspace surfaces beyond the current shipped scope
 
 This document is intentionally execution-oriented. It is not a concept note.
 
@@ -21,117 +21,117 @@ Mark each line only when the changed scope is:
 ## A. Interview Flow Redesign
 
 ### A1. Interview Entry Workspace
-- [ ] Redesign `apps/web/src/pages/interview/InterviewPage.tsx`
-- [ ] Make the page read like a workspace entry surface, not a generic launcher
-- [ ] Clarify the relationship between interview mode, current context, and next action
-- [ ] Add a top-level workspace summary surface consistent with other redesigned pages
-- [ ] Remove duplicated summaries or decorative wrappers that do not affect decisions
-- [ ] Verify mobile and desktop hierarchy separately
+- [x] Redesign `apps/web/src/pages/interview/InterviewPage.tsx`
+- [x] Make the page read like a workspace entry surface, not a generic launcher
+- [x] Clarify the relationship between interview mode, current context, and next action
+- [x] Add a top-level workspace summary surface consistent with other redesigned pages
+- [x] Remove duplicated summaries or decorative wrappers that do not affect decisions
+- [x] Verify mobile and desktop hierarchy separately
 
 ### A2. Interview Session Workspace
-- [ ] Redesign `apps/web/src/pages/interview-session/InterviewSessionPage.tsx`
-- [ ] Strengthen DFS context visibility during an active session
-- [ ] Keep the current node, parent path, and immediate next branch readable without navigation loss
-- [ ] Separate answering focus from side-context noise
-- [ ] Preserve or improve sticky inspector behavior without obscuring content
-- [ ] Verify that the session page still works as the main focused practice surface
+- [x] Redesign `apps/web/src/pages/interview-session/InterviewSessionPage.tsx`
+- [x] Strengthen DFS context visibility during an active session
+- [x] Keep the current node, parent path, and immediate next branch readable without navigation loss
+- [x] Separate answering focus from side-context noise
+- [x] Preserve or improve sticky inspector behavior without obscuring content
+- [x] Verify that the session page still works as the main focused practice surface
 
 ### A3. Interview Result Workspace
-- [ ] Redesign `apps/web/src/pages/interview-result/InterviewResultPage.tsx`
-- [ ] Make the result page feel like branch review and continuation guidance, not a detached score screen
-- [ ] Surface retry direction, weak claims, and next branch recommendations clearly
-- [ ] Keep score presentation secondary to actionable review context
-- [ ] Align layout and copy with the same workspace system as the session page
-- [ ] Verify continuity from session to result without mental model break
+- [x] Redesign `apps/web/src/pages/interview-result/InterviewResultPage.tsx`
+- [x] Make the result page feel like branch review and continuation guidance, not a detached score screen
+- [x] Surface retry direction, weak claims, and next branch recommendations clearly
+- [x] Keep score presentation secondary to actionable review context
+- [x] Align layout and copy with the same workspace system as the session page
+- [x] Verify continuity from session to result without mental model break
 
 ### A4. Interview Flow Cohesion
-- [ ] Align `InterviewPage`, `InterviewSessionPage`, and `InterviewResultPage` as one continuous flow
-- [ ] Keep shared labels, breadcrumbs, badges, and status patterns consistent
-- [ ] Remove route-to-route tone drift
-- [ ] Ensure the user can tell what to do next at every step
+- [x] Align `InterviewPage`, `InterviewSessionPage`, and `InterviewResultPage` as one continuous flow
+- [x] Keep shared labels, breadcrumbs, badges, and status patterns consistent
+- [x] Remove route-to-route tone drift
+- [x] Ensure the user can tell what to do next at every step
 
 ## B. DFS And Inspector System
 
 ### B1. DFS Context Signals
-- [ ] Standardize active-path breadcrumbs
-- [ ] Standardize current-node emphasis
-- [ ] Standardize sibling de-emphasis
-- [ ] Standardize next-branch or retry cues
-- [ ] Reuse one visual rule set instead of per-page variants
+- [x] Standardize active-path breadcrumbs
+- [x] Standardize current-node emphasis
+- [x] Standardize sibling de-emphasis
+- [x] Standardize next-branch or retry cues
+- [x] Reuse one visual rule set instead of per-page variants
 
 ### B2. Inspector Behavior
-- [ ] Define the persistent right-rail role across interview pages
-- [ ] Ensure the inspector shows evidence, notes, related branches, or answer state without duplicating the main panel
-- [ ] Keep sticky behavior readable on desktop and non-obstructive on small screens
-- [ ] Validate heading hierarchy and section density inside inspector surfaces
+- [x] Define the persistent right-rail role across interview pages
+- [x] Ensure the inspector shows evidence, notes, related branches, or answer state without duplicating the main panel
+- [x] Keep sticky behavior readable on desktop and non-obstructive on small screens
+- [x] Validate heading hierarchy and section density inside inspector surfaces
 
 ## C. Remaining Question And Answer Workspaces
 
 ### C1. Question Detail
-- [ ] Redesign `apps/web/src/pages/question-detail/QuestionDetailPage.tsx`
-- [ ] Make question detail feel like an inspector-driven node workspace
-- [ ] Strengthen evidence linkage and branch context
-- [ ] Reduce page-fragmented reading patterns
+- [x] Redesign `apps/web/src/pages/question-detail/QuestionDetailPage.tsx`
+- [x] Make question detail feel like an inspector-driven node workspace
+- [x] Strengthen evidence linkage and branch context
+- [x] Reduce page-fragmented reading patterns
 
 ### C2. Answer Editor
-- [ ] Redesign `apps/web/src/pages/answer-editor/AnswerEditorPage.tsx`
-- [ ] Keep answer drafting in context with the active node and supporting evidence
-- [ ] Make evaluation intent and next action clear before submission
-- [ ] Reduce unnecessary visual competition around the editor surface
+- [x] Redesign `apps/web/src/pages/answer-editor/AnswerEditorPage.tsx`
+- [x] Keep answer drafting in context with the active node and supporting evidence
+- [x] Make evaluation intent and next action clear before submission
+- [x] Reduce unnecessary visual competition around the editor surface
 
 ### C3. Result Analysis
-- [ ] Redesign `apps/web/src/pages/result-analysis/ResultAnalysisPage.tsx`
-- [ ] Prioritize weakness interpretation, retry decision, and branch follow-up over decorative analytics
-- [ ] Align result-analysis surfaces with interview result and question detail patterns
+- [x] Redesign `apps/web/src/pages/result-analysis/ResultAnalysisPage.tsx`
+- [x] Prioritize weakness interpretation, retry decision, and branch follow-up over decorative analytics
+- [x] Align result-analysis surfaces with interview result and question detail patterns
 
 ## D. Remaining Resume Source-Of-Truth Workspaces
 
 ### D1. Resume Analysis
-- [ ] Redesign `apps/web/src/pages/resume-analysis/ResumeAnalysisPage.tsx`
-- [ ] Reframe the page around claim defense quality, not static analysis output
-- [ ] Make extracted risks and missing support actionable
+- [x] Redesign `apps/web/src/pages/resume-analysis/ResumeAnalysisPage.tsx`
+- [x] Reframe the page around claim defense quality, not static analysis output
+- [x] Make extracted risks and missing support actionable
 
 ### D2. Resume Editor
-- [ ] Redesign `apps/web/src/pages/resume-editor/ResumeEditorPage.tsx`
-- [ ] Make the editor feel like source-of-truth authoring, not isolated document editing
-- [ ] Keep claim clarity, evidence density, and interview defensibility visible
+- [x] Redesign `apps/web/src/pages/resume-editor/ResumeEditorPage.tsx`
+- [x] Make the editor feel like source-of-truth authoring, not isolated document editing
+- [x] Keep claim clarity, evidence density, and interview defensibility visible
 
 ### D3. Resume Heatmap
-- [ ] Redesign `apps/web/src/pages/resume-heatmap/ResumeHeatmapPage.tsx`
-- [ ] Redesign `apps/web/src/pages/resume-heatmap/ResumeHeatmapAnchorPage.tsx`
-- [ ] Ensure heatmap visuals support prioritization instead of becoming decorative analytics
+- [x] Redesign `apps/web/src/pages/resume-heatmap/ResumeHeatmapPage.tsx`
+- [x] Redesign `apps/web/src/pages/resume-heatmap/ResumeHeatmapAnchorPage.tsx`
+- [x] Ensure heatmap visuals support prioritization instead of becoming decorative analytics
 
 ### D4. Resume Tailor Flow
-- [ ] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorLandingPage.tsx`
-- [ ] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorJobPostingsPage.tsx`
-- [ ] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorAnalysisListPage.tsx`
-- [ ] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorAnalysisDetailPage.tsx`
-- [ ] Align the entire flow with the same source-of-truth and interview-preparation mental model
+- [x] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorLandingPage.tsx`
+- [x] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorJobPostingsPage.tsx`
+- [x] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorAnalysisListPage.tsx`
+- [x] Redesign `apps/web/src/pages/resume-tailor/ResumeTailorAnalysisDetailPage.tsx`
+- [x] Align the entire flow with the same source-of-truth and interview-preparation mental model
 
 ## E. Secondary Product Surfaces
 
 ### E1. Skills And Practical Interviews
-- [ ] Redesign `apps/web/src/pages/skills/SkillsPage.tsx`
-- [ ] Redesign `apps/web/src/pages/practical-interviews/PracticalInterviewListPage.tsx`
-- [ ] Redesign `apps/web/src/pages/practical-interviews/PracticalInterviewReviewPage.tsx`
-- [ ] Keep these screens visually subordinate to the core interview DFS loop
+- [x] Redesign `apps/web/src/pages/skills/SkillsPage.tsx`
+- [x] Redesign `apps/web/src/pages/practical-interviews/PracticalInterviewListPage.tsx`
+- [x] Redesign `apps/web/src/pages/practical-interviews/PracticalInterviewReviewPage.tsx`
+- [x] Keep these screens visually subordinate to the core interview DFS loop
 
 ### E2. Auth Surfaces
-- [ ] Redesign `apps/web/src/pages/login/LoginPage.tsx`
-- [ ] Redesign `apps/web/src/pages/signup/SignupPage.tsx`
-- [ ] Align with the product tone without turning auth into a marketing page
+- [x] Redesign `apps/web/src/pages/login/LoginPage.tsx`
+- [x] Redesign `apps/web/src/pages/signup/SignupPage.tsx`
+- [x] Align with the product tone without turning auth into a marketing page
 
 ## F. Newly Required Workspace Surfaces
 
 ### F1. Notes Workspace
-- [ ] Add a dedicated `NotesPage` route and page implementation
-- [ ] Keep pinned notes, recent notes, and active note editing in one workspace
-- [ ] Preserve links to questions, resume context, and related skills inside the right rail
+- [x] Add a dedicated `NotesPage` route and page implementation
+- [x] Keep pinned notes, recent notes, and active note editing in one workspace
+- [x] Preserve links to questions, resume context, and related skills inside the right rail
 
 ### F2. Bookmarks Workspace
-- [ ] Add a dedicated `BookmarksPage` route and page implementation
-- [ ] Support saved questions, paths, materials, and companies as filterable bookmark types
-- [ ] Make the inspector actionable for replay, review, and path continuation
+- [x] Add a dedicated `BookmarksPage` route and page implementation
+- [x] Support saved questions, paths, materials, and companies as filterable bookmark types
+- [x] Make the inspector actionable for replay, review, and path continuation
 
 ### F3. Scheduled Reviews Workspace
 - [ ] Add a dedicated `ScheduledReviewsPage` route and page implementation
@@ -161,7 +161,7 @@ Mark each line only when the changed scope is:
 ## G. Shared Design System Cleanup
 
 ### G1. Shared Surface Patterns
-- [ ] Audit top workspace surfaces for repeated CSS that should be shared
+- [x] Audit top workspace surfaces for repeated CSS that should be shared
 - [ ] Consolidate repeated hero, stat, chip, and muted-note patterns
 - [ ] Reduce per-page one-off styling where the pattern is already stable
 
@@ -173,18 +173,22 @@ Mark each line only when the changed scope is:
 - [ ] Keep one consistent dark workspace language across all redesigned pages
 
 ### G3. Navigation And Structure
-- [ ] Re-check global navigation labels against the workspace-first hierarchy
-- [ ] Make sure practice, review, and resume context read as one connected system
+- [x] Re-check global navigation labels against the workspace-first hierarchy
+- [x] Make sure practice, review, and resume context read as one connected system
 - [ ] Reduce leftover route-first cues where they weaken the product mental model
 
 ## H. Verification Checklist
 
 ### H1. Per Work Unit
 - [ ] Run page-specific tests after each redesign unit
-- [ ] Run `npm run build` for the web app after each redesign unit
+  Current status: builds were run consistently, but page-specific test coverage is still incomplete.
+- [x] Run `npm run build` for the web app after each redesign unit
 - [ ] Check desktop layout behavior
+  Current status: desktop hierarchy was checked repeatedly during implementation, but a single final sweep is still pending.
 - [ ] Check mobile layout behavior
+  Current status: mobile stacking rules were updated repeatedly during implementation, but a single final sweep is still pending.
 - [ ] Check sticky rails and overflow behavior
+  Current status: key sticky rails were reviewed during redesign work, but a final cross-page pass is still pending.
 - [ ] Check text duplication against test expectations
 
 ### H2. Final Acceptance Pass
@@ -197,11 +201,18 @@ Mark each line only when the changed scope is:
 - [ ] Verify notes, bookmarks, scheduling, and company-target surfaces behave as real workspaces
 - [ ] Verify the command palette can navigate across every major workspace family
 
+## Current Remaining Scope
+
+The practical remaining scope is now:
+
+1. shared CSS and token cleanup across the stabilized workspace families
+2. final acceptance verification across the main user journeys
+3. decision on whether the still-unbuilt workspace surfaces in section F3-F7 belong in the current delivery scope
+
+Everything else in this checklist has either been implemented directly or adapted into adjacent shipped flows.
+
 ## Suggested Execution Order
 
-1. Interview flow: `InterviewPage` -> `InterviewSessionPage` -> `InterviewResultPage`
-2. Question/answer flow: `QuestionDetailPage` -> `AnswerEditorPage` -> `ResultAnalysisPage`
-3. Resume source-of-truth flow: `ResumeAnalysisPage` -> `ResumeEditorPage` -> `ResumeHeatmap*` -> `ResumeTailor*`
-4. New workspace surfaces: `NotesPage` -> `BookmarksPage` -> `ScheduledReviewsPage` -> `TargetCompaniesPage` -> `SettingsPage` -> `WeakNodes`
-5. Secondary surfaces: `SkillsPage` -> `PracticalInterview*` -> `LoginPage` -> `SignupPage`
-6. Shared system cleanup and final acceptance pass
+1. Shared system cleanup: stable workspace families -> repeated CSS -> token audit
+2. Final acceptance pass: practice -> review -> resume authoring -> interview continuity
+3. Scope decision: `ScheduledReviewsPage` -> `TargetCompaniesPage` -> `SettingsPage` -> `WeakNodes` -> command palette
