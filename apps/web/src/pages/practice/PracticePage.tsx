@@ -33,6 +33,11 @@ export function PracticePage() {
     status: filterState.status || undefined,
     search: filterState.search || undefined,
   });
+  const visibleItems = practiceQuery.data?.items ?? [];
+  const weakItemCount = visibleItems.filter((item) => (item.statusLabel ?? "").toLowerCase().includes("weak")).length;
+  const retryItemCount = visibleItems.filter((item) => (item.statusLabel ?? "").toLowerCase().includes("retry")).length;
+  const topCategories = practiceQuery.data?.filters.categories.slice(0, 3) ?? [];
+  const topCompanies = practiceQuery.data?.filters.companies.slice(0, 3) ?? [];
 
   useEffect(() => {
     setDraftSearch(filterState.search);
@@ -177,6 +182,81 @@ export function PracticePage() {
           </SectionPanel>
         );
 
+        const focusSummaryCard = (
+          <SectionPanel className="practice-focus-summary-card" variant="muted">
+            <div className="practice-focus-summary-card__topline">
+              <span className="page-card__label">DFS focus</span>
+              <span className="detail-chip detail-chip--accent">Branch control</span>
+            </div>
+            <h2 className="page-card__title">Make one deliberate pick instead of browsing the catalog loosely</h2>
+            <div className="practice-focus-summary-card__stats">
+              <article>
+                <span>Weak nodes</span>
+                <strong>{weakItemCount}</strong>
+              </article>
+              <article>
+                <span>Retry candidates</span>
+                <strong>{retryItemCount}</strong>
+              </article>
+            </div>
+            <div className="practice-focus-summary-card__groups">
+              <div className="practice-focus-summary-card__group">
+                <span>Top categories</span>
+                <div className="practice-focus-summary-card__chips">
+                  {topCategories.length > 0 ? (
+                    topCategories.map((category) => (
+                      <span className="detail-chip" key={category.id}>
+                        {category.label}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="detail-chip">No category signal yet</span>
+                  )}
+                </div>
+              </div>
+              <div className="practice-focus-summary-card__group">
+                <span>Target companies</span>
+                <div className="practice-focus-summary-card__chips">
+                  {topCompanies.length > 0 ? (
+                    topCompanies.map((company) => (
+                      <span className="detail-chip" key={company.id}>
+                        {company.label}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="detail-chip">No company signal yet</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </SectionPanel>
+        );
+
+        const mapLaunchCard = (
+          <SectionPanel className="practice-map-launch-card workspace-note-card" variant="muted">
+            <div className="practice-map-launch-card__topline">
+              <span className="page-card__label">Question map</span>
+              <span className="detail-chip">DFS view</span>
+            </div>
+            <h2 className="page-card__title">Open the branch map when the next answer depends on follow-up order</h2>
+            <p className="page-card__body">
+              Practice list selection is only the first step. When one prompt looks strategically important, switch to the tree and inspect the follow-up depth before answering.
+            </p>
+            <div className="page-card__actions">
+              <Link
+                className="secondary-button"
+                to={
+                  visibleItems[0]
+                    ? routeConfig.questionTree.buildPath({ questionId: visibleItems[0].id })
+                    : routeConfig.practice.buildPath()
+                }
+              >
+                Open first visible map
+              </Link>
+            </div>
+          </SectionPanel>
+        );
+
         const filterControls =
           practiceQuery.data ? (
             <QuestionFilterBar
@@ -239,12 +319,23 @@ export function PracticePage() {
         );
 
         if (!isDesktop) {
-          return <PracticeMobileLayout filterControls={filterControls} resultsContent={resultsContent} reviewQueueCard={reviewQueueCard} searchControl={searchControl} />;
+          return (
+            <PracticeMobileLayout
+              filterControls={filterControls}
+              focusSummaryCard={focusSummaryCard}
+              mapLaunchCard={mapLaunchCard}
+              resultsContent={resultsContent}
+              reviewQueueCard={reviewQueueCard}
+              searchControl={searchControl}
+            />
+          );
         }
 
         return (
           <PracticeDesktopLayout
             filterControls={filterControls}
+            focusSummaryCard={focusSummaryCard}
+            mapLaunchCard={mapLaunchCard}
             resultsContent={resultsContent}
             reviewQueueCard={reviewQueueCard}
             searchControl={searchControl}

@@ -5,6 +5,8 @@ type PracticeLayoutProps = {
   searchControl: ReactNode;
   filterControls: ReactNode;
   reviewQueueCard: ReactNode;
+  focusSummaryCard: ReactNode;
+  mapLaunchCard: ReactNode;
   resultsContent: ReactNode;
 };
 
@@ -12,6 +14,8 @@ export function PracticeMobileLayout({
   searchControl,
   filterControls,
   reviewQueueCard,
+  focusSummaryCard,
+  mapLaunchCard,
   resultsContent,
 }: PracticeLayoutProps) {
   return (
@@ -19,6 +23,8 @@ export function PracticeMobileLayout({
       <section className="practice-layout__search">{searchControl}</section>
       <section className="practice-layout__results">{resultsContent}</section>
       <section className="practice-layout__cluster practice-layout__cluster--support">
+        {focusSummaryCard}
+        {mapLaunchCard}
         {filterControls}
         {reviewQueueCard}
       </section>
@@ -30,6 +36,8 @@ export function PracticeDesktopLayout({
   searchControl,
   filterControls,
   reviewQueueCard,
+  focusSummaryCard,
+  mapLaunchCard,
   resultsContent,
 }: PracticeLayoutProps) {
   return (
@@ -43,6 +51,8 @@ export function PracticeDesktopLayout({
         }
         aside={
           <div className="page-stack practice-layout__cluster practice-layout__cluster--rail">
+            {focusSummaryCard}
+            {mapLaunchCard}
             {reviewQueueCard}
             <FilterPanel
               description="Keep filters pinned while scanning a larger desktop result set."
