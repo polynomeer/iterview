@@ -5148,6 +5148,39 @@ button {
   gap: 10px;
 }
 
+.resume-heatmap-workspace-surface__guidance,
+.resume-editor-workspace-surface__guidance {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.resume-heatmap-workspace-surface__guidance-card,
+.resume-editor-workspace-surface__guidance-card {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, white 10%, transparent);
+  background: color-mix(in srgb, white 6%, transparent);
+}
+
+.resume-heatmap-workspace-surface__guidance-card span,
+.resume-editor-workspace-surface__guidance-card span {
+  color: rgba(255, 247, 240, 0.62);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-heatmap-workspace-surface__guidance-card strong,
+.resume-editor-workspace-surface__guidance-card strong {
+  color: #fff8f0;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+}
+
 .resume-heatmap-priority-board,
 .resume-heatmap-anchor-plan {
   display: grid;
@@ -12925,6 +12958,8 @@ button {
 @media (max-width: 900px) {
   .question-detail-workspace-surface__guidance,
   .answer-editor-workspace-surface__guidance,
+  .resume-heatmap-workspace-surface__guidance,
+  .resume-editor-workspace-surface__guidance,
   .answer-editor-insight-surface__stats,
   .review-queue-insight-surface__stats,
   .notes-insight-surface__stats,

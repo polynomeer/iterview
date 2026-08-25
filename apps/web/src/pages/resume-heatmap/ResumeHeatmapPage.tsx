@@ -475,8 +475,8 @@ export function ResumeHeatmapPage() {
           </Link>
         </>
       }
-      description="Use the resume itself as the main review surface. Click a highlighted block or sentence to open its related interview questions in place."
-      eyebrow="Resume Heatmap"
+      description="Use the resume itself as a repair board. Follow the hottest claims, weak answers, and routed questions back to the exact source line."
+      eyebrow="Source-of-truth heatmap"
       title={versionQuery.data.fileNameLabel}
     >
       <div className="page-stack resume-heatmap-workspace">
@@ -485,7 +485,9 @@ export function ResumeHeatmapPage() {
             <div className="resume-heatmap-workspace-surface__intro">
               <div className="resume-heatmap-workspace-surface__eyebrow-row">
                 <p className="resume-heatmap-workspace-surface__breadcrumbs">
-                  <span>Resume intelligence</span>
+                  <span>Source of truth</span>
+                  <span>/</span>
+                  <span>Repair queue</span>
                   <span>/</span>
                   <span>Question routing</span>
                 </p>
@@ -494,11 +496,11 @@ export function ResumeHeatmapPage() {
                 </span>
               </div>
               <h2 className="resume-heatmap-workspace-surface__title">
-                Interview heatmap overview
+                Use the heatmap to find which resume claims break first under interview pressure
               </h2>
               <p className="resume-heatmap-workspace-surface__body">
-                Resume heatmap is not a decorative chart. It is the repair queue for source-of-truth
-                claims that triggered repeated follow-ups, weak answers, and pressure questions.
+                This is not decorative analytics. It is the repair queue for claims that triggered repeated follow-ups,
+                weak answers, and pressure questions across real interview paths.
               </p>
             </div>
             <div className="resume-heatmap-workspace-surface__stats">
@@ -519,6 +521,20 @@ export function ResumeHeatmapPage() {
                 <strong>{overlayTargetCount}</strong>
               </article>
             </div>
+          </div>
+          <div className="resume-heatmap-workspace-surface__guidance" aria-label="Heatmap repair guidance">
+            <article className="resume-heatmap-workspace-surface__guidance-card">
+              <span>Priority rule</span>
+              <strong>Repair the claim that combines weak answers with heavy follow-up pressure first.</strong>
+            </article>
+            <article className="resume-heatmap-workspace-surface__guidance-card">
+              <span>Routing rule</span>
+              <strong>Open the anchor only after the question pattern behind the heat is obvious.</strong>
+            </article>
+            <article className="resume-heatmap-workspace-surface__guidance-card">
+              <span>Exit rule</span>
+              <strong>Return to editing once one fragile claim has a cleaner source-of-truth version.</strong>
+            </article>
           </div>
           <div className="resume-heatmap-workspace-surface__chips">
             <span className="detail-chip">
@@ -584,7 +600,7 @@ export function ResumeHeatmapPage() {
             <div className="section-heading">
               <div>
                 <p className="section-heading__eyebrow">Coverage signals</p>
-                <h3 className="page-card__title">What this pass should answer</h3>
+                <h3 className="page-card__title">Use these signals to decide what to repair in this pass</h3>
               </div>
             </div>
             <div className="resume-heatmap-signal-list">
@@ -616,13 +632,12 @@ export function ResumeHeatmapPage() {
         <section className="page-card page-card--muted">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">Resume-centered review</p>
-              <h2 className="page-card__title">Filters and routing controls</h2>
+              <p className="section-heading__eyebrow">Repair filters</p>
+              <h2 className="page-card__title">Change the analysis lens without changing the resume itself</h2>
             </div>
           </div>
           <p className="page-card__body">
-            Keep the original resume untouched while changing the analysis lens. Narrow the queue
-            to a specific interview pattern before drilling into each anchor.
+            Keep the underlying resume untouched while narrowing the repair queue to one interview pattern at a time.
           </p>
           <div className="filter-chip-row">
             {HEATMAP_SCOPES.map((item) => (

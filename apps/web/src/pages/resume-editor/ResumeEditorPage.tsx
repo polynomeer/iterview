@@ -2647,8 +2647,8 @@ export function ResumeEditorPage() {
           </button>
         </>
       }
-      description="Edit a draft workspace layered on top of one immutable resume version. Comments, question cards, suggestions, history, and print preview all live inside this workspace."
-      eyebrow="Resume Editor"
+      description="Author the resume source of truth, then pressure-test each claim with comments, question cards, and linked interview context."
+      eyebrow="Source of truth editor"
       title={workspaceQuery.data.sourceFileName}
     >
       <div className="page-stack">
@@ -2667,11 +2667,11 @@ export function ResumeEditorPage() {
                 Follow-up survivability
               </p>
               <h2 className="resume-editor-workspace-surface__title">
-                Tighten the resume until each line can survive deeper interview questioning
+                Write the resume until every line can survive DFS follow-up pressure
               </h2>
               <p className="resume-editor-workspace-surface__body">
-                This workspace is not just document editing. Every revision should make the active resume more
-                defensible when question cards, comment threads, and DFS-style follow-ups pressure the weakest claim.
+                Treat this as source-of-truth authoring, not document polishing. Each revision should make one claim
+                clearer, better evidenced, or less fragile under deeper questioning.
               </p>
             </div>
             <div className="resume-editor-workspace-surface__stats">
@@ -2680,7 +2680,7 @@ export function ResumeEditorPage() {
                 <strong>{workspaceQuery.data.revisionNo}</strong>
               </article>
               <article className="resume-editor-workspace-surface__stat">
-                <span>Source context</span>
+                <span>Evidence anchors</span>
                 <strong>{sourceContextCards.length}</strong>
               </article>
               <article className="resume-editor-workspace-surface__stat">
@@ -2694,6 +2694,20 @@ export function ResumeEditorPage() {
                 <strong>{workspaceQuery.data.supportedViewModes.length}</strong>
               </article>
             </div>
+          </div>
+          <div className="resume-editor-workspace-surface__guidance" aria-label="Resume authoring guidance">
+            <article className="resume-editor-workspace-surface__guidance-card">
+              <span>Claim rule</span>
+              <strong>Rewrite the exact line that would fail under follow-up, not the whole document.</strong>
+            </article>
+            <article className="resume-editor-workspace-surface__guidance-card">
+              <span>Evidence rule</span>
+              <strong>Attach one concrete fact, metric, or constraint before broadening wording.</strong>
+            </article>
+            <article className="resume-editor-workspace-surface__guidance-card">
+              <span>Exit rule</span>
+              <strong>Leave this pass only when the selected claim has a defendable answer path.</strong>
+            </article>
           </div>
           <div className="resume-editor-workspace-surface__chips">
             <span className="detail-chip">{workspaceQuery.data.workspaceStatusLabel}</span>
@@ -2712,8 +2726,8 @@ export function ResumeEditorPage() {
         <section className="page-card resume-editor-topbar">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">Draft controls</p>
-              <h2 className="page-card__title">Resume editor workspace</h2>
+              <p className="section-heading__eyebrow">Authoring controls</p>
+              <h2 className="page-card__title">Control the draft layer without losing the writing surface</h2>
             </div>
             <div className="page-card__actions">
               <span className="question-status-badge question-status-badge--accent">
@@ -2759,8 +2773,7 @@ export function ResumeEditorPage() {
             </div>
           </div>
           <p className="resume-tailor-muted">
-            The source resume version stays immutable. Use this control strip to manage the draft layer, view mode,
-            and save cadence while the authoring surface below stays focused on claim quality.
+            The source resume stays immutable. Use this strip to manage saves, view mode, and draft behavior while the main surface stays focused on claim quality.
           </p>
           {saveMessage ? <p className="resume-tailor-muted">{saveMessage}</p> : null}
           <div className="filter-chip-row resume-editor-tabbar">
@@ -2816,8 +2829,7 @@ export function ResumeEditorPage() {
           </div>
           {currentTab === "edit" || currentTab === "review" ? (
             <p className="resume-tailor-muted">
-              Select markdown text first. If the workspace exposes the v2 rich tree, node anchors and contextual
-              actions will use `selectionAnchor` and operation patches automatically.
+              Select the smallest claim that needs work first. Rich-tree anchors and contextual actions will bind the edit to that source line automatically when available.
             </p>
           ) : null}
           {isWorkspaceInfoOpen ? (
@@ -3031,7 +3043,7 @@ export function ResumeEditorPage() {
                     <div className="section-heading">
                       <div>
                         <p className="section-heading__eyebrow">Review focus</p>
-                        <h2 className="page-card__title">Read through the draft and annotate weak spots</h2>
+                        <h2 className="page-card__title">Read the draft like interview pressure, then annotate the weakest claims</h2>
                       </div>
                       <span className="detail-chip">Review mode</span>
                     </div>
@@ -3056,8 +3068,7 @@ export function ResumeEditorPage() {
                       />
                     </div>
                     <p className="resume-tailor-muted">
-                      Use the reading surface and the sticky review strip first, then open the full tools only when
-                      you need to resolve or add detail.
+                      Start with the reading surface and hotspot navigation, then open full tools only when the weak line is clear enough to fix.
                     </p>
                     <div className="page-card__actions">
                       <span className="detail-chip">
