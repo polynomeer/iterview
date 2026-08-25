@@ -45,9 +45,9 @@ export function ResultAnalysisPage() {
 
   return (
     <PageContainer
-      description="Review your total score, dimension-level breakdown, feedback, and the recommended next step."
+      description="Review the weakest part of the answer, decide the next retry shape, and convert the score into a clearer next response."
       eyebrow="Results"
-      title="Result analysis"
+      title="Turn evaluation into the next answer"
     >
       {resultQuery.isLoading ? (
         <LoadingStateCard
@@ -106,14 +106,13 @@ export function ResultAnalysisPage() {
                       <span>/</span>
                       Weakest dimension
                       <span>/</span>
-                      Next simulation
+                      Next retry loop
                     </p>
                     <h2 className="result-analysis-workspace-surface__title">
                       Turn this evaluation into the next stronger answer
                     </h2>
                     <p className="result-analysis-workspace-surface__body">
-                      Read the verdict, isolate the weakest branch, and decide whether the next loop should be an
-                      immediate retry or a deeper follow-up question.
+                      Read the verdict, isolate the weakest branch, and decide whether the next loop should be an immediate retry or a deeper follow-up question.
                     </p>
                   </div>
                   <div className="result-analysis-workspace-surface__stats">
@@ -150,6 +149,16 @@ export function ResultAnalysisPage() {
                     <span className="detail-chip">Retry ready</span>
                   )}
                   <span className="detail-chip">Strength signals {strongestSignals}</span>
+                </div>
+                <div className="result-analysis-workspace-surface__guidance">
+                  <article className="result-analysis-workspace-surface__guidance-card">
+                    <span>Weakest read</span>
+                    <strong>Start with the dimension that made the answer easiest to challenge.</strong>
+                  </article>
+                  <article className="result-analysis-workspace-surface__guidance-card">
+                    <span>Next loop</span>
+                    <strong>Choose retry depth before writing another longer answer.</strong>
+                  </article>
                 </div>
               </section>
             );

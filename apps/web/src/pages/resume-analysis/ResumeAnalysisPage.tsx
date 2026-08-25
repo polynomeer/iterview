@@ -34,9 +34,9 @@ export function ResumeAnalysisPage() {
           Open resume workspace
         </Link>
       }
-      description="Review parsed resume insights, extracted evidence, and risk signals around the active resume version."
+      description="Review the active resume as source of truth, then find the claims that need stronger evidence before interview follow-ups begin."
       eyebrow="Resume Analysis"
-      title="Resume intelligence"
+      title="Inspect resume source of truth"
     >
       {resumeListQuery.isLoading && latestResumeQuery.isLoading ? (
         <LoadingStateCard
@@ -114,19 +114,17 @@ export function ResumeAnalysisPage() {
                         <span className="question-status-badge question-status-badge--accent">Defense lane</span>
                       </div>
                       <p className="resume-analysis-workspace-surface__breadcrumbs">
-                        Claim quality
+                        Source claim quality
                         <span>/</span>
                         Evidence density
                         <span>/</span>
                         Follow-up survivability
                       </p>
                       <h2 className="resume-analysis-workspace-surface__title">
-                        Inspect whether the active resume can survive DFS-style follow-up questioning
+                        Check whether the active resume can survive DFS follow-up pressure
                       </h2>
                       <p className="resume-analysis-workspace-surface__body">
-                        This page should not behave like a passive parser output. Use it to find thin claims, weak
-                        evidence blocks, and the exact parts of the resume that need stronger grounding before an
-                        interview session drills into them.
+                        Use this page to find thin claims, weak evidence blocks, and the exact resume sections that need stronger grounding before an interview session drills into them.
                       </p>
                     </div>
                     <div className="resume-analysis-workspace-surface__stats">
@@ -157,11 +155,11 @@ export function ResumeAnalysisPage() {
                   <div className="resume-analysis-workspace-surface__guidance">
                     <article className="resume-analysis-workspace-surface__guidance-card">
                       <span>First read</span>
-                      <strong>Start with the claim most likely to fail when the interviewer asks for concrete trade-offs</strong>
+                      <strong>Start with the claim most likely to fail under concrete trade-off questions.</strong>
                     </article>
                     <article className="resume-analysis-workspace-surface__guidance-card">
                       <span>Repair order</span>
-                      <strong>Fix thin source text before spending another session on answers built from it</strong>
+                      <strong>Fix thin source text before running another mock session.</strong>
                     </article>
                   </div>
                 </section>
@@ -207,7 +205,7 @@ export function ResumeAnalysisPage() {
                         </article>
                         <article className="resume-analysis-priority-card__playbook-step">
                           <span>2. Trace the evidence</span>
-                          <strong>Make sure the supporting experience block contains metrics, constraints, and decisions instead of summaries only</strong>
+                          <strong>Make sure the supporting experience block contains metrics, constraints, and decisions.</strong>
                         </article>
                       </div>
                     </section>
@@ -219,11 +217,9 @@ export function ResumeAnalysisPage() {
                     <ActiveResumeOverviewCard resumeList={effectiveResumeList} />
                     <section className="page-card section-panel section-panel--muted resume-analysis-guide">
                       <span className="page-card__label">Defense guide</span>
-                      <h2 className="page-card__title">Read this analysis like interview pressure, not resume QA</h2>
+                      <h2 className="page-card__title">Read this analysis like interview pressure</h2>
                       <p className="page-card__body">
-                        A strong resume source of truth is one where every highlighted claim can be expanded into
-                        concrete decisions, constraints, metrics, and tradeoffs when the question tree keeps drilling
-                        deeper.
+                        A strong resume source of truth is one where every highlighted claim can expand into concrete decisions, constraints, metrics, and trade-offs when the question tree keeps drilling deeper.
                       </p>
                       <div className="resume-analysis-guide__signals">
                         <article className="resume-analysis-guide__signal">
@@ -236,13 +232,13 @@ export function ResumeAnalysisPage() {
                         </article>
                         <article className="resume-analysis-guide__signal">
                           <span>Before next interview</span>
-                          <strong>Make the risky claim and its evidence block readable without extra explanation</strong>
+                          <strong>Make the risky claim and its evidence block readable without extra explanation.</strong>
                         </article>
                       </div>
                       <div className="resume-analysis-guide__rules">
                         <div className="resume-analysis-guide__rule">
                           <strong>1. Find vague claims first</strong>
-                          <span>Risk items usually point to claims that sound impressive but will collapse under detail.</span>
+                          <span>Risk items usually point to claims that sound impressive but collapse under detail.</span>
                         </div>
                         <div className="resume-analysis-guide__rule">
                           <strong>2. Check the evidence block</strong>
@@ -250,7 +246,7 @@ export function ResumeAnalysisPage() {
                         </div>
                         <div className="resume-analysis-guide__rule">
                           <strong>3. Repair before mock practice</strong>
-                          <span>Tighten the source text before spending another session on answers built on weak inputs.</span>
+                          <span>Tighten the source text before spending another session on weak inputs.</span>
                         </div>
                       </div>
                       <div className="page-card__actions">
