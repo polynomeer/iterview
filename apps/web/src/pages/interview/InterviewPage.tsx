@@ -362,6 +362,7 @@ export function InterviewPage() {
         : selectedInterviewMode === "full_coverage"
           ? "Coverage pass ready"
           : "Scoped branch ready";
+  const nextBranchCandidates = selectedInspector.relatedQuestions.slice(0, 2);
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -563,12 +564,8 @@ export function InterviewPage() {
                       <strong>{selectedInspector.score}/100</strong>
                     </article>
                     <article className="interview-workspace-inspector__metric">
-                      <span>Last Attempt</span>
-                      <strong>3 days ago</strong>
-                    </article>
-                    <article className="interview-workspace-inspector__metric">
-                      <span>Best Score</span>
-                      <strong>{selectedInspector.score}/100</strong>
+                      <span>Current weakness</span>
+                      <strong>{selectedInspector.weakness}</strong>
                     </article>
                   </div>
                 </div>
@@ -576,10 +573,13 @@ export function InterviewPage() {
                 <div className="interview-workspace-inspector__panel">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Key Concepts</p>
-                      <h3 className="page-card__title">What this branch must defend</h3>
+                      <p className="section-heading__eyebrow">Branch anchor</p>
+                      <h3 className="page-card__title">{selectedInspector.relatedExperience}</h3>
                     </div>
                   </div>
+                  <p className="page-card__body">
+                    Anchor every answer to the exact resume claim and the operational detail that makes it defensible.
+                  </p>
                   <div className="chip-list">
                     {selectedInspector.concepts.map((concept) => (
                       <span className="detail-chip" key={concept}>{concept}</span>
@@ -590,24 +590,12 @@ export function InterviewPage() {
                 <div className="interview-workspace-inspector__panel">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Related To My Experience</p>
-                      <h3 className="page-card__title">{selectedInspector.relatedExperience}</h3>
-                    </div>
-                  </div>
-                  <p className="page-card__body">
-                    Current weakness: {selectedInspector.weakness}. Anchor every answer to the exact resume claim and the operational detail that makes it defensible.
-                  </p>
-                </div>
-
-                <div className="interview-workspace-inspector__panel">
-                  <div className="section-heading">
-                    <div>
-                      <p className="section-heading__eyebrow">Related Questions (DFS)</p>
-                      <h3 className="page-card__title">Next branch candidates</h3>
+                      <p className="section-heading__eyebrow">Next branch candidates</p>
+                      <h3 className="page-card__title">Inspect the most likely follow-ups before launch</h3>
                     </div>
                   </div>
                   <div className="stack-list">
-                    {selectedInspector.relatedQuestions.map((question, index) => (
+                    {nextBranchCandidates.map((question, index) => (
                       <article className="list-item-card interview-workspace-inspector__question" key={question.title}>
                         <div className="list-item-card__content">
                           <div className="list-item-card__meta">
@@ -722,50 +710,6 @@ export function InterviewPage() {
               </section>
             </div>
           </section>
-
-          <SectionPanel className="interview-launch-insight-surface" variant="muted">
-            <div className="interview-launch-insight-surface__header">
-              <div>
-                <span className="page-card__label">Launch insight</span>
-                <h2 className="page-card__title">Start only when the resume boundary, pass shape, and first branch target are all explicit</h2>
-                <p className="page-card__body">
-                  The opening screen should remove ambiguity before the first question appears. You should know which resume truth source is active, how wide the session will go, and which branch is most likely to be defended first.
-                </p>
-              </div>
-              <span className="detail-chip detail-chip--accent">{launchSignal}</span>
-            </div>
-            <div className="interview-launch-insight-surface__stats">
-              <article>
-                <span>Selected branch</span>
-                <strong>{selectedInspector.title}</strong>
-                <p>the node currently acting as the most likely opening defense target</p>
-              </article>
-              <article>
-                <span>Mode posture</span>
-                <strong>{selectedInterviewModeOption.label}</strong>
-                <p>{selectedInterviewMode === "full_coverage" ? "traverse the tree deliberately and recover weak branches" : "stay narrow enough to pressure-test one branch well"}</p>
-              </article>
-              <article>
-                <span>Boundary lock</span>
-                <strong>{selectedResumeChoice?.versionNumberLabel ?? "Not selected"}</strong>
-                <p>one resume version that becomes the source of truth for this run</p>
-              </article>
-            </div>
-            <div className="interview-launch-insight-surface__lanes">
-              <div className="interview-launch-insight-surface__lane">
-                <strong>Lock the source</strong>
-                <span>Pick one resume version and keep every answer defensible against that exact document.</span>
-              </div>
-              <div className="interview-launch-insight-surface__lane">
-                <strong>Choose the pass shape</strong>
-                <span>Use a short run for calibration, or use coverage mode only when you intend to finish the DFS tree.</span>
-              </div>
-              <div className="interview-launch-insight-surface__lane">
-                <strong>Open the weakest branch first</strong>
-                <span>Start where follow-up pressure is most likely to expose vague reasoning or missing evidence.</span>
-              </div>
-            </div>
-          </SectionPanel>
 
           <div className="interview-page-layout">
             <section className="interview-page-layout__hero">

@@ -107,9 +107,9 @@ export function ReviewQueuePage() {
       <div className="review-queue-insight-surface__header">
         <div>
           <span className="page-card__label">Queue strategy</span>
-          <h2 className="page-card__title">Separate items you can answer now from items that still need evidence or depth work</h2>
+          <h2 className="page-card__title">Separate answerable retries from branches that still need study</h2>
           <p className="page-card__body">
-            A clean queue is not just short. It should tell you which branch is ready for an answer attempt, which one needs source-of-truth reinforcement, and which one can be delayed without losing momentum.
+            Use the queue to decide whether the next move is answer, study, or defer.
           </p>
         </div>
         <span className="detail-chip detail-chip--accent">{executionMode}</span>
@@ -125,11 +125,6 @@ export function ReviewQueuePage() {
           <strong>{depthRepairCount}</strong>
           <p>branches that likely need a more concrete follow-up explanation</p>
         </article>
-        <article>
-          <span>Fresh retries</span>
-          <strong>{freshRetryCount}</strong>
-          <p>scheduled or stale items that should be recycled back into active practice</p>
-        </article>
       </div>
       <div className="review-queue-insight-surface__lanes">
         <div className="review-queue-insight-surface__lane">
@@ -139,10 +134,6 @@ export function ReviewQueuePage() {
         <div className="review-queue-insight-surface__lane">
           <strong>Study before retry</strong>
           <span>Use this lane for weak skill or shallow depth items where the explanation is still abstract.</span>
-        </div>
-        <div className="review-queue-insight-surface__lane">
-          <strong>Defer intentionally</strong>
-          <span>Skip only when you are preserving focus, not when you are avoiding a branch you do not yet understand.</span>
         </div>
       </div>
     </SectionPanel>

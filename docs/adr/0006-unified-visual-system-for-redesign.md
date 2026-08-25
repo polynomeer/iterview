@@ -33,4 +33,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Visual consistency matters as much as local page polish.
 - Pages with too many competing headers or cards should be simplified.
 - Workspace entry surfaces should favor one short directive, two or three key stats, and a small number of guidance blocks.
+- Secondary support panels should be merged or removed when they restate the same branch choice, launch rule, or retry strategy already shown in the main workspace surface.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.

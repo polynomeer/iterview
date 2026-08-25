@@ -143,16 +143,6 @@ export function PracticePage() {
             <p className="page-card__body">
               Jump into the review queue to skip or complete items before choosing a fresh practice question.
             </p>
-            <div className="practice-review-queue-card__points">
-              <div className="practice-review-queue-card__point">
-                <strong>Retry lane</strong>
-                <span>Finish scheduled recovery before opening a broad new branch.</span>
-              </div>
-              <div className="practice-review-queue-card__point">
-                <strong>Scope control</strong>
-                <span>Use this queue to keep practice depth tighter than random catalog browsing.</span>
-              </div>
-            </div>
             <div className="page-card__actions">
               <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
                 Open review queue
@@ -178,34 +168,26 @@ export function PracticePage() {
                 <strong>{retryItemCount}</strong>
               </article>
             </div>
-            <div className="practice-focus-summary-card__groups">
-              <div className="practice-focus-summary-card__group">
-                <span>Top categories</span>
-                <div className="practice-focus-summary-card__chips">
-                  {topCategories.length > 0 ? (
-                    topCategories.map((category) => (
+            <div className="practice-focus-summary-card__group">
+              <span>Current signals</span>
+              <div className="practice-focus-summary-card__chips">
+                {topCategories.length > 0
+                  ? topCategories.map((category) => (
                       <span className="detail-chip" key={category.id}>
                         {category.label}
                       </span>
                     ))
-                  ) : (
-                    <span className="detail-chip">No category signal yet</span>
-                  )}
-                </div>
-              </div>
-              <div className="practice-focus-summary-card__group">
-                <span>Target companies</span>
-                <div className="practice-focus-summary-card__chips">
-                  {topCompanies.length > 0 ? (
-                    topCompanies.map((company) => (
+                  : null}
+                {topCompanies.length > 0
+                  ? topCompanies.map((company) => (
                       <span className="detail-chip" key={company.id}>
                         {company.label}
                       </span>
                     ))
-                  ) : (
-                    <span className="detail-chip">No company signal yet</span>
-                  )}
-                </div>
+                  : null}
+                {topCategories.length === 0 && topCompanies.length === 0 ? (
+                  <span className="detail-chip">No strong signal yet</span>
+                ) : null}
               </div>
             </div>
           </SectionPanel>
@@ -219,7 +201,7 @@ export function PracticePage() {
             </div>
             <h2 className="page-card__title">Open the branch map when the next answer depends on follow-up order</h2>
             <p className="page-card__body">
-              Practice list selection is only the first step. When one prompt looks strategically important, switch to the tree and inspect the follow-up depth before answering.
+              When one prompt looks important, switch to the tree before answering.
             </p>
             <div className="page-card__actions">
               <Link
