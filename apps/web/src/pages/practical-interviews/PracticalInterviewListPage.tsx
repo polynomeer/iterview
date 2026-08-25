@@ -94,9 +94,9 @@ export function PracticalInterviewListPage() {
 
   return (
     <PageContainer
-      description="Upload practical interview artifacts, inspect imported records, and open a review-ready interview replay workspace."
-      eyebrow="Practical Interview"
-      title="Practical interview review"
+      description="Import one real interview artifact, stabilize transcript readiness, and turn it into the next recovery review workspace."
+      eyebrow="Recovery loop"
+      title="Import real interview evidence before opening recovery review"
     >
       {recordListQuery.isLoading ? (
         <LoadingStateCard
@@ -127,16 +127,18 @@ export function PracticalInterviewListPage() {
               <div className="practical-list-workspace-surface__intro">
                 <div className="practical-list-workspace-surface__eyebrow-row">
                   <p className="practical-list-workspace-surface__breadcrumbs">
-                    <span>Practical interviews</span>
+                    <span>Imported interview</span>
                     <span>/</span>
-                    <span>Import queue</span>
+                    <span>Transcript readiness</span>
+                    <span>/</span>
+                    <span>Recovery review</span>
                   </p>
                   <span className="question-status-badge question-status-badge--neutral">
                     Replay-ready workflow
                   </span>
                 </div>
                 <h2 className="practical-list-workspace-surface__title">
-                  Import and route real interview evidence into one review loop
+                  Import one real interview and route it into one focused recovery loop
                 </h2>
                 <p className="practical-list-workspace-surface__body">
                   Each upload should become a structured review workspace with transcript quality,
@@ -186,6 +188,10 @@ export function PracticalInterviewListPage() {
                     ? "Finish transcript-ready records first, then clean up retries before importing more."
                     : "Open the freshest completed record first and turn it into a focused recovery review."}
                 </strong>
+              </article>
+              <article className="practical-list-workspace-surface__guidance-card">
+                <span>Exit rule</span>
+                <strong>Leave this page once one record is clearly ready to inspect transcript, question, and thread failures.</strong>
               </article>
             </div>
           </section>

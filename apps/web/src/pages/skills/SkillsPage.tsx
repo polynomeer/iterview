@@ -53,9 +53,9 @@ export function SkillsPage() {
 
   return (
     <PageContainer
-      description="Track your skill radar, gap analysis, and readiness signals in one workspace."
-      eyebrow="Skills"
-      title="Skill dashboard"
+      description="Use skill radar and gap signals only to decide which interview branch should be reinforced next."
+      eyebrow="Support workspace"
+      title="Turn skill signals into the next branch choice"
     >
       {radarQuery.isLoading || gapQuery.isLoading || progressQuery.isLoading ? (
         <LoadingStateCard
@@ -109,16 +109,18 @@ export function SkillsPage() {
               <div className="skills-workspace-surface__intro">
                 <div className="skills-workspace-surface__eyebrow-row">
                   <p className="skills-workspace-surface__breadcrumbs">
-                    <span>Skills</span>
+                    <span>Skill signal</span>
                     <span>/</span>
-                    <span>Readiness workspace</span>
+                    <span>Gap pressure</span>
+                    <span>/</span>
+                    <span>Next branch</span>
                   </p>
                   <span className="question-status-badge question-status-badge--accent">
                     Practice companion
                   </span>
                 </div>
                 <h2 className="skills-workspace-surface__title">
-                  Turn raw skill signals into the next practice target
+                  Use skill signals only to choose the next branch worth defending
                 </h2>
                 <p className="skills-workspace-surface__body">
                   Radar, gap analysis, and progress only matter if they narrow what you should

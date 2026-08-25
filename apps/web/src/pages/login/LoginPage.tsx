@@ -74,9 +74,9 @@ export function LoginPage() {
 
   return (
     <PageContainer
-      description={t("auth.loginDescription")}
-      eyebrow={t("auth.loginEyebrow")}
-      title={t("auth.loginTitle")}
+      description="Sign back into the same resume-grounded practice and review workspace without losing branch continuity."
+      eyebrow="Workspace access"
+      title="Return to the active interview workspace"
     >
       <div className="auth-access-layout">
         <section className="auth-access-surface">
@@ -89,11 +89,11 @@ export function LoginPage() {
                 </span>
               </div>
               <p className="auth-access-surface__breadcrumbs">
-                Resume continuity
+                Re-entry
                 <span>/</span>
                 Interview history
                 <span>/</span>
-                Review access
+                Resume continuity
               </p>
               <h2 className="auth-access-surface__title">{t("auth.loginCardTitle")}</h2>
               <p className="auth-access-surface__body">{t("auth.loginCardBody")}</p>

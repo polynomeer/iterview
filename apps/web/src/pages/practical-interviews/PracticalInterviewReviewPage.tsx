@@ -1019,8 +1019,8 @@ export function PracticalInterviewReviewPage() {
 
   return (
     <PageContainer
-      description="Use the server-provided review payload to inspect transcript issues, structured questions, follow-up threads, and replay readiness."
-      eyebrow="Practical Interview"
+      description="Use one imported interview to inspect transcript failures, question structure, follow-up threads, and replay blockers before the next retry."
+      eyebrow="Recovery loop"
       title={detail.title}
     >
       <div className="page-stack practical-review-layout">
@@ -1030,10 +1030,13 @@ export function PracticalInterviewReviewPage() {
               <div className="practical-review-workspace-surface__intro">
                 <div className="practical-review-workspace-surface__eyebrow-row">
                   <p className="practical-review-workspace-surface__breadcrumbs">
-                    <span>Practical interviews</span>
+                    <span>Imported interview</span>
                     <span>/</span>
-                    <span>Review workspace</span>
+                    <span>Recovery lanes</span>
+                    <span>/</span>
+                    <span>Replay readiness</span>
                   </p>
+                  <span className="detail-chip">Review stage</span>
                   <span className="question-status-badge question-status-badge--accent">
                     {detail.structuringStageLabel}
                   </span>
@@ -1045,7 +1048,7 @@ export function PracticalInterviewReviewPage() {
                 <p className="practical-review-workspace-surface__body">
                   {detail.aiEnrichedSummary ??
                     detail.deterministicSummary ??
-                    "Use the lane dashboard below to review transcript quality, structured questions, and replay readiness."}
+                    "Use the lane dashboard below to repair transcript quality, structured questions, and replay readiness before another attempt."}
                 </p>
               </div>
               <div className="practical-review-workspace-surface__stats">
@@ -1099,6 +1102,10 @@ export function PracticalInterviewReviewPage() {
                     ? `${primaryReviewLane.badgeText} is the first recovery surface because ${primaryReviewLane.whyItMatters.toLowerCase()}`
                     : "Open the most unstable lane first, then verify replay readiness."}
                 </strong>
+              </article>
+              <article className="practical-review-workspace-surface__guidance-card">
+                <span>Exit rule</span>
+                <strong>Leave this review only when one weak answer or follow-up chain has a clear correction path.</strong>
               </article>
             </div>
             {(updateReviewMutation.isSuccess || confirmMutation.isSuccess) && (
@@ -1235,7 +1242,7 @@ export function PracticalInterviewReviewPage() {
               <span className="page-card__label">Analysis flow</span>
               <h2 className="page-card__title">Keep replay context and lane priorities above the detailed edits</h2>
               <p className="page-card__body">
-                The transcript editor should stay tactical. Readiness, blockers, provenance, and launch decisions belong in a stable briefing layer above it.
+                Transcript edits stay tactical. Readiness, blockers, provenance, and launch decisions belong in a stable briefing layer above them.
               </p>
             </SectionPanel>
 

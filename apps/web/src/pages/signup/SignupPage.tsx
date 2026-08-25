@@ -74,9 +74,9 @@ export function SignupPage() {
 
   return (
     <PageContainer
-      description={t("auth.signupDescription")}
-      eyebrow={t("auth.signupEyebrow")}
-      title={t("auth.signupTitle")}
+      description="Create access to one persistent resume-grounded interview workspace, then start from source-of-truth and practice continuity."
+      eyebrow="Workspace access"
+      title="Enter the resume-grounded interview workspace"
     >
       <div className="auth-access-layout">
         <section className="auth-access-surface">
@@ -89,11 +89,11 @@ export function SignupPage() {
                 </span>
               </div>
               <p className="auth-access-surface__breadcrumbs">
-                Account setup
+                First access
+                <span>/</span>
+                Resume grounding
                 <span>/</span>
                 Practice continuity
-                <span>/</span>
-                Resume-first loop
               </p>
               <h2 className="auth-access-surface__title">{t("auth.signupCardTitle")}</h2>
               <p className="auth-access-surface__body">{t("auth.signupCardBody")}</p>
