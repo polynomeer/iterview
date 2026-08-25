@@ -394,49 +394,6 @@ export function InterviewSessionPage() {
             ))}
           </div>
         </section>
-        <SectionPanel className="interview-session-insight-surface" variant="muted">
-          <div className="interview-session-insight-surface__header">
-            <div>
-              <span className="page-card__label">Session insight</span>
-              <h2 className="page-card__title">Keep the current branch narrow enough that the next follow-up has to become more specific</h2>
-              <p className="page-card__body">
-                This surface should tell you whether to keep writing, reinforce the source-of-truth evidence, or unlock the next question in the DFS path.
-              </p>
-            </div>
-            <span className="detail-chip detail-chip--accent">{sessionExecutionSignal}</span>
-          </div>
-          <div className="interview-session-insight-surface__stats">
-            <article>
-              <span>Resume anchors</span>
-              <strong>{evidenceAnchorCount}</strong>
-              <p>attached source-of-truth snippets available for this answer</p>
-            </article>
-            <article>
-              <span>Current depth</span>
-              <strong>{branchDepthLabel}</strong>
-              <p>how deep the interviewer has already drilled on this branch</p>
-            </article>
-            <article>
-              <span>Remaining nodes</span>
-              <strong>{activeSession.summary.remainingQuestions}</strong>
-              <p>questions still left in the active session plan</p>
-            </article>
-          </div>
-          <div className="interview-session-insight-surface__lanes">
-            <div className="interview-session-insight-surface__lane">
-              <strong>State the decision</strong>
-              <span>Open with the exact answer instead of narrating context first.</span>
-            </div>
-            <div className="interview-session-insight-surface__lane">
-              <strong>Lock the evidence</strong>
-              <span>Name the metric, constraint, or project fact that makes the answer defensible.</span>
-            </div>
-            <div className="interview-session-insight-surface__lane">
-              <strong>Prepare the next probe</strong>
-              <span>Assume the next follow-up will attack the vaguest unsupported phrase.</span>
-            </div>
-          </div>
-        </SectionPanel>
         <div className="interview-session-layout__hero">
           <div className="interview-session-layout__main">
             <section className="page-card interview-session-current">
@@ -546,12 +503,18 @@ export function InterviewSessionPage() {
                     <span>Recovery focus</span>
                     <strong>{weakFacetCount > 0 ? "Tighten weak resume facets before broadening scope" : "No weak facets are currently forcing a retry"}</strong>
                   </article>
-                </div>
-              </SectionPanel>
-              <SectionPanel className="workspace-note-card interview-session-side-panel" variant="muted">
-                <div className="interview-session-side-panel__header">
-                  <span className="page-card__label">Branch rules</span>
-                  <p className="interview-session-side-panel__eyebrow-note">Claim, evidence, trade-off</p>
+                  <article className="interview-session-side-summary__signal">
+                    <span>Resume anchors</span>
+                    <strong>
+                      {evidenceAnchorCount > 0
+                        ? `${evidenceAnchorCount} snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
+                        : "No source-of-truth snippet is attached yet"}
+                    </strong>
+                  </article>
+                  <article className="interview-session-side-summary__signal">
+                    <span>Execution signal</span>
+                    <strong>{sessionExecutionSignal}</strong>
+                  </article>
                 </div>
                 <div className="interview-session-side-panel__list">
                   <div className="interview-session-side-panel__item">
@@ -566,14 +529,6 @@ export function InterviewSessionPage() {
                     <strong>3. Trade-off</strong>
                     <span>Show what you accepted and why.</span>
                   </div>
-                </div>
-              </SectionPanel>
-              <SectionPanel className="workspace-note-card interview-session-side-panel" variant="muted">
-                <div className="interview-session-side-panel__header">
-                  <span className="page-card__label">Next branch</span>
-                  <p className="interview-session-side-panel__eyebrow-note">Unlock conditions</p>
-                </div>
-                <div className="interview-session-side-panel__list">
                   <div className="interview-session-side-panel__item">
                     <strong>{canAdvance ? "Advance is unlocked" : "Advance is blocked"}</strong>
                     <span>
@@ -586,17 +541,14 @@ export function InterviewSessionPage() {
                     <strong>Weak facet watch</strong>
                     <span>{weakFacetCount > 0 ? `${weakFacetCount} weak facets still need defense.` : "No weak facets are currently flagged."}</span>
                   </div>
+                  {isFullCoverage ? (
+                    <div className="interview-session-side-panel__item interview-session-side-panel__item--coverage">
+                      <strong>Coverage pass</strong>
+                      <span>Weak and skipped facets are revisit targets for the full DFS map, not just score penalties.</span>
+                    </div>
+                  ) : null}
                 </div>
               </SectionPanel>
-              {isFullCoverage ? (
-                <SectionPanel className="workspace-note-card interview-session-side-panel interview-session-side-panel--coverage" variant="muted">
-                  <span className="page-card__label">Coverage pass</span>
-                  <h2 className="page-card__title">This session is traversing the full resume evidence map</h2>
-                  <p className="page-card__body">
-                    Weak facets and skipped facets are signals for where the DFS review must return, not just score penalties to glance at later.
-                  </p>
-                </SectionPanel>
-              ) : null}
             </div>
           </div>
           <div className="interview-session-layout__answer-stack">

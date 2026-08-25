@@ -8187,7 +8187,6 @@ button {
 .question-detail-layout__sidebar,
 .question-detail-layout__cluster,
 .question-detail-layout__study-rail,
-.interview-result-layout__hero-grid,
 .interview-result-layout__content,
 .interview-result-layout__main,
 .interview-result-layout__side {
@@ -8205,11 +8204,7 @@ button {
 
 .interview-session-current,
 .interview-session-side-summary,
-.interview-session-side-panel,
 .interview-result-layout__hero,
-.interview-result-layout__brief,
-.interview-result-layout__next-pass,
-.interview-result-layout__next-rail,
 .interview-result-layout__actions,
 .interview-result-layout__recap {
   position: relative;
@@ -8224,11 +8219,7 @@ button {
 
 .interview-session-current::before,
 .interview-session-side-summary::before,
-.interview-session-side-panel::before,
 .interview-result-layout__hero::before,
-.interview-result-layout__brief::before,
-.interview-result-layout__next-pass::before,
-.interview-result-layout__next-rail::before,
 .interview-result-layout__actions::before,
 .interview-result-layout__recap::before {
   content: "";
@@ -8240,11 +8231,7 @@ button {
 
 .interview-session-current > *,
 .interview-session-side-summary > *,
-.interview-session-side-panel > *,
 .interview-result-layout__hero > *,
-.interview-result-layout__brief > *,
-.interview-result-layout__next-pass > *,
-.interview-result-layout__next-rail > *,
 .interview-result-layout__actions > *,
 .interview-result-layout__recap > * {
   position: relative;
@@ -8258,9 +8245,6 @@ button {
 }
 
 .interview-result-layout__hero,
-.interview-result-layout__brief,
-.interview-result-layout__next-pass,
-.interview-result-layout__next-rail,
 .interview-result-layout__actions,
 .interview-result-layout__recap {
   display: grid;
@@ -8268,8 +8252,6 @@ button {
 }
 
 .interview-result-layout__hero-topline,
-.interview-result-layout__brief-topline,
-.interview-result-layout__next-pass-topline,
 .interview-result-layout__next-topline {
   display: flex;
   flex-wrap: wrap;
@@ -8307,62 +8289,7 @@ button {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.interview-result-insight-surface {
-  display: grid;
-  gap: 1rem;
-  border-color: rgba(148, 163, 184, 0.14);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
-}
-
-.interview-result-insight-surface__header,
-.interview-result-insight-surface__lanes {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.interview-result-insight-surface__stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.interview-result-insight-surface__stats article,
-.interview-result-insight-surface__lane {
-  display: grid;
-  gap: 4px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(148, 163, 184, 0.06);
-}
-
-.interview-result-insight-surface__stats span {
-  margin: 0;
-  color: var(--text-subtle);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-result-insight-surface__stats strong,
-.interview-result-insight-surface__lane strong {
-  color: var(--text-main);
-  font-size: 1rem;
-  letter-spacing: -0.03em;
-  line-height: 1.45;
-}
-
-.interview-result-insight-surface__stats p,
-.interview-result-insight-surface__lane span {
-  margin: 0;
-  color: var(--text-muted);
-  line-height: 1.55;
-}
-
 .interview-result-layout__hero-supporting-item,
-.interview-result-layout__brief-rule,
 .interview-result-workspace-surface__guidance-card,
 .interview-result-layout__hero-decision-item,
 .interview-result-layout__next-pass-signal,
@@ -8395,7 +8322,6 @@ button {
 }
 
 .interview-result-layout__hero-supporting-item strong,
-.interview-result-layout__brief-rule strong,
 .interview-result-workspace-surface__guidance-card strong,
 .interview-result-layout__hero-decision-item strong,
 .interview-result-layout__next-pass-signal strong,
@@ -8407,16 +8333,6 @@ button {
   font-size: 1rem;
   letter-spacing: -0.03em;
   line-height: 1.45;
-}
-
-.interview-result-layout__brief-rules {
-  display: grid;
-  gap: 10px;
-}
-
-.interview-result-layout__brief-rule span {
-  color: var(--text-muted);
-  line-height: 1.6;
 }
 
 .question-detail-workspace-surface__chips {
@@ -8802,58 +8718,6 @@ button {
   line-height: 1.45;
 }
 
-.interview-session-insight-surface {
-  display: grid;
-  gap: 1rem;
-  border-color: rgba(148, 163, 184, 0.14);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
-}
-
-.interview-session-insight-surface__header,
-.interview-session-insight-surface__lanes {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.interview-session-insight-surface__stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.interview-session-insight-surface__stats article,
-.interview-session-insight-surface__lane {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(8, 15, 29, 0.52);
-}
-
-.interview-session-insight-surface__stats span {
-  color: rgba(148, 163, 184, 0.82);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-session-insight-surface__stats strong,
-.interview-session-insight-surface__lane strong {
-  color: #f8fafc;
-  font-size: 1rem;
-  letter-spacing: -0.03em;
-}
-
-.interview-session-insight-surface__stats p,
-.interview-session-insight-surface__lane span {
-  margin: 0;
-  color: rgba(226, 232, 240, 0.72);
-  line-height: 1.55;
-}
-
 .interview-result-workspace-surface__chips {
   display: flex;
   flex-wrap: wrap;
@@ -9082,7 +8946,6 @@ button {
 }
 
 @media (max-width: 900px) {
-  .interview-session-insight-surface__stats,
   .interview-session-answer-surface__draft-status {
     grid-template-columns: 1fr;
   }
@@ -9106,12 +8969,13 @@ button {
   font-size: 0.92rem;
 }
 
-.interview-result-layout__content > * {
-  min-width: 0;
+.interview-session-side-panel__item--coverage {
+  border-color: rgba(96, 165, 250, 0.18);
+  background: rgba(37, 99, 235, 0.08);
 }
 
-.interview-result-layout__brief {
-  border-style: dashed;
+.interview-result-layout__content > * {
+  min-width: 0;
 }
 
 .interview-result-layout__recap-intro {
@@ -9848,10 +9712,6 @@ button {
     align-items: start;
   }
 
-  .interview-result-layout__hero-grid {
-    grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
-    align-items: start;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -12546,8 +12406,6 @@ button {
 .answer-editor-insight-surface,
 .review-queue-insight-surface,
 .notes-insight-surface,
-.interview-session-insight-surface,
-.interview-result-insight-surface,
 .practical-review-insight-surface,
 .question-detail-insight-surface {
   display: grid;
@@ -12561,15 +12419,11 @@ button {
 .answer-editor-insight-surface__header,
 .review-queue-insight-surface__header,
 .notes-insight-surface__header,
-.interview-session-insight-surface__header,
-.interview-result-insight-surface__header,
 .practical-review-insight-surface__header,
 .question-detail-insight-surface__header,
 .answer-editor-insight-surface__lanes,
 .review-queue-insight-surface__lanes,
 .notes-insight-surface__lanes,
-.interview-session-insight-surface__lanes,
-.interview-result-insight-surface__lanes,
 .practical-review-insight-surface__lanes,
 .question-detail-insight-surface__actions {
   display: grid;
@@ -12579,8 +12433,6 @@ button {
 .answer-editor-insight-surface__stats,
 .review-queue-insight-surface__stats,
 .notes-insight-surface__stats,
-.interview-session-insight-surface__stats,
-.interview-result-insight-surface__stats,
 .practical-review-insight-surface__stats,
 .question-detail-insight-surface__stats {
   display: grid;
@@ -12591,15 +12443,11 @@ button {
 .answer-editor-insight-surface__stats article,
 .review-queue-insight-surface__stats article,
 .notes-insight-surface__stats article,
-.interview-session-insight-surface__stats article,
-.interview-result-insight-surface__stats article,
 .practical-review-insight-surface__stats article,
 .question-detail-insight-surface__stats article,
 .answer-editor-insight-surface__lane,
 .review-queue-insight-surface__lane,
 .notes-insight-surface__lane,
-.interview-session-insight-surface__lane,
-.interview-result-insight-surface__lane,
 .practical-review-insight-surface__lane,
 .question-detail-insight-surface__action {
   display: grid;
@@ -12613,8 +12461,6 @@ button {
 .answer-editor-insight-surface__stats span,
 .review-queue-insight-surface__stats span,
 .notes-insight-surface__stats span,
-.interview-session-insight-surface__stats span,
-.interview-result-insight-surface__stats span,
 .practical-review-insight-surface__stats span,
 .question-detail-insight-surface__stats span {
   color: rgba(148, 163, 184, 0.84);
@@ -12626,15 +12472,11 @@ button {
 .answer-editor-insight-surface__stats strong,
 .review-queue-insight-surface__stats strong,
 .notes-insight-surface__stats strong,
-.interview-session-insight-surface__stats strong,
-.interview-result-insight-surface__stats strong,
 .practical-review-insight-surface__stats strong,
 .question-detail-insight-surface__stats strong,
 .answer-editor-insight-surface__lane strong,
 .review-queue-insight-surface__lane strong,
 .notes-insight-surface__lane strong,
-.interview-session-insight-surface__lane strong,
-.interview-result-insight-surface__lane strong,
 .practical-review-insight-surface__lane strong,
 .question-detail-insight-surface__action strong {
   color: #f8fafc;
@@ -12645,15 +12487,11 @@ button {
 .answer-editor-insight-surface__stats p,
 .review-queue-insight-surface__stats p,
 .notes-insight-surface__stats p,
-.interview-session-insight-surface__stats p,
-.interview-result-insight-surface__stats p,
 .practical-review-insight-surface__stats p,
 .question-detail-insight-surface__stats p,
 .answer-editor-insight-surface__lane span,
 .review-queue-insight-surface__lane span,
 .notes-insight-surface__lane span,
-.interview-session-insight-surface__lane span,
-.interview-result-insight-surface__lane span,
 .practical-review-insight-surface__lane span,
 .question-detail-insight-surface__action span {
   margin: 0;
@@ -12665,8 +12503,6 @@ button {
   .answer-editor-insight-surface__stats,
   .review-queue-insight-surface__stats,
   .notes-insight-surface__stats,
-  .interview-session-insight-surface__stats,
-  .interview-result-insight-surface__stats,
   .practical-review-insight-surface__stats,
   .question-detail-insight-surface__stats {
     grid-template-columns: 1fr;

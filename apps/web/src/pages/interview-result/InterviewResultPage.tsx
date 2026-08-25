@@ -12,7 +12,6 @@ import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { useLocale } from "../../shared/i18n";
-import { SectionPanel } from "../../shared/ui/layout";
 import { InterviewFullCoverageResultView } from "../../widgets/interview";
 
 export function InterviewResultPage() {
@@ -237,118 +236,57 @@ export function InterviewResultPage() {
             </article>
           </div>
         </section>
-        <SectionPanel className="interview-result-insight-surface" variant="muted">
-          <div className="interview-result-insight-surface__header">
-            <div>
-              <span className="page-card__label">Recovery insight</span>
-              <h2 className="page-card__title">Turn the finished session into one explicit next-pass decision</h2>
-              <p className="page-card__body">
-                Scores are only useful if they narrow the next DFS move. This layer should tell you whether to reopen a weak branch, recover skipped evidence, or move sideways into a neighboring path without losing depth.
-              </p>
-            </div>
-            <span className="detail-chip detail-chip--accent">{recoverySignal}</span>
+        <section className="page-card interview-result-layout__hero">
+          <div className="interview-result-layout__hero-topline">
+            <span className="page-card__label">{t("result.summaryLabel")}</span>
+            <span className="question-status-badge question-status-badge--accent">Decision readout</span>
           </div>
-          <div className="interview-result-insight-surface__stats">
-            <article>
-              <span>Unresolved branches</span>
-              <strong>{unresolvedBranchCount}</strong>
-              <p>weak or skipped recovery targets still carrying into the next run</p>
+          <h2 className="page-card__title">Session {sessionId}</h2>
+          <p className="page-card__body">{t("result.summaryBody")}</p>
+          <div className="stats-grid">
+            <MetricCard label={t("result.questions")} tone="muted" value={String(session.summary.totalQuestions)} />
+            <MetricCard label={t("result.answered")} tone="accent" value={String(answeredCount)} />
+            <MetricCard label={t("result.skipped")} tone="muted" value={String(skippedCount)} />
+            <MetricCard label={t("result.status")} tone="muted" value={session.status} />
+            <MetricCard label={t("result.averageScore")} tone="muted" value={averageScoreLabel} />
+          </div>
+          <div className="interview-result-layout__hero-supporting">
+            <article className="interview-result-layout__hero-supporting-item">
+              <span>Branch state</span>
+              <strong>{session.status}</strong>
             </article>
-            <article>
-              <span>Answered nodes</span>
-              <strong>{answeredCount}</strong>
-              <p>branches that already produced a defendable answer attempt</p>
+            <article className="interview-result-layout__hero-supporting-item">
+              <span>Weak recovery</span>
+              <strong>{weakFacetCount}</strong>
             </article>
-            <article>
-              <span>Next action</span>
-              <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Recovery pass" : "Neighbor branch"}</strong>
-              <p>the most efficient direction for the next interview cycle</p>
+            <article className="interview-result-layout__hero-supporting-item">
+              <span>Skipped recovery</span>
+              <strong>{skippedFacetCount}</strong>
             </article>
           </div>
-          <div className="interview-result-insight-surface__lanes">
-            <div className="interview-result-insight-surface__lane">
-              <strong>Recover the narrowest failure</strong>
-              <span>Start with the smallest branch that still collapses under follow-up pressure.</span>
-            </div>
-            <div className="interview-result-insight-surface__lane">
-              <strong>Bring missing evidence</strong>
-              <span>Re-enter with the metric, trade-off, or source-of-truth line the previous answer could not defend.</span>
-            </div>
-            <div className="interview-result-insight-surface__lane">
-              <strong>Expand only after depth holds</strong>
-              <span>Move to adjacent branches only when the reopened node no longer stays vague.</span>
-            </div>
+          <div className="interview-result-layout__hero-decision">
+            <article className="interview-result-layout__hero-decision-item">
+              <span>Primary recovery</span>
+              <strong>
+                {weakFacetCount > 0
+                  ? `${weakFacetCount} weak branches should be revisited first`
+                  : "No weak branches are currently blocking the next pass"}
+              </strong>
+            </article>
+            <article className="interview-result-layout__hero-decision-item">
+              <span>Pass shape</span>
+              <strong>
+                {skippedFacetCount > 0
+                  ? "Run a narrow recovery session before expanding breadth again"
+                  : "You can expand to adjacent branches once evidence stays concrete"}
+              </strong>
+            </article>
+            <article className="interview-result-layout__hero-decision-item">
+              <span>Recovery signal</span>
+              <strong>{recoverySignal}</strong>
+            </article>
           </div>
-        </SectionPanel>
-        <div className="interview-result-layout__hero-grid">
-          <section className="page-card interview-result-layout__hero">
-            <div className="interview-result-layout__hero-topline">
-              <span className="page-card__label">{t("result.summaryLabel")}</span>
-              <span className="question-status-badge question-status-badge--accent">Decision readout</span>
-            </div>
-            <h2 className="page-card__title">Session {sessionId}</h2>
-            <p className="page-card__body">{t("result.summaryBody")}</p>
-            <div className="stats-grid">
-              <MetricCard label={t("result.questions")} tone="muted" value={String(session.summary.totalQuestions)} />
-              <MetricCard label={t("result.answered")} tone="accent" value={String(answeredCount)} />
-              <MetricCard label={t("result.skipped")} tone="muted" value={String(skippedCount)} />
-              <MetricCard label={t("result.status")} tone="muted" value={session.status} />
-              <MetricCard label={t("result.averageScore")} tone="muted" value={averageScoreLabel} />
-            </div>
-            <div className="interview-result-layout__hero-supporting">
-              <article className="interview-result-layout__hero-supporting-item">
-                <span>Branch state</span>
-                <strong>{session.status}</strong>
-              </article>
-              <article className="interview-result-layout__hero-supporting-item">
-                <span>Weak recovery</span>
-                <strong>{weakFacetCount}</strong>
-              </article>
-              <article className="interview-result-layout__hero-supporting-item">
-                <span>Skipped recovery</span>
-                <strong>{skippedFacetCount}</strong>
-              </article>
-            </div>
-            <div className="interview-result-layout__hero-decision">
-              <article className="interview-result-layout__hero-decision-item">
-                <span>Primary recovery</span>
-                <strong>
-                  {weakFacetCount > 0
-                    ? `${weakFacetCount} weak branches should be revisited first`
-                    : "No weak branches are currently blocking the next pass"}
-                </strong>
-              </article>
-              <article className="interview-result-layout__hero-decision-item">
-                <span>Pass shape</span>
-                <strong>
-                  {skippedFacetCount > 0
-                    ? "Run a narrow recovery session before expanding breadth again"
-                    : "You can expand to adjacent branches once evidence stays concrete"}
-                </strong>
-              </article>
-            </div>
-          </section>
-          <SectionPanel className="workspace-note-card workspace-note-card--accent interview-result-layout__brief" variant="muted">
-            <div className="interview-result-layout__brief-topline">
-              <span className="page-card__label">Result review</span>
-              <span className="question-status-badge">Next pass cue</span>
-            </div>
-            <h2 className="page-card__title">Use this review to choose the next branch, not just to read the score</h2>
-            <p className="page-card__body">
-              Strong sessions should reveal which resume claims were actually defended, which branches stayed shallow, and where the next DFS pass should continue.
-            </p>
-            <div className="interview-result-layout__brief-rules">
-              <div className="interview-result-layout__brief-rule">
-                <strong>1. Evidence first</strong>
-                <span>Repeat only the branch that still lacks a concrete resume fact or constraint.</span>
-              </div>
-              <div className="interview-result-layout__brief-rule">
-                <strong>2. Narrow scope</strong>
-                <span>Keep the next pass small enough that depth improves before breadth expands.</span>
-              </div>
-            </div>
-          </SectionPanel>
-        </div>
+        </section>
         <div className="interview-result-layout__content">
           <div className="interview-result-layout__main">
             {shouldRenderFullCoverageResult ? (
@@ -428,30 +366,34 @@ export function InterviewResultPage() {
             )}
           </div>
           <aside className="interview-result-layout__side">
-            <SectionPanel className="workspace-note-card interview-result-layout__next-pass" variant="muted">
-              <div className="interview-result-layout__next-pass-topline">
-                <span className="page-card__label">Next pass</span>
+            <section className="page-card interview-result-layout__actions">
+              <div className="interview-result-layout__next-topline">
+                <span className="page-card__label">Next cycle</span>
                 <span className="question-status-badge question-status-badge--accent">Recovery scope</span>
               </div>
-              <h2 className="page-card__title">Turn this review into the next deeper interview pass</h2>
+              <h2 className="page-card__title">Turn this review into one explicit next-pass decision</h2>
               <p className="page-card__body">
                 Re-run weak branches, revisit skipped evidence, and keep the next session scoped enough that you can tell whether the answer improved or only became longer.
               </p>
               <div className="interview-result-layout__next-pass-signals">
                 <article className="interview-result-layout__next-pass-signal">
-                  <span>Weak recovery queue</span>
-                  <strong>{weakFacetCount > 0 ? `${weakFacetCount} branches waiting` : "No weak branches queued"}</strong>
+                  <span>Unresolved branches</span>
+                  <strong>{unresolvedBranchCount}</strong>
                 </article>
                 <article className="interview-result-layout__next-pass-signal">
-                  <span>Skipped evidence queue</span>
-                  <strong>{skippedFacetCount > 0 ? `${skippedFacetCount} skipped facets waiting` : "No skipped facets queued"}</strong>
+                  <span>Next action</span>
+                  <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Recovery pass" : "Neighbor branch"}</strong>
                 </article>
               </div>
-            </SectionPanel>
-            <SectionPanel className="workspace-note-card interview-result-layout__next-rail" variant="muted">
-              <div className="interview-result-layout__next-topline">
-                <span className="page-card__label">Recovery plan</span>
-                <p className="interview-result-layout__next-note">Prioritize the smallest unfinished branches first</p>
+              <div className="interview-result-layout__actions-summary">
+                <article className="interview-result-layout__actions-summary-item">
+                  <span>Recommended action</span>
+                  <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Start a narrow recovery pass" : "Continue to a neighboring branch"}</strong>
+                </article>
+                <article className="interview-result-layout__actions-summary-item">
+                  <span>Do not do</span>
+                  <strong>Do not restart broad coverage if the unresolved branch is still shallow</strong>
+                </article>
               </div>
               <div className="interview-result-layout__next-list">
                 <div className="interview-result-layout__next-item">
@@ -483,23 +425,6 @@ export function InterviewResultPage() {
                 <article className="interview-result-layout__next-playbook-step">
                   <span>2. Re-enter with evidence</span>
                   <strong>Bring the missing resume fact, constraint, or metric that the earlier answer could not defend</strong>
-                </article>
-              </div>
-            </SectionPanel>
-            <section className="page-card interview-result-layout__actions">
-              <span className="page-card__label">Actions</span>
-              <h2 className="page-card__title">Start the next interview cycle deliberately</h2>
-              <p className="page-card__body">
-                Launch another session only after choosing whether you are retesting weak branches, skipped facets, or the same branch with tighter evidence.
-              </p>
-              <div className="interview-result-layout__actions-summary">
-                <article className="interview-result-layout__actions-summary-item">
-                  <span>Recommended action</span>
-                  <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Start a narrow recovery pass" : "Continue to a neighboring branch"}</strong>
-                </article>
-                <article className="interview-result-layout__actions-summary-item">
-                  <span>Do not do</span>
-                  <strong>Do not restart broad coverage if the unresolved branch is still shallow</strong>
                 </article>
               </div>
               <div className="interview-result-layout__actions-checklist">
