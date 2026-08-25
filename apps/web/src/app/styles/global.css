@@ -10245,9 +10245,9 @@ button {
 
 .sidebar-navigation__summary {
   color: rgba(196, 207, 226, 0.72);
-  font-size: 0.88rem;
-  line-height: 1.6;
-  max-width: 22ch;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  max-width: 18ch;
 }
 
 .sidebar-navigation__section {
@@ -10395,8 +10395,8 @@ button {
 }
 
 .app-header--guest {
-  grid-template-columns: minmax(0, 220px) minmax(0, 1fr) auto;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
 }
 
 .app-header__title {
@@ -10411,13 +10411,6 @@ button {
 .app-header__search {
   display: flex;
   justify-content: center;
-}
-
-.app-header__guest-summary {
-  margin: 0;
-  color: rgba(183, 198, 220, 0.76);
-  font-size: 0.92rem;
-  line-height: 1.6;
 }
 
 .app-header__search-input {

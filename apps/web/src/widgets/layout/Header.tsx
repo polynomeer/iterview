@@ -48,11 +48,7 @@ export function Header() {
             type="search"
           />
         </div>
-      ) : (
-        <p className="app-header__guest-summary">
-          Build your source of truth, then rehearse deep follow-up questions before the interview.
-        </p>
-      )}
+      ) : null}
       <div className="app-header__actions">
         {isAuthenticated && currentUser ? (
           <>

@@ -43,7 +43,7 @@ export function SidebarNavigation() {
           <span className="sidebar-navigation__pro-badge">DFS prep</span>
         </div>
         <p className="sidebar-navigation__summary">
-          Turn resume claims into a source of truth, then pressure-test them with deep follow-up interviews.
+          Resume-first interview practice.
         </p>
       </div>
 
@@ -118,7 +118,7 @@ export function SidebarNavigation() {
       ) : (
         <section className="sidebar-navigation__progress-card sidebar-navigation__progress-card--compact">
           <span className="sidebar-navigation__section-label">Core loop</span>
-          <p className="sidebar-navigation__progress-range">Start from your resume, expand follow-up branches, and rehearse until each claim is defensible.</p>
+          <p className="sidebar-navigation__progress-range">Source of truth, DFS follow-ups, answer rehearsal.</p>
         </section>
       )}
     </aside>
