@@ -23,6 +23,7 @@ The shared redesign system will use:
 - reusable card, stat, insight, and guidance structures
 - typography tuned for clarity and hierarchy over decoration
 - simplified header density where pages already have strong workspace surfaces
+- reduced workspace-entry density so landing cards do not stack breadcrumbs, many stats, and many rule blocks at once
 
 The design direction should remain clean, severe, and task-oriented rather than decorative.
 
@@ -31,4 +32,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - New UI work should reuse shared surface and spacing patterns before inventing new ones.
 - Visual consistency matters as much as local page polish.
 - Pages with too many competing headers or cards should be simplified.
+- Workspace entry surfaces should favor one short directive, two or three key stats, and a small number of guidance blocks.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.

@@ -162,17 +162,9 @@ export function ReviewQueuePage() {
               <span className="page-card__label">Queue workspace</span>
               <span className="question-status-badge question-status-badge--accent">Action mode</span>
             </div>
-            <p className="review-queue-workspace-surface__breadcrumbs">
-              Retry loop
-              <span>/</span>
-              Scheduled follow-up
-              <span>/</span>
-              Intentional execution
-            </p>
-            <h2 className="review-queue-workspace-surface__title">Review control tower</h2>
+            <h2 className="review-queue-workspace-surface__title">Clear the smallest high-signal retry first</h2>
             <p className="review-queue-workspace-surface__body">
-              Clear the highest-signal retries first, then return to open practice with fewer unresolved weak points in
-              the queue.
+              Finish the retries that unblock the next branch, then return to open practice with fewer vague weak points.
             </p>
           </div>
           <div className="review-queue-workspace-surface__stats">
@@ -188,10 +180,6 @@ export function ReviewQueuePage() {
               <span>Due today</span>
               <strong>{scheduledTodayCount}</strong>
             </article>
-            <article className="review-queue-workspace-surface__stat">
-              <span>With results</span>
-              <strong>{itemsWithResultCount}</strong>
-            </article>
           </div>
         </div>
         <div className="review-queue-workspace-surface__guidance">
@@ -199,13 +187,9 @@ export function ReviewQueuePage() {
             <span>Execution rule</span>
             <strong>Clear the smallest high-signal retry before opening fresh practice work.</strong>
           </article>
-          <article className="review-queue-workspace-surface__guidance-card">
-            <span>Defer rule</span>
-            <strong>Skip only when you are choosing a later slot intentionally, not when the branch feels vague.</strong>
-          </article>
         </div>
         <div className="review-queue-workspace-surface__chips">
-          <span className="detail-chip">{`Queue ${queueItems.length}`}</span>
+          <span className="detail-chip detail-chip--accent">{executionMode}</span>
           {highPriorityCount > 0 ? <span className="detail-chip detail-chip--accent">High-priority items</span> : null}
           {scheduledTodayCount > 0 ? <span className="detail-chip">Due in current cycle</span> : null}
           {itemsWithResultCount > 0 ? <span className="detail-chip">Result context available</span> : null}

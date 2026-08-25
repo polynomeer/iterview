@@ -362,26 +362,6 @@ export function InterviewPage() {
         : selectedInterviewMode === "full_coverage"
           ? "Coverage pass ready"
           : "Scoped branch ready";
-  const entrySnapshotItems = [
-    {
-      label: "Current branch target",
-      value: selectedInspector.title,
-    },
-    {
-      label: "Launch posture",
-      value:
-        selectedInterviewMode === "full_coverage"
-          ? "Traverse the full resume graph with recovery in mind"
-          : "Start with one scoped branch before broadening coverage",
-    },
-    {
-      label: "Resume boundary",
-      value:
-        selectedResumeChoice !== null
-          ? "Resume version is locked before the next DFS pass starts"
-          : "Choose one resume version before opening the branch",
-    },
-  ] as const;
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -471,17 +451,9 @@ export function InterviewPage() {
                   <span className="page-card__label">Interview workspace</span>
                   <span className="question-status-badge question-status-badge--accent">Entry surface</span>
                 </div>
-                <p className="interview-workspace-surface__breadcrumbs">
-                  Resume boundary
-                  <span>/</span>
-                  DFS branch focus
-                  <span>/</span>
-                  Session launch
-                </p>
                 <h2 className="interview-workspace-surface__title">Enter one defendable interview path</h2>
                 <p className="interview-workspace-surface__body">
-                  Start from a stable resume version, inspect the branch you are about to defend, and launch the session
-                  only after the traversal mode is explicit.
+                  Lock one resume version, pick the branch you want to defend, and launch only when the traversal mode is explicit.
                 </p>
               </div>
               <div className="interview-workspace-surface__stats">
@@ -497,10 +469,6 @@ export function InterviewPage() {
                   <span>Completed sessions</span>
                   <strong>{completedSessionCount}</strong>
                 </article>
-                <article className="interview-workspace-surface__stat">
-                  <span>Seed count</span>
-                  <strong>{questionCount}</strong>
-                </article>
               </div>
             </div>
             <div className="interview-workspace-surface__chips">
@@ -510,14 +478,7 @@ export function InterviewPage() {
                 <span className="detail-chip">{t("interview.coverageBadge")}</span>
               ) : null}
               {sessionCount > 0 ? <span className="detail-chip">{`History ${sessionCount}`}</span> : null}
-            </div>
-            <div className="interview-workspace-surface__snapshot">
-              {entrySnapshotItems.map((item) => (
-                <article className="interview-workspace-surface__snapshot-card" key={item.label}>
-                  <span>{item.label}</span>
-                  <strong>{item.value}</strong>
-                </article>
-              ))}
+              <span className="detail-chip">{launchSignal}</span>
             </div>
             <div className="interview-workspace-surface__guidance">
               <article className="interview-workspace-surface__guidance-card">
@@ -527,10 +488,6 @@ export function InterviewPage() {
               <article className="interview-workspace-surface__guidance-card">
                 <span>Traversal</span>
                 <strong>Choose a mode that matches whether you want calibration or full DFS coverage</strong>
-              </article>
-              <article className="interview-workspace-surface__guidance-card">
-                <span>Next move</span>
-                <strong>Inspect the weak node first, then open setup only when the branch target is explicit</strong>
               </article>
             </div>
             <div className="interview-workspace-surface__actions">
@@ -547,7 +504,7 @@ export function InterviewPage() {
                 onClick={() => setSelectedGraphNodeId("read-uncommitted")}
                 type="button"
               >
-                Jump to weakest branch
+                Inspect weakest branch
               </button>
             </div>
 

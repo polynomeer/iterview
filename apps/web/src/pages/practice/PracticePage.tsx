@@ -83,17 +83,9 @@ export function PracticePage() {
               <span className="page-card__label">Practice workspace</span>
               <span className="question-status-badge question-status-badge--accent">Discovery mode</span>
             </div>
-            <p className="practice-workspace-surface__breadcrumbs">
-              Question set
-              <span>/</span>
-              Filtered discovery
-              <span>/</span>
-              Next branch selection
-            </p>
-            <h2 className="practice-workspace-surface__title">Practice control tower</h2>
+            <h2 className="practice-workspace-surface__title">Pick the next branch on purpose</h2>
             <p className="practice-workspace-surface__body">
-              Narrow the queue until the next prompt is worth a full answer pass, not just another random click
-              through the catalog.
+              Filter until one question is worth a full answer pass, not another loose click through the catalog.
             </p>
           </div>
           <div className="practice-workspace-surface__stats">
@@ -102,12 +94,8 @@ export function PracticePage() {
               <strong>{practiceQuery.data?.items.length ?? 0}</strong>
             </article>
             <article className="practice-workspace-surface__stat">
-              <span>Categories</span>
-              <strong>{practiceQuery.data?.filters.categories.length ?? 0}</strong>
-            </article>
-            <article className="practice-workspace-surface__stat">
-              <span>Companies</span>
-              <strong>{practiceQuery.data?.filters.companies.length ?? 0}</strong>
+              <span>Retry candidates</span>
+              <strong>{retryItemCount}</strong>
             </article>
             <article className="practice-workspace-surface__stat">
               <span>Active filters</span>
@@ -124,10 +112,6 @@ export function PracticePage() {
             <span>Selection rule</span>
             <strong>Pick the next question because it sharpens one branch, not because it is simply available.</strong>
           </article>
-          <article className="practice-workspace-surface__guidance-card">
-            <span>Retry signal</span>
-            <strong>Scheduled review items should usually be cleared before starting a fresh prompt.</strong>
-          </article>
         </div>
         <div className="practice-workspace-surface__chips">
           {filterState.search ? <span className="detail-chip detail-chip--accent">{`Search ${filterState.search}`}</span> : null}
@@ -135,13 +119,7 @@ export function PracticePage() {
           {filterState.company ? <span className="detail-chip">{`Company ${filterState.company}`}</span> : null}
           {filterState.difficulty ? <span className="detail-chip">{`Level ${filterState.difficulty}`}</span> : null}
           {filterState.status ? <span className="detail-chip">{`Status ${filterState.status}`}</span> : null}
-          {!filterState.search &&
-          !filterState.category &&
-          !filterState.company &&
-          !filterState.difficulty &&
-          !filterState.status ? (
-            <span className="detail-chip">No filters pinned yet</span>
-          ) : null}
+          {retryItemCount > 0 ? <span className="detail-chip">Retry work present</span> : null}
         </div>
       </section>
       {(() => {
