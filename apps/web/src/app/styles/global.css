@@ -8510,11 +8510,30 @@ button {
 .interview-result-workspace-surface {
   position: relative;
   overflow: hidden;
+  padding: 24px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background:
     radial-gradient(circle at top left, rgba(16, 185, 129, 0.18), transparent 38%),
     radial-gradient(circle at top right, rgba(14, 165, 233, 0.14), transparent 30%),
     linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
+  box-shadow: 0 28px 64px rgba(2, 6, 23, 0.38);
+}
+
+.interview-session-workspace-surface::after,
+.question-detail-workspace-surface::after,
+.interview-result-workspace-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 22%);
+  pointer-events: none;
+}
+
+.interview-session-workspace-surface > *,
+.question-detail-workspace-surface > *,
+.interview-result-workspace-surface > * {
+  position: relative;
+  z-index: 1;
 }
 
 .interview-session-workspace-surface__header,
@@ -8559,7 +8578,7 @@ button {
 .interview-session-workspace-surface__body,
 .question-detail-workspace-surface__body,
 .interview-result-workspace-surface__body {
-  max-width: 70ch;
+  max-width: 62ch;
   margin: 0;
   color: rgba(226, 232, 240, 0.78);
 }
@@ -8580,7 +8599,8 @@ button {
   padding: 16px 18px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 18px;
-  background: rgba(9, 17, 32, 0.72);
+  background: linear-gradient(180deg, rgba(10, 18, 34, 0.92), rgba(7, 14, 27, 0.88));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .interview-session-workspace-surface__stat-label,
@@ -8709,12 +8729,13 @@ button {
   padding: 14px 16px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 18px;
-  background: rgba(10, 18, 34, 0.76);
+  background: linear-gradient(180deg, rgba(10, 18, 34, 0.9), rgba(8, 14, 27, 0.86));
   color: #dbe4ee;
   text-align: left;
   transition:
     border-color 180ms ease,
     background-color 180ms ease,
+    box-shadow 180ms ease,
     transform 180ms ease;
   cursor: pointer;
 }
@@ -8723,12 +8744,31 @@ button {
 .interview-session-workspace-surface__branch:focus-visible {
   border-color: rgba(45, 212, 191, 0.44);
   background: rgba(13, 24, 44, 0.92);
+  box-shadow: 0 16px 32px rgba(8, 15, 29, 0.28);
   transform: translateY(-1px);
 }
 
 .interview-session-workspace-surface__branch--active {
-  border-color: rgba(45, 212, 191, 0.52);
-  background: linear-gradient(180deg, rgba(12, 27, 46, 0.92), rgba(9, 19, 35, 0.92));
+  border-color: rgba(45, 212, 191, 0.56);
+  background:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.18), transparent 44%),
+    linear-gradient(180deg, rgba(12, 27, 46, 0.96), rgba(8, 19, 35, 0.94));
+  box-shadow:
+    inset 0 0 0 1px rgba(94, 234, 212, 0.14),
+    0 18px 36px rgba(8, 15, 29, 0.34);
+}
+
+.interview-session-workspace-surface__branch--answered {
+  border-color: rgba(74, 222, 128, 0.28);
+  background:
+    radial-gradient(circle at top left, rgba(74, 222, 128, 0.12), transparent 40%),
+    linear-gradient(180deg, rgba(10, 24, 22, 0.9), rgba(8, 18, 21, 0.86));
+}
+
+.interview-session-workspace-surface__branch--queued {
+  border-style: dashed;
+  border-color: rgba(100, 116, 139, 0.28);
+  background: linear-gradient(180deg, rgba(10, 16, 28, 0.84), rgba(7, 13, 24, 0.82));
 }
 
 .interview-session-workspace-surface__branch-step {
@@ -8741,16 +8781,19 @@ button {
   background: rgba(34, 197, 94, 0.16);
   color: #bbf7d0;
   font-weight: 700;
+  flex: 0 0 auto;
 }
 
 .interview-session-workspace-surface__branch-copy {
   display: grid;
   gap: 4px;
+  min-width: 0;
 }
 
 .interview-session-workspace-surface__branch-copy strong {
   color: #f8fafc;
   font-size: 0.95rem;
+  line-height: 1.35;
 }
 
 .interview-session-workspace-surface__branch-copy span {
@@ -8760,6 +8803,11 @@ button {
 
 .interview-session-current {
   border-radius: 18px;
+  border-color: rgba(45, 212, 191, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.08), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
 }
 
 .interview-session-current .page-card__label {
@@ -8803,9 +8851,11 @@ button {
   padding: 24px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 34%),
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 34%),
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.08), transparent 26%),
     linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
   scroll-margin-top: 120px;
+  box-shadow: 0 24px 52px rgba(2, 6, 23, 0.34);
 }
 
 .interview-session-answer-surface__header {
@@ -8891,8 +8941,38 @@ button {
   gap: 12px;
 }
 
+.interview-session-side-panel__item {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.32));
+}
+
+.interview-session-side-panel__item strong {
+  color: #f8fafc;
+  line-height: 1.4;
+}
+
+.interview-session-side-panel__item span {
+  color: rgba(203, 213, 225, 0.74);
+  line-height: 1.45;
+}
+
+.interview-session-side-panel__item--coverage {
+  border-color: rgba(45, 212, 191, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(13, 24, 44, 0.62), rgba(9, 19, 35, 0.46));
+}
+
 @media (max-width: 900px) {
   .interview-session-answer-surface__draft-status {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-session-workspace-surface__branches {
     grid-template-columns: 1fr;
   }
 }

@@ -346,6 +346,12 @@ export function InterviewSessionPage() {
               <button
                 className={`interview-session-workspace-surface__branch ${
                   question.id === currentQuestion.id ? "interview-session-workspace-surface__branch--active" : ""
+                }${
+                  question.status === "answered"
+                    ? " interview-session-workspace-surface__branch--answered"
+                    : question.id === currentQuestion.id
+                      ? ""
+                      : " interview-session-workspace-surface__branch--queued"
                 }`}
                 key={question.id}
                 onClick={() => {
