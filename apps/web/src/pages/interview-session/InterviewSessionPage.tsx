@@ -152,21 +152,21 @@ export function InterviewSessionPage() {
   const trimmedDraftLength = draft.trim().length;
   const answerDraftStatus =
     trimmedDraftLength === 0
-      ? "Start with the exact claim this node is testing."
+      ? "Start with the exact claim."
       : trimmedDraftLength < 140
-        ? "Add one concrete resume fact or number before moving on."
-        : "Draft is long enough to pressure-test for evidence and trade-offs.";
+        ? "Add one resume fact or number."
+        : "Check the evidence and trade-off.";
   const evidenceAnchorCount = currentQuestion.resumeEvidence.length;
   const sessionExecutionSignal =
     !isCurrentQuestionActive
       ? "Review current state"
       : trimmedDraftLength === 0
-        ? "Draft the core claim"
+        ? "Draft the claim"
         : trimmedDraftLength < 140
-          ? "Add evidence before submit"
+          ? "Add evidence"
           : canAdvance
-            ? "Branch ready to move"
-            : "Defend this node first";
+            ? "Ready to move"
+            : "Defend this node";
   const statusRailItems = [
     {
       key: "question",
@@ -294,10 +294,9 @@ export function InterviewSessionPage() {
                 <span>/</span>
                 {currentQuestion.isFollowUp ? "Generated branch" : "Root branch"}
               </p>
-              <h2 className="interview-session-workspace-surface__title">Defend the current branch before moving sideways</h2>
+              <h2 className="interview-session-workspace-surface__title">Defend this branch first</h2>
               <p className="interview-session-workspace-surface__body">
-                {currentQuestion.title}. Follow the current DFS branch until the claim is specific, evidence-backed,
-                and no longer vague enough to generate a shallow escape route.
+                {currentQuestion.title}. Stay on this DFS path until the answer is specific and evidence-backed.
               </p>
             </div>
             <div className="interview-session-workspace-surface__stats">
@@ -335,11 +334,11 @@ export function InterviewSessionPage() {
           <div className="interview-session-workspace-surface__guidance">
             <article className="interview-session-workspace-surface__guidance-card">
               <span>Current node</span>
-              <strong>Finish this claim with enough evidence that the next follow-up becomes narrower</strong>
+              <strong>Finish this claim with evidence.</strong>
             </article>
             <article className="interview-session-workspace-surface__guidance-card">
               <span>Branch discipline</span>
-              <strong>Stay on the active path until the answer reaches concrete resume-backed detail</strong>
+              <strong>Do not branch sideways yet.</strong>
             </article>
           </div>
           <div className="interview-session-workspace-surface__branches" role="list">
@@ -410,11 +409,11 @@ export function InterviewSessionPage() {
               <div className="interview-session-current__summary">
                 <article className="interview-session-current__summary-item">
                   <span>Resume anchor</span>
-                  <strong>{currentQuestion.resumeContextSummary ?? "No explicit resume anchor attached yet"}</strong>
+                  <strong>{currentQuestion.resumeContextSummary ?? "No resume anchor attached yet"}</strong>
                 </article>
                 <article className="interview-session-current__summary-item">
                   <span>Follow-up role</span>
-                  <strong>{currentQuestion.isFollowUp ? "Defend the generated branch before expanding sideways" : "Establish the root claim before deeper probing begins"}</strong>
+                  <strong>{currentQuestion.isFollowUp ? "Defend the generated branch first" : "Lock the root claim first"}</strong>
                 </article>
               </div>
               <div className="interview-session-current__rail">
@@ -450,10 +449,10 @@ export function InterviewSessionPage() {
                   <span className="question-status-badge question-status-badge--accent">DFS defense</span>
                 </div>
                 <h2 className="page-card__title">
-                  Answer the current node with enough evidence that the next follow-up has nowhere vague to hide
+                  Answer this node with evidence
                 </h2>
                 <p className="page-card__body">
-                  Treat each response as a checkpoint in the question tree. The goal is not to sound longer, but to make the next branch more specific, testable, and grounded in the resume.
+                  Make the next branch narrower, not longer.
                 </p>
                 <div className="interview-session-side-summary__stats">
                   <article className="interview-session-side-summary__stat">
@@ -472,18 +471,18 @@ export function InterviewSessionPage() {
                 <div className="interview-session-side-summary__signals">
                   <article className="interview-session-side-summary__signal">
                     <span>Advance state</span>
-                    <strong>{canAdvance ? "Ready to unlock the next node" : "Current node still blocks the next branch"}</strong>
+                    <strong>{canAdvance ? "Next node can open" : "This node still blocks the branch"}</strong>
                   </article>
                   <article className="interview-session-side-summary__signal">
                     <span>Recovery focus</span>
-                    <strong>{weakFacetCount > 0 ? "Tighten weak resume facets before broadening scope" : "No weak facets are currently forcing a retry"}</strong>
+                    <strong>{weakFacetCount > 0 ? "Tighten weak facets first" : "No weak facets are forcing a retry"}</strong>
                   </article>
                   <article className="interview-session-side-summary__signal">
                     <span>Resume anchors</span>
                     <strong>
                       {evidenceAnchorCount > 0
                         ? `${evidenceAnchorCount} snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
-                        : "No source-of-truth snippet is attached yet"}
+                        : "No source-of-truth snippet yet"}
                     </strong>
                   </article>
                   <article className="interview-session-side-summary__signal">
@@ -508,18 +507,18 @@ export function InterviewSessionPage() {
                     <strong>{canAdvance ? "Advance is unlocked" : "Advance is blocked"}</strong>
                     <span>
                       {canAdvance
-                        ? "This branch has enough input to move deeper or sideways."
-                        : "Submit or skip this node before the session can reveal the next follow-up."}
+                        ? "This branch can move deeper."
+                        : "Submit or skip before the next follow-up opens."}
                     </span>
                   </div>
                   <div className="interview-session-side-panel__item">
                     <strong>Weak facet watch</strong>
-                    <span>{weakFacetCount > 0 ? `${weakFacetCount} weak facets still need defense.` : "No weak facets are currently flagged."}</span>
+                    <span>{weakFacetCount > 0 ? `${weakFacetCount} weak facets still need defense.` : "No weak facets are flagged."}</span>
                   </div>
                   {isFullCoverage ? (
                     <div className="interview-session-side-panel__item interview-session-side-panel__item--coverage">
                       <strong>Coverage pass</strong>
-                      <span>Weak and skipped facets are revisit targets for the full DFS map, not just score penalties.</span>
+                      <span>Weak and skipped facets become revisit targets in the DFS map.</span>
                     </div>
                   ) : null}
                 </div>
@@ -534,7 +533,7 @@ export function InterviewSessionPage() {
                     <span className="page-card__label">Answer draft</span>
                     <span className="question-status-badge question-status-badge--accent">Execution lane</span>
                   </div>
-                  <h2 className="page-card__title">Keep the draft close to the evidence and the next branch decision</h2>
+                  <h2 className="page-card__title">Keep the draft close to the branch</h2>
                 </div>
                 <div className="interview-session-answer-surface__meta">
                   <span>{currentQuestion.difficultyLabel}</span>
@@ -543,7 +542,7 @@ export function InterviewSessionPage() {
                 </div>
               </div>
               <p className="page-card__body">
-                Answer, skip, or advance deliberately. This panel should feel like the execution surface for the branch you are currently defending.
+                Answer, skip, or advance with intent.
               </p>
               <div className="interview-session-answer-surface__draft-status">
                 <article className="interview-session-answer-surface__draft-status-card">
@@ -555,7 +554,7 @@ export function InterviewSessionPage() {
                   <strong>
                     {evidenceAnchorCount > 0
                       ? `${evidenceAnchorCount} source-of-truth snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
-                      : "No explicit source-of-truth snippet is attached yet"}
+                      : "No source-of-truth snippet yet"}
                   </strong>
                 </article>
                 <article className="interview-session-answer-surface__draft-status-card">
@@ -566,21 +565,21 @@ export function InterviewSessionPage() {
               <div className="interview-session-answer-surface__guidance">
                 <article className="interview-session-answer-surface__guidance-card">
                   <span>Branch goal</span>
-                  <strong>Make the next follow-up narrower than this one.</strong>
+                  <strong>Make the next follow-up narrower.</strong>
                 </article>
                 <article className="interview-session-answer-surface__guidance-card">
                   <span>Evidence rule</span>
-                  <strong>Use one concrete resume fact, number, or constraint.</strong>
+                  <strong>Use one concrete fact, number, or constraint.</strong>
                 </article>
               </div>
               <div className="interview-session-answer-surface__playbook">
                 <article className="interview-session-answer-surface__playbook-step">
                   <span>1. State the claim</span>
-                  <strong>Answer the exact decision or trade-off this node is testing before adding side context</strong>
+                  <strong>Answer the exact decision or trade-off first</strong>
                 </article>
                 <article className="interview-session-answer-surface__playbook-step">
                   <span>2. Lock the evidence</span>
-                  <strong>Attach the project fact, metric, or constraint that proves the answer came from your source of truth</strong>
+                  <strong>Attach the fact, metric, or constraint that proves it</strong>
                 </article>
               </div>
               <AnswerTextEditor

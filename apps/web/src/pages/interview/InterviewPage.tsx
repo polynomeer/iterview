@@ -450,9 +450,9 @@ export function InterviewPage() {
                   <span className="page-card__label">Interview workspace</span>
                   <span className="question-status-badge question-status-badge--accent">Entry surface</span>
                 </div>
-                <h2 className="interview-workspace-surface__title">Enter one defendable interview path</h2>
+                <h2 className="interview-workspace-surface__title">Choose one branch to defend</h2>
                 <p className="interview-workspace-surface__body">
-                  Lock one resume version, pick the branch you want to defend, and launch only when the traversal mode is explicit.
+                  Lock one resume version, pick one branch, then start with a clear traversal mode.
                 </p>
               </div>
               <div className="interview-workspace-surface__stats">
@@ -482,11 +482,11 @@ export function InterviewPage() {
             <div className="interview-workspace-surface__guidance">
               <article className="interview-workspace-surface__guidance-card">
                 <span>Boundary</span>
-                <strong>Lock one resume version before the session opens a new branch</strong>
+                <strong>Use one resume version per run.</strong>
               </article>
               <article className="interview-workspace-surface__guidance-card">
                 <span>Traversal</span>
-                <strong>Choose a mode that matches whether you want calibration or full DFS coverage</strong>
+                <strong>Pick scope first, then start.</strong>
               </article>
             </div>
             <div className="interview-workspace-surface__actions">
@@ -512,7 +512,7 @@ export function InterviewPage() {
                 <div className="interview-graph-panel__header">
                   <div>
                     <p className="section-heading__eyebrow">Branch map</p>
-                    <h3 className="page-card__title">Preview the branch before the session starts</h3>
+                    <h3 className="page-card__title">Preview the branch</h3>
                   </div>
                   <div className="interview-graph-panel__toolbar">
                     <button className="secondary-button" type="button">Map View</button>
@@ -575,9 +575,7 @@ export function InterviewPage() {
                       <h3 className="page-card__title">{selectedInspector.relatedExperience}</h3>
                     </div>
                   </div>
-                  <p className="page-card__body">
-                    Anchor every answer to the exact resume claim and the operational detail that makes it defensible.
-                  </p>
+                  <p className="page-card__body">Tie the branch to one resume claim and one concrete detail.</p>
                   <div className="chip-list">
                     {selectedInspector.concepts.map((concept) => (
                       <span className="detail-chip" key={concept}>{concept}</span>
@@ -588,8 +586,8 @@ export function InterviewPage() {
                 <div className="interview-workspace-inspector__panel">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Next branch candidates</p>
-                      <h3 className="page-card__title">Inspect the most likely follow-ups before launch</h3>
+                      <p className="section-heading__eyebrow">Next branches</p>
+                      <h3 className="page-card__title">Inspect likely follow-ups</h3>
                     </div>
                   </div>
                   <div className="stack-list">
@@ -622,7 +620,7 @@ export function InterviewPage() {
               <div className="section-heading">
                 <div>
                   <p className="section-heading__eyebrow">Recent Sessions</p>
-                  <h3 className="page-card__title">Re-open the last defended branches</h3>
+                  <h3 className="page-card__title">Re-open recent branches</h3>
                 </div>
                 <span className="section-heading__count">{sessionCount}</span>
               </div>
@@ -654,7 +652,7 @@ export function InterviewPage() {
                 <div>
                   <span className="page-card__label">{t("interview.sessionSetupLabel")}</span>
                   <h2 className="page-card__title">{t("interview.sessionSetupTitle")}</h2>
-                  <p className="page-card__body">{t("interview.sessionSetupBody")}</p>
+                  <p className="page-card__body">Keep the boundary and launch rule in one place.</p>
                 </div>
                 <div className="interview-launch-setup-surface__summary">
                   <article className="interview-launch-setup-surface__summary-item">
@@ -680,9 +678,7 @@ export function InterviewPage() {
                       <h3 className="page-card__title">{t("interview.chooseResumeTitle")}</h3>
                     </div>
                   </div>
-                  <p className="page-card__body">
-                    Pick the single version you want to treat as source of truth for this run. Every branch should be answerable from this boundary.
-                  </p>
+                  <p className="page-card__body">Pick the one resume version that will anchor this run.</p>
                   <div className="stack-list">
                     {resumeVersionChoices.map((choice) => {
                       const isSelected = choice.versionId === selectedResumeVersionId;
@@ -719,18 +715,18 @@ export function InterviewPage() {
                 <section className="page-card page-card--inset">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Launch playbook</p>
-                      <h3 className="page-card__title">Choose the traversal before you press start</h3>
+                      <p className="section-heading__eyebrow">Launch rule</p>
+                      <h3 className="page-card__title">Choose the traversal first</h3>
                     </div>
                   </div>
                   <div className="interview-launch-setup-surface__playbook">
                     <article className="interview-launch-setup-surface__playbook-step">
                       <span>1. Lock the source</span>
-                      <strong>One session should map to one defendable resume truth source.</strong>
+                      <strong>One run, one source of truth.</strong>
                     </article>
                     <article className="interview-launch-setup-surface__playbook-step">
                       <span>2. Pick the traversal</span>
-                      <strong>Use coverage mode only when you intend to walk the full DFS question tree.</strong>
+                      <strong>Use coverage mode only for a full DFS pass.</strong>
                     </article>
                   </div>
                   <div className="stack-list">

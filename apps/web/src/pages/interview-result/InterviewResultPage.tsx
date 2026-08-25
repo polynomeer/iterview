@@ -140,10 +140,9 @@ export function InterviewResultPage() {
                 <span>/</span>
                 Next DFS pass
               </p>
-              <h2 className="interview-result-workspace-surface__title">Review what actually held up under pressure</h2>
+              <h2 className="interview-result-workspace-surface__title">Review what held up</h2>
               <p className="interview-result-workspace-surface__body">
-                This result is not the end of the flow. Use it to identify which branches were defendable, which evidence
-                stayed shallow, and what the next pass must revisit.
+                Keep the branches that held up. Re-enter the ones that stayed shallow.
               </p>
             </div>
             <div className="interview-result-workspace-surface__stats">
@@ -174,11 +173,11 @@ export function InterviewResultPage() {
           <div className="interview-result-workspace-surface__guidance">
             <article className="interview-result-workspace-surface__guidance-card">
               <span>Keep</span>
-              <strong>Carry forward only the branches that still fail under follow-up pressure</strong>
+              <strong>Carry forward only the branches worth re-testing.</strong>
             </article>
             <article className="interview-result-workspace-surface__guidance-card">
               <span>Recover</span>
-              <strong>Use weak and skipped facets to define the smallest worthwhile next pass</strong>
+              <strong>Use weak and skipped facets to scope the next pass.</strong>
             </article>
           </div>
         </section>
@@ -188,24 +187,24 @@ export function InterviewResultPage() {
             <span className="question-status-badge question-status-badge--accent">Decision readout</span>
           </div>
           <h2 className="page-card__title">Session {sessionId}</h2>
-          <p className="page-card__body">{t("result.summaryBody")}</p>
+          <p className="page-card__body">Use this pass to choose the next branch, not to admire the last one.</p>
           <div className="interview-result-layout__hero-decision">
             <article className="interview-result-layout__hero-decision-item">
-              <span>Primary recovery</span>
-              <strong>
-                {weakFacetCount > 0
-                  ? `${weakFacetCount} weak branches should be revisited first`
-                  : "No weak branches are currently blocking the next pass"}
-              </strong>
-            </article>
-            <article className="interview-result-layout__hero-decision-item">
-              <span>Pass shape</span>
-              <strong>
-                {skippedFacetCount > 0
-                  ? "Run a narrow recovery session before expanding breadth again"
-                  : "You can expand to adjacent branches once evidence stays concrete"}
-              </strong>
-            </article>
+                  <span>Primary recovery</span>
+                  <strong>
+                    {weakFacetCount > 0
+                      ? `${weakFacetCount} weak branches should be revisited first`
+                      : "No weak branches are blocking the next pass"}
+                  </strong>
+                </article>
+                <article className="interview-result-layout__hero-decision-item">
+                  <span>Pass shape</span>
+                  <strong>
+                    {skippedFacetCount > 0
+                      ? "Run a narrow recovery pass first"
+                      : "Expand only after evidence stays concrete"}
+                  </strong>
+                </article>
             <article className="interview-result-layout__hero-decision-item">
               <span>Recovery signal</span>
               <strong>{recoverySignal}</strong>
@@ -250,9 +249,7 @@ export function InterviewResultPage() {
                     <h2 className="page-card__title">{t("result.recapTitle")}</h2>
                   </div>
                 </div>
-                <p className="page-card__body interview-result-layout__recap-intro">
-                  Treat each question in this recap as a branch checkpoint. Reopen the nodes that were skipped, shallow, or worth defending with cleaner evidence.
-                </p>
+                <p className="page-card__body interview-result-layout__recap-intro">Reopen the skipped or shallow nodes with cleaner evidence.</p>
                 <div className="stack-list">
                   {session.questions.map((question) => (
                     <article className="list-item-card interview-result-layout__recap-card" key={question.id}>
@@ -296,9 +293,9 @@ export function InterviewResultPage() {
                 <span className="page-card__label">Next cycle</span>
                 <span className="question-status-badge question-status-badge--accent">Recovery scope</span>
               </div>
-              <h2 className="page-card__title">Turn this review into one explicit next-pass decision</h2>
+              <h2 className="page-card__title">Choose one next-pass decision</h2>
               <p className="page-card__body">
-                Re-run weak branches, revisit skipped evidence, and keep the next session scoped enough that you can tell whether the answer improved or only became longer.
+                Keep the next session narrow enough to see real improvement.
               </p>
               <div className="interview-result-layout__next-pass-signals">
                 <article className="interview-result-layout__next-pass-signal">
@@ -317,7 +314,7 @@ export function InterviewResultPage() {
                 </article>
                 <article className="interview-result-layout__actions-summary-item">
                   <span>Do not do</span>
-                  <strong>Do not restart broad coverage if the unresolved branch is still shallow</strong>
+                  <strong>Do not restart broad coverage if the branch is still shallow</strong>
                 </article>
               </div>
               <div className="interview-result-layout__next-list">
@@ -334,22 +331,22 @@ export function InterviewResultPage() {
                   <span>
                     {skippedFacetCount > 0
                       ? `${skippedFacetCount} skipped facets should return in the next session.`
-                      : "No skipped facets are currently waiting for recovery."}
+                      : "No skipped facets are waiting for recovery."}
                   </span>
                 </div>
                 <div className="interview-result-layout__next-item">
                   <strong>Scope rule</strong>
-                  <span>Keep the next pass narrow enough that branch depth improves, not just answer length.</span>
+                  <span>Keep the next pass narrow enough to improve branch depth.</span>
                 </div>
               </div>
               <div className="interview-result-layout__next-playbook">
                 <article className="interview-result-layout__next-playbook-step">
                   <span>1. Pick one failed area</span>
-                  <strong>Choose either weak recovery or skipped recovery as the dominant goal for the next run</strong>
+                  <strong>Choose weak recovery or skipped recovery as the goal</strong>
                 </article>
                 <article className="interview-result-layout__next-playbook-step">
                   <span>2. Re-enter with evidence</span>
-                  <strong>Bring the missing resume fact, constraint, or metric that the earlier answer could not defend</strong>
+                  <strong>Bring the missing fact, constraint, or metric</strong>
                 </article>
               </div>
               <div className="page-card__actions">
