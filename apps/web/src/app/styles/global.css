@@ -1676,11 +1676,16 @@ button {
 .primary-button {
   background: var(--primary-button-background, var(--accent));
   color: var(--primary-button-text, var(--accent-contrast));
+  border: 1px solid color-mix(in srgb, var(--primary-button-background, var(--accent)) 72%, white 10%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 24px color-mix(in srgb, var(--shadow-soft) 18%, transparent);
 }
 
 .secondary-button {
   border: 1px solid var(--border-soft);
-  background: var(--surface-strong);
+  background: color-mix(in srgb, var(--surface-strong) 84%, var(--surface-soft));
+  color: var(--text-strong);
 }
 
 .auth-form {
@@ -2531,13 +2536,17 @@ button {
   gap: 14px;
   padding: 16px;
   border-radius: 20px;
-  background: var(--surface-soft);
-  border: 1px solid var(--border-soft);
-  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent),
+    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
+  border: 1px solid color-mix(in srgb, var(--border-soft) 88%, transparent);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--shadow-soft) 10%, transparent);
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 .list-item-card:hover {
-  border-color: var(--border-info);
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--border-soft));
+  box-shadow: 0 18px 36px color-mix(in srgb, var(--shadow-soft) 16%, transparent);
 }
 
 .list-item-card:focus-visible {
@@ -7415,11 +7424,12 @@ button {
 .question-tree-workspace-surface {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   background:
-    radial-gradient(circle at top left, rgba(16, 185, 129, 0.18), transparent 38%),
-    radial-gradient(circle at top right, rgba(14, 165, 233, 0.14), transparent 30%),
-    linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
+    radial-gradient(circle at top left, rgba(28, 92, 255, 0.12), transparent 34%),
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(13, 22, 37, 0.98) 0%, rgba(9, 16, 28, 0.98) 100%);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
 }
 
 .practice-workspace-surface__header,
@@ -7478,7 +7488,7 @@ button {
   padding: 16px 18px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 18px;
-  background: rgba(9, 17, 32, 0.72);
+  background: rgba(9, 17, 32, 0.78);
 }
 
 .practice-workspace-surface__stat span,
@@ -7517,7 +7527,7 @@ button {
   padding: 12px 14px;
   border-radius: 16px;
   border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(148, 163, 184, 0.06);
+  background: rgba(148, 163, 184, 0.05);
 }
 
 .practice-workspace-surface__guidance-card span,
@@ -7587,6 +7597,16 @@ button {
 .practice-workflow-note {
   display: grid;
   gap: 14px;
+}
+
+.practice-review-queue-card,
+.practice-workflow-note,
+.practice-focus-summary-card,
+.practice-map-launch-card {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent),
+    rgba(10, 18, 31, 0.9);
 }
 
 .practice-question-list__intro {
@@ -10543,6 +10563,7 @@ button {
 
 .interview-workspace-surface {
   background:
+    radial-gradient(circle at top left, rgba(28, 92, 255, 0.12), transparent 30%),
     linear-gradient(180deg, rgba(14, 23, 39, 0.98), rgba(10, 17, 29, 0.98)),
     #09111d;
   border-color: rgba(255, 255, 255, 0.07);
@@ -10808,7 +10829,9 @@ button {
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 18px;
-  background: rgba(11, 20, 34, 0.92);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent),
+    rgba(11, 20, 34, 0.94);
 }
 
 .interview-workspace-inspector__eyebrow-row {
@@ -10877,9 +10900,12 @@ button {
   width: 100%;
   min-height: 54px;
   font-size: 1rem;
-  background: linear-gradient(90deg, #1c5cff, #6a45ff 55%, #b64ef6);
-  border-color: transparent;
+  background: linear-gradient(135deg, #1c5cff, #2458d6);
+  border-color: rgba(119, 165, 255, 0.2);
   color: #f8fbff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 30px rgba(10, 40, 96, 0.28);
 }
 
 .interview-workspace-deck {
@@ -10890,7 +10916,9 @@ button {
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 18px;
-  background: rgba(10, 18, 31, 0.88);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent),
+    rgba(10, 18, 31, 0.9);
 }
 
 .interview-workspace-deck__metric-row {

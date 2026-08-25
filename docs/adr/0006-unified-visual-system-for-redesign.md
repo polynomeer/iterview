@@ -20,6 +20,7 @@ The shared redesign system will use:
 
 - a minimal dark workspace shell as the default app environment
 - consistent surface gradients and border treatments
+- aligned card hierarchy so primary surfaces, support panels, and list items share the same dark-surface family
 - reusable card, stat, insight, and guidance structures
 - typography tuned for clarity and hierarchy over decoration
 - simplified header density where pages already have strong workspace surfaces
