@@ -162,13 +162,13 @@ Mark each line only when the changed scope is:
 
 ### G1. Shared Surface Patterns
 - [x] Audit top workspace surfaces for repeated CSS that should be shared
-- [ ] Consolidate repeated hero, stat, chip, and muted-note patterns
-- [ ] Reduce per-page one-off styling where the pattern is already stable
+- [x] Consolidate repeated hero, stat, chip, and muted-note patterns
+- [x] Reduce per-page one-off styling where the pattern is already stable
 
 ### G2. Token Discipline
-- [ ] Audit spacing drift
-- [ ] Audit radius drift
-- [ ] Audit border and shadow drift
+- [x] Audit spacing drift
+- [x] Audit radius drift
+- [x] Audit border and shadow drift
 - [ ] Audit accent-color drift
 - [ ] Keep one consistent dark workspace language across all redesigned pages
 

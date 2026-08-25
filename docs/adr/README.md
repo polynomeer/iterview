@@ -50,3 +50,5 @@ Each ADR should include:
    Separates graph-first weak-node remediation from queue-based retry execution.
 12. [`0012-adopt-global-command-palette-for-workspace-navigation.md`](0012-adopt-global-command-palette-for-workspace-navigation.md)
    Adds one keyboard-first, route-independent search and command overlay across the workspace shell.
+13. [`0013-consolidate-workspace-surface-tokens-for-secondary-workspaces.md`](0013-consolidate-workspace-surface-tokens-for-secondary-workspaces.md)
+   Consolidates repeated workspace-surface structure through shared spacing, radius, and card tokens.
