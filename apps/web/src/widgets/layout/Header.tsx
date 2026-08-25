@@ -30,22 +30,29 @@ export function Header() {
     currentUser?.jobRole?.trim() ||
     "Interview profile";
   const profileImageUrl = currentUser?.profile?.profileImageUrl?.trim() ?? "";
+
   return (
-    <header className="app-header">
+    <header className={`app-header${isAuthenticated ? "" : " app-header--guest"}`}>
       <div className="app-header__brand">
         <div>
-          <span className="app-header__eyebrow">Interview Workspace</span>
-          <strong className="app-header__title">Interview Workspace</strong>
+          <span className="app-header__eyebrow">{isAuthenticated ? "Interview Workspace" : "Resume-grounded prep"}</span>
+          <strong className="app-header__title">{isAuthenticated ? "Interview Workspace" : "DFS Interview Practice"}</strong>
         </div>
       </div>
-      <div className="app-header__search">
-        <input
-          aria-label="Search workspace"
-          className="app-header__search-input"
-          placeholder="Search (⌘K)"
-          type="search"
-        />
-      </div>
+      {isAuthenticated ? (
+        <div className="app-header__search">
+          <input
+            aria-label="Search workspace"
+            className="app-header__search-input"
+            placeholder="Search (⌘K)"
+            type="search"
+          />
+        </div>
+      ) : (
+        <p className="app-header__guest-summary">
+          Build your source of truth, then rehearse deep follow-up questions before the interview.
+        </p>
+      )}
       <div className="app-header__actions">
         {isAuthenticated && currentUser ? (
           <>
