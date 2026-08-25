@@ -14,15 +14,39 @@ export function InterviewQuestionTimeline({
   currentQuestionId,
 }: InterviewQuestionTimelineProps) {
   const { t } = useLocale();
+  const answeredCount = items.filter((item) => item.status.toLowerCase() === "answered").length;
+  const skippedCount = items.filter((item) => item.status.toLowerCase() === "skipped").length;
+  const currentIndex = currentQuestionId ? items.findIndex((item) => item.id === currentQuestionId) : -1;
+  const maxDepth = items.reduce((max, item) => Math.max(max, item.depth), 0);
 
   return (
     <section className="page-card interview-timeline-workspace">
-      <div className="section-heading">
-        <div>
-          <p className="section-heading__eyebrow">{t("interview.questionTimelineEyebrow")}</p>
-          <h2 className="page-card__title">{t("interview.questionTimelineTitle")}</h2>
+      <div className="interview-timeline-workspace__header">
+        <div className="section-heading">
+          <div>
+            <p className="section-heading__eyebrow">{t("interview.questionTimelineEyebrow")}</p>
+            <h2 className="page-card__title">{t("interview.questionTimelineTitle")}</h2>
+          </div>
+          <span className="section-heading__count">{items.length}</span>
         </div>
-        <span className="section-heading__count">{items.length}</span>
+        <div className="interview-timeline-workspace__stats">
+          <article className="interview-timeline-workspace__stat">
+            <span>Current step</span>
+            <strong>{currentIndex >= 0 ? `#${currentIndex + 1}` : "Review"}</strong>
+          </article>
+          <article className="interview-timeline-workspace__stat">
+            <span>Answered</span>
+            <strong>{answeredCount}</strong>
+          </article>
+          <article className="interview-timeline-workspace__stat">
+            <span>Skipped</span>
+            <strong>{skippedCount}</strong>
+          </article>
+          <article className="interview-timeline-workspace__stat">
+            <span>Max depth</span>
+            <strong>{maxDepth + 1}</strong>
+          </article>
+        </div>
       </div>
       <p className="page-card__body interview-timeline-workspace__intro">
         Review the branch order, evidence anchors, and generated follow-ups as one continuous defense path rather than isolated prompts.
@@ -31,17 +55,33 @@ export function InterviewQuestionTimeline({
         {items.map((item) => {
           const canOpenQuestion = Boolean(item.questionId);
           const isAiFollowUp = item.sourceType === "ai_follow_up";
+          const normalizedStatus = item.status.toLowerCase();
+          const toneClass =
+            currentQuestionId === item.id
+              ? "interview-timeline-card--current"
+              : normalizedStatus === "answered"
+                ? "interview-timeline-card--answered"
+                : normalizedStatus === "skipped"
+                  ? "interview-timeline-card--skipped"
+                  : "interview-timeline-card--queued";
 
           return (
             <article
-              className={`list-item-card interview-timeline-card ${currentQuestionId === item.id ? "list-item-card--selected" : ""}`}
+              className={`list-item-card interview-timeline-card ${toneClass} ${
+                currentQuestionId === item.id ? "list-item-card--selected" : ""
+              }`}
               id={`session-question-card-${item.id}`}
               key={item.id}
-              style={{ marginLeft: `${item.depth * 16}px` }}
+              style={{ marginLeft: `${item.depth * 18}px` }}
             >
+              <div className="interview-timeline-card__rail" aria-hidden="true">
+                <span className="interview-timeline-card__rail-line" />
+                <span className="interview-timeline-card__rail-node">{item.depth + 1}</span>
+              </div>
               <div className="list-item-card__content">
                 <div className="list-item-card__meta">
                   <span>#{item.orderIndex + 1}</span>
+                  <span>{`Depth ${item.depth + 1}`}</span>
                   <span>{item.difficultyLabel}</span>
                   {item.categoryName ? <span>{item.categoryName}</span> : null}
                   <span>{item.status}</span>

@@ -43,4 +43,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Placeholder branches, fake scores, and duplicate metric summaries should be removed once real session state is available on the page.
 - DFS-oriented surfaces should visually separate current, defended, and queued branches so traversal state is readable before any body copy is read.
 - Result and recovery surfaces should visually distinguish weak recovery, skipped recovery, and safe expansion so the next action is obvious at scan speed.
+- Timeline surfaces should expose traversal order, depth, and branch status together so the interview path reads like a navigable DFS trail rather than a flat history list.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.
