@@ -32,14 +32,14 @@ export function ReviewQueueDesktopLayout({
         <SectionPanel className="review-queue-note-card" variant="muted">
           <div className="review-queue-note-card__header">
             <span className="page-card__label">Queue actions</span>
-            <span className="detail-chip detail-chip--accent">Execution lane</span>
+            <span className="detail-chip detail-chip--accent">Recovery lane</span>
           </div>
           <h2 className="page-card__title">Move items forward intentionally</h2>
           <p className="page-card__body">
-            Use `Practice now` when you have time to answer, `Done` when the follow-up is complete, and `Skip` when you need to defer.
+            Use `Practice now` when you can answer, `Done` when the retry is resolved, and `Skip` when the branch still needs deferment.
           </p>
           <p className="review-queue-note-card__body">
-            Treat this queue as a short operational list, not as another browsing page.
+            Treat this queue as a short recovery list, not as another browsing page.
           </p>
           <div className="review-queue-note-card__rules">
             <div className="review-queue-note-card__rule">

@@ -71,21 +71,28 @@ export function PracticePage() {
 
   return (
     <PageContainer
-      description="Browse the question set, refine it with filters, and jump into the next prompt that matches your practice goal."
+      description="Filter the question set until one prompt is worth a focused DFS answer pass, then enter that branch on purpose."
       eyebrow="Practice"
       introVariant="minimal"
-      title="Practice question discovery"
+      title="Choose the next interview branch"
     >
       <section className="page-card practice-workspace-surface">
         <div className="practice-workspace-surface__header">
           <div className="practice-workspace-surface__intro">
             <div className="practice-workspace-surface__eyebrow-row">
               <span className="page-card__label">Practice workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Discovery mode</span>
+              <span className="question-status-badge question-status-badge--accent">Branch entry</span>
             </div>
+            <p className="practice-workspace-surface__breadcrumbs">
+              Resume signal
+              <span>/</span>
+              DFS branch choice
+              <span>/</span>
+              Retry awareness
+            </p>
             <h2 className="practice-workspace-surface__title">Pick the next branch on purpose</h2>
             <p className="practice-workspace-surface__body">
-              Filter until one question is worth a full answer pass, not another loose click through the catalog.
+              Filter until one question is worth a real defense pass, not another loose click through the catalog.
             </p>
           </div>
           <div className="practice-workspace-surface__stats">
@@ -110,7 +117,11 @@ export function PracticePage() {
         <div className="practice-workspace-surface__guidance">
           <article className="practice-workspace-surface__guidance-card">
             <span>Selection rule</span>
-            <strong>Pick the next question because it sharpens one branch, not because it is simply available.</strong>
+            <strong>Pick the next question because it sharpens one branch.</strong>
+          </article>
+          <article className="practice-workspace-surface__guidance-card">
+            <span>Retry rule</span>
+            <strong>Check recovery pressure before opening fresh practice.</strong>
           </article>
         </div>
         <div className="practice-workspace-surface__chips">
@@ -136,12 +147,12 @@ export function PracticePage() {
         const reviewQueueCard = (
           <SectionPanel className="practice-review-queue-card" variant="muted">
             <div className="practice-review-queue-card__topline">
-              <span className="page-card__label">Review queue</span>
+              <span className="page-card__label">Recovery queue</span>
               <span className="question-status-badge">Retry first</span>
             </div>
-            <h2 className="page-card__title">Need to handle scheduled retries first?</h2>
+            <h2 className="page-card__title">Need to clear weak branches first?</h2>
             <p className="page-card__body">
-              Jump into the review queue to skip or complete items before choosing a fresh practice question.
+              Jump into the review queue before choosing a fresh prompt when the weak branch is already known.
             </p>
             <div className="page-card__actions">
               <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
@@ -157,7 +168,7 @@ export function PracticePage() {
               <span className="page-card__label">DFS focus</span>
               <span className="detail-chip detail-chip--accent">Branch control</span>
             </div>
-            <h2 className="page-card__title">Make one deliberate pick instead of browsing the catalog loosely</h2>
+            <h2 className="page-card__title">Make one deliberate pick instead of browsing loosely</h2>
             <div className="practice-focus-summary-card__stats">
               <article>
                 <span>Weak nodes</span>
@@ -199,7 +210,7 @@ export function PracticePage() {
               <span className="page-card__label">Question map</span>
               <span className="detail-chip">DFS view</span>
             </div>
-            <h2 className="page-card__title">Open the branch map when the next answer depends on follow-up order</h2>
+            <h2 className="page-card__title">Open the branch map when follow-up order matters</h2>
             <p className="page-card__body">
               When one prompt looks important, switch to the tree before answering.
             </p>

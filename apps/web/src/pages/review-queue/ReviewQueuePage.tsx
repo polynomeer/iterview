@@ -141,18 +141,25 @@ export function ReviewQueuePage() {
 
   return (
     <PageContainer
-      description="Work through the retry queue, skip items for later, or mark them done and return to focused practice."
+      description="Resolve the highest-signal retry first, then return to fresh practice with fewer weak branches still open."
       eyebrow="Review Queue"
       introVariant="minimal"
-      title="Review queue"
+      title="Resolve queued retry branches"
     >
       <section className="page-card review-queue-workspace-surface">
         <div className="review-queue-workspace-surface__header">
           <div className="review-queue-workspace-surface__intro">
             <div className="review-queue-workspace-surface__eyebrow-row">
               <span className="page-card__label">Queue workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Action mode</span>
+              <span className="question-status-badge question-status-badge--accent">Recovery execution</span>
             </div>
+            <p className="review-queue-workspace-surface__breadcrumbs">
+              Retry signal
+              <span>/</span>
+              Branch repair
+              <span>/</span>
+              Return to practice
+            </p>
             <h2 className="review-queue-workspace-surface__title">Clear the smallest high-signal retry first</h2>
             <p className="review-queue-workspace-surface__body">
               Finish the retries that unblock the next branch, then return to open practice with fewer vague weak points.
@@ -176,7 +183,11 @@ export function ReviewQueuePage() {
         <div className="review-queue-workspace-surface__guidance">
           <article className="review-queue-workspace-surface__guidance-card">
             <span>Execution rule</span>
-            <strong>Clear the smallest high-signal retry before opening fresh practice work.</strong>
+            <strong>Clear the smallest high-signal retry first.</strong>
+          </article>
+          <article className="review-queue-workspace-surface__guidance-card">
+            <span>Exit rule</span>
+            <strong>Return to fresh practice only after the weak branch is less vague.</strong>
           </article>
         </div>
         <div className="review-queue-workspace-surface__chips">

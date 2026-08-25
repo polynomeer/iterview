@@ -63,11 +63,11 @@ export function PracticeDesktopLayout({
             <SectionPanel className="workspace-note-card practice-workflow-note" variant="muted">
               <div className="practice-workflow-note__topline">
                 <span className="page-card__label">Practice workflow</span>
-                <span className="detail-chip">Control rail</span>
+                <span className="detail-chip">Entry rail</span>
               </div>
-              <h2 className="page-card__title">Filter once, then move through the queue with less branching</h2>
+              <h2 className="page-card__title">Reduce noise, then enter one branch</h2>
               <p className="page-card__body">
-                Keep retry pressure and filters visible in one side rail while the main column stays focused on picking the next question.
+                Keep retry pressure and filters visible while the main column stays focused on one defendable next question.
               </p>
               <div className="practice-workflow-note__steps">
                 <div className="practice-workflow-note__step">
