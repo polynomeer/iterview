@@ -53,6 +53,21 @@ export function ProfilePage() {
   const scoreThresholdLabel = targetScoreThreshold ? `${targetScoreThreshold}%` : "Not set";
   const languageLabel = preferredLanguage === "ko" ? "Korean" : "English";
   const roleLabel = currentProfile?.jobRole ?? "Not set";
+  const experienceYears = Number(yearsOfExperience || currentProfile?.yearsOfExperience || "0");
+  const currentCompanyLabel = targetCompanies[0] ?? "Dreamus";
+  const targetRoleLabel =
+    experienceYears >= 7 ? "Staff Backend Engineer" : experienceYears >= 4 ? "Senior Backend Engineer" : "Backend Engineer";
+  const readinessTopics = [
+    { label: "Backend depth", score: 92 },
+    { label: "Problem solving", score: 85 },
+    { label: "Distributed systems", score: 78 },
+    { label: "Communication", score: 75 },
+  ];
+  const relatedQuestions = [
+    { title: "Design a high-throughput settlement system.", score: 85, label: "System Design" },
+    { title: "How would you ensure idempotency in transaction processing?", score: 82, label: "System Design" },
+    { title: "Why did you choose Kafka for audit logs?", score: 80, label: "Behavioral" },
+  ];
 
   useEffect(() => {
     if (!currentUserQuery.data) {
@@ -218,6 +233,60 @@ export function ProfilePage() {
                 profile={profileModel}
               />
             );
+            const overviewCard = (
+              <SectionPanel className="career-context-overview-card" variant="muted">
+                <div className="career-context-overview-card__header">
+                  <div>
+                    <span className="page-card__label">Career context snapshot</span>
+                    <h2 className="page-card__title">Keep your current role, target role, and company focus visible at a glance</h2>
+                    <p className="page-card__body">
+                      This should read like the top of an interview workspace, not an account form. The goal is to
+                      keep your professional story legible before you jump into editing or practice.
+                    </p>
+                  </div>
+                  <span className="detail-chip detail-chip--accent">Context map</span>
+                </div>
+                <div className="career-context-overview-card__metrics">
+                  <article className="career-context-overview-card__metric">
+                    <span>Current role</span>
+                    <strong>{roleLabel}</strong>
+                    <p>{currentCompanyLabel}</p>
+                  </article>
+                  <article className="career-context-overview-card__metric">
+                    <span>Experience</span>
+                    <strong>{experienceYears > 0 ? `${experienceYears.toFixed(1)}` : "0.0"}</strong>
+                    <p>Years</p>
+                  </article>
+                  <article className="career-context-overview-card__metric">
+                    <span>Target role</span>
+                    <strong>{targetRoleLabel}</strong>
+                    <p>Next level</p>
+                  </article>
+                  <article className="career-context-overview-card__metric">
+                    <span>Target companies</span>
+                    <strong>{targetCompanies.length}</strong>
+                    <p>{targetCompanies.length > 0 ? targetCompanies.slice(0, 3).join(" · ") : "No companies yet"}</p>
+                  </article>
+                </div>
+                <div className="career-context-overview-card__readiness">
+                  <div className="career-context-overview-card__readiness-summary">
+                    <span className="page-card__label">Interview readiness by topic</span>
+                    <p>Use this as a context layer for the rest of the page so strengths and weak areas are visible before editing settings.</p>
+                  </div>
+                  <div className="career-context-overview-card__bars">
+                    {readinessTopics.map((topic) => (
+                      <div className="career-context-overview-card__bar-row" key={topic.label}>
+                        <span>{topic.label}</span>
+                        <div className="career-context-overview-card__bar-track">
+                          <div className="career-context-overview-card__bar-fill" style={{ width: `${topic.score}%` }} />
+                        </div>
+                        <strong>{topic.score}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </SectionPanel>
+            );
             const resumeCard = (
               <SectionPanel className="profile-workspace-card" variant="muted">
                 <div className="profile-workspace-card__header">
@@ -263,6 +332,52 @@ export function ProfilePage() {
                       </Link>
                     </div>
                   </div>
+                </div>
+              </SectionPanel>
+            );
+            const contextRailCard = (
+              <SectionPanel className="career-context-detail-rail" variant="muted">
+                <div className="career-context-detail-rail__header">
+                  <div>
+                    <span className="page-card__label">Project detail</span>
+                    <h2 className="page-card__title">Dreamus Settlement System</h2>
+                  </div>
+                  <span className="detail-chip">Featured project</span>
+                </div>
+                <div className="career-context-detail-rail__meta">
+                  <strong>{roleLabel}</strong>
+                  <span>{experienceYears > 0 ? `${Math.max(1, Math.round(experienceYears * 12))} months of active context` : "Current context"}</span>
+                </div>
+                <p className="page-card__body">
+                  Use one representative project as the source of truth anchor for why your backend decisions, trade-offs,
+                  and follow-up answers are credible.
+                </p>
+                <div className="career-context-detail-rail__section">
+                  <span className="career-context-detail-rail__label">Key contributions</span>
+                  <div className="career-context-detail-rail__list">
+                    <div>Designed scalable transaction processing architecture.</div>
+                    <div>Implemented idempotent flows and operational audit logging.</div>
+                    <div>Improved system reliability with queue-backed recovery patterns.</div>
+                  </div>
+                </div>
+                <div className="career-context-detail-rail__section">
+                  <span className="career-context-detail-rail__label">Related interview questions</span>
+                  <div className="career-context-detail-rail__questions">
+                    {relatedQuestions.map((question) => (
+                      <article className="career-context-detail-rail__question" key={question.title}>
+                        <div>
+                          <strong>{question.title}</strong>
+                          <span>{question.label}</span>
+                        </div>
+                        <b>{question.score}</b>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+                <div className="page-card__actions">
+                  <Link className="primary-button" to={routeConfig.practice.buildPath()}>
+                    Practice this context
+                  </Link>
                 </div>
               </SectionPanel>
             );
@@ -336,6 +451,8 @@ export function ProfilePage() {
             if (!isDesktop) {
               return (
                 <ProfileMobileLayout
+                  contextRailCard={contextRailCard}
+                  overviewCard={overviewCard}
                   profileForm={profileForm}
                   resumeCard={resumeCard}
                   settingsForm={settingsForm}
@@ -348,6 +465,8 @@ export function ProfilePage() {
 
             return (
               <ProfileDesktopLayout
+                contextRailCard={contextRailCard}
+                overviewCard={overviewCard}
                 profileForm={profileForm}
                 resumeCard={resumeCard}
                 settingsForm={settingsForm}

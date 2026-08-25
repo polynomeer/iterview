@@ -7707,6 +7707,164 @@ button {
   border-style: dashed;
 }
 
+.career-context-overview-card,
+.career-context-detail-rail {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.career-context-overview-card {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.career-context-overview-card__header,
+.career-context-overview-card__readiness,
+.career-context-detail-rail__header,
+.career-context-detail-rail__section {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.career-context-overview-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.career-context-overview-card__metric {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.05rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.career-context-overview-card__metric span,
+.career-context-overview-card__readiness-summary .page-card__label,
+.career-context-detail-rail__label {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.career-context-overview-card__metric strong {
+  color: #f8fafc;
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.career-context-overview-card__metric p,
+.career-context-overview-card__readiness-summary p,
+.career-context-detail-rail__meta span {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.7);
+  line-height: 1.55;
+}
+
+.career-context-overview-card__bars {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.career-context-overview-card__bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(6rem, 1.6fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.career-context-overview-card__bar-row span {
+  color: #f8fafc;
+  font-size: 0.92rem;
+}
+
+.career-context-overview-card__bar-row strong {
+  color: rgba(226, 232, 240, 0.86);
+  font-size: 0.9rem;
+}
+
+.career-context-overview-card__bar-track {
+  height: 0.52rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.career-context-overview-card__bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(96, 165, 250, 0.92), rgba(52, 211, 153, 0.92));
+}
+
+.career-context-detail-rail {
+  display: grid;
+  gap: 1rem;
+}
+
+.career-context-detail-rail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  align-items: center;
+}
+
+.career-context-detail-rail__meta strong {
+  color: #f8fafc;
+  font-size: 1rem;
+}
+
+.career-context-detail-rail__list,
+.career-context-detail-rail__questions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.career-context-detail-rail__list div,
+.career-context-detail-rail__question {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.career-context-detail-rail__question {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.career-context-detail-rail__question strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #f8fafc;
+  line-height: 1.45;
+}
+
+.career-context-detail-rail__question span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.career-context-detail-rail__question b {
+  display: grid;
+  place-items: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: 0.9rem;
+  background: rgba(16, 185, 129, 0.14);
+  color: #86efac;
+}
+
 .profile-section-cluster {
   position: relative;
   overflow: hidden;
