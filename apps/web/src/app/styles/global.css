@@ -1,6 +1,12 @@
 :root {
   color-scheme: var(--theme-color-scheme);
-  font-family: "Segoe UI", sans-serif;
+  font-family:
+    Inter,
+    "SF Pro Display",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color: var(--text-main);
@@ -36,6 +42,7 @@
   --border-danger: rgba(180, 35, 24, 0.14);
   --border-success: rgba(15, 118, 110, 0.14);
   --text-main: #16202a;
+  --text-strong: #0f172a;
   --text-muted: #5f6b7a;
   --text-inverse: #f8fffe;
   --text-info: #103b52;
@@ -13740,6 +13747,322 @@ button {
   .notes-insight-surface__stats,
   .practical-review-insight-surface__stats,
   .question-detail-insight-surface__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Final redesign overrides: simplify contrast, reduce card heaviness, and unify workspace surfaces. */
+.app-shell {
+  background:
+    radial-gradient(circle at top left, rgba(148, 163, 184, 0.16), transparent 24%),
+    linear-gradient(180deg, #eef2f6 0%, #f7f4ed 44%, #f3efe6 100%);
+  color: var(--text-strong);
+}
+
+.app-shell__workspace {
+  padding: 24px 28px 48px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.72), transparent 32%),
+    linear-gradient(180deg, rgba(250, 248, 244, 0.94), rgba(243, 238, 228, 0.98));
+}
+
+.sidebar-navigation {
+  padding: 28px 20px 22px;
+}
+
+.sidebar-navigation__title {
+  font-size: 1.85rem;
+  font-weight: 750;
+  letter-spacing: -0.05em;
+}
+
+.sidebar-navigation__summary {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  max-width: 20ch;
+}
+
+.sidebar-navigation__link {
+  min-height: 48px;
+  padding: 12px 14px;
+}
+
+.page-container__intro {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+.page-container__eyebrow {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(15, 23, 42, 0.08);
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.page-container__title {
+  color: #101828;
+}
+
+.page-container__description {
+  color: rgba(71, 85, 105, 0.92);
+}
+
+.interview-session-history__item,
+.page-card,
+.list-item-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+.page-card__body,
+.list-item-card__body,
+.list-item-card__meta,
+.metric-card__helper,
+.metric-card__label,
+.section-heading__eyebrow {
+  color: rgba(71, 85, 105, 0.88);
+}
+
+.metric-card {
+  background: rgba(248, 250, 252, 0.94);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.question-status-badge,
+.page-card__label,
+.detail-chip,
+.insight-card__chip {
+  background: rgba(245, 247, 250, 0.94);
+  border-color: rgba(15, 23, 42, 0.08);
+  color: rgba(51, 65, 85, 0.9);
+}
+
+.question-status-badge--positive {
+  color: #0f766e;
+}
+
+.question-status-badge--accent {
+  color: #a16207;
+}
+
+.workspace-continuity-rail {
+  gap: 1.4rem;
+  padding: 1.4rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background:
+    radial-gradient(circle at top right, rgba(161, 98, 7, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(249, 247, 242, 0.96) 100%);
+}
+
+.workspace-continuity-rail__surface {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.workspace-continuity-rail__surface:hover,
+.workspace-continuity-rail__surface--current {
+  border-color: rgba(161, 98, 7, 0.22);
+}
+
+.workspace-continuity-rail__surface--current {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 240, 0.96) 0%, rgba(255, 255, 255, 0.98) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.workspace-continuity-rail__status {
+  background: rgba(241, 245, 249, 0.92);
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.workspace-continuity-rail__status--current {
+  background: rgba(161, 98, 7, 0.12);
+  color: #92400e;
+}
+
+.workspace-continuity-rail__status--next {
+  background: rgba(15, 118, 110, 0.12);
+  color: #0f766e;
+}
+
+.practice-workspace-surface,
+.question-tree-workspace-surface,
+.review-queue-workspace-surface,
+.archive-workspace-surface,
+.home-workspace-surface,
+.feed-workspace-surface,
+.profile-workspace-surface,
+.resume-workspace-surface {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background:
+    radial-gradient(circle at top left, rgba(148, 163, 184, 0.14), transparent 32%),
+    radial-gradient(circle at top right, rgba(161, 98, 7, 0.08), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(249, 247, 242, 0.98) 100%);
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.07);
+}
+
+.practice-workspace-surface::after,
+.question-tree-workspace-surface::after,
+.review-queue-workspace-surface::after,
+.archive-workspace-surface::after,
+.home-workspace-surface::after,
+.feed-workspace-surface::after,
+.profile-workspace-surface::after,
+.resume-workspace-surface::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 22%);
+}
+
+.practice-workspace-surface__breadcrumbs,
+.question-tree-workspace-surface__breadcrumbs,
+.review-queue-workspace-surface__breadcrumbs,
+.archive-workspace-surface__breadcrumbs,
+.home-workspace-surface__breadcrumbs,
+.feed-workspace-surface__breadcrumbs,
+.profile-workspace-surface__breadcrumbs,
+.resume-workspace-surface__breadcrumbs {
+  color: rgba(100, 116, 139, 0.88);
+}
+
+.practice-workspace-surface__title,
+.question-tree-workspace-surface__title,
+.review-queue-workspace-surface__title,
+.archive-workspace-surface__title,
+.home-workspace-surface__title,
+.feed-workspace-surface__title,
+.profile-workspace-surface__title,
+.resume-workspace-surface__title {
+  font-size: clamp(1.7rem, 2.3vw, 2.35rem);
+  line-height: 1.08;
+  color: #101828;
+}
+
+.practice-workspace-surface__body,
+.question-tree-workspace-surface__body,
+.review-queue-workspace-surface__body,
+.archive-workspace-surface__body,
+.home-workspace-surface__body,
+.feed-workspace-surface__body,
+.profile-workspace-surface__body,
+.resume-workspace-surface__body {
+  color: rgba(71, 85, 105, 0.92);
+}
+
+.practice-workspace-surface__stat,
+.question-tree-workspace-surface__stat,
+.review-queue-workspace-surface__stat,
+.archive-workspace-surface__stat,
+.home-workspace-surface__stat,
+.feed-workspace-surface__stat,
+.profile-workspace-surface__stat,
+.resume-workspace-surface__stat,
+.practice-workspace-surface__guidance-card,
+.question-tree-workspace-surface__guidance-card,
+.home-workspace-surface__guidance-card,
+.practice-review-queue-card,
+.practice-workflow-note,
+.practice-focus-summary-card,
+.practice-map-launch-card,
+.practice-list-item-card,
+.question-tree-root-brief {
+  border-color: rgba(15, 23, 42, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent),
+    rgba(255, 255, 255, 0.9);
+  box-shadow: none;
+}
+
+.practice-workspace-surface__stat span,
+.question-tree-workspace-surface__stat span,
+.review-queue-workspace-surface__stat span,
+.archive-workspace-surface__stat span,
+.home-workspace-surface__stat span,
+.feed-workspace-surface__stat span,
+.profile-workspace-surface__stat span,
+.resume-workspace-surface__stat span,
+.practice-workspace-surface__guidance-card span,
+.question-tree-workspace-surface__guidance-card span,
+.home-workspace-surface__guidance-card span {
+  color: rgba(100, 116, 139, 0.9);
+}
+
+.practice-workspace-surface__stat strong,
+.question-tree-workspace-surface__stat strong,
+.review-queue-workspace-surface__stat strong,
+.archive-workspace-surface__stat strong,
+.home-workspace-surface__stat strong,
+.feed-workspace-surface__stat strong,
+.profile-workspace-surface__stat strong,
+.resume-workspace-surface__stat strong,
+.practice-workspace-surface__guidance-card strong,
+.question-tree-workspace-surface__guidance-card strong,
+.home-workspace-surface__guidance-card strong {
+  color: #101828;
+}
+
+.guest-home__hero {
+  border-color: rgba(15, 23, 42, 0.08);
+  background:
+    radial-gradient(circle at top right, rgba(148, 163, 184, 0.16), transparent 26%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
+  box-shadow: 0 24px 54px rgba(15, 23, 42, 0.12);
+}
+
+.guest-home__title {
+  max-width: 12ch;
+  font-size: clamp(2rem, 3.2vw, 3.35rem);
+  line-height: 1.02;
+  color: #f8fafc;
+}
+
+.guest-home__body {
+  color: rgba(226, 232, 240, 0.84);
+}
+
+.guest-home__metric,
+.guest-home__card {
+  border-color: rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(15, 23, 42, 0.82));
+}
+
+.guest-home__metric-label {
+  color: rgba(191, 201, 219, 0.72);
+}
+
+.guest-home__metric-value {
+  color: #f8fafc;
+}
+
+.guest-home__card .page-card__title {
+  color: #f8fafc;
+}
+
+.guest-home__card .page-card__body {
+  color: rgba(226, 232, 240, 0.78);
+}
+
+@media (max-width: 1023px) {
+  .app-shell__workspace {
+    padding: 18px 16px 34px;
+  }
+
+  .workspace-continuity-rail {
+    padding: 1.1rem;
+  }
+
+  .practice-workspace-surface__title,
+  .question-tree-workspace-surface__title,
+  .review-queue-workspace-surface__title,
+  .archive-workspace-surface__title,
+  .home-workspace-surface__title,
+  .feed-workspace-surface__title,
+  .profile-workspace-surface__title,
+  .resume-workspace-surface__title {
+    font-size: 1.55rem;
+  }
+
+  .guest-home__metrics,
+  .guest-home__grid {
     grid-template-columns: 1fr;
   }
 }
