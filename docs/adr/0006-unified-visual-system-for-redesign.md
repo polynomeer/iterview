@@ -39,4 +39,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Interview workspace entry should keep a single primary surface and move session configuration into one dedicated setup surface instead of repeating the same launch context across separate hero, rail, and snapshot sections.
 - Deprecated page-specific scaffolding should be deleted once the replacement workspace pattern is verified, rather than left behind as dormant CSS.
 - Session and result screens should collapse repeated advisory panels into one or two decisive support surfaces instead of scattering the same recovery guidance across separate insight, brief, and rail cards.
+- Placeholder branches, fake scores, and duplicate metric summaries should be removed once real session state is available on the page.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.

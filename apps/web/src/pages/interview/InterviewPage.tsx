@@ -618,59 +618,6 @@ export function InterviewPage() {
               </aside>
             </div>
 
-            <div className="interview-workspace-deck">
-              <section className="interview-workspace-deck__card">
-                <div className="section-heading">
-                  <div>
-                    <p className="section-heading__eyebrow">Today&apos;s Path</p>
-                    <h3 className="page-card__title">Likely opening lanes</h3>
-                  </div>
-                  <span className="section-heading__count">2</span>
-                </div>
-                <div className="stack-list">
-                  <article className="list-item-card">
-                    <div className="list-item-card__content">
-                      <h4 className="list-item-card__title">Transaction Isolation</h4>
-                      <p className="list-item-card__body">Retry branch · Score 70</p>
-                    </div>
-                    <span className="question-status-badge question-status-badge--accent">Retry</span>
-                  </article>
-                  <article className="list-item-card">
-                    <div className="list-item-card__content">
-                      <h4 className="list-item-card__title">JVM Garbage Collection</h4>
-                      <p className="list-item-card__body">New branch</p>
-                    </div>
-                    <span className="question-status-badge question-status-badge--neutral">New</span>
-                  </article>
-                </div>
-              </section>
-
-              <section className="interview-workspace-deck__card">
-                <div className="section-heading">
-                  <div>
-                    <p className="section-heading__eyebrow">Weak Areas</p>
-                    <h3 className="page-card__title">Nodes that still collapse under follow-ups</h3>
-                  </div>
-                </div>
-                <div className="stack-list">
-                  {[
-                    ["Concurrency", 52],
-                    ["JVM", 63],
-                    ["Network", 65],
-                    ["Kafka", 60],
-                  ].map(([label, score]) => (
-                    <article className="list-item-card interview-workspace-deck__metric-row" key={label}>
-                      <span>{label}</span>
-                      <div className="interview-workspace-deck__bar">
-                        <span style={{ width: `${score}%` }} />
-                      </div>
-                      <strong>{score}</strong>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            </div>
-
             <section className="interview-workspace-deck__card interview-workspace-deck__card--history">
               <div className="section-heading">
                 <div>

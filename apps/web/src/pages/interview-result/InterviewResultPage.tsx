@@ -9,7 +9,6 @@ import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
-import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { useLocale } from "../../shared/i18n";
 import { InterviewFullCoverageResultView } from "../../widgets/interview";
@@ -119,51 +118,6 @@ export function InterviewResultPage() {
         ? "Weak-branch recovery"
         : "Skipped-facet recovery"
       : "Adjacent branch expansion";
-  const resultSnapshotItems = [
-    {
-      label: "Next pass shape",
-      value:
-        unresolvedBranchCount > 0
-          ? "Run a narrow recovery pass before opening breadth again"
-          : "Move to an adjacent branch while keeping evidence depth high",
-    },
-    {
-      label: "Recovery pressure",
-      value:
-        weakFacetCount > 0
-          ? `${weakFacetCount} weak branch${weakFacetCount > 1 ? "es" : ""} still fail under follow-up pressure`
-          : "No weak branches are currently forcing a retry",
-    },
-    {
-      label: "Skipped debt",
-      value:
-        skippedFacetCount > 0
-          ? `${skippedFacetCount} skipped facet${skippedFacetCount > 1 ? "s are" : " is"} waiting for the next pass`
-          : "No skipped facets are carrying over into the next run",
-    },
-  ] as const;
-  const actionChecklistItems = [
-    {
-      label: "Primary target",
-      value:
-        weakFacetCount > 0
-          ? "Start with weak branch recovery."
-          : skippedFacetCount > 0
-            ? "Start with skipped facet recovery."
-            : "Open one neighboring branch with the same evidence discipline.",
-    },
-    {
-      label: "Required input",
-      value:
-        unresolvedBranchCount > 0
-          ? "Bring the missing metric, constraint, or source-of-truth sentence before restarting."
-          : "Bring one sharper resume fact so the next branch still gets narrower under pressure.",
-    },
-    {
-      label: "Stop condition",
-      value: "Do not broaden scope until the reopened branch becomes concrete enough to resist another follow-up.",
-    },
-  ] as const;
 
   return (
     <PageContainer
@@ -217,14 +171,6 @@ export function InterviewResultPage() {
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
-          <div className="interview-result-workspace-surface__snapshot">
-            {resultSnapshotItems.map((item) => (
-              <article className="interview-result-workspace-surface__snapshot-card" key={item.label}>
-                <span>{item.label}</span>
-                <strong>{item.value}</strong>
-              </article>
-            ))}
-          </div>
           <div className="interview-result-workspace-surface__guidance">
             <article className="interview-result-workspace-surface__guidance-card">
               <span>Keep</span>
@@ -243,27 +189,6 @@ export function InterviewResultPage() {
           </div>
           <h2 className="page-card__title">Session {sessionId}</h2>
           <p className="page-card__body">{t("result.summaryBody")}</p>
-          <div className="stats-grid">
-            <MetricCard label={t("result.questions")} tone="muted" value={String(session.summary.totalQuestions)} />
-            <MetricCard label={t("result.answered")} tone="accent" value={String(answeredCount)} />
-            <MetricCard label={t("result.skipped")} tone="muted" value={String(skippedCount)} />
-            <MetricCard label={t("result.status")} tone="muted" value={session.status} />
-            <MetricCard label={t("result.averageScore")} tone="muted" value={averageScoreLabel} />
-          </div>
-          <div className="interview-result-layout__hero-supporting">
-            <article className="interview-result-layout__hero-supporting-item">
-              <span>Branch state</span>
-              <strong>{session.status}</strong>
-            </article>
-            <article className="interview-result-layout__hero-supporting-item">
-              <span>Weak recovery</span>
-              <strong>{weakFacetCount}</strong>
-            </article>
-            <article className="interview-result-layout__hero-supporting-item">
-              <span>Skipped recovery</span>
-              <strong>{skippedFacetCount}</strong>
-            </article>
-          </div>
           <div className="interview-result-layout__hero-decision">
             <article className="interview-result-layout__hero-decision-item">
               <span>Primary recovery</span>
@@ -426,14 +351,6 @@ export function InterviewResultPage() {
                   <span>2. Re-enter with evidence</span>
                   <strong>Bring the missing resume fact, constraint, or metric that the earlier answer could not defend</strong>
                 </article>
-              </div>
-              <div className="interview-result-layout__actions-checklist">
-                {actionChecklistItems.map((item) => (
-                  <article className="interview-result-layout__actions-checklist-item" key={item.label}>
-                    <span>{item.label}</span>
-                    <strong>{item.value}</strong>
-                  </article>
-                ))}
               </div>
               <div className="page-card__actions">
                 <Link className="primary-button" to={routeConfig.interview.buildPath()}>

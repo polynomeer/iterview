@@ -167,23 +167,6 @@ export function InterviewSessionPage() {
           : canAdvance
             ? "Branch ready to move"
             : "Defend this node first";
-  const branchSnapshotItems = [
-    {
-      label: "Current branch",
-      value: currentQuestion.isFollowUp ? "Generated follow-up under defense" : "Root claim under defense",
-    },
-    {
-      label: "Next unlock",
-      value: canAdvance ? "Branch can reveal the next node" : "Answer or skip must close this node first",
-    },
-    {
-      label: "Recovery signal",
-      value:
-        weakFacetCount > 0
-          ? `${weakFacetCount} weak facet${weakFacetCount > 1 ? "s" : ""} still need a tighter answer`
-          : "No weak facets are forcing a retry right now",
-    },
-  ] as const;
   const statusRailItems = [
     {
       key: "question",
@@ -348,14 +331,6 @@ export function InterviewSessionPage() {
             ) : null}
             {activeSession.startedAt ? <span className="detail-chip">{activeSession.startedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
-          </div>
-          <div className="interview-session-workspace-surface__snapshot">
-            {branchSnapshotItems.map((item) => (
-              <article className="interview-session-workspace-surface__snapshot-card" key={item.label}>
-                <span>{item.label}</span>
-                <strong>{item.value}</strong>
-              </article>
-            ))}
           </div>
           <div className="interview-session-workspace-surface__guidance">
             <article className="interview-session-workspace-surface__guidance-card">
@@ -570,20 +545,6 @@ export function InterviewSessionPage() {
               <p className="page-card__body">
                 Answer, skip, or advance deliberately. This panel should feel like the execution surface for the branch you are currently defending.
               </p>
-              <div className="interview-session-answer-surface__summary">
-                <article className="interview-session-answer-surface__summary-card">
-                  <span>Draft chars</span>
-                  <strong>{trimmedDraftLength}</strong>
-                </article>
-                <article className="interview-session-answer-surface__summary-card">
-                  <span>Advance state</span>
-                  <strong>{canAdvance ? "Unlocked" : "Blocked"}</strong>
-                </article>
-                <article className="interview-session-answer-surface__summary-card">
-                  <span>Remaining nodes</span>
-                  <strong>{activeSession.summary.remainingQuestions}</strong>
-                </article>
-              </div>
               <div className="interview-session-answer-surface__draft-status">
                 <article className="interview-session-answer-surface__draft-status-card">
                   <span>Draft checkpoint</span>

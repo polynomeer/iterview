@@ -8260,19 +8260,11 @@ button {
   gap: 10px;
 }
 
-.interview-result-layout__hero-supporting {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
 .interview-result-workspace-surface__guidance,
 .interview-result-layout__hero-decision,
 .interview-result-layout__next-pass-signals,
 .interview-result-layout__next-playbook,
-.interview-result-layout__actions-summary,
-.interview-result-workspace-surface__snapshot,
-.interview-result-layout__actions-checklist {
+.interview-result-layout__actions-summary {
   display: grid;
   gap: 10px;
 }
@@ -8280,23 +8272,15 @@ button {
 .interview-result-workspace-surface__guidance,
 .interview-result-layout__hero-decision,
 .interview-result-layout__next-pass-signals,
-.interview-result-layout__actions-summary,
-.interview-result-layout__actions-checklist {
+.interview-result-layout__actions-summary {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.interview-result-workspace-surface__snapshot {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.interview-result-layout__hero-supporting-item,
 .interview-result-workspace-surface__guidance-card,
 .interview-result-layout__hero-decision-item,
 .interview-result-layout__next-pass-signal,
 .interview-result-layout__next-playbook-step,
-.interview-result-layout__actions-summary-item,
-.interview-result-workspace-surface__snapshot-card,
-.interview-result-layout__actions-checklist-item {
+.interview-result-layout__actions-summary-item {
   display: grid;
   gap: 4px;
   padding: 12px 14px;
@@ -8305,15 +8289,12 @@ button {
   background: rgba(148, 163, 184, 0.06);
 }
 
-.interview-result-layout__hero-supporting-item span,
 .interview-result-layout__next-note,
 .interview-result-workspace-surface__guidance-card span,
 .interview-result-layout__hero-decision-item span,
 .interview-result-layout__next-pass-signal span,
 .interview-result-layout__next-playbook-step span,
-.interview-result-layout__actions-summary-item span,
-.interview-result-workspace-surface__snapshot-card span,
-.interview-result-layout__actions-checklist-item span {
+.interview-result-layout__actions-summary-item span {
   margin: 0;
   color: var(--text-subtle);
   font-size: 0.76rem;
@@ -8321,14 +8302,11 @@ button {
   text-transform: uppercase;
 }
 
-.interview-result-layout__hero-supporting-item strong,
 .interview-result-workspace-surface__guidance-card strong,
 .interview-result-layout__hero-decision-item strong,
 .interview-result-layout__next-pass-signal strong,
 .interview-result-layout__next-playbook-step strong,
-.interview-result-layout__actions-summary-item strong,
-.interview-result-workspace-surface__snapshot-card strong,
-.interview-result-layout__actions-checklist-item strong {
+.interview-result-layout__actions-summary-item strong {
   color: var(--text-main);
   font-size: 1rem;
   letter-spacing: -0.03em;
@@ -8635,7 +8613,6 @@ button {
   gap: 10px;
 }
 
-.interview-session-workspace-surface__snapshot,
 .interview-session-answer-surface__draft-status {
   display: grid;
   gap: 12px;
@@ -8661,7 +8638,6 @@ button {
   margin-top: 24px;
 }
 
-.interview-session-workspace-surface__snapshot-card,
 .interview-session-answer-surface__draft-status-card {
   display: grid;
   gap: 6px;
@@ -8671,7 +8647,6 @@ button {
   background: rgba(8, 15, 29, 0.58);
 }
 
-.interview-session-workspace-surface__snapshot-card span,
 .interview-session-answer-surface__draft-status-card span {
   color: rgba(148, 163, 184, 0.84);
   font-size: 0.76rem;
@@ -8679,7 +8654,6 @@ button {
   text-transform: uppercase;
 }
 
-.interview-session-workspace-surface__snapshot-card strong,
 .interview-session-answer-surface__draft-status-card strong {
   color: #f8fafc;
   line-height: 1.45;
@@ -8844,34 +8818,6 @@ button {
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-}
-
-.interview-session-answer-surface__summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.interview-session-answer-surface__summary-card {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(8, 15, 29, 0.52);
-}
-
-.interview-session-answer-surface__summary-card span {
-  color: rgba(148, 163, 184, 0.82);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-session-answer-surface__summary-card strong {
-  color: #f8fafc;
-  font-size: 1.1rem;
-  letter-spacing: -0.03em;
 }
 
 .interview-session-answer-surface__guidance {
@@ -9902,10 +9848,6 @@ button {
     width: min(100%, 320px);
   }
 
-  .interview-result-layout__hero-supporting {
-    grid-template-columns: 1fr;
-  }
-
   .interview-session-layout {
     gap: 22px;
   }
@@ -10625,27 +10567,6 @@ button {
   grid-column: 1 / -1;
 }
 
-.interview-workspace-deck__metric-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-}
-
-.interview-workspace-deck__bar {
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
-  overflow: hidden;
-}
-
-.interview-workspace-deck__bar span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #ff8c4d, #f5bf58);
-}
-
 .interview-launch-setup-surface {
   display: grid;
   gap: 20px;
@@ -11356,8 +11277,6 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .interview-session-workspace-surface__snapshot,
-  .interview-result-workspace-surface__snapshot,
   .interview-session-workspace-surface__guidance,
   .interview-result-workspace-surface__guidance,
   .interview-session-current__summary,
@@ -11365,11 +11284,9 @@ button {
   .interview-session-answer-surface__draft-status,
   .interview-session-answer-surface__guidance,
   .interview-session-answer-surface__playbook,
-  .interview-session-answer-surface__summary,
   .interview-result-layout__hero-decision,
   .interview-result-layout__next-pass-signals,
-  .interview-result-layout__actions-summary,
-  .interview-result-layout__actions-checklist {
+  .interview-result-layout__actions-summary {
     grid-template-columns: 1fr;
   }
 
