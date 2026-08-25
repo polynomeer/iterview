@@ -105,22 +105,21 @@ describe("InterviewPage", () => {
 
     expect(screen.getByText("Session history")).toBeInTheDocument();
     expect(screen.getByText("Resume Mock session")).toBeInTheDocument();
-    expect(
-      screen.getByText("Choose the resume version and language context for this mock"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Current branch target")).toBeInTheDocument();
-    expect(screen.getByText("Start with one scoped branch before broadening coverage")).toBeInTheDocument();
-    expect(screen.getByText("Resume version is locked before the next DFS pass starts")).toBeInTheDocument();
-    expect(screen.getByText("Today's recovery")).toBeInTheDocument();
-    expect(screen.getByText("Jump to weakest branch")).toBeInTheDocument();
+    expect(screen.getByText("Lock one resume version, pick one branch, then start with a clear traversal mode.")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Open session setup" }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("Use one resume version per run.")).toBeInTheDocument();
+    expect(screen.getByText("Pick scope first, then start.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Inspect weakest branch" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Start Interview" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Open session setup" })[0]);
 
     expect(screen.getByText("Select one resume version")).toBeInTheDocument();
     expect(
       screen.getAllByRole("button", { name: /Backend Platform Resume/i }).length,
     ).toBeGreaterThanOrEqual(2);
     expect(screen.getByText("Start the resume-grounded interview")).toBeInTheDocument();
+    expect(screen.getByText("Choose the traversal first")).toBeInTheDocument();
+    expect(screen.getByText("One run, one source of truth.")).toBeInTheDocument();
     expect(screen.getAllByText("Full coverage").length).toBeGreaterThanOrEqual(1);
 
     fireEvent.click(screen.getByRole("button", { name: /Full coverage/i }));

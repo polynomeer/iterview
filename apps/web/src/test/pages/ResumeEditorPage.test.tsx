@@ -400,8 +400,10 @@ describe("ResumeEditorPage", () => {
       { route: "/resume-versions/version-1/editor" },
     );
 
-    expect(screen.getByText("Resume editor workspace")).toBeInTheDocument();
-    expect(screen.getByText("Single-surface editor with rich-tree anchors")).toBeInTheDocument();
+    expect(
+      screen.getByText("Write the resume until every line can survive DFS follow-up pressure"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Treat this as source-of-truth authoring, not document polishing\./)).toBeInTheDocument();
     expect(screen.queryByText("Immutable source resume context")).not.toBeInTheDocument();
     expect(screen.queryByText("Workspace presence")).not.toBeInTheDocument();
     expect(screen.getByText("Annotated preview")).toBeInTheDocument();

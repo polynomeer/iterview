@@ -201,7 +201,7 @@ describe("ResumeAnalysisPage", () => {
       { route: "/profile/resumes/analysis" },
     );
 
-    expect(screen.getByText("Resume intelligence")).toBeInTheDocument();
+    expect(screen.getByText("Inspect resume source of truth")).toBeInTheDocument();
     expect(document.querySelector(".resume-analysis-layout--desktop")).not.toBeNull();
   });
 });

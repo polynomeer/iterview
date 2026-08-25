@@ -311,7 +311,9 @@ describe("ResumeHeatmapPage", () => {
       { route: "/resume-versions/version-1/heatmap" },
     );
 
-    expect(screen.getByText("Interview heatmap overview")).toBeInTheDocument();
+    expect(
+      screen.getByText("Use the heatmap to find which resume claims break first under interview pressure"),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { name: "Cache platform" }).length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: /Sentence \(1\)/ })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Projects" })).toBeInTheDocument();

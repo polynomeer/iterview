@@ -27,7 +27,10 @@ describe("CommandPalette", () => {
 
     expect(screen.getAllByText("Questions").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Skills").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Resume Evidence").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Companies").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Notes").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Commands").length).toBeGreaterThan(0);
 
     await user.type(screen.getByLabelText("Search Iterview"), "Stripe");
 
@@ -58,6 +61,32 @@ describe("CommandPalette", () => {
     await user.keyboard("{Enter}");
 
     expect(screen.getByTestId("location-display")).toHaveTextContent("/review-queue");
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it("navigates into another workspace family from a filtered search result", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={
+            <>
+              <CommandPalette isOpen onClose={onClose} />
+              <LocationDisplay />
+            </>
+          }
+          path="/"
+        />
+        <Route element={<LocationDisplay />} path="/target-companies" />
+      </Routes>,
+    );
+
+    await user.type(screen.getByLabelText("Search Iterview"), "Stripe");
+    await user.click(screen.getByRole("button", { name: /Stripe target preparation board/i }));
+
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/target-companies?company=stripe");
     expect(onClose).toHaveBeenCalled();
   });
 });

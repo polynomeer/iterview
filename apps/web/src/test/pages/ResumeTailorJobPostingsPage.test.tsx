@@ -54,7 +54,9 @@ describe("ResumeTailorJobPostingsPage", () => {
       { route: "/resume-tailor/job-postings" },
     );
 
-    expect(screen.getByText("Company target board")).toBeInTheDocument();
+    expect(
+      screen.getByText("Capture the role context that should shape the next tailored resume pass"),
+    ).toBeInTheDocument();
     expect(screen.getByRole("searchbox", { name: "Search target companies" })).toBeInTheDocument();
     fireEvent.change(screen.getByRole("combobox", { name: "Input type" }), { target: { value: "link" } });
     fireEvent.change(

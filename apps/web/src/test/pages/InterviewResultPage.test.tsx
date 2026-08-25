@@ -275,14 +275,10 @@ describe("InterviewResultPage", () => {
     expect(screen.getAllByText("Skipped facet recovery").length).toBeGreaterThan(0);
     expect(screen.getByText("Resume projects")).toBeInTheDocument();
     expect(screen.getAllByText("Caching rollout").length).toBeGreaterThan(0);
-    expect(screen.getByText("Run a narrow recovery pass before opening breadth again")).toBeInTheDocument();
-    expect(screen.getByText("1 weak branch still fail under follow-up pressure")).toBeInTheDocument();
-    expect(screen.getByText("Start with weak branch recovery.")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "Bring the missing metric, constraint, or source-of-truth sentence before restarting.",
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Run a narrow recovery pass first")).toBeInTheDocument();
+    expect(screen.getByText("1 weak branches should be revisited first")).toBeInTheDocument();
+    expect(screen.getByText("Start a narrow recovery pass")).toBeInTheDocument();
+    expect(screen.getByText("Use weak and skipped facets to scope the next pass.")).toBeInTheDocument();
 
     await userEvent.click(screen.getAllByRole("button", { name: /Caching rollout/i })[0]);
 

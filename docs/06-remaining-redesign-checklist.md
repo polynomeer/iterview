@@ -192,14 +192,14 @@ Mark each line only when the changed scope is:
 - [ ] Check text duplication against test expectations
 
 ### H2. Final Acceptance Pass
-- [ ] Verify daily practice journey
-- [ ] Verify question exploration journey
-- [ ] Verify review and retry journey
-- [ ] Verify resume source-of-truth authoring journey
-- [ ] Verify interview session to result continuity
+- [x] Verify daily practice journey
+- [x] Verify question exploration journey
+- [x] Verify review and retry journey
+- [x] Verify resume source-of-truth authoring journey
+- [x] Verify interview session to result continuity
 - [ ] Verify the product reads as one interview workspace rather than a set of disconnected pages
-- [ ] Verify notes, bookmarks, scheduling, and company-target surfaces behave as real workspaces
-- [ ] Verify the command palette can navigate across every major workspace family
+- [x] Verify notes, bookmarks, scheduling, and company-target surfaces behave as real workspaces
+- [x] Verify the command palette can navigate across every major workspace family
 
 ## Current Remaining Scope
 

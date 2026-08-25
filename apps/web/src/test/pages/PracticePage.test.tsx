@@ -138,4 +138,57 @@ describe("PracticePage", () => {
     expect(screen.getByText("Explain caching")).toBeInTheDocument();
     expect(document.querySelector(".practice-layout--desktop")).not.toBeNull();
   });
+
+  it("opens the first visible question tree when the user moves from browsing into DFS exploration", async () => {
+    vi.mocked(usePracticeQuestionsQuery).mockReturnValue({
+      data: {
+        items: [
+          {
+            id: "question-21",
+            title: "Explain caching",
+            prompt: "Discuss eviction and invalidation tradeoffs.",
+            categoryLabel: "System Design",
+            companyLabel: "General",
+            difficultyLabel: "Intermediate",
+            statusLabel: "new",
+            progressSummaryLabel: null,
+          },
+        ],
+        filters: {
+          categories: [],
+          companies: [],
+          difficulties: [],
+          statuses: [],
+        },
+        page: 1,
+        hasMore: false,
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
+    const user = userEvent.setup();
+
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={
+            <>
+              <PracticePage />
+              <LocationDisplay />
+            </>
+          }
+          path="/practice"
+        />
+        <Route element={<LocationDisplay />} path="/questions/:questionId/tree" />
+      </Routes>,
+      { route: "/practice" },
+    );
+
+    await user.click(screen.getByRole("link", { name: "Open first visible map" }));
+
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/questions/question-21/tree");
+  });
 });

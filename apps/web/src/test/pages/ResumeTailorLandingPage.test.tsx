@@ -86,7 +86,9 @@ describe("ResumeTailorLandingPage", () => {
       { route: "/resume-tailor" },
     );
 
-    expect(screen.getByText("Resume tailoring workspace")).toBeInTheDocument();
+    expect(
+      screen.getByText("Choose one immutable resume version, then tailor it toward one real role"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Platform engineer tailored summary")).toBeInTheDocument();
     expect(screen.getByText("Example Corp · Backend Platform Engineer")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Create analysis" })).toBeInTheDocument();

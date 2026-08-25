@@ -13,7 +13,7 @@ describe("NotesPage", () => {
       { route: "/notes" },
     );
 
-    expect(screen.getByText("Knowledge notes")).toBeInTheDocument();
+    expect(screen.getByText("Keep the explanation you want ready before the next DFS drill-down")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Distributed Lock Patterns" })).toBeInTheDocument();
     expect(screen.getByRole("searchbox", { name: "Search notes" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
