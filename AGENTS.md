@@ -14,6 +14,8 @@ Expected app layout:
 - preserve package-by-domain in `apps/api`
 - preserve the existing frontend architecture in `apps/web`
 - keep API contracts and frontend integration docs aligned
+- record shared product, design, architecture, and repository workflow decisions in `docs/adr/`
+- when a work unit introduces a new shared decision, add or update the matching ADR in the same work unit
 
 ## Migration Rules
 - migrate one app or one shared concern at a time

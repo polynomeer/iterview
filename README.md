@@ -46,6 +46,7 @@ iterview/
 Start here if you are new:
 - repository and workflow overview: [`docs/README.md`](docs/README.md)
 - shared product direction: [`docs/01-product-foundation.md`](docs/01-product-foundation.md)
+- shared architecture decisions: [`docs/adr/README.md`](docs/adr/README.md)
 - monorepo conventions: [`docs/monorepo-conventions.md`](docs/monorepo-conventions.md)
 - backend app guide: [`apps/api/README.md`](apps/api/README.md)
 - frontend app guide: [`apps/web/README.md`](apps/web/README.md)
@@ -178,4 +179,5 @@ Repository rules are intentionally simple:
 
 The authoritative repository guidance lives in:
 - [`AGENTS.md`](AGENTS.md)
+- [`docs/adr/README.md`](docs/adr/README.md)
 - [`docs/monorepo-conventions.md`](docs/monorepo-conventions.md)

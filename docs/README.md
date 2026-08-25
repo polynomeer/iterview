@@ -16,9 +16,11 @@ Use these files when you want to understand product intent, monorepo policy, or 
    Shared UX and visual-system reset strategy for the product redesign.
 5. [`05-workspace-redesign-workplan.md`](05-workspace-redesign-workplan.md)
    Shared execution plan for moving from page polish to a graph-based interview workspace.
-6. [`monorepo-conventions.md`](monorepo-conventions.md)
+6. [`adr/README.md`](adr/README.md)
+   Shared architecture decision records for durable product, design, and repository decisions.
+7. [`monorepo-conventions.md`](monorepo-conventions.md)
    What belongs at the root versus inside each app.
-7. [`monorepo-status.md`](monorepo-status.md)
+8. [`monorepo-status.md`](monorepo-status.md)
    Current operational status, known risks, and verification path.
 
 ## Reference Assets
@@ -31,6 +33,7 @@ Design image references that support the shared redesign documents live under:
 Keep documentation in root `docs/` only when it is truly shared:
 - product direction used by both backend and frontend
 - shared design and UX strategy that both apps must follow
+- architecture decision records for shared decisions
 - repository-wide engineering policy
 - cross-app roadmap and acceptance criteria
 - monorepo migration or operating guidance
