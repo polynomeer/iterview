@@ -13933,7 +13933,15 @@ button {
 .home-workspace-surface,
 .feed-workspace-surface,
 .profile-workspace-surface,
-.resume-workspace-surface {
+.resume-workspace-surface,
+.auth-access-surface,
+.practical-list-workspace-surface,
+.practical-review-workspace-surface,
+.interview-workspace-surface,
+.interview-session-workspace-surface,
+.question-detail-workspace-surface,
+.interview-result-workspace-surface,
+.result-analysis-workspace-surface {
   border: 1px solid rgba(15, 23, 42, 0.08);
   background:
     radial-gradient(circle at top left, rgba(148, 163, 184, 0.14), transparent 32%),
@@ -13949,7 +13957,11 @@ button {
 .home-workspace-surface::after,
 .feed-workspace-surface::after,
 .profile-workspace-surface::after,
-.resume-workspace-surface::after {
+.resume-workspace-surface::after,
+.interview-session-workspace-surface::after,
+.question-detail-workspace-surface::after,
+.interview-result-workspace-surface::after,
+.result-analysis-workspace-surface::after {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 22%);
 }
 
@@ -13960,7 +13972,15 @@ button {
 .home-workspace-surface__breadcrumbs,
 .feed-workspace-surface__breadcrumbs,
 .profile-workspace-surface__breadcrumbs,
-.resume-workspace-surface__breadcrumbs {
+.resume-workspace-surface__breadcrumbs,
+.auth-access-surface__breadcrumbs,
+.practical-list-workspace-surface__breadcrumbs,
+.practical-review-workspace-surface__breadcrumbs,
+.interview-workspace-surface__breadcrumbs,
+.interview-session-workspace-surface__breadcrumbs,
+.question-detail-workspace-surface__breadcrumbs,
+.interview-result-workspace-surface__breadcrumbs,
+.result-analysis-workspace-surface__breadcrumbs {
   color: rgba(100, 116, 139, 0.88);
 }
 
@@ -13971,7 +13991,15 @@ button {
 .home-workspace-surface__title,
 .feed-workspace-surface__title,
 .profile-workspace-surface__title,
-.resume-workspace-surface__title {
+.resume-workspace-surface__title,
+.auth-access-surface__title,
+.practical-list-workspace-surface__title,
+.practical-review-workspace-surface__title,
+.interview-workspace-surface__title,
+.interview-session-workspace-surface__title,
+.question-detail-workspace-surface__title,
+.interview-result-workspace-surface__title,
+.result-analysis-workspace-surface__title {
   font-size: clamp(1.7rem, 2.3vw, 2.35rem);
   line-height: 1.08;
   color: #101828;
@@ -13984,7 +14012,15 @@ button {
 .home-workspace-surface__body,
 .feed-workspace-surface__body,
 .profile-workspace-surface__body,
-.resume-workspace-surface__body {
+.resume-workspace-surface__body,
+.auth-access-surface__body,
+.practical-list-workspace-surface__body,
+.practical-review-workspace-surface__body,
+.interview-workspace-surface__body,
+.interview-session-workspace-surface__body,
+.question-detail-workspace-surface__body,
+.interview-result-workspace-surface__body,
+.result-analysis-workspace-surface__body {
   color: rgba(71, 85, 105, 0.92);
 }
 
@@ -13996,9 +14032,28 @@ button {
 .feed-workspace-surface__stat,
 .profile-workspace-surface__stat,
 .resume-workspace-surface__stat,
+.auth-access-surface__stat,
+.practical-list-workspace-surface__stat,
+.practical-review-workspace-surface__stat,
+.interview-workspace-surface__stat,
+.interview-session-workspace-surface__stat,
+.question-detail-workspace-surface__stat,
+.interview-result-workspace-surface__stat,
+.result-analysis-workspace-surface__stat,
 .practice-workspace-surface__guidance-card,
 .question-tree-workspace-surface__guidance-card,
 .home-workspace-surface__guidance-card,
+.auth-access-surface__guidance-card,
+.auth-access-form-card__summary-item,
+.practical-list-workspace-surface__guidance-card,
+.practical-review-workspace-surface__guidance-card,
+.interview-workspace-surface__snapshot-card,
+.interview-workspace-surface__guidance-card,
+.interview-session-workspace-surface__guidance-card,
+.question-detail-workspace-surface__guidance-card,
+.answer-editor-workspace-surface__guidance-card,
+.interview-result-workspace-surface__guidance-card,
+.result-analysis-workspace-surface__guidance-card,
 .practice-review-queue-card,
 .practice-workflow-note,
 .practice-focus-summary-card,
@@ -14020,9 +14075,28 @@ button {
 .feed-workspace-surface__stat span,
 .profile-workspace-surface__stat span,
 .resume-workspace-surface__stat span,
+.auth-access-surface__stat span,
+.practical-list-workspace-surface__stat span,
+.practical-review-workspace-surface__stat span,
+.interview-workspace-surface__stat span,
+.interview-session-workspace-surface__stat-label,
+.question-detail-workspace-surface__stat span,
+.interview-result-workspace-surface__stat span,
+.result-analysis-workspace-surface__stat span,
 .practice-workspace-surface__guidance-card span,
 .question-tree-workspace-surface__guidance-card span,
-.home-workspace-surface__guidance-card span {
+.home-workspace-surface__guidance-card span,
+.auth-access-surface__guidance-card span,
+.auth-access-form-card__summary-item span,
+.practical-list-workspace-surface__guidance-card span,
+.practical-review-workspace-surface__guidance-card span,
+.interview-workspace-surface__snapshot-card span,
+.interview-workspace-surface__guidance-card span,
+.interview-session-workspace-surface__guidance-card span,
+.question-detail-workspace-surface__guidance-card span,
+.answer-editor-workspace-surface__guidance-card span,
+.interview-result-workspace-surface__guidance-card span,
+.result-analysis-workspace-surface__guidance-card span {
   color: rgba(100, 116, 139, 0.9);
 }
 
@@ -14034,10 +14108,64 @@ button {
 .feed-workspace-surface__stat strong,
 .profile-workspace-surface__stat strong,
 .resume-workspace-surface__stat strong,
+.auth-access-surface__stat strong,
+.practical-list-workspace-surface__stat strong,
+.practical-review-workspace-surface__stat strong,
+.interview-workspace-surface__stat strong,
+.interview-session-workspace-surface__stat-value,
+.question-detail-workspace-surface__stat strong,
+.interview-result-workspace-surface__stat strong,
+.result-analysis-workspace-surface__stat strong,
 .practice-workspace-surface__guidance-card strong,
 .question-tree-workspace-surface__guidance-card strong,
-.home-workspace-surface__guidance-card strong {
+.home-workspace-surface__guidance-card strong,
+.auth-access-surface__guidance-card strong,
+.auth-access-form-card__summary-item strong,
+.practical-list-workspace-surface__guidance-card strong,
+.practical-review-workspace-surface__guidance-card strong,
+.interview-workspace-surface__snapshot-card strong,
+.interview-workspace-surface__guidance-card strong,
+.interview-session-workspace-surface__guidance-card strong,
+.question-detail-workspace-surface__guidance-card strong,
+.answer-editor-workspace-surface__guidance-card strong,
+.interview-result-workspace-surface__guidance-card strong,
+.result-analysis-workspace-surface__guidance-card strong {
   color: #101828;
+}
+
+.auth-access-surface__title,
+.practical-list-workspace-surface__title,
+.practical-review-workspace-surface__title,
+.interview-workspace-surface__title,
+.interview-session-workspace-surface__title,
+.question-detail-workspace-surface__title,
+.interview-result-workspace-surface__title,
+.result-analysis-workspace-surface__title {
+  max-width: 16ch;
+}
+
+.auth-access-surface__guidance,
+.practical-list-workspace-surface__guidance,
+.practical-review-workspace-surface__guidance,
+.interview-workspace-surface__guidance,
+.interview-workspace-surface__snapshot,
+.interview-session-workspace-surface__guidance,
+.question-detail-workspace-surface__guidance,
+.answer-editor-workspace-surface__guidance,
+.interview-result-workspace-surface__guidance,
+.result-analysis-workspace-surface__guidance {
+  gap: 10px;
+}
+
+.auth-access-surface__stat,
+.practical-list-workspace-surface__stat,
+.practical-review-workspace-surface__stat,
+.interview-workspace-surface__stat,
+.interview-session-workspace-surface__stat,
+.question-detail-workspace-surface__stat,
+.interview-result-workspace-surface__stat,
+.result-analysis-workspace-surface__stat {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 .guest-home__hero {
