@@ -224,9 +224,9 @@ export function QuestionDetailPage() {
 
   return (
     <PageContainer
-      description="Review the full prompt, metadata, learning support, and your current progress before starting an answer."
-      eyebrow="Question Detail"
-      title="Question detail"
+      description="Inspect the active question node, its support stack, and follow-up pressure before spending the next answer attempt."
+      eyebrow="Node inspector"
+      title="Inspect the node before opening the next answer pass"
     >
       {questionDetailQuery.isLoading ? (
         <LoadingStateCard
@@ -446,23 +446,22 @@ export function QuestionDetailPage() {
                 <div className="question-detail-workspace-surface__header">
                   <div className="question-detail-workspace-surface__intro">
                     <div className="question-detail-workspace-surface__eyebrow-row">
-                      <span className="page-card__label">Question workspace</span>
+                      <span className="page-card__label">Node inspector</span>
                       <span className="question-status-badge question-status-badge--accent">
                         {questionDetailQuery.data.difficulty}
                       </span>
                     </div>
                     <p className="question-detail-workspace-surface__breadcrumbs">
-                      {questionDetailQuery.data.category}
+                      Question node
                       <span>/</span>
-                      {questionDetailQuery.data.roles[0] ?? "Practice path"}
+                      Resume evidence
                       <span>/</span>
-                      {questionDetailQuery.data.companies[0] ?? "Interview prep"}
+                      Follow-up pressure
                     </p>
-                    <h2 className="question-detail-workspace-surface__title">Question node briefing</h2>
+                    <h2 className="question-detail-workspace-surface__title">Inspect this node before you decide to answer, study, or branch deeper</h2>
                     <p className="question-detail-workspace-surface__body">
-                      {questionDetailQuery.data.title}. Treat this prompt as a branch root: read the node, inspect the
-                      context, and keep support material and prior attempts close enough that the next answer can be
-                      defended under follow-up pressure.
+                      {questionDetailQuery.data.title}. Treat the prompt like an interview checkpoint: read the node,
+                      check whether the support is strong enough, and only then spend the next attempt.
                     </p>
                   </div>
                   <div className="question-detail-workspace-surface__stats">
@@ -475,16 +474,31 @@ export function QuestionDetailPage() {
                       <strong>{progress?.bestScoreLabel ?? "Not started"}</strong>
                     </article>
                     <article className="question-detail-workspace-surface__stat">
-                      <span>Follow-ups</span>
-                      <strong>{recommendedCount}</strong>
+                      <span>Retry pressure</span>
+                      <strong>{weaknessSignal}</strong>
                     </article>
                     <article className="question-detail-workspace-surface__stat">
                       <span>Support items</span>
-                      <strong>{supportCount || promptDensity}</strong>
+                      <strong>{supportCount}</strong>
                     </article>
                   </div>
                 </div>
+                <div className="question-detail-workspace-surface__guidance" aria-label="Question node guidance">
+                  <article className="question-detail-workspace-surface__guidance-card">
+                    <span>Answer now</span>
+                    <strong>Use the next attempt only when the main claim is already obvious.</strong>
+                  </article>
+                  <article className="question-detail-workspace-surface__guidance-card">
+                    <span>Study first</span>
+                    <strong>Pause here when the resume-backed evidence is still vague or thin.</strong>
+                  </article>
+                  <article className="question-detail-workspace-surface__guidance-card">
+                    <span>Open the tree</span>
+                    <strong>Branch deeper when you need to see which follow-up attack lands next.</strong>
+                  </article>
+                </div>
                 <div className="question-detail-workspace-surface__chips">
+                  <span className="detail-chip">{`Category ${questionDetailQuery.data.category}`}</span>
                   {questionDetailQuery.data.tags.slice(0, 4).map((tag) => (
                     <span className="detail-chip" key={tag}>
                       {`Topic ${tag}`}
@@ -505,10 +519,10 @@ export function QuestionDetailPage() {
               <SectionPanel className="question-detail-insight-surface" variant="muted">
                 <div className="question-detail-insight-surface__header">
                   <div>
-                    <span className="page-card__label">Branch insight</span>
-                    <h2 className="page-card__title">Decide whether to answer, study, or branch deeper before spending another attempt</h2>
+                    <span className="page-card__label">Decision read</span>
+                    <h2 className="page-card__title">Read the smallest missing piece before doing more work on this node</h2>
                     <p className="page-card__body">
-                      This node should tell you what kind of work is missing: a clearer main claim, stronger source-of-truth evidence, or a deeper follow-up pass.
+                      This surface should tell you whether the missing work is clarity, evidence, or branch awareness.
                     </p>
                   </div>
                   <span className="detail-chip detail-chip--accent">{weaknessSignal}</span>

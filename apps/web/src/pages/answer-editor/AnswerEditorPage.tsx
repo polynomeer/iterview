@@ -92,9 +92,9 @@ export function AnswerEditorPage() {
 
   return (
     <PageContainer
-      description={t("answer.pageDescription")}
-      eyebrow={t("answer.pageEyebrow")}
-      title={t("answer.pageTitle")}
+      description="Draft the answer with the current node, resume evidence, and follow-up pressure visible in one workspace."
+      eyebrow="Answer workspace"
+      title="Write one defendable answer before the next follow-up lands"
     >
       {questionDetailQuery.isLoading ? (
         <LoadingStateCard
@@ -155,11 +155,11 @@ export function AnswerEditorPage() {
                     </span>
                   </div>
                   <p className="answer-editor-workspace-surface__breadcrumbs">
-                    Prompt context
+                    Current node
                     <span>/</span>
-                    Evidence anchor
+                    Resume evidence
                     <span>/</span>
-                    Submission decision
+                    Submission check
                   </p>
                   <h2 className="answer-editor-workspace-surface__title">Write one answer the next follow-up cannot easily break</h2>
                   <p className="answer-editor-workspace-surface__body">
@@ -184,10 +184,25 @@ export function AnswerEditorPage() {
                     <span>Support items</span>
                     <strong>{supportCount}</strong>
                   </article>
+                  </div>
                 </div>
+              <div className="answer-editor-workspace-surface__guidance" aria-label="Answer drafting guidance">
+                <article className="answer-editor-workspace-surface__guidance-card">
+                  <span>Claim first</span>
+                  <strong>Answer the exact node before adding background or chronology.</strong>
+                </article>
+                <article className="answer-editor-workspace-surface__guidance-card">
+                  <span>Evidence second</span>
+                  <strong>Attach one concrete fact, metric, or constraint from real work.</strong>
+                </article>
+                <article className="answer-editor-workspace-surface__guidance-card">
+                  <span>Submit last</span>
+                  <strong>Only submit when the weakest likely follow-up already has a prepared answer line.</strong>
+                </article>
               </div>
               <div className="answer-editor-workspace-surface__chips">
                 <span className="detail-chip">{questionDetailQuery.data.difficulty}</span>
+                <span className="detail-chip">{branchSignal}</span>
                 {(questionDetailQuery.data.relatedSkills ?? []).slice(0, 3).map((skill) => (
                   <span className="detail-chip detail-chip--accent" key={skill}>
                     {skill}
@@ -200,8 +215,8 @@ export function AnswerEditorPage() {
             <SectionPanel className="answer-editor-insight-surface" variant="muted">
               <div className="answer-editor-insight-surface__header">
                 <div>
-                  <span className="page-card__label">Draft strategy</span>
-                  <h2 className="page-card__title">Decide whether this node needs more evidence, more structure, or a direct submission</h2>
+                  <span className="page-card__label">Submission read</span>
+                  <h2 className="page-card__title">Use this check to decide whether the draft needs more structure, more evidence, or a clean submit</h2>
                   <p className="page-card__body">
                     The answer should stay narrowly attached to the current node. If the claim is still vague, fix that before adding more words.
                   </p>
@@ -266,7 +281,7 @@ export function AnswerEditorPage() {
           const contextSection = (
               <SectionPanel as="aside" className="answer-editor-context" variant="muted">
                 <span className="page-card__label">{t("answer.contextLabel")}</span>
-                <h2 className="page-card__title">Keep decision context beside the draft</h2>
+                <h2 className="page-card__title">Keep only the supporting context that changes the draft decision</h2>
                 <div className="stats-grid">
                   <article className="stat-tile">
                     <p className="stat-tile__label">{t("answer.resumeStatus")}</p>
@@ -300,7 +315,7 @@ export function AnswerEditorPage() {
                 </article>
                 </div>
                 <p className="page-card__body">
-                  {t("answer.contextBody")}
+                  Resume linkage, branch depth, and related skills belong here only when they help tighten the current answer.
                 </p>
                 <div className="answer-editor-context__rules">
                   <div className="answer-editor-context__rule">

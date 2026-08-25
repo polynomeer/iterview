@@ -60,12 +60,12 @@ export function QuestionDetailDesktopLayout({
         {headerSection}
         <SectionPanel className="workspace-note-card workspace-note-card--accent question-detail-layout__hero-note" variant="muted">
           <div className="question-detail-layout__note-header">
-            <span className="page-card__label">Node workflow</span>
-            <span className="detail-chip detail-chip--accent">Primary lane</span>
+            <span className="page-card__label">Inspector rule</span>
+            <span className="detail-chip detail-chip--accent">Entry lane</span>
           </div>
-          <h2 className="page-card__title">Anchor on the prompt, then inspect context before writing the next answer</h2>
+          <h2 className="page-card__title">Keep the prompt dominant, then read only the context needed for the next decision</h2>
           <p className="page-card__body">
-            The main node stays dominant. Evidence, answer history, and follow-up branches stay near it so the question detail screen behaves like an inspector, not a detached reading page.
+            The question stays central. History, support, and follow-up branches should sharpen the next step instead of turning this page into a detached reading screen.
           </p>
           <div className="question-detail-layout__note-rules">
             <div className="question-detail-layout__note-rule">
@@ -88,16 +88,6 @@ export function QuestionDetailDesktopLayout({
       <div className="question-detail-layout__study-rail">
         <div className="page-stack question-detail-layout__cluster">
           {materialsSection}
-          <SectionPanel className="workspace-note-card" variant="muted">
-            <div className="question-detail-layout__note-header">
-              <span className="page-card__label">Study rail</span>
-              <span className="detail-chip">Support stack</span>
-            </div>
-            <h2 className="page-card__title">Keep source material beside the node instead of below the page</h2>
-            <p className="page-card__body">
-              Notes, references, and learning resources should act like a support rail that sharpens the next answer, not a separate page that breaks answer preparation.
-            </p>
-          </SectionPanel>
         </div>
       </div>
       <aside className="question-detail-layout__sidebar">

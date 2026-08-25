@@ -19,8 +19,8 @@ export function AnswerEditorMobileLayout({
   return (
     <div className="page-stack">
       {workspaceSummary}
-      {insightSummary}
       {promptSection}
+      {insightSummary}
       {contextSection}
       {editorSection}
       {submitSection}
@@ -39,10 +39,10 @@ export function AnswerEditorDesktopLayout({
   return (
     <div className="answer-editor-layout answer-editor-layout--desktop">
       <section className="answer-editor-layout__workspace-summary">{workspaceSummary}</section>
-      <section className="answer-editor-layout__workspace-summary">{insightSummary}</section>
       <aside className="answer-editor-layout__context">
         <div className="page-stack">
           {promptSection}
+          {insightSummary}
           {contextSection}
         </div>
       </aside>
