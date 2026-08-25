@@ -21,6 +21,13 @@ export function SubmitActionBar({
   onSubmit,
 }: SubmitActionBarProps) {
   const { t } = useLocale();
+  const executionSignal = validationMessage
+    ? "Hold submission"
+    : isPending
+      ? "Submitting now"
+      : isSubmitDisabled
+        ? "Draft incomplete"
+        : "Ready to submit";
   const readinessItems = [
     {
       label: "Prompt answered",
@@ -50,9 +57,27 @@ export function SubmitActionBar({
           ))}
         </div>
       </div>
+      <div className="answer-submit-card__signal">
+        <strong>{executionSignal}</strong>
+        <span>Submit only when the claim is direct, the evidence is concrete, and the weakest follow-up line is already anticipated.</span>
+      </div>
       <p className="answer-submit-card__body">
         Submit only after the current draft answers the exact node and names the fact the next branch is most likely to probe.
       </p>
+      <div className="answer-submit-card__lanes">
+        <article className="answer-submit-card__lane">
+          <strong>Claim</strong>
+          <span>Open with the direct answer instead of background setup.</span>
+        </article>
+        <article className="answer-submit-card__lane">
+          <strong>Evidence</strong>
+          <span>Name the metric, constraint, or real system condition that makes the answer defensible.</span>
+        </article>
+        <article className="answer-submit-card__lane">
+          <strong>Follow-up</strong>
+          <span>Assume the next question will pressure-test the weakest unsupported phrase.</span>
+        </article>
+      </div>
       {infoMessage ? <FeedbackNotice message={infoMessage} tone="info" /> : null}
       {validationMessage ? <FeedbackNotice message={validationMessage} tone="error" /> : null}
       {errorMessage ? <FeedbackNotice details={errorDetails} message={errorMessage} tone="error" /> : null}

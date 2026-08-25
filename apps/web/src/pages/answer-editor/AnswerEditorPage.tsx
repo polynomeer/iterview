@@ -135,6 +135,15 @@ export function AnswerEditorPage() {
             questionDetailQuery.data.learningMaterials.length +
             (questionDetailQuery.data.relatedSkills ?? []).length;
           const treeNodeCount = questionTreeQuery.data?.nodes.length ?? 0;
+          const promptDensity = questionDetailQuery.data.body.split(/\s+/).filter(Boolean).length;
+          const branchSignal =
+            trimmedDraft.length === 0
+              ? "Blank draft"
+              : trimmedDraft.length < 180
+                ? "Thin answer"
+                : supportCount < 2
+                  ? "Needs support"
+                  : "Submission-ready";
           const workspaceSummary = (
             <section className="page-card answer-editor-workspace-surface">
               <div className="answer-editor-workspace-surface__header">
@@ -186,6 +195,51 @@ export function AnswerEditorPage() {
                 ))}
               </div>
             </section>
+          );
+          const insightSummary = (
+            <SectionPanel className="answer-editor-insight-surface" variant="muted">
+              <div className="answer-editor-insight-surface__header">
+                <div>
+                  <span className="page-card__label">Draft strategy</span>
+                  <h2 className="page-card__title">Decide whether this node needs more evidence, more structure, or a direct submission</h2>
+                  <p className="page-card__body">
+                    The answer should stay narrowly attached to the current node. If the claim is still vague, fix that before adding more words.
+                  </p>
+                </div>
+                <span className="detail-chip detail-chip--accent">{branchSignal}</span>
+              </div>
+              <div className="answer-editor-insight-surface__stats">
+                <article>
+                  <span>Prompt size</span>
+                  <strong>{promptDensity}</strong>
+                  <p>words in the question body that set the response scope</p>
+                </article>
+                <article>
+                  <span>Support depth</span>
+                  <strong>{supportCount}</strong>
+                  <p>materials and skill anchors that can back the answer</p>
+                </article>
+                <article>
+                  <span>Follow-up map</span>
+                  <strong>{treeNodeCount}</strong>
+                  <p>linked nodes that may branch immediately after this answer</p>
+                </article>
+              </div>
+              <div className="answer-editor-insight-surface__lanes">
+                <div className="answer-editor-insight-surface__lane">
+                  <strong>Write the claim first</strong>
+                  <span>Open with the outcome or decision before narrating history.</span>
+                </div>
+                <div className="answer-editor-insight-surface__lane">
+                  <strong>Attach real evidence</strong>
+                  <span>Pick one metric, constraint, or trade-off from the resume that makes the answer concrete.</span>
+                </div>
+                <div className="answer-editor-insight-surface__lane">
+                  <strong>Prepare the next branch</strong>
+                  <span>Scan the question tree and close the easiest-to-attack gap before submitting.</span>
+                </div>
+              </div>
+            </SectionPanel>
           );
           const promptSection = <QuestionPromptCard question={questionDetailQuery.data} />;
           const editorSection = (
@@ -277,6 +331,7 @@ export function AnswerEditorPage() {
             return (
               <AnswerEditorMobileLayout
                 workspaceSummary={workspaceSummary}
+                insightSummary={insightSummary}
                 contextSection={contextSection}
                 editorSection={editorSection}
                 promptSection={promptSection}
@@ -288,6 +343,7 @@ export function AnswerEditorPage() {
           return (
             <AnswerEditorDesktopLayout
               workspaceSummary={workspaceSummary}
+              insightSummary={insightSummary}
               contextSection={contextSection}
               editorSection={editorSection}
               promptSection={promptSection}

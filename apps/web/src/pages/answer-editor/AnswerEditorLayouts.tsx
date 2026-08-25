@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 type AnswerEditorLayoutProps = {
   workspaceSummary: ReactNode;
+  insightSummary: ReactNode;
   promptSection: ReactNode;
   editorSection: ReactNode;
   submitSection: ReactNode;
@@ -9,6 +10,7 @@ type AnswerEditorLayoutProps = {
 
 export function AnswerEditorMobileLayout({
   workspaceSummary,
+  insightSummary,
   promptSection,
   editorSection,
   submitSection,
@@ -17,6 +19,7 @@ export function AnswerEditorMobileLayout({
   return (
     <div className="page-stack">
       {workspaceSummary}
+      {insightSummary}
       {promptSection}
       {contextSection}
       {editorSection}
@@ -27,6 +30,7 @@ export function AnswerEditorMobileLayout({
 
 export function AnswerEditorDesktopLayout({
   workspaceSummary,
+  insightSummary,
   promptSection,
   editorSection,
   submitSection,
@@ -35,6 +39,7 @@ export function AnswerEditorDesktopLayout({
   return (
     <div className="answer-editor-layout answer-editor-layout--desktop">
       <section className="answer-editor-layout__workspace-summary">{workspaceSummary}</section>
+      <section className="answer-editor-layout__workspace-summary">{insightSummary}</section>
       <aside className="answer-editor-layout__context">
         <div className="page-stack">
           {promptSection}

@@ -15,6 +15,22 @@ export function AnswerTextEditor({
 }: AnswerTextEditorProps) {
   const { t } = useLocale();
   const trimmedLength = value.trim().length;
+  const paragraphCount = value
+    .split(/\n\s*\n/)
+    .map((segment) => segment.trim())
+    .filter(Boolean).length;
+  const sentenceCount = value
+    .split(/[.!?]\s+/)
+    .map((segment) => segment.trim())
+    .filter(Boolean).length;
+  const draftSignal =
+    trimmedLength === 0
+      ? "Empty"
+      : trimmedLength < 180
+        ? "Needs depth"
+        : sentenceCount < 3
+          ? "Needs structure"
+          : "Answer-shaped";
   const modeClassName =
     mode === "workspace" ? "answer-editor-card answer-editor-card--workspace" : "answer-editor-card";
 
@@ -31,11 +47,19 @@ export function AnswerTextEditor({
           <div className="answer-editor-card__metrics" aria-label="Draft status">
             <article className="answer-editor-card__metric">
               <span>Draft state</span>
-              <strong>{trimmedLength > 0 ? "In progress" : "Empty"}</strong>
+              <strong>{draftSignal}</strong>
             </article>
             <article className="answer-editor-card__metric">
               <span>Trimmed chars</span>
               <strong>{trimmedLength}</strong>
+            </article>
+            <article className="answer-editor-card__metric">
+              <span>Paragraphs</span>
+              <strong>{paragraphCount}</strong>
+            </article>
+            <article className="answer-editor-card__metric">
+              <span>Sentences</span>
+              <strong>{sentenceCount}</strong>
             </article>
           </div>
         ) : null}
@@ -58,9 +82,14 @@ export function AnswerTextEditor({
           {trimmedLength > 0 ? t("answer.editorSaved") : t("answer.editorEmpty")}
         </p>
         {mode === "workspace" ? (
-          <p className="answer-editor-card__helper-note">
-            Prefer one crisp claim, one supporting constraint, and one outcome over a long generic paragraph.
-          </p>
+          <div className="answer-editor-card__helper-stack">
+            <p className="answer-editor-card__helper-note">
+              Prefer one crisp claim, one supporting constraint, and one outcome over a long generic paragraph.
+            </p>
+            <p className="answer-editor-card__helper-note answer-editor-card__helper-note--secondary">
+              The next interviewer move will usually attack the vaguest sentence first. Tighten that line before submitting.
+            </p>
+          </div>
         ) : null}
       </div>
     </section>

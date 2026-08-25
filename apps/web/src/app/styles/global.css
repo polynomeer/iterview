@@ -4181,6 +4181,71 @@ button {
   gap: 10px;
 }
 
+.answer-editor-insight-surface {
+  display: grid;
+  gap: 1rem;
+  border-color: rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
+}
+
+.answer-editor-insight-surface__header,
+.answer-editor-insight-surface__lanes,
+.answer-submit-card__lanes {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.answer-editor-insight-surface__stats,
+.answer-editor-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.answer-editor-insight-surface__stats article,
+.answer-editor-insight-surface__lane,
+.answer-submit-card__signal,
+.answer-submit-card__lane,
+.answer-editor-card__metric {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.05);
+}
+
+.answer-editor-insight-surface__stats span,
+.answer-editor-card__metric span,
+.answer-submit-card__summary-item span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.answer-editor-insight-surface__stats strong,
+.answer-editor-insight-surface__lane strong,
+.answer-submit-card__signal strong,
+.answer-submit-card__lane strong,
+.answer-editor-card__metric strong,
+.answer-submit-card__summary-item strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.answer-editor-insight-surface__stats p,
+.answer-editor-insight-surface__lane span,
+.answer-submit-card__signal span,
+.answer-submit-card__lane span {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.72);
+  line-height: 1.55;
+}
+
 .answer-editor-context .page-card__body {
   margin-top: 16px;
 }
@@ -4207,6 +4272,22 @@ button {
 .answer-editor-context__rule span {
   color: var(--text-muted);
   font-size: 0.92rem;
+}
+
+.answer-editor-card__helper-stack {
+  display: grid;
+  gap: 6px;
+}
+
+.answer-editor-card__helper-note--secondary {
+  color: rgba(148, 163, 184, 0.78);
+}
+
+@media (max-width: 900px) {
+  .answer-editor-insight-surface__stats,
+  .answer-editor-card__metrics {
+    grid-template-columns: 1fr;
+  }
 }
 
 .theme-option-list {
