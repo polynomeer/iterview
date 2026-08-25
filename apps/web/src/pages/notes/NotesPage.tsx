@@ -307,28 +307,27 @@ export function NotesPage() {
           </Link>
         </>
       }
-      description="Organize reusable interview knowledge, trade-off notes, and source-of-truth fragments without losing the connected question context."
+      description="Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."
       eyebrow="Notes"
-      title="Knowledge notes"
+      title="Store reusable defense notes"
     >
       <section className="page-card notes-workspace-surface">
         <div className="notes-workspace-surface__header">
           <div className="notes-workspace-surface__intro">
             <div className="notes-workspace-surface__eyebrow-row">
               <span className="page-card__label">Knowledge workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Linked context</span>
+              <span className="question-status-badge question-status-badge--accent">Defense fragments</span>
             </div>
             <p className="notes-workspace-surface__breadcrumbs">
-              Notes
+              Reusable explanations
               <span>/</span>
-              Questions
+              Linked questions
               <span>/</span>
               Resume evidence
             </p>
-            <h2 className="notes-workspace-surface__title">Keep the explanation you want to reuse before the next DFS drill-down</h2>
+            <h2 className="notes-workspace-surface__title">Keep the explanation you want ready before the next DFS drill-down</h2>
             <p className="notes-workspace-surface__body">
-              Write notes as reusable defense fragments. A strong note should help you answer a follow-up faster,
-              reconnect to supporting resume evidence, and reduce vague explanation under pressure.
+              Write notes as reusable defense fragments. A strong note should help you answer a follow-up faster, reconnect to supporting resume evidence, and reduce vague explanation under pressure.
             </p>
           </div>
           <div className="notes-workspace-surface__stats">
@@ -351,7 +350,7 @@ export function NotesPage() {
           </div>
         </div>
         <div className="notes-workspace-surface__chips">
-          <span className="detail-chip detail-chip--accent">Editor + inspector</span>
+          <span className="detail-chip detail-chip--accent">Reusable answer fragments</span>
           <span className="detail-chip">Resume-linked</span>
           <span className="detail-chip">Question-linked</span>
           <span className="detail-chip">Searchable snippets</span>
@@ -365,7 +364,7 @@ export function NotesPage() {
               <span className="page-card__label">Selected note insight</span>
               <h2 className="page-card__title">Keep one reusable explanation fragment ready for the next follow-up branch</h2>
               <p className="page-card__body">
-                The best note is not a dump of facts. It is a tight explanation unit that can be reused when the interviewer pushes from the resume claim into DFS-level follow-up questions.
+                The best note is not a dump of facts. It is a tight explanation unit you can reuse when the interviewer pushes from the resume claim into DFS-level follow-up questions.
               </p>
             </div>
             <span className="detail-chip detail-chip--accent">{noteModeSignal}</span>

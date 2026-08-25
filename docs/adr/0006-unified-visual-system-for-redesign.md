@@ -48,4 +48,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Home and cross-linking workspace surfaces should state the product goal in interview terms first, then organize retries, evidence, and resume risk around that goal.
 - Practice and review-queue surfaces should clearly split branch entry from branch recovery so users do not confuse fresh exploration with retry execution.
 - Analysis surfaces should distinguish source-of-truth inspection from answer-result review so users know whether they are repairing resume inputs or answer outputs.
+- Notes and archive surfaces should distinguish reusable explanation fragments from proven answer libraries so users know whether they are preparing new material or reopening validated material.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.

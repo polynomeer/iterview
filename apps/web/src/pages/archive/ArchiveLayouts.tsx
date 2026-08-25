@@ -18,9 +18,9 @@ export function ArchiveMobileLayout({
         <SectionPanel className="workspace-note-card archive-workspace-note" variant="muted">
           <div className="archive-workspace-note__header">
             <span className="page-card__label">Archive review</span>
-            <span className="detail-chip">Mobile reading</span>
+            <span className="detail-chip">Mobile library</span>
           </div>
-          <h2 className="page-card__title">Treat the archive as a compact review shelf, not a dumping ground</h2>
+          <h2 className="page-card__title">Treat the archive as a compact answer shelf</h2>
           <p className="page-card__body">
             Filtering comes after the mastered list on mobile so the screen stays focused on what you can reopen, revisit, or map back to interview sessions.
           </p>
@@ -55,7 +55,7 @@ export function ArchiveDesktopLayout({
                 <span className="page-card__label">Archive browsing</span>
                 <span className="detail-chip detail-chip--accent">Pinned rail</span>
               </div>
-              <h2 className="page-card__title">Use the extra space to scan mastered work without losing context</h2>
+              <h2 className="page-card__title">Use the extra space to scan proven work without losing context</h2>
               <p className="page-card__body">
                 Desktop should keep filters and reopened-session context visible while the main column stays focused on high-signal summaries.
               </p>

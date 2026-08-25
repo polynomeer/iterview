@@ -77,29 +77,28 @@ export function ArchivePage() {
 
   return (
     <PageContainer
-      description="Review the questions you have already mastered, filter them, and reopen their latest result summary when needed."
+      description="Review the questions that already held up, filter them, and reopen the original session context when you need a proven answer pattern."
       eyebrow="Archive"
       introVariant="minimal"
-      title="Archive"
+      title="Reopen proven answer branches"
     >
       <section className="page-card archive-workspace-surface">
         <div className="archive-workspace-surface__header">
           <div className="archive-workspace-surface__intro">
             <div className="archive-workspace-surface__eyebrow-row">
               <span className="page-card__label">Archive workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Library mode</span>
+              <span className="question-status-badge question-status-badge--accent">Answer library</span>
             </div>
             <p className="archive-workspace-surface__breadcrumbs">
-              Mastered questions
+              Proven answers
               <span>/</span>
               Session backtrace
               <span>/</span>
               Source review
             </p>
-            <h2 className="archive-workspace-surface__title">Review library</h2>
+            <h2 className="archive-workspace-surface__title">Reopen answers that already held up</h2>
             <p className="archive-workspace-surface__body">
-              Treat the archive as a compact shelf of proven answers you can reopen, compare, and trace back to the
-              exact session where the reasoning became solid.
+              Treat the archive as a compact shelf of proven answers you can reopen, compare, and trace back to the exact session where the reasoning became solid.
             </p>
           </div>
           <div className="archive-workspace-surface__stats">
@@ -130,11 +129,11 @@ export function ArchivePage() {
         <div className="archive-workspace-surface__guidance">
           <article className="archive-workspace-surface__guidance-card">
             <span>Open with intent</span>
-            <strong>Reuse answers that already held up under repeated probing</strong>
+            <strong>Reuse answers that already held up under repeated probing.</strong>
           </article>
           <article className="archive-workspace-surface__guidance-card">
             <span>Trace the source</span>
-            <strong>Jump back to the exact mock session when you need the original context</strong>
+            <strong>Jump back to the exact mock session when you need the original context.</strong>
           </article>
         </div>
       </section>
