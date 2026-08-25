@@ -3,16 +3,19 @@ import { ContentGrid, SectionPanel } from "../../shared/ui/layout";
 
 type ReviewQueueLayoutProps = {
   actionError: ReactNode;
+  decisionSupport: ReactNode;
   listContent: ReactNode;
 };
 
 export function ReviewQueueMobileLayout({
   actionError,
+  decisionSupport,
   listContent,
 }: ReviewQueueLayoutProps) {
   return (
     <div className="page-stack">
       {actionError}
+      {decisionSupport}
       {listContent}
     </div>
   );
@@ -20,6 +23,7 @@ export function ReviewQueueMobileLayout({
 
 export function ReviewQueueDesktopLayout({
   actionError,
+  decisionSupport,
   listContent,
 }: ReviewQueueLayoutProps) {
   return (
@@ -48,29 +52,7 @@ export function ReviewQueueDesktopLayout({
             </div>
           </div>
         </SectionPanel>
-        <SectionPanel className="review-queue-note-card" variant="muted">
-          <div className="review-queue-note-card__header">
-            <span className="page-card__label">Desktop workflow</span>
-            <span className="detail-chip">Readable controls</span>
-          </div>
-          <h2 className="page-card__title">Keep action choices readable</h2>
-          <p className="page-card__body">
-            Desktop uses wider cards so the question title, scheduling context, and actions stay visible together.
-          </p>
-          <p className="review-queue-note-card__body">
-            The goal is fast triage: inspect, act, then return to focused answer work.
-          </p>
-          <div className="review-queue-note-card__rules">
-            <div className="review-queue-note-card__rule">
-              <strong>Priority first</strong>
-              <span>High-priority and due-today items should dominate the first pass.</span>
-            </div>
-            <div className="review-queue-note-card__rule">
-              <strong>Loop closure</strong>
-              <span>Use result context only to tighten the retry, not to re-read old work indefinitely.</span>
-            </div>
-          </div>
-        </SectionPanel>
+        {decisionSupport}
       </ContentGrid>
       <div className="page-stack">
         {actionError}

@@ -18,18 +18,42 @@ export function ReviewQueueItem({
   pendingAction = null,
 }: ReviewQueueItemProps) {
   const disabled = pendingAction !== null;
+  const priorityText = item.priorityLabel ?? "Priority pending";
+  const timingText = item.scheduledLabel ?? "No schedule";
+  const executionLane = item.sourceAnswerAttemptId
+    ? "Answer-ready"
+    : item.reasonTypeLabel.toLowerCase().includes("depth") || item.reasonTypeLabel.toLowerCase().includes("skill")
+      ? "Needs study"
+      : "Quick retry";
 
   return (
     <article className="list-item-card review-queue-item-card">
       <div className="list-item-card__content">
-        <div className="list-item-card__meta">
-          <span>{item.reasonTypeLabel}</span>
-          {item.priorityLabel ? <span>{item.priorityLabel}</span> : null}
-          {item.scheduledLabel ? <span>{item.scheduledLabel}</span> : null}
-          <QuestionStatusBadge status={item.statusLabel} />
+        <div className="review-queue-item-card__topline">
+          <div className="list-item-card__meta">
+            <span>{item.reasonTypeLabel}</span>
+            {item.priorityLabel ? <span>{item.priorityLabel}</span> : null}
+            {item.scheduledLabel ? <span>{item.scheduledLabel}</span> : null}
+            <QuestionStatusBadge status={item.statusLabel} />
+          </div>
+          <span className="detail-chip detail-chip--accent">{executionLane}</span>
         </div>
         <h3 className="list-item-card__title">{item.questionTitle}</h3>
         <p className="list-item-card__body">{item.reasonDetail}</p>
+        <div className="review-queue-item-card__decision-grid">
+          <article className="review-queue-item-card__decision-card">
+            <span>Priority signal</span>
+            <strong>{priorityText}</strong>
+          </article>
+          <article className="review-queue-item-card__decision-card">
+            <span>Timing</span>
+            <strong>{timingText}</strong>
+          </article>
+          <article className="review-queue-item-card__decision-card">
+            <span>Best next move</span>
+            <strong>{executionLane}</strong>
+          </article>
+        </div>
         <div className="review-queue-item-card__supporting">
           {item.priorityLabel ? (
             <article className="review-queue-item-card__supporting-item">
@@ -63,7 +87,7 @@ export function ReviewQueueItem({
           className="secondary-button"
           to={routeConfig.questionDetail.buildPath({ questionId: item.questionId })}
         >
-          Detail
+          Inspect
         </Link>
         <Link
           className="primary-button"
@@ -81,9 +105,14 @@ export function ReviewQueueItem({
         ) : null}
       </div>
       <div className="review-queue-item-card__footer">
-        <p className="review-queue-item-card__note">
-          Resolve now only if you can finish the answer loop; otherwise defer intentionally.
-        </p>
+        <div className="review-queue-item-card__footer-copy">
+          <p className="review-queue-item-card__note">
+            Resolve now only if you can finish the answer loop; otherwise defer intentionally.
+          </p>
+          <span className="review-queue-item-card__footer-hint">
+            The queue should shrink because the branch became clearer, not because it was hidden.
+          </span>
+        </div>
         <QueueActionButtons
           disabled={disabled}
           onDone={onDone}

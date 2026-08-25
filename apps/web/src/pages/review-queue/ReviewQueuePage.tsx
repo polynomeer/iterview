@@ -5,7 +5,7 @@ import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
-import { useLayoutMode } from "../../shared/ui/layout";
+import { SectionPanel, useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { useReviewQueueActionMutation } from "../../features/review-queue/api/useReviewQueueActionMutation";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
@@ -28,6 +28,20 @@ export function ReviewQueuePage() {
     (item.scheduledLabel ?? "").toLowerCase().includes("today"),
   ).length;
   const itemsWithResultCount = queueItems.filter((item) => Boolean(item.sourceAnswerAttemptId)).length;
+  const depthRepairCount = queueItems.filter((item) =>
+    item.reasonTypeLabel.toLowerCase().includes("depth") ||
+    item.reasonTypeLabel.toLowerCase().includes("skill"),
+  ).length;
+  const freshRetryCount = queueItems.filter((item) =>
+    item.reasonTypeLabel.toLowerCase().includes("fresh") ||
+    item.reasonTypeLabel.toLowerCase().includes("scheduled"),
+  ).length;
+  const executionMode =
+    highPriorityCount > 0
+      ? "Priority-first pass"
+      : scheduledTodayCount > 0
+        ? "Due-today cleanup"
+        : "Steady queue maintenance";
 
   async function handleSkip(queueItemId: string) {
     setActionStatus(null);
@@ -88,6 +102,51 @@ export function ReviewQueuePage() {
       pendingItemId={pendingItemId}
     />
   ) : null;
+  const decisionSupport = (
+    <SectionPanel className="review-queue-insight-surface" variant="muted">
+      <div className="review-queue-insight-surface__header">
+        <div>
+          <span className="page-card__label">Queue strategy</span>
+          <h2 className="page-card__title">Separate items you can answer now from items that still need evidence or depth work</h2>
+          <p className="page-card__body">
+            A clean queue is not just short. It should tell you which branch is ready for an answer attempt, which one needs source-of-truth reinforcement, and which one can be delayed without losing momentum.
+          </p>
+        </div>
+        <span className="detail-chip detail-chip--accent">{executionMode}</span>
+      </div>
+      <div className="review-queue-insight-surface__stats">
+        <article>
+          <span>Result-backed</span>
+          <strong>{itemsWithResultCount}</strong>
+          <p>items with previous answer context to tighten immediately</p>
+        </article>
+        <article>
+          <span>Depth repair</span>
+          <strong>{depthRepairCount}</strong>
+          <p>branches that likely need a more concrete follow-up explanation</p>
+        </article>
+        <article>
+          <span>Fresh retries</span>
+          <strong>{freshRetryCount}</strong>
+          <p>scheduled or stale items that should be recycled back into active practice</p>
+        </article>
+      </div>
+      <div className="review-queue-insight-surface__lanes">
+        <div className="review-queue-insight-surface__lane">
+          <strong>Answer now</strong>
+          <span>Prefer items that already have result context or a sharply defined retry target.</span>
+        </div>
+        <div className="review-queue-insight-surface__lane">
+          <strong>Study before retry</strong>
+          <span>Use this lane for weak skill or shallow depth items where the explanation is still abstract.</span>
+        </div>
+        <div className="review-queue-insight-surface__lane">
+          <strong>Defer intentionally</strong>
+          <span>Skip only when you are preserving focus, not when you are avoiding a branch you do not yet understand.</span>
+        </div>
+      </div>
+    </SectionPanel>
+  );
 
   return (
     <PageContainer
@@ -190,8 +249,8 @@ export function ReviewQueuePage() {
 
       {listContent
         ? isDesktop
-          ? <ReviewQueueDesktopLayout actionError={null} listContent={listContent} />
-          : <ReviewQueueMobileLayout actionError={null} listContent={listContent} />
+          ? <ReviewQueueDesktopLayout actionError={null} decisionSupport={decisionSupport} listContent={listContent} />
+          : <ReviewQueueMobileLayout actionError={null} decisionSupport={decisionSupport} listContent={listContent} />
         : null}
     </PageContainer>
   );
