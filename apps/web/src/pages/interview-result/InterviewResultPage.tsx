@@ -10,6 +10,7 @@ import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 import { useLocale } from "../../shared/i18n";
 import { InterviewFullCoverageResultView } from "../../widgets/interview";
 
@@ -131,6 +132,31 @@ export function InterviewResultPage() {
       title={t("result.pageTitle")}
     >
       <div className="interview-result-layout">
+        <WorkspaceContinuityRail
+          current={{
+            title: "Session recovery decision",
+            description: "Translate the finished session into a narrower recovery pass or a justified next branch.",
+          }}
+          downstream={[
+            {
+              title: "Review queue",
+              description: "Push unresolved weak or skipped branches into deliberate retry work.",
+              to: routeConfig.reviewQueue.buildPath(),
+            },
+            {
+              title: "Resume analysis",
+              description: "Return to source-of-truth review when the weak branch points back to a thin claim.",
+              to: routeConfig.resumeAnalysis.buildPath(),
+            },
+          ]}
+          upstream={[
+            {
+              title: "Interview session",
+              description: "This result should be read as the continuation of the branch you just defended.",
+              to: routeConfig.interviewSession.buildPath({ sessionId }),
+            },
+          ]}
+        />
         <section className="page-card interview-result-workspace-surface">
           <div className="interview-result-workspace-surface__header">
             <div className="interview-result-workspace-surface__intro">

@@ -202,6 +202,8 @@ describe("ResumeAnalysisPage", () => {
     );
 
     expect(screen.getByText("Inspect resume source of truth")).toBeInTheDocument();
+    expect(screen.getByText("Stay inside one interview preparation loop")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Resume editor/i })).toBeInTheDocument();
     expect(document.querySelector(".resume-analysis-layout--desktop")).not.toBeNull();
   });
 });

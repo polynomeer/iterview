@@ -12,6 +12,7 @@ import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 import { InterviewSessionHistoryList } from "../../widgets/interview";
 
 type WorkspaceNode = {
@@ -449,6 +450,31 @@ export function InterviewPage() {
       {!(resumeListQuery.isLoading || latestResumeQuery.isLoading) &&
       !(resumeListQuery.isError && latestResumeQuery.isError) ? (
         <div className="interview-workspace-page">
+          <WorkspaceContinuityRail
+            current={{
+              title: "Interview session launch",
+              description: "Lock one resume version, choose one branch, and decide how broad this pass should be.",
+            }}
+            downstream={[
+              {
+                title: "Practice",
+                description: "Return to question browsing if the next branch is still unclear.",
+                to: routeConfig.practice.buildPath(),
+              },
+              {
+                title: "Review queue",
+                description: "Clear recovery work first when recent weak branches still block a new run.",
+                to: routeConfig.reviewQueue.buildPath(),
+              },
+            ]}
+            upstream={[
+              {
+                title: "Resume analysis",
+                description: "Use the active source-of-truth review to decide which branch should be defended next.",
+                to: routeConfig.resumeAnalysis.buildPath(),
+              },
+            ]}
+          />
           <section className="page-card interview-workspace-surface">
             <div className="interview-workspace-surface__header">
               <div className="interview-workspace-surface__intro">

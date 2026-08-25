@@ -7475,6 +7475,113 @@ button {
   background: var(--surface-muted);
 }
 
+.workspace-continuity-rail {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 88%, rgba(87, 116, 255, 0.18));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-primary) 95%, rgba(87, 116, 255, 0.05)) 0%, var(--surface-primary) 100%);
+}
+
+.workspace-continuity-rail__header {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.workspace-continuity-rail__header .page-card__body {
+  max-width: 66ch;
+  margin: 0;
+}
+
+.workspace-continuity-rail__columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.workspace-continuity-rail__column {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.workspace-continuity-rail__stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.workspace-continuity-rail__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.workspace-continuity-rail__surface {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem 1rem 1.05rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-secondary) 92%, white 8%);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.workspace-continuity-rail__surface:hover {
+  border-color: color-mix(in srgb, var(--border-strong) 72%, rgba(87, 116, 255, 0.34));
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.workspace-continuity-rail__surface strong {
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--text-main);
+}
+
+.workspace-continuity-rail__surface p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.workspace-continuity-rail__surface--current {
+  border-color: color-mix(in srgb, var(--border-strong) 78%, rgba(87, 116, 255, 0.4));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-primary) 84%, rgba(87, 116, 255, 0.12)) 0%, var(--surface-primary) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.46);
+}
+
+.workspace-continuity-rail__status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.28rem 0.58rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.06);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.workspace-continuity-rail__status--current {
+  background: rgba(87, 116, 255, 0.14);
+  color: var(--brand-accent-strong);
+}
+
+.workspace-continuity-rail__status--next {
+  background: rgba(16, 185, 129, 0.14);
+  color: rgb(6, 95, 70);
+}
+
 .interview-session-side-summary,
 .interview-session-side-panel {
   display: grid;
@@ -12005,6 +12112,7 @@ button {
   .interview-session-answer-surface__draft-status,
   .interview-session-answer-surface__guidance,
   .interview-session-answer-surface__playbook,
+  .workspace-continuity-rail__columns,
   .result-analysis-workspace-surface__guidance,
   .interview-result-layout__hero-decision,
   .interview-result-layout__next-pass-signals,

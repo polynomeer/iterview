@@ -136,6 +136,8 @@ describe("PracticePage", () => {
     );
 
     expect(screen.getByText("Explain caching")).toBeInTheDocument();
+    expect(screen.getByText("Stay inside one interview preparation loop")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Resume analysis/i })).toBeInTheDocument();
     expect(document.querySelector(".practice-layout--desktop")).not.toBeNull();
   });
 

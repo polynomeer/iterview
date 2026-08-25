@@ -12,6 +12,7 @@ import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { SectionPanel, useLayoutMode } from "../../shared/ui/layout";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 import { PracticeDesktopLayout, PracticeMobileLayout } from "./PracticeLayouts";
 import { QuestionFilterBar, QuestionList, SearchInput } from "../../widgets/practice";
 
@@ -76,6 +77,33 @@ export function PracticePage() {
       introVariant="minimal"
       title="Choose the next interview branch"
     >
+      <WorkspaceContinuityRail
+        current={{
+          title: "Practice branch selection",
+          description: "Filter the catalog until one question deserves a deliberate DFS pass.",
+        }}
+        downstream={[
+          {
+            title: "Review queue",
+            description: "Move into retry work when a weak branch should be cleared before new practice.",
+            to: routeConfig.reviewQueue.buildPath(),
+          },
+          {
+            title: "Question tree",
+            description: "Open the branch map before answering when follow-up order matters.",
+            to: visibleItems[0]
+              ? routeConfig.questionTree.buildPath({ questionId: visibleItems[0].id })
+              : routeConfig.practice.buildPath(),
+          },
+        ]}
+        upstream={[
+          {
+            title: "Resume analysis",
+            description: "Start from the source claim that needs interview pressure next.",
+            to: routeConfig.resumeAnalysis.buildPath(),
+          },
+        ]}
+      />
       <section className="page-card practice-workspace-surface">
         <div className="practice-workspace-surface__header">
           <div className="practice-workspace-surface__intro">

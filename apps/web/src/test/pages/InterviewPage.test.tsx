@@ -105,6 +105,7 @@ describe("InterviewPage", () => {
 
     expect(screen.getByText("Session history")).toBeInTheDocument();
     expect(screen.getByText("Resume Mock session")).toBeInTheDocument();
+    expect(screen.getByText("Stay inside one interview preparation loop")).toBeInTheDocument();
     expect(screen.getByText("Lock one resume version, pick one branch, then start with a clear traversal mode.")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Open session setup" }).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Use one resume version per run.")).toBeInTheDocument();

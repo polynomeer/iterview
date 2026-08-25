@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 
 type WeakNode = {
   id: string;
@@ -194,6 +195,31 @@ export function WeakNodesPage() {
       eyebrow="Weak Nodes"
       title="Weak node remediation workspace"
     >
+      <WorkspaceContinuityRail
+        current={{
+          title: "Weak branch remediation",
+          description: "Trace the failing relationship between a weak explanation, its question branch, and its evidence.",
+        }}
+        downstream={[
+          {
+            title: "Resume analysis",
+            description: "Return to source-of-truth review when the weak branch exposes a thin claim.",
+            to: routeConfig.resumeAnalysis.buildPath(),
+          },
+          {
+            title: "Notes",
+            description: "Capture the repaired explanation before reopening the branch under pressure.",
+            to: routeConfig.notes.buildPath(),
+          },
+        ]}
+        upstream={[
+          {
+            title: "Review queue",
+            description: "Use this surface after the queue identifies a retry that needs structural remediation.",
+            to: routeConfig.reviewQueue.buildPath(),
+          },
+        ]}
+      />
       <section className="page-card weak-nodes-workspace-surface">
         <div className="weak-nodes-workspace-surface__header">
           <div className="weak-nodes-workspace-surface__intro">

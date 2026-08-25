@@ -24,6 +24,7 @@ import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { SectionPanel } from "../../shared/ui/layout";
+import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 import { AnswerTextEditor } from "../../widgets/answer";
 import {
   InterviewCoveragePanel,
@@ -280,6 +281,31 @@ export function InterviewSessionPage() {
       title={t("interview.sessionWorkspaceTitle")}
     >
       <div className="page-stack interview-session-layout">
+        <WorkspaceContinuityRail
+          current={{
+            title: "Active DFS interview branch",
+            description: "Stay on the current branch until the answer is specific, evidence-backed, and ready to advance.",
+          }}
+          downstream={[
+            {
+              title: "Interview result",
+              description: "Use the result surface to decide whether this branch needs recovery or expansion next.",
+              to: routeConfig.interviewSessionResult.buildPath({ sessionId }),
+            },
+            {
+              title: "Notes",
+              description: "Capture the exact repaired explanation before the next retry pass.",
+              to: routeConfig.notes.buildPath(),
+            },
+          ]}
+          upstream={[
+            {
+              title: "Interview launcher",
+              description: "This active branch inherits its boundary and traversal mode from the interview workspace.",
+              to: routeConfig.interview.buildPath(),
+            },
+          ]}
+        />
         <section className="page-card interview-session-workspace-surface">
           <div className="interview-session-workspace-surface__header">
             <div className="interview-session-workspace-surface__intro">

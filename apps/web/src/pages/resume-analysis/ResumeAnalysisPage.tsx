@@ -10,6 +10,7 @@ import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 import {
   ActiveResumeOverviewCard,
   ResumeExperienceList,
@@ -38,6 +39,33 @@ export function ResumeAnalysisPage() {
       eyebrow="Resume Analysis"
       title="Inspect resume source of truth"
     >
+      <WorkspaceContinuityRail
+        current={{
+          title: "Resume source-of-truth review",
+          description: "Find which active resume claims still lack enough evidence to survive follow-up pressure.",
+        }}
+        downstream={[
+          {
+            title: "Resume editor",
+            description: "Rewrite the thin claim once the risk is clear.",
+            to: activeResumeVersion
+              ? routeConfig.resumeEditor.buildPath({ versionId: activeResumeVersion.id })
+              : routeConfig.resume.buildPath(),
+          },
+          {
+            title: "Interview launcher",
+            description: "Start a mock only after the source claim is strong enough to defend.",
+            to: routeConfig.interview.buildPath(),
+          },
+        ]}
+        upstream={[
+          {
+            title: "Weak nodes",
+            description: "Come back here when a failing branch points to a weak resume claim.",
+            to: routeConfig.weakNodes.buildPath(),
+          },
+        ]}
+      />
       {resumeListQuery.isLoading && latestResumeQuery.isLoading ? (
         <LoadingStateCard
           body="Loading resume containers and the active version before opening analysis."

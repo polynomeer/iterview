@@ -197,7 +197,7 @@ Mark each line only when the changed scope is:
 - [x] Verify review and retry journey
 - [x] Verify resume source-of-truth authoring journey
 - [x] Verify interview session to result continuity
-- [ ] Verify the product reads as one interview workspace rather than a set of disconnected pages
+- [x] Verify the product reads as one interview workspace rather than a set of disconnected pages
 - [x] Verify notes, bookmarks, scheduling, and company-target surfaces behave as real workspaces
 - [x] Verify the command palette can navigate across every major workspace family
 

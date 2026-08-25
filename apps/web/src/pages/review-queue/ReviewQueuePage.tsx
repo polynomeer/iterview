@@ -8,6 +8,7 @@ import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { SectionPanel, useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 import { useReviewQueueActionMutation } from "../../features/review-queue/api/useReviewQueueActionMutation";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { ReviewQueueDesktopLayout, ReviewQueueMobileLayout } from "./ReviewQueueLayouts";
@@ -157,6 +158,36 @@ export function ReviewQueuePage() {
       introVariant="minimal"
       title="Resolve queued retry branches"
     >
+      <WorkspaceContinuityRail
+        current={{
+          title: "Queued retry execution",
+          description: "Use the queue to decide whether the next move is answer, study, or defer.",
+        }}
+        downstream={[
+          {
+            title: "Weak nodes",
+            description: "Open the remediation graph when the queue says something is weak but not why.",
+            to: routeConfig.weakNodes.buildPath(),
+          },
+          {
+            title: "Scheduled reviews",
+            description: "Rebalance upcoming retry blocks once the immediate queue is under control.",
+            to: routeConfig.scheduledReviews.buildPath(),
+          },
+        ]}
+        upstream={[
+          {
+            title: "Practice",
+            description: "Fresh practice surfaces usually feed the next retry decision into this queue.",
+            to: routeConfig.practice.buildPath(),
+          },
+          {
+            title: "Interview launcher",
+            description: "Full-session recovery decisions should land here before broad practice opens again.",
+            to: routeConfig.interview.buildPath(),
+          },
+        ]}
+      />
       <section className="page-card review-queue-workspace-surface">
         <div className="review-queue-workspace-surface__header">
           <div className="review-queue-workspace-surface__intro">
