@@ -29,7 +29,7 @@ export function SidebarNavigation() {
       ];
   const manageLinks = isAuthenticated
     ? [
-        { label: "Target Companies", to: routeConfig.resumeTailorJobPostings.buildPath() },
+        { label: "Target Companies", to: routeConfig.targetCompanies.buildPath() },
         { label: "Notes", to: routeConfig.notes.buildPath() },
         { label: "Bookmarks", to: routeConfig.bookmarks.buildPath() },
       ]

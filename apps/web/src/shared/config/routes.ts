@@ -64,6 +64,7 @@ export const routeConfig = {
   feed: createStaticRoute("/feed", "Feed"),
   notes: createStaticRoute("/notes", "Notes", true),
   bookmarks: createStaticRoute("/bookmarks", "Bookmarks", true),
+  targetCompanies: createStaticRoute("/target-companies", "Target Companies", true),
   profile: createStaticRoute("/profile", "Profile", true),
   resume: createStaticRoute("/profile/resumes", "Resume", true),
   resumeAnalysis: createStaticRoute("/profile/resumes/analysis", "Resume Analysis", true),

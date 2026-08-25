@@ -96,7 +96,7 @@ const BOOKMARK_RECORDS: BookmarkRecord[] = [
     context: "Use this bookmark to align your strongest stories with the company’s likely expectations around correctness and infrastructure maturity.",
     related: ["Payments DFS drill path", "Settlement reliability note", "Target job posting"],
     primaryActionLabel: "Open company board",
-    primaryActionTo: routeConfig.resumeTailorJobPostings.buildPath(),
+    primaryActionTo: routeConfig.targetCompanies.buildPath(),
     secondaryActionLabel: "Open resume",
     secondaryActionTo: routeConfig.resumeAnalysis.buildPath(),
   },

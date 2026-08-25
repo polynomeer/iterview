@@ -40,3 +40,5 @@ Each ADR should include:
    Standardizes the redesign around a minimal dark workspace surface system with shared card and typography rules.
 7. [`0007-guest-simplification-and-ongoing-adr-policy.md`](0007-guest-simplification-and-ongoing-adr-policy.md)
    Simplifies the guest experience and formalizes ongoing ADR creation as a repository rule.
+8. [`0008-separate-target-company-tracking-from-job-posting-intake.md`](0008-separate-target-company-tracking-from-job-posting-intake.md)
+   Separates company preparation tracking from resume-tailor job posting ingestion.
