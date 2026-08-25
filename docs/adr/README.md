@@ -46,3 +46,5 @@ Each ADR should include:
    Separates spaced-repetition planning from the active retry execution queue.
 10. [`0010-separate-account-identity-from-practice-settings.md`](0010-separate-account-identity-from-practice-settings.md)
    Separates account identity management from operational practice settings.
+11. [`0011-separate-weak-node-remediation-from-queue-execution.md`](0011-separate-weak-node-remediation-from-queue-execution.md)
+   Separates graph-first weak-node remediation from queue-based retry execution.

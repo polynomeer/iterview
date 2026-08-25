@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { getErrorDetails } from "../../shared/api/errors";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
@@ -141,6 +142,16 @@ export function ReviewQueuePage() {
 
   return (
     <PageContainer
+      actions={
+        <>
+          <Link className="secondary-button" to={routeConfig.weakNodes.buildPath()}>
+            Open weak nodes
+          </Link>
+          <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>
+            Open scheduled reviews
+          </Link>
+        </>
+      }
       description="Resolve the highest-signal retry first, then return to fresh practice with fewer weak branches still open."
       eyebrow="Review Queue"
       introVariant="minimal"

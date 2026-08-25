@@ -37,6 +37,7 @@ export const routeConfig = {
   skills: createStaticRoute("/skills", "Skills", true),
   reviewQueue: createStaticRoute("/review-queue", "Review Queue", true),
   scheduledReviews: createStaticRoute("/scheduled-reviews", "Scheduled Reviews", true),
+  weakNodes: createStaticRoute("/weak-nodes", "Weak Nodes", true),
   questionDetail: createDynamicRoute(
     "/questions/:questionId",
     "Question Detail",
@@ -162,6 +163,7 @@ export const secondaryDesktopRoutes = [
   routeConfig.skills,
   routeConfig.interview,
   routeConfig.scheduledReviews,
+  routeConfig.weakNodes,
   routeConfig.resumeTailor,
   routeConfig.practicalInterviews,
   routeConfig.resumeAnalysis,

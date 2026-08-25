@@ -11,6 +11,7 @@ export function SidebarNavigation() {
         { label: "Question Map", to: routeConfig.practice.buildPath() },
         { label: "Review Queue", to: routeConfig.reviewQueue.buildPath() },
         { label: "Scheduled Reviews", to: routeConfig.scheduledReviews.buildPath() },
+        { label: "Weak Nodes", to: routeConfig.weakNodes.buildPath() },
         { label: "Archive", to: routeConfig.archive.buildPath() },
       ]
     : [
