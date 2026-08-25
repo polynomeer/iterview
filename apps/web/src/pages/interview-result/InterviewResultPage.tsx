@@ -114,6 +114,12 @@ export function InterviewResultPage() {
       ? coverageQuery.data.skippedFacetSummaries.length
       : 0;
   const unresolvedBranchCount = weakFacetCount + skippedFacetCount;
+  const recoverySignal =
+    unresolvedBranchCount > 0
+      ? weakFacetCount > 0
+        ? "Weak-branch recovery"
+        : "Skipped-facet recovery"
+      : "Adjacent branch expansion";
   const resultSnapshotItems = [
     {
       label: "Next pass shape",
@@ -231,6 +237,49 @@ export function InterviewResultPage() {
             </article>
           </div>
         </section>
+        <SectionPanel className="interview-result-insight-surface" variant="muted">
+          <div className="interview-result-insight-surface__header">
+            <div>
+              <span className="page-card__label">Recovery insight</span>
+              <h2 className="page-card__title">Turn the finished session into one explicit next-pass decision</h2>
+              <p className="page-card__body">
+                Scores are only useful if they narrow the next DFS move. This layer should tell you whether to reopen a weak branch, recover skipped evidence, or move sideways into a neighboring path without losing depth.
+              </p>
+            </div>
+            <span className="detail-chip detail-chip--accent">{recoverySignal}</span>
+          </div>
+          <div className="interview-result-insight-surface__stats">
+            <article>
+              <span>Unresolved branches</span>
+              <strong>{unresolvedBranchCount}</strong>
+              <p>weak or skipped recovery targets still carrying into the next run</p>
+            </article>
+            <article>
+              <span>Answered nodes</span>
+              <strong>{answeredCount}</strong>
+              <p>branches that already produced a defendable answer attempt</p>
+            </article>
+            <article>
+              <span>Next action</span>
+              <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Recovery pass" : "Neighbor branch"}</strong>
+              <p>the most efficient direction for the next interview cycle</p>
+            </article>
+          </div>
+          <div className="interview-result-insight-surface__lanes">
+            <div className="interview-result-insight-surface__lane">
+              <strong>Recover the narrowest failure</strong>
+              <span>Start with the smallest branch that still collapses under follow-up pressure.</span>
+            </div>
+            <div className="interview-result-insight-surface__lane">
+              <strong>Bring missing evidence</strong>
+              <span>Re-enter with the metric, trade-off, or source-of-truth line the previous answer could not defend.</span>
+            </div>
+            <div className="interview-result-insight-surface__lane">
+              <strong>Expand only after depth holds</strong>
+              <span>Move to adjacent branches only when the reopened node no longer stays vague.</span>
+            </div>
+          </div>
+        </SectionPanel>
         <div className="interview-result-layout__hero-grid">
           <section className="page-card interview-result-layout__hero">
             <div className="interview-result-layout__hero-topline">
