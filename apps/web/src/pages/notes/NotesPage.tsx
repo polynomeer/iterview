@@ -236,6 +236,7 @@ function NoteListSection({
                 <span>{note.updatedAt}</span>
               </div>
               <p>{note.summary}</p>
+              <p className="notes-list-item__excerpt">{note.excerpt}</p>
               <div className="notes-list-item__chips">
                 {note.tags.map((tag) => (
                   <span className="detail-chip" key={tag}>
@@ -280,6 +281,19 @@ export function NotesPage() {
   const otherNotes = filteredNotes.filter((note) => !note.pinned);
   const linkedQuestionCount = selectedNote?.linkedQuestions.length ?? 0;
   const relatedSkillCount = selectedNote?.relatedSkills.length ?? 0;
+  const selectedWordCount = selectedNote?.body.split(/\s+/).filter(Boolean).length ?? 0;
+  const selectedBacklinkCount = selectedNote?.backlinks.length ?? 0;
+  const selectedQuestionAverage = linkedQuestionCount
+    ? Math.round(
+        (selectedNote?.linkedQuestions.reduce((sum, question) => sum + question.score, 0) ?? 0) / linkedQuestionCount,
+      )
+    : 0;
+  const noteModeSignal =
+    linkedQuestionCount >= 3
+      ? "High reuse potential"
+      : selectedBacklinkCount > 0
+        ? "Connected context"
+        : "Needs linking";
 
   return (
     <PageContainer
@@ -344,6 +358,52 @@ export function NotesPage() {
         </div>
       </section>
 
+      {selectedNote ? (
+        <section className="page-card notes-insight-surface">
+          <div className="notes-insight-surface__header">
+            <div>
+              <span className="page-card__label">Selected note insight</span>
+              <h2 className="page-card__title">Keep one reusable explanation fragment ready for the next follow-up branch</h2>
+              <p className="page-card__body">
+                The best note is not a dump of facts. It is a tight explanation unit that can be reused when the interviewer pushes from the resume claim into DFS-level follow-up questions.
+              </p>
+            </div>
+            <span className="detail-chip detail-chip--accent">{noteModeSignal}</span>
+          </div>
+          <div className="notes-insight-surface__stats">
+            <article>
+              <span>Words</span>
+              <strong>{selectedWordCount}</strong>
+              <p>enough density to support a complete answer without drifting</p>
+            </article>
+            <article>
+              <span>Question average</span>
+              <strong>{selectedQuestionAverage || "-"}</strong>
+              <p>average score across linked follow-up questions</p>
+            </article>
+            <article>
+              <span>Backlinks</span>
+              <strong>{selectedBacklinkCount}</strong>
+              <p>other notes that should stay semantically connected</p>
+            </article>
+          </div>
+          <div className="notes-insight-surface__lanes">
+            <div className="notes-insight-surface__lane">
+              <strong>Clarify the claim</strong>
+              <span>State the main argument you want to reuse before adding supporting details.</span>
+            </div>
+            <div className="notes-insight-surface__lane">
+              <strong>Reconnect the evidence</strong>
+              <span>Tie the note back to a resume event, metric, or engineering decision that you can defend concretely.</span>
+            </div>
+            <div className="notes-insight-surface__lane">
+              <strong>Branch outward</strong>
+              <span>Link the follow-up questions that are most likely to probe this note next.</span>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <div className={`notes-layout ${isDesktop ? "notes-layout--desktop" : "notes-layout--mobile"}`}>
         <aside className="notes-layout__sidebar page-stack">
           <section className="page-card notes-panel">
@@ -399,6 +459,7 @@ export function NotesPage() {
               <div className="notes-editor__header">
                 <div>
                   <h2 className="notes-editor__title">{selectedNote.title}</h2>
+                  <p className="notes-editor__summary">{selectedNote.summary}</p>
                   <div className="notes-editor__chips">
                     {selectedNote.tags.map((tag) => (
                       <span className="detail-chip" key={tag}>
@@ -435,6 +496,20 @@ export function NotesPage() {
                   </button>
                 ))}
               </div>
+              <div className="notes-editor__mini-stats">
+                <article>
+                  <span>Linked questions</span>
+                  <strong>{selectedNote.linkedQuestions.length}</strong>
+                </article>
+                <article>
+                  <span>Resume evidence</span>
+                  <strong>{selectedNote.resumeContext.period}</strong>
+                </article>
+                <article>
+                  <span>Backlinks</span>
+                  <strong>{selectedNote.backlinks.length}</strong>
+                </article>
+              </div>
               {mode === "edit" ? (
                 <textarea
                   className="notes-editor__textarea"
@@ -468,6 +543,10 @@ export function NotesPage() {
               </div>
               <div className="notes-detail-rail__group">
                 <span className="notes-detail-rail__label">About this note</span>
+                <div className="notes-detail-rail__spotlight">
+                  <strong>{selectedNote.summary}</strong>
+                  <span>{selectedNote.excerpt}</span>
+                </div>
                 <div className="notes-detail-rail__meta-grid">
                   <article>
                     <span>Last updated</span>
