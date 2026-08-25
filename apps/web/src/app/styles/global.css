@@ -8091,6 +8091,13 @@ button {
   margin-top: 24px;
 }
 
+.feed-workspace-surface__guidance {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
 .home-workspace-surface__guidance-card {
   display: grid;
   gap: 4px;
@@ -8108,6 +8115,29 @@ button {
 }
 
 .home-workspace-surface__guidance-card strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+  line-height: 1.45;
+}
+
+.feed-workspace-surface__guidance-card {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.feed-workspace-surface__guidance-card span {
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.feed-workspace-surface__guidance-card strong {
   color: #f8fafc;
   font-size: 1rem;
   letter-spacing: -0.03em;
@@ -10065,6 +10095,7 @@ button {
   }
 
   .practice-workspace-surface__guidance,
+  .feed-workspace-surface__guidance,
   .practice-list-item-card__supporting {
     grid-template-columns: 1fr;
   }
