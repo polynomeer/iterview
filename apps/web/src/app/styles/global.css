@@ -8289,6 +8289,24 @@ button {
   background: rgba(148, 163, 184, 0.06);
 }
 
+.interview-result-layout__hero-decision-item--warning,
+.interview-result-layout__next-pass-signal--warning,
+.interview-result-layout__actions-summary-item--warning {
+  border-color: rgba(248, 113, 113, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(248, 113, 113, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(42, 16, 24, 0.78), rgba(27, 11, 17, 0.62));
+}
+
+.interview-result-layout__hero-decision-item--accent,
+.interview-result-layout__next-pass-signal--accent,
+.interview-result-layout__actions-summary-item--accent {
+  border-color: rgba(45, 212, 191, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(13, 24, 44, 0.72), rgba(8, 18, 34, 0.58));
+}
+
 .interview-result-layout__next-note,
 .interview-result-workspace-surface__guidance-card span,
 .interview-result-layout__hero-decision-item span,
@@ -9015,6 +9033,27 @@ button {
     color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
 }
 
+.interview-result-layout__recap-card--answered {
+  border-color: rgba(74, 222, 128, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(74, 222, 128, 0.08), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
+    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
+}
+
+.interview-result-layout__recap-card--skipped {
+  border-color: rgba(248, 113, 113, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(248, 113, 113, 0.1), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-base) 96%, rgba(69, 10, 10, 0.32));
+}
+
+.interview-result-layout__recap-card--open {
+  border-style: dashed;
+  border-color: rgba(100, 116, 139, 0.22);
+}
+
 .interview-result-layout__recap-card .list-item-card__content {
   gap: 10px;
 }
@@ -9050,6 +9089,25 @@ button {
   border-radius: 16px;
   border: 1px solid rgba(148, 163, 184, 0.12);
   background: rgba(148, 163, 184, 0.05);
+}
+
+.interview-result-layout__next-item--warning {
+  border-color: rgba(248, 113, 113, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(248, 113, 113, 0.1), transparent 42%),
+    linear-gradient(180deg, rgba(42, 16, 24, 0.74), rgba(27, 11, 17, 0.58));
+}
+
+.interview-result-layout__next-item--accent {
+  border-color: rgba(45, 212, 191, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.1), transparent 42%),
+    linear-gradient(180deg, rgba(13, 24, 44, 0.7), rgba(8, 18, 34, 0.56));
+}
+
+.interview-result-layout__next-item--neutral {
+  border-color: rgba(148, 163, 184, 0.16);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.56), rgba(15, 23, 42, 0.38));
 }
 
 .interview-result-layout__next-item strong {

@@ -118,6 +118,11 @@ export function InterviewResultPage() {
         ? "Weak-branch recovery"
         : "Skipped-facet recovery"
       : "Adjacent branch expansion";
+  const nextActionLabel = weakFacetCount > 0 || skippedFacetCount > 0 ? "Recovery pass" : "Neighbor branch";
+  const recommendedActionLabel =
+    weakFacetCount > 0 || skippedFacetCount > 0 ? "Start a narrow recovery pass" : "Continue to a neighboring branch";
+  const recoveryModeTone =
+    weakFacetCount > 0 ? "warning" : skippedFacetCount > 0 ? "accent" : "neutral";
 
   return (
     <PageContainer
@@ -189,7 +194,7 @@ export function InterviewResultPage() {
           <h2 className="page-card__title">Session {sessionId}</h2>
           <p className="page-card__body">Use this pass to choose the next branch, not to admire the last one.</p>
           <div className="interview-result-layout__hero-decision">
-            <article className="interview-result-layout__hero-decision-item">
+            <article className={`interview-result-layout__hero-decision-item interview-result-layout__hero-decision-item--${recoveryModeTone}`}>
                   <span>Primary recovery</span>
                   <strong>
                     {weakFacetCount > 0
@@ -252,7 +257,16 @@ export function InterviewResultPage() {
                 <p className="page-card__body interview-result-layout__recap-intro">Reopen the skipped or shallow nodes with cleaner evidence.</p>
                 <div className="stack-list">
                   {session.questions.map((question) => (
-                    <article className="list-item-card interview-result-layout__recap-card" key={question.id}>
+                    <article
+                      className={`list-item-card interview-result-layout__recap-card${
+                        question.status === "skipped"
+                          ? " interview-result-layout__recap-card--skipped"
+                          : question.status === "answered"
+                            ? " interview-result-layout__recap-card--answered"
+                            : " interview-result-layout__recap-card--open"
+                      }`}
+                      key={question.id}
+                    >
                       <div className="list-item-card__content">
                         <div className="list-item-card__meta">
                           <span>{question.difficultyLabel}</span>
@@ -298,19 +312,19 @@ export function InterviewResultPage() {
                 Keep the next session narrow enough to see real improvement.
               </p>
               <div className="interview-result-layout__next-pass-signals">
-                <article className="interview-result-layout__next-pass-signal">
+                <article className={`interview-result-layout__next-pass-signal interview-result-layout__next-pass-signal--${recoveryModeTone}`}>
                   <span>Unresolved branches</span>
                   <strong>{unresolvedBranchCount}</strong>
                 </article>
                 <article className="interview-result-layout__next-pass-signal">
                   <span>Next action</span>
-                  <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Recovery pass" : "Neighbor branch"}</strong>
+                  <strong>{nextActionLabel}</strong>
                 </article>
               </div>
               <div className="interview-result-layout__actions-summary">
-                <article className="interview-result-layout__actions-summary-item">
+                <article className={`interview-result-layout__actions-summary-item interview-result-layout__actions-summary-item--${recoveryModeTone}`}>
                   <span>Recommended action</span>
-                  <strong>{weakFacetCount > 0 || skippedFacetCount > 0 ? "Start a narrow recovery pass" : "Continue to a neighboring branch"}</strong>
+                  <strong>{recommendedActionLabel}</strong>
                 </article>
                 <article className="interview-result-layout__actions-summary-item">
                   <span>Do not do</span>
@@ -318,7 +332,7 @@ export function InterviewResultPage() {
                 </article>
               </div>
               <div className="interview-result-layout__next-list">
-                <div className="interview-result-layout__next-item">
+                <div className={`interview-result-layout__next-item${weakFacetCount > 0 ? " interview-result-layout__next-item--warning" : ""}`}>
                   <strong>Weak branch recovery</strong>
                   <span>
                     {weakFacetCount > 0
@@ -326,7 +340,7 @@ export function InterviewResultPage() {
                       : "No weak branches are flagged in this result."}
                   </span>
                 </div>
-                <div className="interview-result-layout__next-item">
+                <div className={`interview-result-layout__next-item${skippedFacetCount > 0 ? " interview-result-layout__next-item--accent" : ""}`}>
                   <strong>Skipped facet recovery</strong>
                   <span>
                     {skippedFacetCount > 0
@@ -334,7 +348,7 @@ export function InterviewResultPage() {
                       : "No skipped facets are waiting for recovery."}
                   </span>
                 </div>
-                <div className="interview-result-layout__next-item">
+                <div className="interview-result-layout__next-item interview-result-layout__next-item--neutral">
                   <strong>Scope rule</strong>
                   <span>Keep the next pass narrow enough to improve branch depth.</span>
                 </div>

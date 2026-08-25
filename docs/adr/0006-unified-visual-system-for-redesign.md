@@ -42,4 +42,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Session and result screens should collapse repeated advisory panels into one or two decisive support surfaces instead of scattering the same recovery guidance across separate insight, brief, and rail cards.
 - Placeholder branches, fake scores, and duplicate metric summaries should be removed once real session state is available on the page.
 - DFS-oriented surfaces should visually separate current, defended, and queued branches so traversal state is readable before any body copy is read.
+- Result and recovery surfaces should visually distinguish weak recovery, skipped recovery, and safe expansion so the next action is obvious at scan speed.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.
