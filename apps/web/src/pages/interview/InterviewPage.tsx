@@ -349,6 +349,12 @@ export function InterviewPage() {
   const selectedInspector = WORKSPACE_INSPECTOR[selectedGraphNodeId] ?? WORKSPACE_INSPECTOR.mvcc;
   const completedSessionCount = sessionListQuery.data?.filter((item) => item.status === "completed").length ?? 0;
   const sessionCount = sessionListQuery.data?.length ?? 0;
+  const selectedNodePosition = WORKSPACE_COLUMNS.findIndex((column) =>
+    column.some((node) => node.id === selectedGraphNodeId),
+  );
+  const selectedNode =
+    WORKSPACE_COLUMNS[selectedNodePosition]?.find((node) => node.id === selectedGraphNodeId) ?? null;
+  const selectedLaneCount = selectedNodePosition >= 0 ? WORKSPACE_COLUMNS[selectedNodePosition].length : 0;
   const selectedResumeSummary = selectedResumeChoice
     ? `${selectedResumeChoice.resumeTitle} ${selectedResumeChoice.versionNumberLabel}`
     : t("interview.noResumeTitle");
@@ -520,6 +526,24 @@ export function InterviewPage() {
                     <button className="secondary-button" type="button">All Paths</button>
                   </div>
                 </div>
+                <div className="interview-graph-panel__summary">
+                  <article className="interview-graph-panel__summary-card interview-graph-panel__summary-card--active">
+                    <span>Selected branch</span>
+                    <strong>{selectedInspector.title}</strong>
+                  </article>
+                  <article className="interview-graph-panel__summary-card">
+                    <span>Depth lane</span>
+                    <strong>{selectedNodePosition >= 0 ? `Level ${selectedNodePosition + 1}` : "Root"}</strong>
+                  </article>
+                  <article className="interview-graph-panel__summary-card">
+                    <span>Parallel branches</span>
+                    <strong>{selectedLaneCount}</strong>
+                  </article>
+                  <article className="interview-graph-panel__summary-card">
+                    <span>Readiness</span>
+                    <strong>{selectedNode?.state === "weak" ? "Needs recovery" : selectedNode?.state === "medium" ? "Can narrow" : "Ready to defend"}</strong>
+                  </article>
+                </div>
                 <div className="interview-graph-panel__canvas">
                   {WORKSPACE_COLUMNS.map((column, columnIndex) => (
                     <div className="interview-graph-panel__lane" key={`column-${columnIndex}`}>
@@ -593,6 +617,9 @@ export function InterviewPage() {
                   <div className="stack-list">
                     {nextBranchCandidates.map((question, index) => (
                       <article className="list-item-card interview-workspace-inspector__question" key={question.title}>
+                        <div className={`interview-workspace-inspector__question-rail ${
+                          index === 0 ? "interview-workspace-inspector__question-rail--strong" : ""
+                        }`} aria-hidden="true" />
                         <div className="list-item-card__content">
                           <div className="list-item-card__meta">
                             <span>{index + 1}</span>

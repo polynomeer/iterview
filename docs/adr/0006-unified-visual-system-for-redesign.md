@@ -44,4 +44,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - DFS-oriented surfaces should visually separate current, defended, and queued branches so traversal state is readable before any body copy is read.
 - Result and recovery surfaces should visually distinguish weak recovery, skipped recovery, and safe expansion so the next action is obvious at scan speed.
 - Timeline surfaces should expose traversal order, depth, and branch status together so the interview path reads like a navigable DFS trail rather than a flat history list.
+- Entry branch maps should surface the selected path, its depth lane, and the immediate follow-up pressure before the session starts.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.
