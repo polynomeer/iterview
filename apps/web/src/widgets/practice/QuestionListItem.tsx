@@ -19,20 +19,6 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
         </div>
         <h3 className="list-item-card__title">{item.title}</h3>
         <p className="list-item-card__body">{item.prompt}</p>
-        <div className="practice-list-item-card__supporting">
-          {item.progressSummaryLabel ? (
-            <article className="practice-list-item-card__supporting-item">
-              <span>Progress</span>
-              <strong>{item.progressSummaryLabel}</strong>
-            </article>
-          ) : null}
-          {item.resumeRelevanceLabel ? (
-            <article className="practice-list-item-card__supporting-item">
-              <span>Resume relevance</span>
-              <strong>{item.resumeRelevanceLabel}</strong>
-            </article>
-          ) : null}
-        </div>
         {item.progressSummaryLabel || item.resumeRelevanceLabel ? (
           <div className="practice-list-item-card__notes">
             {item.progressSummaryLabel ? (
@@ -40,7 +26,7 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
             ) : null}
             {item.resumeRelevanceLabel ? (
               <p className="practice-list-item__progress">
-                Resume relevance: {item.resumeRelevanceLabel}
+                Resume: {item.resumeRelevanceLabel}
                 {item.resumeRelevanceReason ? ` / ${item.resumeRelevanceReason}` : ""}
               </p>
             ) : null}

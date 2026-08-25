@@ -40,37 +40,10 @@ export function ReviewQueueItem({
         </div>
         <h3 className="list-item-card__title">{item.questionTitle}</h3>
         <p className="list-item-card__body">{item.reasonDetail}</p>
-        <div className="review-queue-item-card__decision-grid">
-          <article className="review-queue-item-card__decision-card">
-            <span>Priority signal</span>
-            <strong>{priorityText}</strong>
-          </article>
-          <article className="review-queue-item-card__decision-card">
-            <span>Timing</span>
-            <strong>{timingText}</strong>
-          </article>
-          <article className="review-queue-item-card__decision-card">
-            <span>Best next move</span>
-            <strong>{executionLane}</strong>
-          </article>
-        </div>
-        <div className="review-queue-item-card__supporting">
-          {item.priorityLabel ? (
-            <article className="review-queue-item-card__supporting-item">
-              <span>Priority</span>
-              <strong>{item.priorityLabel}</strong>
-            </article>
-          ) : null}
-          {item.scheduledLabel ? (
-            <article className="review-queue-item-card__supporting-item">
-              <span>Scheduled</span>
-              <strong>{item.scheduledLabel}</strong>
-            </article>
-          ) : null}
-        </div>
         <div className="review-queue-item-card__chips">
-          {item.priorityLabel ? <span className="detail-chip detail-chip--accent">{item.priorityLabel}</span> : null}
-          {item.scheduledLabel ? <span className="detail-chip">{item.scheduledLabel}</span> : null}
+          <span className="detail-chip detail-chip--accent">{priorityText}</span>
+          <span className="detail-chip">{timingText}</span>
+          <span className="detail-chip">{executionLane}</span>
         </div>
         {(item.relatedSkillLabels ?? []).length > 0 ? (
           <div className="chip-list">
@@ -105,14 +78,9 @@ export function ReviewQueueItem({
         ) : null}
       </div>
       <div className="review-queue-item-card__footer">
-        <div className="review-queue-item-card__footer-copy">
-          <p className="review-queue-item-card__note">
-            Resolve now only if you can finish the answer loop; otherwise defer intentionally.
-          </p>
-          <span className="review-queue-item-card__footer-hint">
-            The queue should shrink because the branch became clearer, not because it was hidden.
-          </span>
-        </div>
+        <p className="review-queue-item-card__note">
+          Resolve now only if you can finish the answer loop; otherwise defer intentionally.
+        </p>
         <QueueActionButtons
           disabled={disabled}
           onDone={onDone}

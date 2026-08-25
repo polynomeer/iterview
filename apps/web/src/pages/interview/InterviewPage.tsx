@@ -625,9 +625,9 @@ export function InterviewPage() {
                 <div className="section-heading">
                   <div>
                     <p className="section-heading__eyebrow">Today&apos;s Path</p>
-                    <h3 className="page-card__title">Resume-grounded starting lanes</h3>
+                    <h3 className="page-card__title">Likely opening lanes</h3>
                   </div>
-                  <span className="section-heading__count">3</span>
+                  <span className="section-heading__count">2</span>
                 </div>
                 <div className="stack-list">
                   <article className="list-item-card">
@@ -643,13 +643,6 @@ export function InterviewPage() {
                       <p className="list-item-card__body">New branch</p>
                     </div>
                     <span className="question-status-badge question-status-badge--neutral">New</span>
-                  </article>
-                  <article className="list-item-card">
-                    <div className="list-item-card__content">
-                      <h4 className="list-item-card__title">Redis Distributed Lock</h4>
-                      <p className="list-item-card__body">Resume branch · Score 58</p>
-                    </div>
-                    <span className="question-status-badge question-status-badge--positive">Resume</span>
                   </article>
                 </div>
               </section>
@@ -676,36 +669,6 @@ export function InterviewPage() {
                       <strong>{score}</strong>
                     </article>
                   ))}
-                </div>
-              </section>
-
-              <section className="interview-workspace-deck__card">
-                <div className="section-heading">
-                  <div>
-                    <p className="section-heading__eyebrow">Upcoming Review</p>
-                    <h3 className="page-card__title">Queued branches after this launch</h3>
-                  </div>
-                  <span className="section-heading__count">{completedSessionCount || 5}</span>
-                </div>
-                <div className="stack-list">
-                  <article className="list-item-card">
-                    <div className="list-item-card__content">
-                      <h4 className="list-item-card__title">Thread Safety</h4>
-                      <p className="list-item-card__body">Tomorrow</p>
-                    </div>
-                  </article>
-                  <article className="list-item-card">
-                    <div className="list-item-card__content">
-                      <h4 className="list-item-card__title">TCP 3-Way Handshake</h4>
-                      <p className="list-item-card__body">May 20</p>
-                    </div>
-                  </article>
-                  <article className="list-item-card">
-                    <div className="list-item-card__content">
-                      <h4 className="list-item-card__title">Spring AOP</h4>
-                      <p className="list-item-card__body">May 21</p>
-                    </div>
-                  </article>
                 </div>
               </section>
             </div>
