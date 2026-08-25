@@ -8,11 +8,11 @@ export function GuestHomeIntro() {
     <section className="guest-home">
       <div className="guest-home__hero">
         <div className="guest-home__hero-copy">
-          <span className="page-card__label">Iterview</span>
-          <h2 className="guest-home__title">Your personalized home is available after sign-in</h2>
+          <span className="page-card__label">Resume-grounded mock interview</span>
+          <h2 className="guest-home__title">Pressure-test every resume claim until it holds up under DFS follow-ups</h2>
           <p className="guest-home__body">
-            Resume-driven interview prep, daily question flow, skill radar, review queue, and
-            answer analysis all come together here once your workspace is active.
+            Iterview builds a detailed source of truth from your resume, expands each topic into
+            deeper follow-up branches, and helps you simulate answers before the real interview.
           </p>
           <div className="page-card__actions">
             <Link
@@ -32,43 +32,43 @@ export function GuestHomeIntro() {
         </div>
         <div className="guest-home__metrics">
           <article className="guest-home__metric">
-            <span className="guest-home__metric-label">Daily loop</span>
-            <strong className="guest-home__metric-value">Question → Answer → Review</strong>
+            <span className="guest-home__metric-label">1. Build context</span>
+            <strong className="guest-home__metric-value">Turn resume lines into verifiable interview evidence</strong>
           </article>
           <article className="guest-home__metric">
-            <span className="guest-home__metric-label">Resume intelligence</span>
-            <strong className="guest-home__metric-value">Risks, skills, and follow-up prompts</strong>
+            <span className="guest-home__metric-label">2. Traverse the tree</span>
+            <strong className="guest-home__metric-value">Walk every follow-up branch until the details become atomic</strong>
           </article>
           <article className="guest-home__metric">
-            <span className="guest-home__metric-label">Skill readiness</span>
-            <strong className="guest-home__metric-value">Radar, gaps, and progress snapshots</strong>
+            <span className="guest-home__metric-label">3. Simulate answers</span>
+            <strong className="guest-home__metric-value">Rehearse weak spots, retry, and tighten the source of truth</strong>
           </article>
         </div>
       </div>
 
       <div className="guest-home__grid">
         <article className="guest-home__card">
-          <span className="page-card__label">Resume-driven prep</span>
-          <h3 className="page-card__title">Turn resume claims into interview defense practice</h3>
+          <span className="page-card__label">Question tree</span>
+          <h3 className="page-card__title">Interview depth is driven by structured follow-up paths</h3>
           <p className="page-card__body">
-            Surface extracted skills, experiences, and risks so your next questions match what you
-            actually need to defend.
+            Start from a single claim and keep drilling into scope, trade-offs, decisions, metrics,
+            and failures until the interviewer has nowhere left to poke.
           </p>
         </article>
         <article className="guest-home__card">
-          <span className="page-card__label">Question learning loop</span>
-          <h3 className="page-card__title">Practice with tree-based follow-ups and retry flow</h3>
+          <span className="page-card__label">Source of truth</span>
+          <h3 className="page-card__title">Keep a written understanding of what your resume really means</h3>
           <p className="page-card__body">
-            Move from the main question into deeper follow-ups, then revisit weak answers through a
-            dedicated review queue.
+            Capture the real project context, constraints, architecture, and outcomes so your
+            answers stay consistent across every branch of questioning.
           </p>
         </article>
         <article className="guest-home__card">
-          <span className="page-card__label">Answer analysis</span>
-          <h3 className="page-card__title">See what changed after each answer attempt</h3>
+          <span className="page-card__label">Answer simulation</span>
+          <h3 className="page-card__title">Practice, inspect weak points, and immediately retry</h3>
           <p className="page-card__body">
-            Track score breakdowns, weakness summaries, and next-step guidance without losing your
-            place in the study loop.
+            Review your answer quality, identify vague claims, and loop back into the exact question
+            branch that still needs work.
           </p>
         </article>
       </div>
