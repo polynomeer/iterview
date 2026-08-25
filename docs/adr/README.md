@@ -44,3 +44,5 @@ Each ADR should include:
    Separates company preparation tracking from resume-tailor job posting ingestion.
 9. [`0009-separate-scheduled-review-planning-from-active-review-queue.md`](0009-separate-scheduled-review-planning-from-active-review-queue.md)
    Separates spaced-repetition planning from the active retry execution queue.
+10. [`0010-separate-account-identity-from-practice-settings.md`](0010-separate-account-identity-from-practice-settings.md)
+   Separates account identity management from operational practice settings.

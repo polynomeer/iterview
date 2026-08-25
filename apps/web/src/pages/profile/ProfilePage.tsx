@@ -2,56 +2,40 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { mapCurrentUserDtoToProfileModel } from "../../entities/profile/model";
 import { useUpdateProfileMutation } from "../../features/profile/api/useUpdateProfileMutation";
-import { useUpdateSettingsMutation } from "../../features/profile/api/useUpdateSettingsMutation";
-import { useUpdateTargetCompaniesMutation } from "../../features/profile/api/useUpdateTargetCompaniesMutation";
 import { useUploadProfileImageMutation } from "../../features/profile/api/useUploadProfileImageMutation";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { routeConfig } from "../../shared/config/routes";
 import { getErrorDetails } from "../../shared/api/errors";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { SectionPanel, useLayoutMode } from "../../shared/ui/layout";
-import { useLocale, type AppLocale } from "../../shared/i18n";
-import { useTheme } from "../../shared/theme";
+import { useLocale } from "../../shared/i18n";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { ProfileDesktopLayout, ProfileMobileLayout } from "./ProfileLayouts";
 import {
   ProfileEditForm,
   ProfileSummaryCard,
-  SettingsForm,
-  TargetCompanySelector,
-  ThemeSettingsCard,
 } from "../../widgets/profile";
 
 export function ProfilePage() {
   const currentUserQuery = useCurrentUserQuery();
   const { isDesktop } = useLayoutMode();
-  const { theme, setTheme } = useTheme();
-  const { setLocale, t } = useLocale();
+  const { t } = useLocale();
   const updateProfileMutation = useUpdateProfileMutation();
-  const updateSettingsMutation = useUpdateSettingsMutation();
-  const updateTargetCompaniesMutation = useUpdateTargetCompaniesMutation();
   const uploadProfileImageMutation = useUploadProfileImageMutation();
   const [nickname, setNickname] = useState("");
   const [jobRole, setJobRole] = useState("");
   const [yearsOfExperience, setYearsOfExperience] = useState("");
-  const [targetScoreThreshold, setTargetScoreThreshold] = useState("");
-  const [passScoreThreshold, setPassScoreThreshold] = useState("");
-  const [retryEnabled, setRetryEnabled] = useState(true);
-  const [dailyQuestionCount, setDailyQuestionCount] = useState("");
-  const [preferredLanguage, setPreferredLanguage] = useState<AppLocale>("en");
   const [targetCompanies, setTargetCompanies] = useState<string[]>([]);
   const [profileStatus, setProfileStatus] = useState<string | null>(null);
   const [profileImageStatus, setProfileImageStatus] = useState<string | null>(null);
-  const [settingsStatus, setSettingsStatus] = useState<string | null>(null);
-  const [targetCompaniesStatus, setTargetCompaniesStatus] = useState<string | null>(null);
   const currentProfile = currentUserQuery.data
     ? mapCurrentUserDtoToProfileModel(currentUserQuery.data)
     : null;
   const targetCompanyCount = targetCompanies.length;
-  const normalizedDailyQuestionCount = dailyQuestionCount || "0";
-  const scoreThresholdLabel = targetScoreThreshold ? `${targetScoreThreshold}%` : "Not set";
-  const languageLabel = preferredLanguage === "ko" ? "Korean" : "English";
+  const normalizedDailyQuestionCount = currentProfile?.dailyQuestionCount || "0";
+  const scoreThresholdLabel = currentProfile?.targetScoreThreshold ? `${currentProfile.targetScoreThreshold}%` : "Not set";
+  const languageLabel = currentProfile?.preferredLanguage === "ko" ? "Korean" : "English";
   const roleLabel = currentProfile?.jobRole ?? "Not set";
   const experienceYears = Number(yearsOfExperience || currentProfile?.yearsOfExperience || "0");
   const currentCompanyLabel = targetCompanies[0] ?? "Dreamus";
@@ -79,11 +63,6 @@ export function ProfilePage() {
     setNickname(profile.nickname);
     setJobRole(profile.jobRole);
     setYearsOfExperience(profile.yearsOfExperience);
-    setTargetScoreThreshold(profile.targetScoreThreshold);
-    setPassScoreThreshold(profile.passScoreThreshold);
-    setRetryEnabled(profile.retryEnabled);
-    setDailyQuestionCount(profile.dailyQuestionCount);
-    setPreferredLanguage(profile.preferredLanguage);
     setTargetCompanies(profile.targetCompanies);
   }, [currentUserQuery.data]);
 
@@ -106,35 +85,6 @@ export function ProfilePage() {
     try {
       await uploadProfileImageMutation.mutateAsync(file);
       setProfileImageStatus(t("profile.imageUploaded"));
-    } catch {
-      return;
-    }
-  }
-
-  async function handleSaveSettings() {
-    setSettingsStatus(null);
-    try {
-      await updateSettingsMutation.mutateAsync({
-        targetScoreThreshold: targetScoreThreshold ? Number(targetScoreThreshold) : undefined,
-        passScoreThreshold: passScoreThreshold ? Number(passScoreThreshold) : undefined,
-        retryEnabled,
-        dailyQuestionCount: dailyQuestionCount ? Number(dailyQuestionCount) : undefined,
-        preferredLanguage,
-      });
-      setLocale(preferredLanguage);
-      setSettingsStatus(t("settings.saved"));
-    } catch {
-      return;
-    }
-  }
-
-  async function handleSaveTargetCompanies() {
-    setTargetCompaniesStatus(null);
-    try {
-      await updateTargetCompaniesMutation.mutateAsync({
-        targetCompanies,
-      });
-      setTargetCompaniesStatus(t("profile.targetCompaniesSaved"));
     } catch {
       return;
     }
@@ -187,9 +137,9 @@ export function ProfilePage() {
         </div>
         <div className="profile-workspace-surface__chips">
           <span className="detail-chip">{`Language ${languageLabel}`}</span>
-          {retryEnabled ? <span className="detail-chip detail-chip--accent">Retry queue enabled</span> : null}
+          {currentProfile?.retryEnabled ? <span className="detail-chip detail-chip--accent">Retry queue enabled</span> : null}
           {currentProfile?.jobRole ? <span className="detail-chip">{currentProfile.jobRole}</span> : null}
-          {passScoreThreshold ? <span className="detail-chip">{`Pass line ${passScoreThreshold}%`}</span> : null}
+          {currentProfile?.passScoreThreshold ? <span className="detail-chip">{`Pass line ${currentProfile.passScoreThreshold}%`}</span> : null}
         </div>
       </section>
       {currentUserQuery.isLoading ? (
@@ -271,7 +221,7 @@ export function ProfilePage() {
                 <div className="career-context-overview-card__readiness">
                   <div className="career-context-overview-card__readiness-summary">
                     <span className="page-card__label">Interview readiness by topic</span>
-                    <p>Use this as a context layer for the rest of the page so strengths and weak areas are visible before editing settings.</p>
+                    <p>Use this as a context layer for the rest of the page so strengths and weak areas are visible before editing identity details.</p>
                   </div>
                   <div className="career-context-overview-card__bars">
                     {readinessTopics.map((topic) => (
@@ -400,52 +350,50 @@ export function ProfilePage() {
                 yearsOfExperience={yearsOfExperience}
               />
             );
-            const settingsForm = (
-              <SettingsForm
-                className="page-card--embedded"
-                dailyQuestionCount={dailyQuestionCount}
-                errorMessage={updateSettingsMutation.error instanceof Error ? updateSettingsMutation.error.message : null}
-                errorDetails={getErrorDetails(updateSettingsMutation.error)}
-                isPending={updateSettingsMutation.isPending}
-                onDailyQuestionCountChange={setDailyQuestionCount}
-                onPassScoreThresholdChange={setPassScoreThreshold}
-                onPreferredLanguageChange={setPreferredLanguage}
-                onRetryEnabledChange={setRetryEnabled}
-                onSubmit={() => {
-                  void handleSaveSettings();
-                }}
-                onTargetScoreThresholdChange={setTargetScoreThreshold}
-                passScoreThreshold={passScoreThreshold}
-                preferredLanguage={preferredLanguage}
-                retryEnabled={retryEnabled}
-                statusMessage={settingsStatus}
-                targetScoreThreshold={targetScoreThreshold}
-              />
-            );
-            const targetCompaniesForm = (
-              <TargetCompanySelector
-                className="page-card--embedded"
-                companies={targetCompanies}
-                errorMessage={
-                  updateTargetCompaniesMutation.error instanceof Error
-                    ? updateTargetCompaniesMutation.error.message
-                    : null
-                }
-                errorDetails={getErrorDetails(updateTargetCompaniesMutation.error)}
-                isPending={updateTargetCompaniesMutation.isPending}
-                onChange={setTargetCompanies}
-                onSubmit={() => {
-                  void handleSaveTargetCompanies();
-                }}
-                statusMessage={targetCompaniesStatus}
-              />
-            );
-            const themeSettingsCard = (
-              <ThemeSettingsCard
-                className="page-card--embedded"
-                onChange={setTheme}
-                value={theme}
-              />
+            const operationsCard = (
+              <SectionPanel className="profile-workspace-card" variant="muted">
+                <div className="profile-workspace-card__header">
+                  <div>
+                    <span className="page-card__label">Operations</span>
+                    <h2 className="page-card__title">Move from identity into settings and company preparation on purpose</h2>
+                    <p className="page-card__body">
+                      Practice defaults, appearance, review behavior, and company targeting now have their own workspaces.
+                    </p>
+                  </div>
+                  <span className="detail-chip detail-chip--accent">Separated controls</span>
+                </div>
+                <div className="profile-workspace-groups">
+                  <div className="profile-workspace-group">
+                    <div className="profile-workspace-group__header">
+                      <span className="profile-workspace-group__label">Settings workspace</span>
+                      <p className="profile-workspace-group__body">
+                        Adjust scoring defaults, language, appearance, and review notification behavior.
+                      </p>
+                    </div>
+                    <div className="page-card__actions">
+                      <Link className="primary-button" to={routeConfig.settings.buildPath()}>
+                        Open settings
+                      </Link>
+                      <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>
+                        Scheduled reviews
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="profile-workspace-group">
+                    <div className="profile-workspace-group__header">
+                      <span className="profile-workspace-group__label">Company preparation</span>
+                      <p className="profile-workspace-group__body">
+                        Keep company lanes and preparation priorities outside the account editing surface.
+                      </p>
+                    </div>
+                    <div className="page-card__actions">
+                      <Link className="secondary-button" to={routeConfig.targetCompanies.buildPath()}>
+                        Open target companies
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </SectionPanel>
             );
 
             if (!isDesktop) {
@@ -453,12 +401,10 @@ export function ProfilePage() {
                 <ProfileMobileLayout
                   contextRailCard={contextRailCard}
                   overviewCard={overviewCard}
+                  operationsCard={operationsCard}
                   profileForm={profileForm}
                   resumeCard={resumeCard}
-                  settingsForm={settingsForm}
                   summaryCard={summaryCard}
-                  themeSettingsCard={themeSettingsCard}
-                  targetCompaniesForm={targetCompaniesForm}
                 />
               );
             }
@@ -467,12 +413,10 @@ export function ProfilePage() {
               <ProfileDesktopLayout
                 contextRailCard={contextRailCard}
                 overviewCard={overviewCard}
+                operationsCard={operationsCard}
                 profileForm={profileForm}
                 resumeCard={resumeCard}
-                settingsForm={settingsForm}
                 summaryCard={summaryCard}
-                themeSettingsCard={themeSettingsCard}
-                targetCompaniesForm={targetCompaniesForm}
               />
             );
           })()

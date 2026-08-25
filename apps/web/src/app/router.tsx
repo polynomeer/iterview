@@ -20,6 +20,7 @@ const FeedPage = lazy(() => import("../pages/feed/FeedPage").then((module) => ({
 const NotesPage = lazy(() => import("../pages/notes/NotesPage").then((module) => ({ default: module.NotesPage })));
 const BookmarksPage = lazy(() => import("../pages/bookmarks/BookmarksPage").then((module) => ({ default: module.BookmarksPage })));
 const TargetCompaniesPage = lazy(() => import("../pages/target-companies/TargetCompaniesPage").then((module) => ({ default: module.TargetCompaniesPage })));
+const SettingsPage = lazy(() => import("../pages/settings/SettingsPage").then((module) => ({ default: module.SettingsPage })));
 const ProfilePage = lazy(() => import("../pages/profile/ProfilePage").then((module) => ({ default: module.ProfilePage })));
 const ResumePage = lazy(() => import("../pages/resume/ResumePage").then((module) => ({ default: module.ResumePage })));
 const ResumeAnalysisPage = lazy(() => import("../pages/resume-analysis/ResumeAnalysisPage").then((module) => ({ default: module.ResumeAnalysisPage })));
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
           {
             path: routeConfig.targetCompanies.path,
             element: withSuspense(<TargetCompaniesPage />),
+          },
+          {
+            path: routeConfig.settings.path,
+            element: withSuspense(<SettingsPage />),
           },
           {
             path: routeConfig.profile.path,
