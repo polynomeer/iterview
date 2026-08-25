@@ -45,4 +45,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Result and recovery surfaces should visually distinguish weak recovery, skipped recovery, and safe expansion so the next action is obvious at scan speed.
 - Timeline surfaces should expose traversal order, depth, and branch status together so the interview path reads like a navigable DFS trail rather than a flat history list.
 - Entry branch maps should surface the selected path, its depth lane, and the immediate follow-up pressure before the session starts.
+- Home and cross-linking workspace surfaces should state the product goal in interview terms first, then organize retries, evidence, and resume risk around that goal.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.

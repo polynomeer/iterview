@@ -19,21 +19,20 @@ function ReviewQueuePanel() {
     <SectionPanel className="home-layout__review-panel home-layout__review-panel--contrast">
       <div className="home-layout__review-panel-header">
         <div>
-          <span className="page-card__label">Review queue</span>
-          <h2 className="page-card__title">Move through scheduled follow-up practice</h2>
+          <span className="page-card__label">Retry recovery</span>
+          <h2 className="page-card__title">Process weak branches without breaking the main run</h2>
         </div>
-        <span className="detail-chip detail-chip--accent">Side workflow</span>
+        <span className="detail-chip detail-chip--accent">Recovery lane</span>
       </div>
       <p className="page-card__body">
-        Open the dedicated review queue to clear retry work without breaking the flow of the main
-        dashboard.
+        Open the dedicated review queue when you want to tighten several weak answers back-to-back.
       </p>
       <p className="home-layout__review-panel-note">
-        Best used when you want to process several weak answers back-to-back.
+        Best used after a session or result review exposes shallow branches.
       </p>
       <div className="page-card__actions">
         <Link className="primary-button" to={routeConfig.reviewQueue.buildPath()}>
-          Open review queue
+          Open recovery queue
         </Link>
       </div>
     </SectionPanel>

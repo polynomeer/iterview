@@ -27,10 +27,10 @@ export function HomePage() {
   const isUnauthorized = homeQuery.error instanceof ApiClientError && homeQuery.error.status === 401;
   const pageTitle = isUnauthorized
     ? "Resume-grounded interview prep, kept simple"
-    : "Your daily interview practice starts here";
+    : "Resume-grounded DFS interview practice";
   const pageDescription = isUnauthorized
     ? "Build a clear source of truth from your resume, then rehearse DFS-style follow-up questions until every claim is defensible."
-    : "Keep today's main interview question front and center, then move through retries and learning support.";
+    : "Use your resume as source of truth, then move through follow-up pressure, retries, and recovery from one workspace.";
   const summaryCount = homeData?.summaryStats?.length ?? 0;
   const retryCount = homeData?.retryQuestions?.length ?? 0;
   const materialCount = homeData?.learningMaterials?.length ?? 0;
@@ -61,21 +61,20 @@ export function HomePage() {
                 <span className="question-status-badge question-status-badge--accent">Focus mode</span>
               </div>
               <p className="home-workspace-surface__breadcrumbs">
-                Today&apos;s prompt
+                Resume source of truth
                 <span>/</span>
-                Retry pressure
+                DFS follow-up pressure
                 <span>/</span>
-                Resume defense
+                Recovery loop
               </p>
-              <h2 className="home-workspace-surface__title">Daily command center</h2>
+              <h2 className="home-workspace-surface__title">Defend your resume one branch at a time</h2>
               <p className="home-workspace-surface__body">
-                Keep the main question, the retry queue, and the current resume risks in one place so the next hour of
-                practice moves in a single direction.
+                Start from the active resume claim, follow the next question deeper, and keep retries and resume risks close enough to recover weak branches fast.
               </p>
             </div>
             <div className="home-workspace-surface__stats">
               <article className="home-workspace-surface__stat">
-                <span>Today card</span>
+                <span>Today branch</span>
                 <strong>{homeData?.todayQuestion ? 1 : 0}</strong>
               </article>
               <article className="home-workspace-surface__stat">
@@ -83,7 +82,7 @@ export function HomePage() {
                 <strong>{retryCount}</strong>
               </article>
               <article className="home-workspace-surface__stat">
-                <span>Materials</span>
+                <span>Support notes</span>
                 <strong>{materialCount}</strong>
               </article>
               <article className="home-workspace-surface__stat">
@@ -95,10 +94,24 @@ export function HomePage() {
           <div className="home-workspace-surface__chips">
             <span className="detail-chip">{`Summary ${summaryCount}`}</span>
             {homeData?.todayQuestion ? (
-              <span className="detail-chip detail-chip--accent">Daily prompt active</span>
+              <span className="detail-chip detail-chip--accent">Active branch ready</span>
             ) : null}
-            {retryCount > 0 ? <span className="detail-chip">Retry queue live</span> : null}
-            {materialCount > 0 ? <span className="detail-chip">Learning support loaded</span> : null}
+            {retryCount > 0 ? <span className="detail-chip">Retry recovery live</span> : null}
+            {materialCount > 0 ? <span className="detail-chip">Evidence support loaded</span> : null}
+          </div>
+          <div className="home-workspace-surface__guidance">
+            <article className="home-workspace-surface__guidance-card">
+              <span>Source of truth</span>
+              <strong>Keep one defendable resume story active.</strong>
+            </article>
+            <article className="home-workspace-surface__guidance-card">
+              <span>Traversal</span>
+              <strong>Use today&apos;s question to enter the next DFS branch.</strong>
+            </article>
+            <article className="home-workspace-surface__guidance-card">
+              <span>Recovery</span>
+              <strong>Clear retries and resume risks before broadening scope.</strong>
+            </article>
           </div>
         </section>
       ) : null}
