@@ -142,6 +142,9 @@ Still manual:
 - mobile visual sweep across the full route set
 - sticky rail and overflow review across long pages
 
+Manual sweep reference:
+- `docs/08-manual-visual-qa-sweep.md`
+
 Already closed by automated + implementation evidence:
 - the product now reads as one continuous interview workspace at the route and copy level
 - redesigned page copy used in the verified workspace families is aligned with current tests

@@ -209,6 +209,9 @@ The practical remaining scope is now:
 1. shared CSS and token cleanup across the stabilized workspace families
 2. final acceptance verification across the main user journeys
 
+Manual sweep reference:
+- `docs/08-manual-visual-qa-sweep.md`
+
 Everything else in this checklist has either been implemented directly or adapted into adjacent shipped flows.
 
 ## Suggested Execution Order
