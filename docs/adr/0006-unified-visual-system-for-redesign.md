@@ -36,4 +36,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Workspace entry surfaces should favor one short directive, two or three key stats, and a small number of guidance blocks.
 - Secondary support panels should be merged or removed when they restate the same branch choice, launch rule, or retry strategy already shown in the main workspace surface.
 - List items should avoid stacked summary grids when a short note row and a small chip set communicate the same state more directly.
+- Interview workspace entry should keep a single primary surface and move session configuration into one dedicated setup surface instead of repeating the same launch context across separate hero, rail, and snapshot sections.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.
