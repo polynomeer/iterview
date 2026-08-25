@@ -37,4 +37,5 @@ The design direction should remain clean, severe, and task-oriented rather than 
 - Secondary support panels should be merged or removed when they restate the same branch choice, launch rule, or retry strategy already shown in the main workspace surface.
 - List items should avoid stacked summary grids when a short note row and a small chip set communicate the same state more directly.
 - Interview workspace entry should keep a single primary surface and move session configuration into one dedicated setup surface instead of repeating the same launch context across separate hero, rail, and snapshot sections.
+- Deprecated page-specific scaffolding should be deleted once the replacement workspace pattern is verified, rather than left behind as dormant CSS.
 - Future work should continue removing fake metrics, noisy chrome, and duplicated framing.
