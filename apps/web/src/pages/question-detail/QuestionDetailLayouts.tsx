@@ -3,6 +3,7 @@ import { SectionPanel } from "../../shared/ui/layout";
 
 type QuestionDetailLayoutProps = {
   workspaceSummary: ReactNode;
+  insightSummary: ReactNode;
   headerSection: ReactNode;
   metadataSection: ReactNode;
   progressSection: ReactNode;
@@ -13,6 +14,7 @@ type QuestionDetailLayoutProps = {
 
 export function QuestionDetailMobileLayout({
   workspaceSummary,
+  insightSummary,
   headerSection,
   metadataSection,
   progressSection,
@@ -23,6 +25,7 @@ export function QuestionDetailMobileLayout({
   return (
     <div className="question-detail-layout question-detail-layout--mobile">
       <section className="question-detail-layout__workspace-summary">{workspaceSummary}</section>
+      <section className="question-detail-layout__workspace-summary">{insightSummary}</section>
       <section className="question-detail-layout__hero">{headerSection}</section>
       <section className="question-detail-layout__sidebar">
         {progressSection}
@@ -41,6 +44,7 @@ export function QuestionDetailMobileLayout({
 
 export function QuestionDetailDesktopLayout({
   workspaceSummary,
+  insightSummary,
   headerSection,
   metadataSection,
   progressSection,
@@ -51,6 +55,7 @@ export function QuestionDetailDesktopLayout({
   return (
     <div className="question-detail-layout question-detail-layout--desktop">
       <section className="question-detail-layout__workspace-summary">{workspaceSummary}</section>
+      <section className="question-detail-layout__workspace-summary">{insightSummary}</section>
       <div className="question-detail-layout__hero">
         {headerSection}
         <SectionPanel className="workspace-note-card workspace-note-card--accent question-detail-layout__hero-note" variant="muted">

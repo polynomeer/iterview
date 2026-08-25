@@ -19,7 +19,7 @@ import { AuthRequiredStateCard } from "../../shared/ui/AuthRequiredStateCard";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
-import { useLayoutMode } from "../../shared/ui/layout";
+import { SectionPanel, useLayoutMode } from "../../shared/ui/layout";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { SectionEmptyState } from "../../shared/ui/SectionEmptyState";
@@ -433,6 +433,14 @@ export function QuestionDetailPage() {
               learningMaterials.length +
               (answerHistoryQuery.data?.items.length ?? 0);
             const recommendedCount = recommendedItems.length;
+            const weaknessSignal =
+              progress?.status === "retry"
+                ? "Retry required"
+                : (answerHistoryQuery.data?.items.length ?? 0) === 0
+                  ? "Unanswered node"
+                  : supportCount < 3
+                    ? "Thin support"
+                    : "Stable branch";
             const workspaceSummary = (
               <section className="page-card question-detail-workspace-surface">
                 <div className="question-detail-workspace-surface__header">
@@ -493,11 +501,57 @@ export function QuestionDetailPage() {
                 </div>
               </section>
             );
+            const insightSummary = (
+              <SectionPanel className="question-detail-insight-surface" variant="muted">
+                <div className="question-detail-insight-surface__header">
+                  <div>
+                    <span className="page-card__label">Branch insight</span>
+                    <h2 className="page-card__title">Decide whether to answer, study, or branch deeper before spending another attempt</h2>
+                    <p className="page-card__body">
+                      This node should tell you what kind of work is missing: a clearer main claim, stronger source-of-truth evidence, or a deeper follow-up pass.
+                    </p>
+                  </div>
+                  <span className="detail-chip detail-chip--accent">{weaknessSignal}</span>
+                </div>
+                <div className="question-detail-insight-surface__stats">
+                  <article>
+                    <span>Support density</span>
+                    <strong>{supportCount}</strong>
+                    <p>{supportCount > 0 ? "answers + materials + history" : "No support attached yet"}</p>
+                  </article>
+                  <article>
+                    <span>Next follow-ups</span>
+                    <strong>{recommendedCount}</strong>
+                    <p>{recommendedCount > 0 ? "candidate attack branches" : "No linked follow-ups yet"}</p>
+                  </article>
+                  <article>
+                    <span>Prompt size</span>
+                    <strong>{promptDensity}</strong>
+                    <p>words in the core prompt</p>
+                  </article>
+                </div>
+                <div className="question-detail-insight-surface__actions">
+                  <div className="question-detail-insight-surface__action">
+                    <strong>Answer now</strong>
+                    <span>Use this when the main line is already clear and the node just needs another clean pass.</span>
+                  </div>
+                  <div className="question-detail-insight-surface__action">
+                    <strong>Study first</strong>
+                    <span>Pause here when support is thin or the resume-backed evidence is still vague.</span>
+                  </div>
+                  <div className="question-detail-insight-surface__action">
+                    <strong>Open the tree</strong>
+                    <span>Switch to the map when you need to understand which branch the interviewer is most likely to probe next.</span>
+                  </div>
+                </div>
+              </SectionPanel>
+            );
 
             if (!isDesktop) {
               return (
                 <QuestionDetailMobileLayout
                   workspaceSummary={workspaceSummary}
+                  insightSummary={insightSummary}
                   answerHistorySection={answerHistorySection}
                   headerSection={<QuestionHeader question={questionDetailQuery.data} />}
                   materialsSection={
@@ -528,29 +582,30 @@ export function QuestionDetailPage() {
             return (
               <QuestionDetailDesktopLayout
                 workspaceSummary={workspaceSummary}
-                  answerHistorySection={answerHistorySection}
-                  headerSection={<QuestionHeader question={questionDetailQuery.data} />}
-                  materialsSection={
-                    <>
-                      {referenceSection}
-                      {referenceAnswersQuery.isError && questionDetailQuery.data.referenceAnswers.length > 0 ? (
-                        <FeedbackNotice
-                          message="Reference answers were shown from the question detail payload while the dedicated study endpoint failed."
-                          tone="info"
-                        />
-                      ) : null}
-                      {materialsSection}
-                      {learningMaterialsQuery.isError && questionDetailQuery.data.learningMaterials.length > 0 ? (
-                        <FeedbackNotice
-                          message="Learning materials were shown from the question detail payload while the dedicated study endpoint failed."
-                          tone="info"
-                        />
-                      ) : null}
-                    </>
-                  }
-                  metadataSection={<QuestionMetaSection question={questionDetailQuery.data} />}
-                  progressSection={progressSection}
-                  recommendedSection={recommendedSection}
+                insightSummary={insightSummary}
+                answerHistorySection={answerHistorySection}
+                headerSection={<QuestionHeader question={questionDetailQuery.data} />}
+                materialsSection={
+                  <>
+                    {referenceSection}
+                    {referenceAnswersQuery.isError && questionDetailQuery.data.referenceAnswers.length > 0 ? (
+                      <FeedbackNotice
+                        message="Reference answers were shown from the question detail payload while the dedicated study endpoint failed."
+                        tone="info"
+                      />
+                    ) : null}
+                    {materialsSection}
+                    {learningMaterialsQuery.isError && questionDetailQuery.data.learningMaterials.length > 0 ? (
+                      <FeedbackNotice
+                        message="Learning materials were shown from the question detail payload while the dedicated study endpoint failed."
+                        tone="info"
+                      />
+                    ) : null}
+                  </>
+                }
+                metadataSection={<QuestionMetaSection question={questionDetailQuery.data} />}
+                progressSection={progressSection}
+                recommendedSection={recommendedSection}
               />
             );
           })()
