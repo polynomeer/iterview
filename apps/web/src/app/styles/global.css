@@ -7694,11 +7694,12 @@ button {
   line-height: 1.02;
   letter-spacing: -0.04em;
   color: #f8fafc;
+  max-width: 16ch;
 }
 
 .review-queue-workspace-surface__body,
 .archive-workspace-surface__body {
-  max-width: 70ch;
+  max-width: 68ch;
   margin: 0;
   color: rgba(226, 232, 240, 0.78);
 }
@@ -9419,13 +9420,13 @@ button {
   color: #fff8f0;
   font-size: clamp(1.6rem, 2.2vw, 2.3rem);
   line-height: 1.08;
-  max-width: 14ch;
+  max-width: 16ch;
   text-wrap: balance;
 }
 
 .notes-workspace-surface__body {
   margin: 0;
-  max-width: 72ch;
+  max-width: 68ch;
   color: rgba(255, 247, 240, 0.76);
   line-height: 1.7;
 }
@@ -10892,13 +10893,13 @@ button {
   color: #fff8f0;
   font-size: clamp(1.6rem, 2.2vw, 2.3rem);
   line-height: 1.08;
-  max-width: 13ch;
+  max-width: 16ch;
   text-wrap: balance;
 }
 
 .result-analysis-workspace-surface__body {
   margin: 0;
-  max-width: 70ch;
+  max-width: 68ch;
   color: rgba(255, 247, 240, 0.76);
   line-height: 1.7;
 }
@@ -11254,13 +11255,13 @@ button {
   color: #fff8f0;
   font-size: clamp(1.6rem, 2.2vw, 2.3rem);
   line-height: 1.08;
-  max-width: 14ch;
+  max-width: 16ch;
   text-wrap: balance;
 }
 
 .resume-analysis-workspace-surface__body {
   margin: 0;
-  max-width: 72ch;
+  max-width: 68ch;
   color: rgba(255, 247, 240, 0.76);
   line-height: 1.7;
 }
