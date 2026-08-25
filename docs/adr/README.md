@@ -48,3 +48,5 @@ Each ADR should include:
    Separates account identity management from operational practice settings.
 11. [`0011-separate-weak-node-remediation-from-queue-execution.md`](0011-separate-weak-node-remediation-from-queue-execution.md)
    Separates graph-first weak-node remediation from queue-based retry execution.
+12. [`0012-adopt-global-command-palette-for-workspace-navigation.md`](0012-adopt-global-command-palette-for-workspace-navigation.md)
+   Adds one keyboard-first, route-independent search and command overlay across the workspace shell.

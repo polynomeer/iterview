@@ -1,9 +1,13 @@
 import { Header } from "./Header";
 
-export function TopToolbar() {
+type TopToolbarProps = {
+  onOpenCommandPalette?: () => void;
+};
+
+export function TopToolbar({ onOpenCommandPalette }: TopToolbarProps) {
   return (
     <div className="top-toolbar">
-      <Header />
+      <Header onOpenCommandPalette={onOpenCommandPalette} />
     </div>
   );
 }

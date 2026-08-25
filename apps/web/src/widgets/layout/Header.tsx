@@ -5,6 +5,10 @@ import { useAuth } from "../../shared/auth/useAuth";
 import { useLogout } from "../../features/auth/useLogout";
 import { useLocale } from "../../shared/i18n";
 
+type HeaderProps = {
+  onOpenCommandPalette?: () => void;
+};
+
 function getInitials(label: string) {
   return label
     .trim()
@@ -14,7 +18,7 @@ function getInitials(label: string) {
     .join("");
 }
 
-export function Header() {
+export function Header({ onOpenCommandPalette }: HeaderProps) {
   const { isAuthenticated } = useAuth();
   const currentUserQuery = useCurrentUserQuery();
   const logout = useLogout();
@@ -41,12 +45,17 @@ export function Header() {
       </div>
       {isAuthenticated ? (
         <div className="app-header__search">
-          <input
-            aria-label="Search workspace"
-            className="app-header__search-input"
-            placeholder="Search (⌘K)"
-            type="search"
-          />
+          <button
+            aria-label="Open command palette"
+            className="app-header__search-trigger"
+            onClick={onOpenCommandPalette}
+            type="button"
+          >
+            <span className="app-header__search-placeholder">Search workspace</span>
+            <span aria-hidden="true" className="app-header__search-shortcut">
+              ⌘K
+            </span>
+          </button>
         </div>
       ) : null}
       <div className="app-header__actions">

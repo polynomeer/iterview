@@ -154,9 +154,9 @@ Mark each line only when the changed scope is:
 - [x] Link weak nodes directly to connected questions, dimensions, and resume evidence
 
 ### F7. Global Command Palette
-- [ ] Add a workspace-wide command/search overlay
-- [ ] Search across questions, skills, experiences, companies, notes, and commands
-- [ ] Keep it route-independent and available from the primary workspace shell
+- [x] Add a workspace-wide command/search overlay
+- [x] Search across questions, skills, experiences, companies, notes, and commands
+- [x] Keep it route-independent and available from the primary workspace shell
 
 ## G. Shared Design System Cleanup
 
@@ -207,7 +207,6 @@ The practical remaining scope is now:
 
 1. shared CSS and token cleanup across the stabilized workspace families
 2. final acceptance verification across the main user journeys
-3. decision on whether the still-unbuilt workspace surface in section F7 belongs in the current delivery scope
 
 Everything else in this checklist has either been implemented directly or adapted into adjacent shipped flows.
 
@@ -215,4 +214,3 @@ Everything else in this checklist has either been implemented directly or adapte
 
 1. Shared system cleanup: stable workspace families -> repeated CSS -> token audit
 2. Final acceptance pass: practice -> review -> resume authoring -> interview continuity
-3. Scope decision: command palette
