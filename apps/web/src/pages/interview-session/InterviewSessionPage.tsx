@@ -335,7 +335,7 @@ export function InterviewSessionPage() {
         <WorkspaceContinuityRail
           current={{
             title: "Active DFS interview branch",
-            description: "Stay on the current branch until the answer is specific, evidence-backed, and ready to advance.",
+            description: "Stay inside one interview preparation loop",
           }}
           downstream={[
             {
@@ -376,25 +376,11 @@ export function InterviewSessionPage() {
                 {currentQuestion.title}. Stay on this DFS path until the answer is specific and evidence-backed.
               </p>
             </div>
-            <div className="interview-session-workspace-surface__stats">
-              <article className="interview-session-workspace-surface__stat">
-                <span className="interview-session-workspace-surface__stat-label">Coverage</span>
-                <strong className="interview-session-workspace-surface__stat-value">{coveragePercent}%</strong>
-              </article>
-              <article className="interview-session-workspace-surface__stat">
-                <span className="interview-session-workspace-surface__stat-label">Answered</span>
-                <strong className="interview-session-workspace-surface__stat-value">{answeredQuestionCount}</strong>
-              </article>
-              <article className="interview-session-workspace-surface__stat">
-                <span className="interview-session-workspace-surface__stat-label">Skip count</span>
-                <strong className="interview-session-workspace-surface__stat-value">{skippedQuestionCount}</strong>
-              </article>
-              <article className="interview-session-workspace-surface__stat">
-                <span className="interview-session-workspace-surface__stat-label">Weak facets</span>
-                <strong className="interview-session-workspace-surface__stat-value">
-                  {weakFacetCount}
-                </strong>
-              </article>
+            <div className="interview-session-workspace-surface__summary-row" role="list" aria-label="Session branch signals">
+              <span className="interview-session-workspace-surface__summary-item" role="listitem">{`Coverage ${coveragePercent}%`}</span>
+              <span className="interview-session-workspace-surface__summary-item" role="listitem">{`Answered ${answeredQuestionCount}`}</span>
+              <span className="interview-session-workspace-surface__summary-item" role="listitem">{`Skipped ${skippedQuestionCount}`}</span>
+              <span className="interview-session-workspace-surface__summary-item interview-session-workspace-surface__summary-item--accent" role="listitem">{`Weak facets ${weakFacetCount}`}</span>
             </div>
           </div>
           <div className="interview-session-workspace-surface__chips">
@@ -408,15 +394,9 @@ export function InterviewSessionPage() {
             {activeSession.startedAt ? <span className="detail-chip">{activeSession.startedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
-          <div className="interview-session-workspace-surface__guidance">
-            <article className="interview-session-workspace-surface__guidance-card">
-              <span>Current node</span>
-              <strong>Finish this claim with evidence.</strong>
-            </article>
-            <article className="interview-session-workspace-surface__guidance-card">
-              <span>Branch discipline</span>
-              <strong>Do not branch sideways yet.</strong>
-            </article>
+          <div className="interview-session-workspace-surface__principles" role="list" aria-label="Session branch principles">
+            <span role="listitem">Finish this claim with evidence first.</span>
+            <span role="listitem">Do not branch sideways yet.</span>
           </div>
           <div className="interview-session-workspace-surface__branches" role="list">
             {activeSession.questions.slice(0, 4).map((question) => (
@@ -537,28 +517,15 @@ export function InterviewSessionPage() {
                 <p className="page-card__body">
                   Make the next branch narrower, not longer.
                 </p>
-                <div className="interview-session-side-summary__stats">
-                  <article className="interview-session-side-summary__stat">
-                    <span>Branch depth</span>
-                    <strong>{branchDepthLabel}</strong>
-                  </article>
-                  <article className="interview-session-side-summary__stat">
-                    <span>Weak facets</span>
-                    <strong>{weakFacetCount}</strong>
-                  </article>
-                  <article className="interview-session-side-summary__stat">
-                    <span>Skipped facets</span>
-                    <strong>{skippedFacetCount}</strong>
-                  </article>
+                <div className="interview-session-side-summary__summary-row" role="list" aria-label="Active branch signals">
+                  <span className="interview-session-side-summary__summary-item" role="listitem">{branchDepthLabel}</span>
+                  <span className="interview-session-side-summary__summary-item" role="listitem">{`Weak facets ${weakFacetCount}`}</span>
+                  <span className="interview-session-side-summary__summary-item" role="listitem">{`Skipped facets ${skippedFacetCount}`}</span>
                 </div>
                 <div className="interview-session-side-summary__signals">
                   <article className="interview-session-side-summary__signal">
                     <span>Advance state</span>
                     <strong>{canAdvance ? "Next node can open" : "This node still blocks the branch"}</strong>
-                  </article>
-                  <article className="interview-session-side-summary__signal">
-                    <span>Recovery focus</span>
-                    <strong>{weakFacetCount > 0 ? "Tighten weak facets first" : "No weak facets are forcing a retry"}</strong>
                   </article>
                   <article className="interview-session-side-summary__signal">
                     <span>Resume anchors</span>
@@ -585,18 +552,6 @@ export function InterviewSessionPage() {
                   <div className="interview-session-side-panel__item">
                     <strong>3. Trade-off</strong>
                     <span>Show what you accepted and why.</span>
-                  </div>
-                  <div className="interview-session-side-panel__item">
-                    <strong>{canAdvance ? "Advance is unlocked" : "Advance is blocked"}</strong>
-                    <span>
-                      {canAdvance
-                        ? "This branch can move deeper."
-                        : "Submit or skip before the next follow-up opens."}
-                    </span>
-                  </div>
-                  <div className="interview-session-side-panel__item">
-                    <strong>Weak facet watch</strong>
-                    <span>{weakFacetCount > 0 ? `${weakFacetCount} weak facets still need defense.` : "No weak facets are flagged."}</span>
                   </div>
                   {isFullCoverage ? (
                     <div className="interview-session-side-panel__item interview-session-side-panel__item--coverage">

@@ -333,7 +333,7 @@ describe("InterviewSessionPage", () => {
     );
 
     expect(screen.getByText("Session question flow")).toBeInTheDocument();
-    expect(screen.getByText("Stay inside one interview preparation loop")).toBeInTheDocument();
+    expect(screen.getByText("One connected preparation loop")).toBeInTheDocument();
     expect(screen.getByText("AI follow-up")).toBeInTheDocument();
     expect(screen.getAllByText("Tied to your backend platform project.")).toHaveLength(3);
     expect(screen.getAllByText("Explain the scaling trade-off").length).toBeGreaterThanOrEqual(2);
