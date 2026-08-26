@@ -605,10 +605,14 @@ export function InterviewPage() {
                   <div className="section-heading">
                     <div>
                       <p className="section-heading__eyebrow">Branch anchor</p>
-                      <h3 className="page-card__title">{selectedInspector.relatedExperience}</h3>
+                      <h3 className="page-card__title interview-workspace-inspector__section-title">
+                        {selectedInspector.relatedExperience}
+                      </h3>
                     </div>
                   </div>
-                  <p className="page-card__body">Tie the branch to one resume claim and one concrete detail.</p>
+                  <p className="page-card__body interview-workspace-inspector__section-body">
+                    Tie the branch to one resume claim and one concrete detail.
+                  </p>
                   <div className="chip-list">
                     {selectedInspector.concepts.map((concept) => (
                       <span className="detail-chip" key={concept}>{concept}</span>
@@ -620,7 +624,9 @@ export function InterviewPage() {
                   <div className="section-heading">
                     <div>
                       <p className="section-heading__eyebrow">Next branches</p>
-                      <h3 className="page-card__title">Review only the next likely follow-ups</h3>
+                      <h3 className="page-card__title interview-workspace-inspector__section-title">
+                        Review only the next likely follow-ups
+                      </h3>
                     </div>
                   </div>
                   <div className="stack-list">
@@ -630,7 +636,7 @@ export function InterviewPage() {
                           index === 0 ? "interview-workspace-inspector__question-rail--strong" : ""
                         }`} aria-hidden="true" />
                         <div className="list-item-card__content">
-                          <div className="list-item-card__meta">
+                          <div className="list-item-card__meta interview-workspace-inspector__question-meta">
                             <span>{index + 1}</span>
                             <span>{index === 0 ? "Strong" : "Open"}</span>
                           </div>

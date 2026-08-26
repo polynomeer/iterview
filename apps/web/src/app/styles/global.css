@@ -11389,9 +11389,11 @@ button {
 
 .interview-workspace-inspector__title {
   margin: 0;
-  font-size: clamp(1.55rem, 2.1vw, 1.9rem);
-  line-height: 1.1;
+  max-width: 16ch;
+  font-size: clamp(1.62rem, 2.15vw, 2rem);
+  line-height: 1.04;
   letter-spacing: -0.04em;
+  text-wrap: balance;
 }
 
 .interview-workspace-inspector__metrics {
@@ -11418,14 +11420,29 @@ button {
 }
 
 .interview-workspace-inspector__metric strong {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
 }
 
 .interview-workspace-inspector__summary {
-  margin: 14px 0 0;
-  color: rgba(196, 207, 225, 0.82);
-  font-size: 0.95rem;
-  line-height: 1.55;
+  margin: 12px 0 0;
+  max-width: 56ch;
+  color: rgba(207, 217, 233, 0.86);
+  font-size: 0.98rem;
+  line-height: 1.62;
+}
+
+.interview-workspace-inspector__section-title {
+  font-size: 1.12rem;
+  line-height: 1.28;
+  letter-spacing: -0.03em;
+}
+
+.interview-workspace-inspector__section-body {
+  max-width: 48ch;
+  color: rgba(190, 202, 221, 0.8);
+  font-size: 0.92rem;
+  line-height: 1.56;
 }
 
 .interview-workspace-inspector__question {
@@ -11453,12 +11470,19 @@ button {
 }
 
 .interview-workspace-inspector__question .list-item-card__content {
-  gap: 8px;
+  gap: 7px;
+}
+
+.interview-workspace-inspector__question-meta {
+  gap: 6px;
+  color: rgba(160, 175, 198, 0.76);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
 }
 
 .interview-workspace-inspector__question .list-item-card__title {
   font-size: 0.96rem;
-  line-height: 1.34;
+  line-height: 1.36;
   letter-spacing: -0.03em;
 }
 
