@@ -9111,12 +9111,6 @@ button {
   box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.12);
 }
 
-.interview-session-answer-surface__draft-status {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
 .interview-session-workspace-surface__guidance,
 .interview-session-current__summary,
 .interview-session-side-summary__signals,
@@ -9136,26 +9130,29 @@ button {
   margin-top: 24px;
 }
 
-.interview-session-answer-surface__draft-status-card {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(8, 15, 29, 0.58);
+.interview-session-answer-surface__summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.interview-session-answer-surface__draft-status-card span {
-  color: rgba(148, 163, 184, 0.84);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.interview-session-answer-surface__summary-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(15, 23, 42, 0.58);
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
 }
 
-.interview-session-answer-surface__draft-status-card strong {
+.interview-session-answer-surface__summary-item--accent {
+  border-color: rgba(45, 212, 191, 0.24);
+  background: rgba(10, 25, 35, 0.78);
   color: #f8fafc;
-  line-height: 1.45;
-  letter-spacing: -0.03em;
 }
 
 .interview-session-workspace-surface__guidance-card,
@@ -9346,37 +9343,6 @@ button {
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-}
-
-.interview-session-answer-surface__guidance {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.interview-session-answer-surface__draft-status {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.interview-session-answer-surface__guidance-card {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background: rgba(15, 23, 42, 0.58);
-}
-
-.interview-session-answer-surface__guidance-card span {
-  color: rgba(148, 163, 184, 0.82);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-session-answer-surface__guidance-card strong {
-  color: #f8fafc;
-  line-height: 1.45;
 }
 
 .interview-session-answer-surface__meta {

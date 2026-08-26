@@ -582,33 +582,16 @@ export function InterviewSessionPage() {
               <p className="page-card__body">
                 Answer, skip, or advance with intent.
               </p>
-              <div className="interview-session-answer-surface__draft-status">
-                <article className="interview-session-answer-surface__draft-status-card">
-                  <span>Draft checkpoint</span>
-                  <strong>{answerDraftStatus}</strong>
-                </article>
-                <article className="interview-session-answer-surface__draft-status-card">
-                  <span>Resume anchors</span>
-                  <strong>
-                    {evidenceAnchorCount > 0
-                      ? `${evidenceAnchorCount} source-of-truth snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
-                      : "No source-of-truth snippet yet"}
-                  </strong>
-                </article>
-                <article className="interview-session-answer-surface__draft-status-card">
-                  <span>Execution signal</span>
-                  <strong>{sessionExecutionSignal}</strong>
-                </article>
-              </div>
-              <div className="interview-session-answer-surface__guidance">
-                <article className="interview-session-answer-surface__guidance-card">
-                  <span>Branch goal</span>
-                  <strong>Make the next follow-up narrower.</strong>
-                </article>
-                <article className="interview-session-answer-surface__guidance-card">
-                  <span>Evidence rule</span>
-                  <strong>Use one concrete fact, number, or constraint.</strong>
-                </article>
+              <div className="interview-session-answer-surface__summary-row" role="list" aria-label="Answer draft signals">
+                <span className="interview-session-answer-surface__summary-item" role="listitem">{answerDraftStatus}</span>
+                <span className="interview-session-answer-surface__summary-item" role="listitem">
+                  {evidenceAnchorCount > 0
+                    ? `${evidenceAnchorCount} source-of-truth snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
+                    : "No source-of-truth snippet yet"}
+                </span>
+                <span className="interview-session-answer-surface__summary-item interview-session-answer-surface__summary-item--accent" role="listitem">
+                  {sessionExecutionSignal}
+                </span>
               </div>
               <div className="interview-session-answer-surface__playbook">
                 <article className="interview-session-answer-surface__playbook-step">
