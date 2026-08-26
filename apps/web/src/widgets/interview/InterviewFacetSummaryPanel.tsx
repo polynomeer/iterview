@@ -30,6 +30,17 @@ export function InterviewFacetSummaryPanel({
       <span className="page-card__label">{eyebrow}</span>
       <h2 className="page-card__title">{title}</h2>
       <p className="page-card__body">{helperText}</p>
+      {safeItems.length > 0 ? (
+        <div className="interview-facet-summary-panel__summary-row" role="list" aria-label={`${title} summary`}>
+          <span className="interview-facet-summary-panel__summary-item" role="listitem">{`Items ${safeItems.length}`}</span>
+          <span className="interview-facet-summary-panel__summary-item" role="listitem">
+            {`Weak ${safeItems.reduce((sum, item) => sum + item.weakFacetCount, 0)}`}
+          </span>
+          <span className="interview-facet-summary-panel__summary-item interview-facet-summary-panel__summary-item--accent" role="listitem">
+            {`Skipped ${safeItems.reduce((sum, item) => sum + item.skippedFacetCount, 0)}`}
+          </span>
+        </div>
+      ) : null}
       {safeItems.length === 0 ? (
         <p className="resume-section__helper">{emptyMessage}</p>
       ) : (

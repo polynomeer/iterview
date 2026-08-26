@@ -41,6 +41,10 @@ export function InterviewQuestionTimeline({
       <p className="page-card__body interview-timeline-workspace__intro">
         Review the branch order, evidence anchors, and generated follow-ups as one continuous defense path rather than isolated prompts.
       </p>
+      <div className="interview-timeline-workspace__principles" role="list" aria-label="Session flow principles">
+        <span role="listitem">Read the branch as one defense path, not as separate prompts.</span>
+        <span role="listitem">Use revisit and result links only when a node still changes the branch decision.</span>
+      </div>
       <div className="stack-list interview-timeline-workspace__stack">
         {items.map((item) => {
           const canOpenQuestion = Boolean(item.questionId);
@@ -95,17 +99,13 @@ export function InterviewQuestionTimeline({
                 {item.revisitLabel ? (
                   <p className="resume-section__helper interview-question-revisit-note">{item.revisitLabel}</p>
                 ) : null}
-                {item.focusSkillNames.length > 0 ? (
+                {item.focusSkillNames.length > 0 || item.tags.length > 0 ? (
                   <div className="chip-list">
                     {item.focusSkillNames.map((skill) => (
                       <span className="detail-chip detail-chip--accent" key={skill}>
                         {skill}
                       </span>
                     ))}
-                  </div>
-                ) : null}
-                {item.tags.length > 0 ? (
-                  <div className="chip-list">
                     {item.tags.map((tag) => (
                       <span className="detail-chip" key={tag}>
                         {tag}

@@ -66,6 +66,12 @@ export function InterviewCoveragePanel({
                 </div>
                 <span className="section-heading__count">{items.length}</span>
               </div>
+              <div className="interview-coverage-panel__section-summary-row" role="list" aria-label={`${section} coverage summary`}>
+                <span className="interview-coverage-panel__section-summary-item" role="listitem">{`${items.length} evidence item${items.length > 1 ? "s" : ""}`}</span>
+                <span className="interview-coverage-panel__section-summary-item interview-coverage-panel__section-summary-item--accent" role="listitem">
+                  {`${items.reduce((count, item) => count + item.relatedQuestions.length, 0)} linked question${items.reduce((count, item) => count + item.relatedQuestions.length, 0) !== 1 ? "s" : ""}`}
+                </span>
+              </div>
               <div className="stack-list">
                 {items.map((item) => (
                   <article

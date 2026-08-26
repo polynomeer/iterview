@@ -3102,17 +3102,17 @@ button {
 
 .interview-timeline-workspace {
   display: grid;
-  gap: 16px;
-  padding: 24px;
+  gap: 14px;
+  padding: 20px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 32%),
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 30%),
     linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
 }
 
 .interview-timeline-workspace__header {
   display: grid;
-  gap: 18px;
+  gap: 14px;
 }
 
 .interview-timeline-workspace__summary-row {
@@ -3144,16 +3144,40 @@ button {
   max-width: 70ch;
 }
 
+.interview-timeline-workspace__principles {
+  display: grid;
+  gap: 8px;
+}
+
+.interview-timeline-workspace__principles span {
+  position: relative;
+  padding-left: 18px;
+  color: rgba(203, 213, 225, 0.76);
+  line-height: 1.52;
+}
+
+.interview-timeline-workspace__principles span::before {
+  content: "";
+  position: absolute;
+  top: 0.72em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(45, 212, 191, 0.88);
+  transform: translateY(-50%);
+}
+
 .interview-timeline-workspace__stack {
-  gap: 14px;
+  gap: 12px;
 }
 
 .interview-timeline-card {
   position: relative;
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-columns: 40px minmax(0, 1fr);
   align-items: start;
-  gap: 16px;
+  gap: 14px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
@@ -3181,14 +3205,14 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   margin-top: 2px;
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.18);
   background: rgba(15, 23, 42, 0.92);
   color: rgba(226, 232, 240, 0.84);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
 }
 
@@ -3198,7 +3222,7 @@ button {
     radial-gradient(circle at top left, rgba(45, 212, 191, 0.14), transparent 44%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent),
     color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
-  box-shadow: 0 18px 36px rgba(8, 15, 29, 0.28);
+  box-shadow: 0 14px 28px rgba(8, 15, 29, 0.24);
 }
 
 .interview-timeline-card--current .interview-timeline-card__rail-node {
@@ -3245,14 +3269,43 @@ button {
 }
 
 .interview-timeline-card .detail-chip {
-  min-height: 36px;
-  padding: 7px 12px;
+  min-height: 32px;
+  padding: 6px 11px;
 }
 
 .interview-facet-card__signals {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.interview-facet-summary-panel__summary-row,
+.interview-coverage-panel__section-summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.interview-facet-summary-panel__summary-item,
+.interview-coverage-panel__section-summary-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(15, 23, 42, 0.42);
+  color: rgba(226, 232, 240, 0.9);
+  font-size: 0.8rem;
+  letter-spacing: -0.01em;
+}
+
+.interview-facet-summary-panel__summary-item--accent,
+.interview-coverage-panel__section-summary-item--accent {
+  border-color: rgba(45, 212, 191, 0.24);
+  background: rgba(10, 25, 35, 0.78);
+  color: #f8fafc;
 }
 
 .interview-facet-card__signal {
