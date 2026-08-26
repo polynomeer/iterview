@@ -502,16 +502,16 @@ button {
 .question-status-badge {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
-  padding: 6px 11px;
+  min-height: 26px;
+  padding: 5px 10px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--border-soft) 86%, transparent);
   background: color-mix(in srgb, var(--surface-muted) 84%, var(--surface-base));
   color: var(--text-muted);
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
 .question-status-badge--positive {
@@ -3639,13 +3639,13 @@ button {
 .detail-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 4px 11px;
+  min-height: 28px;
+  padding: 4px 10px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--border-soft) 84%, transparent);
   background: var(--chip-background);
   color: var(--chip-text);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 600;
   line-height: 1.25;
 }
@@ -6900,18 +6900,18 @@ button {
 }
 
 .page-container__title {
-  font-size: clamp(1.85rem, 3vw, 3rem);
-  line-height: 1.04;
+  font-size: clamp(1.72rem, 2.6vw, 2.7rem);
+  line-height: 1.06;
   letter-spacing: -0.04em;
-  max-width: 15ch;
+  max-width: 16ch;
 }
 
 .page-container__description {
   margin: 0;
-  max-width: 60ch;
+  max-width: 62ch;
   color: var(--text-muted);
-  font-size: 0.96rem;
-  line-height: 1.65;
+  font-size: 0.92rem;
+  line-height: 1.6;
 }
 
 .page-container__inline-actions {
@@ -6928,7 +6928,7 @@ button {
 }
 
 .page-card {
-  padding: 22px;
+  padding: 20px;
   border-radius: 18px;
   background: var(--surface-base);
   border: 1px solid var(--border-soft);
@@ -6944,37 +6944,37 @@ button {
 }
 
 .page-card__label {
-  min-height: 28px;
-  margin-bottom: 12px;
-  padding: 5px 10px;
+  min-height: 26px;
+  margin-bottom: 10px;
+  padding: 4px 9px;
   border: 1px solid var(--border-soft);
   border-radius: 999px;
   background: color-mix(in srgb, var(--surface-soft) 94%, transparent);
   color: var(--text-muted);
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .page-card__title {
-  font-size: 1.1rem;
-  line-height: 1.24;
+  font-size: 1.02rem;
+  line-height: 1.22;
   letter-spacing: -0.03em;
 }
 
 .page-card__body {
-  margin-top: 10px;
+  margin-top: 8px;
   max-width: 64ch;
-  line-height: 1.62;
+  line-height: 1.56;
 }
 
 .primary-button,
 .secondary-button {
-  min-height: 44px;
-  padding: 0 15px;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 11px;
+  font-size: 0.86rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   cursor: pointer;
@@ -7004,14 +7004,14 @@ button {
 .primary-button:focus-visible {
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent),
-    0 12px 24px color-mix(in srgb, var(--shadow-soft) 20%, transparent);
+    0 10px 20px color-mix(in srgb, var(--shadow-soft) 16%, transparent);
 }
 
 .secondary-button:hover,
 .secondary-button:focus-visible {
   border-color: color-mix(in srgb, var(--accent) 18%, var(--border-soft));
   background: color-mix(in srgb, var(--surface-strong) 88%, var(--surface-soft));
-  box-shadow: 0 10px 22px color-mix(in srgb, var(--shadow-soft) 14%, transparent);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--shadow-soft) 12%, transparent);
 }
 
 .primary-button:focus-visible,
