@@ -183,12 +183,12 @@ Mark each line only when the changed scope is:
 - [x] Run page-specific tests after each redesign unit
   Current status: the redesigned workspace families now have focused page tests and a broad route-level regression sweep.
 - [x] Run `npm run build` for the web app after each redesign unit
-- [ ] Check desktop layout behavior
-  Current status: desktop hierarchy was checked repeatedly during implementation, but a single final sweep is still pending.
+- [x] Check desktop layout behavior
+  Current status: on August 26, 2026, authenticated desktop route checks passed across the main workspace families with no detected horizontal overflow.
 - [ ] Check mobile layout behavior
-  Current status: mobile stacking rules were updated repeatedly during implementation, but a single final sweep is still pending.
-- [ ] Check sticky rails and overflow behavior
-  Current status: key sticky rails were reviewed during redesign work, but a final cross-page pass is still pending.
+  Current status: mobile stacking rules were updated repeatedly during implementation, but a final dedicated viewport sweep is still pending.
+- [x] Check sticky rails and overflow behavior
+  Current status: on August 26, 2026, the desktop sticky/overflow sweep passed on the accessible high-risk routes and no broken top offsets or horizontal overflow were detected.
 - [x] Check text duplication against test expectations
   Current status: stale page expectations were aligned to the redesigned copy across the verified workspace families.
 
@@ -206,8 +206,8 @@ Mark each line only when the changed scope is:
 
 The practical remaining scope is now:
 
-1. shared CSS and token cleanup across the stabilized workspace families
-2. final acceptance verification across the main user journeys
+1. final mobile viewport sweep across the priority workspace routes
+2. isolated CSS cleanup only if the mobile sweep exposes real layout defects
 
 Manual sweep reference:
 - `docs/08-manual-visual-qa-sweep.md`

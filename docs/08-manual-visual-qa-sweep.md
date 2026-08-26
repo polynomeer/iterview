@@ -124,3 +124,35 @@ Mark the sweep complete only if:
 After this sweep, the remaining redesign work should be limited to:
 - isolated CSS cleanup found during the visual pass
 - any final token cleanup caused by repeated visual defects
+
+## Current Sweep Status
+
+Status on August 26, 2026:
+- desktop authenticated route sweep completed
+- desktop sticky/overflow sweep completed
+- mobile dedicated viewport sweep still pending
+
+Verified desktop routes in the August 26 pass:
+- `/`
+- `/practice`
+- `/review-queue`
+- `/weak-nodes`
+- `/profile/resumes`
+- `/profile/resumes/analysis`
+- `/resume-versions/1/editor`
+- `/resume-versions/1/heatmap`
+- `/resume-versions/1/heatmap/anchors/project/1`
+- `/interviews`
+- `/interviews/session-1`
+- `/interviews/session-14/result`
+- `/notes`
+- `/target-companies`
+
+Desktop findings from that pass:
+- no horizontal overflow was detected on the verified routes at `1280px` width
+- verified sticky elements kept stable top offsets where present
+- protected routes were validated using the local demo-authenticated workspace
+- no additional desktop CSS fix was required from the final authenticated pass
+
+Remaining gap:
+- a dedicated mobile viewport pass still needs to be run to close the redesign checklist fully
