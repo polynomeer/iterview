@@ -11273,42 +11273,23 @@ button {
   white-space: nowrap;
 }
 
-.interview-graph-panel__summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+.interview-graph-panel__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.interview-graph-panel__summary-card {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 16px;
+.interview-graph-panel__meta-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.14);
-  background: linear-gradient(180deg, rgba(10, 18, 34, 0.9), rgba(7, 14, 27, 0.86));
-}
-
-.interview-graph-panel__summary-card--active {
-  border-color: rgba(45, 212, 191, 0.28);
-  background:
-    radial-gradient(circle at top left, rgba(45, 212, 191, 0.12), transparent 44%),
-    linear-gradient(180deg, rgba(10, 25, 35, 0.92), rgba(8, 16, 28, 0.88));
-}
-
-.interview-graph-panel__summary-card span {
-  color: rgba(148, 163, 184, 0.82);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-graph-panel__summary-card strong {
-  color: #f8fafc;
-  font-size: 1rem;
-  letter-spacing: -0.03em;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  background: rgba(15, 23, 42, 0.42);
+  color: rgba(226, 232, 240, 0.9);
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
 }
 
 .interview-graph-panel__canvas {
@@ -11445,32 +11426,24 @@ button {
   text-wrap: balance;
 }
 
-.interview-workspace-inspector__metrics {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
+.interview-workspace-inspector__signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 16px;
 }
 
-.interview-workspace-inspector__metric {
-  display: grid;
-  gap: 8px;
-  padding: 14px;
-  border-radius: 14px;
-  background: rgba(18, 30, 48, 0.94);
+.interview-workspace-inspector__signal {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(18, 30, 48, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.interview-workspace-inspector__metric span {
-  color: rgba(163, 178, 202, 0.78);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.interview-workspace-inspector__metric strong {
-  font-size: 1.2rem;
-  letter-spacing: -0.03em;
+  color: rgba(226, 232, 240, 0.92);
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
 }
 
 .interview-workspace-inspector__summary {
@@ -12479,14 +12452,6 @@ button {
   .interview-graph-panel__canvas {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     min-height: auto;
-  }
-
-  .interview-graph-panel__summary {
-    grid-template-columns: 1fr;
-  }
-
-  .interview-workspace-inspector__metrics {
-    grid-template-columns: 1fr;
   }
 
   .interview-session-workspace-surface__guidance,

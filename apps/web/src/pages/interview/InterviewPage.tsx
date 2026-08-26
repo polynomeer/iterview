@@ -368,6 +368,13 @@ export function InterviewPage() {
           ? "Coverage pass ready"
           : "Scoped branch ready";
   const nextBranchCandidates = selectedInspector.relatedQuestions.slice(0, 2);
+  const selectedDepthLabel = selectedNodePosition >= 0 ? `Level ${selectedNodePosition + 1}` : "Root";
+  const selectedReadinessLabel =
+    selectedNode?.state === "weak"
+      ? "Needs recovery"
+      : selectedNode?.state === "medium"
+        ? "Can narrow"
+        : "Ready to defend";
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -540,23 +547,14 @@ export function InterviewPage() {
                     </p>
                   </div>
                   <div className="interview-graph-panel__toolbar">
-                    <span className="detail-chip">Focused lane</span>
+                    <span className="detail-chip">{selectedDepthLabel}</span>
                     <button className="primary-button" type="button">DFS Focus</button>
                   </div>
                 </div>
-                <div className="interview-graph-panel__summary">
-                  <article className="interview-graph-panel__summary-card interview-graph-panel__summary-card--active">
-                    <span>Current branch</span>
-                    <strong>{selectedInspector.title}</strong>
-                  </article>
-                  <article className="interview-graph-panel__summary-card">
-                    <span>Depth</span>
-                    <strong>{selectedNodePosition >= 0 ? `Level ${selectedNodePosition + 1}` : "Root"}</strong>
-                  </article>
-                  <article className="interview-graph-panel__summary-card">
-                    <span>Readiness</span>
-                    <strong>{selectedNode?.state === "weak" ? "Needs recovery" : selectedNode?.state === "medium" ? "Can narrow" : "Ready to defend"}</strong>
-                  </article>
+                <div className="interview-graph-panel__meta" role="list" aria-label="Focus lane signals">
+                  <span className="interview-graph-panel__meta-item" role="listitem">{selectedInspector.title}</span>
+                  <span className="interview-graph-panel__meta-item" role="listitem">{selectedReadinessLabel}</span>
+                  <span className="interview-graph-panel__meta-item" role="listitem">{`${selectedLaneCount} nodes in lane`}</span>
                 </div>
                 <div className="interview-graph-panel__canvas">
                   {WORKSPACE_COLUMNS.map((column, columnIndex) => (
@@ -594,11 +592,10 @@ export function InterviewPage() {
                     ) : null}
                   </div>
                   <h2 className="interview-workspace-inspector__title">{selectedInspector.title}</h2>
-                  <div className="interview-workspace-inspector__metrics">
-                    <article className="interview-workspace-inspector__metric">
-                      <span>Mastery Score</span>
-                      <strong>{selectedInspector.score}/100</strong>
-                    </article>
+                  <div className="interview-workspace-inspector__signals" role="list" aria-label="Branch signals">
+                    <span className="interview-workspace-inspector__signal" role="listitem">{`${selectedInspector.score}/100 mastery`}</span>
+                    <span className="interview-workspace-inspector__signal" role="listitem">{selectedReadinessLabel}</span>
+                    <span className="interview-workspace-inspector__signal" role="listitem">{selectedInspector.relatedExperience}</span>
                   </div>
                   <p className="interview-workspace-inspector__summary">{selectedInspector.weakness}</p>
                 </div>
