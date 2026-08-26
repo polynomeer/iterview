@@ -30,7 +30,7 @@ export function WorkspaceContinuityRail({
           <h2 className="page-card__title">One connected preparation loop</h2>
         </div>
         <p className="page-card__body">
-          Keep the same claim, weak branch, and next DFS step visible as you move.
+          Keep the same claim, weak branch, and next step visible as you move.
         </p>
       </div>
       <div className="workspace-continuity-rail__columns">

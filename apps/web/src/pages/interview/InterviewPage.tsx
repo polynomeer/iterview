@@ -453,24 +453,24 @@ export function InterviewPage() {
           <WorkspaceContinuityRail
             current={{
               title: "Interview session launch",
-              description: "Lock one resume version, choose one branch, and decide how broad this pass should be.",
+              description: "Lock one resume, choose one branch, and start the pass.",
             }}
             downstream={[
               {
                 title: "Practice",
-                description: "Return to question browsing if the next branch is still unclear.",
+                description: "Return to question browsing if the branch is still unclear.",
                 to: routeConfig.practice.buildPath(),
               },
               {
                 title: "Review queue",
-                description: "Clear recovery work first when recent weak branches still block a new run.",
+                description: "Clear recovery work first when weak branches block a new run.",
                 to: routeConfig.reviewQueue.buildPath(),
               },
             ]}
             upstream={[
               {
                 title: "Resume analysis",
-                description: "Use the active source-of-truth review to decide which branch should be defended next.",
+                description: "Use the active source-of-truth review to decide the next branch.",
                 to: routeConfig.resumeAnalysis.buildPath(),
               },
             ]}
