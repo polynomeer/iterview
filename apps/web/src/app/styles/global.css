@@ -141,6 +141,7 @@
   --border-danger: rgba(248, 113, 113, 0.26);
   --border-success: rgba(52, 211, 153, 0.24);
   --text-main: #e5eef9;
+  --text-strong: #f4f8ff;
   --text-muted: #a3b3c6;
   --text-inverse: #eff8ff;
   --text-info: #93c5fd;
@@ -208,6 +209,7 @@
   --border-danger: rgba(255, 107, 129, 0.24);
   --border-success: rgba(115, 219, 166, 0.24);
   --text-main: #eef2ff;
+  --text-strong: #f7f9ff;
   --text-muted: #aab3c9;
   --text-inverse: #f7f9ff;
   --text-info: #8ed8ff;
@@ -6504,6 +6506,7 @@ button {
   --border-danger: rgba(221, 127, 123, 0.24);
   --border-success: rgba(98, 188, 145, 0.24);
   --text-main: #edf2ed;
+  --text-strong: #f8faf7;
   --text-primary: #edf2ed;
   --text-muted: #9eb0b0;
   --text-inverse: #132024;
@@ -6546,6 +6549,7 @@ button {
 }
 
 :root[data-theme="dracula"] {
+  --text-strong: #fff7ff;
   --accent: #b7b7ff;
   --accent-strong: #d8d5ff;
   --accent-active-soft: rgba(183, 183, 255, 0.16);
