@@ -513,7 +513,7 @@ export function InterviewPage() {
             </div>
             <div className="interview-workspace-surface__actions">
               <button
-                className="primary-button"
+                className="primary-button interview-workspace-surface__action interview-workspace-surface__action--primary"
                 disabled={resumeVersionChoices.length === 0}
                 onClick={() => setStartFormOpen(true)}
                 type="button"
@@ -521,7 +521,7 @@ export function InterviewPage() {
                 Open session setup
               </button>
               <button
-                className="secondary-button"
+                className="secondary-button interview-workspace-surface__action interview-workspace-surface__action--secondary"
                 onClick={() => setSelectedGraphNodeId("read-uncommitted")}
                 type="button"
               >
