@@ -44,22 +44,26 @@ export function InterviewFacetSummaryPanel({
                 <h3 className="list-item-card__title">
                   {item.label ?? `${item.sectionLabel} ${t("interview.evidenceFallbackSuffix")}`}
                 </h3>
-                <p className="resume-section__helper">{t("interview.facetDefended")}: {formatFacetList(item.defendedFacets) ?? t("common.none")}</p>
-                {item.weakFacets.length > 0 ? (
-                  <p className="list-item-card__body list-item-card__body--warning">
-                    {t("interview.facetWeak")}: {formatFacetList(item.weakFacets)}
-                  </p>
-                ) : null}
-                {item.skippedFacets.length > 0 ? (
-                  <p className="list-item-card__body list-item-card__body--warning">
-                    {t("interview.facetSkipped")}: {formatFacetList(item.skippedFacets)}
-                  </p>
-                ) : null}
-                {item.unaskedFacets.length > 0 ? (
-                  <p className="resume-section__helper">
-                    {t("interview.facetUnasked")}: {formatFacetList(item.unaskedFacets)}
-                  </p>
-                ) : null}
+                <div className="interview-facet-card__signals">
+                  <span className="interview-facet-card__signal">
+                    {t("interview.facetDefended")}: {formatFacetList(item.defendedFacets) ?? t("common.none")}
+                  </span>
+                  {item.weakFacets.length > 0 ? (
+                    <span className="interview-facet-card__signal interview-facet-card__signal--warning">
+                      {t("interview.facetWeak")}: {formatFacetList(item.weakFacets)}
+                    </span>
+                  ) : null}
+                  {item.skippedFacets.length > 0 ? (
+                    <span className="interview-facet-card__signal interview-facet-card__signal--warning">
+                      {t("interview.facetSkipped")}: {formatFacetList(item.skippedFacets)}
+                    </span>
+                  ) : null}
+                  {item.unaskedFacets.length > 0 ? (
+                    <span className="interview-facet-card__signal">
+                      {t("interview.facetUnasked")}: {formatFacetList(item.unaskedFacets)}
+                    </span>
+                  ) : null}
+                </div>
               </div>
             </article>
           ))}

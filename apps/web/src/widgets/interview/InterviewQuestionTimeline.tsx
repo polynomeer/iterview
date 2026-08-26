@@ -29,23 +29,13 @@ export function InterviewQuestionTimeline({
           </div>
           <span className="section-heading__count">{items.length}</span>
         </div>
-        <div className="interview-timeline-workspace__stats">
-          <article className="interview-timeline-workspace__stat">
-            <span>Current step</span>
-            <strong>{currentIndex >= 0 ? `#${currentIndex + 1}` : "Review"}</strong>
-          </article>
-          <article className="interview-timeline-workspace__stat">
-            <span>Answered</span>
-            <strong>{answeredCount}</strong>
-          </article>
-          <article className="interview-timeline-workspace__stat">
-            <span>Skipped</span>
-            <strong>{skippedCount}</strong>
-          </article>
-          <article className="interview-timeline-workspace__stat">
-            <span>Max depth</span>
-            <strong>{maxDepth + 1}</strong>
-          </article>
+        <div className="interview-timeline-workspace__summary-row" role="list" aria-label="Session flow signals">
+          <span className="interview-timeline-workspace__summary-item" role="listitem">
+            {currentIndex >= 0 ? `Current step #${currentIndex + 1}` : "Review"}
+          </span>
+          <span className="interview-timeline-workspace__summary-item" role="listitem">{`Answered ${answeredCount}`}</span>
+          <span className="interview-timeline-workspace__summary-item" role="listitem">{`Skipped ${skippedCount}`}</span>
+          <span className="interview-timeline-workspace__summary-item interview-timeline-workspace__summary-item--accent" role="listitem">{`Max depth ${maxDepth + 1}`}</span>
         </div>
       </div>
       <p className="page-card__body interview-timeline-workspace__intro">
@@ -83,7 +73,6 @@ export function InterviewQuestionTimeline({
                   <span>#{item.orderIndex + 1}</span>
                   <span>{`Depth ${item.depth + 1}`}</span>
                   <span>{item.difficultyLabel}</span>
-                  {item.categoryName ? <span>{item.categoryName}</span> : null}
                   <span>{item.status}</span>
                   {item.contentLocale ? (
                     <span>
@@ -101,6 +90,7 @@ export function InterviewQuestionTimeline({
                   )}
                 </div>
                 <h3 className="list-item-card__title">{item.title}</h3>
+                {item.categoryName ? <p className="resume-section__helper">{item.categoryName}</p> : null}
                 {item.bodyText ? <p className="list-item-card__body">{item.bodyText}</p> : null}
                 {item.revisitLabel ? (
                   <p className="resume-section__helper interview-question-revisit-note">{item.revisitLabel}</p>
