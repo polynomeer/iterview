@@ -11284,9 +11284,21 @@ button {
 }
 
 .interview-graph-panel__lane {
+  position: relative;
   align-content: start;
   gap: 12px;
-  padding-top: 2px;
+  padding: 6px 6px 2px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.01));
+}
+
+.interview-graph-panel__lane::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  pointer-events: none;
 }
 
 .interview-graph-node {
@@ -11296,35 +11308,42 @@ button {
   min-height: 88px;
   padding: 14px 14px 13px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(20, 31, 48, 0.92);
+  border: 1px solid rgba(146, 164, 196, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), transparent),
+    rgba(18, 29, 46, 0.94);
   color: #edf3fb;
   text-align: left;
   transition:
     border-color 180ms ease,
     transform 180ms ease,
     box-shadow 180ms ease,
-    background-color 180ms ease;
+    background-color 180ms ease,
+    opacity 180ms ease;
 }
 
 .interview-graph-node:hover,
 .interview-graph-node:focus-visible {
   transform: translateY(-1px);
-  border-color: rgba(102, 163, 255, 0.34);
-  box-shadow: 0 14px 28px rgba(5, 12, 27, 0.26);
+  border-color: rgba(113, 174, 255, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(113, 174, 255, 0.18),
+    0 16px 30px rgba(5, 12, 27, 0.28);
 }
 
 .interview-graph-node--focus {
-  border-color: rgba(89, 144, 255, 0.32);
-  background: rgba(16, 39, 77, 0.88);
+  border-color: rgba(94, 154, 255, 0.4);
+  background:
+    radial-gradient(circle at top left, rgba(77, 130, 255, 0.16), transparent 44%),
+    rgba(16, 37, 70, 0.94);
 }
 
 .interview-graph-node--selected {
   box-shadow:
-    0 0 0 1px rgba(102, 163, 255, 0.42),
-    0 0 0 6px rgba(45, 102, 189, 0.12),
-    0 18px 34px rgba(5, 12, 27, 0.34);
-  border-color: rgba(102, 163, 255, 0.42);
+    0 0 0 2px rgba(114, 176, 255, 0.4),
+    0 0 0 8px rgba(45, 102, 189, 0.12),
+    0 22px 38px rgba(5, 12, 27, 0.38);
+  border-color: rgba(114, 176, 255, 0.52);
   transform: translateY(-1px) scale(1.01);
 }
 
@@ -11342,7 +11361,7 @@ button {
 }
 
 .interview-graph-node__score {
-  color: rgba(178, 193, 216, 0.82);
+  color: rgba(190, 204, 225, 0.88);
   font-size: 0.82rem;
 }
 
