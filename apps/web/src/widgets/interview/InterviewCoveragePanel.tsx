@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import type { InterviewCoverageModel, InterviewResumeMapModel } from "../../entities/interview/model";
 import { useLocale } from "../../shared/i18n";
-import { MetricCard } from "../../shared/ui/MetricCard";
 
 type InterviewCoveragePanelProps = {
   coverage: InterviewCoverageModel | null;
@@ -38,10 +37,22 @@ export function InterviewCoveragePanel({
       <h2 className="page-card__title">{t("interview.coverageTitle")}</h2>
       <p className="page-card__body">{t("interview.coverageBody")}</p>
       {coverage ? (
-        <div className="stats-grid">
-          <MetricCard label={t("interview.coverageMode")} tone="accent" value={coverage.interviewModeLabel} />
-          <MetricCard label={t("interview.overallCoverage")} tone="muted" value={`${coverage.overallCoveragePercent}%`} />
-          <MetricCard label={t("interview.defendedCoverage")} tone="muted" value={`${coverage.defendedCoveragePercent}%`} />
+        <div className="interview-coverage-summary__summary-row" role="list" aria-label="Coverage panel summary">
+          <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
+            {`${t("interview.coverageMode")} ${coverage.interviewModeLabel}`}
+          </span>
+          <span className="interview-coverage-summary__summary-item" role="listitem">
+            {`${t("interview.overallCoverage")} ${coverage.overallCoveragePercent}%`}
+          </span>
+          <span className="interview-coverage-summary__summary-item" role="listitem">
+            {`${t("interview.defendedCoverage")} ${coverage.defendedCoveragePercent}%`}
+          </span>
+        </div>
+      ) : null}
+      {coverage ? (
+        <div className="interview-coverage-summary__principles" role="list" aria-label="Coverage panel principles">
+          <span role="listitem">Use these numbers to identify the next recovery lane, not to restate the whole session.</span>
+          <span role="listitem">Jump from one resume record straight into its linked question when evidence still feels thin.</span>
         </div>
       ) : null}
       {sectionEntries.length > 0 ? (

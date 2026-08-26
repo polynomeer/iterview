@@ -494,26 +494,18 @@ export function InterviewPage() {
                   Lock one resume, keep one branch in focus, then start the next DFS pass.
                 </p>
               </div>
-              <div className="interview-workspace-surface__stats">
-                <article className="interview-workspace-surface__stat">
-                  <span>Resume boundary</span>
-                  <strong>{selectedResumeSummary}</strong>
-                </article>
-                <article className="interview-workspace-surface__stat">
-                  <span>Current pass</span>
-                  <strong>{selectedInterviewModeOption.label}</strong>
-                </article>
-              </div>
             </div>
-            <div className="interview-workspace-surface__summary-row">
+            <div className="interview-workspace-surface__summary-row" role="list" aria-label="Launch summary">
+              <span className="interview-workspace-surface__summary-item" role="listitem">{selectedResumeSummary}</span>
+              <span className="interview-workspace-surface__summary-item" role="listitem">{selectedInterviewModeOption.label}</span>
               <span className="interview-workspace-surface__summary-item interview-workspace-surface__summary-item--accent">
                 {launchSignal}
               </span>
               {selectedInterviewMode === "full_coverage" ? (
-                <span className="interview-workspace-surface__summary-item">{t("interview.coverageBadge")}</span>
+                <span className="interview-workspace-surface__summary-item" role="listitem">{t("interview.coverageBadge")}</span>
               ) : null}
-              <span className="interview-workspace-surface__summary-item">{`History ${sessionCount}`}</span>
-              <span className="interview-workspace-surface__summary-item">{`${completedSessionCount} completed`}</span>
+              <span className="interview-workspace-surface__summary-item" role="listitem">{`History ${sessionCount}`}</span>
+              <span className="interview-workspace-surface__summary-item" role="listitem">{`${completedSessionCount} completed`}</span>
             </div>
             <div className="interview-workspace-surface__principles" role="list" aria-label="Launch principles">
               <span role="listitem">One resume version per run.</span>

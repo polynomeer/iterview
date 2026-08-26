@@ -2828,6 +2828,62 @@ button {
   line-height: 1.4;
 }
 
+.interview-coverage-summary__summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.interview-coverage-summary__summary-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in srgb, var(--surface-soft) 90%, var(--surface-base));
+  color: var(--text-main);
+  font-size: 0.84rem;
+  letter-spacing: -0.01em;
+}
+
+.interview-coverage-summary__summary-item--accent {
+  border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.interview-coverage-summary__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.interview-coverage-summary__principles {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.interview-coverage-summary__principles span {
+  position: relative;
+  padding-left: 18px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.interview-coverage-summary__principles span::before {
+  content: "";
+  position: absolute;
+  top: 0.72em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 76%, white 10%);
+  transform: translateY(-50%);
+}
+
 .interview-result-related-question {
   text-align: left;
   color: inherit;
@@ -11166,7 +11222,6 @@ button {
 .interview-workspace-deck,
 .interview-workspace-surface__header,
 .interview-workspace-surface__intro,
-.interview-workspace-surface__stats,
 .interview-graph-panel,
 .interview-graph-panel__header,
 .interview-graph-panel__toolbar,
@@ -11227,34 +11282,6 @@ button {
   max-width: 70ch;
   margin: 0;
   color: rgba(226, 232, 240, 0.78);
-}
-
-.interview-workspace-surface__stats {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.interview-workspace-surface__stat {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 16px;
-  background: rgba(9, 17, 32, 0.72);
-}
-
-.interview-workspace-surface__stat span {
-  color: rgba(148, 163, 184, 0.84);
-  font-size: 0.74rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-workspace-surface__stat strong {
-  color: #f8fafc;
-  font-size: 1rem;
-  line-height: 1.4;
-  letter-spacing: -0.04em;
 }
 
 .interview-workspace-surface__summary-row {

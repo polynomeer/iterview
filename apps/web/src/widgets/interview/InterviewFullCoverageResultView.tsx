@@ -11,7 +11,6 @@ import type {
 import { InterviewQuestionTimeline } from "./InterviewQuestionTimeline";
 import { InterviewFacetSummaryPanel } from "./InterviewFacetSummaryPanel";
 import { useLocale } from "../../shared/i18n";
-import { MetricCard } from "../../shared/ui/MetricCard";
 
 type InterviewFullCoverageResultViewProps = {
   coverage: InterviewCoverageModel;
@@ -104,13 +103,34 @@ export function InterviewFullCoverageResultView({
           <span className="page-card__label">{t("interview.coverageSummaryLabel")}</span>
           <h2 className="page-card__title">{t("interview.coverageSummaryTitle")}</h2>
           <p className="page-card__body">{t("interview.coverageSummaryBody")}</p>
-          <div className="stats-grid">
-            <MetricCard label={t("interview.overallCoverage")} tone="accent" value={`${coverage.overallCoveragePercent}%`} />
-            <MetricCard label={t("interview.defendedCoverage")} tone="muted" value={`${coverage.defendedCoveragePercent}%`} />
-            <MetricCard label={t("interview.metricQuestion")} tone="muted" value={String(session.summary.totalQuestions)} />
-            <MetricCard label={t("interview.metricAnswered")} tone="muted" value={String(session.summary.answeredQuestions)} />
-            <MetricCard label={t("interview.metricSkipped")} tone="muted" value={String(session.summary.skippedQuestions)} />
-            <MetricCard label={t("interview.metricRemaining")} tone="muted" value={String(session.summary.remainingQuestions)} />
+          <div className="interview-coverage-summary__summary-row" role="list" aria-label="Coverage summary">
+            <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
+              {`${t("interview.overallCoverage")} ${coverage.overallCoveragePercent}%`}
+            </span>
+            <span className="interview-coverage-summary__summary-item" role="listitem">
+              {`${t("interview.defendedCoverage")} ${coverage.defendedCoveragePercent}%`}
+            </span>
+            <span className="interview-coverage-summary__summary-item" role="listitem">
+              {`${t("interview.metricQuestion")} ${session.summary.totalQuestions}`}
+            </span>
+            <span className="interview-coverage-summary__summary-item" role="listitem">
+              {`${t("interview.metricAnswered")} ${session.summary.answeredQuestions}`}
+            </span>
+            <span className="interview-coverage-summary__summary-item" role="listitem">
+              {`${t("interview.metricSkipped")} ${session.summary.skippedQuestions}`}
+            </span>
+            <span className="interview-coverage-summary__summary-item" role="listitem">
+              {`${t("interview.metricRemaining")} ${session.summary.remainingQuestions}`}
+            </span>
+          </div>
+          <div className="interview-coverage-summary__chips">
+            <span className="detail-chip">{coverage.interviewModeLabel}</span>
+            <span className="detail-chip detail-chip--accent">{`Session ${session.id}`}</span>
+            {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
+          </div>
+          <div className="interview-coverage-summary__principles" role="list" aria-label="Coverage principles">
+            <span role="listitem">Use overall coverage to see the sweep, then use weak and skipped facets to decide recovery order.</span>
+            <span role="listitem">Pin one resume record at a time before following its related questions.</span>
           </div>
         </section>
 

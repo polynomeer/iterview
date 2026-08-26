@@ -347,7 +347,7 @@ describe("InterviewSessionPage", () => {
     expect(screen.getByText("Needs more defense")).toBeInTheDocument();
     expect(screen.getByText("Skipped recovery")).toBeInTheDocument();
     expect(screen.getByText(/Weak facets: tradeoffs/i)).toBeInTheDocument();
-    expect(screen.getByText("Overall coverage")).toBeInTheDocument();
+    expect(screen.getByText("Overall coverage 84%")).toBeInTheDocument();
     expect(screen.getAllByText("Skipped").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByRole("button", { name: "Skip question" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Next question" })).toBeDisabled();
