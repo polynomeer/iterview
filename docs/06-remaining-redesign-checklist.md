@@ -186,7 +186,7 @@ Mark each line only when the changed scope is:
 - [x] Check desktop layout behavior
   Current status: on August 26, 2026, authenticated desktop route checks passed across the main workspace families with no detected horizontal overflow.
 - [x] Check mobile layout behavior
-  Current status: on August 26, 2026, dedicated `390 x 844` mobile and `820 x 1180` tablet sweeps passed across the authenticated priority routes after tightening the interview entry layout and resume metric wrapping. The current local demo state exposed unavailable-state shells instead of live interview session/result content on `/interviews/session-1` and `/interviews/session-14/result`, but those shells remained stable with no horizontal overflow.
+  Current status: on August 26, 2026, dedicated `390 x 844` mobile and `820 x 1180` tablet sweeps passed across the authenticated priority routes after tightening the interview entry layout and resume metric wrapping. A live interview session was created and verified at `/interviews/1`, and the matching completed result was verified at `/interviews/1/result`, both without horizontal overflow.
 - [x] Check sticky rails and overflow behavior
   Current status: on August 26, 2026, the desktop sticky/overflow sweep passed on the accessible high-risk routes and no broken top offsets or horizontal overflow were detected.
 - [x] Check text duplication against test expectations

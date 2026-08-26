@@ -58,9 +58,9 @@ Check:
 
 1. `/profile/resumes`
 2. `/profile/resumes/analysis`
-3. `/resume-versions/version-1/editor`
-4. `/resume-versions/version-1/heatmap`
-5. `/resume-versions/version-1/heatmap/anchors/project/1`
+3. `/resume-versions/1/editor`
+4. `/resume-versions/1/heatmap`
+5. `/resume-versions/1/heatmap/anchors/project/1`
 
 Check:
 - editor side panels do not overflow their container
@@ -71,8 +71,8 @@ Check:
 ### D. Interview Loop
 
 1. `/interviews`
-2. `/interviews/session-1`
-3. `/interviews/session-14/result`
+2. latest live session route created from the interview workspace, for example `/interviews/1`
+3. the matching completed result route, for example `/interviews/1/result`
 
 Check:
 - workspace continuity rail does not visually overpower the main surface
@@ -96,10 +96,10 @@ Check:
 ## Sticky And Overflow Watch List
 
 Pages with the highest sticky/overflow risk:
-- `/resume-versions/version-1/editor`
-- `/resume-versions/version-1/heatmap`
-- `/interviews/session-1`
-- `/interviews/session-14/result`
+- `/resume-versions/1/editor`
+- `/resume-versions/1/heatmap`
+- latest live session route, for example `/interviews/1`
+- matching completed result route, for example `/interviews/1/result`
 - `/weak-nodes`
 - `/target-companies`
 - `/notes`
@@ -143,8 +143,8 @@ Verified desktop routes in the August 26 pass:
 - `/resume-versions/1/heatmap`
 - `/resume-versions/1/heatmap/anchors/project/1`
 - `/interviews`
-- `/interviews/session-1`
-- `/interviews/session-14/result`
+- `/interviews/1`
+- `/interviews/1/result`
 - `/notes`
 - `/target-companies`
 
@@ -158,7 +158,9 @@ Mobile and tablet findings from the August 26 follow-up pass:
 - verified routes passed at `390 x 844` and `820 x 1180` with no page-level horizontal overflow
 - `/profile/resumes` required metric-card wrapping cleanup on tablet and now passes without overflow
 - `/interviews` required tighter mobile graph stacking and now passes without page-level overflow
-- `/interviews/session-1` and `/interviews/session-14/result` currently render stable unavailable-state shells in the local demo fixture, so the viewport pass validated those fallback shells rather than a live session body
+- a live session was created from the interview workspace and verified at `/interviews/1`
+- that same session was advanced to a completed result and verified at `/interviews/1/result`
+- the earlier fallback-only check was superseded by the live session/result verification on August 26, 2026
 
 Remaining gap:
 - none inside the current redesign acceptance scope
