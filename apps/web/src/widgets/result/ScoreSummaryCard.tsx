@@ -7,9 +7,9 @@ type ScoreSummaryCardProps = {
 
 export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
   const summaryPoints = [
-    { label: "Decision", value: result.archiveDecisionLabel ? `Route: ${result.archiveDecisionLabel}` : "Keep iterating" },
-    { label: "Progress", value: result.progressStatusLabel ?? "Not labeled" },
-    { label: "Next review", value: result.nextReviewLabel ?? "Retry immediately" },
+    result.archiveDecisionLabel ? `Route ${result.archiveDecisionLabel}` : "Keep iterating",
+    result.progressStatusLabel ?? "Progress not labeled",
+    result.nextReviewLabel ? `Review ${result.nextReviewLabel}` : "Retry immediately",
   ];
 
   return (
@@ -27,12 +27,11 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
             value={result.totalScore}
           />
         </div>
-        <div className="result-score-card__supporting">
+        <div className="result-score-card__summary-row" role="list" aria-label="Score summary">
           {summaryPoints.map((point) => (
-            <article className="result-score-card__supporting-item" key={point.label}>
-              <span>{point.label}</span>
-              <strong>{point.value}</strong>
-            </article>
+            <span className="result-score-card__summary-item" key={point} role="listitem">
+              {point}
+            </span>
           ))}
         </div>
       </div>
@@ -42,9 +41,9 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
         Use this verdict as a branch decision, not a final grade. The next iteration should target the weakest
         reasoning step instead of rewriting everything.
       </p>
-      <div className="result-score-card__chips">
-        <span className="detail-chip">Question verdict</span>
-        {result.progressStatusLabel ? <span className="detail-chip detail-chip--accent">{result.progressStatusLabel}</span> : null}
+      <div className="result-score-card__principles" role="list" aria-label="Score card principles">
+        <span role="listitem">Read the score as routing information, not as the final outcome.</span>
+        <span role="listitem">Target the weakest reasoning step before rewriting the full answer.</span>
       </div>
     </section>
   );

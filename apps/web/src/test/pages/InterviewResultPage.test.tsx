@@ -276,8 +276,8 @@ describe("InterviewResultPage", () => {
     expect(screen.getAllByText("Skipped facet recovery").length).toBeGreaterThan(0);
     expect(screen.getByText("Resume projects")).toBeInTheDocument();
     expect(screen.getAllByText("Caching rollout").length).toBeGreaterThan(0);
-    expect(screen.getByText("Run a narrow recovery pass first")).toBeInTheDocument();
-    expect(screen.getByText("1 weak branches should be revisited first")).toBeInTheDocument();
+    expect(screen.getByText("Run a narrow recovery pass")).toBeInTheDocument();
+    expect(screen.getByText("1 weak branches first")).toBeInTheDocument();
     expect(screen.getByText("Start a narrow recovery pass")).toBeInTheDocument();
     expect(screen.getByText("Use weak and skipped facets to scope the next pass.")).toBeInTheDocument();
 

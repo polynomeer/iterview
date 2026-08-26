@@ -71,7 +71,7 @@ describe("ResultAnalysisPage", () => {
     expect(screen.getByText("How to improve this answer")).toBeInTheDocument();
     expect(screen.getByText("Suggested strong answer")).toBeInTheDocument();
     expect(screen.getByText("Strong framing")).toBeInTheDocument();
-    expect(screen.getByText("Keep practicing")).toBeInTheDocument();
+    expect(screen.getAllByText("Decision Keep practicing").length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "Try this question again" })).toHaveAttribute(
       "href",
       "/questions/question-3/answer",

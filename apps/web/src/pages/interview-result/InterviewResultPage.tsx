@@ -251,27 +251,25 @@ export function InterviewResultPage() {
           </div>
           <h2 className="page-card__title">Session {sessionId}</h2>
           <p className="page-card__body">Use this pass to choose the next branch, not to admire the last one.</p>
-          <div className="interview-result-layout__hero-decision">
-            <article className={`interview-result-layout__hero-decision-item interview-result-layout__hero-decision-item--${recoveryModeTone}`}>
-                  <span>Primary recovery</span>
-                  <strong>
-                    {weakFacetCount > 0
-                      ? `${weakFacetCount} weak branches should be revisited first`
-                      : "No weak branches are blocking the next pass"}
-                  </strong>
-                </article>
-                <article className="interview-result-layout__hero-decision-item">
-                  <span>Pass shape</span>
-                  <strong>
-                    {skippedFacetCount > 0
-                      ? "Run a narrow recovery pass first"
-                      : "Expand only after evidence stays concrete"}
-                  </strong>
-                </article>
-            <article className="interview-result-layout__hero-decision-item">
-              <span>Recovery signal</span>
-              <strong>{recoverySignal}</strong>
-            </article>
+          <div className="interview-result-layout__hero-summary-row" role="list" aria-label="Session recovery summary">
+            <span
+              className={`interview-result-layout__hero-summary-item interview-result-layout__hero-summary-item--${recoveryModeTone}`}
+              role="listitem"
+            >
+              {weakFacetCount > 0
+                ? `${weakFacetCount} weak branches first`
+                : "No weak branches blocking"}
+            </span>
+            <span className="interview-result-layout__hero-summary-item" role="listitem">
+              {skippedFacetCount > 0
+                ? "Run a narrow recovery pass"
+                : "Expand only after evidence holds"}
+            </span>
+            <span className="interview-result-layout__hero-summary-item" role="listitem">{recoverySignal}</span>
+          </div>
+          <div className="interview-result-layout__hero-principles" role="list" aria-label="Session recovery principles">
+            <span role="listitem">Recover one failed branch before widening coverage again.</span>
+            <span role="listitem">Bring the missing fact, metric, or constraint into the next pass.</span>
           </div>
         </section>
         <div className="interview-result-layout__content">
@@ -369,25 +367,19 @@ export function InterviewResultPage() {
               <p className="page-card__body">
                 Keep the next session narrow enough to see real improvement.
               </p>
-              <div className="interview-result-layout__next-pass-signals">
-                <article className={`interview-result-layout__next-pass-signal interview-result-layout__next-pass-signal--${recoveryModeTone}`}>
-                  <span>Unresolved branches</span>
-                  <strong>{unresolvedBranchCount}</strong>
-                </article>
-                <article className="interview-result-layout__next-pass-signal">
-                  <span>Next action</span>
-                  <strong>{nextActionLabel}</strong>
-                </article>
+              <div className="interview-result-layout__actions-summary-row" role="list" aria-label="Next pass summary">
+                <span
+                  className={`interview-result-layout__actions-summary-chip interview-result-layout__actions-summary-chip--${recoveryModeTone}`}
+                  role="listitem"
+                >
+                  {`Unresolved ${unresolvedBranchCount}`}
+                </span>
+                <span className="interview-result-layout__actions-summary-chip" role="listitem">{nextActionLabel}</span>
+                <span className="interview-result-layout__actions-summary-chip" role="listitem">{recommendedActionLabel}</span>
               </div>
-              <div className="interview-result-layout__actions-summary">
-                <article className={`interview-result-layout__actions-summary-item interview-result-layout__actions-summary-item--${recoveryModeTone}`}>
-                  <span>Recommended action</span>
-                  <strong>{recommendedActionLabel}</strong>
-                </article>
-                <article className="interview-result-layout__actions-summary-item">
-                  <span>Do not do</span>
-                  <strong>Do not restart broad coverage if the branch is still shallow</strong>
-                </article>
+              <div className="interview-result-layout__actions-principles" role="list" aria-label="Next pass principles">
+                <span role="listitem">Do not restart broad coverage while the branch is still shallow.</span>
+                <span role="listitem">Pick one recovery target and make the next session prove it.</span>
               </div>
               <div className="interview-result-layout__next-list">
                 <div className={`interview-result-layout__next-item${weakFacetCount > 0 ? " interview-result-layout__next-item--warning" : ""}`}>
@@ -410,16 +402,6 @@ export function InterviewResultPage() {
                   <strong>Scope rule</strong>
                   <span>Keep the next pass narrow enough to improve branch depth.</span>
                 </div>
-              </div>
-              <div className="interview-result-layout__next-playbook">
-                <article className="interview-result-layout__next-playbook-step">
-                  <span>1. Pick one failed area</span>
-                  <strong>Choose weak recovery or skipped recovery as the goal</strong>
-                </article>
-                <article className="interview-result-layout__next-playbook-step">
-                  <span>2. Re-enter with evidence</span>
-                  <strong>Bring the missing fact, constraint, or metric</strong>
-                </article>
               </div>
               <div className="page-card__actions">
                 <Link className="primary-button" to={routeConfig.interview.buildPath()}>
