@@ -11014,6 +11014,40 @@ button {
   gap: 8px;
 }
 
+.app-header__locale-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 18, 31, 0.9);
+}
+
+.app-header__locale-option {
+  min-width: 44px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: rgba(148, 164, 188, 0.86);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-header__locale-option--active {
+  background: rgba(255, 255, 255, 0.09);
+  color: #f8fbff;
+}
+
+.app-header__locale-option:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .app-header__action-copy strong {
   color: #f8fbff;
 }
@@ -14411,6 +14445,20 @@ button {
   color: #0f172a;
 }
 
+.app-header__locale-switch {
+  border-color: rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.app-header__locale-option {
+  color: rgba(100, 116, 139, 0.88);
+}
+
+.app-header__locale-option--active {
+  background: rgba(241, 245, 249, 0.96);
+  color: #0f172a;
+}
+
 .interview-session-history__item,
 .page-card,
 .list-item-card {
@@ -14771,6 +14819,8 @@ button {
 :root[data-theme="dracula"] .app-header__search-trigger,
 :root[data-theme="dark"] .app-header__search-shortcut,
 :root[data-theme="dracula"] .app-header__search-shortcut,
+:root[data-theme="dark"] .app-header__locale-switch,
+:root[data-theme="dracula"] .app-header__locale-switch,
 :root[data-theme="dark"] .app-header__icon-action,
 :root[data-theme="dracula"] .app-header__icon-action,
 :root[data-theme="dark"] .app-header__action,
@@ -14779,6 +14829,17 @@ button {
 :root[data-theme="dracula"] .app-header__action--secondary {
   border-color: var(--border-soft);
   background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
+  color: var(--text-main);
+}
+
+:root[data-theme="dark"] .app-header__locale-option,
+:root[data-theme="dracula"] .app-header__locale-option {
+  color: var(--text-muted);
+}
+
+:root[data-theme="dark"] .app-header__locale-option--active,
+:root[data-theme="dracula"] .app-header__locale-option--active {
+  background: color-mix(in srgb, white 8%, transparent);
   color: var(--text-main);
 }
 

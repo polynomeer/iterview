@@ -18,29 +18,15 @@ type LocaleContextValue = {
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 function readInitialLocale() {
-  if (typeof document !== "undefined") {
-    const domLocale = normalizeAppLocale(document.documentElement.lang);
-
-    if (domLocale) {
-      return domLocale;
-    }
-  }
-
   if (typeof window !== "undefined") {
     const storedLocale = getStoredAppLocale(window.localStorage);
 
     if (storedLocale) {
       return storedLocale;
     }
-
-    const browserLocale = normalizeAppLocale(window.navigator.language);
-
-    if (browserLocale) {
-      return browserLocale;
-    }
   }
 
-  return "en" as const;
+  return "ko" as const;
 }
 
 function applyLocale(locale: AppLocale) {

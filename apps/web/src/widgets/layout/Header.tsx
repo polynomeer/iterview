@@ -3,7 +3,8 @@ import { routeConfig } from "../../shared/config/routes";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { useAuth } from "../../shared/auth/useAuth";
 import { useLogout } from "../../features/auth/useLogout";
-import { useLocale } from "../../shared/i18n";
+import { useLocale, type AppLocale } from "../../shared/i18n";
+import { useUpdateSettingsMutation } from "../../features/profile/api/useUpdateSettingsMutation";
 
 type HeaderProps = {
   onOpenCommandPalette?: () => void;
@@ -21,8 +22,9 @@ function getInitials(label: string) {
 export function Header({ onOpenCommandPalette }: HeaderProps) {
   const { isAuthenticated } = useAuth();
   const currentUserQuery = useCurrentUserQuery();
+  const updateSettingsMutation = useUpdateSettingsMutation();
   const logout = useLogout();
-  const { t } = useLocale();
+  const { locale, setLocale, t } = useLocale();
   const currentUser = currentUserQuery.data;
   const displayName =
     currentUser?.profile?.nickname?.trim() ||
@@ -32,26 +34,50 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
   const profileMeta =
     currentUser?.profile?.jobRole?.trim() ||
     currentUser?.jobRole?.trim() ||
-    "Interview profile";
+    t("navigation.profile");
   const profileImageUrl = currentUser?.profile?.profileImageUrl?.trim() ?? "";
+
+  async function handleLocaleChange(nextLocale: AppLocale) {
+    if (nextLocale === locale) {
+      return;
+    }
+
+    if (!isAuthenticated || !currentUser) {
+      setLocale(nextLocale);
+      return;
+    }
+
+    try {
+      await updateSettingsMutation.mutateAsync({
+        preferredLanguage: nextLocale,
+      });
+      setLocale(nextLocale);
+    } catch {
+      return;
+    }
+  }
 
   return (
     <header className={`app-header${isAuthenticated ? "" : " app-header--guest"}`}>
       <div className="app-header__brand">
         <div>
-          <span className="app-header__eyebrow">{isAuthenticated ? "Interview Workspace" : "Resume-grounded prep"}</span>
-          <strong className="app-header__title">{isAuthenticated ? "Interview Workspace" : "DFS Interview Practice"}</strong>
+          <span className="app-header__eyebrow">
+            {isAuthenticated ? t("header.workspaceEyebrow") : t("header.guestEyebrow")}
+          </span>
+          <strong className="app-header__title">
+            {isAuthenticated ? t("header.workspaceTitle") : t("header.guestTitle")}
+          </strong>
         </div>
       </div>
       {isAuthenticated ? (
         <div className="app-header__search">
           <button
-            aria-label="Open command palette"
+            aria-label={t("header.openCommandPalette")}
             className="app-header__search-trigger"
             onClick={onOpenCommandPalette}
             type="button"
           >
-            <span className="app-header__search-placeholder">Search workspace</span>
+            <span className="app-header__search-placeholder">{t("header.searchPlaceholder")}</span>
             <span aria-hidden="true" className="app-header__search-shortcut">
               ⌘K
             </span>
@@ -59,6 +85,22 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
         </div>
       ) : null}
       <div className="app-header__actions">
+        <div aria-label={t("header.languageToggleLabel")} className="app-header__locale-switch" role="group">
+          {(["ko", "en"] as const).map((option) => (
+            <button
+              aria-pressed={locale === option}
+              className={`app-header__locale-option${locale === option ? " app-header__locale-option--active" : ""}`}
+              disabled={updateSettingsMutation.isPending}
+              key={option}
+              onClick={() => {
+                void handleLocaleChange(option);
+              }}
+              type="button"
+            >
+              {option.toUpperCase()}
+            </button>
+          ))}
+        </div>
         {isAuthenticated && currentUser ? (
           <>
             <button className="app-header__icon-action" type="button">

@@ -34,9 +34,9 @@ export function ProfilePage() {
     : null;
   const targetCompanyCount = targetCompanies.length;
   const normalizedDailyQuestionCount = currentProfile?.dailyQuestionCount || "0";
-  const scoreThresholdLabel = currentProfile?.targetScoreThreshold ? `${currentProfile.targetScoreThreshold}%` : "Not set";
-  const languageLabel = currentProfile?.preferredLanguage === "ko" ? "Korean" : "English";
-  const roleLabel = currentProfile?.jobRole ?? "Not set";
+  const scoreThresholdLabel = currentProfile?.targetScoreThreshold ? `${currentProfile.targetScoreThreshold}%` : t("profile.notSet");
+  const languageLabel = currentProfile?.preferredLanguage === "ko" ? t("common.languageKorean") : t("common.languageEnglish");
+  const roleLabel = currentProfile?.jobRole ?? t("profile.notSet");
   const experienceYears = Number(yearsOfExperience || currentProfile?.yearsOfExperience || "0");
   const currentCompanyLabel = targetCompanies[0] ?? "Dreamus";
   const targetRoleLabel =
@@ -136,7 +136,7 @@ export function ProfilePage() {
           </div>
         </div>
         <div className="profile-workspace-surface__chips">
-          <span className="detail-chip">{`Language ${languageLabel}`}</span>
+          <span className="detail-chip">{`${t("profile.language")} ${languageLabel}`}</span>
           {currentProfile?.retryEnabled ? <span className="detail-chip detail-chip--accent">Retry queue enabled</span> : null}
           {currentProfile?.jobRole ? <span className="detail-chip">{currentProfile.jobRole}</span> : null}
           {currentProfile?.passScoreThreshold ? <span className="detail-chip">{`Pass line ${currentProfile.passScoreThreshold}%`}</span> : null}

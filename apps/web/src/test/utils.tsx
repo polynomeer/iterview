@@ -29,6 +29,8 @@ export function renderWithProviders(
 ) {
   const queryClient = createTestQueryClient();
 
+  window.localStorage.setItem("iterview-locale", "en");
+
   function Wrapper({ children }: PropsWithChildren) {
     return (
       <ThemeProvider>

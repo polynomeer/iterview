@@ -29,12 +29,12 @@ export function SettingsPage() {
   const updateSettingsMutation = useUpdateSettingsMutation();
   const { isDesktop } = useLayoutMode();
   const { theme, setTheme } = useTheme();
-  const { setLocale } = useLocale();
+  const { setLocale, t } = useLocale();
   const [targetScoreThreshold, setTargetScoreThreshold] = useState("");
   const [passScoreThreshold, setPassScoreThreshold] = useState("");
   const [retryEnabled, setRetryEnabled] = useState(true);
   const [dailyQuestionCount, setDailyQuestionCount] = useState("");
-  const [preferredLanguage, setPreferredLanguage] = useState<AppLocale>("en");
+  const [preferredLanguage, setPreferredLanguage] = useState<AppLocale>("ko");
   const [settingsStatus, setSettingsStatus] = useState<string | null>(null);
   const [notificationPreset, setNotificationPreset] = useState<NotificationPreset>("balanced");
   const [reviewReminderLead, setReviewReminderLead] = useState("30");
@@ -103,7 +103,7 @@ export function SettingsPage() {
         preferredLanguage,
       });
       setLocale(preferredLanguage);
-      setSettingsStatus("Settings saved.");
+      setSettingsStatus(t("settings.saved"));
     } catch {
       return;
     }
@@ -130,23 +130,23 @@ export function SettingsPage() {
     : null;
   const targetCompanyCount = currentProfile?.targetCompanies.length ?? 0;
   const dailyLoad = dailyQuestionCount || currentProfile?.dailyQuestionCount || "0";
-  const languageLabel = preferredLanguage === "ko" ? "Korean" : "English";
+  const languageLabel = preferredLanguage === "ko" ? t("common.languageKorean") : t("common.languageEnglish");
 
   return (
     <PageContainer
       actions={
         <>
           <Link className="secondary-button" to={routeConfig.profile.buildPath()}>
-            Open profile
+            {t("settings.openProfile")}
           </Link>
           <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>
-            Open scheduled reviews
+            {t("settings.openScheduledReviews")}
           </Link>
         </>
       }
-      description="Control practice defaults, local appearance, and review behavior without mixing these operational settings into the identity-focused profile workspace."
-      eyebrow="Workspace controls"
-      title="Practice settings workspace"
+      description={t("settings.pageDescription")}
+      eyebrow={t("settings.pageEyebrow")}
+      title={t("settings.pageTitle")}
     >
       <section className="page-card settings-workspace-surface">
         <div className="settings-workspace-surface__header">
@@ -169,7 +169,7 @@ export function SettingsPage() {
               <strong>{dailyLoad}</strong>
             </article>
             <article>
-              <span>Language</span>
+              <span>{t("settings.language")}</span>
               <strong>{languageLabel}</strong>
             </article>
             <article>
