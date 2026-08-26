@@ -27,10 +27,10 @@ export function WorkspaceContinuityRail({
       <div className="workspace-continuity-rail__header">
         <div>
           <span className="page-card__label">Workspace continuity</span>
-          <h2 className="page-card__title">Stay inside one interview preparation loop</h2>
+          <h2 className="page-card__title">One connected preparation loop</h2>
         </div>
         <p className="page-card__body">
-          Move between connected surfaces without losing the source claim, weak branch, or next DFS action.
+          Keep the same claim, weak branch, and next DFS step visible as you move.
         </p>
       </div>
       <div className="workspace-continuity-rail__columns">
@@ -39,8 +39,10 @@ export function WorkspaceContinuityRail({
           <div className="workspace-continuity-rail__stack">
             {upstream.map((item) => (
               <Link className="workspace-continuity-rail__surface" key={item.to} to={item.to}>
-                <span className="workspace-continuity-rail__status">Before this</span>
-                <strong>{item.title}</strong>
+                <div className="workspace-continuity-rail__surface-line">
+                  <span className="workspace-continuity-rail__status">Before</span>
+                  <strong>{item.title}</strong>
+                </div>
                 <p>{item.description}</p>
               </Link>
             ))}
@@ -49,10 +51,12 @@ export function WorkspaceContinuityRail({
         <section className="workspace-continuity-rail__column workspace-continuity-rail__column--current">
           <p className="workspace-continuity-rail__eyebrow">Current surface</p>
           <article className="workspace-continuity-rail__surface workspace-continuity-rail__surface--current">
-            <span className="workspace-continuity-rail__status workspace-continuity-rail__status--current">
-              Current surface
-            </span>
-            <strong>{current.title}</strong>
+            <div className="workspace-continuity-rail__surface-line">
+              <span className="workspace-continuity-rail__status workspace-continuity-rail__status--current">
+                Current
+              </span>
+              <strong>{current.title}</strong>
+            </div>
             <p>{current.description}</p>
           </article>
         </section>
@@ -61,10 +65,12 @@ export function WorkspaceContinuityRail({
           <div className="workspace-continuity-rail__stack">
             {downstream.map((item) => (
               <Link className="workspace-continuity-rail__surface" key={item.to} to={item.to}>
-                <span className="workspace-continuity-rail__status workspace-continuity-rail__status--next">
-                  Next surface
-                </span>
-                <strong>{item.title}</strong>
+                <div className="workspace-continuity-rail__surface-line">
+                  <span className="workspace-continuity-rail__status workspace-continuity-rail__status--next">
+                    Next
+                  </span>
+                  <strong>{item.title}</strong>
+                </div>
                 <p>{item.description}</p>
               </Link>
             ))}

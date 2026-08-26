@@ -11,14 +11,7 @@ export function InterviewSessionHistoryList({ items }: InterviewSessionHistoryLi
   const { t } = useLocale();
 
   return (
-    <section className="page-card interview-session-history">
-      <div className="section-heading">
-        <div>
-          <p className="section-heading__eyebrow">{t("interview.historyEyebrow")}</p>
-          <h2 className="page-card__title">{t("interview.historyTitle")}</h2>
-        </div>
-        <span className="section-heading__count">{items.length}</span>
-      </div>
+    <div className="interview-session-history">
       <div className="card-grid card-grid--two-column interview-session-history__grid">
         {items.map((item) => (
           <article className="list-item-card interview-session-history__item" key={item.id}>
@@ -59,6 +52,6 @@ export function InterviewSessionHistoryList({ items }: InterviewSessionHistoryLi
           </article>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

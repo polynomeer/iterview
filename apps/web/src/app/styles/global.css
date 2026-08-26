@@ -580,18 +580,12 @@ button {
 
 .interview-session-history {
   display: grid;
-  gap: 16px;
-  padding: 22px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-    color-mix(in srgb, var(--surface-base) 97%, var(--surface-soft));
-  box-shadow: var(--shadow-soft);
+  gap: 12px;
 }
 
 .interview-session-history__item {
   display: block;
-  padding: 18px 18px;
+  padding: 16px 16px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent),
@@ -617,14 +611,14 @@ button {
 }
 
 .interview-session-history__item .list-item-card__title {
-  font-size: 1.08rem;
+  font-size: 1rem;
   line-height: 1.34;
   letter-spacing: -0.03em;
 }
 
 .interview-session-history__item .list-item-card__body {
-  font-size: 0.94rem;
-  line-height: 1.55;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: var(--text-muted);
 }
 
@@ -643,9 +637,9 @@ button {
 }
 
 .interview-session-history__actions .primary-button {
-  min-height: 38px;
-  padding-inline: 14px;
-  font-size: 0.9rem;
+  min-height: 36px;
+  padding-inline: 13px;
+  font-size: 0.86rem;
   white-space: nowrap;
 }
 
@@ -7504,8 +7498,8 @@ button {
 
 .workspace-continuity-rail {
   display: grid;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: 1.1rem;
+  padding: 1.15rem 1.2rem;
   border: 1px solid color-mix(in srgb, var(--border-default) 88%, rgba(87, 116, 255, 0.18));
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--surface-primary) 95%, rgba(87, 116, 255, 0.05)) 0%, var(--surface-primary) 100%);
@@ -7513,30 +7507,31 @@ button {
 
 .workspace-continuity-rail__header {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.45rem;
 }
 
 .workspace-continuity-rail__header .page-card__body {
-  max-width: 66ch;
+  max-width: 58ch;
   margin: 0;
+  font-size: 0.92rem;
 }
 
 .workspace-continuity-rail__columns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .workspace-continuity-rail__column {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.55rem;
   align-content: start;
   min-width: 0;
 }
 
 .workspace-continuity-rail__stack {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.55rem;
 }
 
 .workspace-continuity-rail__eyebrow {
@@ -7550,14 +7545,19 @@ button {
 
 .workspace-continuity-rail__surface {
   display: grid;
-  gap: 0.55rem;
-  padding: 1rem 1rem 1.05rem;
-  border-radius: 1rem;
+  gap: 0.4rem;
+  padding: 0.85rem 0.9rem 0.92rem;
+  border-radius: 0.9rem;
   border: 1px solid var(--border-subtle);
   background: color-mix(in srgb, var(--surface-secondary) 92%, white 8%);
   text-decoration: none;
   color: inherit;
   transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.workspace-continuity-rail__surface-line {
+  display: grid;
+  gap: 0.38rem;
 }
 
 .workspace-continuity-rail__surface:hover {
@@ -7568,8 +7568,8 @@ button {
 
 .workspace-continuity-rail__surface strong {
   min-width: 0;
-  font-size: 1rem;
-  line-height: 1.35;
+  font-size: 0.96rem;
+  line-height: 1.3;
   color: var(--text-main);
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -7577,8 +7577,8 @@ button {
 
 .workspace-continuity-rail__surface p {
   margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.55;
+  font-size: 0.86rem;
+  line-height: 1.48;
   color: var(--text-muted);
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -7595,10 +7595,10 @@ button {
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  padding: 0.28rem 0.58rem;
+  padding: 0.22rem 0.5rem;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.06);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
