@@ -541,13 +541,19 @@ export function InterviewPage() {
                   </div>
                   <div className="interview-graph-panel__toolbar">
                     <span className="detail-chip">{selectedDepthLabel}</span>
-                    <button className="primary-button" type="button">DFS Focus</button>
+                    <span className="detail-chip detail-chip--accent">DFS focus</span>
                   </div>
                 </div>
-                <div className="interview-graph-panel__meta" role="list" aria-label="Focus lane signals">
-                  <span className="interview-graph-panel__meta-item" role="listitem">{selectedInspector.title}</span>
-                  <span className="interview-graph-panel__meta-item" role="listitem">{selectedReadinessLabel}</span>
-                  <span className="interview-graph-panel__meta-item" role="listitem">{`${selectedLaneCount} nodes in lane`}</span>
+                <div className="interview-graph-panel__summary-row" role="list" aria-label="Focus lane signals">
+                  <span className="interview-graph-panel__summary-item interview-graph-panel__summary-item--accent" role="listitem">
+                    {selectedInspector.title}
+                  </span>
+                  <span className="interview-graph-panel__summary-item" role="listitem">{selectedReadinessLabel}</span>
+                  <span className="interview-graph-panel__summary-item" role="listitem">{`${selectedLaneCount} nodes in lane`}</span>
+                </div>
+                <div className="interview-graph-panel__principles" role="list" aria-label="Focus lane principles">
+                  <span role="listitem">Keep one branch in focus and let nearby follow-ups stay secondary.</span>
+                  <span role="listitem">Use the inspector to confirm the exact resume claim before restarting the pass.</span>
                 </div>
                 <div className="interview-graph-panel__canvas">
                   {WORKSPACE_COLUMNS.map((column, columnIndex) => (
@@ -585,12 +591,18 @@ export function InterviewPage() {
                     ) : null}
                   </div>
                   <h2 className="interview-workspace-inspector__title">{selectedInspector.title}</h2>
-                  <div className="interview-workspace-inspector__signals" role="list" aria-label="Branch signals">
-                    <span className="interview-workspace-inspector__signal" role="listitem">{`${selectedInspector.score}/100 mastery`}</span>
-                    <span className="interview-workspace-inspector__signal" role="listitem">{selectedReadinessLabel}</span>
-                    <span className="interview-workspace-inspector__signal" role="listitem">{selectedInspector.relatedExperience}</span>
+                  <div className="interview-workspace-inspector__summary-row" role="list" aria-label="Branch signals">
+                    <span className="interview-workspace-inspector__summary-item interview-workspace-inspector__summary-item--accent" role="listitem">
+                      {`${selectedInspector.score}/100 mastery`}
+                    </span>
+                    <span className="interview-workspace-inspector__summary-item" role="listitem">{selectedReadinessLabel}</span>
+                    <span className="interview-workspace-inspector__summary-item" role="listitem">{selectedInspector.relatedExperience}</span>
                   </div>
                   <p className="interview-workspace-inspector__summary">{selectedInspector.weakness}</p>
+                  <div className="interview-workspace-inspector__principles" role="list" aria-label="Branch inspector principles">
+                    <span role="listitem">Tie this branch to one resume claim and one concrete detail.</span>
+                    <span role="listitem">Use the next likely follow-ups to decide whether the answer is actually stable.</span>
+                  </div>
                 </div>
 
                 <div className="interview-workspace-inspector__panel">
