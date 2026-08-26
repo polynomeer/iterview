@@ -11133,9 +11133,7 @@ button {
 }
 
 .interview-workspace-surface__snapshot,
-.interview-workspace-surface__guidance,
-.interview-launch-setup-surface__summary,
-.interview-launch-setup-surface__playbook {
+.interview-workspace-surface__guidance {
   display: grid;
   gap: 10px;
 }
@@ -11205,8 +11203,7 @@ button {
 
 .interview-workspace-surface__snapshot-card,
 .interview-workspace-surface__guidance-card,
-.interview-launch-setup-surface__summary-item,
-.interview-launch-setup-surface__playbook-step {
+.interview-launch-step__selected {
   display: grid;
   gap: 4px;
   padding: 12px 14px;
@@ -11217,8 +11214,7 @@ button {
 
 .interview-workspace-surface__snapshot-card span,
 .interview-workspace-surface__guidance-card span,
-.interview-launch-setup-surface__summary-item span,
-.interview-launch-setup-surface__playbook-step span {
+.interview-launch-step__selected span {
   color: rgba(148, 163, 184, 0.84);
   font-size: 0.76rem;
   letter-spacing: 0.08em;
@@ -11227,8 +11223,7 @@ button {
 
 .interview-workspace-surface__snapshot-card strong,
 .interview-workspace-surface__guidance-card strong,
-.interview-launch-setup-surface__summary-item strong,
-.interview-launch-setup-surface__playbook-step strong {
+.interview-launch-step__selected strong {
   color: #f8fafc;
   font-size: 1rem;
   letter-spacing: -0.03em;
@@ -11674,8 +11669,29 @@ button {
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.interview-launch-setup-surface__summary {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.interview-launch-setup-surface__signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.interview-launch-setup-surface__signal {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(18, 30, 48, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(226, 232, 240, 0.9);
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
+}
+
+.interview-launch-setup-surface__signal--accent {
+  border-color: rgba(87, 116, 255, 0.28);
+  background: rgba(24, 34, 58, 0.92);
+  color: #f8fafc;
 }
 
 .interview-launch-setup-surface__body {
@@ -11683,8 +11699,34 @@ button {
   align-items: start;
 }
 
-.interview-launch-setup-surface__playbook {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.interview-launch-step {
+  gap: 16px;
+}
+
+.interview-launch-step__eyebrow {
+  margin: 0 0 6px;
+  color: rgba(148, 163, 184, 0.86);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.interview-launch-step__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.interview-launch-step__question-count {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.interview-launch-step__submit {
+  min-width: clamp(220px, 28vw, 260px);
 }
 
 .result-analysis-layout__workspace-summary {
@@ -12411,8 +12453,6 @@ button {
 
   .interview-workspace-surface__guidance,
   .home-workspace-surface__guidance,
-  .interview-launch-setup-surface__summary,
-  .interview-launch-setup-surface__playbook,
   .interview-launch-setup-surface__body {
     grid-template-columns: 1fr;
   }

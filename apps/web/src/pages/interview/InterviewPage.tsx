@@ -375,6 +375,7 @@ export function InterviewPage() {
       : selectedNode?.state === "medium"
         ? "Can narrow"
         : "Ready to defend";
+  const selectedQuestionCountLabel = `${questionCount} questions`;
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -685,33 +686,29 @@ export function InterviewPage() {
                 <div>
                   <span className="page-card__label">{t("interview.sessionSetupLabel")}</span>
                   <h2 className="page-card__title">{t("interview.sessionSetupTitle")}</h2>
-                  <p className="page-card__body">Keep the boundary and launch rule in one place.</p>
+                  <p className="page-card__body">Lock one source, choose one traversal, then launch the next pass.</p>
                 </div>
-                <div className="interview-launch-setup-surface__summary">
-                  <article className="interview-launch-setup-surface__summary-item">
-                    <span>Resume boundary</span>
-                    <strong>{selectedResumeChoice?.versionNumberLabel ?? t("interview.noResumeTitle")}</strong>
-                  </article>
-                  <article className="interview-launch-setup-surface__summary-item">
-                    <span>Traversal mode</span>
-                    <strong>{selectedInterviewModeOption.label}</strong>
-                  </article>
-                  <article className="interview-launch-setup-surface__summary-item">
-                    <span>Launch signal</span>
-                    <strong>{launchSignal}</strong>
-                  </article>
+                <div className="interview-launch-setup-surface__signals" role="list" aria-label="Session setup signals">
+                  <span className="interview-launch-setup-surface__signal" role="listitem">{selectedResumeChoice?.versionNumberLabel ?? t("interview.noResumeTitle")}</span>
+                  <span className="interview-launch-setup-surface__signal" role="listitem">{selectedInterviewModeOption.label}</span>
+                  <span className="interview-launch-setup-surface__signal" role="listitem">{selectedQuestionCountLabel}</span>
+                  <span className="interview-launch-setup-surface__signal interview-launch-setup-surface__signal--accent" role="listitem">{launchSignal}</span>
                 </div>
               </div>
 
               <div className="interview-launch-setup-surface__body">
-                <section className="page-card page-card--inset">
+                <section className="page-card page-card--inset interview-launch-step">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">{t("interview.resumeSelectionEyebrow")}</p>
+                      <p className="interview-launch-step__eyebrow">Step 1</p>
                       <h3 className="page-card__title">{t("interview.chooseResumeTitle")}</h3>
                     </div>
                   </div>
-                  <p className="page-card__body">Pick the one resume version that will anchor this run.</p>
+                  <p className="page-card__body">Pick the single resume version that will anchor this pass.</p>
+                  <div className="interview-launch-step__selected">
+                    <span>Active boundary</span>
+                    <strong>{selectedResumeSummary}</strong>
+                  </div>
                   <div className="stack-list">
                     {resumeVersionChoices.map((choice) => {
                       const isSelected = choice.versionId === selectedResumeVersionId;
@@ -745,22 +742,17 @@ export function InterviewPage() {
                   </div>
                 </section>
 
-                <section className="page-card page-card--inset">
+                <section className="page-card page-card--inset interview-launch-step">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Launch rule</p>
+                      <p className="interview-launch-step__eyebrow">Step 2</p>
                       <h3 className="page-card__title">Choose the traversal first</h3>
                     </div>
                   </div>
-                  <div className="interview-launch-setup-surface__playbook">
-                    <article className="interview-launch-setup-surface__playbook-step">
-                      <span>1. Lock the source</span>
-                      <strong>One run, one source of truth.</strong>
-                    </article>
-                    <article className="interview-launch-setup-surface__playbook-step">
-                      <span>2. Pick the traversal</span>
-                      <strong>Use coverage mode only for a full DFS pass.</strong>
-                    </article>
+                  <p className="page-card__body">Use coverage mode only when the next run should sweep the full DFS tree.</p>
+                  <div className="interview-launch-step__selected">
+                    <span>Current launch rule</span>
+                    <strong>One run, one source of truth.</strong>
                   </div>
                   <div className="stack-list">
                     {interviewModeOptions.map((option) => {
@@ -788,23 +780,25 @@ export function InterviewPage() {
                       );
                     })}
                   </div>
-                  <div className="page-card__actions">
+                  <div className="interview-launch-step__footer">
+                    <div className="interview-launch-step__question-count" role="group" aria-label="Question count">
+                      <button
+                        className={questionCount === 3 ? "primary-button" : "secondary-button"}
+                        onClick={() => setQuestionCount(3)}
+                        type="button"
+                      >
+                        3 questions
+                      </button>
+                      <button
+                        className={questionCount === 5 ? "primary-button" : "secondary-button"}
+                        onClick={() => setQuestionCount(5)}
+                        type="button"
+                      >
+                        5 questions
+                      </button>
+                    </div>
                     <button
-                      className={questionCount === 3 ? "primary-button" : "secondary-button"}
-                      onClick={() => setQuestionCount(3)}
-                      type="button"
-                    >
-                      3 questions
-                    </button>
-                    <button
-                      className={questionCount === 5 ? "primary-button" : "secondary-button"}
-                      onClick={() => setQuestionCount(5)}
-                      type="button"
-                    >
-                      5 questions
-                    </button>
-                    <button
-                      className="primary-button"
+                      className="primary-button interview-launch-step__submit"
                       disabled={createSessionMutation.isPending || !selectedResumeVersionId}
                       onClick={() => {
                         void handleStartSession();
