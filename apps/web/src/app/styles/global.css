@@ -11099,14 +11099,37 @@ button {
 .interview-workspace-surface__summary-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 8px 14px;
   align-items: center;
+  padding-top: 2px;
+  color: rgba(163, 177, 200, 0.74);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
-.interview-workspace-surface__summary-row .detail-chip {
-  min-height: 30px;
-  padding-inline: 11px;
-  font-size: 0.82rem;
+.interview-workspace-surface__summary-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.interview-workspace-surface__summary-item::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(120, 143, 181, 0.56);
+}
+
+.interview-workspace-surface__summary-item--accent {
+  color: rgba(214, 225, 243, 0.9);
+}
+
+.interview-workspace-surface__summary-item--accent::before {
+  background: rgba(87, 116, 255, 0.92);
+  box-shadow: 0 0 0 4px rgba(87, 116, 255, 0.14);
 }
 
 .interview-workspace-surface__snapshot,

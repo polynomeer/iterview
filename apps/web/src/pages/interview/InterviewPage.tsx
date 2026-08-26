@@ -498,12 +498,14 @@ export function InterviewPage() {
               </div>
             </div>
             <div className="interview-workspace-surface__summary-row">
-              <span className="detail-chip detail-chip--accent">{launchSignal}</span>
+              <span className="interview-workspace-surface__summary-item interview-workspace-surface__summary-item--accent">
+                {launchSignal}
+              </span>
               {selectedInterviewMode === "full_coverage" ? (
-                <span className="detail-chip">{t("interview.coverageBadge")}</span>
+                <span className="interview-workspace-surface__summary-item">{t("interview.coverageBadge")}</span>
               ) : null}
-              <span className="detail-chip">{`History ${sessionCount}`}</span>
-              <span className="detail-chip">{`${completedSessionCount} completed`}</span>
+              <span className="interview-workspace-surface__summary-item">{`History ${sessionCount}`}</span>
+              <span className="interview-workspace-surface__summary-item">{`${completedSessionCount} completed`}</span>
             </div>
             <div className="interview-workspace-surface__principles" role="list" aria-label="Launch principles">
               <span role="listitem">One resume version per run.</span>
