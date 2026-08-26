@@ -6876,34 +6876,35 @@ button {
 .page-container__intro {
   display: grid;
   align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
   padding: 0;
-  padding-bottom: 6px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--border-soft);
 }
 
 .page-container__intro-copy {
   display: grid;
-  gap: 10px;
-  max-width: 760px;
+  gap: 8px;
+  max-width: 720px;
 }
 
 .page-container__eyebrow {
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  min-height: 28px;
-  padding: 5px 10px;
+  min-height: 26px;
+  padding: 4px 9px;
   border: 1px solid var(--border-soft);
   border-radius: 999px;
   background: var(--surface-soft);
 }
 
 .page-container__title {
-  font-size: clamp(1.72rem, 2.6vw, 2.7rem);
-  line-height: 1.06;
+  font-size: clamp(1.68rem, 2.45vw, 2.5rem);
+  line-height: 1.08;
   letter-spacing: -0.04em;
-  max-width: 16ch;
+  max-width: 15ch;
+  text-wrap: balance;
 }
 
 .page-container__description {
@@ -6911,7 +6912,7 @@ button {
   max-width: 62ch;
   color: var(--text-muted);
   font-size: 0.92rem;
-  line-height: 1.6;
+  line-height: 1.62;
 }
 
 .page-container__inline-actions {
@@ -11214,17 +11215,17 @@ button {
 
 .page-container__intro {
   border-bottom-color: rgba(255, 255, 255, 0.08);
-  padding-bottom: 18px;
+  padding-bottom: 14px;
 }
 
 .page-container__intro--minimal {
-  gap: 10px;
-  padding-bottom: 12px;
+  gap: 8px;
+  padding-bottom: 10px;
 }
 
 .page-container--minimal .page-container__intro-copy {
-  gap: 8px;
-  max-width: 680px;
+  gap: 7px;
+  max-width: 640px;
 }
 
 .page-container__eyebrow {
@@ -11253,7 +11254,7 @@ button {
 
 .page-container__description {
   color: rgba(187, 201, 222, 0.76);
-  max-width: 68ch;
+  max-width: 62ch;
 }
 
 .page-container--minimal .page-container__description {
@@ -14546,6 +14547,8 @@ button {
 .interview-result-workspace-surface__breadcrumbs,
 .result-analysis-workspace-surface__breadcrumbs {
   color: rgba(100, 116, 139, 0.88);
+  font-size: 0.77rem;
+  letter-spacing: 0.08em;
 }
 
 .practice-workspace-surface__title,
@@ -14564,9 +14567,11 @@ button {
 .question-detail-workspace-surface__title,
 .interview-result-workspace-surface__title,
 .result-analysis-workspace-surface__title {
-  font-size: clamp(1.7rem, 2.3vw, 2.35rem);
+  font-size: clamp(1.64rem, 2.18vw, 2.18rem);
   line-height: 1.08;
   color: #101828;
+  max-width: 16ch;
+  text-wrap: balance;
 }
 
 .practice-workspace-surface__body,
@@ -14586,6 +14591,8 @@ button {
 .interview-result-workspace-surface__body,
 .result-analysis-workspace-surface__body {
   color: rgba(71, 85, 105, 0.92);
+  max-width: 63ch;
+  line-height: 1.62;
 }
 
 .practice-workspace-surface__stat,
