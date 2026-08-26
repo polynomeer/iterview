@@ -130,7 +130,7 @@ After this sweep, the remaining redesign work should be limited to:
 Status on August 26, 2026:
 - desktop authenticated route sweep completed
 - desktop sticky/overflow sweep completed
-- mobile dedicated viewport sweep still pending
+- mobile and tablet dedicated viewport sweep completed
 
 Verified desktop routes in the August 26 pass:
 - `/`
@@ -154,5 +154,11 @@ Desktop findings from that pass:
 - protected routes were validated using the local demo-authenticated workspace
 - no additional desktop CSS fix was required from the final authenticated pass
 
+Mobile and tablet findings from the August 26 follow-up pass:
+- verified routes passed at `390 x 844` and `820 x 1180` with no page-level horizontal overflow
+- `/profile/resumes` required metric-card wrapping cleanup on tablet and now passes without overflow
+- `/interviews` required tighter mobile graph stacking and now passes without page-level overflow
+- `/interviews/session-1` and `/interviews/session-14/result` currently render stable unavailable-state shells in the local demo fixture, so the viewport pass validated those fallback shells rather than a live session body
+
 Remaining gap:
-- a dedicated mobile viewport pass still needs to be run to close the redesign checklist fully
+- none inside the current redesign acceptance scope
