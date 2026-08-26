@@ -538,9 +538,8 @@ export function InterviewPage() {
                     </p>
                   </div>
                   <div className="interview-graph-panel__toolbar">
-                    <button className="secondary-button" type="button">Lane</button>
+                    <span className="detail-chip">Focused lane</span>
                     <button className="primary-button" type="button">DFS Focus</button>
-                    <button className="secondary-button" type="button">All</button>
                   </div>
                 </div>
                 <div className="interview-graph-panel__summary">
@@ -642,14 +641,6 @@ export function InterviewPage() {
                     ))}
                   </div>
                 </div>
-
-                <button
-                  className="primary-button interview-workspace-inspector__cta"
-                  onClick={() => setStartFormOpen(true)}
-                  type="button"
-                >
-                  Open session setup
-                </button>
               </aside>
             </div>
 
