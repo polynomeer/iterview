@@ -268,7 +268,7 @@ export function ResumePage() {
   return (
     <PageContainer
       description="Manage resume containers, upload PDF versions, watch parsing status, and inspect extracted interview context."
-      eyebrow="Resume"
+      eyebrow="Resume sources"
       title="Resume management"
     >
       <section className="page-card resume-workspace-surface">

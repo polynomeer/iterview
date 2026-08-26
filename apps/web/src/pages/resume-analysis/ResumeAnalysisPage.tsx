@@ -36,7 +36,7 @@ export function ResumeAnalysisPage() {
         </Link>
       }
       description="Review the active resume as source of truth, then find the claims that need stronger evidence before interview follow-ups begin."
-      eyebrow="Resume Analysis"
+      eyebrow="Source review"
       title="Inspect resume source of truth"
     >
       <WorkspaceContinuityRail

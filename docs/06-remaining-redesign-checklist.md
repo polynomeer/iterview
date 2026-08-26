@@ -175,7 +175,7 @@ Mark each line only when the changed scope is:
 ### G3. Navigation And Structure
 - [x] Re-check global navigation labels against the workspace-first hierarchy
 - [x] Make sure practice, review, and resume context read as one connected system
-- [ ] Reduce leftover route-first cues where they weaken the product mental model
+- [x] Reduce leftover route-first cues where they weaken the product mental model
 
 ## H. Verification Checklist
 

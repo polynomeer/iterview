@@ -48,7 +48,7 @@ export function HomePage() {
   return (
     <PageContainer
       description={pageDescription}
-      eyebrow="Home"
+      eyebrow="Daily loop"
       introVariant={isUnauthorized ? "hidden" : "minimal"}
       title={pageTitle}
     >

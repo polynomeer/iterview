@@ -154,7 +154,7 @@ export function ReviewQueuePage() {
         </>
       }
       description="Resolve the highest-signal retry first, then return to fresh practice with fewer weak branches still open."
-      eyebrow="Review Queue"
+      eyebrow="Recovery loop"
       introVariant="minimal"
       title="Resolve queued retry branches"
     >

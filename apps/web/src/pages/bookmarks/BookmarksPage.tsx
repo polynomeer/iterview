@@ -187,7 +187,7 @@ export function BookmarksPage() {
         </>
       }
       description="Collect the exact questions, paths, evidence packs, and company context you want to revisit without losing the source-of-truth connection."
-      eyebrow="Bookmarks"
+      eyebrow="Saved context"
       title="Saved interview bookmarks"
     >
       <section className="page-card bookmarks-workspace-surface">

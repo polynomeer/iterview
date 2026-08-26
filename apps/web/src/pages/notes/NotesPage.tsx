@@ -308,7 +308,7 @@ export function NotesPage() {
         </>
       }
       description="Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."
-      eyebrow="Notes"
+      eyebrow="Answer fragments"
       title="Store reusable defense notes"
     >
       <section className="page-card notes-workspace-surface">

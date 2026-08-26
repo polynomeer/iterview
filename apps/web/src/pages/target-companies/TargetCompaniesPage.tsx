@@ -309,7 +309,7 @@ export function TargetCompaniesPage() {
         </>
       }
       description="Track which companies matter now, which interview loops they are likely to stress, and which source-of-truth repairs improve readiness fastest."
-      eyebrow="Target Companies"
+      eyebrow="Company signals"
       title="Company preparation board"
     >
       <section className="page-card target-companies-workspace-surface">

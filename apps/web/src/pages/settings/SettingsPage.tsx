@@ -145,7 +145,7 @@ export function SettingsPage() {
         </>
       }
       description="Control practice defaults, local appearance, and review behavior without mixing these operational settings into the identity-focused profile workspace."
-      eyebrow="Settings"
+      eyebrow="Workspace controls"
       title="Practice settings workspace"
     >
       <section className="page-card settings-workspace-surface">

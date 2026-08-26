@@ -192,7 +192,7 @@ export function WeakNodesPage() {
         </>
       }
       description="Inspect the weakest branches as connected graph nodes so remediation starts from the failing relationship, not from an unstructured retry list."
-      eyebrow="Weak Nodes"
+      eyebrow="Recovery graph"
       title="Weak node remediation workspace"
     >
       <WorkspaceContinuityRail

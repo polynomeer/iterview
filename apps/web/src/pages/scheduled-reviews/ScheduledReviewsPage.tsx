@@ -147,7 +147,7 @@ export function ScheduledReviewsPage() {
         </>
       }
       description="Turn retry work into a visible schedule so you can see what is due, what is slipping, and what will improve mastery fastest this week."
-      eyebrow="Scheduled Reviews"
+      eyebrow="Planned recovery"
       title="Scheduled review board"
     >
       <section className="page-card scheduled-reviews-workspace-surface">
