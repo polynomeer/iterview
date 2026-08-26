@@ -6,13 +6,12 @@ import { useInterviewSessionResumeMapQuery } from "../../features/interview/api/
 import { useResumeVersionResultSectionsQuery } from "../../features/resume/api/useResumeVersionResultSectionsQuery";
 import { getErrorDetails } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
-import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
 import { useLocale } from "../../shared/i18n";
-import { InterviewFullCoverageResultView } from "../../widgets/interview";
+import { InterviewFullCoverageResultView, InterviewWorkspaceFallback } from "../../widgets/interview";
 
 export function InterviewResultPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -33,12 +32,28 @@ export function InterviewResultPage() {
         eyebrow={t("result.pageEyebrow")}
         title={t("result.unavailableTitle")}
       >
-        <EmptyStateCard
-          action={{
-            label: t("result.startInterview"),
-            to: routeConfig.interview.buildPath(),
-          }}
+        <InterviewWorkspaceFallback
+          actions={[
+            {
+              label: t("result.startInterview"),
+              to: routeConfig.interview.buildPath(),
+            },
+            {
+              label: "Open review queue",
+              to: routeConfig.reviewQueue.buildPath(),
+              variant: "secondary",
+            },
+          ]}
+          badge="Result lookup"
           body={t("result.missingBody")}
+          eyebrow="Interview result"
+          signals={[
+            { label: "Session id", value: "Missing", tone: "warning" },
+            { label: "Safe next move", value: "Restart from the interview workspace", tone: "accent" },
+            { label: "Alternative path", value: "Continue remediation from the review queue" },
+          ]}
+          summaryBody="A result route can only summarize a concrete session. Re-enter through the launcher or the review queue so the next pass starts from real branch context."
+          summaryTitle="This result surface has no session to summarize."
           title={t("result.missingTitle")}
         />
       </PageContainer>
@@ -64,12 +79,31 @@ export function InterviewResultPage() {
         eyebrow={t("result.pageEyebrow")}
         title={t("result.unavailableTitle")}
       >
-        <ErrorStateCard
+        <InterviewWorkspaceFallback
+          actions={[
+            {
+              label: "Retry result lookup",
+              onAction: () => {
+                void sessionQuery.refetch();
+              },
+            },
+            {
+              label: "Back to interview workspace",
+              to: routeConfig.interview.buildPath(),
+              variant: "secondary",
+            },
+          ]}
+          badge="Recovery needed"
           body={sessionQuery.error instanceof Error ? sessionQuery.error.message : t("result.loadErrorBody")}
           details={getErrorDetails(sessionQuery.error)}
-          onAction={() => {
-            void sessionQuery.refetch();
-          }}
+          eyebrow="Interview result"
+          signals={[
+            { label: "Current state", value: "Result data did not load", tone: "warning" },
+            { label: "Retry path", value: "Refresh the finished pass before starting a new one", tone: "accent" },
+            { label: "Fallback path", value: "Return to the launcher if the session no longer exists" },
+          ]}
+          summaryBody="The shell is reachable but the completed session summary could not be reconstructed. Retry first so you do not lose the last branch context."
+          summaryTitle="The result shell loaded, but the session summary did not."
           title={t("result.loadErrorTitle")}
         />
       </PageContainer>
@@ -89,12 +123,28 @@ export function InterviewResultPage() {
         eyebrow={t("result.pageEyebrow")}
         title={t("result.unavailableTitle")}
       >
-        <EmptyStateCard
-          action={{
-            label: t("result.startInterview"),
-            to: routeConfig.interview.buildPath(),
-          }}
+        <InterviewWorkspaceFallback
+          actions={[
+            {
+              label: t("result.startInterview"),
+              to: routeConfig.interview.buildPath(),
+            },
+            {
+              label: "Back to home workspace",
+              to: routeConfig.home.buildPath(),
+              variant: "secondary",
+            },
+          ]}
+          badge="No session summary"
           body={t("result.notFoundBody")}
+          eyebrow="Interview result"
+          signals={[
+            { label: "Session status", value: "No completed summary is available", tone: "warning" },
+            { label: "Best next move", value: "Launch a fresh pass from the interview workspace", tone: "accent" },
+            { label: "Navigation fallback", value: "Return home if this route came from stale history" },
+          ]}
+          summaryBody="This route did not resolve to a stored session summary. Start a fresh branch or step back to the workspace that linked here."
+          summaryTitle="The result surface cannot find a finished interview pass."
           title={t("result.notFoundTitle")}
         />
       </PageContainer>

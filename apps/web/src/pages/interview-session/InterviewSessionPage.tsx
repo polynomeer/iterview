@@ -18,7 +18,6 @@ import { getActiveResumeVersionId } from "../../entities/resume/model";
 import { getErrorDetails } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
-import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
@@ -31,6 +30,7 @@ import {
   InterviewFacetSummaryPanel,
   InterviewQuestionTimeline,
   InterviewResumeEvidenceBlock,
+  InterviewWorkspaceFallback,
 } from "../../widgets/interview";
 
 export function InterviewSessionPage() {
@@ -61,12 +61,28 @@ export function InterviewSessionPage() {
         eyebrow={t("interview.pageEyebrow")}
         title={t("interview.sessionUnavailableTitle")}
       >
-        <EmptyStateCard
-          action={{
-            label: t("interview.startInterview"),
-            to: routeConfig.interview.buildPath(),
-          }}
+        <InterviewWorkspaceFallback
+          actions={[
+            {
+              label: t("interview.startInterview"),
+              to: routeConfig.interview.buildPath(),
+            },
+            {
+              label: "Open review queue",
+              to: routeConfig.reviewQueue.buildPath(),
+              variant: "secondary",
+            },
+          ]}
+          badge="Session lookup"
           body={t("interview.sessionMissingBody")}
+          eyebrow="Interview session"
+          signals={[
+            { label: "Session id", value: "Missing", tone: "warning" },
+            { label: "Safe next move", value: "Re-enter from the interview launcher", tone: "accent" },
+            { label: "Alternative path", value: "Continue recovery work from the review queue" },
+          ]}
+          summaryBody="A direct session route needs a concrete session id. Re-enter from the launcher so the next branch inherits the right resume and traversal mode."
+          summaryTitle="This route cannot reconstruct a DFS branch on its own."
           title={t("interview.sessionMissingTitle")}
         />
       </PageContainer>
@@ -92,12 +108,31 @@ export function InterviewSessionPage() {
         eyebrow={t("interview.pageEyebrow")}
         title={t("interview.sessionUnavailableTitle")}
       >
-        <ErrorStateCard
+        <InterviewWorkspaceFallback
+          actions={[
+            {
+              label: "Retry session lookup",
+              onAction: () => {
+                void sessionQuery.refetch();
+              },
+            },
+            {
+              label: "Back to interview workspace",
+              to: routeConfig.interview.buildPath(),
+              variant: "secondary",
+            },
+          ]}
+          badge="Recovery needed"
           body={sessionQuery.error instanceof Error ? sessionQuery.error.message : t("interview.sessionUnavailableBody")}
           details={getErrorDetails(sessionQuery.error)}
-          onAction={() => {
-            void sessionQuery.refetch();
-          }}
+          eyebrow="Interview session"
+          signals={[
+            { label: "Current state", value: "Session data did not load", tone: "warning" },
+            { label: "Retry path", value: "Refresh this branch before restarting broadly", tone: "accent" },
+            { label: "Fallback path", value: "Use the launcher if the branch was never created" },
+          ]}
+          summaryBody="The active branch could not be reconstructed from the current data response. Retry first, then go back to the interview workspace only if this branch is no longer valid."
+          summaryTitle="The session shell loaded, but the branch payload did not."
           title={t("interview.sessionUnavailableTitle")}
         />
       </PageContainer>
@@ -115,12 +150,28 @@ export function InterviewSessionPage() {
         eyebrow={t("interview.noCurrentQuestionEyebrow")}
         title={t("interview.sessionUnavailableTitle")}
       >
-        <EmptyStateCard
-          action={{
-            label: t("interview.viewSessionResult"),
-            to: routeConfig.interviewSessionResult.buildPath({ sessionId }),
-          }}
+        <InterviewWorkspaceFallback
+          actions={[
+            {
+              label: t("interview.viewSessionResult"),
+              to: routeConfig.interviewSessionResult.buildPath({ sessionId }),
+            },
+            {
+              label: "Back to interview workspace",
+              to: routeConfig.interview.buildPath(),
+              variant: "secondary",
+            },
+          ]}
+          badge="Branch complete"
           body={t("interview.noCurrentQuestionBody")}
+          eyebrow="Interview session"
+          signals={[
+            { label: "Current question", value: "No active node is left in this session", tone: "accent" },
+            { label: "Best next surface", value: "Read the result before launching a new pass" },
+            { label: "Traversal rule", value: "Do not restart broad coverage until the result is reviewed" },
+          ]}
+          summaryBody="This usually means the session has already consumed its active branch or moved into a completed state. Read the result and decide whether recovery or expansion is next."
+          summaryTitle="The DFS pass no longer has a live node to defend."
           title={t("interview.noCurrentQuestionTitle")}
         />
       </PageContainer>

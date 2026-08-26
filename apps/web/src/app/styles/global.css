@@ -11360,6 +11360,131 @@ button {
     0 16px 30px rgba(10, 40, 96, 0.28);
 }
 
+.interview-workspace-fallback,
+.interview-workspace-fallback__hero,
+.interview-workspace-fallback__copy,
+.interview-workspace-fallback__signals {
+  display: grid;
+  gap: 18px;
+}
+
+.interview-workspace-fallback__topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.interview-workspace-fallback__hero {
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  align-items: start;
+}
+
+.interview-workspace-fallback__title {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(1.7rem, 2.5vw, 2.35rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: #101828;
+}
+
+.interview-workspace-fallback__body {
+  margin: 0;
+  max-width: 60ch;
+  color: rgba(71, 85, 105, 0.92);
+  line-height: 1.65;
+}
+
+.interview-workspace-fallback__summary {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent),
+    rgba(255, 255, 255, 0.88);
+}
+
+.interview-workspace-fallback__summary-label {
+  color: rgba(100, 116, 139, 0.9);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.interview-workspace-fallback__summary strong {
+  color: #101828;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.interview-workspace-fallback__summary p {
+  margin: 0;
+  color: rgba(71, 85, 105, 0.88);
+  line-height: 1.55;
+}
+
+.interview-workspace-fallback__signals {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.interview-workspace-fallback__signal {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent),
+    rgba(248, 250, 252, 0.94);
+}
+
+.interview-workspace-fallback__signal span {
+  color: rgba(100, 116, 139, 0.88);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.interview-workspace-fallback__signal strong {
+  color: #101828;
+  font-size: 1rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.interview-workspace-fallback__signal--accent {
+  border-color: rgba(15, 118, 110, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 36%),
+    rgba(240, 253, 250, 0.96);
+}
+
+.interview-workspace-fallback__signal--warning {
+  border-color: rgba(180, 35, 24, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(180, 35, 24, 0.06), transparent 34%),
+    rgba(255, 247, 245, 0.96);
+}
+
+.interview-workspace-fallback__details {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 1.15rem;
+  color: rgba(71, 85, 105, 0.88);
+}
+
+.interview-workspace-fallback__details li {
+  line-height: 1.55;
+}
+
 .interview-workspace-deck {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -12128,6 +12253,11 @@ button {
   }
 
   .interview-workspace-surface__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-workspace-fallback__hero,
+  .interview-workspace-fallback__signals {
     grid-template-columns: 1fr;
   }
 
