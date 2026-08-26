@@ -170,7 +170,7 @@ Mark each line only when the changed scope is:
 - [x] Audit radius drift
 - [x] Audit border and shadow drift
 - [x] Audit accent-color drift
-- [ ] Keep one consistent dark workspace language across all redesigned pages
+- [x] Keep one consistent dark workspace language across all redesigned pages
 
 ### G3. Navigation And Structure
 - [x] Re-check global navigation labels against the workspace-first hierarchy

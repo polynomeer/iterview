@@ -14325,6 +14325,564 @@ button {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
+:root[data-theme="dark"] .app-shell,
+:root[data-theme="dracula"] .app-shell {
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 14%, transparent), transparent 24%),
+    var(--app-background);
+  color: var(--text-main);
+}
+
+:root[data-theme="dark"] .app-shell__workspace,
+:root[data-theme="dracula"] .app-shell__workspace {
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--border-overlay) 26%, transparent), transparent 32%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 92%, transparent),
+      color-mix(in srgb, var(--surface-base) 96%, transparent)
+    );
+}
+
+:root[data-theme="dark"] .page-container__intro,
+:root[data-theme="dracula"] .page-container__intro,
+:root[data-theme="dark"] .app-header,
+:root[data-theme="dracula"] .app-header {
+  border-bottom-color: var(--border-soft);
+}
+
+:root[data-theme="dark"] .page-container__eyebrow,
+:root[data-theme="dracula"] .page-container__eyebrow,
+:root[data-theme="dark"] .app-header__search-trigger,
+:root[data-theme="dracula"] .app-header__search-trigger,
+:root[data-theme="dark"] .app-header__search-shortcut,
+:root[data-theme="dracula"] .app-header__search-shortcut,
+:root[data-theme="dark"] .app-header__icon-action,
+:root[data-theme="dracula"] .app-header__icon-action,
+:root[data-theme="dark"] .app-header__action,
+:root[data-theme="dracula"] .app-header__action,
+:root[data-theme="dark"] .app-header__action--secondary,
+:root[data-theme="dracula"] .app-header__action--secondary {
+  border-color: var(--border-soft);
+  background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
+  color: var(--text-main);
+}
+
+:root[data-theme="dark"] .page-container__title,
+:root[data-theme="dracula"] .page-container__title,
+:root[data-theme="dark"] .app-header__title,
+:root[data-theme="dracula"] .app-header__title {
+  color: var(--text-main);
+}
+
+:root[data-theme="dark"] .page-container__eyebrow,
+:root[data-theme="dracula"] .page-container__eyebrow,
+:root[data-theme="dark"] .page-container__description,
+:root[data-theme="dracula"] .page-container__description,
+:root[data-theme="dark"] .app-header__eyebrow,
+:root[data-theme="dracula"] .app-header__eyebrow,
+:root[data-theme="dark"] .app-header__search-placeholder,
+:root[data-theme="dracula"] .app-header__search-placeholder {
+  color: var(--text-muted);
+}
+
+:root[data-theme="dark"] .interview-session-history__item,
+:root[data-theme="dracula"] .interview-session-history__item,
+:root[data-theme="dark"] .page-card,
+:root[data-theme="dracula"] .page-card,
+:root[data-theme="dark"] .list-item-card,
+:root[data-theme="dracula"] .list-item-card,
+:root[data-theme="dark"] .metric-card,
+:root[data-theme="dracula"] .metric-card {
+  background-color: color-mix(in srgb, var(--surface-strong) 90%, transparent);
+  border-color: var(--border-soft);
+  color: var(--text-main);
+  box-shadow: var(--shadow-soft);
+}
+
+:root[data-theme="dark"] .page-card__body,
+:root[data-theme="dracula"] .page-card__body,
+:root[data-theme="dark"] .list-item-card__body,
+:root[data-theme="dracula"] .list-item-card__body,
+:root[data-theme="dark"] .list-item-card__meta,
+:root[data-theme="dracula"] .list-item-card__meta,
+:root[data-theme="dark"] .metric-card__helper,
+:root[data-theme="dracula"] .metric-card__helper,
+:root[data-theme="dark"] .metric-card__label,
+:root[data-theme="dracula"] .metric-card__label,
+:root[data-theme="dark"] .section-heading__eyebrow,
+:root[data-theme="dracula"] .section-heading__eyebrow {
+  color: var(--text-muted);
+}
+
+:root[data-theme="dark"] .question-status-badge,
+:root[data-theme="dracula"] .question-status-badge,
+:root[data-theme="dark"] .page-card__label,
+:root[data-theme="dracula"] .page-card__label,
+:root[data-theme="dark"] .detail-chip,
+:root[data-theme="dracula"] .detail-chip,
+:root[data-theme="dark"] .insight-card__chip,
+:root[data-theme="dracula"] .insight-card__chip {
+  background: color-mix(in srgb, var(--surface-muted) 82%, transparent);
+  border-color: var(--border-soft);
+  color: var(--text-main);
+}
+
+:root[data-theme="dark"] .question-status-badge--positive,
+:root[data-theme="dracula"] .question-status-badge--positive {
+  background: color-mix(in srgb, var(--surface-success-soft) 92%, transparent);
+  color: var(--text-success);
+}
+
+:root[data-theme="dark"] .question-status-badge--accent,
+:root[data-theme="dracula"] .question-status-badge--accent {
+  background: color-mix(in srgb, var(--surface-accent-soft) 92%, transparent);
+  color: var(--accent-strong);
+}
+
+:root[data-theme="dark"] .workspace-continuity-rail,
+:root[data-theme="dracula"] .workspace-continuity-rail {
+  border-color: var(--border-soft);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 28%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 94%, transparent) 0%,
+      color-mix(in srgb, var(--surface-base) 98%, transparent) 100%
+    );
+}
+
+:root[data-theme="dark"] .workspace-continuity-rail__surface,
+:root[data-theme="dracula"] .workspace-continuity-rail__surface {
+  border-color: var(--border-soft);
+  background: color-mix(in srgb, var(--surface-strong) 90%, transparent);
+}
+
+:root[data-theme="dark"] .workspace-continuity-rail__surface:hover,
+:root[data-theme="dracula"] .workspace-continuity-rail__surface:hover,
+:root[data-theme="dark"] .workspace-continuity-rail__surface--current,
+:root[data-theme="dracula"] .workspace-continuity-rail__surface--current {
+  border-color: color-mix(in srgb, var(--accent) 44%, var(--border-soft));
+}
+
+:root[data-theme="dark"] .workspace-continuity-rail__surface--current,
+:root[data-theme="dracula"] .workspace-continuity-rail__surface--current {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-accent-soft) 72%, var(--surface-strong)) 0%,
+      color-mix(in srgb, var(--surface-strong) 96%, transparent) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 12%, transparent);
+}
+
+:root[data-theme="dark"] .workspace-continuity-rail__status,
+:root[data-theme="dracula"] .workspace-continuity-rail__status {
+  background: color-mix(in srgb, var(--surface-muted) 88%, transparent);
+  color: var(--text-muted);
+}
+
+:root[data-theme="dark"] .workspace-continuity-rail__status--current,
+:root[data-theme="dracula"] .workspace-continuity-rail__status--current,
+:root[data-theme="dark"] .workspace-continuity-rail__status--next,
+:root[data-theme="dracula"] .workspace-continuity-rail__status--next {
+  background: color-mix(in srgb, var(--surface-accent-soft) 92%, transparent);
+  color: var(--accent-strong);
+}
+
+:root[data-theme="dark"] .practice-workspace-surface,
+:root[data-theme="dracula"] .practice-workspace-surface,
+:root[data-theme="dark"] .question-tree-workspace-surface,
+:root[data-theme="dracula"] .question-tree-workspace-surface,
+:root[data-theme="dark"] .review-queue-workspace-surface,
+:root[data-theme="dracula"] .review-queue-workspace-surface,
+:root[data-theme="dark"] .archive-workspace-surface,
+:root[data-theme="dracula"] .archive-workspace-surface,
+:root[data-theme="dark"] .home-workspace-surface,
+:root[data-theme="dracula"] .home-workspace-surface,
+:root[data-theme="dark"] .feed-workspace-surface,
+:root[data-theme="dracula"] .feed-workspace-surface,
+:root[data-theme="dark"] .profile-workspace-surface,
+:root[data-theme="dracula"] .profile-workspace-surface,
+:root[data-theme="dark"] .resume-workspace-surface,
+:root[data-theme="dracula"] .resume-workspace-surface,
+:root[data-theme="dark"] .auth-access-surface,
+:root[data-theme="dracula"] .auth-access-surface,
+:root[data-theme="dark"] .practical-list-workspace-surface,
+:root[data-theme="dracula"] .practical-list-workspace-surface,
+:root[data-theme="dark"] .practical-review-workspace-surface,
+:root[data-theme="dracula"] .practical-review-workspace-surface,
+:root[data-theme="dark"] .interview-workspace-surface,
+:root[data-theme="dracula"] .interview-workspace-surface,
+:root[data-theme="dark"] .interview-session-workspace-surface,
+:root[data-theme="dracula"] .interview-session-workspace-surface,
+:root[data-theme="dark"] .question-detail-workspace-surface,
+:root[data-theme="dracula"] .question-detail-workspace-surface,
+:root[data-theme="dark"] .interview-result-workspace-surface,
+:root[data-theme="dracula"] .interview-result-workspace-surface,
+:root[data-theme="dark"] .result-analysis-workspace-surface,
+:root[data-theme="dracula"] .result-analysis-workspace-surface {
+  border-color: var(--border-soft);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 12%, transparent), transparent 32%),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--surface-info-soft) 70%, transparent), transparent 22%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 96%, transparent) 0%,
+      color-mix(in srgb, var(--surface-base) 98%, transparent) 100%
+    );
+  box-shadow: var(--shadow-soft);
+}
+
+:root[data-theme="dark"] .practice-workspace-surface::after,
+:root[data-theme="dracula"] .practice-workspace-surface::after,
+:root[data-theme="dark"] .question-tree-workspace-surface::after,
+:root[data-theme="dracula"] .question-tree-workspace-surface::after,
+:root[data-theme="dark"] .review-queue-workspace-surface::after,
+:root[data-theme="dracula"] .review-queue-workspace-surface::after,
+:root[data-theme="dark"] .archive-workspace-surface::after,
+:root[data-theme="dracula"] .archive-workspace-surface::after,
+:root[data-theme="dark"] .home-workspace-surface::after,
+:root[data-theme="dracula"] .home-workspace-surface::after,
+:root[data-theme="dark"] .feed-workspace-surface::after,
+:root[data-theme="dracula"] .feed-workspace-surface::after,
+:root[data-theme="dark"] .profile-workspace-surface::after,
+:root[data-theme="dracula"] .profile-workspace-surface::after,
+:root[data-theme="dark"] .resume-workspace-surface::after,
+:root[data-theme="dracula"] .resume-workspace-surface::after,
+:root[data-theme="dark"] .interview-session-workspace-surface::after,
+:root[data-theme="dracula"] .interview-session-workspace-surface::after,
+:root[data-theme="dark"] .question-detail-workspace-surface::after,
+:root[data-theme="dracula"] .question-detail-workspace-surface::after,
+:root[data-theme="dark"] .interview-result-workspace-surface::after,
+:root[data-theme="dracula"] .interview-result-workspace-surface::after,
+:root[data-theme="dark"] .result-analysis-workspace-surface::after,
+:root[data-theme="dracula"] .result-analysis-workspace-surface::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 22%);
+}
+
+:root[data-theme="dark"] .practice-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .practice-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .question-tree-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .question-tree-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .review-queue-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .review-queue-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .archive-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .archive-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .home-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .home-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .feed-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .feed-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .profile-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .profile-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .resume-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .resume-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .auth-access-surface__breadcrumbs,
+:root[data-theme="dracula"] .auth-access-surface__breadcrumbs,
+:root[data-theme="dark"] .practical-list-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .practical-list-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .practical-review-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .practical-review-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .interview-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .interview-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .interview-session-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .interview-session-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .question-detail-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .question-detail-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .interview-result-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .interview-result-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .result-analysis-workspace-surface__breadcrumbs,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__breadcrumbs,
+:root[data-theme="dark"] .practice-workspace-surface__body,
+:root[data-theme="dracula"] .practice-workspace-surface__body,
+:root[data-theme="dark"] .question-tree-workspace-surface__body,
+:root[data-theme="dracula"] .question-tree-workspace-surface__body,
+:root[data-theme="dark"] .review-queue-workspace-surface__body,
+:root[data-theme="dracula"] .review-queue-workspace-surface__body,
+:root[data-theme="dark"] .archive-workspace-surface__body,
+:root[data-theme="dracula"] .archive-workspace-surface__body,
+:root[data-theme="dark"] .home-workspace-surface__body,
+:root[data-theme="dracula"] .home-workspace-surface__body,
+:root[data-theme="dark"] .feed-workspace-surface__body,
+:root[data-theme="dracula"] .feed-workspace-surface__body,
+:root[data-theme="dark"] .profile-workspace-surface__body,
+:root[data-theme="dracula"] .profile-workspace-surface__body,
+:root[data-theme="dark"] .resume-workspace-surface__body,
+:root[data-theme="dracula"] .resume-workspace-surface__body,
+:root[data-theme="dark"] .auth-access-surface__body,
+:root[data-theme="dracula"] .auth-access-surface__body,
+:root[data-theme="dark"] .practical-list-workspace-surface__body,
+:root[data-theme="dracula"] .practical-list-workspace-surface__body,
+:root[data-theme="dark"] .practical-review-workspace-surface__body,
+:root[data-theme="dracula"] .practical-review-workspace-surface__body,
+:root[data-theme="dark"] .interview-workspace-surface__body,
+:root[data-theme="dracula"] .interview-workspace-surface__body,
+:root[data-theme="dark"] .interview-session-workspace-surface__body,
+:root[data-theme="dracula"] .interview-session-workspace-surface__body,
+:root[data-theme="dark"] .question-detail-workspace-surface__body,
+:root[data-theme="dracula"] .question-detail-workspace-surface__body,
+:root[data-theme="dark"] .interview-result-workspace-surface__body,
+:root[data-theme="dracula"] .interview-result-workspace-surface__body,
+:root[data-theme="dark"] .result-analysis-workspace-surface__body,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__body {
+  color: var(--text-muted);
+}
+
+:root[data-theme="dark"] .practice-workspace-surface__title,
+:root[data-theme="dracula"] .practice-workspace-surface__title,
+:root[data-theme="dark"] .question-tree-workspace-surface__title,
+:root[data-theme="dracula"] .question-tree-workspace-surface__title,
+:root[data-theme="dark"] .review-queue-workspace-surface__title,
+:root[data-theme="dracula"] .review-queue-workspace-surface__title,
+:root[data-theme="dark"] .archive-workspace-surface__title,
+:root[data-theme="dracula"] .archive-workspace-surface__title,
+:root[data-theme="dark"] .home-workspace-surface__title,
+:root[data-theme="dracula"] .home-workspace-surface__title,
+:root[data-theme="dark"] .feed-workspace-surface__title,
+:root[data-theme="dracula"] .feed-workspace-surface__title,
+:root[data-theme="dark"] .profile-workspace-surface__title,
+:root[data-theme="dracula"] .profile-workspace-surface__title,
+:root[data-theme="dark"] .resume-workspace-surface__title,
+:root[data-theme="dracula"] .resume-workspace-surface__title,
+:root[data-theme="dark"] .auth-access-surface__title,
+:root[data-theme="dracula"] .auth-access-surface__title,
+:root[data-theme="dark"] .practical-list-workspace-surface__title,
+:root[data-theme="dracula"] .practical-list-workspace-surface__title,
+:root[data-theme="dark"] .practical-review-workspace-surface__title,
+:root[data-theme="dracula"] .practical-review-workspace-surface__title,
+:root[data-theme="dark"] .interview-workspace-surface__title,
+:root[data-theme="dracula"] .interview-workspace-surface__title,
+:root[data-theme="dark"] .interview-session-workspace-surface__title,
+:root[data-theme="dracula"] .interview-session-workspace-surface__title,
+:root[data-theme="dark"] .question-detail-workspace-surface__title,
+:root[data-theme="dracula"] .question-detail-workspace-surface__title,
+:root[data-theme="dark"] .interview-result-workspace-surface__title,
+:root[data-theme="dracula"] .interview-result-workspace-surface__title,
+:root[data-theme="dark"] .result-analysis-workspace-surface__title,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__title,
+:root[data-theme="dark"] .practice-workspace-surface__stat strong,
+:root[data-theme="dracula"] .practice-workspace-surface__stat strong,
+:root[data-theme="dark"] .question-tree-workspace-surface__stat strong,
+:root[data-theme="dracula"] .question-tree-workspace-surface__stat strong,
+:root[data-theme="dark"] .review-queue-workspace-surface__stat strong,
+:root[data-theme="dracula"] .review-queue-workspace-surface__stat strong,
+:root[data-theme="dark"] .archive-workspace-surface__stat strong,
+:root[data-theme="dracula"] .archive-workspace-surface__stat strong,
+:root[data-theme="dark"] .home-workspace-surface__stat strong,
+:root[data-theme="dracula"] .home-workspace-surface__stat strong,
+:root[data-theme="dark"] .feed-workspace-surface__stat strong,
+:root[data-theme="dracula"] .feed-workspace-surface__stat strong,
+:root[data-theme="dark"] .profile-workspace-surface__stat strong,
+:root[data-theme="dracula"] .profile-workspace-surface__stat strong,
+:root[data-theme="dark"] .resume-workspace-surface__stat strong,
+:root[data-theme="dracula"] .resume-workspace-surface__stat strong,
+:root[data-theme="dark"] .auth-access-surface__stat strong,
+:root[data-theme="dracula"] .auth-access-surface__stat strong,
+:root[data-theme="dark"] .practical-list-workspace-surface__stat strong,
+:root[data-theme="dracula"] .practical-list-workspace-surface__stat strong,
+:root[data-theme="dark"] .practical-review-workspace-surface__stat strong,
+:root[data-theme="dracula"] .practical-review-workspace-surface__stat strong,
+:root[data-theme="dark"] .interview-workspace-surface__stat strong,
+:root[data-theme="dracula"] .interview-workspace-surface__stat strong,
+:root[data-theme="dark"] .interview-session-workspace-surface__stat-value,
+:root[data-theme="dracula"] .interview-session-workspace-surface__stat-value,
+:root[data-theme="dark"] .question-detail-workspace-surface__stat strong,
+:root[data-theme="dracula"] .question-detail-workspace-surface__stat strong,
+:root[data-theme="dark"] .interview-result-workspace-surface__stat strong,
+:root[data-theme="dracula"] .interview-result-workspace-surface__stat strong,
+:root[data-theme="dark"] .result-analysis-workspace-surface__stat strong,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__stat strong,
+:root[data-theme="dark"] .practice-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .practice-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .question-tree-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .question-tree-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .home-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .home-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .auth-access-surface__guidance-card strong,
+:root[data-theme="dracula"] .auth-access-surface__guidance-card strong,
+:root[data-theme="dark"] .auth-access-form-card__summary-item strong,
+:root[data-theme="dracula"] .auth-access-form-card__summary-item strong,
+:root[data-theme="dark"] .practical-list-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .practical-list-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .practical-review-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .practical-review-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .interview-workspace-surface__snapshot-card strong,
+:root[data-theme="dracula"] .interview-workspace-surface__snapshot-card strong,
+:root[data-theme="dark"] .interview-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .interview-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .interview-session-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .interview-session-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .question-detail-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .question-detail-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .answer-editor-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .answer-editor-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .interview-result-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .interview-result-workspace-surface__guidance-card strong,
+:root[data-theme="dark"] .result-analysis-workspace-surface__guidance-card strong,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__guidance-card strong {
+  color: var(--text-main);
+}
+
+:root[data-theme="dark"] .practice-workspace-surface__stat,
+:root[data-theme="dracula"] .practice-workspace-surface__stat,
+:root[data-theme="dark"] .question-tree-workspace-surface__stat,
+:root[data-theme="dracula"] .question-tree-workspace-surface__stat,
+:root[data-theme="dark"] .review-queue-workspace-surface__stat,
+:root[data-theme="dracula"] .review-queue-workspace-surface__stat,
+:root[data-theme="dark"] .archive-workspace-surface__stat,
+:root[data-theme="dracula"] .archive-workspace-surface__stat,
+:root[data-theme="dark"] .home-workspace-surface__stat,
+:root[data-theme="dracula"] .home-workspace-surface__stat,
+:root[data-theme="dark"] .feed-workspace-surface__stat,
+:root[data-theme="dracula"] .feed-workspace-surface__stat,
+:root[data-theme="dark"] .profile-workspace-surface__stat,
+:root[data-theme="dracula"] .profile-workspace-surface__stat,
+:root[data-theme="dark"] .resume-workspace-surface__stat,
+:root[data-theme="dracula"] .resume-workspace-surface__stat,
+:root[data-theme="dark"] .auth-access-surface__stat,
+:root[data-theme="dracula"] .auth-access-surface__stat,
+:root[data-theme="dark"] .practical-list-workspace-surface__stat,
+:root[data-theme="dracula"] .practical-list-workspace-surface__stat,
+:root[data-theme="dark"] .practical-review-workspace-surface__stat,
+:root[data-theme="dracula"] .practical-review-workspace-surface__stat,
+:root[data-theme="dark"] .interview-workspace-surface__stat,
+:root[data-theme="dracula"] .interview-workspace-surface__stat,
+:root[data-theme="dark"] .interview-session-workspace-surface__stat,
+:root[data-theme="dracula"] .interview-session-workspace-surface__stat,
+:root[data-theme="dark"] .question-detail-workspace-surface__stat,
+:root[data-theme="dracula"] .question-detail-workspace-surface__stat,
+:root[data-theme="dark"] .interview-result-workspace-surface__stat,
+:root[data-theme="dracula"] .interview-result-workspace-surface__stat,
+:root[data-theme="dark"] .result-analysis-workspace-surface__stat,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__stat,
+:root[data-theme="dark"] .practice-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .practice-workspace-surface__guidance-card,
+:root[data-theme="dark"] .question-tree-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .question-tree-workspace-surface__guidance-card,
+:root[data-theme="dark"] .home-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .home-workspace-surface__guidance-card,
+:root[data-theme="dark"] .auth-access-surface__guidance-card,
+:root[data-theme="dracula"] .auth-access-surface__guidance-card,
+:root[data-theme="dark"] .auth-access-form-card__summary-item,
+:root[data-theme="dracula"] .auth-access-form-card__summary-item,
+:root[data-theme="dark"] .practical-list-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .practical-list-workspace-surface__guidance-card,
+:root[data-theme="dark"] .practical-review-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .practical-review-workspace-surface__guidance-card,
+:root[data-theme="dark"] .interview-workspace-surface__snapshot-card,
+:root[data-theme="dracula"] .interview-workspace-surface__snapshot-card,
+:root[data-theme="dark"] .interview-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .interview-workspace-surface__guidance-card,
+:root[data-theme="dark"] .interview-session-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .interview-session-workspace-surface__guidance-card,
+:root[data-theme="dark"] .question-detail-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .question-detail-workspace-surface__guidance-card,
+:root[data-theme="dark"] .answer-editor-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .answer-editor-workspace-surface__guidance-card,
+:root[data-theme="dark"] .interview-result-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .interview-result-workspace-surface__guidance-card,
+:root[data-theme="dark"] .result-analysis-workspace-surface__guidance-card,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__guidance-card,
+:root[data-theme="dark"] .practice-review-queue-card,
+:root[data-theme="dracula"] .practice-review-queue-card,
+:root[data-theme="dark"] .practice-workflow-note,
+:root[data-theme="dracula"] .practice-workflow-note,
+:root[data-theme="dark"] .practice-focus-summary-card,
+:root[data-theme="dracula"] .practice-focus-summary-card,
+:root[data-theme="dark"] .practice-map-launch-card,
+:root[data-theme="dracula"] .practice-map-launch-card,
+:root[data-theme="dark"] .practice-list-item-card,
+:root[data-theme="dracula"] .practice-list-item-card,
+:root[data-theme="dark"] .question-tree-root-brief,
+:root[data-theme="dracula"] .question-tree-root-brief {
+  border-color: var(--border-soft);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    color-mix(in srgb, var(--surface-strong) 88%, transparent);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .practice-workspace-surface__stat span,
+:root[data-theme="dracula"] .practice-workspace-surface__stat span,
+:root[data-theme="dark"] .question-tree-workspace-surface__stat span,
+:root[data-theme="dracula"] .question-tree-workspace-surface__stat span,
+:root[data-theme="dark"] .review-queue-workspace-surface__stat span,
+:root[data-theme="dracula"] .review-queue-workspace-surface__stat span,
+:root[data-theme="dark"] .archive-workspace-surface__stat span,
+:root[data-theme="dracula"] .archive-workspace-surface__stat span,
+:root[data-theme="dark"] .home-workspace-surface__stat span,
+:root[data-theme="dracula"] .home-workspace-surface__stat span,
+:root[data-theme="dark"] .feed-workspace-surface__stat span,
+:root[data-theme="dracula"] .feed-workspace-surface__stat span,
+:root[data-theme="dark"] .profile-workspace-surface__stat span,
+:root[data-theme="dracula"] .profile-workspace-surface__stat span,
+:root[data-theme="dark"] .resume-workspace-surface__stat span,
+:root[data-theme="dracula"] .resume-workspace-surface__stat span,
+:root[data-theme="dark"] .auth-access-surface__stat span,
+:root[data-theme="dracula"] .auth-access-surface__stat span,
+:root[data-theme="dark"] .practical-list-workspace-surface__stat span,
+:root[data-theme="dracula"] .practical-list-workspace-surface__stat span,
+:root[data-theme="dark"] .practical-review-workspace-surface__stat span,
+:root[data-theme="dracula"] .practical-review-workspace-surface__stat span,
+:root[data-theme="dark"] .interview-workspace-surface__stat span,
+:root[data-theme="dracula"] .interview-workspace-surface__stat span,
+:root[data-theme="dark"] .interview-session-workspace-surface__stat-label,
+:root[data-theme="dracula"] .interview-session-workspace-surface__stat-label,
+:root[data-theme="dark"] .question-detail-workspace-surface__stat span,
+:root[data-theme="dracula"] .question-detail-workspace-surface__stat span,
+:root[data-theme="dark"] .interview-result-workspace-surface__stat span,
+:root[data-theme="dracula"] .interview-result-workspace-surface__stat span,
+:root[data-theme="dark"] .result-analysis-workspace-surface__stat span,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__stat span,
+:root[data-theme="dark"] .practice-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .practice-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .question-tree-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .question-tree-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .home-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .home-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .auth-access-surface__guidance-card span,
+:root[data-theme="dracula"] .auth-access-surface__guidance-card span,
+:root[data-theme="dark"] .auth-access-form-card__summary-item span,
+:root[data-theme="dracula"] .auth-access-form-card__summary-item span,
+:root[data-theme="dark"] .practical-list-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .practical-list-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .practical-review-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .practical-review-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .interview-workspace-surface__snapshot-card span,
+:root[data-theme="dracula"] .interview-workspace-surface__snapshot-card span,
+:root[data-theme="dark"] .interview-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .interview-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .interview-session-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .interview-session-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .question-detail-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .question-detail-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .answer-editor-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .answer-editor-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .interview-result-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .interview-result-workspace-surface__guidance-card span,
+:root[data-theme="dark"] .result-analysis-workspace-surface__guidance-card span,
+:root[data-theme="dracula"] .result-analysis-workspace-surface__guidance-card span {
+  color: var(--text-muted);
+}
+
+:root[data-theme="dark"] .auth-access-surface__stat,
+:root[data-theme="dracula"] .auth-access-surface__stat,
+:root[data-theme="dark"] .practical-list-workspace-surface__stat,
+:root[data-theme="dracula"] .practical-list-workspace-surface__stat,
+:root[data-theme="dark"] .practical-review-workspace-surface__stat,
+:root[data-theme="dracula"] .practical-review-workspace-surface__stat,
+:root[data-theme="dark"] .interview-workspace-surface__stat,
+:root[data-theme="dracula"] .interview-workspace-surface__stat,
+:root[data-theme="dark"] .interview-session-workspace-surface__stat,
+:root[data-theme="dracula"] .interview-session-workspace-surface__stat,
+:root[data-theme="dark"] .question-detail-workspace-surface__stat,
+:root[data-theme="dracula"] .question-detail-workspace-surface__stat,
+:root[data-theme="dark"] .interview-result-workspace-surface__stat,
+:root[data-theme="dracula"] .interview-result-workspace-surface__stat,
+:root[data-theme="dark"] .result-analysis-workspace-surface__stat {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
 .guest-home__hero {
   border-color: rgba(15, 23, 42, 0.08);
   background:
