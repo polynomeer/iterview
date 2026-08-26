@@ -543,27 +543,26 @@ export function InterviewPage() {
               <div className="interview-graph-panel">
                 <div className="interview-graph-panel__header">
                   <div>
-                    <p className="section-heading__eyebrow">Branch map</p>
-                    <h3 className="page-card__title">Preview the branch</h3>
+                    <p className="section-heading__eyebrow">Focus lane</p>
+                    <h3 className="page-card__title">Preview the active branch without noise</h3>
+                    <p className="interview-graph-panel__description">
+                      One branch stays in focus while adjacent follow-ups remain visible.
+                    </p>
                   </div>
                   <div className="interview-graph-panel__toolbar">
-                    <button className="secondary-button" type="button">Map View</button>
+                    <button className="secondary-button" type="button">Lane</button>
                     <button className="primary-button" type="button">DFS Focus</button>
-                    <button className="secondary-button" type="button">All Paths</button>
+                    <button className="secondary-button" type="button">All</button>
                   </div>
                 </div>
                 <div className="interview-graph-panel__summary">
                   <article className="interview-graph-panel__summary-card interview-graph-panel__summary-card--active">
-                    <span>Selected branch</span>
+                    <span>Current branch</span>
                     <strong>{selectedInspector.title}</strong>
                   </article>
                   <article className="interview-graph-panel__summary-card">
-                    <span>Depth lane</span>
+                    <span>Depth</span>
                     <strong>{selectedNodePosition >= 0 ? `Level ${selectedNodePosition + 1}` : "Root"}</strong>
-                  </article>
-                  <article className="interview-graph-panel__summary-card">
-                    <span>Parallel branches</span>
-                    <strong>{selectedLaneCount}</strong>
                   </article>
                   <article className="interview-graph-panel__summary-card">
                     <span>Readiness</span>
@@ -611,11 +610,8 @@ export function InterviewPage() {
                       <span>Mastery Score</span>
                       <strong>{selectedInspector.score}/100</strong>
                     </article>
-                    <article className="interview-workspace-inspector__metric">
-                      <span>Current weakness</span>
-                      <strong>{selectedInspector.weakness}</strong>
-                    </article>
                   </div>
+                  <p className="interview-workspace-inspector__summary">{selectedInspector.weakness}</p>
                 </div>
 
                 <div className="interview-workspace-inspector__panel">
@@ -637,7 +633,7 @@ export function InterviewPage() {
                   <div className="section-heading">
                     <div>
                       <p className="section-heading__eyebrow">Next branches</p>
-                      <h3 className="page-card__title">Inspect likely follow-ups</h3>
+                      <h3 className="page-card__title">Review only the next likely follow-ups</h3>
                     </div>
                   </div>
                   <div className="stack-list">
