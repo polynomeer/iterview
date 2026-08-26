@@ -9201,6 +9201,7 @@ button {
 }
 
 .interview-session-workspace-surface__summary-item--accent,
+.interview-session-side-summary__summary-item--accent,
 .interview-result-workspace-surface__summary-item--accent,
 .result-analysis-workspace-surface__summary-item--accent {
   border-color: rgba(45, 212, 191, 0.24);
@@ -9371,6 +9372,33 @@ button {
   line-height: 1.45;
 }
 
+.interview-session-side-summary__principles,
+.interview-session-answer-surface__principles {
+  display: grid;
+  gap: 8px;
+}
+
+.interview-session-side-summary__principles span,
+.interview-session-answer-surface__principles span {
+  position: relative;
+  padding-left: 18px;
+  color: rgba(203, 213, 225, 0.78);
+  line-height: 1.55;
+}
+
+.interview-session-side-summary__principles span::before,
+.interview-session-answer-surface__principles span::before {
+  content: "";
+  position: absolute;
+  top: 0.72em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(45, 212, 191, 0.88);
+  transform: translateY(-50%);
+}
+
 .interview-result-workspace-surface__chips {
   display: flex;
   flex-wrap: wrap;
@@ -9506,20 +9534,20 @@ button {
 
 .interview-session-answer-surface {
   display: grid;
-  gap: 18px;
-  padding: 24px;
+  gap: 16px;
+  padding: 20px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 34%),
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 32%),
     radial-gradient(circle at top left, rgba(45, 212, 191, 0.08), transparent 26%),
     linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
   scroll-margin-top: 120px;
-  box-shadow: 0 24px 52px rgba(2, 6, 23, 0.34);
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28);
 }
 
 .interview-session-answer-surface__header {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .interview-session-answer-surface__topline {
@@ -9537,12 +9565,12 @@ button {
 }
 
 .interview-session-answer-surface__meta span {
-  padding: 8px 10px;
+  padding: 7px 10px;
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.16);
   background: rgba(15, 23, 42, 0.64);
   color: #cbd5e1;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -9562,41 +9590,6 @@ button {
 .interview-session-answer-surface__actions {
   justify-content: space-between;
   align-items: center;
-}
-
-.interview-session-side-summary__signals {
-  grid-template-columns: 1fr;
-}
-
-.interview-session-side-panel__list {
-  display: grid;
-  gap: 12px;
-}
-
-.interview-session-side-panel__item {
-  display: grid;
-  gap: 4px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.32));
-}
-
-.interview-session-side-panel__item strong {
-  color: #f8fafc;
-  line-height: 1.4;
-}
-
-.interview-session-side-panel__item span {
-  color: rgba(203, 213, 225, 0.74);
-  line-height: 1.45;
-}
-
-.interview-session-side-panel__item--coverage {
-  border-color: rgba(45, 212, 191, 0.18);
-  background:
-    radial-gradient(circle at top left, rgba(45, 212, 191, 0.12), transparent 42%),
-    linear-gradient(180deg, rgba(13, 24, 44, 0.62), rgba(9, 19, 35, 0.46));
 }
 
 @media (max-width: 900px) {

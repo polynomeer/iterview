@@ -521,43 +521,20 @@ export function InterviewSessionPage() {
                   <span className="interview-session-side-summary__summary-item" role="listitem">{branchDepthLabel}</span>
                   <span className="interview-session-side-summary__summary-item" role="listitem">{`Weak facets ${weakFacetCount}`}</span>
                   <span className="interview-session-side-summary__summary-item" role="listitem">{`Skipped facets ${skippedFacetCount}`}</span>
+                  <span className="interview-session-side-summary__summary-item interview-session-side-summary__summary-item--accent" role="listitem">
+                    {sessionExecutionSignal}
+                  </span>
                 </div>
-                <div className="interview-session-side-summary__signals">
-                  <article className="interview-session-side-summary__signal">
-                    <span>Advance state</span>
-                    <strong>{canAdvance ? "Next node can open" : "This node still blocks the branch"}</strong>
-                  </article>
-                  <article className="interview-session-side-summary__signal">
-                    <span>Resume anchors</span>
-                    <strong>
-                      {evidenceAnchorCount > 0
-                        ? `${evidenceAnchorCount} snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
-                        : "No source-of-truth snippet yet"}
-                    </strong>
-                  </article>
-                  <article className="interview-session-side-summary__signal">
-                    <span>Execution signal</span>
-                    <strong>{sessionExecutionSignal}</strong>
-                  </article>
-                </div>
-                <div className="interview-session-side-panel__list">
-                  <div className="interview-session-side-panel__item">
-                    <strong>1. Claim</strong>
-                    <span>State the decision in one sentence.</span>
-                  </div>
-                  <div className="interview-session-side-panel__item">
-                    <strong>2. Evidence</strong>
-                    <span>Attach resume facts, numbers, or constraints.</span>
-                  </div>
-                  <div className="interview-session-side-panel__item">
-                    <strong>3. Trade-off</strong>
-                    <span>Show what you accepted and why.</span>
-                  </div>
+                <div className="interview-session-side-summary__principles" role="list" aria-label="Active branch principles">
+                  <span role="listitem">{canAdvance ? "This node can open the next branch once the answer is locked." : "This node still blocks the branch until you answer or skip it."}</span>
+                  <span role="listitem">
+                    {evidenceAnchorCount > 0
+                      ? `${evidenceAnchorCount} source-of-truth snippet${evidenceAnchorCount > 1 ? "s are" : " is"} attached to the branch.`
+                      : "No source-of-truth snippet is attached to the branch yet."}
+                  </span>
+                  <span role="listitem">State the claim, attach the evidence, then show the trade-off.</span>
                   {isFullCoverage ? (
-                    <div className="interview-session-side-panel__item interview-session-side-panel__item--coverage">
-                      <strong>Coverage pass</strong>
-                      <span>Weak and skipped facets become revisit targets in the DFS map.</span>
-                    </div>
+                    <span role="listitem">Weak and skipped facets become deliberate revisit targets in the DFS map.</span>
                   ) : null}
                 </div>
               </SectionPanel>
@@ -593,15 +570,9 @@ export function InterviewSessionPage() {
                   {sessionExecutionSignal}
                 </span>
               </div>
-              <div className="interview-session-answer-surface__playbook">
-                <article className="interview-session-answer-surface__playbook-step">
-                  <span>1. State the claim</span>
-                  <strong>Answer the exact decision or trade-off first</strong>
-                </article>
-                <article className="interview-session-answer-surface__playbook-step">
-                  <span>2. Lock the evidence</span>
-                  <strong>Attach the fact, metric, or constraint that proves it</strong>
-                </article>
+              <div className="interview-session-answer-surface__principles" role="list" aria-label="Answer draft principles">
+                <span role="listitem">Answer the exact decision or trade-off first.</span>
+                <span role="listitem">Attach the fact, metric, or constraint that proves it.</span>
               </div>
               <AnswerTextEditor
                 disabled={submitMutation.isPending || advanceMutation.isPending || skipMutation.isPending}
