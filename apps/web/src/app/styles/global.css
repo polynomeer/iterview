@@ -9062,14 +9062,18 @@ button {
 }
 
 .interview-session-workspace-surface__summary-row,
-.interview-session-side-summary__summary-row {
+.interview-session-side-summary__summary-row,
+.interview-result-workspace-surface__summary-row,
+.result-analysis-workspace-surface__summary-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
 .interview-session-workspace-surface__summary-item,
-.interview-session-side-summary__summary-item {
+.interview-session-side-summary__summary-item,
+.interview-result-workspace-surface__summary-item,
+.result-analysis-workspace-surface__summary-item {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
@@ -9082,7 +9086,9 @@ button {
   letter-spacing: -0.01em;
 }
 
-.interview-session-workspace-surface__summary-item--accent {
+.interview-session-workspace-surface__summary-item--accent,
+.interview-result-workspace-surface__summary-item--accent,
+.result-analysis-workspace-surface__summary-item--accent {
   border-color: rgba(45, 212, 191, 0.24);
   background: rgba(10, 25, 35, 0.78);
   color: #f8fafc;
@@ -9131,6 +9137,48 @@ button {
   border-radius: 999px;
   background: rgba(45, 212, 191, 0.88);
   box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.12);
+}
+
+.interview-result-workspace-surface__principles,
+.result-analysis-workspace-surface__principles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.interview-result-workspace-surface__principles {
+  color: rgba(188, 199, 218, 0.78);
+}
+
+.result-analysis-workspace-surface__principles {
+  color: rgba(255, 247, 240, 0.76);
+}
+
+.interview-result-workspace-surface__principles span,
+.result-analysis-workspace-surface__principles span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.interview-result-workspace-surface__principles span::before,
+.result-analysis-workspace-surface__principles span::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+.interview-result-workspace-surface__principles span::before {
+  background: rgba(45, 212, 191, 0.88);
+  box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.12);
+}
+
+.result-analysis-workspace-surface__principles span::before {
+  background: rgba(255, 214, 170, 0.9);
+  box-shadow: 0 0 0 4px rgba(255, 214, 170, 0.12);
 }
 
 .interview-session-workspace-surface__guidance,

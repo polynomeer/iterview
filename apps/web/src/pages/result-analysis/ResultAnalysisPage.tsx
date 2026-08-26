@@ -115,23 +115,13 @@ export function ResultAnalysisPage() {
                       Read the verdict, isolate the weakest branch, and decide whether the next loop should be an immediate retry or a deeper follow-up question.
                     </p>
                   </div>
-                  <div className="result-analysis-workspace-surface__stats">
-                    <article className="result-analysis-workspace-surface__stat">
-                      <span>Total score</span>
-                      <strong>{`${resultQuery.data.totalScore} / 100`}</strong>
-                    </article>
-                    <article className="result-analysis-workspace-surface__stat">
-                      <span>Weakest dimension</span>
-                      <strong>{weakestDimension ? `${weakestDimension.label} ${weakestDimension.value}` : "Pending"}</strong>
-                    </article>
-                    <article className="result-analysis-workspace-surface__stat">
-                      <span>Improvement signals</span>
-                      <strong>{improvementSignals}</strong>
-                    </article>
-                    <article className="result-analysis-workspace-surface__stat">
-                      <span>Next prompts</span>
-                      <strong>{resultQuery.data.followUpRecommendations.length}</strong>
-                    </article>
+                  <div className="result-analysis-workspace-surface__summary-row" role="list" aria-label="Result analysis signals">
+                    <span className="result-analysis-workspace-surface__summary-item" role="listitem">{`Total score ${resultQuery.data.totalScore} / 100`}</span>
+                    <span className="result-analysis-workspace-surface__summary-item" role="listitem">
+                      {weakestDimension ? `Weakest ${weakestDimension.label} ${weakestDimension.value}` : "Weakest Pending"}
+                    </span>
+                    <span className="result-analysis-workspace-surface__summary-item" role="listitem">{`Improvement signals ${improvementSignals}`}</span>
+                    <span className="result-analysis-workspace-surface__summary-item result-analysis-workspace-surface__summary-item--accent" role="listitem">{`Next prompts ${resultQuery.data.followUpRecommendations.length}`}</span>
                   </div>
                 </div>
                 <div className="result-analysis-workspace-surface__chips">
@@ -150,15 +140,9 @@ export function ResultAnalysisPage() {
                   )}
                   <span className="detail-chip">Strength signals {strongestSignals}</span>
                 </div>
-                <div className="result-analysis-workspace-surface__guidance">
-                  <article className="result-analysis-workspace-surface__guidance-card">
-                    <span>Weakest read</span>
-                    <strong>Start with the dimension that made the answer easiest to challenge.</strong>
-                  </article>
-                  <article className="result-analysis-workspace-surface__guidance-card">
-                    <span>Next loop</span>
-                    <strong>Choose retry depth before writing another longer answer.</strong>
-                  </article>
+                <div className="result-analysis-workspace-surface__principles" role="list" aria-label="Result analysis principles">
+                  <span role="listitem">Start with the dimension that made the answer easiest to challenge.</span>
+                  <span role="listitem">Choose retry depth before writing another longer answer.</span>
                 </div>
               </section>
             );

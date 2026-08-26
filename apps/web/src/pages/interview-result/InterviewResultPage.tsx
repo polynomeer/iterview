@@ -226,23 +226,11 @@ export function InterviewResultPage() {
                 Keep the branches that held up. Re-enter the ones that stayed shallow.
               </p>
             </div>
-            <div className="interview-result-workspace-surface__stats">
-              <article className="interview-result-workspace-surface__stat">
-                <span>Answered</span>
-                <strong>{answeredCount}</strong>
-              </article>
-              <article className="interview-result-workspace-surface__stat">
-                <span>Skipped</span>
-                <strong>{skippedCount}</strong>
-              </article>
-              <article className="interview-result-workspace-surface__stat">
-                <span>Average score</span>
-                <strong>{averageScoreLabel}</strong>
-              </article>
-              <article className="interview-result-workspace-surface__stat">
-                <span>Weak branches</span>
-                <strong>{weakFacetCount}</strong>
-              </article>
+            <div className="interview-result-workspace-surface__summary-row" role="list" aria-label="Result workspace signals">
+              <span className="interview-result-workspace-surface__summary-item" role="listitem">{`Answered ${answeredCount}`}</span>
+              <span className="interview-result-workspace-surface__summary-item" role="listitem">{`Skipped ${skippedCount}`}</span>
+              <span className="interview-result-workspace-surface__summary-item" role="listitem">{`Average score ${averageScoreLabel}`}</span>
+              <span className="interview-result-workspace-surface__summary-item interview-result-workspace-surface__summary-item--accent" role="listitem">{`Weak branches ${weakFacetCount}`}</span>
             </div>
           </div>
           <div className="interview-result-workspace-surface__chips">
@@ -251,15 +239,9 @@ export function InterviewResultPage() {
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{`Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
-          <div className="interview-result-workspace-surface__guidance">
-            <article className="interview-result-workspace-surface__guidance-card">
-              <span>Keep</span>
-              <strong>Carry forward only the branches worth re-testing.</strong>
-            </article>
-            <article className="interview-result-workspace-surface__guidance-card">
-              <span>Recover</span>
-              <strong>Use weak and skipped facets to scope the next pass.</strong>
-            </article>
+          <div className="interview-result-workspace-surface__principles" role="list" aria-label="Result workspace principles">
+            <span role="listitem">Carry forward only the branches worth re-testing.</span>
+            <span role="listitem">Use weak and skipped facets to scope the next pass.</span>
           </div>
         </section>
         <section className="page-card interview-result-layout__hero">
