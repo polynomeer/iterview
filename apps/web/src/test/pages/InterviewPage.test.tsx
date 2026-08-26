@@ -106,10 +106,9 @@ describe("InterviewPage", () => {
     expect(screen.getByText("Re-open recent branches")).toBeInTheDocument();
     expect(screen.getByText("Resume Mock session")).toBeInTheDocument();
     expect(screen.getByText("One connected preparation loop")).toBeInTheDocument();
-    expect(screen.getByText("Lock one resume version, pick one branch, then start with a clear traversal mode.")).toBeInTheDocument();
+    expect(screen.getByText("Lock one resume, keep one branch in focus, then start the next DFS pass.")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Open session setup" }).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("Use one resume version per run.")).toBeInTheDocument();
-    expect(screen.getByText("Pick scope first, then start.")).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Launch principles" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Inspect weakest branch" })).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole("button", { name: "Open session setup" })[0]);

@@ -480,46 +480,34 @@ export function InterviewPage() {
               <div className="interview-workspace-surface__intro">
                 <div className="interview-workspace-surface__eyebrow-row">
                   <span className="page-card__label">Interview workspace</span>
-                  <span className="question-status-badge question-status-badge--accent">Entry surface</span>
                 </div>
                 <h2 className="interview-workspace-surface__title">Choose one branch to defend</h2>
                 <p className="interview-workspace-surface__body">
-                  Lock one resume version, pick one branch, then start with a clear traversal mode.
+                  Lock one resume, keep one branch in focus, then start the next DFS pass.
                 </p>
               </div>
               <div className="interview-workspace-surface__stats">
                 <article className="interview-workspace-surface__stat">
-                  <span>Resume versions</span>
-                  <strong>{resumeVersionChoices.length}</strong>
+                  <span>Resume boundary</span>
+                  <strong>{selectedResumeSummary}</strong>
                 </article>
                 <article className="interview-workspace-surface__stat">
-                  <span>Active mode</span>
+                  <span>Current pass</span>
                   <strong>{selectedInterviewModeOption.label}</strong>
-                </article>
-                <article className="interview-workspace-surface__stat">
-                  <span>Completed sessions</span>
-                  <strong>{completedSessionCount}</strong>
                 </article>
               </div>
             </div>
-            <div className="interview-workspace-surface__chips">
-              <span className="detail-chip">{selectedResumeSummary}</span>
-              <span className="detail-chip detail-chip--accent">{selectedInspector.title}</span>
+            <div className="interview-workspace-surface__summary-row">
+              <span className="detail-chip detail-chip--accent">{launchSignal}</span>
               {selectedInterviewMode === "full_coverage" ? (
                 <span className="detail-chip">{t("interview.coverageBadge")}</span>
               ) : null}
-              {sessionCount > 0 ? <span className="detail-chip">{`History ${sessionCount}`}</span> : null}
-              <span className="detail-chip">{launchSignal}</span>
+              <span className="detail-chip">{`History ${sessionCount}`}</span>
+              <span className="detail-chip">{`${completedSessionCount} completed`}</span>
             </div>
-            <div className="interview-workspace-surface__guidance">
-              <article className="interview-workspace-surface__guidance-card">
-                <span>Boundary</span>
-                <strong>Use one resume version per run.</strong>
-              </article>
-              <article className="interview-workspace-surface__guidance-card">
-                <span>Traversal</span>
-                <strong>Pick scope first, then start.</strong>
-              </article>
+            <div className="interview-workspace-surface__principles" role="list" aria-label="Launch principles">
+              <span role="listitem">One resume version per run.</span>
+              <span role="listitem">Pick scope first, then start.</span>
             </div>
             <div className="interview-workspace-surface__actions">
               <button
