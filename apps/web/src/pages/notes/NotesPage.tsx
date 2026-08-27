@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
 
@@ -253,6 +254,8 @@ function NoteListSection({
 }
 
 export function NotesPage() {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const { isDesktop } = useLayoutMode();
   const [selectedNoteId, setSelectedNoteId] = useState(NOTE_RECORDS[0]?.id ?? "");
   const [search, setSearch] = useState("");
@@ -290,70 +293,78 @@ export function NotesPage() {
     : 0;
   const noteModeSignal =
     linkedQuestionCount >= 3
-      ? "High reuse potential"
+      ? isKorean
+        ? "재사용 잠재력 높음"
+        : "High reuse potential"
       : selectedBacklinkCount > 0
-        ? "Connected context"
-        : "Needs linking";
+        ? isKorean
+          ? "연결된 맥락"
+          : "Connected context"
+        : isKorean
+          ? "링크 보강 필요"
+          : "Needs linking";
 
   return (
     <PageContainer
       actions={
         <>
           <button className="secondary-button" type="button">
-            New note
+            {isKorean ? "새 노트" : "New note"}
           </button>
           <Link className="secondary-button" to={routeConfig.questionTree.buildPath({ questionId: "distributed-lock" })}>
-            Open question map
+            {isKorean ? "질문 맵 열기" : "Open question map"}
           </Link>
         </>
       }
-      description="Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."
-      eyebrow="Answer fragments"
-      title="Store reusable defense notes"
+      description={isKorean ? "연결된 질문 맥락을 잃지 않으면서 재사용 가능한 방어 조각, 트레이드오프 노트, source of truth 스니펫을 정리하세요." : "Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."}
+      eyebrow={isKorean ? "답변 조각" : "Answer fragments"}
+      title={isKorean ? "재사용 가능한 방어 노트 보관" : "Store reusable defense notes"}
     >
       <section className="page-card notes-workspace-surface">
         <div className="notes-workspace-surface__header">
           <div className="notes-workspace-surface__intro">
             <div className="notes-workspace-surface__eyebrow-row">
-              <span className="page-card__label">Knowledge workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Defense fragments</span>
+              <span className="page-card__label">{isKorean ? "지식 워크스페이스" : "Knowledge workspace"}</span>
+              <span className="question-status-badge question-status-badge--accent">{isKorean ? "방어 조각" : "Defense fragments"}</span>
             </div>
             <p className="notes-workspace-surface__breadcrumbs">
-              Reusable explanations
+              {isKorean ? "재사용 가능한 설명" : "Reusable explanations"}
               <span>/</span>
-              Linked questions
+              {isKorean ? "연결된 질문" : "Linked questions"}
               <span>/</span>
-              Resume evidence
+              {isKorean ? "이력서 근거" : "Resume evidence"}
             </p>
-            <h2 className="notes-workspace-surface__title">Keep the explanation you want ready before the next DFS drill-down</h2>
+            <h2 className="notes-workspace-surface__title">{isKorean ? "다음 DFS 드릴다운 전에 원하는 설명을 준비해 두세요" : "Keep the explanation you want ready before the next DFS drill-down"}</h2>
             <p className="notes-workspace-surface__body">
-              Write notes as reusable defense fragments. A strong note should help you answer a follow-up faster, reconnect to supporting resume evidence, and reduce vague explanation under pressure.
+              {isKorean
+                ? "노트를 재사용 가능한 방어 조각으로 작성하세요. 좋은 노트는 꼬리질문에 더 빨리 답하게 하고, 뒷받침하는 이력서 근거와 다시 연결되며, 압박 상황에서 모호한 설명을 줄여야 합니다."
+                : "Write notes as reusable defense fragments. A strong note should help you answer a follow-up faster, reconnect to supporting resume evidence, and reduce vague explanation under pressure."}
             </p>
           </div>
           <div className="notes-workspace-surface__stats">
             <article className="notes-workspace-surface__stat">
-              <span>Total notes</span>
+              <span>{isKorean ? "전체 노트" : "Total notes"}</span>
               <strong>{NOTE_RECORDS.length}</strong>
             </article>
             <article className="notes-workspace-surface__stat">
-              <span>Pinned notes</span>
+              <span>{isKorean ? "고정 노트" : "Pinned notes"}</span>
               <strong>{NOTE_RECORDS.filter((note) => note.pinned).length}</strong>
             </article>
             <article className="notes-workspace-surface__stat">
-              <span>Linked questions</span>
+              <span>{isKorean ? "연결 질문" : "Linked questions"}</span>
               <strong>{linkedQuestionCount}</strong>
             </article>
             <article className="notes-workspace-surface__stat">
-              <span>Related skills</span>
+              <span>{isKorean ? "연관 스킬" : "Related skills"}</span>
               <strong>{relatedSkillCount}</strong>
             </article>
           </div>
         </div>
         <div className="notes-workspace-surface__chips">
-          <span className="detail-chip detail-chip--accent">Reusable answer fragments</span>
-          <span className="detail-chip">Resume-linked</span>
-          <span className="detail-chip">Question-linked</span>
-          <span className="detail-chip">Searchable snippets</span>
+          <span className="detail-chip detail-chip--accent">{isKorean ? "재사용 가능한 답변 조각" : "Reusable answer fragments"}</span>
+          <span className="detail-chip">{isKorean ? "이력서 연결" : "Resume-linked"}</span>
+          <span className="detail-chip">{isKorean ? "질문 연결" : "Question-linked"}</span>
+          <span className="detail-chip">{isKorean ? "검색 가능한 스니펫" : "Searchable snippets"}</span>
         </div>
       </section>
 
@@ -361,43 +372,49 @@ export function NotesPage() {
         <section className="page-card notes-insight-surface">
           <div className="notes-insight-surface__header">
             <div>
-              <span className="page-card__label">Selected note insight</span>
-              <h2 className="page-card__title">Keep one reusable explanation fragment ready for the next follow-up branch</h2>
+              <span className="page-card__label">{isKorean ? "선택한 노트 인사이트" : "Selected note insight"}</span>
+              <h2 className="page-card__title">
+                {isKorean
+                  ? "다음 꼬리질문 가지를 위해 재사용 가능한 설명 조각 하나를 준비하세요"
+                  : "Keep one reusable explanation fragment ready for the next follow-up branch"}
+              </h2>
               <p className="page-card__body">
-                The best note is not a dump of facts. It is a tight explanation unit you can reuse when the interviewer pushes from the resume claim into DFS-level follow-up questions.
+                {isKorean
+                  ? "좋은 노트는 사실을 쏟아놓는 문서가 아닙니다. 면접관이 이력서 주장부터 DFS 수준의 꼬리질문까지 밀어붙일 때 재사용할 수 있는 압축된 설명 단위여야 합니다."
+                  : "The best note is not a dump of facts. It is a tight explanation unit you can reuse when the interviewer pushes from the resume claim into DFS-level follow-up questions."}
               </p>
             </div>
             <span className="detail-chip detail-chip--accent">{noteModeSignal}</span>
           </div>
           <div className="notes-insight-surface__stats">
             <article>
-              <span>Words</span>
+              <span>{isKorean ? "단어 수" : "Words"}</span>
               <strong>{selectedWordCount}</strong>
-              <p>enough density to support a complete answer without drifting</p>
+              <p>{isKorean ? "답변이 흐트러지지 않게 받쳐줄 정도의 밀도" : "enough density to support a complete answer without drifting"}</p>
             </article>
             <article>
-              <span>Question average</span>
+              <span>{isKorean ? "질문 평균" : "Question average"}</span>
               <strong>{selectedQuestionAverage || "-"}</strong>
-              <p>average score across linked follow-up questions</p>
+              <p>{isKorean ? "연결된 꼬리질문 전반의 평균 점수" : "average score across linked follow-up questions"}</p>
             </article>
             <article>
-              <span>Backlinks</span>
+              <span>{isKorean ? "백링크" : "Backlinks"}</span>
               <strong>{selectedBacklinkCount}</strong>
-              <p>other notes that should stay semantically connected</p>
+              <p>{isKorean ? "의미적으로 계속 연결돼야 하는 다른 노트" : "other notes that should stay semantically connected"}</p>
             </article>
           </div>
           <div className="notes-insight-surface__lanes">
             <div className="notes-insight-surface__lane">
-              <strong>Clarify the claim</strong>
-              <span>State the main argument you want to reuse before adding supporting details.</span>
+              <strong>{isKorean ? "주장 명확화" : "Clarify the claim"}</strong>
+              <span>{isKorean ? "보조 디테일을 붙이기 전에 재사용할 핵심 주장을 먼저 적으세요." : "State the main argument you want to reuse before adding supporting details."}</span>
             </div>
             <div className="notes-insight-surface__lane">
-              <strong>Reconnect the evidence</strong>
-              <span>Tie the note back to a resume event, metric, or engineering decision that you can defend concretely.</span>
+              <strong>{isKorean ? "근거 다시 연결" : "Reconnect the evidence"}</strong>
+              <span>{isKorean ? "노트를 구체적으로 방어 가능한 이력서 사건, 수치, 엔지니어링 결정과 다시 연결하세요." : "Tie the note back to a resume event, metric, or engineering decision that you can defend concretely."}</span>
             </div>
             <div className="notes-insight-surface__lane">
-              <strong>Branch outward</strong>
-              <span>Link the follow-up questions that are most likely to probe this note next.</span>
+              <strong>{isKorean ? "가지 확장" : "Branch outward"}</strong>
+              <span>{isKorean ? "다음으로 이 노트를 파고들 가능성이 높은 꼬리질문을 연결하세요." : "Link the follow-up questions that are most likely to probe this note next."}</span>
             </div>
           </div>
         </section>
@@ -408,19 +425,23 @@ export function NotesPage() {
           <section className="page-card notes-panel">
             <div className="notes-panel__toolbar">
               <button className="primary-button notes-panel__new-button" type="button">
-                New note
+                {isKorean ? "새 노트" : "New note"}
               </button>
-              <button aria-label="Filter notes" className="secondary-button notes-panel__icon-button" type="button">
-                Filter
+              <button
+                aria-label={isKorean ? "노트 필터" : "Filter notes"}
+                className="secondary-button notes-panel__icon-button"
+                type="button"
+              >
+                {isKorean ? "필터" : "Filter"}
               </button>
             </div>
             <label className="notes-panel__search">
               <input
-                aria-label="Search notes"
+                aria-label={isKorean ? "노트 검색" : "Search notes"}
                 onChange={(event) => {
                   setSearch(event.target.value);
                 }}
-                placeholder="Search notes..."
+                placeholder={isKorean ? "노트 검색..." : "Search notes..."}
                 type="search"
                 value={search}
               />
@@ -429,16 +450,16 @@ export function NotesPage() {
               notes={pinnedNotes}
               onSelect={setSelectedNoteId}
               selectedNoteId={selectedNote?.id ?? ""}
-              title="Pinned notes"
+              title={isKorean ? "고정 노트" : "Pinned notes"}
             />
             <NoteListSection
               notes={otherNotes}
               onSelect={setSelectedNoteId}
               selectedNoteId={selectedNote?.id ?? ""}
-              title="All notes"
+              title={isKorean ? "전체 노트" : "All notes"}
             />
             <button className="secondary-button secondary-button--static notes-panel__load-more" type="button">
-              Load more notes
+              {isKorean ? "노트 더 불러오기" : "Load more notes"}
             </button>
           </section>
         </aside>
@@ -447,7 +468,7 @@ export function NotesPage() {
           {selectedNote ? (
             <section className="page-card notes-editor">
               <div className="notes-editor__breadcrumbs">
-                <span>Notes</span>
+                <span>{isKorean ? "노트" : "Notes"}</span>
                 <span>/</span>
                 <span>Backend</span>
                 <span>/</span>
@@ -475,7 +496,7 @@ export function NotesPage() {
                     }}
                     type="button"
                   >
-                    Edit
+                    {isKorean ? "편집" : "Edit"}
                   </button>
                   <button
                     className={`secondary-button notes-editor__tab${mode === "preview" ? " notes-editor__tab--active" : ""}`}
@@ -484,7 +505,7 @@ export function NotesPage() {
                     }}
                     type="button"
                   >
-                    Preview
+                    {isKorean ? "미리보기" : "Preview"}
                   </button>
                 </div>
               </div>
@@ -497,15 +518,15 @@ export function NotesPage() {
               </div>
               <div className="notes-editor__mini-stats">
                 <article>
-                  <span>Linked questions</span>
+                  <span>{isKorean ? "연결 질문" : "Linked questions"}</span>
                   <strong>{selectedNote.linkedQuestions.length}</strong>
                 </article>
                 <article>
-                  <span>Resume evidence</span>
+                  <span>{isKorean ? "이력서 근거" : "Resume evidence"}</span>
                   <strong>{selectedNote.resumeContext.period}</strong>
                 </article>
                 <article>
-                  <span>Backlinks</span>
+                  <span>{isKorean ? "백링크" : "Backlinks"}</span>
                   <strong>{selectedNote.backlinks.length}</strong>
                 </article>
               </div>
@@ -523,9 +544,9 @@ export function NotesPage() {
                 </article>
               )}
               <div className="notes-editor__footer">
-                <span>{`${selectedNote.body.split(/\s+/).filter(Boolean).length} words`}</span>
-                <span>{`${selectedNote.linkedQuestions.length} linked questions`}</span>
-                <span>Markdown workspace</span>
+                <span>{isKorean ? `단어 ${selectedNote.body.split(/\s+/).filter(Boolean).length}개` : `${selectedNote.body.split(/\s+/).filter(Boolean).length} words`}</span>
+                <span>{isKorean ? `연결 질문 ${selectedNote.linkedQuestions.length}개` : `${selectedNote.linkedQuestions.length} linked questions`}</span>
+                <span>{isKorean ? "Markdown 워크스페이스" : "Markdown workspace"}</span>
               </div>
             </section>
           ) : null}
@@ -536,23 +557,23 @@ export function NotesPage() {
             <section className="page-card notes-detail-rail">
               <div className="section-heading">
                 <div>
-                  <p className="section-heading__eyebrow">Note details</p>
-                  <h2 className="page-card__title">Keep the note connected to the rest of the prep graph</h2>
+                  <p className="section-heading__eyebrow">{isKorean ? "노트 상세" : "Note details"}</p>
+                  <h2 className="page-card__title">{isKorean ? "노트를 준비 그래프의 나머지와 계속 연결하세요" : "Keep the note connected to the rest of the prep graph"}</h2>
                 </div>
               </div>
               <div className="notes-detail-rail__group">
-                <span className="notes-detail-rail__label">About this note</span>
+                <span className="notes-detail-rail__label">{isKorean ? "이 노트 정보" : "About this note"}</span>
                 <div className="notes-detail-rail__spotlight">
                   <strong>{selectedNote.summary}</strong>
                   <span>{selectedNote.excerpt}</span>
                 </div>
                 <div className="notes-detail-rail__meta-grid">
                   <article>
-                    <span>Last updated</span>
+                    <span>{isKorean ? "마지막 수정" : "Last updated"}</span>
                     <strong>{selectedNote.updatedAt}</strong>
                   </article>
                   <article>
-                    <span>Created</span>
+                    <span>{isKorean ? "생성일" : "Created"}</span>
                     <strong>{selectedNote.createdAt}</strong>
                   </article>
                 </div>
@@ -565,7 +586,7 @@ export function NotesPage() {
                 </div>
               </div>
               <div className="notes-detail-rail__group">
-                <span className="notes-detail-rail__label">Linked questions</span>
+                <span className="notes-detail-rail__label">{isKorean ? "연결 질문" : "Linked questions"}</span>
                 <div className="notes-detail-rail__list">
                   {selectedNote.linkedQuestions.map((question) => (
                     <Link
@@ -580,20 +601,20 @@ export function NotesPage() {
                 </div>
               </div>
               <div className="notes-detail-rail__group">
-                <span className="notes-detail-rail__label">Linked resume context</span>
+                <span className="notes-detail-rail__label">{isKorean ? "연결된 이력서 컨텍스트" : "Linked resume context"}</span>
                 <article className="notes-detail-rail__context-card">
                   <strong>{selectedNote.resumeContext.title}</strong>
                   <p>{selectedNote.resumeContext.description}</p>
                   <div className="notes-detail-rail__context-footer">
                     <span>{selectedNote.resumeContext.period}</span>
                     <Link className="secondary-button" to={routeConfig.resumeAnalysis.buildPath()}>
-                      Open resume
+                      {isKorean ? "이력서 열기" : "Open resume"}
                     </Link>
                   </div>
                 </article>
               </div>
               <div className="notes-detail-rail__group">
-                <span className="notes-detail-rail__label">Related skills</span>
+                <span className="notes-detail-rail__label">{isKorean ? "연관 스킬" : "Related skills"}</span>
                 <div className="notes-detail-rail__chips">
                   {selectedNote.relatedSkills.map((skill) => (
                     <span className="detail-chip detail-chip--accent" key={skill.label}>
@@ -603,7 +624,7 @@ export function NotesPage() {
                 </div>
               </div>
               <div className="notes-detail-rail__group">
-                <span className="notes-detail-rail__label">Backlinks</span>
+                <span className="notes-detail-rail__label">{isKorean ? "백링크" : "Backlinks"}</span>
                 <div className="notes-detail-rail__list">
                   {selectedNote.backlinks.map((backlink) => (
                     <div className="notes-detail-rail__backlink" key={backlink}>

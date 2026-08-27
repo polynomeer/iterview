@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
 
@@ -252,6 +253,8 @@ function getPriorityLabel(priority: CompanyPriority) {
 }
 
 export function TargetCompaniesPage() {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const { isDesktop } = useLayoutMode();
   const [mode, setMode] = useState<"company" | "job-posting">("company");
   const [statusFilter, setStatusFilter] = useState<CompanyStatus | "all">("all");
@@ -295,53 +298,73 @@ export function TargetCompaniesPage() {
   const averageReadiness = Math.round(
     TARGET_COMPANIES.reduce((sum, company) => sum + company.readiness, 0) / TARGET_COMPANIES.length,
   );
+  const statusFilters = COMPANY_STATUS_FILTERS.map((filter) => ({
+    ...filter,
+    label:
+      filter.key === "all"
+        ? isKorean
+          ? "전체 레인"
+          : filter.label
+        : filter.key === "active"
+          ? isKorean
+            ? "활성"
+            : filter.label
+          : filter.key === "watchlist"
+            ? isKorean
+              ? "관심 목록"
+              : filter.label
+            : isKorean
+              ? "중지"
+              : filter.label,
+  }));
 
   return (
     <PageContainer
       actions={
         <>
           <Link className="secondary-button" to={routeConfig.resumeTailorJobPostings.buildPath()}>
-            Open job postings
+            {isKorean ? "채용공고 열기" : "Open job postings"}
           </Link>
           <Link className="secondary-button" to={routeConfig.resumeAnalysis.buildPath()}>
-            Open resume analysis
+            {isKorean ? "이력서 분석 열기" : "Open resume analysis"}
           </Link>
         </>
       }
-      description="Track which companies matter now, which interview loops they are likely to stress, and which source-of-truth repairs improve readiness fastest."
-      eyebrow="Company signals"
-      title="Company preparation board"
+      description={isKorean ? "지금 중요한 회사와 해당 회사가 압박할 인터뷰 루프, 그리고 준비도를 가장 빨리 올려주는 source of truth 보강 지점을 추적하세요." : "Track which companies matter now, which interview loops they are likely to stress, and which source-of-truth repairs improve readiness fastest."}
+      eyebrow={isKorean ? "회사 신호" : "Company signals"}
+      title={isKorean ? "회사 준비 보드" : "Company preparation board"}
     >
       <section className="page-card target-companies-workspace-surface">
         <div className="target-companies-workspace-surface__header">
           <div className="target-companies-workspace-surface__intro">
             <div className="target-companies-workspace-surface__eyebrow-row">
-              <span className="page-card__label">Preparation lanes</span>
-              <span className="question-status-badge question-status-badge--accent">Company-specific</span>
+              <span className="page-card__label">{isKorean ? "준비 레인" : "Preparation lanes"}</span>
+              <span className="question-status-badge question-status-badge--accent">{isKorean ? "회사별 준비" : "Company-specific"}</span>
             </div>
             <h2 className="target-companies-workspace-surface__title">
-              Separate company readiness from job-posting ingestion and prepare by interview pressure
+              {isKorean ? "채용공고 수집과 회사 준비도를 분리하고, 인터뷰 압박 기준으로 준비하세요" : "Separate company readiness from job-posting ingestion and prepare by interview pressure"}
             </h2>
             <p className="target-companies-workspace-surface__body">
-              Job postings tell you what exists in the market. This board decides which companies deserve active
-              preparation, which stories they will probe, and what to repair next in your resume and DFS branches.
+              {isKorean
+                ? "채용공고는 시장에 무엇이 있는지 알려줍니다. 이 보드는 어떤 회사를 실제로 준비할지, 어떤 스토리를 집요하게 파고들지, 다음에 이력서와 DFS 가지에서 무엇을 보강할지 결정합니다."
+                : "Job postings tell you what exists in the market. This board decides which companies deserve active preparation, which stories they will probe, and what to repair next in your resume and DFS branches."}
             </p>
           </div>
           <div className="target-companies-workspace-surface__stats">
             <article>
-              <span>Tracked companies</span>
+              <span>{isKorean ? "추적 중인 회사" : "Tracked companies"}</span>
               <strong>{TARGET_COMPANIES.length}</strong>
             </article>
             <article>
-              <span>Active lanes</span>
+              <span>{isKorean ? "활성 레인" : "Active lanes"}</span>
               <strong>{activeCount}</strong>
             </article>
             <article>
-              <span>High priority</span>
+              <span>{isKorean ? "높은 우선순위" : "High priority"}</span>
               <strong>{highPriorityCount}</strong>
             </article>
             <article>
-              <span>Average readiness</span>
+              <span>{isKorean ? "평균 준비도" : "Average readiness"}</span>
               <strong>{averageReadiness}%</strong>
             </article>
           </div>
@@ -353,8 +376,8 @@ export function TargetCompaniesPage() {
           <section className="page-card target-companies-create-card">
             <div className="section-heading section-heading--compact">
               <div>
-                <p className="section-heading__eyebrow">Mode split</p>
-                <h2 className="section-heading__title">Keep company tracking distinct from role ingestion</h2>
+                <p className="section-heading__eyebrow">{isKorean ? "모드 분리" : "Mode split"}</p>
+                <h2 className="section-heading__title">{isKorean ? "회사 추적과 공고 수집을 분리하세요" : "Keep company tracking distinct from role ingestion"}</h2>
               </div>
             </div>
             <div className="target-companies-create-card__mode-switch">
@@ -365,7 +388,7 @@ export function TargetCompaniesPage() {
                 }}
                 type="button"
               >
-                Company board
+                {isKorean ? "회사 보드" : "Company board"}
               </button>
               <button
                 className={`target-companies-create-card__mode${mode === "job-posting" ? " target-companies-create-card__mode--active" : ""}`}
@@ -374,23 +397,27 @@ export function TargetCompaniesPage() {
                 }}
                 type="button"
               >
-                Job posting intake
+                {isKorean ? "채용공고 수집" : "Job posting intake"}
               </button>
             </div>
             <p className="page-card__body">
               {mode === "company"
-                ? "Use this board when you have already chosen the companies that matter and need a preparation plan per loop."
-                : "Use job posting intake when you are still collecting external signals and mapping them back to your resume-tailor pipeline."}
+                ? isKorean
+                  ? "중요한 회사를 이미 골랐고, 회사별 인터뷰 루프에 맞는 준비 계획이 필요할 때 이 보드를 사용하세요."
+                  : "Use this board when you have already chosen the companies that matter and need a preparation plan per loop."
+                : isKorean
+                  ? "외부 신호를 아직 수집 중이고 그것을 resume-tailor 파이프라인에 다시 연결해야 할 때 채용공고 수집 화면을 사용하세요."
+                  : "Use job posting intake when you are still collecting external signals and mapping them back to your resume-tailor pipeline."}
             </p>
             {mode === "job-posting" ? (
               <Link className="primary-button" to={routeConfig.resumeTailorJobPostings.buildPath()}>
-                Go to job posting intake
+                {isKorean ? "채용공고 수집으로 이동" : "Go to job posting intake"}
               </Link>
             ) : (
-              <div className="chip-list" aria-label="Company board rules">
-                <span className="detail-chip">1. Pick the active company</span>
-                <span className="detail-chip">2. Repair the weak proof chain</span>
-                <span className="detail-chip">3. Rehearse the likely branch loop</span>
+              <div className="chip-list" aria-label={isKorean ? "회사 보드 원칙" : "Company board rules"}>
+                <span className="detail-chip">{isKorean ? "1. 현재 집중할 회사를 고르기" : "1. Pick the active company"}</span>
+                <span className="detail-chip">{isKorean ? "2. 약한 증빙 체인 보강하기" : "2. Repair the weak proof chain"}</span>
+                <span className="detail-chip">{isKorean ? "3. 가능성 높은 가지 루프 리허설" : "3. Rehearse the likely branch loop"}</span>
               </div>
             )}
           </section>
@@ -399,32 +426,32 @@ export function TargetCompaniesPage() {
             <div className="target-companies-board__toolbar">
               <div className="section-heading section-heading--compact">
                 <div>
-                  <p className="section-heading__eyebrow">Company lanes</p>
-                  <h2 className="section-heading__title">Prioritize by preparation pressure, not by saved postings alone</h2>
+                  <p className="section-heading__eyebrow">{isKorean ? "회사 레인" : "Company lanes"}</p>
+                  <h2 className="section-heading__title">{isKorean ? "저장된 공고가 아니라 준비 압박 기준으로 우선순위를 정하세요" : "Prioritize by preparation pressure, not by saved postings alone"}</h2>
                 </div>
               </div>
               <div className="target-companies-board__filters">
                 <label className="target-companies-board__search">
                   <input
-                    aria-label="Search target companies"
+                    aria-label={isKorean ? "목표 회사 검색" : "Search target companies"}
                     onChange={(event) => {
                       setSearch(event.target.value);
                     }}
-                    placeholder="Search companies, focus areas, or likely loops"
+                    placeholder={isKorean ? "회사, 포커스 영역, 예상 루프 검색" : "Search companies, focus areas, or likely loops"}
                     type="search"
                     value={search}
                   />
                 </label>
                 <label className="target-companies-board__select">
-                  <span>Status lane</span>
+                  <span>{isKorean ? "상태 레인" : "Status lane"}</span>
                   <select
-                    aria-label="Filter target companies by status"
+                    aria-label={isKorean ? "상태별 목표 회사 필터" : "Filter target companies by status"}
                     onChange={(event) => {
                       setStatusFilter(event.target.value as CompanyStatus | "all");
                     }}
                     value={statusFilter}
                   >
-                    {COMPANY_STATUS_FILTERS.map((filter) => (
+                    {statusFilters.map((filter) => (
                       <option key={filter.key} value={filter.key}>
                         {filter.label}
                       </option>
@@ -464,12 +491,12 @@ export function TargetCompaniesPage() {
 
                   <div className="target-company-card__content">
                     <section className="target-company-card__section">
-                      <span>Why this lane matters</span>
+                      <span>{isKorean ? "이 레인이 중요한 이유" : "Why this lane matters"}</span>
                       <p className="page-card__body">{company.summary}</p>
                     </section>
 
                     <section className="target-company-card__section">
-                      <span>Likely loops</span>
+                      <span>{isKorean ? "예상 루프" : "Likely loops"}</span>
                       <ul>
                         {company.likelyLoops.map((loop) => (
                           <li key={loop}>{loop}</li>
@@ -478,14 +505,14 @@ export function TargetCompaniesPage() {
                     </section>
 
                     <div className="target-company-card__readiness">
-                      <span>Readiness</span>
+                      <span>{isKorean ? "준비도" : "Readiness"}</span>
                       <div className="target-company-card__readiness-ring">
                         <strong>{company.readiness}%</strong>
                       </div>
                     </div>
                   </div>
 
-                  <div className="target-company-card__chips" aria-label={`${company.name} focus areas`}>
+                  <div className="target-company-card__chips" aria-label={isKorean ? `${company.name} 포커스 영역` : `${company.name} focus areas`}>
                     {company.focusAreas.map((area) => (
                       <span className="detail-chip" key={area}>
                         {area}
@@ -512,8 +539,8 @@ export function TargetCompaniesPage() {
 
             <section className="target-company-detail-rail__panel">
               <div className="target-company-detail-rail__panel-header">
-                <span>Readiness shape</span>
-                <strong>{selectedCompany.readiness}% ready</strong>
+                <span>{isKorean ? "준비도 구성" : "Readiness shape"}</span>
+                <strong>{isKorean ? `${selectedCompany.readiness}% 준비됨` : `${selectedCompany.readiness}% ready`}</strong>
               </div>
               <div className="target-company-detail-rail__bars">
                 {selectedCompany.readinessAreas.map((area) => (
@@ -530,8 +557,8 @@ export function TargetCompaniesPage() {
 
             <section className="target-company-detail-rail__panel">
               <div className="target-company-detail-rail__panel-header">
-                <span>Signal summary</span>
-                <strong>What to expect</strong>
+                <span>{isKorean ? "신호 요약" : "Signal summary"}</span>
+                <strong>{isKorean ? "예상되는 압박" : "What to expect"}</strong>
               </div>
               <div className="target-company-card__chips">
                 {selectedCompany.focusAreas.map((area) => (
@@ -549,8 +576,8 @@ export function TargetCompaniesPage() {
 
             <section className="target-company-detail-rail__panel">
               <div className="target-company-detail-rail__panel-header">
-                <span>Proof notes</span>
-                <strong>Repairs before the next loop</strong>
+                <span>{isKorean ? "증빙 노트" : "Proof notes"}</span>
+                <strong>{isKorean ? "다음 루프 전에 보강할 것" : "Repairs before the next loop"}</strong>
               </div>
               <ul className="page-card__list">
                 {selectedCompany.proofNotes.map((note) => (
@@ -561,8 +588,8 @@ export function TargetCompaniesPage() {
 
             <section className="target-company-detail-rail__panel">
               <div className="target-company-detail-rail__panel-header">
-                <span>Next actions</span>
-                <strong>Continue from this lane</strong>
+                <span>{isKorean ? "다음 액션" : "Next actions"}</span>
+                <strong>{isKorean ? "이 레인에서 이어서 진행" : "Continue from this lane"}</strong>
               </div>
               <div className="target-company-detail-rail__actions-list">
                 {selectedCompany.nextActions.map((action) => (
@@ -571,7 +598,7 @@ export function TargetCompaniesPage() {
                       <strong>{action.title}</strong>
                       <span>{action.body}</span>
                     </div>
-                    <span aria-hidden="true">-&gt;</span>
+                    <span aria-hidden="true">{isKorean ? "이동" : "->"}</span>
                   </Link>
                 ))}
               </div>

@@ -14,6 +14,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { getErrorDetails } from "../../shared/api/errors";
 import { queryKeys } from "../../shared/api/queryKeys";
 import { downloadResumeVersionFileRequest } from "../../shared/api/resumeApi";
+import { useLocale } from "../../shared/i18n";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
@@ -51,6 +52,8 @@ const parsedSectionLinks = [
 ] as const;
 
 export function ResumePage() {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const queryClient = useQueryClient();
   const resumeListQuery = useResumeListQuery();
   const { isDesktop } = useLayoutMode();
@@ -78,12 +81,18 @@ export function ResumePage() {
   const versionCount =
     resumeListQuery.data?.items.reduce((count, resume) => count + resume.versions.length, 0) ?? 0;
   const activeResume = resumeListQuery.data ? getActiveResumeVersion(resumeListQuery.data) : null;
-  const activeVersionLabel = activeResume?.versionNumberLabel ?? "No active version";
+  const activeVersionLabel = activeResume?.versionNumberLabel ?? (isKorean ? "활성 버전 없음" : "No active version");
   const extractionReadinessLabel = selectedExtractionQuery.data?.isUsable
-    ? "Ready"
+    ? isKorean
+      ? "준비 완료"
+      : "Ready"
     : selectedVersionQuery.data?.parsingStatus === "completed"
-      ? "Parsing done"
-      : "In progress";
+      ? isKorean
+        ? "파싱 완료"
+        : "Parsing done"
+      : isKorean
+        ? "진행 중"
+        : "In progress";
   const canLoadSnapshots =
     selectedVersionQuery.data?.parsingStatus === "completed" &&
     selectedExtractionQuery.data?.extractionStatus !== "pending" &&
@@ -151,7 +160,7 @@ export function ResumePage() {
       ]);
 
       if (currentStatus === "completed") {
-        setVersionStatus("Resume parsing completed. You can now activate this version.");
+        setVersionStatus(isKorean ? "이력서 파싱이 완료되었습니다. 이제 이 버전을 활성화할 수 있습니다." : "Resume parsing completed. You can now activate this version.");
       }
     }
   }, [queryClient, selectedVersionQuery.data?.parsingStatus]);
@@ -177,7 +186,7 @@ export function ResumePage() {
       ]);
 
       if (currentStatus === "completed") {
-        setVersionStatus("Structured extraction completed. Resume insights are ready.");
+        setVersionStatus(isKorean ? "구조화 추출이 완료되었습니다. 이력서 인사이트를 확인할 수 있습니다." : "Structured extraction completed. Resume insights are ready.");
       }
     }
   }, [queryClient, selectedExtractionQuery.data?.extractionStatus, selectedVersionId]);
@@ -188,7 +197,7 @@ export function ResumePage() {
       await createResumeMutation.mutateAsync({
         title: resumeTitle,
       });
-      setCreateStatus("Resume created.");
+      setCreateStatus(isKorean ? "이력서를 생성했습니다." : "Resume created.");
       setResumeTitle("");
       setIsCreateResumeOpen(false);
     } catch {
@@ -206,7 +215,7 @@ export function ResumePage() {
       });
       setSelectedResumeId(resumeId);
       setSelectedVersionId(String(uploadedVersion.id));
-      setVersionStatus("Resume PDF uploaded. Parsing has started.");
+      setVersionStatus(isKorean ? "이력서 PDF를 업로드했습니다. 파싱을 시작했습니다." : "Resume PDF uploaded. Parsing has started.");
     } catch {
       return;
     } finally {
@@ -219,7 +228,7 @@ export function ResumePage() {
     setPendingActivationId(versionId);
     try {
       await activateResumeVersionMutation.mutateAsync(versionId);
-      setActivationStatus("Version activated.");
+      setActivationStatus(isKorean ? "버전을 활성화했습니다." : "Version activated.");
     } catch {
       return;
     } finally {
@@ -232,7 +241,11 @@ export function ResumePage() {
     setPendingReExtractId(versionId);
     try {
       await reExtractResumeVersionMutation.mutateAsync(versionId);
-      setVersionStatus("Structured extraction restarted. The page will refresh until the status changes.");
+      setVersionStatus(
+        isKorean
+          ? "구조화 추출을 다시 시작했습니다. 상태가 바뀔 때까지 페이지가 새로고침됩니다."
+          : "Structured extraction restarted. The page will refresh until the status changes.",
+      );
       void Promise.all([
         selectedVersionQuery.refetch(),
         selectedExtractionQuery.refetch(),
@@ -267,45 +280,46 @@ export function ResumePage() {
 
   return (
     <PageContainer
-      description="Manage resume containers, upload PDF versions, watch parsing status, and inspect extracted interview context."
-      eyebrow="Resume sources"
-      title="Resume management"
+      description={isKorean ? "이력서 컨테이너를 관리하고, PDF 버전을 업로드하고, 파싱 상태와 추출된 인터뷰 컨텍스트를 확인하세요." : "Manage resume containers, upload PDF versions, watch parsing status, and inspect extracted interview context."}
+      eyebrow={isKorean ? "이력서 소스" : "Resume sources"}
+      title={isKorean ? "이력서 관리" : "Resume management"}
     >
       <section className="page-card resume-workspace-surface">
         <div className="resume-workspace-surface__header">
           <div className="resume-workspace-surface__intro">
             <div className="resume-workspace-surface__eyebrow-row">
-              <span className="page-card__label">Resume workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Evidence lane</span>
+              <span className="page-card__label">{isKorean ? "이력서 워크스페이스" : "Resume workspace"}</span>
+              <span className="question-status-badge question-status-badge--accent">{isKorean ? "근거 레인" : "Evidence lane"}</span>
             </div>
             <p className="resume-workspace-surface__breadcrumbs">
-              Containers
+              {isKorean ? "컨테이너" : "Containers"}
               <span>/</span>
-              Active version
+              {isKorean ? "활성 버전" : "Active version"}
               <span>/</span>
-              Parsed evidence
+              {isKorean ? "파싱된 근거" : "Parsed evidence"}
             </p>
-            <h2 className="resume-workspace-surface__title">Build one defendable source of truth</h2>
+            <h2 className="resume-workspace-surface__title">{isKorean ? "방어 가능한 source of truth를 하나 구축하세요" : "Build one defendable source of truth"}</h2>
             <p className="resume-workspace-surface__body">
-              Resume uploads are not just files. Each active version becomes interview evidence that should survive DFS-style
-              follow-up questioning down to the smallest claim.
+              {isKorean
+                ? "이력서 업로드는 단순한 파일 보관이 아닙니다. 각 활성 버전은 가장 작은 주장까지 DFS 방식의 꼬리질문을 견뎌야 하는 인터뷰 근거가 됩니다."
+                : "Resume uploads are not just files. Each active version becomes interview evidence that should survive DFS-style follow-up questioning down to the smallest claim."}
             </p>
           </div>
           <div className="resume-workspace-surface__stats">
             <article className="resume-workspace-surface__stat">
-              <span>Containers</span>
+              <span>{isKorean ? "컨테이너" : "Containers"}</span>
               <strong>{resumeCount}</strong>
             </article>
             <article className="resume-workspace-surface__stat">
-              <span>Versions</span>
+              <span>{isKorean ? "버전" : "Versions"}</span>
               <strong>{versionCount}</strong>
             </article>
             <article className="resume-workspace-surface__stat">
-              <span>Active focus</span>
+              <span>{isKorean ? "현재 활성 포커스" : "Active focus"}</span>
               <strong>{activeVersionLabel}</strong>
             </article>
             <article className="resume-workspace-surface__stat">
-              <span>Extraction</span>
+              <span>{isKorean ? "추출" : "Extraction"}</span>
               <strong>{extractionReadinessLabel}</strong>
             </article>
           </div>
@@ -316,24 +330,24 @@ export function ResumePage() {
           ) : null}
           {selectedExtractionQuery.data?.extractionStatusLabel ? (
             <span className="detail-chip detail-chip--accent">
-              {`Status ${selectedExtractionQuery.data.extractionStatusLabel}`}
+              {isKorean ? `상태 ${selectedExtractionQuery.data.extractionStatusLabel}` : `Status ${selectedExtractionQuery.data.extractionStatusLabel}`}
             </span>
           ) : null}
           {snapshotsQuery.data?.projects.length ? (
-            <span className="detail-chip">{`Projects ${snapshotsQuery.data.projects.length}`}</span>
+            <span className="detail-chip">{isKorean ? `프로젝트 ${snapshotsQuery.data.projects.length}` : `Projects ${snapshotsQuery.data.projects.length}`}</span>
           ) : null}
           {snapshotsQuery.data?.risks.length ? (
-            <span className="detail-chip">{`Risks ${snapshotsQuery.data.risks.length}`}</span>
+            <span className="detail-chip">{isKorean ? `리스크 ${snapshotsQuery.data.risks.length}` : `Risks ${snapshotsQuery.data.risks.length}`}</span>
           ) : null}
         </div>
         <div className="resume-workspace-surface__guidance">
           <article className="resume-workspace-surface__guidance-card">
-            <span>Active boundary</span>
-            <strong>Keep one version active as the interview source of truth until its claims are stable enough to defend</strong>
+            <span>{isKorean ? "활성 경계" : "Active boundary"}</span>
+            <strong>{isKorean ? "방어 가능한 수준으로 주장이 안정될 때까지 하나의 버전을 인터뷰 source of truth로 유지하세요." : "Keep one version active as the interview source of truth until its claims are stable enough to defend"}</strong>
           </article>
           <article className="resume-workspace-surface__guidance-card">
-            <span>Next step</span>
-            <strong>Upload, parse, activate, then inspect risks before using a new version in mock sessions</strong>
+            <span>{isKorean ? "다음 단계" : "Next step"}</span>
+            <strong>{isKorean ? "업로드하고, 파싱하고, 활성화한 뒤 새 버전을 모의 세션에 쓰기 전에 리스크를 점검하세요." : "Upload, parse, activate, then inspect risks before using a new version in mock sessions"}</strong>
           </article>
         </div>
       </section>
@@ -392,14 +406,14 @@ export function ResumePage() {
         );
         const profileCard = (
           <section className="page-card">
-            <span className="page-card__label">Profile</span>
-            <h2 className="page-card__title">Profile and analysis launchers</h2>
+            <span className="page-card__label">{isKorean ? "프로필" : "Profile"}</span>
+            <h2 className="page-card__title">{isKorean ? "프로필과 분석 실행 도구" : "Profile and analysis launchers"}</h2>
             <div className="page-card__actions">
               <Link className="secondary-button" to={routeConfig.profile.buildPath()}>
-                Back to profile
+                {isKorean ? "프로필로 돌아가기" : "Back to profile"}
               </Link>
               <Link className="primary-button" to={routeConfig.resumeAnalysis.buildPath()}>
-                Open analysis
+                {isKorean ? "분석 열기" : "Open analysis"}
               </Link>
             </div>
           </section>
@@ -410,10 +424,12 @@ export function ResumePage() {
           <section className="page-card page-card--muted">
             <div className="section-heading">
               <div>
-                <span className="page-card__label">Resume library</span>
-                <h2 className="page-card__title">Resume containers and selected version</h2>
+                <span className="page-card__label">{isKorean ? "이력서 라이브러리" : "Resume library"}</span>
+                <h2 className="page-card__title">{isKorean ? "이력서 컨테이너와 선택된 버전" : "Resume containers and selected version"}</h2>
                 <p className="page-card__body">
-                  Pick one resume container, upload new PDF versions, and inspect the currently selected version without pushing the parsed result view too far down the page.
+                  {isKorean
+                    ? "이력서 컨테이너 하나를 고르고, 새 PDF 버전을 업로드한 뒤, 파싱 결과 화면이 너무 아래로 밀리지 않도록 현재 선택된 버전을 바로 점검하세요."
+                    : "Pick one resume container, upload new PDF versions, and inspect the currently selected version without pushing the parsed result view too far down the page."}
                 </p>
               </div>
               <div className="page-card__actions resume-library__actions">
@@ -425,25 +441,27 @@ export function ResumePage() {
                   }}
                   type="button"
                 >
-                  + Create resume
+                  {isKorean ? "+ 이력서 만들기" : "+ Create resume"}
                 </button>
               </div>
             </div>
             <div className="resume-library__summary">
               <article className="resume-library__summary-item">
-                <span>Selected container</span>
+                <span>{isKorean ? "선택된 컨테이너" : "Selected container"}</span>
                 <strong>
                   {selectedResumeId
-                    ? resumeListQuery.data?.items.find((resume) => resume.id === selectedResumeId)?.title ?? "Resume"
-                    : "No container selected"}
+                    ? resumeListQuery.data?.items.find((resume) => resume.id === selectedResumeId)?.title ?? (isKorean ? "이력서" : "Resume")
+                    : isKorean
+                      ? "선택된 컨테이너 없음"
+                      : "No container selected"}
                 </strong>
               </article>
               <article className="resume-library__summary-item">
-                <span>Selected version</span>
-                <strong>{selectedVersionQuery.data?.fileNameLabel ?? "Choose or upload a version"}</strong>
+                <span>{isKorean ? "선택된 버전" : "Selected version"}</span>
+                <strong>{selectedVersionQuery.data?.fileNameLabel ?? (isKorean ? "버전을 선택하거나 업로드하세요" : "Choose or upload a version")}</strong>
               </article>
               <article className="resume-library__summary-item">
-                <span>Interview readiness</span>
+                <span>{isKorean ? "인터뷰 준비도" : "Interview readiness"}</span>
                 <strong>{extractionReadinessLabel}</strong>
               </article>
             </div>
@@ -453,8 +471,8 @@ export function ResumePage() {
           <>
             {resumeListQuery.isLoading ? (
               <LoadingStateCard
-                body="Loading resume containers and their versions."
-                title="Preparing resumes"
+                body={isKorean ? "이력서 컨테이너와 버전 목록을 불러오는 중입니다." : "Loading resume containers and their versions."}
+                title={isKorean ? "이력서 준비 중" : "Preparing resumes"}
               />
             ) : null}
 
@@ -463,24 +481,26 @@ export function ResumePage() {
                 body={
                   resumeListQuery.error instanceof Error
                     ? resumeListQuery.error.message
-                    : "The resume list could not be loaded."
+                    : isKorean
+                      ? "이력서 목록을 불러오지 못했습니다."
+                      : "The resume list could not be loaded."
                 }
                 details={getErrorDetails(resumeListQuery.error)}
                 onAction={() => {
                   void resumeListQuery.refetch();
                 }}
-                title="Unable to load resumes"
+                title={isKorean ? "이력서를 불러올 수 없습니다" : "Unable to load resumes"}
               />
             ) : null}
 
             {!resumeListQuery.isLoading && !resumeListQuery.isError && resumeListQuery.data && resumeListQuery.data.items.length === 0 ? (
               <EmptyStateCard
                 action={{
-                  label: "Back to profile",
+                  label: isKorean ? "프로필로 돌아가기" : "Back to profile",
                   to: routeConfig.profile.buildPath(),
                 }}
-                body="Create your first resume to start attaching versions."
-                title="No resumes yet"
+                body={isKorean ? "버전을 연결하려면 첫 이력서를 먼저 만드세요." : "Create your first resume to start attaching versions."}
+                title={isKorean ? "이력서가 아직 없습니다" : "No resumes yet"}
               />
             ) : null}
 
@@ -505,12 +525,14 @@ export function ResumePage() {
                       <div>
                         <p className="section-heading__eyebrow">Selected resume</p>
                         <h2 className="page-card__title">
-                          {resumeListQuery.data.items.find((resume) => resume.id === selectedResumeId)?.title ?? "Resume"}
+                          {resumeListQuery.data.items.find((resume) => resume.id === selectedResumeId)?.title ?? (isKorean ? "이력서" : "Resume")}
                         </h2>
                       </div>
                     </div>
                     <p className="page-card__body">
-                      This resume container has no uploaded versions yet. Upload a PDF to start parsing skills, experiences, and risks.
+                      {isKorean
+                        ? "이 이력서 컨테이너에는 아직 업로드된 버전이 없습니다. 스킬, 경험, 리스크 파싱을 시작하려면 PDF를 업로드하세요."
+                        : "This resume container has no uploaded versions yet. Upload a PDF to start parsing skills, experiences, and risks."}
                     </p>
                     <div className="page-card__actions">
                       <label className="primary-button resume-upload-button">
@@ -526,7 +548,7 @@ export function ResumePage() {
                           }}
                           type="file"
                         />
-                        Upload first PDF version
+                        {isKorean ? "첫 PDF 버전 업로드" : "Upload first PDF version"}
                       </label>
                     </div>
                   </section>
@@ -535,38 +557,40 @@ export function ResumePage() {
                 {selectedVersionId ? (
                   selectedVersionQuery.isLoading ? (
                     <LoadingStateCard
-                      body="Loading version metadata and parsing progress."
-                      title="Preparing selected version"
+                      body={isKorean ? "버전 메타데이터와 파싱 진행 상태를 불러오는 중입니다." : "Loading version metadata and parsing progress."}
+                      title={isKorean ? "선택된 버전 준비 중" : "Preparing selected version"}
                     />
                   ) : selectedVersionQuery.isError ? (
                     <ErrorStateCard
                       body={
                         selectedVersionQuery.error instanceof Error
                           ? selectedVersionQuery.error.message
-                          : "The selected resume version could not be loaded."
+                          : isKorean
+                            ? "선택한 이력서 버전을 불러오지 못했습니다."
+                            : "The selected resume version could not be loaded."
                       }
                       details={getErrorDetails(selectedVersionQuery.error)}
                       onAction={() => {
                         void selectedVersionQuery.refetch();
                       }}
-                      title="Unable to load resume version"
+                      title={isKorean ? "이력서 버전을 불러올 수 없습니다" : "Unable to load resume version"}
                     />
                   ) : selectedVersionQuery.data ? (
                     <section className="page-card">
                       <div className="section-heading">
                         <div>
-                          <p className="section-heading__eyebrow">Selected version</p>
+                          <p className="section-heading__eyebrow">{isKorean ? "선택된 버전" : "Selected version"}</p>
                           <h2 className="page-card__title">{selectedVersionQuery.data.fileNameLabel}</h2>
                         </div>
                         <div className="resume-status-badges">
                           {selectedVersionQuery.data.isActive ? (
-                            <span className="question-status-badge question-status-badge--positive">Active version</span>
+                            <span className="question-status-badge question-status-badge--positive">{isKorean ? "활성 버전" : "Active version"}</span>
                           ) : null}
                           <span className={`question-status-badge question-status-badge--${selectedVersionQuery.data.parsingTone}`}>
-                            Parsing: {selectedVersionQuery.data.parsingStatusLabel}
+                            {isKorean ? "파싱" : "Parsing"}: {selectedVersionQuery.data.parsingStatusLabel}
                           </span>
                           <span className={`question-status-badge question-status-badge--${selectedVersionQuery.data.extractionTone}`}>
-                            Extraction: {selectedVersionQuery.data.extractionStatusLabel}
+                            {isKorean ? "추출" : "Extraction"}: {selectedVersionQuery.data.extractionStatusLabel}
                           </span>
                         </div>
                       </div>
