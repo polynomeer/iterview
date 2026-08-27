@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useLocale } from "../../shared/i18n";
 
 type InterviewWorkspaceFallbackAction =
   | {
@@ -43,6 +44,9 @@ export function InterviewWorkspaceFallback({
   actions,
   details = [],
 }: InterviewWorkspaceFallbackProps) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
+
   return (
     <section className="page-card interview-workspace-fallback" role="status">
       <div className="interview-workspace-fallback__topline">
@@ -55,7 +59,9 @@ export function InterviewWorkspaceFallback({
           <p className="interview-workspace-fallback__body">{body}</p>
         </div>
         <aside className="interview-workspace-fallback__summary">
-          <span className="interview-workspace-fallback__summary-label">Recovery summary</span>
+          <span className="interview-workspace-fallback__summary-label">
+            {isKorean ? "복구 요약" : "Recovery summary"}
+          </span>
           <strong>{summaryTitle}</strong>
           <p>{summaryBody}</p>
         </aside>

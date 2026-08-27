@@ -22,7 +22,8 @@ export function InterviewFacetSummaryPanel({
   tone,
   emptyMessage,
 }: InterviewFacetSummaryPanelProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
   const safeItems = items ?? [];
 
   return (
@@ -31,13 +32,23 @@ export function InterviewFacetSummaryPanel({
       <h2 className="page-card__title">{title}</h2>
       <p className="page-card__body">{helperText}</p>
       {safeItems.length > 0 ? (
-        <div className="interview-facet-summary-panel__summary-row" role="list" aria-label={`${title} summary`}>
-          <span className="interview-facet-summary-panel__summary-item" role="listitem">{`Items ${safeItems.length}`}</span>
+        <div
+          className="interview-facet-summary-panel__summary-row"
+          role="list"
+          aria-label={isKorean ? `${title} 요약` : `${title} summary`}
+        >
           <span className="interview-facet-summary-panel__summary-item" role="listitem">
-            {`Weak ${safeItems.reduce((sum, item) => sum + item.weakFacetCount, 0)}`}
+            {isKorean ? `항목 ${safeItems.length}개` : `Items ${safeItems.length}`}
+          </span>
+          <span className="interview-facet-summary-panel__summary-item" role="listitem">
+            {isKorean
+              ? `약한 항목 ${safeItems.reduce((sum, item) => sum + item.weakFacetCount, 0)}개`
+              : `Weak ${safeItems.reduce((sum, item) => sum + item.weakFacetCount, 0)}`}
           </span>
           <span className="interview-facet-summary-panel__summary-item interview-facet-summary-panel__summary-item--accent" role="listitem">
-            {`Skipped ${safeItems.reduce((sum, item) => sum + item.skippedFacetCount, 0)}`}
+            {isKorean
+              ? `건너뜀 ${safeItems.reduce((sum, item) => sum + item.skippedFacetCount, 0)}개`
+              : `Skipped ${safeItems.reduce((sum, item) => sum + item.skippedFacetCount, 0)}`}
           </span>
         </div>
       ) : null}

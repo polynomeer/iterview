@@ -13,17 +13,18 @@ export function InterviewCoveragePanel({
   resumeMap,
   onJumpToQuestion,
 }: InterviewCoveragePanelProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
   const groupedEvidence = useMemo(() => {
     const items = resumeMap?.evidenceItems ?? [];
 
     return items.reduce<Record<string, InterviewResumeMapModel["evidenceItems"]>>((groups, item) => {
-      const key = item.sectionLabel || "Resume";
+      const key = item.sectionLabel || (isKorean ? "이력서" : "Resume");
       groups[key] ??= [];
       groups[key].push(item);
       return groups;
     }, {});
-  }, [resumeMap]);
+  }, [isKorean, resumeMap]);
 
   if (!coverage && !resumeMap) {
     return null;
@@ -37,7 +38,11 @@ export function InterviewCoveragePanel({
       <h2 className="page-card__title">{t("interview.coverageTitle")}</h2>
       <p className="page-card__body">{t("interview.coverageBody")}</p>
       {coverage ? (
-        <div className="interview-coverage-summary__summary-row" role="list" aria-label="Coverage panel summary">
+        <div
+          className="interview-coverage-summary__summary-row"
+          role="list"
+          aria-label={isKorean ? "커버리지 패널 요약" : "Coverage panel summary"}
+        >
           <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
             {`${t("interview.coverageMode")} ${coverage.interviewModeLabel}`}
           </span>
@@ -50,9 +55,21 @@ export function InterviewCoveragePanel({
         </div>
       ) : null}
       {coverage ? (
-        <div className="interview-coverage-summary__principles" role="list" aria-label="Coverage panel principles">
-          <span role="listitem">Use these numbers to identify the next recovery lane, not to restate the whole session.</span>
-          <span role="listitem">Jump from one resume record straight into its linked question when evidence still feels thin.</span>
+        <div
+          className="interview-coverage-summary__principles"
+          role="list"
+          aria-label={isKorean ? "커버리지 패널 원칙" : "Coverage panel principles"}
+        >
+          <span role="listitem">
+            {isKorean
+              ? "이 수치는 전체 세션을 다시 설명하려는 용도가 아니라, 다음 복구 레인을 찾기 위한 기준입니다."
+              : "Use these numbers to identify the next recovery lane, not to restate the whole session."}
+          </span>
+          <span role="listitem">
+            {isKorean
+              ? "근거가 얇다면 이력서 항목에서 연결된 질문으로 바로 이동하세요."
+              : "Jump from one resume record straight into its linked question when evidence still feels thin."}
+          </span>
         </div>
       ) : null}
       {sectionEntries.length > 0 ? (
@@ -66,10 +83,22 @@ export function InterviewCoveragePanel({
                 </div>
                 <span className="section-heading__count">{items.length}</span>
               </div>
-              <div className="interview-coverage-panel__section-summary-row" role="list" aria-label={`${section} coverage summary`}>
-                <span className="interview-coverage-panel__section-summary-item" role="listitem">{`${items.length} evidence item${items.length > 1 ? "s" : ""}`}</span>
+              <div
+                className="interview-coverage-panel__section-summary-row"
+                role="list"
+                aria-label={isKorean ? `${section} 커버리지 요약` : `${section} coverage summary`}
+              >
+                <span className="interview-coverage-panel__section-summary-item" role="listitem">
+                  {isKorean ? `근거 ${items.length}개` : `${items.length} evidence item${items.length > 1 ? "s" : ""}`}
+                </span>
                 <span className="interview-coverage-panel__section-summary-item interview-coverage-panel__section-summary-item--accent" role="listitem">
-                  {`${items.reduce((count, item) => count + item.relatedQuestions.length, 0)} linked question${items.reduce((count, item) => count + item.relatedQuestions.length, 0) !== 1 ? "s" : ""}`}
+                  {(() => {
+                    const linkedQuestionCount = items.reduce((count, item) => count + item.relatedQuestions.length, 0);
+
+                    return isKorean
+                      ? `연결 질문 ${linkedQuestionCount}개`
+                      : `${linkedQuestionCount} linked question${linkedQuestionCount !== 1 ? "s" : ""}`;
+                  })()}
                 </span>
               </div>
               <div className="stack-list">

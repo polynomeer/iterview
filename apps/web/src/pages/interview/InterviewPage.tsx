@@ -289,7 +289,8 @@ const WORKSPACE_INSPECTOR: Record<string, WorkspaceInspectorModel> = {
 
 export function InterviewPage() {
   const navigate = useNavigate();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
   const [questionCount, setQuestionCount] = useState(3);
   const [startFormOpen, setStartFormOpen] = useState(false);
   const [selectedResumeVersionId, setSelectedResumeVersionId] = useState<string | null>(null);
@@ -361,21 +362,41 @@ export function InterviewPage() {
     : t("interview.noResumeTitle");
   const launchSignal =
     resumeVersionChoices.length === 0
-      ? "Resume required"
+      ? isKorean
+        ? "이력서 필요"
+        : "Resume required"
       : !startFormOpen
-        ? "Open setup"
+        ? isKorean
+          ? "설정 열기"
+          : "Open setup"
         : selectedInterviewMode === "full_coverage"
-          ? "Coverage pass ready"
-          : "Scoped branch ready";
+          ? isKorean
+            ? "커버리지 패스 준비 완료"
+            : "Coverage pass ready"
+          : isKorean
+            ? "범위 지정 가지 준비 완료"
+            : "Scoped branch ready";
   const nextBranchCandidates = selectedInspector.relatedQuestions.slice(0, 2);
-  const selectedDepthLabel = selectedNodePosition >= 0 ? `Level ${selectedNodePosition + 1}` : "Root";
+  const selectedDepthLabel = selectedNodePosition >= 0
+    ? isKorean
+      ? `레벨 ${selectedNodePosition + 1}`
+      : `Level ${selectedNodePosition + 1}`
+    : isKorean
+      ? "루트"
+      : "Root";
   const selectedReadinessLabel =
     selectedNode?.state === "weak"
-      ? "Needs recovery"
+      ? isKorean
+        ? "복구 필요"
+        : "Needs recovery"
       : selectedNode?.state === "medium"
-        ? "Can narrow"
-        : "Ready to defend";
-  const selectedQuestionCountLabel = `${questionCount} questions`;
+        ? isKorean
+          ? "더 좁힐 수 있음"
+          : "Can narrow"
+        : isKorean
+          ? "방어 준비 완료"
+          : "Ready to defend";
+  const selectedQuestionCountLabel = isKorean ? `${questionCount}개 질문` : `${questionCount} questions`;
 
   useEffect(() => {
     if (resumeVersionChoices.length === 0) {
@@ -458,44 +479,52 @@ export function InterviewPage() {
       {!(resumeListQuery.isLoading || latestResumeQuery.isLoading) &&
       !(resumeListQuery.isError && latestResumeQuery.isError) ? (
         <div className="interview-workspace-page">
-          <WorkspaceContinuityRail
-            current={{
-              title: "Interview session launch",
-              description: "Lock one resume, choose one branch, and start the pass.",
-            }}
-            downstream={[
-              {
-                title: "Practice",
-                description: "Return to question browsing if the branch is still unclear.",
-                to: routeConfig.practice.buildPath(),
-              },
-              {
-                title: "Review queue",
-                description: "Clear recovery work first when weak branches block a new run.",
-                to: routeConfig.reviewQueue.buildPath(),
-              },
-            ]}
-            upstream={[
-              {
-                title: "Resume analysis",
-                description: "Use the active source-of-truth review to decide the next branch.",
-                to: routeConfig.resumeAnalysis.buildPath(),
-              },
-            ]}
-          />
+        <WorkspaceContinuityRail
+          current={{
+            title: isKorean ? "인터뷰 세션 시작" : "Interview session launch",
+            description: isKorean ? "하나의 이력서를 고정하고, 하나의 가지를 선택한 뒤 패스를 시작하세요." : "Lock one resume, choose one branch, and start the pass.",
+          }}
+          downstream={[
+            {
+              title: isKorean ? "연습" : "Practice",
+              description: isKorean ? "가지가 아직 불명확하면 질문 탐색으로 돌아가세요." : "Return to question browsing if the branch is still unclear.",
+              to: routeConfig.practice.buildPath(),
+            },
+            {
+              title: isKorean ? "복습 큐" : "Review queue",
+              description: isKorean ? "약한 가지가 새 실행을 막는다면 복구 작업부터 처리하세요." : "Clear recovery work first when weak branches block a new run.",
+              to: routeConfig.reviewQueue.buildPath(),
+            },
+          ]}
+          upstream={[
+            {
+              title: isKorean ? "이력서 분석" : "Resume analysis",
+              description: isKorean ? "활성 source of truth 검토를 기준으로 다음 가지를 결정하세요." : "Use the active source-of-truth review to decide the next branch.",
+              to: routeConfig.resumeAnalysis.buildPath(),
+            },
+          ]}
+        />
           <section className="page-card interview-workspace-surface">
             <div className="interview-workspace-surface__header">
               <div className="interview-workspace-surface__intro">
                 <div className="interview-workspace-surface__eyebrow-row">
-                  <span className="page-card__label">Interview workspace</span>
+                  <span className="page-card__label">{isKorean ? "인터뷰 워크스페이스" : "Interview workspace"}</span>
                 </div>
-                <h2 className="interview-workspace-surface__title">Choose one branch to defend</h2>
+                <h2 className="interview-workspace-surface__title">
+                  {isKorean ? "방어할 가지를 하나 선택하세요" : "Choose one branch to defend"}
+                </h2>
                 <p className="interview-workspace-surface__body">
-                  Lock one resume, keep one branch in focus, then start the next DFS pass.
+                  {isKorean
+                    ? "하나의 이력서를 고정하고, 하나의 가지에 집중한 뒤 다음 DFS 패스를 시작하세요."
+                    : "Lock one resume, keep one branch in focus, then start the next DFS pass."}
                 </p>
               </div>
             </div>
-            <div className="interview-workspace-surface__summary-row" role="list" aria-label="Launch summary">
+            <div
+              className="interview-workspace-surface__summary-row"
+              role="list"
+              aria-label={isKorean ? "실행 요약" : "Launch summary"}
+            >
               <span className="interview-workspace-surface__summary-item" role="listitem">{selectedResumeSummary}</span>
               <span className="interview-workspace-surface__summary-item" role="listitem">{selectedInterviewModeOption.label}</span>
               <span className="interview-workspace-surface__summary-item interview-workspace-surface__summary-item--accent">
@@ -504,12 +533,20 @@ export function InterviewPage() {
               {selectedInterviewMode === "full_coverage" ? (
                 <span className="interview-workspace-surface__summary-item" role="listitem">{t("interview.coverageBadge")}</span>
               ) : null}
-              <span className="interview-workspace-surface__summary-item" role="listitem">{`History ${sessionCount}`}</span>
-              <span className="interview-workspace-surface__summary-item" role="listitem">{`${completedSessionCount} completed`}</span>
+              <span className="interview-workspace-surface__summary-item" role="listitem">
+                {isKorean ? `기록 ${sessionCount}` : `History ${sessionCount}`}
+              </span>
+              <span className="interview-workspace-surface__summary-item" role="listitem">
+                {isKorean ? `${completedSessionCount}개 완료` : `${completedSessionCount} completed`}
+              </span>
             </div>
-            <div className="interview-workspace-surface__principles" role="list" aria-label="Launch principles">
-              <span role="listitem">One resume version per run.</span>
-              <span role="listitem">Pick scope first, then start.</span>
+            <div
+              className="interview-workspace-surface__principles"
+              role="list"
+              aria-label={isKorean ? "실행 원칙" : "Launch principles"}
+            >
+              <span role="listitem">{isKorean ? "한 번의 실행에는 하나의 이력서 버전만 사용합니다." : "One resume version per run."}</span>
+              <span role="listitem">{isKorean ? "먼저 범위를 정한 뒤 시작하세요." : "Pick scope first, then start."}</span>
             </div>
             <div className="interview-workspace-surface__actions">
               <button
@@ -518,14 +555,14 @@ export function InterviewPage() {
                 onClick={() => setStartFormOpen(true)}
                 type="button"
               >
-                Open session setup
+                {isKorean ? "세션 설정 열기" : "Open session setup"}
               </button>
               <button
                 className="secondary-button interview-workspace-surface__action interview-workspace-surface__action--secondary"
                 onClick={() => setSelectedGraphNodeId("read-uncommitted")}
                 type="button"
               >
-                Inspect weakest branch
+                {isKorean ? "가장 약한 가지 점검" : "Inspect weakest branch"}
               </button>
             </div>
 
@@ -533,27 +570,49 @@ export function InterviewPage() {
               <div className="interview-graph-panel">
                 <div className="interview-graph-panel__header">
                   <div>
-                    <p className="section-heading__eyebrow">Focus lane</p>
-                    <h3 className="page-card__title">Preview the active branch without noise</h3>
+                    <p className="section-heading__eyebrow">{isKorean ? "집중 레인" : "Focus lane"}</p>
+                    <h3 className="page-card__title">
+                      {isKorean ? "노이즈 없이 활성 가지를 미리 봅니다" : "Preview the active branch without noise"}
+                    </h3>
                     <p className="interview-graph-panel__description">
-                      One branch stays in focus while adjacent follow-ups remain visible.
+                      {isKorean
+                        ? "인접한 꼬리질문은 보이되, 하나의 가지만 중심에 둡니다."
+                        : "One branch stays in focus while adjacent follow-ups remain visible."}
                     </p>
                   </div>
                   <div className="interview-graph-panel__toolbar">
                     <span className="detail-chip">{selectedDepthLabel}</span>
-                    <span className="detail-chip detail-chip--accent">DFS focus</span>
+                    <span className="detail-chip detail-chip--accent">{isKorean ? "DFS 집중" : "DFS focus"}</span>
                   </div>
                 </div>
-                <div className="interview-graph-panel__summary-row" role="list" aria-label="Focus lane signals">
+                <div
+                  className="interview-graph-panel__summary-row"
+                  role="list"
+                  aria-label={isKorean ? "집중 레인 신호" : "Focus lane signals"}
+                >
                   <span className="interview-graph-panel__summary-item interview-graph-panel__summary-item--accent" role="listitem">
                     {selectedInspector.title}
                   </span>
                   <span className="interview-graph-panel__summary-item" role="listitem">{selectedReadinessLabel}</span>
-                  <span className="interview-graph-panel__summary-item" role="listitem">{`${selectedLaneCount} nodes in lane`}</span>
+                  <span className="interview-graph-panel__summary-item" role="listitem">
+                    {isKorean ? `레인 내 노드 ${selectedLaneCount}개` : `${selectedLaneCount} nodes in lane`}
+                  </span>
                 </div>
-                <div className="interview-graph-panel__principles" role="list" aria-label="Focus lane principles">
-                  <span role="listitem">Keep one branch in focus and let nearby follow-ups stay secondary.</span>
-                  <span role="listitem">Use the inspector to confirm the exact resume claim before restarting the pass.</span>
+                <div
+                  className="interview-graph-panel__principles"
+                  role="list"
+                  aria-label={isKorean ? "집중 레인 원칙" : "Focus lane principles"}
+                >
+                  <span role="listitem">
+                    {isKorean
+                      ? "하나의 가지에 집중하고 주변 꼬리질문은 보조로 두세요."
+                      : "Keep one branch in focus and let nearby follow-ups stay secondary."}
+                  </span>
+                  <span role="listitem">
+                    {isKorean
+                      ? "패스를 다시 시작하기 전에 인스펙터로 정확한 이력서 주장을 확인하세요."
+                      : "Use the inspector to confirm the exact resume claim before restarting the pass."}
+                  </span>
                 </div>
                 <div className="interview-graph-panel__canvas">
                   {WORKSPACE_COLUMNS.map((column, columnIndex) => (
@@ -572,7 +631,7 @@ export function InterviewPage() {
                           >
                             <span className="interview-graph-node__label">{node.label}</span>
                             <span className="interview-graph-node__score">
-                              {node.score > 0 ? `${node.score}%` : "Core"}
+                              {node.score > 0 ? `${node.score}%` : isKorean ? "핵심" : "Core"}
                             </span>
                           </button>
                         );
@@ -585,37 +644,57 @@ export function InterviewPage() {
               <aside className="interview-workspace-inspector">
                 <div className="interview-workspace-inspector__panel">
                   <div className="interview-workspace-inspector__eyebrow-row">
-                    <span className="question-status-badge question-status-badge--neutral">Branch inspector</span>
+                    <span className="question-status-badge question-status-badge--neutral">
+                      {isKorean ? "가지 인스펙터" : "Branch inspector"}
+                    </span>
                     {selectedInspector.badge ? (
                       <span className="question-status-badge question-status-badge--accent">{selectedInspector.badge}</span>
                     ) : null}
                   </div>
                   <h2 className="interview-workspace-inspector__title">{selectedInspector.title}</h2>
-                  <div className="interview-workspace-inspector__summary-row" role="list" aria-label="Branch signals">
+                  <div
+                    className="interview-workspace-inspector__summary-row"
+                    role="list"
+                    aria-label={isKorean ? "가지 신호" : "Branch signals"}
+                  >
                     <span className="interview-workspace-inspector__summary-item interview-workspace-inspector__summary-item--accent" role="listitem">
-                      {`${selectedInspector.score}/100 mastery`}
+                      {isKorean ? `${selectedInspector.score}/100 숙련도` : `${selectedInspector.score}/100 mastery`}
                     </span>
                     <span className="interview-workspace-inspector__summary-item" role="listitem">{selectedReadinessLabel}</span>
                     <span className="interview-workspace-inspector__summary-item" role="listitem">{selectedInspector.relatedExperience}</span>
                   </div>
                   <p className="interview-workspace-inspector__summary">{selectedInspector.weakness}</p>
-                  <div className="interview-workspace-inspector__principles" role="list" aria-label="Branch inspector principles">
-                    <span role="listitem">Tie this branch to one resume claim and one concrete detail.</span>
-                    <span role="listitem">Use the next likely follow-ups to decide whether the answer is actually stable.</span>
+                  <div
+                    className="interview-workspace-inspector__principles"
+                    role="list"
+                    aria-label={isKorean ? "가지 인스펙터 원칙" : "Branch inspector principles"}
+                  >
+                    <span role="listitem">
+                      {isKorean
+                        ? "이 가지를 하나의 이력서 주장과 하나의 구체적인 디테일에 연결하세요."
+                        : "Tie this branch to one resume claim and one concrete detail."}
+                    </span>
+                    <span role="listitem">
+                      {isKorean
+                        ? "다음으로 나올 가능성이 높은 꼬리질문으로 답변이 실제로 안정적인지 판단하세요."
+                        : "Use the next likely follow-ups to decide whether the answer is actually stable."}
+                    </span>
                   </div>
                 </div>
 
                 <div className="interview-workspace-inspector__panel">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Branch anchor</p>
+                      <p className="section-heading__eyebrow">{isKorean ? "가지 앵커" : "Branch anchor"}</p>
                       <h3 className="page-card__title interview-workspace-inspector__section-title">
                         {selectedInspector.relatedExperience}
                       </h3>
                     </div>
                   </div>
                   <p className="page-card__body interview-workspace-inspector__section-body">
-                    Tie the branch to one resume claim and one concrete detail.
+                    {isKorean
+                      ? "이 가지를 하나의 이력서 주장과 하나의 구체적인 디테일에 연결하세요."
+                      : "Tie the branch to one resume claim and one concrete detail."}
                   </p>
                   <div className="chip-list">
                     {selectedInspector.concepts.map((concept) => (
@@ -627,9 +706,9 @@ export function InterviewPage() {
                 <div className="interview-workspace-inspector__panel">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Next branches</p>
+                      <p className="section-heading__eyebrow">{isKorean ? "다음 가지" : "Next branches"}</p>
                       <h3 className="page-card__title interview-workspace-inspector__section-title">
-                        Review only the next likely follow-ups
+                        {isKorean ? "가능성이 높은 다음 꼬리질문만 검토하세요" : "Review only the next likely follow-ups"}
                       </h3>
                     </div>
                   </div>
@@ -642,7 +721,7 @@ export function InterviewPage() {
                         <div className="list-item-card__content">
                           <div className="list-item-card__meta interview-workspace-inspector__question-meta">
                             <span>{index + 1}</span>
-                            <span>{index === 0 ? "Strong" : "Open"}</span>
+                            <span>{index === 0 ? (isKorean ? "강함" : "Strong") : isKorean ? "열림" : "Open"}</span>
                           </div>
                           <h3 className="list-item-card__title">{question.title}</h3>
                         </div>
@@ -657,8 +736,8 @@ export function InterviewPage() {
             <section className="interview-workspace-deck__card interview-workspace-deck__card--history">
               <div className="section-heading">
                 <div>
-                  <p className="section-heading__eyebrow">Recent Sessions</p>
-                  <h3 className="page-card__title">Re-open recent branches</h3>
+                  <p className="section-heading__eyebrow">{isKorean ? "최근 세션" : "Recent Sessions"}</p>
+                  <h3 className="page-card__title">{isKorean ? "최근 가지 다시 열기" : "Re-open recent branches"}</h3>
                 </div>
                 <span className="section-heading__count">{sessionCount}</span>
               </div>
@@ -690,9 +769,15 @@ export function InterviewPage() {
                 <div>
                   <span className="page-card__label">{t("interview.sessionSetupLabel")}</span>
                   <h2 className="page-card__title">{t("interview.sessionSetupTitle")}</h2>
-                  <p className="page-card__body">Lock one source, choose one traversal, then launch the next pass.</p>
+                  <p className="page-card__body">
+                    {isKorean ? "하나의 기준 source를 고정하고, 하나의 순회 방식을 선택한 뒤 다음 패스를 실행하세요." : "Lock one source, choose one traversal, then launch the next pass."}
+                  </p>
                 </div>
-                <div className="interview-launch-setup-surface__signals" role="list" aria-label="Session setup signals">
+                <div
+                  className="interview-launch-setup-surface__signals"
+                  role="list"
+                  aria-label={isKorean ? "세션 설정 신호" : "Session setup signals"}
+                >
                   <span className="interview-launch-setup-surface__signal" role="listitem">{selectedResumeChoice?.versionNumberLabel ?? t("interview.noResumeTitle")}</span>
                   <span className="interview-launch-setup-surface__signal" role="listitem">{selectedInterviewModeOption.label}</span>
                   <span className="interview-launch-setup-surface__signal" role="listitem">{selectedQuestionCountLabel}</span>
@@ -704,13 +789,15 @@ export function InterviewPage() {
                 <section className="page-card page-card--inset interview-launch-step">
                   <div className="section-heading">
                     <div>
-                      <p className="interview-launch-step__eyebrow">Step 1</p>
+                      <p className="interview-launch-step__eyebrow">{isKorean ? "1단계" : "Step 1"}</p>
                       <h3 className="page-card__title">{t("interview.chooseResumeTitle")}</h3>
                     </div>
                   </div>
-                  <p className="page-card__body">Pick the single resume version that will anchor this pass.</p>
+                  <p className="page-card__body">
+                    {isKorean ? "이 패스의 기준이 될 이력서 버전을 하나 선택하세요." : "Pick the single resume version that will anchor this pass."}
+                  </p>
                   <div className="interview-launch-step__selected">
-                    <span>Active boundary</span>
+                    <span>{isKorean ? "현재 경계" : "Active boundary"}</span>
                     <strong>{selectedResumeSummary}</strong>
                   </div>
                   <div className="stack-list">
@@ -749,14 +836,16 @@ export function InterviewPage() {
                 <section className="page-card page-card--inset interview-launch-step">
                   <div className="section-heading">
                     <div>
-                      <p className="interview-launch-step__eyebrow">Step 2</p>
-                      <h3 className="page-card__title">Choose the traversal first</h3>
+                      <p className="interview-launch-step__eyebrow">{isKorean ? "2단계" : "Step 2"}</p>
+                      <h3 className="page-card__title">{isKorean ? "먼저 순회 방식을 선택하세요" : "Choose the traversal first"}</h3>
                     </div>
                   </div>
-                  <p className="page-card__body">Use coverage mode only when the next run should sweep the full DFS tree.</p>
+                  <p className="page-card__body">
+                    {isKorean ? "다음 실행이 전체 DFS 트리를 훑어야 할 때만 coverage 모드를 사용하세요." : "Use coverage mode only when the next run should sweep the full DFS tree."}
+                  </p>
                   <div className="interview-launch-step__selected">
-                    <span>Current launch rule</span>
-                    <strong>One run, one source of truth.</strong>
+                    <span>{isKorean ? "현재 실행 규칙" : "Current launch rule"}</span>
+                    <strong>{isKorean ? "한 번의 실행, 하나의 source of truth." : "One run, one source of truth."}</strong>
                   </div>
                   <div className="stack-list">
                     {interviewModeOptions.map((option) => {
@@ -785,20 +874,24 @@ export function InterviewPage() {
                     })}
                   </div>
                   <div className="interview-launch-step__footer">
-                    <div className="interview-launch-step__question-count" role="group" aria-label="Question count">
+                    <div
+                      className="interview-launch-step__question-count"
+                      role="group"
+                      aria-label={isKorean ? "질문 수" : "Question count"}
+                    >
                       <button
                         className={questionCount === 3 ? "primary-button" : "secondary-button"}
                         onClick={() => setQuestionCount(3)}
                         type="button"
                       >
-                        3 questions
+                        {isKorean ? "질문 3개" : "3 questions"}
                       </button>
                       <button
                         className={questionCount === 5 ? "primary-button" : "secondary-button"}
                         onClick={() => setQuestionCount(5)}
                         type="button"
                       >
-                        5 questions
+                        {isKorean ? "질문 5개" : "5 questions"}
                       </button>
                     </div>
                     <button

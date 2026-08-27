@@ -13,7 +13,8 @@ export function InterviewQuestionTimeline({
   items,
   currentQuestionId,
 }: InterviewQuestionTimelineProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
   const answeredCount = items.filter((item) => item.status.toLowerCase() === "answered").length;
   const skippedCount = items.filter((item) => item.status.toLowerCase() === "skipped").length;
   const currentIndex = currentQuestionId ? items.findIndex((item) => item.id === currentQuestionId) : -1;
@@ -29,21 +30,51 @@ export function InterviewQuestionTimeline({
           </div>
           <span className="section-heading__count">{items.length}</span>
         </div>
-        <div className="interview-timeline-workspace__summary-row" role="list" aria-label="Session flow signals">
+        <div
+          className="interview-timeline-workspace__summary-row"
+          role="list"
+          aria-label={isKorean ? "세션 흐름 신호" : "Session flow signals"}
+        >
           <span className="interview-timeline-workspace__summary-item" role="listitem">
-            {currentIndex >= 0 ? `Current step #${currentIndex + 1}` : "Review"}
+            {currentIndex >= 0
+              ? isKorean
+                ? `현재 단계 #${currentIndex + 1}`
+                : `Current step #${currentIndex + 1}`
+              : isKorean
+                ? "검토"
+                : "Review"}
           </span>
-          <span className="interview-timeline-workspace__summary-item" role="listitem">{`Answered ${answeredCount}`}</span>
-          <span className="interview-timeline-workspace__summary-item" role="listitem">{`Skipped ${skippedCount}`}</span>
-          <span className="interview-timeline-workspace__summary-item interview-timeline-workspace__summary-item--accent" role="listitem">{`Max depth ${maxDepth + 1}`}</span>
+          <span className="interview-timeline-workspace__summary-item" role="listitem">
+            {isKorean ? `답변 완료 ${answeredCount}` : `Answered ${answeredCount}`}
+          </span>
+          <span className="interview-timeline-workspace__summary-item" role="listitem">
+            {isKorean ? `건너뜀 ${skippedCount}` : `Skipped ${skippedCount}`}
+          </span>
+          <span className="interview-timeline-workspace__summary-item interview-timeline-workspace__summary-item--accent" role="listitem">
+            {isKorean ? `최대 깊이 ${maxDepth + 1}` : `Max depth ${maxDepth + 1}`}
+          </span>
         </div>
       </div>
       <p className="page-card__body interview-timeline-workspace__intro">
-        Review the branch order, evidence anchors, and generated follow-ups as one continuous defense path rather than isolated prompts.
+        {isKorean
+          ? "질문 순서, 근거 앵커, 생성된 꼬리질문을 분리된 프롬프트가 아니라 하나의 연속된 방어 경로로 검토하세요."
+          : "Review the branch order, evidence anchors, and generated follow-ups as one continuous defense path rather than isolated prompts."}
       </p>
-      <div className="interview-timeline-workspace__principles" role="list" aria-label="Session flow principles">
-        <span role="listitem">Read the branch as one defense path, not as separate prompts.</span>
-        <span role="listitem">Use revisit and result links only when a node still changes the branch decision.</span>
+      <div
+        className="interview-timeline-workspace__principles"
+        role="list"
+        aria-label={isKorean ? "세션 흐름 원칙" : "Session flow principles"}
+      >
+        <span role="listitem">
+          {isKorean
+            ? "가지를 개별 프롬프트가 아니라 하나의 방어 경로로 읽으세요."
+            : "Read the branch as one defense path, not as separate prompts."}
+        </span>
+        <span role="listitem">
+          {isKorean
+            ? "노드가 가지 판단을 실제로 바꿀 때만 재검토와 결과 링크를 사용하세요."
+            : "Use revisit and result links only when a node still changes the branch decision."}
+        </span>
       </div>
       <div className="stack-list interview-timeline-workspace__stack">
         {items.map((item) => {
@@ -75,7 +106,7 @@ export function InterviewQuestionTimeline({
               <div className="list-item-card__content">
                 <div className="list-item-card__meta">
                   <span>#{item.orderIndex + 1}</span>
-                  <span>{`Depth ${item.depth + 1}`}</span>
+                  <span>{isKorean ? `깊이 ${item.depth + 1}` : `Depth ${item.depth + 1}`}</span>
                   <span>{item.difficultyLabel}</span>
                   <span>{item.status}</span>
                   {item.contentLocale ? (
@@ -86,9 +117,13 @@ export function InterviewQuestionTimeline({
                     </span>
                   ) : null}
                   {isAiFollowUp ? (
-                    <span className="question-status-badge question-status-badge--accent">AI follow-up</span>
+                    <span className="question-status-badge question-status-badge--accent">
+                      {isKorean ? "AI 꼬리질문" : "AI follow-up"}
+                    </span>
                   ) : item.isFollowUp ? (
-                    <span className="question-status-badge question-status-badge--neutral">Follow-up</span>
+                    <span className="question-status-badge question-status-badge--neutral">
+                      {isKorean ? "꼬리질문" : "Follow-up"}
+                    </span>
                   ) : (
                     <span className="question-status-badge question-status-badge--neutral">{item.sourceLabel}</span>
                   )}
@@ -140,7 +175,7 @@ export function InterviewQuestionTimeline({
                     className="secondary-button"
                     to={routeConfig.questionDetail.buildPath({ questionId: item.questionId ?? "" })}
                   >
-                    Open catalog question
+                    {isKorean ? "질문 카탈로그 열기" : "Open catalog question"}
                   </Link>
                 ) : null}
                 {item.answerAttemptId ? (
@@ -148,7 +183,7 @@ export function InterviewQuestionTimeline({
                     className="secondary-button"
                     to={routeConfig.resultAnalysis.buildPath({ answerAttemptId: item.answerAttemptId })}
                   >
-                    Open answer result
+                    {isKorean ? "답변 결과 열기" : "Open answer result"}
                   </Link>
                 ) : null}
               </div>
