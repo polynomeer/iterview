@@ -16,10 +16,13 @@ import { SettingsForm, ThemeSettingsCard } from "../../widgets/profile";
 
 type NotificationPreset = "focus-only" | "balanced" | "quiet";
 
-const NOTIFICATION_PRESET_LABELS: Record<NotificationPreset, string> = {
-  "focus-only": "Focus only",
-  balanced: "Balanced",
-  quiet: "Quiet",
+const NOTIFICATION_PRESET_LABELS: Record<
+  NotificationPreset,
+  "settings.notificationPresetFocusOnly" | "settings.notificationPresetBalanced" | "settings.notificationPresetQuiet"
+> = {
+  "focus-only": "settings.notificationPresetFocusOnly",
+  balanced: "settings.notificationPresetBalanced",
+  quiet: "settings.notificationPresetQuiet",
 };
 
 const SETTINGS_STORAGE_KEY = "iterview-settings-workspace";
@@ -122,7 +125,7 @@ export function SettingsPage() {
       );
     }
 
-    setLocalSettingsStatus("Local review and notification preferences saved.");
+    setLocalSettingsStatus(t("settings.localSaved"));
   }
 
   const currentProfile = currentUserQuery.data
@@ -151,21 +154,18 @@ export function SettingsPage() {
       <section className="page-card settings-workspace-surface">
         <div className="settings-workspace-surface__header">
           <div className="settings-workspace-surface__intro">
-            <div className="settings-workspace-surface__eyebrow-row">
-              <span className="page-card__label">System controls</span>
-              <span className="question-status-badge question-status-badge--accent">Operational defaults</span>
+              <div className="settings-workspace-surface__eyebrow-row">
+              <span className="page-card__label">{t("settings.systemControls")}</span>
+              <span className="question-status-badge question-status-badge--accent">{t("settings.operationalDefaults")}</span>
             </div>
             <h2 className="settings-workspace-surface__title">
-              Keep study preferences, personalization, and review behavior in one dedicated control room
+              {t("settings.workspaceTitle")}
             </h2>
-            <p className="settings-workspace-surface__body">
-              Settings shape how you practice, retry, and schedule work. They should live beside review planning and
-              account context, but not inside the identity editing flow itself.
-            </p>
+            <p className="settings-workspace-surface__body">{t("settings.workspaceBody")}</p>
           </div>
           <div className="settings-workspace-surface__stats">
             <article>
-              <span>Daily load</span>
+              <span>{t("settings.dailyLoad")}</span>
               <strong>{dailyLoad}</strong>
             </article>
             <article>
@@ -173,29 +173,29 @@ export function SettingsPage() {
               <strong>{languageLabel}</strong>
             </article>
             <article>
-              <span>Retry queue</span>
-              <strong>{retryEnabled ? "Enabled" : "Paused"}</strong>
+              <span>{t("settings.retryQueue")}</span>
+              <strong>{retryEnabled ? t("settings.enabled") : t("settings.paused")}</strong>
             </article>
             <article>
-              <span>Target companies</span>
+              <span>{t("settings.targetCompanies")}</span>
               <strong>{targetCompanyCount}</strong>
             </article>
           </div>
         </div>
         <div className="settings-workspace-surface__guidance">
           <article className="settings-workspace-surface__guidance-card">
-            <span>Control rule</span>
-            <strong>Change defaults here first, then verify the impact in review and practice workspaces.</strong>
+            <span>{t("settings.controlRule")}</span>
+            <strong>{t("settings.controlRuleBody")}</strong>
           </article>
           <article className="settings-workspace-surface__guidance-card">
-            <span>Scope split</span>
-            <strong>Profile is for identity. Settings is for how the interview system behaves around you.</strong>
+            <span>{t("settings.scopeSplit")}</span>
+            <strong>{t("settings.scopeSplitBody")}</strong>
           </article>
         </div>
       </section>
 
       {currentUserQuery.isLoading ? (
-        <LoadingStateCard body="Loading your current settings and local workspace preferences." title="Preparing settings" />
+        <LoadingStateCard body={t("settings.loadingBody")} title={t("settings.loadingTitle")} />
       ) : null}
 
       {currentUserQuery.isError ? (
@@ -203,13 +203,13 @@ export function SettingsPage() {
           body={
             currentUserQuery.error instanceof Error
               ? currentUserQuery.error.message
-              : "The settings workspace could not be loaded."
+              : t("settings.loadErrorBody")
           }
           details={getErrorDetails(currentUserQuery.error)}
           onAction={() => {
             void currentUserQuery.refetch();
           }}
-          title="Unable to load settings"
+          title={t("settings.loadErrorTitle")}
         />
       ) : null}
 
@@ -241,18 +241,15 @@ export function SettingsPage() {
             <section className="page-card settings-local-panel">
               <div className="section-heading">
                 <div>
-                  <p className="section-heading__eyebrow">Review behavior</p>
-                  <h2 className="page-card__title">Tune local reminder timing and interruption level</h2>
-                  <p className="page-card__body">
-                    These controls are local to this browser. Use them to reduce review noise during deep rehearsal
-                    windows without changing the shared backend profile.
-                  </p>
+                  <p className="section-heading__eyebrow">{t("settings.reviewBehavior")}</p>
+                  <h2 className="page-card__title">{t("settings.reviewBehaviorTitle")}</h2>
+                  <p className="page-card__body">{t("settings.reviewBehaviorBody")}</p>
                 </div>
-                <span className="section-heading__count section-heading__count--text">Local only</span>
+                <span className="section-heading__count section-heading__count--text">{t("settings.localOnly")}</span>
               </div>
               <div className="auth-form">
                 <label className="form-field">
-                  <span className="form-field__label">Notification preset</span>
+                  <span className="form-field__label">{t("settings.notificationPreset")}</span>
                   <select
                     className="form-field__input"
                     onChange={(event) => {
@@ -262,13 +259,13 @@ export function SettingsPage() {
                   >
                     {Object.entries(NOTIFICATION_PRESET_LABELS).map(([value, label]) => (
                       <option key={value} value={value}>
-                        {label}
+                        {t(label)}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="form-field">
-                  <span className="form-field__label">Review reminder lead (minutes)</span>
+                  <span className="form-field__label">{t("settings.reviewReminderLead")}</span>
                   <input
                     className="form-field__input"
                     inputMode="numeric"
@@ -280,7 +277,7 @@ export function SettingsPage() {
                 </label>
                 <div className="content-grid content-grid--two">
                   <label className="form-field">
-                    <span className="form-field__label">Quiet hours start</span>
+                    <span className="form-field__label">{t("settings.quietHoursStart")}</span>
                     <input
                       className="form-field__input"
                       onChange={(event) => {
@@ -291,7 +288,7 @@ export function SettingsPage() {
                     />
                   </label>
                   <label className="form-field">
-                    <span className="form-field__label">Quiet hours end</span>
+                    <span className="form-field__label">{t("settings.quietHoursEnd")}</span>
                     <input
                       className="form-field__input"
                       onChange={(event) => {
@@ -305,7 +302,7 @@ export function SettingsPage() {
                 {localSettingsStatus ? <FeedbackNotice message={localSettingsStatus} tone="success" /> : null}
                 <div className="page-card__actions">
                   <button className="primary-button" onClick={handleSaveLocalSettings} type="button">
-                    Save local review settings
+                    {t("settings.saveLocalSettings")}
                   </button>
                 </div>
               </div>
@@ -316,25 +313,25 @@ export function SettingsPage() {
             <section className="page-card settings-health-rail">
               <div className="section-heading section-heading--compact">
                 <div>
-                  <p className="section-heading__eyebrow">Configuration health</p>
-                  <h2 className="page-card__title">Recommended tweaks before the next review cycle</h2>
+                  <p className="section-heading__eyebrow">{t("settings.configurationHealth")}</p>
+                  <h2 className="page-card__title">{t("settings.configurationHealthTitle")}</h2>
                 </div>
               </div>
               <div className="settings-health-rail__list">
                 <article className="settings-health-rail__item">
-                  <span>Daily load</span>
-                  <strong>{dailyLoad === "0" ? "Set a realistic daily question target" : `Current target ${dailyLoad}`}</strong>
-                  <p>Match the review schedule to the actual number of questions you can defend in one day.</p>
+                  <span>{t("settings.dailyLoad")}</span>
+                  <strong>{dailyLoad === "0" ? t("settings.dailyLoadHintTitle") : `${t("settings.dailyLoadHintCurrentPrefix")} ${dailyLoad}`}</strong>
+                  <p>{t("settings.dailyLoadHintBody")}</p>
                 </article>
                 <article className="settings-health-rail__item">
-                  <span>Retry behavior</span>
-                  <strong>{retryEnabled ? "Retry queue active" : "Retry queue disabled"}</strong>
-                  <p>Disable only if you are intentionally running a source-of-truth repair week instead of retry execution.</p>
+                  <span>{t("settings.retryBehavior")}</span>
+                  <strong>{retryEnabled ? t("settings.retryBehaviorActive") : t("settings.retryBehaviorDisabled")}</strong>
+                  <p>{t("settings.retryBehaviorBody")}</p>
                 </article>
                 <article className="settings-health-rail__item">
-                  <span>Workspace linkage</span>
-                  <strong>{`${targetCompanyCount} linked company lanes`}</strong>
-                  <p>Make sure settings, scheduling, and company preparation still point to the same workload reality.</p>
+                  <span>{t("settings.workspaceLinkage")}</span>
+                  <strong>{`${targetCompanyCount} ${t("settings.linkedCompanyLanesSuffix")}`}</strong>
+                  <p>{t("settings.workspaceLinkageBody")}</p>
                 </article>
               </div>
             </section>
@@ -342,19 +339,19 @@ export function SettingsPage() {
             <section className="page-card settings-health-rail">
               <div className="section-heading section-heading--compact">
                 <div>
-                  <p className="section-heading__eyebrow">Next routes</p>
-                  <h2 className="page-card__title">Jump back into the workspaces these settings affect</h2>
+                  <p className="section-heading__eyebrow">{t("settings.nextRoutes")}</p>
+                  <h2 className="page-card__title">{t("settings.nextRoutesTitle")}</h2>
                 </div>
               </div>
               <div className="page-card__actions">
                 <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
-                  Review queue
+                  {t("settings.openReviewQueue")}
                 </Link>
                 <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>
-                  Scheduled reviews
+                  {t("sidebar.scheduledReviews")}
                 </Link>
                 <Link className="secondary-button" to={routeConfig.targetCompanies.buildPath()}>
-                  Target companies
+                  {t("settings.targetCompaniesRoute")}
                 </Link>
               </div>
             </section>

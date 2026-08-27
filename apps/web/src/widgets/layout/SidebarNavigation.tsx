@@ -1,40 +1,42 @@
 import { NavLink } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { useAuth } from "../../shared/auth/useAuth";
+import { useLocale } from "../../shared/i18n";
 
 export function SidebarNavigation() {
   const { isAuthenticated } = useAuth();
+  const { t } = useLocale();
   const workspaceLinks = isAuthenticated
     ? [
-        { label: "Today", to: routeConfig.home.buildPath() },
-        { label: "Interview Workspace", to: routeConfig.interview.buildPath() },
-        { label: "Question Map", to: routeConfig.practice.buildPath() },
-        { label: "Review Queue", to: routeConfig.reviewQueue.buildPath() },
-        { label: "Scheduled Reviews", to: routeConfig.scheduledReviews.buildPath() },
-        { label: "Weak Nodes", to: routeConfig.weakNodes.buildPath() },
-        { label: "Archive", to: routeConfig.archive.buildPath() },
+        { label: t("sidebar.today"), to: routeConfig.home.buildPath() },
+        { label: t("header.workspaceTitle"), to: routeConfig.interview.buildPath() },
+        { label: t("sidebar.questionMap"), to: routeConfig.practice.buildPath() },
+        { label: t("navigation.reviewQueue"), to: routeConfig.reviewQueue.buildPath() },
+        { label: t("sidebar.scheduledReviews"), to: routeConfig.scheduledReviews.buildPath() },
+        { label: t("sidebar.weakNodes"), to: routeConfig.weakNodes.buildPath() },
+        { label: t("navigation.archive"), to: routeConfig.archive.buildPath() },
       ]
     : [
-        { label: "Home", to: routeConfig.home.buildPath() },
-        { label: "Question Map", to: routeConfig.practice.buildPath() },
-        { label: "Feed", to: routeConfig.feed.buildPath() },
+        { label: t("navigation.home"), to: routeConfig.home.buildPath() },
+        { label: t("sidebar.questionMap"), to: routeConfig.practice.buildPath() },
+        { label: t("navigation.feed"), to: routeConfig.feed.buildPath() },
       ];
   const careerLinks = isAuthenticated
     ? [
-        { label: "Resume", to: routeConfig.resume.buildPath() },
-        { label: "Resume Analysis", to: routeConfig.resumeAnalysis.buildPath() },
-        { label: "Skills", to: routeConfig.skills.buildPath() },
+        { label: t("navigation.resume"), to: routeConfig.resume.buildPath() },
+        { label: t("navigation.resumeAnalysis"), to: routeConfig.resumeAnalysis.buildPath() },
+        { label: t("navigation.skills"), to: routeConfig.skills.buildPath() },
       ]
     : [
-        { label: "Login", to: routeConfig.login.buildPath() },
-        { label: "Sign Up", to: routeConfig.signup.buildPath() },
+        { label: t("common.login"), to: routeConfig.login.buildPath() },
+        { label: t("common.signUp"), to: routeConfig.signup.buildPath() },
       ];
   const manageLinks = isAuthenticated
     ? [
-        { label: "Settings", to: routeConfig.settings.buildPath() },
-        { label: "Target Companies", to: routeConfig.targetCompanies.buildPath() },
-        { label: "Notes", to: routeConfig.notes.buildPath() },
-        { label: "Bookmarks", to: routeConfig.bookmarks.buildPath() },
+        { label: t("settings.eyebrow"), to: routeConfig.settings.buildPath() },
+        { label: t("sidebar.targetCompanies"), to: routeConfig.targetCompanies.buildPath() },
+        { label: t("sidebar.notes"), to: routeConfig.notes.buildPath() },
+        { label: t("sidebar.bookmarks"), to: routeConfig.bookmarks.buildPath() },
       ]
     : [];
 
@@ -43,14 +45,14 @@ export function SidebarNavigation() {
       <div className="sidebar-navigation__brand">
         <div className="sidebar-navigation__brand-row">
           <strong className="sidebar-navigation__title">Iterview</strong>
-          <span className="sidebar-navigation__pro-badge">DFS prep</span>
+          <span className="sidebar-navigation__pro-badge">{t("sidebar.brandBadge")}</span>
         </div>
         <p className="sidebar-navigation__summary">
-          Resume-first interview practice.
+          {t("sidebar.brandSummary")}
         </p>
       </div>
 
-      <nav aria-label="Workspace" className="sidebar-navigation__nav">
+      <nav aria-label={t("sidebar.workspace")} className="sidebar-navigation__nav">
         {workspaceLinks.map((link) => (
           <NavLink
             key={link.to}
@@ -68,8 +70,8 @@ export function SidebarNavigation() {
       </nav>
 
       <div className="sidebar-navigation__section">
-        <span className="sidebar-navigation__section-label">{isAuthenticated ? "Career" : "Account"}</span>
-        <nav aria-label="Career" className="sidebar-navigation__nav sidebar-navigation__nav--secondary">
+        <span className="sidebar-navigation__section-label">{isAuthenticated ? t("sidebar.career") : t("sidebar.account")}</span>
+        <nav aria-label={isAuthenticated ? t("sidebar.career") : t("sidebar.account")} className="sidebar-navigation__nav sidebar-navigation__nav--secondary">
           {careerLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -89,8 +91,8 @@ export function SidebarNavigation() {
 
       {manageLinks.length > 0 ? (
         <div className="sidebar-navigation__section">
-          <span className="sidebar-navigation__section-label">Manage</span>
-          <nav aria-label="Manage" className="sidebar-navigation__nav sidebar-navigation__nav--secondary">
+          <span className="sidebar-navigation__section-label">{t("sidebar.manage")}</span>
+          <nav aria-label={t("sidebar.manage")} className="sidebar-navigation__nav sidebar-navigation__nav--secondary">
             {manageLinks.map((link) => (
               <NavLink
                 key={link.to}
@@ -111,17 +113,17 @@ export function SidebarNavigation() {
 
       {isAuthenticated ? (
         <section className="sidebar-navigation__progress-card">
-          <span className="sidebar-navigation__section-label">Workflow</span>
-          <p className="sidebar-navigation__progress-range">Resume → DFS questions → answer review</p>
+          <span className="sidebar-navigation__section-label">{t("sidebar.workflow")}</span>
+          <p className="sidebar-navigation__progress-range">{t("sidebar.workflowRange")}</p>
           <div className="sidebar-navigation__progress-value-row">
-            <strong className="sidebar-navigation__progress-value">Focus</strong>
-            <span className="sidebar-navigation__progress-delta">Keep one claim, one branch, one answer loop.</span>
+            <strong className="sidebar-navigation__progress-value">{t("sidebar.workflowFocus")}</strong>
+            <span className="sidebar-navigation__progress-delta">{t("sidebar.workflowFocusBody")}</span>
           </div>
         </section>
       ) : (
         <section className="sidebar-navigation__progress-card sidebar-navigation__progress-card--compact">
-          <span className="sidebar-navigation__section-label">Core loop</span>
-          <p className="sidebar-navigation__progress-range">Source of truth, DFS follow-ups, answer rehearsal.</p>
+          <span className="sidebar-navigation__section-label">{t("sidebar.coreLoop")}</span>
+          <p className="sidebar-navigation__progress-range">{t("sidebar.coreLoopBody")}</p>
         </section>
       )}
     </aside>

@@ -109,66 +109,63 @@ export function QuestionTreePage() {
             <div className="question-tree-workspace-surface__header">
               <div className="question-tree-workspace-surface__intro">
                 <div className="question-tree-workspace-surface__eyebrow-row">
-                  <span className="page-card__label">Question map</span>
-                  <span className="question-status-badge question-status-badge--accent">DFS ready</span>
+                  <span className="page-card__label">{t("questionTree.mapLabel")}</span>
+                  <span className="question-status-badge question-status-badge--accent">{t("questionTree.dfsReady")}</span>
                 </div>
                 <p className="question-tree-workspace-surface__breadcrumbs">
-                  Root prompt
+                  {t("questionTree.rootPrompt")}
                   <span>/</span>
-                  Follow-up hierarchy
+                  {t("questionTree.followupHierarchy")}
                   <span>/</span>
-                  Branch coverage
+                  {t("questionTree.branchCoverage")}
                 </p>
-                <h2 className="question-tree-workspace-surface__title">Question tree workspace</h2>
-                <p className="question-tree-workspace-surface__body">
-                  Keep the full branching map in view so each answer can be traced back to what it unlocks next,
-                  what it depends on, and where the resume-backed source of truth still looks weak.
-                </p>
+                <h2 className="question-tree-workspace-surface__title">{t("questionTree.workspaceTitleLong")}</h2>
+                <p className="question-tree-workspace-surface__body">{t("questionTree.workspaceBodyLong")}</p>
               </div>
               <div className="question-tree-workspace-surface__stats">
                 <article className="question-tree-workspace-surface__stat">
-                  <span>Nodes</span>
+                  <span>{t("questionTree.nodes")}</span>
                   <strong>{totalNodes}</strong>
                 </article>
                 <article className="question-tree-workspace-surface__stat">
-                  <span>Follow-ups</span>
+                  <span>{t("questionTree.followups")}</span>
                   <strong>{followupCount}</strong>
                 </article>
                 <article className="question-tree-workspace-surface__stat">
-                  <span>Deepest depth</span>
+                  <span>{t("questionTree.deepestDepth")}</span>
                   <strong>{deepestDepth}</strong>
                 </article>
                 <article className="question-tree-workspace-surface__stat">
-                  <span>Relations</span>
+                  <span>{t("questionTree.relations")}</span>
                   <strong>{relationshipCount}</strong>
                 </article>
               </div>
             </div>
             <div className="question-tree-workspace-surface__guidance">
               <article className="question-tree-workspace-surface__guidance-card">
-                <span>Traversal rule</span>
-                <strong>Read every node as a DFS checkpoint, not a loose list of follow-ups.</strong>
+                <span>{t("questionTree.traversalRule")}</span>
+                <strong>{t("questionTree.traversalRuleBody")}</strong>
               </article>
               <article className="question-tree-workspace-surface__guidance-card">
-                <span>Weak line watch</span>
-                <strong>Any vague answer here becomes the branch the next question is most likely to attack.</strong>
+                <span>{t("questionTree.weakLineWatch")}</span>
+                <strong>{t("questionTree.weakLineWatchBody")}</strong>
               </article>
             </div>
           </section>
           <section className="page-card question-tree-root-brief">
             <div className="question-tree-root-brief__topline">
               <span className="page-card__label">{t("questionTree.rootQuestionLabel")}</span>
-              <span className="question-status-badge">Root node</span>
+              <span className="question-status-badge">{t("questionTree.rootNode")}</span>
             </div>
             <h2 className="page-card__title">{questionDetailQuery.data.title}</h2>
             <p className="page-card__body">{t("questionTree.rootQuestionBody")}</p>
             <div className="question-tree-root-brief__supporting">
               <article className="question-tree-root-brief__supporting-item">
-                <span>Category</span>
+                <span>{t("questionTree.category")}</span>
                 <strong>{questionDetailQuery.data.category}</strong>
               </article>
               <article className="question-tree-root-brief__supporting-item">
-                <span>Difficulty</span>
+                <span>{t("questionTree.difficulty")}</span>
                 <strong>{questionDetailQuery.data.difficulty}</strong>
               </article>
             </div>

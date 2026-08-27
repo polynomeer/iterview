@@ -31,9 +31,7 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
         </div>
         <span className="section-heading__count">{tree.nodes.length}</span>
       </div>
-      <p className="page-card__body question-tree-surface__intro">
-        Move from the root to the deepest branch with the assumption that each child question is probing the weakest unsupported line above it.
-      </p>
+      <p className="page-card__body question-tree-surface__intro">{t("questionTree.introBody")}</p>
       <div className={`question-tree-flow ${isDesktop ? "question-tree-flow--desktop" : "question-tree-flow--mobile"}`}>
         <div className="question-tree">
           {tree.nodes.map((node, index) => (
@@ -52,12 +50,12 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
                   <div className="question-tree__node-step">{index + 1}</div>
                   <div className="question-tree__summary">
                     <article className="question-tree__summary-item">
-                      <span>Depth</span>
+                      <span>{t("questionTree.depth")}</span>
                       <strong>{node.depth}</strong>
                     </article>
                     <article className="question-tree__summary-item">
-                      <span>Type</span>
-                      <strong>{node.isRoot ? t("questionTree.root") : node.relationshipType ?? "node"}</strong>
+                      <span>{t("questionTree.type")}</span>
+                      <strong>{node.isRoot ? t("questionTree.root") : node.relationshipType ?? t("questionTree.node")}</strong>
                     </article>
                   </div>
                 </div>
@@ -71,7 +69,7 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
                 <h3 className="list-item-card__title">{node.title}</h3>
                 <div className="list-item-card__actions">
                   <span className="detail-chip detail-chip--accent">
-                    {node.id === selectedNode?.id ? "Selected" : "Inspect node"}
+                    {node.id === selectedNode?.id ? t("questionTree.selected") : t("questionTree.inspectNode")}
                   </span>
                 </div>
               </div>
@@ -82,38 +80,38 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
           <aside className="question-tree-inspector">
             <div className="question-tree-inspector__header">
               <div>
-                <p className="section-heading__eyebrow">Node inspector</p>
+                <p className="section-heading__eyebrow">{t("questionTree.nodeInspector")}</p>
                 <h2 className="page-card__title">{selectedNode.title}</h2>
               </div>
               <QuestionStatusBadge status={selectedNode.status} />
             </div>
             <div className="question-tree-inspector__stats">
               <article>
-                <span>Depth</span>
+                <span>{t("questionTree.depth")}</span>
                 <strong>{selectedNode.depth}</strong>
               </article>
               <article>
-                <span>Siblings</span>
+                <span>{t("questionTree.siblings")}</span>
                 <strong>{siblingCount}</strong>
               </article>
               <article>
-                <span>Difficulty</span>
+                <span>{t("questionTree.difficulty")}</span>
                 <strong>{selectedNode.difficulty}</strong>
               </article>
             </div>
             <div className="question-tree-inspector__panels">
               <div className="question-tree-inspector__panel">
-                <span>Traversal meaning</span>
+                <span>{t("questionTree.traversalMeaning")}</span>
                 <p>
                   {selectedNode.isRoot
-                    ? "This is the root claim. Every deeper node exists to pressure-test one unsupported line in the original answer."
-                    : "Treat this node as the next likely attack point if the parent answer stays vague or weakly evidenced."}
+                    ? t("questionTree.rootMeaning")
+                    : t("questionTree.childMeaning")}
                 </p>
               </div>
               <div className="question-tree-inspector__panel">
-                <span>Relationship</span>
-                <p>{selectedNode.isRoot ? t("questionTree.root") : selectedNode.relationshipType ?? "node"}</p>
-                <p>{selectedNode.parentQuestionId ? `${t("questionTree.parent")} #${selectedNode.parentQuestionId}` : "No parent node"}</p>
+                <span>{t("questionTree.relationship")}</span>
+                <p>{selectedNode.isRoot ? t("questionTree.root") : selectedNode.relationshipType ?? t("questionTree.node")}</p>
+                <p>{selectedNode.parentQuestionId ? `${t("questionTree.parent")} #${selectedNode.parentQuestionId}` : t("questionTree.noParentNode")}</p>
               </div>
             </div>
             <div className="question-tree-inspector__actions">
@@ -124,7 +122,7 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
                 {t("questionTree.answer")}
               </Link>
               <Link className="secondary-button" to={routeConfig.questionTree.buildPath({ questionId: selectedNode.id })}>
-                Re-root from here
+                {t("questionTree.rerootFromHere")}
               </Link>
             </div>
           </aside>

@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import { useLocale } from "../../i18n";
 import { SectionPanel } from "./SectionPanel";
 
 type FilterPanelProps = PropsWithChildren<{
@@ -8,15 +9,18 @@ type FilterPanelProps = PropsWithChildren<{
 
 export function FilterPanel({
   children,
-  title = "Filters",
+  title,
   description,
 }: FilterPanelProps) {
+  const { locale } = useLocale();
+  const resolvedTitle = title ?? (locale === "ko" ? "필터" : "Filters");
+
   return (
     <SectionPanel as="aside" className="filter-panel" variant="muted">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Filters</p>
-          <h2 className="page-card__title">{title}</h2>
+          <p className="section-heading__eyebrow">{resolvedTitle}</p>
+          <h2 className="page-card__title">{resolvedTitle}</h2>
         </div>
       </div>
       {description ? <p className="page-card__body filter-panel__description">{description}</p> : null}

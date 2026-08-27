@@ -20,7 +20,8 @@ import {
 export function ProfilePage() {
   const currentUserQuery = useCurrentUserQuery();
   const { isDesktop } = useLayoutMode();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
   const updateProfileMutation = useUpdateProfileMutation();
   const uploadProfileImageMutation = useUploadProfileImageMutation();
   const [nickname, setNickname] = useState("");
@@ -40,17 +41,33 @@ export function ProfilePage() {
   const experienceYears = Number(yearsOfExperience || currentProfile?.yearsOfExperience || "0");
   const currentCompanyLabel = targetCompanies[0] ?? "Dreamus";
   const targetRoleLabel =
-    experienceYears >= 7 ? "Staff Backend Engineer" : experienceYears >= 4 ? "Senior Backend Engineer" : "Backend Engineer";
+    experienceYears >= 7
+      ? (isKorean ? "Staff Backend Engineer" : "Staff Backend Engineer")
+      : experienceYears >= 4
+        ? (isKorean ? "Senior Backend Engineer" : "Senior Backend Engineer")
+        : (isKorean ? "Backend Engineer" : "Backend Engineer");
   const readinessTopics = [
-    { label: "Backend depth", score: 92 },
-    { label: "Problem solving", score: 85 },
-    { label: "Distributed systems", score: 78 },
-    { label: "Communication", score: 75 },
+    { label: isKorean ? "Backend 깊이" : "Backend depth", score: 92 },
+    { label: isKorean ? "문제 해결" : "Problem solving", score: 85 },
+    { label: isKorean ? "분산 시스템" : "Distributed systems", score: 78 },
+    { label: isKorean ? "커뮤니케이션" : "Communication", score: 75 },
   ];
   const relatedQuestions = [
-    { title: "Design a high-throughput settlement system.", score: 85, label: "System Design" },
-    { title: "How would you ensure idempotency in transaction processing?", score: 82, label: "System Design" },
-    { title: "Why did you choose Kafka for audit logs?", score: 80, label: "Behavioral" },
+    {
+      title: isKorean ? "고처리량 settlement system을 어떻게 설계하겠습니까?" : "Design a high-throughput settlement system.",
+      score: 85,
+      label: "System Design",
+    },
+    {
+      title: isKorean ? "transaction 처리에서 idempotency를 어떻게 보장하겠습니까?" : "How would you ensure idempotency in transaction processing?",
+      score: 82,
+      label: "System Design",
+    },
+    {
+      title: isKorean ? "audit logs에 Kafka를 선택한 이유는 무엇입니까?" : "Why did you choose Kafka for audit logs?",
+      score: 80,
+      label: isKorean ? "행동" : "Behavioral",
+    },
   ];
 
   useEffect(() => {
@@ -100,46 +117,43 @@ export function ProfilePage() {
         <div className="profile-workspace-surface__header">
           <div className="profile-workspace-surface__intro">
             <div className="profile-workspace-surface__eyebrow-row">
-              <span className="page-card__label">Profile workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Control surface</span>
+              <span className="page-card__label">{t("profile.workspaceTag")}</span>
+              <span className="question-status-badge question-status-badge--accent">{t("profile.controlSurface")}</span>
             </div>
             <p className="profile-workspace-surface__breadcrumbs">
-              Identity
+              {isKorean ? "정체성" : "Identity"}
               <span>/</span>
-              Practice defaults
+              {isKorean ? "연습 기본값" : "Practice defaults"}
               <span>/</span>
-              Resume launchers
+              {isKorean ? "이력서 바로가기" : "Resume launchers"}
             </p>
-            <h2 className="profile-workspace-surface__title">Keep account controls calm and separate</h2>
-            <p className="profile-workspace-surface__body">
-              This page should feel like a setup console for interview practice: confirm who you are, define scoring defaults,
-              and keep resume work one step away from account edits.
-            </p>
+            <h2 className="profile-workspace-surface__title">{t("profile.workspaceTitleLong")}</h2>
+            <p className="profile-workspace-surface__body">{t("profile.workspaceBodyLong")}</p>
           </div>
           <div className="profile-workspace-surface__stats">
             <article className="profile-workspace-surface__stat">
-              <span>Primary role</span>
+              <span>{t("profile.primaryRole")}</span>
               <strong>{roleLabel}</strong>
             </article>
             <article className="profile-workspace-surface__stat">
-              <span>Target companies</span>
+              <span>{t("settings.targetCompanies")}</span>
               <strong>{targetCompanyCount}</strong>
             </article>
             <article className="profile-workspace-surface__stat">
-              <span>Daily load</span>
+              <span>{t("settings.dailyLoad")}</span>
               <strong>{normalizedDailyQuestionCount}</strong>
             </article>
             <article className="profile-workspace-surface__stat">
-              <span>Target score</span>
+              <span>{t("profile.targetScore")}</span>
               <strong>{scoreThresholdLabel}</strong>
             </article>
           </div>
         </div>
         <div className="profile-workspace-surface__chips">
           <span className="detail-chip">{`${t("profile.language")} ${languageLabel}`}</span>
-          {currentProfile?.retryEnabled ? <span className="detail-chip detail-chip--accent">Retry queue enabled</span> : null}
+          {currentProfile?.retryEnabled ? <span className="detail-chip detail-chip--accent">{t("profile.retryQueueEnabled")}</span> : null}
           {currentProfile?.jobRole ? <span className="detail-chip">{currentProfile.jobRole}</span> : null}
-          {currentProfile?.passScoreThreshold ? <span className="detail-chip">{`Pass line ${currentProfile.passScoreThreshold}%`}</span> : null}
+          {currentProfile?.passScoreThreshold ? <span className="detail-chip">{`${t("profile.passLinePrefix")} ${currentProfile.passScoreThreshold}%`}</span> : null}
         </div>
       </section>
       {currentUserQuery.isLoading ? (
@@ -187,41 +201,38 @@ export function ProfilePage() {
               <SectionPanel className="career-context-overview-card" variant="muted">
                 <div className="career-context-overview-card__header">
                   <div>
-                    <span className="page-card__label">Career context snapshot</span>
-                    <h2 className="page-card__title">Keep your current role, target role, and company focus visible at a glance</h2>
-                    <p className="page-card__body">
-                      This should read like the top of an interview workspace, not an account form. The goal is to
-                      keep your professional story legible before you jump into editing or practice.
-                    </p>
+                    <span className="page-card__label">{t("profile.careerSnapshot")}</span>
+                    <h2 className="page-card__title">{t("profile.careerSnapshotTitle")}</h2>
+                    <p className="page-card__body">{t("profile.careerSnapshotBody")}</p>
                   </div>
-                  <span className="detail-chip detail-chip--accent">Context map</span>
+                  <span className="detail-chip detail-chip--accent">{t("profile.contextMap")}</span>
                 </div>
                 <div className="career-context-overview-card__metrics">
                   <article className="career-context-overview-card__metric">
-                    <span>Current role</span>
+                    <span>{t("profile.currentRole")}</span>
                     <strong>{roleLabel}</strong>
                     <p>{currentCompanyLabel}</p>
                   </article>
                   <article className="career-context-overview-card__metric">
-                    <span>Experience</span>
+                    <span>{t("profile.experience")}</span>
                     <strong>{experienceYears > 0 ? `${experienceYears.toFixed(1)}` : "0.0"}</strong>
-                    <p>Years</p>
+                    <p>{t("profile.years")}</p>
                   </article>
                   <article className="career-context-overview-card__metric">
-                    <span>Target role</span>
+                    <span>{t("profile.targetRole")}</span>
                     <strong>{targetRoleLabel}</strong>
-                    <p>Next level</p>
+                    <p>{t("profile.nextLevel")}</p>
                   </article>
                   <article className="career-context-overview-card__metric">
-                    <span>Target companies</span>
+                    <span>{t("settings.targetCompanies")}</span>
                     <strong>{targetCompanies.length}</strong>
-                    <p>{targetCompanies.length > 0 ? targetCompanies.slice(0, 3).join(" · ") : "No companies yet"}</p>
+                    <p>{targetCompanies.length > 0 ? targetCompanies.slice(0, 3).join(" · ") : t("profile.noCompaniesYet")}</p>
                   </article>
                 </div>
                 <div className="career-context-overview-card__readiness">
                   <div className="career-context-overview-card__readiness-summary">
-                    <span className="page-card__label">Interview readiness by topic</span>
-                    <p>Use this as a context layer for the rest of the page so strengths and weak areas are visible before editing identity details.</p>
+                    <span className="page-card__label">{t("profile.readinessByTopic")}</span>
+                    <p>{t("profile.readinessByTopicBody")}</p>
                   </div>
                   <div className="career-context-overview-card__bars">
                     {readinessTopics.map((topic) => (
@@ -245,16 +256,13 @@ export function ProfilePage() {
                     <h2 className="page-card__title">{t("profile.workspaceTitle")}</h2>
                     <p className="page-card__body">{t("profile.workspaceBody")}</p>
                   </div>
-                  <span className="detail-chip detail-chip--accent">Launchers</span>
+                  <span className="detail-chip detail-chip--accent">{t("profile.launcherTag")}</span>
                 </div>
                 <div className="profile-workspace-groups">
                   <div className="profile-workspace-group">
                     <div className="profile-workspace-group__header">
-                      <span className="profile-workspace-group__label">Resume workspace</span>
-                      <p className="profile-workspace-group__body">
-                        Move into source-of-truth review, resume evidence checks, and skills mapped
-                        from resume claims.
-                      </p>
+                      <span className="profile-workspace-group__label">{t("profile.resumeWorkspace")}</span>
+                      <p className="profile-workspace-group__body">{t("profile.resumeWorkspaceBody")}</p>
                     </div>
                     <div className="page-card__actions">
                       <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
@@ -270,11 +278,8 @@ export function ProfilePage() {
                   </div>
                   <div className="profile-workspace-group">
                     <div className="profile-workspace-group__header">
-                      <span className="profile-workspace-group__label">Interview workspace</span>
-                      <p className="profile-workspace-group__body">
-                        Jump directly into the mock interview flow after the setup surface is
-                        stable.
-                      </p>
+                      <span className="profile-workspace-group__label">{t("profile.interviewWorkspace")}</span>
+                      <p className="profile-workspace-group__body">{t("profile.interviewWorkspaceBody")}</p>
                     </div>
                     <div className="page-card__actions">
                       <Link className="primary-button" to={routeConfig.interview.buildPath()}>
@@ -289,29 +294,26 @@ export function ProfilePage() {
               <SectionPanel className="career-context-detail-rail" variant="muted">
                 <div className="career-context-detail-rail__header">
                   <div>
-                    <span className="page-card__label">Project detail</span>
+                    <span className="page-card__label">{t("profile.projectDetail")}</span>
                     <h2 className="page-card__title">Dreamus Settlement System</h2>
                   </div>
-                  <span className="detail-chip">Featured project</span>
+                  <span className="detail-chip">{t("profile.featuredProject")}</span>
                 </div>
                 <div className="career-context-detail-rail__meta">
                   <strong>{roleLabel}</strong>
-                  <span>{experienceYears > 0 ? `${Math.max(1, Math.round(experienceYears * 12))} months of active context` : "Current context"}</span>
+                  <span>{experienceYears > 0 ? `${Math.max(1, Math.round(experienceYears * 12))}${isKorean ? t("profile.contextMonthsSuffix") : ` ${t("profile.contextMonthsSuffix")}`}` : t("profile.currentContext")}</span>
                 </div>
-                <p className="page-card__body">
-                  Use one representative project as the source of truth anchor for why your backend decisions, trade-offs,
-                  and follow-up answers are credible.
-                </p>
+                <p className="page-card__body">{t("profile.projectDetailBody")}</p>
                 <div className="career-context-detail-rail__section">
-                  <span className="career-context-detail-rail__label">Key contributions</span>
+                  <span className="career-context-detail-rail__label">{t("profile.keyContributions")}</span>
                   <div className="career-context-detail-rail__list">
-                    <div>Designed scalable transaction processing architecture.</div>
-                    <div>Implemented idempotent flows and operational audit logging.</div>
-                    <div>Improved system reliability with queue-backed recovery patterns.</div>
+                    <div>{t("profile.contribution1")}</div>
+                    <div>{t("profile.contribution2")}</div>
+                    <div>{t("profile.contribution3")}</div>
                   </div>
                 </div>
                 <div className="career-context-detail-rail__section">
-                  <span className="career-context-detail-rail__label">Related interview questions</span>
+                  <span className="career-context-detail-rail__label">{t("profile.relatedInterviewQuestions")}</span>
                   <div className="career-context-detail-rail__questions">
                     {relatedQuestions.map((question) => (
                       <article className="career-context-detail-rail__question" key={question.title}>
@@ -326,7 +328,7 @@ export function ProfilePage() {
                 </div>
                 <div className="page-card__actions">
                   <Link className="primary-button" to={routeConfig.practice.buildPath()}>
-                    Practice this context
+                    {t("profile.practiceThisContext")}
                   </Link>
                 </div>
               </SectionPanel>
@@ -354,41 +356,35 @@ export function ProfilePage() {
               <SectionPanel className="profile-workspace-card" variant="muted">
                 <div className="profile-workspace-card__header">
                   <div>
-                    <span className="page-card__label">Operations</span>
-                    <h2 className="page-card__title">Move from identity into settings and company preparation on purpose</h2>
-                    <p className="page-card__body">
-                      Practice defaults, appearance, review behavior, and company targeting now have their own workspaces.
-                    </p>
+                    <span className="page-card__label">{t("profile.operations")}</span>
+                    <h2 className="page-card__title">{t("profile.operationsTitle")}</h2>
+                    <p className="page-card__body">{t("profile.operationsBody")}</p>
                   </div>
-                  <span className="detail-chip detail-chip--accent">Separated controls</span>
+                  <span className="detail-chip detail-chip--accent">{t("profile.separatedControls")}</span>
                 </div>
                 <div className="profile-workspace-groups">
                   <div className="profile-workspace-group">
                     <div className="profile-workspace-group__header">
-                      <span className="profile-workspace-group__label">Settings workspace</span>
-                      <p className="profile-workspace-group__body">
-                        Adjust scoring defaults, language, appearance, and review notification behavior.
-                      </p>
+                      <span className="profile-workspace-group__label">{t("profile.settingsWorkspace")}</span>
+                      <p className="profile-workspace-group__body">{t("profile.settingsWorkspaceBody")}</p>
                     </div>
                     <div className="page-card__actions">
                       <Link className="primary-button" to={routeConfig.settings.buildPath()}>
-                        Open settings
+                        {t("profile.openSettings")}
                       </Link>
                       <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>
-                        Scheduled reviews
+                        {t("sidebar.scheduledReviews")}
                       </Link>
                     </div>
                   </div>
                   <div className="profile-workspace-group">
                     <div className="profile-workspace-group__header">
-                      <span className="profile-workspace-group__label">Company preparation</span>
-                      <p className="profile-workspace-group__body">
-                        Keep company lanes and preparation priorities outside the account editing surface.
-                      </p>
+                      <span className="profile-workspace-group__label">{t("profile.companyPreparation")}</span>
+                      <p className="profile-workspace-group__body">{t("profile.companyPreparationBody")}</p>
                     </div>
                     <div className="page-card__actions">
                       <Link className="secondary-button" to={routeConfig.targetCompanies.buildPath()}>
-                        Open target companies
+                        {t("profile.openTargetCompanies")}
                       </Link>
                     </div>
                   </div>

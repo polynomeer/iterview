@@ -23,7 +23,7 @@ export function BottomTabBar() {
   }
 
   return (
-    <nav aria-label="Primary" className="bottom-tab-bar">
+    <nav aria-label={t("sidebar.workspace")} className="bottom-tab-bar">
       {tabRoutes.map((route, index) => (
         <NavLink
           key={route.path}

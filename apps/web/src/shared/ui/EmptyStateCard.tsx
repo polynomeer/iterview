@@ -1,3 +1,4 @@
+import { useLocale } from "../i18n";
 import { StateCard } from "./StateCard";
 
 type EmptyStateCardProps = {
@@ -11,10 +12,12 @@ type EmptyStateCardProps = {
 };
 
 export function EmptyStateCard({
-  label = "Empty",
+  label,
   title,
   body,
   action,
 }: EmptyStateCardProps) {
-  return <StateCard action={action} body={body} label={label} title={title} tone="empty" />;
+  const { t } = useLocale();
+
+  return <StateCard action={action} body={body} label={label ?? t("common.emptyState")} title={title} tone="empty" />;
 }

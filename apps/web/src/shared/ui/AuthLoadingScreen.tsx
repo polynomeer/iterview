@@ -1,3 +1,5 @@
+import { useLocale } from "../i18n";
+
 type AuthLoadingScreenProps = {
   title: string;
   description: string;
@@ -17,22 +19,34 @@ export function AuthLoadingScreen({
   description,
   statusTitle,
   statusBody,
-  eyebrow = "Auth",
-  statusEyebrow = "Loading",
+  eyebrow,
+  statusEyebrow,
   statusMeta,
-  checksEyebrow = "Session checks",
-  checks = [
-    "Restore the saved access token",
-    "Load the current user profile",
-    "Open protected routes after verification",
-  ],
-  nextEyebrow = "What opens next",
-  nextBody = "Profile, resume intelligence, skill radar, review queue, and interview session tools become available as soon as the session is confirmed.",
+  checksEyebrow,
+  checks,
+  nextEyebrow,
+  nextBody,
 }: AuthLoadingScreenProps) {
+  const { t } = useLocale();
+  const resolvedEyebrow = eyebrow ?? t("auth.loadingEyebrow");
+  const resolvedStatusEyebrow = statusEyebrow ?? t("common.loadingState");
+  const resolvedChecksEyebrow = checksEyebrow ?? t("auth.sessionChecks");
+  const resolvedChecks = checks ?? [
+    t("auth.sessionCheckRestoreToken"),
+    t("auth.sessionCheckLoadProfile"),
+    t("auth.sessionCheckOpenRoutes"),
+  ];
+  const resolvedNextEyebrow = nextEyebrow ?? t("auth.whatOpensNext");
+  const resolvedNextBody =
+    nextBody ??
+    (t("common.languageKorean") === "한국어"
+      ? "세션이 확인되는 즉시 프로필, 이력서 인텔리전스, 스킬 레이더, 복습 큐, 인터뷰 세션 도구를 사용할 수 있습니다."
+      : "Profile, resume intelligence, skill radar, review queue, and interview session tools become available as soon as the session is confirmed.");
+
   return (
     <section className="auth-loading-screen">
       <div className="auth-loading-screen__hero">
-        <span className="page-card__label">{eyebrow}</span>
+        <span className="page-card__label">{resolvedEyebrow}</span>
         <h1 className="auth-loading-screen__title">{title}</h1>
         <p className="auth-loading-screen__description">{description}</p>
         <div className="auth-loading-screen__progress">
@@ -42,24 +56,24 @@ export function AuthLoadingScreen({
 
       <div className="auth-loading-screen__grid">
         <section className="auth-loading-screen__panel auth-loading-screen__panel--primary">
-          <span className="page-card__label">{statusEyebrow}</span>
+          <span className="page-card__label">{resolvedStatusEyebrow}</span>
           <h2 className="page-card__title">{statusTitle}</h2>
           <p className="page-card__body">{statusBody}</p>
           {statusMeta ? <p className="auth-loading-screen__meta">{statusMeta}</p> : null}
         </section>
 
         <section className="auth-loading-screen__panel">
-          <span className="page-card__label">{checksEyebrow}</span>
+          <span className="page-card__label">{resolvedChecksEyebrow}</span>
           <ul className="auth-loading-screen__list">
-            {checks.map((item) => (
+            {resolvedChecks.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </section>
 
         <section className="auth-loading-screen__panel">
-          <span className="page-card__label">{nextEyebrow}</span>
-          <p className="page-card__body">{nextBody}</p>
+          <span className="page-card__label">{resolvedNextEyebrow}</span>
+          <p className="page-card__body">{resolvedNextBody}</p>
         </section>
       </div>
     </section>

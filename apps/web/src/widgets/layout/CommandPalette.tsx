@@ -1,18 +1,25 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { commandPaletteItems, type CommandPaletteItem } from "./commandPaletteData";
+import { useLocale } from "../../shared/i18n";
+import { getCommandPaletteItems, type CommandPaletteItem } from "./commandPaletteData";
 
 type CommandPaletteProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+type LocalizedCommandPaletteItem = CommandPaletteItem & {
+  title: string;
+  subtitle: string;
+  section: string;
+};
+
 function normalizeSearchValue(value: string) {
   return value.toLowerCase().trim();
 }
 
-function groupPaletteItems(items: CommandPaletteItem[]) {
-  return items.reduce<Record<string, CommandPaletteItem[]>>((groups, item) => {
+function groupPaletteItems(items: LocalizedCommandPaletteItem[]) {
+  return items.reduce<Record<string, LocalizedCommandPaletteItem[]>>((groups, item) => {
     if (!groups[item.section]) {
       groups[item.section] = [];
     }
@@ -25,10 +32,21 @@ function groupPaletteItems(items: CommandPaletteItem[]) {
 export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLocale();
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const commandPaletteItems = useMemo(
+    () =>
+      getCommandPaletteItems().map((item) => ({
+        ...item,
+        title: t(item.titleKey),
+        subtitle: t(item.subtitleKey),
+        section: t(item.sectionKey),
+      })),
+    [t],
+  );
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = normalizeSearchValue(query);
@@ -41,7 +59,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       const searchText = [item.title, item.subtitle, ...item.keywords].join(" ").toLowerCase();
       return searchText.includes(normalizedQuery);
     });
-  }, [query]);
+  }, [commandPaletteItems, query]);
 
   const groupedItems = useMemo(() => groupPaletteItems(filteredItems), [filteredItems]);
 
@@ -129,16 +147,16 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       >
         <div className="command-palette__search">
           <label className="command-palette__search-label" htmlFor={inputId}>
-            Search Iterview
+            {t("commandPalette.searchLabel")}
           </label>
           <div className="command-palette__search-row">
             <input
               ref={inputRef}
-              aria-label="Search Iterview"
+              aria-label={t("commandPalette.searchLabel")}
               className="command-palette__search-input"
               id={inputId}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search questions, skills, resume evidence, companies, notes, and commands"
+              placeholder={t("commandPalette.searchPlaceholder")}
               type="search"
               value={query}
             />
@@ -147,12 +165,12 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             </span>
           </div>
           <p className="command-palette__search-meta">
-            Current workspace: <strong>{location.pathname}</strong>
+            {t("commandPalette.currentWorkspace")}: <strong>{location.pathname}</strong>
           </p>
         </div>
 
         {filteredItems.length > 0 ? (
-          <div aria-label="Command palette results" className="command-palette__results" role="listbox">
+          <div aria-label={t("commandPalette.results")} className="command-palette__results" role="listbox">
             {Object.entries(groupedItems).map(([section, items]) => (
               <section className="command-palette__group" key={section}>
                 <header className="command-palette__group-header">
@@ -190,8 +208,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           </div>
         ) : (
           <div className="command-palette__empty">
-            <strong>No matching workspace result</strong>
-            <span>Try terms like transaction, kafka, metrics, Stripe, or review queue.</span>
+            <strong>{t("commandPalette.noMatchTitle")}</strong>
+            <span>{t("commandPalette.noMatchBody")}</span>
           </div>
         )}
       </div>

@@ -1,3 +1,5 @@
+import { useLocale } from "../i18n";
+
 export type SkillSummaryItem = {
   id: string;
   label: string;
@@ -15,16 +17,18 @@ type SkillSummaryBlockProps = {
 
 export function SkillSummaryBlock({
   title,
-  eyebrow = "Skill summary",
+  eyebrow,
   items,
-  emptyMessage = "No skill summary is available yet.",
+  emptyMessage,
 }: SkillSummaryBlockProps) {
+  const { locale, t } = useLocale();
+
   return (
     <section className="page-card skill-summary-block">
-      <span className="page-card__label">{eyebrow}</span>
+      <span className="page-card__label">{eyebrow ?? (t("navigation.skills"))}</span>
       <h2 className="page-card__title">{title}</h2>
       {items.length === 0 ? (
-        <p className="page-card__body">{emptyMessage}</p>
+        <p className="page-card__body">{emptyMessage ?? (locale === "ko" ? "아직 스킬 요약이 없습니다." : "No skill summary is available yet.")}</p>
       ) : (
         <div className="skill-summary-block__grid">
           {items.map((item) => (

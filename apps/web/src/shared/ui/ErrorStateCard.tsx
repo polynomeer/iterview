@@ -1,3 +1,4 @@
+import { useLocale } from "../i18n";
 import { StateCard } from "./StateCard";
 
 type ErrorStateCardProps = {
@@ -10,19 +11,21 @@ type ErrorStateCardProps = {
 };
 
 export function ErrorStateCard({
-  label = "Error",
+  label,
   title,
   body,
   details,
-  actionLabel = "Try again",
+  actionLabel,
   onAction,
 }: ErrorStateCardProps) {
+  const { t } = useLocale();
+
   return (
     <StateCard
-      action={onAction ? { label: actionLabel, onAction } : undefined}
+      action={onAction ? { label: actionLabel ?? t("common.tryAgain"), onAction } : undefined}
       body={body}
       details={details}
-      label={label}
+      label={label ?? t("common.errorState")}
       title={title}
       tone="error"
     />

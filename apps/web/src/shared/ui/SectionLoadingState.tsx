@@ -1,3 +1,4 @@
+import { useLocale } from "../i18n";
 import { StateCard } from "./StateCard";
 
 type SectionLoadingStateProps = {
@@ -7,9 +8,11 @@ type SectionLoadingStateProps = {
 };
 
 export function SectionLoadingState({
-  label = "Loading",
+  label,
   title,
   body,
 }: SectionLoadingStateProps) {
-  return <StateCard body={body} label={label} size="section" title={title} tone="loading" />;
+  const { t } = useLocale();
+
+  return <StateCard body={body} label={label ?? t("common.loadingState")} size="section" title={title} tone="loading" />;
 }
