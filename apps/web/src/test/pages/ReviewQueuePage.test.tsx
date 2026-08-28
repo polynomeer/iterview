@@ -51,7 +51,7 @@ describe("ReviewQueuePage", () => {
 
     expect(screen.getByText("Explain how you debugged a latency spike")).toBeInTheDocument();
     expect(screen.getByText("Move items forward intentionally")).toBeInTheDocument();
-    expect(screen.getByText("Stay inside one interview preparation loop")).toBeInTheDocument();
+    expect(screen.getByText("One connected preparation loop")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /Weak nodes/i }).length).toBeGreaterThanOrEqual(1);
     expect(document.querySelector(".review-queue-layout--desktop")).not.toBeNull();
   });

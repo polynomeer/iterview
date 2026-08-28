@@ -35,3 +35,11 @@ export function getStoredAppLocale(storage?: Storage | null): AppLocale | null {
 
   return normalizeAppLocale(storage.getItem(appLocaleStorageKey));
 }
+
+export function getCurrentAppLocale(): AppLocale {
+  if (typeof window === "undefined") {
+    return "ko";
+  }
+
+  return getStoredAppLocale(window.localStorage) ?? "ko";
+}

@@ -1,6 +1,7 @@
 import { toArray } from "../../shared/lib/collection";
 import { formatApiDateTime } from "../../shared/lib/date";
 import type { QuestionAnswerHistoryResponseDto } from "../../shared/types/answer-history";
+import { getCurrentAppLocale } from "../../shared/i18n/locale";
 
 export type AnswerHistoryItemModel = {
   answerAttemptId: string;
@@ -17,13 +18,16 @@ export type AnswerHistoryModel = {
 export function mapQuestionAnswerHistoryResponseDtoToModel(
   response: QuestionAnswerHistoryResponseDto,
 ): AnswerHistoryModel {
+  const isKorean = getCurrentAppLocale() === "ko";
   return {
     items: toArray(response).map((item) => ({
       answerAttemptId: String(item.id),
-      submittedAtLabel: formatApiDateTime(item.submittedAt) ?? "Recent attempt",
+      submittedAtLabel: formatApiDateTime(item.submittedAt) ?? (isKorean ? "최근 시도" : "Recent attempt"),
       totalScoreLabel:
         item.score?.totalScore !== undefined && item.score.totalScore !== null
-          ? `Score ${item.score.totalScore}`
+          ? isKorean
+            ? `점수 ${item.score.totalScore}`
+            : `Score ${item.score.totalScore}`
           : null,
       evaluationResultLabel: item.score?.evaluationResult ?? null,
       progressStatusLabel: item.answerMode ?? null,

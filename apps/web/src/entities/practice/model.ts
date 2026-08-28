@@ -6,6 +6,7 @@ import type {
   PracticeQuestionItemDto,
 } from "../../shared/types/practice";
 import { toArray } from "../../shared/lib/collection";
+import { getCurrentAppLocale } from "../../shared/i18n/locale";
 
 export type PracticeQuestionItemModel = {
   id: string;
@@ -60,10 +61,17 @@ function mapProgressSummaryLabel(summary: PracticeQuestionItemDto["userProgressS
     return null;
   }
 
+  const isKorean = getCurrentAppLocale() === "ko";
   const attemptsCount = summary.attemptsCount ?? 0;
-  const attempts = `${attemptsCount} attempt${attemptsCount === 1 ? "" : "s"}`;
+  const attempts = isKorean ? `시도 ${attemptsCount}회` : `${attemptsCount} attempt${attemptsCount === 1 ? "" : "s"}`;
   const score =
-    summary.bestScore !== undefined && summary.bestScore !== null ? `Best ${summary.bestScore}` : "No score yet";
+    summary.bestScore !== undefined && summary.bestScore !== null
+      ? isKorean
+        ? `최고 ${summary.bestScore}`
+        : `Best ${summary.bestScore}`
+      : isKorean
+        ? "아직 점수 없음"
+        : "No score yet";
   const status = summary.progressStatus ? ` · ${summary.progressStatus}` : "";
 
   return `${attempts} · ${score}${status}`;
@@ -72,6 +80,7 @@ function mapProgressSummaryLabel(summary: PracticeQuestionItemDto["userProgressS
 export function mapPracticeListResponseDtoToModel(
   response: PracticeListResponse,
 ): PracticeListModel {
+  const isKorean = getCurrentAppLocale() === "ko";
   const normalizedResponse: PracticeListResponseDto = Array.isArray(response)
     ? { items: response }
     : response;
@@ -81,14 +90,16 @@ export function mapPracticeListResponseDtoToModel(
       id: item.id,
       title: item.title,
       prompt: item.prompt,
-      categoryLabel: item.category ?? "General",
-      companyLabel: item.company ?? "General",
-      difficultyLabel: item.difficulty ?? "General",
+      categoryLabel: item.category ?? (isKorean ? "일반" : "General"),
+      companyLabel: item.company ?? (isKorean ? "일반" : "General"),
+      difficultyLabel: item.difficulty ?? (isKorean ? "일반" : "General"),
       statusLabel: item.status ?? null,
       progressSummaryLabel: mapProgressSummaryLabel(item.userProgressSummary),
       resumeRelevanceLabel:
         item.resumeRelevance?.score !== undefined && item.resumeRelevance.score !== null
-          ? `${item.resumeRelevance.score}% match`
+          ? isKorean
+            ? `${item.resumeRelevance.score}% 일치`
+            : `${item.resumeRelevance.score}% match`
           : null,
       resumeRelevanceReason: item.resumeRelevance?.reason ?? null,
       relatedSkillLabels: toArray(item.relatedSkillCodes),

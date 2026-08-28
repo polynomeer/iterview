@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { ReviewQueueItemModel } from "../../entities/review-queue/model";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 import { QuestionStatusBadge } from "../../shared/ui/QuestionStatusBadge";
 import { QueueActionButtons } from "./QueueActionButtons";
 
@@ -17,14 +18,28 @@ export function ReviewQueueItem({
   onDone,
   pendingAction = null,
 }: ReviewQueueItemProps) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const disabled = pendingAction !== null;
-  const priorityText = item.priorityLabel ?? "Priority pending";
-  const timingText = item.scheduledLabel ?? "No schedule";
+  const priorityText = item.priorityLabel ?? (isKorean ? "우선순위 미정" : "Priority pending");
+  const timingText = item.scheduledLabel ?? (isKorean ? "일정 없음" : "No schedule");
+  const reasonTypeText = item.reasonTypeLabel.toLowerCase();
+  const isStudyLane =
+    reasonTypeText.includes("depth") ||
+    reasonTypeText.includes("skill") ||
+    reasonTypeText.includes("깊이") ||
+    reasonTypeText.includes("스킬");
   const executionLane = item.sourceAnswerAttemptId
-    ? "Answer-ready"
-    : item.reasonTypeLabel.toLowerCase().includes("depth") || item.reasonTypeLabel.toLowerCase().includes("skill")
-      ? "Needs study"
-      : "Quick retry";
+    ? isKorean
+      ? "답변 준비됨"
+      : "Answer-ready"
+    : isStudyLane
+      ? isKorean
+        ? "학습 필요"
+        : "Needs study"
+      : isKorean
+        ? "빠른 재시도"
+        : "Quick retry";
 
   return (
     <article className="list-item-card review-queue-item-card">
@@ -60,26 +75,28 @@ export function ReviewQueueItem({
           className="secondary-button"
           to={routeConfig.questionDetail.buildPath({ questionId: item.questionId })}
         >
-          Inspect
+          {isKorean ? "검토" : "Inspect"}
         </Link>
         <Link
           className="primary-button"
           to={routeConfig.answerEditor.buildPath({ questionId: item.questionId })}
         >
-          Practice now
+          {isKorean ? "지금 연습" : "Practice now"}
         </Link>
         {item.sourceAnswerAttemptId ? (
           <Link
             className="secondary-button"
             to={routeConfig.resultAnalysis.buildPath({ answerAttemptId: item.sourceAnswerAttemptId })}
           >
-            Latest result
+            {isKorean ? "최신 결과" : "Latest result"}
           </Link>
         ) : null}
       </div>
       <div className="review-queue-item-card__footer">
         <p className="review-queue-item-card__note">
-          Resolve now only if you can finish the answer loop; otherwise defer intentionally.
+          {isKorean
+            ? "답변 루프를 지금 끝낼 수 있을 때만 바로 처리하고, 아니면 의도적으로 미루세요."
+            : "Resolve now only if you can finish the answer loop; otherwise defer intentionally."}
         </p>
         <QueueActionButtons
           disabled={disabled}

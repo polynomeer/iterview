@@ -83,7 +83,7 @@ describe("FeedPage", () => {
       { route: "/feed" },
     );
 
-    expect(screen.getByText("Your feed is available after sign-in")).toBeInTheDocument();
+    expect(screen.getByText("Your branch feed unlocks after sign-in")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute("href", "/login");
     expect(screen.getByRole("link", { name: "Browse practice questions" })).toHaveAttribute(
       "href",
@@ -114,7 +114,7 @@ describe("FeedPage", () => {
     );
 
     expect(
-      screen.getByText("Read the market before choosing the next branch to practice"),
+      screen.getByText("Use external signal to narrow the next question, not to open endless browsing"),
     ).toBeInTheDocument();
     expect(document.querySelector(".feed-layout--desktop")).not.toBeNull();
   });
