@@ -15,6 +15,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
+import { useLocale } from "../../shared/i18n";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
@@ -394,6 +395,7 @@ function renderPreviewTextWithSelection(text: string, selectedText: string | nul
 function renderMarkdownDocumentPreview(
   markdownSource: string,
   options?: {
+    isKorean?: boolean;
     selectedText?: string | null;
     tableOfContents?: Array<{ id: string; nodeId: string; title: string }>;
     editable?: boolean;
@@ -427,18 +429,28 @@ function renderMarkdownDocumentPreview(
     const content = descriptor.content;
     const placeholder =
       descriptor.type === "bullet"
-        ? "List item"
+        ? options?.isKorean
+          ? "목록 항목"
+          : "List item"
         : descriptor.type === "quote"
-          ? "Quote"
+          ? options?.isKorean
+            ? "인용문"
+            : "Quote"
           : descriptor.type === "h1"
-            ? "Title"
+            ? options?.isKorean
+              ? "제목"
+              : "Title"
             : descriptor.type === "h2" || descriptor.type === "h3"
-              ? "Heading"
-              : "Write here";
+              ? options?.isKorean
+                ? "헤딩"
+                : "Heading"
+              : options?.isKorean
+                ? "여기에 작성"
+                : "Write here";
 
     return (
       <div
-        aria-label={`Editable line ${lineIndex + 1}`}
+        aria-label={options?.isKorean ? `편집 가능한 줄 ${lineIndex + 1}` : `Editable line ${lineIndex + 1}`}
         className={`${className} resume-editor-document-preview__editable`}
         contentEditable
         data-placeholder={placeholder}
@@ -473,7 +485,7 @@ function renderMarkdownDocumentPreview(
       >
         <div className="resume-editor-document-preview__controls">
           <button
-            aria-label={`Add line after ${lineIndex + 1}`}
+            aria-label={options?.isKorean ? `${lineIndex + 1}번 줄 다음에 줄 추가` : `Add line after ${lineIndex + 1}`}
             className="resume-editor-document-preview__handle"
             onClick={() => options?.onAddLine?.(lineIndex)}
             type="button"
@@ -481,7 +493,7 @@ function renderMarkdownDocumentPreview(
             +
           </button>
           <button
-            aria-label={`Preview line menu ${lineIndex + 1}`}
+            aria-label={options?.isKorean ? `${lineIndex + 1}번 줄 메뉴` : `Preview line menu ${lineIndex + 1}`}
             className="resume-editor-document-preview__grip"
             onClick={(event) => options?.onToggleLineMenu?.(lineIndex, event.currentTarget)}
             type="button"
@@ -491,14 +503,14 @@ function renderMarkdownDocumentPreview(
         </div>
         <div className="resume-editor-document-preview__content">{content}</div>
         {hasReviewSignals ? (
-          <div className="resume-editor-document-preview__signals" aria-label={`Review signals ${lineIndex + 1}`}>
+          <div className="resume-editor-document-preview__signals" aria-label={options?.isKorean ? `검토 신호 ${lineIndex + 1}` : `Review signals ${lineIndex + 1}`}>
             {lineSignal.commentCount > 0 ? (
               <button
-                aria-label={`${lineSignal.commentCount} comment threads on this line`}
+                aria-label={options?.isKorean ? `이 줄의 댓글 스레드 ${lineSignal.commentCount}개` : `${lineSignal.commentCount} comment threads on this line`}
                 className="detail-chip detail-chip--interactive detail-chip--accent resume-editor-document-preview__signal"
-                data-tooltip={`${lineSignal.commentCount} comment thread${lineSignal.commentCount > 1 ? "s" : ""}`}
+                data-tooltip={options?.isKorean ? `댓글 스레드 ${lineSignal.commentCount}개` : `${lineSignal.commentCount} comment thread${lineSignal.commentCount > 1 ? "s" : ""}`}
                 onClick={() => options?.onReviewSignalClick?.("comments", lineIndex)}
-                title={`${lineSignal.commentCount} comment thread${lineSignal.commentCount > 1 ? "s" : ""}`}
+                title={options?.isKorean ? `댓글 스레드 ${lineSignal.commentCount}개` : `${lineSignal.commentCount} comment thread${lineSignal.commentCount > 1 ? "s" : ""}`}
                 type="button"
               >
                 C {lineSignal.commentCount}
@@ -506,11 +518,11 @@ function renderMarkdownDocumentPreview(
             ) : null}
             {lineSignal.cardCount > 0 ? (
               <button
-                aria-label={`${lineSignal.cardCount} question cards on this line`}
+                aria-label={options?.isKorean ? `이 줄의 질문 카드 ${lineSignal.cardCount}개` : `${lineSignal.cardCount} question cards on this line`}
                 className="detail-chip detail-chip--interactive detail-chip--neutral resume-editor-document-preview__signal"
-                data-tooltip={`${lineSignal.cardCount} question card${lineSignal.cardCount > 1 ? "s" : ""}`}
+                data-tooltip={options?.isKorean ? `질문 카드 ${lineSignal.cardCount}개` : `${lineSignal.cardCount} question card${lineSignal.cardCount > 1 ? "s" : ""}`}
                 onClick={() => options?.onReviewSignalClick?.("question-cards", lineIndex)}
-                title={`${lineSignal.cardCount} question card${lineSignal.cardCount > 1 ? "s" : ""}`}
+                title={options?.isKorean ? `질문 카드 ${lineSignal.cardCount}개` : `${lineSignal.cardCount} question card${lineSignal.cardCount > 1 ? "s" : ""}`}
                 type="button"
               >
                 Q {lineSignal.cardCount}
@@ -518,11 +530,11 @@ function renderMarkdownDocumentPreview(
             ) : null}
             {lineSignal.suggestionCount > 0 ? (
               <button
-                aria-label={`${lineSignal.suggestionCount} suggestions linked to this line`}
+                aria-label={options?.isKorean ? `이 줄에 연결된 제안 ${lineSignal.suggestionCount}개` : `${lineSignal.suggestionCount} suggestions linked to this line`}
                 className="detail-chip detail-chip--interactive resume-editor-document-preview__signal"
-                data-tooltip={`${lineSignal.suggestionCount} suggestion${lineSignal.suggestionCount > 1 ? "s" : ""}`}
+                data-tooltip={options?.isKorean ? `제안 ${lineSignal.suggestionCount}개` : `${lineSignal.suggestionCount} suggestion${lineSignal.suggestionCount > 1 ? "s" : ""}`}
                 onClick={() => options?.onReviewSignalClick?.("suggestions", lineIndex)}
-                title={`${lineSignal.suggestionCount} suggestion${lineSignal.suggestionCount > 1 ? "s" : ""}`}
+                title={options?.isKorean ? `제안 ${lineSignal.suggestionCount}개` : `${lineSignal.suggestionCount} suggestion${lineSignal.suggestionCount > 1 ? "s" : ""}`}
                 type="button"
               >
                 S {lineSignal.suggestionCount}
@@ -808,6 +820,8 @@ function getLineIndexForOffset(value: string, offset: number) {
 }
 
 export function ResumeEditorPage() {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const { versionId } = useParams<{ versionId: string }>();
   const safeVersionId = versionId ?? "";
   const [searchParams, setSearchParams] = useSearchParams();
@@ -1001,40 +1015,40 @@ export function ResumeEditorPage() {
     return [
       snapshotsQuery.data.profile?.summaryText
         ? {
-            title: "Profile summary",
+            title: isKorean ? "프로필 요약" : "Profile summary",
             body: snapshotsQuery.data.profile.summaryText,
           }
         : null,
       snapshotsQuery.data.skills.length > 0
         ? {
-            title: "Skills",
+            title: isKorean ? "스킬" : "Skills",
             body: snapshotsQuery.data.skills.map((skill) => skill.label).join(", "),
           }
         : null,
       snapshotsQuery.data.experiences[0]
         ? {
-            title: "Source experience",
+            title: isKorean ? "원본 경험" : "Source experience",
             body: snapshotsQuery.data.experiences[0].impactText ?? snapshotsQuery.data.experiences[0].summary,
           }
         : null,
       snapshotsQuery.data.projects[0]
         ? {
-            title: "Source project",
+            title: isKorean ? "원본 프로젝트" : "Source project",
             body: snapshotsQuery.data.projects[0].contentText ?? snapshotsQuery.data.projects[0].summary,
           }
         : null,
     ].filter(Boolean) as Array<{ title: string; body: string }>;
-  }, [snapshotsQuery.data]);
+  }, [isKorean, snapshotsQuery.data]);
 
   const primarySidePanels: Array<[EditorSidePanel, string]> = [
-    ["comments", "Comments"],
-    ["question-cards", "Question cards"],
-    ["suggestions", "Suggestions"],
+    ["comments", isKorean ? "댓글" : "Comments"],
+    ["question-cards", isKorean ? "질문 카드" : "Question cards"],
+    ["suggestions", isKorean ? "제안" : "Suggestions"],
   ];
 
   const secondarySidePanels: Array<[EditorSidePanel, string]> = [
-    ["source", "Source"],
-    ["presence", "Presence"],
+    ["source", isKorean ? "원본" : "Source"],
+    ["presence", isKorean ? "참여 상태" : "Presence"],
   ];
 
   const isSecondaryPanelActive = activeSidePanel === "source" || activeSidePanel === "presence";
@@ -1042,33 +1056,45 @@ export function ResumeEditorPage() {
     ? [
         {
           panelId: "comments" as ReviewSignalType,
-          label: "Comments",
+          label: isKorean ? "댓글" : "Comments",
           value: String(workspaceQuery.data.commentSummary.totalCount),
           helper:
             workspaceQuery.data.commentSummary.openCount > 0
-              ? `${workspaceQuery.data.commentSummary.openCount} open`
-              : "No open threads",
+              ? isKorean
+                ? `${workspaceQuery.data.commentSummary.openCount}개 열림`
+                : `${workspaceQuery.data.commentSummary.openCount} open`
+              : isKorean
+                ? "열린 스레드 없음"
+                : "No open threads",
         },
         {
           panelId: "question-cards" as ReviewSignalType,
-          label: "Cards",
+          label: isKorean ? "카드" : "Cards",
           value: String(workspaceQuery.data.questionCardSummary.totalCount),
           helper:
             workspaceQuery.data.questionCardSummary.activeCount > 0
-              ? `${workspaceQuery.data.questionCardSummary.activeCount} active`
-              : "No active cards",
+              ? isKorean
+                ? `${workspaceQuery.data.questionCardSummary.activeCount}개 활성`
+                : `${workspaceQuery.data.questionCardSummary.activeCount} active`
+              : isKorean
+                ? "활성 카드 없음"
+                : "No active cards",
         },
         {
           panelId: "suggestions" as ReviewSignalType,
-          label: "Suggestions",
+          label: isKorean ? "제안" : "Suggestions",
           value: String(
             (questionSuggestionsMutation.data?.suggestions.length ?? 0) +
               (rewriteSuggestionsMutation.data?.suggestions.length ?? 0),
           ),
           helper:
             questionSuggestionsMutation.data || rewriteSuggestionsMutation.data
-              ? "Recent results"
-              : "Generate on demand",
+              ? isKorean
+                ? "최근 결과"
+                : "Recent results"
+              : isKorean
+                ? "필요할 때 생성"
+                : "Generate on demand",
         },
       ]
     : [];
@@ -1106,31 +1132,31 @@ export function ResumeEditorPage() {
   const slashMenuItems = [
     {
       id: "h1",
-      label: "Heading 1",
+      label: isKorean ? "헤딩 1" : "Heading 1",
       matches: ["", "h1", "heading", "title"],
-      onSelect: () => replaceSlashLine("# __TEXT__", "Section title"),
+      onSelect: () => replaceSlashLine("# __TEXT__", isKorean ? "섹션 제목" : "Section title"),
     },
     {
       id: "h2",
-      label: "Heading 2",
+      label: isKorean ? "헤딩 2" : "Heading 2",
       matches: ["h2", "subheading", "subtitle"],
-      onSelect: () => replaceSlashLine("## __TEXT__", "Subsection"),
+      onSelect: () => replaceSlashLine("## __TEXT__", isKorean ? "하위 섹션" : "Subsection"),
     },
     {
       id: "bullet",
-      label: "Bullet list",
+      label: isKorean ? "불릿 목록" : "Bullet list",
       matches: ["bullet", "list", "ul"],
-      onSelect: () => replaceSlashLine("- __TEXT__", "Bullet point"),
+      onSelect: () => replaceSlashLine("- __TEXT__", isKorean ? "불릿 항목" : "Bullet point"),
     },
     {
       id: "quote",
-      label: "Quote / callout",
+      label: isKorean ? "인용 / 콜아웃" : "Quote / callout",
       matches: ["quote", "callout"],
-      onSelect: () => replaceSlashLine("> __TEXT__", "Callout"),
+      onSelect: () => replaceSlashLine("> __TEXT__", isKorean ? "콜아웃" : "Callout"),
     },
     {
       id: "comment",
-      label: "Comment on selection",
+      label: isKorean ? "선택 영역에 댓글" : "Comment on selection",
       matches: ["comment", "note"],
       onSelect: () => {
         openInlineComposer("comment");
@@ -1139,7 +1165,7 @@ export function ResumeEditorPage() {
     },
     {
       id: "question",
-      label: "Question suggestion",
+      label: isKorean ? "질문 제안" : "Question suggestion",
       matches: ["question", "prompt"],
       onSelect: () => {
         void runInlineQuestionSuggestions();
@@ -1148,7 +1174,7 @@ export function ResumeEditorPage() {
     },
     {
       id: "rewrite",
-      label: "Rewrite suggestion",
+      label: isKorean ? "문장 재작성 제안" : "Rewrite suggestion",
       matches: ["rewrite", "improve"],
       onSelect: () => {
         void runInlineRewriteSuggestions();
@@ -1817,35 +1843,35 @@ export function ResumeEditorPage() {
             onClick={() => setActivePreviewLineMenuView("root")}
             type="button"
           >
-            ← Back
+            {isKorean ? "← 뒤로" : "← Back"}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("heading1", lineIndex, lineText)}
             type="button"
           >
-            Heading 1
+            {isKorean ? "헤딩 1" : "Heading 1"}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("heading2", lineIndex, lineText)}
             type="button"
           >
-            Heading 2
+            {isKorean ? "헤딩 2" : "Heading 2"}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("bullet", lineIndex, lineText)}
             type="button"
           >
-            Bulleted list
+            {isKorean ? "불릿 목록" : "Bulleted list"}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("quote", lineIndex, lineText)}
             type="button"
           >
-            Quote
+            {isKorean ? "인용문" : "Quote"}
           </button>
         </div>
       );
@@ -1858,42 +1884,42 @@ export function ResumeEditorPage() {
           onClick={() => setActivePreviewLineMenuView("turn-into")}
           type="button"
         >
-          Turn into →
+          {isKorean ? "형식 변경 →" : "Turn into →"}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("duplicate", lineIndex, lineText)}
           type="button"
         >
-          Duplicate
+          {isKorean ? "복제" : "Duplicate"}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("comment", lineIndex, lineText)}
           type="button"
         >
-          Comment
+          {isKorean ? "댓글" : "Comment"}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("card", lineIndex, lineText)}
           type="button"
         >
-          Create card
+          {isKorean ? "카드 만들기" : "Create card"}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("rewrite", lineIndex, lineText)}
           type="button"
         >
-          Suggest rewrite
+          {isKorean ? "문장 개선 제안" : "Suggest rewrite"}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("tools", lineIndex, lineText)}
           type="button"
         >
-          Open tools
+          {isKorean ? "도구 열기" : "Open tools"}
         </button>
       </div>
     );
@@ -1993,7 +2019,7 @@ export function ResumeEditorPage() {
         baseRevisionNo: workspaceQuery.data.revisionNo,
         changeSource,
       });
-      setSaveMessage("Draft workspace saved.");
+      setSaveMessage(isKorean ? "초안 워크스페이스를 저장했습니다." : "Draft workspace saved.");
       setMergePreviewMessage(null);
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -2034,8 +2060,12 @@ export function ResumeEditorPage() {
 
         setMergePreviewMessage(
           mergePreview.mergeStatus === "clean"
-            ? "The server prepared a clean merged draft. Review it below and save again."
-            : "The server detected merge conflicts. Review the conflicting blocks before saving again.",
+            ? isKorean
+              ? "서버가 충돌 없는 병합 초안을 준비했습니다. 아래에서 검토한 뒤 다시 저장하세요."
+              : "The server prepared a clean merged draft. Review it below and save again."
+            : isKorean
+              ? "서버가 병합 충돌을 감지했습니다. 충돌 블록을 검토한 뒤 다시 저장하세요."
+              : "The server detected merge conflicts. Review the conflicting blocks before saving again.",
         );
       } else {
         throw error;
@@ -2055,7 +2085,7 @@ export function ResumeEditorPage() {
         baseRevisionNo: workspaceQuery.data.revisionNo,
         changeSource,
       });
-      setSaveMessage("Draft workspace saved.");
+      setSaveMessage(isKorean ? "초안 워크스페이스를 저장했습니다." : "Draft workspace saved.");
       setMergePreviewMessage(null);
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -2096,8 +2126,12 @@ export function ResumeEditorPage() {
 
         setMergePreviewMessage(
           mergePreview.mergeStatus === "clean"
-            ? "The server prepared a clean merged draft. Review it below and save again."
-            : "The server detected merge conflicts. Review the conflicting blocks before saving again.",
+            ? isKorean
+              ? "서버가 충돌 없는 병합 초안을 준비했습니다. 아래에서 검토한 뒤 다시 저장하세요."
+              : "The server prepared a clean merged draft. Review it below and save again."
+            : isKorean
+              ? "서버가 병합 충돌을 감지했습니다. 충돌 블록을 검토한 뒤 다시 저장하세요."
+              : "The server detected merge conflicts. Review the conflicting blocks before saving again.",
         );
       } else {
         throw error;
@@ -2132,7 +2166,7 @@ export function ResumeEditorPage() {
       clientSessionKey: sessionKey,
       clientChangeId: `${changeSource}-${Date.now().toString(36)}`,
     });
-    setSaveMessage("Draft workspace saved.");
+    setSaveMessage(isKorean ? "초안 워크스페이스를 저장했습니다." : "Draft workspace saved.");
     setMergePreviewMessage(null);
   }
 
@@ -2209,8 +2243,8 @@ export function ResumeEditorPage() {
       case "source":
         return (
           <section className="page-card">
-            <span className="page-card__label">Source context</span>
-            <h2 className="page-card__title">Immutable source resume context</h2>
+            <span className="page-card__label">{isKorean ? "원본 컨텍스트" : "Source context"}</span>
+            <h2 className="page-card__title">{isKorean ? "변경 불가능한 원본 이력서 컨텍스트" : "Immutable source resume context"}</h2>
             <div className="stack-list">
               {sourceContextCards.map((card) => (
                 <article className="page-card page-card--muted" key={card.title}>
@@ -2224,8 +2258,8 @@ export function ResumeEditorPage() {
       case "presence":
         return (
           <section className="page-card">
-            <span className="page-card__label">Presence</span>
-            <h2 className="page-card__title">Workspace presence</h2>
+            <span className="page-card__label">{isKorean ? "참여 상태" : "Presence"}</span>
+            <h2 className="page-card__title">{isKorean ? "워크스페이스 참여 상태" : "Workspace presence"}</h2>
             <div className="filter-chip-row">
               {workspace.activePresence.length > 0 ? (
                 workspace.activePresence.map((presence) => (
@@ -2236,7 +2270,7 @@ export function ResumeEditorPage() {
                   </span>
                 ))
               ) : (
-                <span className="detail-chip">No active presence yet</span>
+                <span className="detail-chip">{isKorean ? "아직 활성 참여자가 없습니다" : "No active presence yet"}</span>
               )}
             </div>
           </section>
@@ -2244,10 +2278,10 @@ export function ResumeEditorPage() {
       case "question-cards":
         return (
           <section className="page-card">
-            <span className="page-card__label">Question cards</span>
-            <h2 className="page-card__title">Interview and study prompts</h2>
+            <span className="page-card__label">{isKorean ? "질문 카드" : "Question cards"}</span>
+            <h2 className="page-card__title">{isKorean ? "면접 및 학습 프롬프트" : "Interview and study prompts"}</h2>
             <label className="form-field">
-              <span className="form-field__label">Title</span>
+              <span className="form-field__label">{isKorean ? "제목" : "Title"}</span>
               <input
                 className="form-field__input"
                 onChange={(event) => setNewQuestionCardTitle(event.target.value)}
@@ -2255,7 +2289,7 @@ export function ResumeEditorPage() {
               />
             </label>
             <label className="form-field">
-              <span className="form-field__label">Question text</span>
+              <span className="form-field__label">{isKorean ? "질문 본문" : "Question text"}</span>
               <textarea
                 className="form-field__input form-input--textarea"
                 onChange={(event) => setNewQuestionCardText(event.target.value)}
@@ -2264,7 +2298,7 @@ export function ResumeEditorPage() {
               />
             </label>
             <label className="form-field">
-              <span className="form-field__label">Question type</span>
+              <span className="form-field__label">{isKorean ? "질문 유형" : "Question type"}</span>
               <input
                 className="form-field__input"
                 onChange={(event) => setNewQuestionCardType(event.target.value)}
@@ -2298,12 +2332,15 @@ export function ResumeEditorPage() {
                 }}
                 type="button"
               >
-                Create question card
+                {isKorean ? "질문 카드 만들기" : "Create question card"}
               </button>
             </div>
             <div className="stack-list">
               {workspace.questionCards.length === 0 ? (
-                <EmptyStateCard body="No question cards yet." title="No question cards" />
+                <EmptyStateCard
+                  body={isKorean ? "아직 질문 카드가 없습니다." : "No question cards yet."}
+                  title={isKorean ? "질문 카드 없음" : "No question cards"}
+                />
               ) : (
                 workspace.questionCards.map((card) => (
                   <article className="page-card page-card--muted" key={card.id}>
@@ -2339,7 +2376,13 @@ export function ResumeEditorPage() {
                         }}
                         type="button"
                       >
-                        {card.status === "archived" ? "Restore" : "Archive"}
+                        {card.status === "archived"
+                          ? isKorean
+                            ? "복원"
+                            : "Restore"
+                          : isKorean
+                            ? "보관"
+                            : "Archive"}
                       </button>
                     </div>
                   </article>
@@ -2351,10 +2394,10 @@ export function ResumeEditorPage() {
       case "suggestions":
         return selectedBlock || currentSelectionAnchor ? (
           <section className="page-card">
-            <span className="page-card__label">Suggestions</span>
-            <h2 className="page-card__title">Question and rewrite suggestions</h2>
+            <span className="page-card__label">{isKorean ? "제안" : "Suggestions"}</span>
+            <h2 className="page-card__title">{isKorean ? "질문 및 문장 개선 제안" : "Question and rewrite suggestions"}</h2>
             <label className="form-field">
-              <span className="form-field__label">Max question suggestions</span>
+              <span className="form-field__label">{isKorean ? "최대 질문 제안 수" : "Max question suggestions"}</span>
               <input
                 className="form-field__input"
                 onChange={(event) => setQuestionSuggestionMax(event.target.value)}
@@ -2376,7 +2419,7 @@ export function ResumeEditorPage() {
                 }}
                 type="button"
               >
-                Generate question suggestions
+                {isKorean ? "질문 제안 생성" : "Generate question suggestions"}
               </button>
               <button
                 className="secondary-button"
@@ -2390,7 +2433,7 @@ export function ResumeEditorPage() {
                 }}
                 type="button"
               >
-                Generate rewrite suggestions
+                {isKorean ? "문장 개선 제안 생성" : "Generate rewrite suggestions"}
               </button>
             </div>
             {questionSuggestionsMutation.data ? (
@@ -2424,7 +2467,7 @@ export function ResumeEditorPage() {
                         }}
                         type="button"
                       >
-                        Create question card from suggestion
+                        {isKorean ? "제안으로 질문 카드 만들기" : "Create question card from suggestion"}
                       </button>
                     </div>
                   </article>
@@ -2435,7 +2478,7 @@ export function ResumeEditorPage() {
               <div className="stack-list">
                 {rewriteSuggestionsMutation.data.suggestions.map((suggestion) => (
                   <article className="page-card page-card--muted" key={suggestion.id}>
-                    <p className="section-heading__eyebrow">{suggestion.focusArea ?? "Rewrite suggestion"}</p>
+                    <p className="section-heading__eyebrow">{suggestion.focusArea ?? (isKorean ? "문장 개선 제안" : "Rewrite suggestion")}</p>
                     <p className="page-card__body resume-section__body--preserve">{suggestion.suggestedText}</p>
                     <p className="resume-tailor-muted">{suggestion.rationale}</p>
                     <div className="page-card__actions">
@@ -2446,7 +2489,7 @@ export function ResumeEditorPage() {
                         }}
                         type="button"
                       >
-                        Apply rewrite to draft
+                        {isKorean ? "초안에 문장 적용" : "Apply rewrite to draft"}
                       </button>
                     </div>
                   </article>
@@ -2456,18 +2499,18 @@ export function ResumeEditorPage() {
           </section>
         ) : (
           <EmptyStateCard
-            body="Select a block or sentence first to generate question and rewrite suggestions."
-            title="No active selection"
+            body={isKorean ? "질문과 문장 개선 제안을 생성하려면 먼저 블록이나 문장을 선택하세요." : "Select a block or sentence first to generate question and rewrite suggestions."}
+            title={isKorean ? "활성 선택 없음" : "No active selection"}
           />
         );
       case "comments":
       default:
         return (
           <section className="page-card">
-            <span className="page-card__label">Comments</span>
-            <h2 className="page-card__title">Comment threads</h2>
+            <span className="page-card__label">{isKorean ? "댓글" : "Comments"}</span>
+            <h2 className="page-card__title">{isKorean ? "댓글 스레드" : "Comment threads"}</h2>
             <label className="form-field">
-              <span className="form-field__label">New comment</span>
+              <span className="form-field__label">{isKorean ? "새 댓글" : "New comment"}</span>
               <textarea
                 className="form-field__input form-input--textarea"
                 onChange={(event) => setNewCommentBody(event.target.value)}
@@ -2501,12 +2544,15 @@ export function ResumeEditorPage() {
                 }}
                 type="button"
               >
-                Add comment
+                {isKorean ? "댓글 추가" : "Add comment"}
               </button>
             </div>
             <div className="stack-list">
               {workspace.comments.length === 0 ? (
-                <EmptyStateCard body="No comment threads yet." title="No comments" />
+                <EmptyStateCard
+                  body={isKorean ? "아직 댓글 스레드가 없습니다." : "No comment threads yet."}
+                  title={isKorean ? "댓글 없음" : "No comments"}
+                />
               ) : (
                 workspace.comments.map((comment) => (
                   <article className="page-card page-card--muted" key={comment.id}>
@@ -2527,7 +2573,13 @@ export function ResumeEditorPage() {
                         }}
                         type="button"
                       >
-                        {comment.status === "resolved" ? "Reopen" : "Resolve"}
+                        {comment.status === "resolved"
+                          ? isKorean
+                            ? "다시 열기"
+                            : "Reopen"
+                          : isKorean
+                            ? "해결 처리"
+                            : "Resolve"}
                       </button>
                     </div>
                     <p className="page-card__body resume-section__body--preserve">{comment.body}</p>
@@ -2538,7 +2590,7 @@ export function ResumeEditorPage() {
                       </div>
                     ))}
                     <label className="form-field">
-                      <span className="form-field__label">Reply</span>
+                      <span className="form-field__label">{isKorean ? "답글" : "Reply"}</span>
                       <input
                         className="form-field__input"
                         onChange={(event) =>
@@ -2565,7 +2617,7 @@ export function ResumeEditorPage() {
                         }}
                         type="button"
                       >
-                        Add reply
+                        {isKorean ? "답글 추가" : "Add reply"}
                       </button>
                     </div>
                   </article>
@@ -2579,11 +2631,15 @@ export function ResumeEditorPage() {
 
   if (!versionId) {
     return (
-      <PageContainer description="Choose a resume version first." eyebrow="Resume Editor" title="Editor unavailable">
+      <PageContainer
+        description={isKorean ? "먼저 이력서 버전을 선택하세요." : "Choose a resume version first."}
+        eyebrow={isKorean ? "이력서 에디터" : "Resume Editor"}
+        title={isKorean ? "에디터를 열 수 없습니다" : "Editor unavailable"}
+      >
         <EmptyStateCard
-          action={{ label: "Open resumes", to: routeConfig.resume.buildPath() }}
-          body="The editor route requires a resume version id."
-          title="Missing resume version"
+          action={{ label: isKorean ? "이력서 열기" : "Open resumes", to: routeConfig.resume.buildPath() }}
+          body={isKorean ? "에디터 경로에는 이력서 버전 ID가 필요합니다." : "The editor route requires a resume version id."}
+          title={isKorean ? "이력서 버전이 없습니다" : "Missing resume version"}
         />
       </PageContainer>
     );
@@ -2592,13 +2648,13 @@ export function ResumeEditorPage() {
   if (workspaceQuery.isLoading) {
     return (
       <PageContainer
-        description="Bootstrapping the resume editor workspace from the immutable resume version."
-        eyebrow="Resume Editor"
-        title="Preparing workspace"
+        description={isKorean ? "변경 불가능한 이력서 버전에서 에디터 워크스페이스를 준비하고 있습니다." : "Bootstrapping the resume editor workspace from the immutable resume version."}
+        eyebrow={isKorean ? "이력서 에디터" : "Resume Editor"}
+        title={isKorean ? "워크스페이스 준비 중" : "Preparing workspace"}
       >
         <LoadingStateCard
-          body="Loading the draft workspace, annotations, and revision context."
-          title="Preparing resume editor"
+          body={isKorean ? "초안 워크스페이스, 주석, 리비전 컨텍스트를 불러오는 중입니다." : "Loading the draft workspace, annotations, and revision context."}
+          title={isKorean ? "이력서 에디터 준비 중" : "Preparing resume editor"}
         />
       </PageContainer>
     );
@@ -2606,18 +2662,24 @@ export function ResumeEditorPage() {
 
   if (workspaceQuery.isError || !workspaceQuery.data) {
     return (
-      <PageContainer description="The resume editor workspace could not be loaded." eyebrow="Resume Editor" title="Workspace unavailable">
+      <PageContainer
+        description={isKorean ? "이력서 에디터 워크스페이스를 불러오지 못했습니다." : "The resume editor workspace could not be loaded."}
+        eyebrow={isKorean ? "이력서 에디터" : "Resume Editor"}
+        title={isKorean ? "워크스페이스를 열 수 없습니다" : "Workspace unavailable"}
+      >
         <ErrorStateCard
           body={
             workspaceQuery.error instanceof Error
               ? workspaceQuery.error.message
-              : "The resume editor workspace could not be loaded."
+              : isKorean
+                ? "이력서 에디터 워크스페이스를 불러오지 못했습니다."
+                : "The resume editor workspace could not be loaded."
           }
           details={getErrorDetails(workspaceQuery.error)}
           onAction={() => {
             void workspaceQuery.refetch();
           }}
-          title="Unable to load resume editor workspace"
+          title={isKorean ? "이력서 에디터 워크스페이스를 불러올 수 없습니다" : "Unable to load resume editor workspace"}
         />
       </PageContainer>
     );
@@ -2628,11 +2690,11 @@ export function ResumeEditorPage() {
       actions={
         <>
           <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
-            Back to resumes
+            {isKorean ? "이력서로 돌아가기" : "Back to resumes"}
           </Link>
           {workspaceQuery.data.heatmapAvailable ? (
             <Link className="secondary-button" to={routeConfig.resumeHeatmap.buildPath({ versionId: safeVersionId })}>
-              Open heatmap
+              {isKorean ? "히트맵 열기" : "Open heatmap"}
             </Link>
           ) : null}
           <button
@@ -2643,12 +2705,18 @@ export function ResumeEditorPage() {
             }}
             type="button"
           >
-            {updateDocumentMutation.isPending || importMarkdownMutation.isPending ? "Saving..." : "Save draft"}
+            {updateDocumentMutation.isPending || importMarkdownMutation.isPending
+              ? isKorean
+                ? "저장 중..."
+                : "Saving..."
+              : isKorean
+                ? "초안 저장"
+                : "Save draft"}
           </button>
         </>
       }
-      description="Author the resume source of truth, then pressure-test each claim with comments, question cards, and linked interview context."
-      eyebrow="Source of truth editor"
+      description={isKorean ? "이력서 source of truth를 작성하고, 각 주장을 댓글, 질문 카드, 연결된 인터뷰 맥락으로 압박 테스트하세요." : "Author the resume source of truth, then pressure-test each claim with comments, question cards, and linked interview context."}
+      eyebrow={isKorean ? "Source of truth 에디터" : "Source of truth editor"}
       title={workspaceQuery.data.sourceFileName}
     >
       <div className="page-stack">
@@ -2656,69 +2724,76 @@ export function ResumeEditorPage() {
           <div className="resume-editor-workspace-surface__header">
             <div className="resume-editor-workspace-surface__intro">
               <div className="resume-editor-workspace-surface__eyebrow-row">
-                <span className="page-card__label">Source-of-truth authoring</span>
-                <span className="question-status-badge question-status-badge--accent">Draft lane</span>
+                <span className="page-card__label">{isKorean ? "Source of truth 작성" : "Source-of-truth authoring"}</span>
+                <span className="question-status-badge question-status-badge--accent">{isKorean ? "초안 레인" : "Draft lane"}</span>
               </div>
               <p className="resume-editor-workspace-surface__breadcrumbs">
-                Resume claim
+                {isKorean ? "이력서 주장" : "Resume claim"}
                 <span>/</span>
-                Evidence detail
+                {isKorean ? "근거 디테일" : "Evidence detail"}
                 <span>/</span>
-                Follow-up survivability
+                {isKorean ? "꼬리질문 생존성" : "Follow-up survivability"}
               </p>
               <h2 className="resume-editor-workspace-surface__title">
-                Write the resume until every line can survive DFS follow-up pressure
+                {isKorean ? "모든 줄이 DFS 꼬리질문 압박을 견딜 때까지 이력서를 다듬으세요" : "Write the resume until every line can survive DFS follow-up pressure"}
               </h2>
               <p className="resume-editor-workspace-surface__body">
-                Treat this as source-of-truth authoring, not document polishing. Each revision should make one claim
-                clearer, better evidenced, or less fragile under deeper questioning.
+                {isKorean
+                  ? "문서 꾸미기가 아니라 source of truth 작성이라고 생각하세요. 각 리비전은 하나의 주장을 더 명확하게 만들고, 근거를 보강하거나, 깊은 질문에도 덜 흔들리게 만들어야 합니다."
+                  : "Treat this as source-of-truth authoring, not document polishing. Each revision should make one claim clearer, better evidenced, or less fragile under deeper questioning."}
               </p>
             </div>
             <div className="resume-editor-workspace-surface__stats">
               <article className="resume-editor-workspace-surface__stat">
-                <span>Revision</span>
+                <span>{isKorean ? "리비전" : "Revision"}</span>
                 <strong>{workspaceQuery.data.revisionNo}</strong>
               </article>
               <article className="resume-editor-workspace-surface__stat">
-                <span>Evidence anchors</span>
+                <span>{isKorean ? "근거 앵커" : "Evidence anchors"}</span>
                 <strong>{sourceContextCards.length}</strong>
               </article>
               <article className="resume-editor-workspace-surface__stat">
-                <span>Review signals</span>
+                <span>{isKorean ? "검토 신호" : "Review signals"}</span>
                 <strong>
                   {workspaceQuery.data.commentSummary.totalCount + workspaceQuery.data.questionCardSummary.totalCount}
                 </strong>
               </article>
               <article className="resume-editor-workspace-surface__stat">
-                <span>View modes</span>
+                <span>{isKorean ? "뷰 모드" : "View modes"}</span>
                 <strong>{workspaceQuery.data.supportedViewModes.length}</strong>
               </article>
             </div>
           </div>
-          <div className="resume-editor-workspace-surface__guidance" aria-label="Resume authoring guidance">
+          <div className="resume-editor-workspace-surface__guidance" aria-label={isKorean ? "이력서 작성 가이드" : "Resume authoring guidance"}>
             <article className="resume-editor-workspace-surface__guidance-card">
-              <span>Claim rule</span>
-              <strong>Rewrite the exact line that would fail under follow-up, not the whole document.</strong>
+              <span>{isKorean ? "주장 원칙" : "Claim rule"}</span>
+              <strong>{isKorean ? "문서 전체가 아니라, 꼬리질문에서 무너질 정확한 줄만 다시 쓰세요." : "Rewrite the exact line that would fail under follow-up, not the whole document."}</strong>
             </article>
             <article className="resume-editor-workspace-surface__guidance-card">
-              <span>Evidence rule</span>
-              <strong>Attach one concrete fact, metric, or constraint before broadening wording.</strong>
+              <span>{isKorean ? "근거 원칙" : "Evidence rule"}</span>
+              <strong>{isKorean ? "문장을 넓히기 전에 구체적인 사실, 수치, 제약 하나를 먼저 붙이세요." : "Attach one concrete fact, metric, or constraint before broadening wording."}</strong>
             </article>
             <article className="resume-editor-workspace-surface__guidance-card">
-              <span>Exit rule</span>
-              <strong>Leave this pass only when the selected claim has a defendable answer path.</strong>
+              <span>{isKorean ? "종료 원칙" : "Exit rule"}</span>
+              <strong>{isKorean ? "선택한 주장이 방어 가능한 답변 경로를 가질 때만 이 패스를 종료하세요." : "Leave this pass only when the selected claim has a defendable answer path."}</strong>
             </article>
           </div>
           <div className="resume-editor-workspace-surface__chips">
             <span className="detail-chip">{workspaceQuery.data.workspaceStatusLabel}</span>
             <span className="detail-chip detail-chip--accent">
-              {workspaceQuery.data.documentModel === "rich_tree" ? "Rich tree" : "Blocks"}
+              {workspaceQuery.data.documentModel === "rich_tree"
+                ? isKorean
+                  ? "리치 트리"
+                  : "Rich tree"
+                : isKorean
+                  ? "블록"
+                  : "Blocks"}
             </span>
             {workspaceQuery.data.selectionCapabilities.supportsOperations ? (
-              <span className="detail-chip">Operations enabled</span>
+              <span className="detail-chip">{isKorean ? "연산 사용 가능" : "Operations enabled"}</span>
             ) : null}
             {workspaceQuery.data.selectionCapabilities.supportsInlineSelections ? (
-              <span className="detail-chip">Inline selections enabled</span>
+              <span className="detail-chip">{isKorean ? "인라인 선택 사용 가능" : "Inline selections enabled"}</span>
             ) : null}
           </div>
         </section>
@@ -2726,8 +2801,12 @@ export function ResumeEditorPage() {
         <section className="page-card resume-editor-topbar">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">Authoring controls</p>
-              <h2 className="page-card__title">Control the draft layer without losing the writing surface</h2>
+              <p className="section-heading__eyebrow">{isKorean ? "작성 제어" : "Authoring controls"}</p>
+              <h2 className="page-card__title">
+                {isKorean
+                  ? "작성 화면의 집중을 유지한 채 초안 레이어를 제어하세요"
+                  : "Control the draft layer without losing the writing surface"}
+              </h2>
             </div>
             <div className="page-card__actions">
               <span className="question-status-badge question-status-badge--accent">
@@ -2743,7 +2822,7 @@ export function ResumeEditorPage() {
                   onClick={() => setIsWorkspaceMenuOpen((current) => !current)}
                   type="button"
                 >
-                  More actions
+                  {isKorean ? "추가 작업" : "More actions"}
                 </button>
                 {isWorkspaceMenuOpen ? (
                   <div className="resume-editor-topbar__menu-popover" role="menu">
@@ -2755,7 +2834,13 @@ export function ResumeEditorPage() {
                       }}
                       type="button"
                     >
-                      {isWorkspaceInfoOpen ? "Hide workspace info" : "Workspace info"}
+                      {isWorkspaceInfoOpen
+                        ? isKorean
+                          ? "워크스페이스 정보 숨기기"
+                          : "Hide workspace info"
+                        : isKorean
+                          ? "워크스페이스 정보"
+                          : "Workspace info"}
                     </button>
                     <button
                       className="resume-editor-topbar__menu-item"
@@ -2765,7 +2850,7 @@ export function ResumeEditorPage() {
                       }}
                       type="button"
                     >
-                      Import markdown
+                      {isKorean ? "마크다운 가져오기" : "Import markdown"}
                     </button>
                   </div>
                 ) : null}
@@ -2773,7 +2858,9 @@ export function ResumeEditorPage() {
             </div>
           </div>
           <p className="resume-tailor-muted">
-            The source resume stays immutable. Use this strip to manage saves, view mode, and draft behavior while the main surface stays focused on claim quality.
+            {isKorean
+              ? "원본 이력서는 변경되지 않습니다. 이 영역에서 저장, 보기 모드, 초안 동작을 관리하고 메인 화면은 주장 품질 점검에 집중하세요."
+              : "The source resume stays immutable. Use this strip to manage saves, view mode, and draft behavior while the main surface stays focused on claim quality."}
           </p>
           {saveMessage ? <p className="resume-tailor-muted">{saveMessage}</p> : null}
           <div className="filter-chip-row resume-editor-tabbar">
@@ -2787,7 +2874,7 @@ export function ResumeEditorPage() {
                 }}
                 type="button"
               >
-                {tab === "edit" ? "Edit" : "Review"}
+                {tab === "edit" ? (isKorean ? "편집" : "Edit") : isKorean ? "리뷰" : "Review"}
               </button>
             ))}
             <div className="resume-editor-topbar__menu">
@@ -2797,7 +2884,7 @@ export function ResumeEditorPage() {
                 onClick={() => setIsViewMenuOpen((current) => !current)}
                 type="button"
               >
-                Views
+                {isKorean ? "보기" : "Views"}
               </button>
               {isViewMenuOpen ? (
                 <div className="resume-editor-topbar__menu-popover" role="menu">
@@ -2811,7 +2898,17 @@ export function ResumeEditorPage() {
                       }}
                       type="button"
                     >
-                      {tab === "heatmap" ? "Heatmap" : tab === "print-preview" ? "Print preview" : "History"}
+                      {tab === "heatmap"
+                        ? isKorean
+                          ? "히트맵"
+                          : "Heatmap"
+                        : tab === "print-preview"
+                          ? isKorean
+                            ? "출력 미리보기"
+                            : "Print preview"
+                          : isKorean
+                            ? "히스토리"
+                            : "History"}
                     </button>
                   ))}
                 </div>
@@ -2820,40 +2917,55 @@ export function ResumeEditorPage() {
             {isSecondaryTabActive ? (
               <span className="detail-chip">
                 {currentTab === "heatmap"
-                  ? "Heatmap"
+                  ? isKorean
+                    ? "히트맵"
+                    : "Heatmap"
                   : currentTab === "print-preview"
-                    ? "Print preview"
-                    : "History"}
+                    ? isKorean
+                      ? "출력 미리보기"
+                      : "Print preview"
+                    : isKorean
+                      ? "히스토리"
+                      : "History"}
               </span>
             ) : null}
           </div>
           {currentTab === "edit" || currentTab === "review" ? (
             <p className="resume-tailor-muted">
-              Select the smallest claim that needs work first. Rich-tree anchors and contextual actions will bind the edit to that source line automatically when available.
+              {isKorean
+                ? "먼저 손봐야 할 가장 작은 주장부터 선택하세요. 가능하면 리치 트리 앵커와 컨텍스트 작업이 수정 내용을 해당 원문 줄에 자동으로 연결합니다."
+                : "Select the smallest claim that needs work first. Rich-tree anchors and contextual actions will bind the edit to that source line automatically when available."}
             </p>
           ) : null}
           {isWorkspaceInfoOpen ? (
             <div className="page-card page-card--muted resume-editor-workspace-info">
               <div className="stats-grid">
-                <MetricCard label="Blocks" value={String(workspaceQuery.data.document.blocks.length)} />
-                <MetricCard label="Nodes" tone="accent" value={String(workspaceQuery.data.document.nodes.length)} />
-                <MetricCard label="Comments" tone="accent" value={String(workspaceQuery.data.commentSummary.totalCount)} />
-                <MetricCard label="Question cards" tone="muted" value={String(workspaceQuery.data.questionCardSummary.totalCount)} />
-                <MetricCard label="Presence" tone="muted" value={String(workspaceQuery.data.activePresence.length)} />
+                <MetricCard label={isKorean ? "블록" : "Blocks"} value={String(workspaceQuery.data.document.blocks.length)} />
+                <MetricCard label={isKorean ? "노드" : "Nodes"} tone="accent" value={String(workspaceQuery.data.document.nodes.length)} />
+                <MetricCard label={isKorean ? "댓글" : "Comments"} tone="accent" value={String(workspaceQuery.data.commentSummary.totalCount)} />
+                <MetricCard label={isKorean ? "질문 카드" : "Question cards"} tone="muted" value={String(workspaceQuery.data.questionCardSummary.totalCount)} />
+                <MetricCard label={isKorean ? "접속자" : "Presence"} tone="muted" value={String(workspaceQuery.data.activePresence.length)} />
               </div>
               <div className="filter-chip-row">
                 <span className="detail-chip">
-                  Model {workspaceQuery.data.documentModel === "rich_tree" ? "Rich tree" : "Blocks"}
+                  {isKorean ? "모델" : "Model"}{" "}
+                  {workspaceQuery.data.documentModel === "rich_tree"
+                    ? isKorean
+                      ? "리치 트리"
+                      : "Rich tree"
+                    : isKorean
+                      ? "블록"
+                      : "Blocks"}
                 </span>
                 {workspaceQuery.data.selectionCapabilities.supportsOperations ? (
-                  <span className="detail-chip">Operations enabled</span>
+                  <span className="detail-chip">{isKorean ? "연산 사용 가능" : "Operations enabled"}</span>
                 ) : null}
                 {workspaceQuery.data.selectionCapabilities.supportsInlineSelections ? (
-                  <span className="detail-chip">Inline selections enabled</span>
+                  <span className="detail-chip">{isKorean ? "인라인 선택 사용 가능" : "Inline selections enabled"}</span>
                 ) : null}
                 {workspaceQuery.data.supportedViewModes.length > 0 ? (
                   <span className="detail-chip">
-                    Modes {workspaceQuery.data.supportedViewModes.join(", ")}
+                    {isKorean ? "모드" : "Modes"} {workspaceQuery.data.supportedViewModes.join(", ")}
                   </span>
                 ) : null}
               </div>
@@ -2878,14 +2990,17 @@ export function ResumeEditorPage() {
                 event.stopPropagation();
               }}
             >
-              <span className="page-card__label">Markdown import</span>
-              <h2 className="page-card__title">Import markdown into the draft workspace</h2>
+              <span className="page-card__label">{isKorean ? "마크다운 가져오기" : "Markdown import"}</span>
+              <h2 className="page-card__title">
+                {isKorean ? "마크다운을 초안 워크스페이스로 가져오기" : "Import markdown into the draft workspace"}
+              </h2>
               <p className="resume-tailor-muted">
-                Paste markdown only when you want to replace or append larger document structure. Day-to-day edits
-                should stay in the writing surface.
+                {isKorean
+                  ? "큰 문서 구조를 교체하거나 덧붙일 때만 마크다운을 붙여 넣으세요. 일상적인 수정은 작성 화면에서 처리하는 편이 좋습니다."
+                  : "Paste markdown only when you want to replace or append larger document structure. Day-to-day edits should stay in the writing surface."}
               </p>
               <label className="form-field">
-                <span className="form-field__label">Markdown source</span>
+                <span className="form-field__label">{isKorean ? "마크다운 원문" : "Markdown source"}</span>
                 <textarea
                   className="form-field__input form-input--textarea"
                   onChange={(event) => setImportMarkdownSource(event.target.value)}
@@ -2894,7 +3009,7 @@ export function ResumeEditorPage() {
                 />
               </label>
               <label className="form-field form-field--checkbox">
-                <span className="form-field__label">Replace existing document</span>
+                <span className="form-field__label">{isKorean ? "기존 문서 교체" : "Replace existing document"}</span>
                 <input
                   checked={replaceDocument}
                   onChange={(event) => setReplaceDocument(event.target.checked)}
@@ -2908,7 +3023,7 @@ export function ResumeEditorPage() {
                   onClick={() => setImportMarkdownOpen(false)}
                   type="button"
                 >
-                  Cancel
+                  {isKorean ? "취소" : "Cancel"}
                 </button>
                 <button
                   className="primary-button"
@@ -2924,7 +3039,13 @@ export function ResumeEditorPage() {
                   }}
                   type="button"
                 >
-                  {importMarkdownMutation.isPending ? "Importing..." : "Import markdown"}
+                  {importMarkdownMutation.isPending
+                    ? isKorean
+                      ? "가져오는 중..."
+                      : "Importing..."
+                    : isKorean
+                      ? "마크다운 가져오기"
+                      : "Import markdown"}
                 </button>
               </div>
             </section>
@@ -2933,16 +3054,16 @@ export function ResumeEditorPage() {
 
         {mergePreviewMessage ? (
           <section className="page-card">
-            <span className="page-card__label">Stale write recovery</span>
-            <h2 className="page-card__title">Merge preview</h2>
+            <span className="page-card__label">{isKorean ? "충돌 복구" : "Stale write recovery"}</span>
+            <h2 className="page-card__title">{isKorean ? "병합 미리보기" : "Merge preview"}</h2>
             <p className="page-card__body">{mergePreviewMessage}</p>
             {mergePreviewMutation.data ? (
               <>
                 <div className="stats-grid">
-                  <MetricCard label="Status" value={mergePreviewMutation.data.mergeStatusLabel} />
-                  <MetricCard label="Added" tone="accent" value={String(mergePreviewMutation.data.changeSummary.addedBlockCount)} />
-                  <MetricCard label="Updated" tone="muted" value={String(mergePreviewMutation.data.changeSummary.updatedBlockCount)} />
-                  <MetricCard label="Conflicts" tone="muted" value={String(mergePreviewMutation.data.conflicts.length)} />
+                  <MetricCard label={isKorean ? "상태" : "Status"} value={mergePreviewMutation.data.mergeStatusLabel} />
+                  <MetricCard label={isKorean ? "추가" : "Added"} tone="accent" value={String(mergePreviewMutation.data.changeSummary.addedBlockCount)} />
+                  <MetricCard label={isKorean ? "수정" : "Updated"} tone="muted" value={String(mergePreviewMutation.data.changeSummary.updatedBlockCount)} />
+                  <MetricCard label={isKorean ? "충돌" : "Conflicts"} tone="muted" value={String(mergePreviewMutation.data.conflicts.length)} />
                 </div>
                 {mergePreviewMutation.data.conflicts.length > 0 ? (
                   <div className="stack-list">
@@ -2959,20 +3080,20 @@ export function ResumeEditorPage() {
                             ))}
                           </div>
                         ) : null}
-                        <p className="resume-tailor-muted">Server current</p>
+                        <p className="resume-tailor-muted">{isKorean ? "서버 현재 버전" : "Server current"}</p>
                         <div className="page-card__body resume-section__body--preserve">
                           {(conflict.currentTextLines.length > 0
                             ? conflict.currentTextLines
-                            : [conflict.currentText ?? "No text"]
+                            : [conflict.currentText ?? (isKorean ? "텍스트 없음" : "No text")]
                           ).map((line, index) => (
                             <p key={`${conflict.id}-current-${index}`}>{line || "\u00A0"}</p>
                           ))}
                         </div>
-                        <p className="resume-tailor-muted">Your proposed edit</p>
+                        <p className="resume-tailor-muted">{isKorean ? "내가 제안한 수정" : "Your proposed edit"}</p>
                         <div className="page-card__body resume-section__body--preserve">
                           {(conflict.proposedTextLines.length > 0
                             ? conflict.proposedTextLines
-                            : [conflict.proposedText ?? "No text"]
+                            : [conflict.proposedText ?? (isKorean ? "텍스트 없음" : "No text")]
                           ).map((line, index) => (
                             <p key={`${conflict.id}-proposed-${index}`}>{line || "\u00A0"}</p>
                           ))}
@@ -2983,21 +3104,21 @@ export function ResumeEditorPage() {
                             onClick={() => resolveConflictBlock(conflict.blockId, "current")}
                             type="button"
                           >
-                            Keep server version
+                            {isKorean ? "서버 버전 유지" : "Keep server version"}
                           </button>
                           <button
                             className="secondary-button"
                             onClick={() => resolveConflictBlock(conflict.blockId, "proposed")}
                             type="button"
                           >
-                            Keep my edit
+                            {isKorean ? "내 수정 유지" : "Keep my edit"}
                           </button>
                           <button
                             className="secondary-button"
                             onClick={() => resolveConflictBlock(conflict.blockId, "merged")}
                             type="button"
                           >
-                            Use merged text
+                            {isKorean ? "병합 텍스트 사용" : "Use merged text"}
                           </button>
                         </div>
                       </article>
@@ -3017,7 +3138,7 @@ export function ResumeEditorPage() {
                     }}
                     type="button"
                   >
-                    Apply merged draft to workspace
+                    {isKorean ? "병합된 초안을 워크스페이스에 적용" : "Apply merged draft to workspace"}
                   </button>
                   <button
                     className="secondary-button"
@@ -3026,7 +3147,7 @@ export function ResumeEditorPage() {
                     }}
                     type="button"
                   >
-                    Save resolved draft
+                    {isKorean ? "해결된 초안 저장" : "Save resolved draft"}
                   </button>
                 </div>
               </>
@@ -3042,24 +3163,28 @@ export function ResumeEditorPage() {
                   <section className="page-card page-card--muted">
                     <div className="section-heading">
                       <div>
-                        <p className="section-heading__eyebrow">Review focus</p>
-                        <h2 className="page-card__title">Read the draft like interview pressure, then annotate the weakest claims</h2>
+                        <p className="section-heading__eyebrow">{isKorean ? "리뷰 포커스" : "Review focus"}</p>
+                        <h2 className="page-card__title">
+                          {isKorean
+                            ? "면접 압박을 받는다는 가정으로 읽고 가장 약한 주장부터 표시하세요"
+                            : "Read the draft like interview pressure, then annotate the weakest claims"}
+                        </h2>
                       </div>
-                      <span className="detail-chip">Review mode</span>
+                      <span className="detail-chip">{isKorean ? "리뷰 모드" : "Review mode"}</span>
                     </div>
                     <div className="stats-grid">
                       <MetricCard
-                        label="Comments"
+                        label={isKorean ? "댓글" : "Comments"}
                         tone="accent"
                         value={String(workspaceQuery.data.commentSummary.totalCount)}
                       />
                       <MetricCard
-                        label="Question cards"
+                        label={isKorean ? "질문 카드" : "Question cards"}
                         tone="muted"
                         value={String(workspaceQuery.data.questionCardSummary.totalCount)}
                       />
                       <MetricCard
-                        label="Suggestions"
+                        label={isKorean ? "제안" : "Suggestions"}
                         tone="muted"
                         value={String(
                           (questionSuggestionsMutation.data?.suggestions.length ?? 0) +
@@ -3068,11 +3193,15 @@ export function ResumeEditorPage() {
                       />
                     </div>
                     <p className="resume-tailor-muted">
-                      Start with the reading surface and hotspot navigation, then open full tools only when the weak line is clear enough to fix.
+                      {isKorean
+                        ? "먼저 읽기 화면과 핫스팟 이동으로 약한 줄을 찾고, 어디를 고칠지 분명해졌을 때만 전체 도구를 여세요."
+                        : "Start with the reading surface and hotspot navigation, then open full tools only when the weak line is clear enough to fix."}
                     </p>
                     <div className="page-card__actions">
                       <span className="detail-chip">
-                        {reviewHotspotLineIndexes.length} hotspot{reviewHotspotLineIndexes.length === 1 ? "" : "s"}
+                        {isKorean
+                          ? `핫스팟 ${reviewHotspotLineIndexes.length}개`
+                          : `${reviewHotspotLineIndexes.length} hotspot${reviewHotspotLineIndexes.length === 1 ? "" : "s"}`}
                       </span>
                       <button
                         className="secondary-button"
@@ -3080,7 +3209,7 @@ export function ResumeEditorPage() {
                         onClick={() => focusReviewHotspot("previous")}
                         type="button"
                       >
-                        Previous hotspot
+                        {isKorean ? "이전 핫스팟" : "Previous hotspot"}
                       </button>
                       <button
                         className="secondary-button"
@@ -3088,7 +3217,7 @@ export function ResumeEditorPage() {
                         onClick={() => focusReviewHotspot("next")}
                         type="button"
                       >
-                        Next hotspot
+                        {isKorean ? "다음 핫스팟" : "Next hotspot"}
                       </button>
                     </div>
                     {selectedBlock || selectedNode ? (
@@ -3121,7 +3250,7 @@ export function ResumeEditorPage() {
                           onClick={() => setIsContextPanelOpen(true)}
                           type="button"
                         >
-                          Open tools
+                          {isKorean ? "도구 열기" : "Open tools"}
                         </button>
                       </div>
                     ) : null}
@@ -3130,30 +3259,42 @@ export function ResumeEditorPage() {
                 <section className="page-card">
                   <div className="section-heading">
                     <div>
-                      <p className="section-heading__eyebrow">Draft document</p>
+                      <p className="section-heading__eyebrow">{isKorean ? "초안 문서" : "Draft document"}</p>
                       <h2 className="page-card__title">
                         {currentTab === "review"
-                          ? "Review reading surface"
+                          ? isKorean
+                            ? "리뷰 읽기 화면"
+                            : "Review reading surface"
                           : richTreeEnabled
-                            ? "Single-surface editor with rich-tree anchors"
-                            : "Single-surface editor"}
+                            ? isKorean
+                              ? "리치 트리 앵커가 연결된 단일 편집 화면"
+                              : "Single-surface editor with rich-tree anchors"
+                            : isKorean
+                              ? "단일 편집 화면"
+                              : "Single-surface editor"}
                       </h2>
                     </div>
                     <div className="resume-status-badges">
                       <span className="detail-chip">
-                        {currentTab === "review" ? "Review mode" : "Row editor"}
+                        {currentTab === "review" ? (isKorean ? "리뷰 모드" : "Review mode") : isKorean ? "행 편집기" : "Row editor"}
                       </span>
                       {selectedBlock || selectedNode ? (
                         <>
                           <span className="question-status-badge question-status-badge--neutral">
-                            Selected {richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockType}
+                            {isKorean ? "선택됨" : "Selected"} {richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockType}
                           </span>
                           <button
                             className="secondary-button"
                             onClick={() => setIsContextPanelOpen((current) => !current)}
                             type="button"
                           >
-                            {isContextPanelOpen ? "Hide tools" : "Open tools"}
+                            {isContextPanelOpen
+                              ? isKorean
+                                ? "도구 숨기기"
+                                : "Hide tools"
+                              : isKorean
+                                ? "도구 열기"
+                                : "Open tools"}
                           </button>
                         </>
                       ) : null}
@@ -3166,8 +3307,8 @@ export function ResumeEditorPage() {
                           <article className="resume-editor-inline-preview">
                             <div className="section-heading">
                               <div>
-                                <p className="section-heading__eyebrow">Inline question suggestions</p>
-                                <h3 className="page-card__title">Selection-based prompts</h3>
+                                <p className="section-heading__eyebrow">{isKorean ? "인라인 질문 제안" : "Inline question suggestions"}</p>
+                                <h3 className="page-card__title">{isKorean ? "선택 영역 기반 프롬프트" : "Selection-based prompts"}</h3>
                               </div>
                               <button
                                 className="secondary-button"
@@ -3177,11 +3318,11 @@ export function ResumeEditorPage() {
                                 }}
                                 type="button"
                               >
-                                Open full panel
+                                {isKorean ? "전체 패널 열기" : "Open full panel"}
                               </button>
                             </div>
                             {questionSuggestionsMutation.isPending ? (
-                              <p className="resume-tailor-muted">Generating question suggestions...</p>
+                              <p className="resume-tailor-muted">{isKorean ? "질문 제안을 생성하는 중..." : "Generating question suggestions..."}</p>
                             ) : questionSuggestionsMutation.data ? (
                               <div className="stack-list">
                                 {questionSuggestionsMutation.data.suggestions.slice(0, 2).map((suggestion) => (
@@ -3215,7 +3356,7 @@ export function ResumeEditorPage() {
                                         }}
                                         type="button"
                                       >
-                                        Create card
+                                        {isKorean ? "카드 만들기" : "Create card"}
                                       </button>
                                     </div>
                                   </article>
@@ -3228,8 +3369,8 @@ export function ResumeEditorPage() {
                           <article className="resume-editor-inline-preview">
                             <div className="section-heading">
                               <div>
-                                <p className="section-heading__eyebrow">Inline rewrite suggestions</p>
-                                <h3 className="page-card__title">Selection-based wording options</h3>
+                                <p className="section-heading__eyebrow">{isKorean ? "인라인 문장 개선 제안" : "Inline rewrite suggestions"}</p>
+                                <h3 className="page-card__title">{isKorean ? "선택 영역 기반 문구 옵션" : "Selection-based wording options"}</h3>
                               </div>
                               <button
                                 className="secondary-button"
@@ -3239,17 +3380,17 @@ export function ResumeEditorPage() {
                                 }}
                                 type="button"
                               >
-                                Open full panel
+                                {isKorean ? "전체 패널 열기" : "Open full panel"}
                               </button>
                             </div>
                             {rewriteSuggestionsMutation.isPending ? (
-                              <p className="resume-tailor-muted">Generating rewrite suggestions...</p>
+                              <p className="resume-tailor-muted">{isKorean ? "문장 개선 제안을 생성하는 중..." : "Generating rewrite suggestions..."}</p>
                             ) : rewriteSuggestionsMutation.data ? (
                               <div className="stack-list">
                                 {rewriteSuggestionsMutation.data.suggestions.slice(0, 2).map((suggestion) => (
                                   <article className="page-card page-card--muted" key={suggestion.id}>
                                     <p className="section-heading__eyebrow">
-                                      {suggestion.focusArea ?? "Rewrite suggestion"}
+                                      {suggestion.focusArea ?? (isKorean ? "문장 개선 제안" : "Rewrite suggestion")}
                                     </p>
                                     <p className="page-card__body resume-section__body--preserve">
                                       {suggestion.suggestedText}
@@ -3262,7 +3403,7 @@ export function ResumeEditorPage() {
                                         }}
                                         type="button"
                                       >
-                                        Apply rewrite
+                                        {isKorean ? "문장 적용" : "Apply rewrite"}
                                       </button>
                                     </div>
                                   </article>
@@ -3275,10 +3416,10 @@ export function ResumeEditorPage() {
                           <article className="resume-editor-slash-menu">
                             <div className="section-heading">
                               <div>
-                                <p className="section-heading__eyebrow">Slash menu</p>
-                                <h3 className="page-card__title">Quick block and action commands</h3>
+                                <p className="section-heading__eyebrow">{isKorean ? "슬래시 메뉴" : "Slash menu"}</p>
+                                <h3 className="page-card__title">{isKorean ? "빠른 블록 및 작업 명령" : "Quick block and action commands"}</h3>
                               </div>
-                              <span className="detail-chip">/{slashCommand.query || "..."}</span>
+                              <span className="detail-chip">/{slashCommand.query || (isKorean ? "입력" : "...")}</span>
                             </div>
                             <div className="resume-editor-slash-menu__list">
                               {slashMenuItems.map((item) => (
@@ -3297,13 +3438,17 @@ export function ResumeEditorPage() {
                         <article className="page-card page-card--muted resume-editor-document-preview resume-editor-document-preview--editable">
                           <div className="section-heading">
                             <div>
-                              <p className="section-heading__eyebrow">Editor surface</p>
-                              <h3 className="page-card__title">Edit each row directly</h3>
+                              <p className="section-heading__eyebrow">{isKorean ? "편집 화면" : "Editor surface"}</p>
+                              <h3 className="page-card__title">{isKorean ? "각 행을 직접 편집" : "Edit each row directly"}</h3>
                             </div>
                             <span className="detail-chip">
                               {selectedMarkdownRange?.text
-                                ? "Selection tools"
-                                : "Select text or use row handles"}
+                                ? isKorean
+                                  ? "선택 도구"
+                                  : "Selection tools"
+                                : isKorean
+                                  ? "텍스트를 선택하거나 행 핸들을 사용하세요"
+                                  : "Select text or use row handles"}
                             </span>
                           </div>
                           <div
@@ -3319,7 +3464,7 @@ export function ResumeEditorPage() {
                                   top: `${editorToolbarPosition.top}px`,
                                 }}
                               >
-                                <span className="resume-editor-context-toolbar__label">Selection tools</span>
+                                <span className="resume-editor-context-toolbar__label">{isKorean ? "선택 도구" : "Selection tools"}</span>
                                 <div className="filter-chip-row">
                                   <div className="resume-editor-selection-format">
                                     <button
@@ -3327,7 +3472,7 @@ export function ResumeEditorPage() {
                                       onClick={() => setIsSelectionFormatOpen((current) => !current)}
                                       type="button"
                                     >
-                                      Format
+                                      {isKorean ? "서식" : "Format"}
                                     </button>
                                     {isSelectionFormatOpen ? (
                                       <div className="resume-editor-selection-format__menu">
@@ -3336,14 +3481,14 @@ export function ResumeEditorPage() {
                                           onClick={() => applySelectionFormat("bold")}
                                           type="button"
                                         >
-                                          Bold
+                                          {isKorean ? "굵게" : "Bold"}
                                         </button>
                                         <button
                                           className="secondary-button"
                                           onClick={() => applySelectionFormat("italic")}
                                           type="button"
                                         >
-                                          Italic
+                                          {isKorean ? "기울임" : "Italic"}
                                         </button>
                                         <button
                                           className="secondary-button"
@@ -3357,28 +3502,28 @@ export function ResumeEditorPage() {
                                           onClick={() => applySelectionFormat("heading1")}
                                           type="button"
                                         >
-                                          Turn into H1
+                                          {isKorean ? "H1로 변경" : "Turn into H1"}
                                         </button>
                                         <button
                                           className="secondary-button"
                                           onClick={() => applySelectionFormat("heading2")}
                                           type="button"
                                         >
-                                          Turn into H2
+                                          {isKorean ? "H2로 변경" : "Turn into H2"}
                                         </button>
                                         <button
                                           className="secondary-button"
                                           onClick={() => applySelectionFormat("bullet")}
                                           type="button"
                                         >
-                                          Bullet list
+                                          {isKorean ? "불릿 목록" : "Bullet list"}
                                         </button>
                                         <button
                                           className="secondary-button"
                                           onClick={() => applySelectionFormat("quote")}
                                           type="button"
                                         >
-                                          Quote
+                                          {isKorean ? "인용문" : "Quote"}
                                         </button>
                                       </div>
                                     ) : null}
@@ -3388,7 +3533,7 @@ export function ResumeEditorPage() {
                                     onClick={() => openInlineComposer("comment")}
                                     type="button"
                                   >
-                                    Comment
+                                    {isKorean ? "댓글" : "Comment"}
                                   </button>
                                   <button
                                     className="detail-chip detail-chip--interactive"
@@ -3397,7 +3542,7 @@ export function ResumeEditorPage() {
                                     }}
                                     type="button"
                                   >
-                                    Question
+                                    {isKorean ? "질문" : "Question"}
                                   </button>
                                   <button
                                     className="detail-chip detail-chip--interactive"
@@ -3406,7 +3551,7 @@ export function ResumeEditorPage() {
                                     }}
                                     type="button"
                                   >
-                                    Rewrite
+                                    {isKorean ? "개선" : "Rewrite"}
                                   </button>
                                   <button
                                     className="detail-chip detail-chip--interactive"
@@ -3417,12 +3562,13 @@ export function ResumeEditorPage() {
                                     }}
                                     type="button"
                                   >
-                                    Clear
+                                    {isKorean ? "지우기" : "Clear"}
                                   </button>
                                 </div>
                               </div>
                             ) : null}
                             {renderMarkdownDocumentPreview(markdownSource, {
+                              isKorean,
                               editable: true,
                               selectedText: effectiveSelectedText,
                               tableOfContents: documentTableOfContents,
@@ -3455,7 +3601,7 @@ export function ResumeEditorPage() {
                             {renderFloatingLineMenu()}
                             {inlineComposerMode === "comment" && editorPopoverPosition ? (
                               <article
-                                aria-label="Inline comment popover"
+                                aria-label={isKorean ? "인라인 댓글 팝오버" : "Inline comment popover"}
                                 className="resume-editor-inline-preview resume-editor-inline-composer resume-editor-inline-composer--floating"
                                 role="dialog"
                                 style={{
@@ -3465,27 +3611,27 @@ export function ResumeEditorPage() {
                               >
                                 <div className="resume-editor-inline-composer__header">
                                   <div>
-                                    <p className="section-heading__eyebrow">Inline comment</p>
-                                    <h3 className="page-card__title">Comment on the current selection</h3>
+                                    <p className="section-heading__eyebrow">{isKorean ? "인라인 댓글" : "Inline comment"}</p>
+                                    <h3 className="page-card__title">{isKorean ? "현재 선택 영역에 댓글 남기기" : "Comment on the current selection"}</h3>
                                   </div>
                                   <button
-                                    aria-label="Close inline comment"
+                                    aria-label={isKorean ? "인라인 댓글 닫기" : "Close inline comment"}
                                     className="secondary-button"
                                     onClick={() => setInlineComposerMode(null)}
                                     type="button"
                                   >
-                                    Close
+                                    {isKorean ? "닫기" : "Close"}
                                   </button>
                                 </div>
                                 {effectiveSelectedText ? (
                                   <p className="resume-editor-inline-composer__meta">
-                                    Selection: {effectiveSelectedText}
+                                    {isKorean ? "선택 영역:" : "Selection:"} {effectiveSelectedText}
                                   </p>
                                 ) : null}
                                 <label className="form-field">
-                                  <span className="form-field__label">Comment</span>
+                                  <span className="form-field__label">{isKorean ? "댓글" : "Comment"}</span>
                                   <textarea
-                                    aria-label="Inline comment"
+                                    aria-label={isKorean ? "인라인 댓글" : "Inline comment"}
                                     className="form-field__input form-input--textarea"
                                     onChange={(event) => setInlineCommentBody(event.target.value)}
                                     rows={3}
@@ -3505,7 +3651,7 @@ export function ResumeEditorPage() {
                                     }}
                                     type="button"
                                   >
-                                    Save inline comment
+                                    {isKorean ? "인라인 댓글 저장" : "Save inline comment"}
                                   </button>
                                   <button
                                     className="secondary-button"
@@ -3515,14 +3661,14 @@ export function ResumeEditorPage() {
                                     }}
                                     type="button"
                                   >
-                                    Open full panel
+                                    {isKorean ? "전체 패널 열기" : "Open full panel"}
                                   </button>
                                 </div>
                               </article>
                             ) : null}
                             {inlineComposerMode === "card" && editorPopoverPosition ? (
                               <article
-                                aria-label="Inline question card popover"
+                                aria-label={isKorean ? "인라인 질문 카드 팝오버" : "Inline question card popover"}
                                 className="resume-editor-inline-preview resume-editor-inline-composer resume-editor-inline-composer--floating"
                                 role="dialog"
                                 style={{
@@ -3532,36 +3678,36 @@ export function ResumeEditorPage() {
                               >
                                 <div className="resume-editor-inline-composer__header">
                                   <div>
-                                    <p className="section-heading__eyebrow">Inline question card</p>
-                                    <h3 className="page-card__title">Create a prompt from the current selection</h3>
+                                    <p className="section-heading__eyebrow">{isKorean ? "인라인 질문 카드" : "Inline question card"}</p>
+                                    <h3 className="page-card__title">{isKorean ? "현재 선택 영역에서 질문 프롬프트 만들기" : "Create a prompt from the current selection"}</h3>
                                   </div>
                                   <button
-                                    aria-label="Close inline question card"
+                                    aria-label={isKorean ? "인라인 질문 카드 닫기" : "Close inline question card"}
                                     className="secondary-button"
                                     onClick={() => setInlineComposerMode(null)}
                                     type="button"
                                   >
-                                    Close
+                                    {isKorean ? "닫기" : "Close"}
                                   </button>
                                 </div>
                                 {effectiveSelectedText ? (
                                   <p className="resume-editor-inline-composer__meta">
-                                    Selection: {effectiveSelectedText}
+                                    {isKorean ? "선택 영역:" : "Selection:"} {effectiveSelectedText}
                                   </p>
                                 ) : null}
                                 <label className="form-field">
-                                  <span className="form-field__label">Title</span>
+                                  <span className="form-field__label">{isKorean ? "제목" : "Title"}</span>
                                   <input
-                                    aria-label="Inline question card title"
+                                    aria-label={isKorean ? "인라인 질문 카드 제목" : "Inline question card title"}
                                     className="form-field__input"
                                     onChange={(event) => setInlineCardTitle(event.target.value)}
                                     value={inlineCardTitle}
                                   />
                                 </label>
                                 <label className="form-field">
-                                  <span className="form-field__label">Question text</span>
+                                  <span className="form-field__label">{isKorean ? "질문 본문" : "Question text"}</span>
                                   <textarea
-                                    aria-label="Inline question card text"
+                                    aria-label={isKorean ? "인라인 질문 카드 본문" : "Inline question card text"}
                                     className="form-field__input form-input--textarea"
                                     onChange={(event) => setInlineCardText(event.target.value)}
                                     rows={3}
@@ -3581,7 +3727,7 @@ export function ResumeEditorPage() {
                                     }}
                                     type="button"
                                   >
-                                    Save inline card
+                                    {isKorean ? "인라인 카드 저장" : "Save inline card"}
                                   </button>
                                   <button
                                     className="secondary-button"
@@ -3591,7 +3737,7 @@ export function ResumeEditorPage() {
                                     }}
                                     type="button"
                                   >
-                                    Open full panel
+                                    {isKorean ? "전체 패널 열기" : "Open full panel"}
                                   </button>
                                 </div>
                               </article>
@@ -3604,11 +3750,17 @@ export function ResumeEditorPage() {
                       <article className="page-card page-card--muted resume-editor-document-preview">
                         <div className="section-heading">
                           <div>
-                            <p className="section-heading__eyebrow">Document preview</p>
-                            <h3 className="page-card__title">Reading surface</h3>
+                            <p className="section-heading__eyebrow">{isKorean ? "문서 프리뷰" : "Document preview"}</p>
+                            <h3 className="page-card__title">{isKorean ? "읽기 화면" : "Reading surface"}</h3>
                           </div>
                           <span className="detail-chip">
-                            {richTreeEnabled ? "Rich-tree aware" : "Markdown preview"}
+                            {richTreeEnabled
+                              ? isKorean
+                                ? "리치 트리 연결"
+                                : "Rich-tree aware"
+                              : isKorean
+                                ? "마크다운 프리뷰"
+                                : "Markdown preview"}
                           </span>
                         </div>
                         {richTreeEnabled && documentTableOfContents.length > 0 ? (
@@ -3634,6 +3786,7 @@ export function ResumeEditorPage() {
                         ) : null}
                         <div className="resume-editor-document-preview__body">
                           {renderMarkdownDocumentPreview(markdownSource, {
+                            isKorean,
                             selectedText: effectiveSelectedText,
                             tableOfContents: documentTableOfContents,
                             activeLineMenuIndex: activePreviewLineIndex,
@@ -3684,24 +3837,36 @@ export function ResumeEditorPage() {
                     <div className="resume-editor-selection">
                       <span className="detail-chip">
                         {selectedMarkdownRange
-                          ? `Markdown selection · ${selectedMarkdownRange.startOffset}-${selectedMarkdownRange.endOffset}`
-                          : "No text range selected"}
+                          ? isKorean
+                            ? `마크다운 선택 · ${selectedMarkdownRange.startOffset}-${selectedMarkdownRange.endOffset}`
+                            : `Markdown selection · ${selectedMarkdownRange.startOffset}-${selectedMarkdownRange.endOffset}`
+                          : isKorean
+                            ? "선택된 텍스트 범위가 없습니다"
+                            : "No text range selected"}
                       </span>
                       <p className="resume-tailor-muted">
                         {effectiveSelectedText
-                          ? `Current excerpt: ${effectiveSelectedText}`
+                          ? isKorean
+                            ? `현재 발췌문: ${effectiveSelectedText}`
+                            : `Current excerpt: ${effectiveSelectedText}`
                           : currentTab === "review"
-                            ? "Use the reading surface or fallback anchors to focus a sentence before leaving review notes."
-                            : "Select markdown text or click a block below to anchor comments, question cards, and AI suggestions more precisely."}
+                            ? isKorean
+                              ? "리뷰 메모를 남기기 전에 읽기 화면이나 폴백 앵커로 문장 하나에 먼저 초점을 맞추세요."
+                              : "Use the reading surface or fallback anchors to focus a sentence before leaving review notes."
+                            : isKorean
+                              ? "댓글, 질문 카드, AI 제안을 더 정확히 연결하려면 마크다운 텍스트를 선택하거나 아래 블록을 클릭하세요."
+                              : "Select markdown text or click a block below to anchor comments, question cards, and AI suggestions more precisely."}
                       </p>
                       {effectiveSelectedText && currentTab !== "review" ? (
                         <p className="resume-tailor-muted">
-                          Comments, question cards, and rewrite suggestions will attach to the current selection.
+                          {isKorean
+                            ? "댓글, 질문 카드, 문장 개선 제안이 현재 선택 영역에 연결됩니다."
+                            : "Comments, question cards, and rewrite suggestions will attach to the current selection."}
                         </p>
                       ) : null}
                       {currentSelectionAnchor?.nodeId ? (
                         <div className="filter-chip-row">
-                          <span className="detail-chip">Node {currentSelectionAnchor.nodeId}</span>
+                          <span className="detail-chip">{isKorean ? "노드" : "Node"} {currentSelectionAnchor.nodeId}</span>
                           {currentSelectionAnchor.fieldPath ? (
                             <span className="detail-chip">{currentSelectionAnchor.fieldPath}</span>
                           ) : null}
@@ -3709,7 +3874,7 @@ export function ResumeEditorPage() {
                       ) : null}
                       {selectedBlock ? (
                         <article className="page-card page-card--muted resume-editor-annotated-text">
-                          <p className="section-heading__eyebrow">Annotated preview</p>
+                          <p className="section-heading__eyebrow">{isKorean ? "주석 프리뷰" : "Annotated preview"}</p>
                           <div className="page-card__body resume-section__body--preserve">
                             {renderAnnotatedText(
                               selectedBlock.text,
@@ -3724,22 +3889,38 @@ export function ResumeEditorPage() {
                   <div className="section-heading">
                     <div>
                       <p className="section-heading__eyebrow">
-                        {richTreeEnabled ? "Fallback blocks and node anchors" : "Parsed blocks"}
+                        {richTreeEnabled
+                          ? isKorean
+                            ? "폴백 블록과 노드 앵커"
+                            : "Fallback blocks and node anchors"
+                          : isKorean
+                            ? "파싱된 블록"
+                            : "Parsed blocks"}
                       </p>
                       <h3 className="page-card__title">
                         {richTreeEnabled
-                          ? "Keep fallback anchors tucked away unless you need a precise block handle"
-                          : "Click a section to open contextual tools"}
+                          ? isKorean
+                            ? "정밀한 블록 핸들이 필요할 때만 폴백 앵커를 펼치세요"
+                            : "Keep fallback anchors tucked away unless you need a precise block handle"
+                          : isKorean
+                            ? "섹션을 클릭해 컨텍스트 도구를 여세요"
+                            : "Click a section to open contextual tools"}
                       </h3>
                     </div>
                     <div className="page-card__actions">
-                      <span className="detail-chip">{blocks.length} blocks</span>
+                      <span className="detail-chip">{isKorean ? `블록 ${blocks.length}개` : `${blocks.length} blocks`}</span>
                       <button
                         className="secondary-button"
                         onClick={() => setIsFallbackBlocksOpen((current) => !current)}
                         type="button"
                       >
-                        {isFallbackBlocksOpen ? "Hide fallback anchors" : "Show fallback anchors"}
+                        {isFallbackBlocksOpen
+                          ? isKorean
+                            ? "폴백 앵커 숨기기"
+                            : "Hide fallback anchors"
+                          : isKorean
+                            ? "폴백 앵커 보기"
+                            : "Show fallback anchors"}
                       </button>
                     </div>
                   </div>
@@ -3747,8 +3928,8 @@ export function ResumeEditorPage() {
                     <article className="page-card page-card--muted resume-editor-block resume-editor-block--selected">
                       <div className="section-heading">
                         <div>
-                          <p className="section-heading__eyebrow">Current fallback anchor</p>
-                          <h3 className="page-card__title">{selectedBlock.title || "Untitled block"}</h3>
+                          <p className="section-heading__eyebrow">{isKorean ? "현재 폴백 앵커" : "Current fallback anchor"}</p>
+                          <h3 className="page-card__title">{selectedBlock.title || (isKorean ? "제목 없는 블록" : "Untitled block")}</h3>
                         </div>
                         <button
                           className="secondary-button"
@@ -3758,11 +3939,11 @@ export function ResumeEditorPage() {
                           }}
                           type="button"
                         >
-                          Open tools
+                          {isKorean ? "도구 열기" : "Open tools"}
                         </button>
                       </div>
                       <p className="page-card__body resume-section__body--preserve">
-                        {selectedBlock.text || "No body text yet."}
+                        {selectedBlock.text || (isKorean ? "본문이 아직 없습니다." : "No body text yet.")}
                       </p>
                     </article>
                   ) : null}
@@ -3776,7 +3957,7 @@ export function ResumeEditorPage() {
                           <div className="section-heading">
                             <div>
                               <p className="section-heading__eyebrow">{block.blockTypeLabel}</p>
-                              <h3 className="page-card__title">{block.title || "Untitled block"}</h3>
+                              <h3 className="page-card__title">{block.title || (isKorean ? "제목 없는 블록" : "Untitled block")}</h3>
                             </div>
                             <button
                               className="secondary-button"
@@ -3791,18 +3972,24 @@ export function ResumeEditorPage() {
                               }}
                               type="button"
                             >
-                              {selectedBlockId === block.blockId ? "Open tools" : "Select block"}
+                              {selectedBlockId === block.blockId
+                                ? isKorean
+                                  ? "도구 열기"
+                                  : "Open tools"
+                                : isKorean
+                                  ? "블록 선택"
+                                  : "Select block"}
                             </button>
                           </div>
                           <p className="page-card__body resume-section__body--preserve">
-                            {block.text || "No body text yet."}
+                            {block.text || (isKorean ? "본문이 아직 없습니다." : "No body text yet.")}
                           </p>
                           <div className="filter-chip-row">
                             {block.sourceAnchorTypeLabel ? (
                               <span className="detail-chip">{block.sourceAnchorTypeLabel}</span>
                             ) : null}
                             {block.fieldPath ? <span className="detail-chip">{block.fieldPath}</span> : null}
-                            <span className="detail-chip">Order {block.displayOrder}</span>
+                            <span className="detail-chip">{isKorean ? "순서" : "Order"} {block.displayOrder}</span>
                           </div>
                           {block.inlineMarks.length > 0 ? (
                             <div className="filter-chip-row">
@@ -3823,7 +4010,7 @@ export function ResumeEditorPage() {
 
             {selectedBlock || selectedNode ? (
               <div
-                aria-label="Contextual editor tools"
+                aria-label={isKorean ? "컨텍스트 편집 도구" : "Contextual editor tools"}
                 className={`resume-editor-contextual ${isContextPanelOpen ? "resume-editor-contextual--open" : ""}`}
               >
                 {isContextPanelOpen ? (
@@ -3847,7 +4034,7 @@ export function ResumeEditorPage() {
                       onClick={() => setIsSecondaryToolsOpen((current) => !current)}
                       type="button"
                     >
-                      More
+                      {isKorean ? "더보기" : "More"}
                     </button>
                     {isSecondaryToolsOpen || isSecondaryPanelActive ? (
                       <div className="resume-editor-contextual__secondary">
@@ -3872,7 +4059,7 @@ export function ResumeEditorPage() {
                       onClick={() => setIsContextPanelOpen(false)}
                       type="button"
                     >
-                      Close
+                      {isKorean ? "닫기" : "Close"}
                     </button>
                   </div>
                 ) : currentTab !== "review" ? (
@@ -3905,7 +4092,7 @@ export function ResumeEditorPage() {
                       onClick={() => setIsContextPanelOpen(true)}
                       type="button"
                     >
-                      Open tools
+                      {isKorean ? "도구 열기" : "Open tools"}
                     </button>
                   </div>
                 ) : null}
@@ -3914,12 +4101,18 @@ export function ResumeEditorPage() {
                     <div className="section-heading">
                       <div>
                         <p className="section-heading__eyebrow">
-                          {richTreeEnabled ? "Selected node" : "Selected block"}
+                          {richTreeEnabled
+                            ? isKorean
+                              ? "선택된 노드"
+                              : "Selected node"
+                            : isKorean
+                              ? "선택된 블록"
+                              : "Selected block"}
                         </p>
                         <h3 className="page-card__title">
                           {richTreeEnabled
-                            ? selectedNode?.metadata.heading ?? selectedNode?.fieldPath ?? selectedNode?.nodeId ?? "Untitled node"
-                            : selectedBlock?.title || "Untitled block"}
+                            ? selectedNode?.metadata.heading ?? selectedNode?.fieldPath ?? selectedNode?.nodeId ?? (isKorean ? "제목 없는 노드" : "Untitled node")
+                            : selectedBlock?.title || (isKorean ? "제목 없는 블록" : "Untitled block")}
                         </h3>
                       </div>
                       <span className="detail-chip">
@@ -3936,24 +4129,24 @@ export function ResumeEditorPage() {
 
         {currentTab === "heatmap" ? (
           <section className="page-card">
-            <span className="page-card__label">Heatmap adjacency</span>
-            <h2 className="page-card__title">Resume heatmap connection</h2>
+            <span className="page-card__label">{isKorean ? "히트맵 연결" : "Heatmap adjacency"}</span>
+            <h2 className="page-card__title">{isKorean ? "이력서 히트맵 연결" : "Resume heatmap connection"}</h2>
             {workspaceQuery.data.heatmapAvailable ? (
               <>
                 <div className="stats-grid">
-                  <MetricCard label="Anchors" value={String(workspaceQuery.data.heatmapSummary?.totalAnchors ?? 0)} />
-                  <MetricCard label="Linked questions" tone="accent" value={String(workspaceQuery.data.heatmapSummary?.totalLinkedQuestions ?? 0)} />
+                  <MetricCard label={isKorean ? "앵커" : "Anchors"} value={String(workspaceQuery.data.heatmapSummary?.totalAnchors ?? 0)} />
+                  <MetricCard label={isKorean ? "연결된 질문" : "Linked questions"} tone="accent" value={String(workspaceQuery.data.heatmapSummary?.totalLinkedQuestions ?? 0)} />
                 </div>
                 <div className="page-card__actions">
                   <Link className="primary-button" to={routeConfig.resumeHeatmap.buildPath({ versionId: safeVersionId })}>
-                    Open interview heatmap
+                    {isKorean ? "면접 히트맵 열기" : "Open interview heatmap"}
                   </Link>
                 </div>
               </>
             ) : (
               <EmptyStateCard
-                body="The resume heatmap is not available for this workspace yet."
-                title="No heatmap connection"
+                body={isKorean ? "이 워크스페이스에서는 아직 이력서 히트맵을 사용할 수 없습니다." : "The resume heatmap is not available for this workspace yet."}
+                title={isKorean ? "히트맵 연결 없음" : "No heatmap connection"}
               />
             )}
           </section>
@@ -3961,35 +4154,38 @@ export function ResumeEditorPage() {
 
         {currentTab === "print-preview" ? (
           <section className="page-card">
-            <span className="page-card__label">Print preview</span>
-            <h2 className="page-card__title">Server print preview</h2>
+            <span className="page-card__label">{isKorean ? "출력 미리보기" : "Print preview"}</span>
+            <h2 className="page-card__title">{isKorean ? "서버 출력 미리보기" : "Server print preview"}</h2>
             {printPreviewQuery.isLoading ? (
-              <LoadingStateCard body="Loading print preview pages and layout hints." title="Preparing print preview" />
+              <LoadingStateCard
+                body={isKorean ? "출력 미리보기 페이지와 레이아웃 힌트를 불러오는 중입니다." : "Loading print preview pages and layout hints."}
+                title={isKorean ? "출력 미리보기 준비 중" : "Preparing print preview"}
+              />
             ) : printPreviewQuery.isError ? (
               <ErrorStateCard
-                body={printPreviewQuery.error instanceof Error ? printPreviewQuery.error.message : "Unable to load print preview."}
+                body={printPreviewQuery.error instanceof Error ? printPreviewQuery.error.message : isKorean ? "출력 미리보기를 불러올 수 없습니다." : "Unable to load print preview."}
                 details={getErrorDetails(printPreviewQuery.error)}
                 onAction={() => {
                   void printPreviewQuery.refetch();
                 }}
-                title="Unable to load print preview"
+                title={isKorean ? "출력 미리보기를 불러올 수 없습니다" : "Unable to load print preview"}
               />
             ) : printPreviewQuery.data ? (
               <div className="page-stack">
                 <div className="stats-grid">
-                  <MetricCard label="Page estimate" value={String(printPreviewQuery.data.pageEstimate)} />
-                  <MetricCard label="Sections" tone="accent" value={String(printPreviewQuery.data.sections.length)} />
+                  <MetricCard label={isKorean ? "예상 페이지 수" : "Page estimate"} value={String(printPreviewQuery.data.pageEstimate)} />
+                  <MetricCard label={isKorean ? "섹션" : "Sections"} tone="accent" value={String(printPreviewQuery.data.sections.length)} />
                 </div>
                 <div className="stack-list">
                   {printPreviewQuery.data.pages.map((page) => (
                     <article className="page-card page-card--muted" key={page.pageNumber}>
                       <div className="section-heading">
                         <div>
-                          <p className="section-heading__eyebrow">Page</p>
+                          <p className="section-heading__eyebrow">{isKorean ? "페이지" : "Page"}</p>
                           <h3 className="page-card__title">{page.pageNumber}</h3>
                         </div>
                         <span className="question-status-badge question-status-badge--neutral">
-                          {page.lineCount} lines
+                          {isKorean ? `${page.lineCount}줄` : `${page.lineCount} lines`}
                         </span>
                       </div>
                       <div className="filter-chip-row">
@@ -4011,18 +4207,21 @@ export function ResumeEditorPage() {
           <div className="resume-editor-workspace">
             <div className="resume-editor-workspace__document">
               <section className="page-card">
-                <span className="page-card__label">Revisions</span>
-                <h2 className="page-card__title">Revision history</h2>
+                <span className="page-card__label">{isKorean ? "리비전" : "Revisions"}</span>
+                <h2 className="page-card__title">{isKorean ? "리비전 히스토리" : "Revision history"}</h2>
                 {revisionsQuery.isLoading ? (
-                  <LoadingStateCard body="Loading persisted workspace revisions." title="Preparing history" />
+                  <LoadingStateCard
+                    body={isKorean ? "저장된 워크스페이스 리비전을 불러오는 중입니다." : "Loading persisted workspace revisions."}
+                    title={isKorean ? "히스토리 준비 중" : "Preparing history"}
+                  />
                 ) : revisionsQuery.isError ? (
                   <ErrorStateCard
-                    body={revisionsQuery.error instanceof Error ? revisionsQuery.error.message : "Unable to load revisions."}
+                    body={revisionsQuery.error instanceof Error ? revisionsQuery.error.message : isKorean ? "리비전을 불러올 수 없습니다." : "Unable to load revisions."}
                     details={getErrorDetails(revisionsQuery.error)}
                     onAction={() => {
                       void revisionsQuery.refetch();
                     }}
-                    title="Unable to load revisions"
+                    title={isKorean ? "리비전을 불러올 수 없습니다" : "Unable to load revisions"}
                   />
                 ) : revisionsQuery.data && revisionsQuery.data.length > 0 ? (
                   <div className="stack-list">
@@ -4031,24 +4230,24 @@ export function ResumeEditorPage() {
                         <div className="section-heading">
                           <div>
                             <p className="section-heading__eyebrow">{revision.changeSourceLabel}</p>
-                            <h3 className="page-card__title">Revision {revision.revisionNo}</h3>
+                            <h3 className="page-card__title">{isKorean ? `리비전 ${revision.revisionNo}` : `Revision ${revision.revisionNo}`}</h3>
                           </div>
                           <button
                             className="secondary-button"
                             onClick={() => setSelectedRevisionId(revision.id)}
                             type="button"
                           >
-                            View detail
+                            {isKorean ? "상세 보기" : "View detail"}
                           </button>
                         </div>
                         <p className="resume-tailor-muted">{revision.createdAtLabel}</p>
                     <div className="filter-chip-row">
-                      <span className="detail-chip">Added {revision.changeSummary.addedBlockCount}</span>
-                      <span className="detail-chip">Updated {revision.changeSummary.updatedBlockCount}</span>
-                      <span className="detail-chip">Removed {revision.changeSummary.removedBlockCount}</span>
+                      <span className="detail-chip">{isKorean ? "추가" : "Added"} {revision.changeSummary.addedBlockCount}</span>
+                      <span className="detail-chip">{isKorean ? "수정" : "Updated"} {revision.changeSummary.updatedBlockCount}</span>
+                      <span className="detail-chip">{isKorean ? "삭제" : "Removed"} {revision.changeSummary.removedBlockCount}</span>
                       {revision.changeSummary.changedBlockIds.length > 0 ? (
                         <span className="detail-chip">
-                          Changed ids {revision.changeSummary.changedBlockIds.length}
+                          {isKorean ? "변경 ID" : "Changed ids"} {revision.changeSummary.changedBlockIds.length}
                         </span>
                       ) : null}
                     </div>
@@ -4056,22 +4255,31 @@ export function ResumeEditorPage() {
                     ))}
                   </div>
                 ) : (
-                  <EmptyStateCard body="No revision history beyond the current draft yet." title="No revisions" />
+                  <EmptyStateCard
+                    body={isKorean ? "현재 초안을 제외하면 아직 리비전 히스토리가 없습니다." : "No revision history beyond the current draft yet."}
+                    title={isKorean ? "리비전 없음" : "No revisions"}
+                  />
                 )}
               </section>
             </div>
             <div className="resume-editor-workspace__side">
               <section className="page-card">
-                <span className="page-card__label">Revision detail</span>
+                <span className="page-card__label">{isKorean ? "리비전 상세" : "Revision detail"}</span>
                 <h2 className="page-card__title">
-                  {revisionDetailQuery.data ? `Revision ${revisionDetailQuery.data.revisionNo}` : "Select a revision"}
+                  {revisionDetailQuery.data
+                    ? isKorean
+                      ? `리비전 ${revisionDetailQuery.data.revisionNo}`
+                      : `Revision ${revisionDetailQuery.data.revisionNo}`
+                    : isKorean
+                      ? "리비전을 선택하세요"
+                      : "Select a revision"}
                 </h2>
                 {revisionDetailQuery.data ? (
                   <div className="page-stack">
                     <p className="resume-tailor-muted">{revisionDetailQuery.data.createdAtLabel}</p>
                     <div className="filter-chip-row">
-                      <span className="detail-chip">Added {revisionDetailQuery.data.changeSummary.addedBlockCount}</span>
-                      <span className="detail-chip">Updated {revisionDetailQuery.data.changeSummary.updatedBlockCount}</span>
+                      <span className="detail-chip">{isKorean ? "추가" : "Added"} {revisionDetailQuery.data.changeSummary.addedBlockCount}</span>
+                      <span className="detail-chip">{isKorean ? "수정" : "Updated"} {revisionDetailQuery.data.changeSummary.updatedBlockCount}</span>
                     </div>
                     <div className="stack-list">
                       {(revisionDetailQuery.data.document.nodes.length > 0
@@ -4101,34 +4309,34 @@ export function ResumeEditorPage() {
               </section>
 
               <section className="page-card">
-                <span className="page-card__label">Tracked changes</span>
-                <h2 className="page-card__title">Compare revisions</h2>
+                <span className="page-card__label">{isKorean ? "변경 추적" : "Tracked changes"}</span>
+                <h2 className="page-card__title">{isKorean ? "리비전 비교" : "Compare revisions"}</h2>
                 <label className="form-field">
-                  <span className="form-field__label">From revision</span>
+                  <span className="form-field__label">{isKorean ? "기준 리비전" : "From revision"}</span>
                   <select
                     className="form-field__input"
                     onChange={(event) => setCompareFromRevisionId(event.target.value)}
                     value={compareFromRevisionId ?? ""}
                   >
-                    <option value="">Select revision</option>
+                    <option value="">{isKorean ? "리비전 선택" : "Select revision"}</option>
                     {revisionsQuery.data?.map((revision) => (
                       <option key={`from-${revision.id}`} value={revision.id}>
-                        Revision {revision.revisionNo}
+                        {isKorean ? `리비전 ${revision.revisionNo}` : `Revision ${revision.revisionNo}`}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="form-field">
-                  <span className="form-field__label">To revision</span>
+                  <span className="form-field__label">{isKorean ? "대상 리비전" : "To revision"}</span>
                   <select
                     className="form-field__input"
                     onChange={(event) => setCompareToRevisionId(event.target.value)}
                     value={compareToRevisionId ?? ""}
                   >
-                    <option value="">Select revision</option>
+                    <option value="">{isKorean ? "리비전 선택" : "Select revision"}</option>
                     {revisionsQuery.data?.map((revision) => (
                       <option key={`to-${revision.id}`} value={revision.id}>
-                        Revision {revision.revisionNo}
+                        {isKorean ? `리비전 ${revision.revisionNo}` : `Revision ${revision.revisionNo}`}
                       </option>
                     ))}
                   </select>
@@ -4140,28 +4348,28 @@ export function ResumeEditorPage() {
                         <p className="section-heading__eyebrow">{change.changeTypeLabel}</p>
                         <h3 className="page-card__title">{change.nodeId ?? change.blockId}</h3>
                         <div className="filter-chip-row">
-                          {change.textChanged ? <span className="detail-chip">Text changed</span> : null}
-                          {change.structureChanged ? <span className="detail-chip">Structure changed</span> : null}
-                          {change.moveRelated ? <span className="detail-chip">Move related</span> : null}
+                          {change.textChanged ? <span className="detail-chip">{isKorean ? "텍스트 변경" : "Text changed"}</span> : null}
+                          {change.structureChanged ? <span className="detail-chip">{isKorean ? "구조 변경" : "Structure changed"}</span> : null}
+                          {change.moveRelated ? <span className="detail-chip">{isKorean ? "이동 관련" : "Move related"}</span> : null}
                         </div>
                         <div className="resume-editor-diff-card__grid">
                           <div className="resume-editor-diff-card__column">
-                            <p className="resume-tailor-muted">Before</p>
+                            <p className="resume-tailor-muted">{isKorean ? "이전" : "Before"}</p>
                             <div className="page-card__body resume-section__body--preserve resume-editor-diff-card__surface resume-editor-diff-card__surface--before">
                               {(change.beforeTextLines.length > 0
                                 ? change.beforeTextLines
-                                : [change.beforeText ?? "No previous text"]
+                                : [change.beforeText ?? (isKorean ? "이전 텍스트 없음" : "No previous text")]
                               ).map((line, index) => (
                                 <p key={`${change.id}-before-${index}`}>{line || "\u00A0"}</p>
                               ))}
                             </div>
                           </div>
                           <div className="resume-editor-diff-card__column">
-                            <p className="resume-tailor-muted">After</p>
+                            <p className="resume-tailor-muted">{isKorean ? "이후" : "After"}</p>
                             <div className="page-card__body resume-section__body--preserve resume-editor-diff-card__surface resume-editor-diff-card__surface--after">
                               {(change.afterTextLines.length > 0
                                 ? change.afterTextLines
-                                : [change.afterText ?? "No updated text"]
+                                : [change.afterText ?? (isKorean ? "수정된 텍스트 없음" : "No updated text")]
                               ).map((line, index) => (
                                 <p key={`${change.id}-after-${index}`}>{line || "\u00A0"}</p>
                               ))}
