@@ -8,9 +8,9 @@ type ResumeExperienceTimelineProps = {
 
 export function ResumeExperienceTimeline({ experiences, sectionId }: ResumeExperienceTimelineProps) {
   return (
-    <ResumeSectionCard count={experiences.length} eyebrow="Experience timeline" sectionId={sectionId} title="Work history extracted from your resume">
+    <ResumeSectionCard count={experiences.length} eyebrow="경력 타임라인" sectionId={sectionId} title="이력서에서 추출한 업무 이력">
       {experiences.length === 0 ? (
-        <p className="page-card__body">No experience timeline entries are available for this version yet.</p>
+        <p className="page-card__body">아직 이 버전의 경력 타임라인이 없습니다.</p>
       ) : (
         <div className="stack-list">
           {experiences.map((experience) => (
@@ -21,17 +21,17 @@ export function ResumeExperienceTimeline({ experiences, sectionId }: ResumeExper
                   <span>{experience.roleName}</span>
                   {experience.employmentType ? <span>{experience.employmentType}</span> : null}
                   <span>{experience.dateLabel}</span>
-                  {experience.current ? <span>Current</span> : null}
+                  {experience.current ? <span>현재</span> : null}
                 </div>
                 <h3 className="list-item-card__title">
                   {[experience.companyName, experience.roleName].filter(Boolean).join(" · ")}
                 </h3>
                 <p className="list-item-card__body">{experience.summary}</p>
                 {experience.impactText ? (
-                  <p className="resume-section__helper">Impact: {experience.impactText}</p>
+                  <p className="resume-section__helper">임팩트: {experience.impactText}</p>
                 ) : null}
                 {experience.projectName ? (
-                  <p className="resume-section__helper">Project: {experience.projectName}</p>
+                  <p className="resume-section__helper">프로젝트: {experience.projectName}</p>
                 ) : null}
               </div>
             </article>

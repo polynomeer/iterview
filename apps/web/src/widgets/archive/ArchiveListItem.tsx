@@ -11,11 +11,11 @@ export function ArchiveListItem({ item }: ArchiveListItemProps) {
   const { t } = useLocale();
   const evidencePoints = [
     item.totalAttemptCountLabel
-      ? { label: "Attempts", value: item.totalAttemptCountLabel }
+      ? { label: "시도", value: item.totalAttemptCountLabel }
       : null,
-    item.archivedAtLabel ? { label: "Archived", value: item.archivedAtLabel } : null,
-    item.sourceLabel ? { label: "Source", value: item.sourceLabel } : null,
-    item.bestScoreLabel ? { label: "Signal", value: item.bestScoreLabel } : null,
+    item.archivedAtLabel ? { label: "보관 시점", value: item.archivedAtLabel } : null,
+    item.sourceLabel ? { label: "출처", value: item.sourceLabel } : null,
+    item.bestScoreLabel ? { label: "신호", value: item.bestScoreLabel } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>;
 
   return (

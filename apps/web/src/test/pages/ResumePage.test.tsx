@@ -211,16 +211,16 @@ describe("ResumePage", () => {
       <Routes>
         <Route element={<ResumePage />} path="/profile/resumes" />
       </Routes>,
-      { route: "/profile/resumes" },
+      { route: "/profile/resumes", locale: "ko" },
     );
 
     expect(screen.getAllByText("Backend Resume")).toHaveLength(2);
-    expect(screen.getByText("Candidate overview")).toBeInTheDocument();
+    expect(screen.getByText("후보자 개요")).toBeInTheDocument();
     expect(screen.getByText("Interview analytics platform")).toBeInTheDocument();
     expect(screen.getByText("Backend Platform")).toBeInTheDocument();
     expect(screen.getByText("resume · domain")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "+ Create resume" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open resume editor" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "+ 이력서 만들기" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "이력서 에디터 열기" })).toHaveAttribute(
       "href",
       "/resume-versions/version-1/editor",
     );
@@ -285,12 +285,12 @@ describe("ResumePage", () => {
       <Routes>
         <Route element={<ResumePage />} path="/profile/resumes" />
       </Routes>,
-      { route: "/profile/resumes" },
+      { route: "/profile/resumes", locale: "ko" },
     );
 
-    await user.click(screen.getByRole("button", { name: "+ Create resume" }));
+    await user.click(screen.getByRole("button", { name: "+ 이력서 만들기" }));
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByText("Start a new resume container")).toBeInTheDocument();
+    expect(screen.getByText("새 이력서 컨테이너를 시작하세요")).toBeInTheDocument();
   });
 });

@@ -4,6 +4,7 @@ import type {
 } from "../../shared/types/archive";
 import { toArray } from "../../shared/lib/collection";
 import { formatApiDateTime } from "../../shared/lib/date";
+import { getCurrentAppLocale } from "../../shared/i18n";
 
 export type ArchiveItemModel = {
   id: string;
@@ -50,19 +51,22 @@ export type ArchiveFilterState = {
 };
 
 function mapArchiveSourceBadge(sourceType?: string | null) {
+  const isKorean = getCurrentAppLocale() === "ko";
+
   switch (sourceType) {
     case "practice":
-      return "Practice";
+      return isKorean ? "연습" : "Practice";
     case "interview":
-      return "Interview";
+      return isKorean ? "면접" : "Interview";
     case "real_interview":
-      return "Real Interview";
+      return isKorean ? "실전 면접" : "Real Interview";
     default:
       return sourceType ?? null;
   }
 }
 
 export function mapArchiveResponseDtoToModel(response: ArchiveResponseDto): ArchiveListModel {
+  const isKorean = getCurrentAppLocale() === "ko";
   const items = toArray(response).map((item) => ({
     id:
       item.sourceSessionQuestionId === null || item.sourceSessionQuestionId === undefined
@@ -70,14 +74,23 @@ export function mapArchiveResponseDtoToModel(response: ArchiveResponseDto): Arch
         : String(item.sourceSessionQuestionId),
     questionId:
       item.questionId === null || item.questionId === undefined ? "" : String(item.questionId),
-    questionTitle: item.title ?? "Archived question",
-    summary: item.sourceLabel ?? "Review the archived question details and score history.",
-    difficultyLabel: item.difficulty ?? "General",
+    questionTitle: item.title ?? (isKorean ? "보관된 질문" : "Archived question"),
+    summary:
+      item.sourceLabel ??
+      (isKorean
+        ? "보관된 질문의 상세 내용과 점수 이력을 확인하세요."
+        : "Review the archived question details and score history."),
+    difficultyLabel: item.difficulty ?? (isKorean ? "일반" : "General"),
     archivedAtLabel: formatApiDateTime(item.archivedAt),
-    totalAttemptCountLabel: `${item.totalAttemptCount ?? 0} attempts`,
+    totalAttemptCountLabel:
+      isKorean ? `시도 ${item.totalAttemptCount ?? 0}회` : `${item.totalAttemptCount ?? 0} attempts`,
     bestScoreLabel:
-      item.bestScore === null || item.bestScore === undefined ? null : `Best score ${Math.round(item.bestScore)}`,
-    archivedStatusLabel: "Archived",
+      item.bestScore === null || item.bestScore === undefined
+        ? null
+        : isKorean
+          ? `최고 점수 ${Math.round(item.bestScore)}`
+          : `Best score ${Math.round(item.bestScore)}`,
+    archivedStatusLabel: isKorean ? "보관됨" : "Archived",
     sourceType: item.sourceType ?? null,
     sourceLabel: item.sourceLabel ?? null,
     sourceBadgeLabel: mapArchiveSourceBadge(item.sourceType),

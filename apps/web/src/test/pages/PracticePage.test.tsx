@@ -85,13 +85,13 @@ describe("PracticePage", () => {
           path="/practice"
         />
       </Routes>,
-      { route: "/practice" },
+      { route: "/practice", locale: "ko" },
     );
 
-    await user.type(screen.getByRole("searchbox", { name: "Search questions" }), "cache");
+    await user.type(screen.getByRole("searchbox", { name: "질문 검색" }), "cache");
     expect(screen.getByTestId("location-display")).toHaveTextContent("/practice?search=cache");
 
-    await user.selectOptions(screen.getByRole("combobox", { name: "Category" }), "system-design");
+    await user.selectOptions(screen.getByRole("combobox", { name: "카테고리" }), "system-design");
     expect(screen.getByTestId("location-display")).toHaveTextContent(
       "/practice?category=system-design&search=cache",
     );
@@ -132,11 +132,11 @@ describe("PracticePage", () => {
       <Routes>
         <Route element={<PracticePage />} path="/practice" />
       </Routes>,
-      { route: "/practice" },
+      { route: "/practice", locale: "ko" },
     );
 
     expect(screen.getByText("Explain caching")).toBeInTheDocument();
-    expect(screen.getByText("Stay inside one interview preparation loop")).toBeInTheDocument();
+    expect(screen.getByText("다음에 연습할 질문을 고르세요")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Resume analysis/i })).toBeInTheDocument();
     expect(document.querySelector(".practice-layout--desktop")).not.toBeNull();
   });

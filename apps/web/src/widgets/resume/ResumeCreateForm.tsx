@@ -27,13 +27,13 @@ export function ResumeCreateForm({
     <section className={`page-card${className ? ` ${className}` : ""}`}>
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Create resume</p>
-          <h2 className="page-card__title">Start a new resume container</h2>
+          <p className="section-heading__eyebrow">이력서 만들기</p>
+          <h2 className="page-card__title">새 이력서 컨테이너를 시작하세요</h2>
         </div>
       </div>
       <div className="auth-form">
         <label className="form-field">
-          <span className="form-field__label">Resume title</span>
+          <span className="form-field__label">이력서 제목</span>
           <input className="form-field__input" onChange={(e) => onTitleChange(e.target.value)} value={title} />
         </label>
         {statusMessage ? <FeedbackNotice message={statusMessage} tone="success" /> : null}
@@ -41,11 +41,11 @@ export function ResumeCreateForm({
         <div className="page-card__actions">
           {onCancel ? (
             <button className="secondary-button" onClick={onCancel} type="button">
-              Cancel
+              취소
             </button>
           ) : null}
           <button className="primary-button" disabled={isPending} onClick={onSubmit} type="button">
-            {isPending ? "Creating..." : "Create resume"}
+            {isPending ? "생성 중..." : "이력서 만들기"}
           </button>
         </div>
       </div>

@@ -12,13 +12,13 @@ export function QuestionList({ items, hasMore, layout = "stack" }: QuestionListP
     <section className="page-card practice-question-list">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Question list</p>
-          <h2 className="page-card__title">Choose what to practice next</h2>
+          <p className="section-heading__eyebrow">질문 목록</p>
+          <h2 className="page-card__title">다음에 연습할 질문을 고르세요</h2>
         </div>
         <span className="section-heading__count">{items.length}</span>
       </div>
       <p className="page-card__body practice-question-list__intro">
-        Scan for the prompt that best matches the current retry goal, company target, or weak branch you want to defend next.
+        지금 보완하려는 약점, 목표 회사, 다시 답해볼 꼬리질문 흐름에 맞는 항목을 빠르게 찾아 연습을 이어가세요.
       </p>
       <div className={layout === "grid" ? "card-grid practice-question-list__grid" : "stack-list practice-question-list__stack"}>
         {items.map((item) => (
@@ -26,7 +26,7 @@ export function QuestionList({ items, hasMore, layout = "stack" }: QuestionListP
         ))}
       </div>
       {hasMore ? (
-        <p className="page-card__body">More questions are available when the backend exposes pagination controls.</p>
+        <p className="page-card__body">백엔드 pagination이 연결되면 더 많은 질문을 이어서 불러올 수 있습니다.</p>
       ) : null}
     </section>
   );

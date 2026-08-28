@@ -28,7 +28,7 @@ function FilterSelect({ label, value, options, onChange }: FilterSelectProps) {
         onChange={(event) => onChange(event.target.value)}
         value={value}
       >
-        <option value="">All</option>
+        <option value="">전체</option>
         {options.map((option) => (
           <option key={option.id} value={option.id}>
             {option.label}
@@ -48,25 +48,25 @@ export function QuestionFilterBar({
   const controls = (
     <div className="practice-filter-grid">
       <FilterSelect
-        label="Category"
+        label="카테고리"
         onChange={(next) => onChange({ ...value, category: next })}
         options={filters.categories}
         value={value.category}
       />
       <FilterSelect
-        label="Company"
+        label="회사"
         onChange={(next) => onChange({ ...value, company: next })}
         options={filters.companies}
         value={value.company}
       />
       <FilterSelect
-        label="Difficulty"
+        label="난이도"
         onChange={(next) => onChange({ ...value, difficulty: next })}
         options={filters.difficulties}
         value={value.difficulty}
       />
       <FilterSelect
-        label="Status"
+        label="상태"
         onChange={(next) => onChange({ ...value, status: next })}
         options={filters.statuses}
         value={value.status}
@@ -82,8 +82,8 @@ export function QuestionFilterBar({
     <section className="page-card practice-filter-panel">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Filters</p>
-          <h2 className="page-card__title">Refine the practice list</h2>
+          <p className="section-heading__eyebrow">필터</p>
+          <h2 className="page-card__title">연습 목록을 좁혀보세요</h2>
         </div>
       </div>
       {controls}

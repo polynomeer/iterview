@@ -8,16 +8,16 @@ type ResumeProjectsCardProps = {
 
 export function ResumeProjectsCard({ projects, sectionId }: ResumeProjectsCardProps) {
   return (
-    <ResumeSectionCard count={projects.length} eyebrow="Projects" sectionId={sectionId} title="Project evidence extracted from your resume">
+    <ResumeSectionCard count={projects.length} eyebrow="프로젝트" sectionId={sectionId} title="이력서에서 추출한 프로젝트 근거">
       {projects.length === 0 ? (
-        <p className="page-card__body">No project snapshots are available for this version yet.</p>
+        <p className="page-card__body">아직 이 버전의 프로젝트 스냅샷이 없습니다.</p>
       ) : (
         <div className="stack-list">
           {projects.map((project) => (
             <article className="page-card page-card--muted" key={project.id}>
               <div className="section-heading">
                 <div>
-                  <p className="section-heading__eyebrow">Project</p>
+                  <p className="section-heading__eyebrow">프로젝트</p>
                   <h3 className="page-card__title">{project.title}</h3>
                 </div>
                 {project.categoryName || project.categoryCode ? (
@@ -30,12 +30,12 @@ export function ResumeProjectsCard({ projects, sectionId }: ResumeProjectsCardPr
                 {project.organizationName ? <span>{project.organizationName}</span> : null}
                 {project.roleName ? <span>{project.roleName}</span> : null}
                 <span>{project.dateLabel}</span>
-                {project.relatedExperienceId ? <span>Related experience</span> : null}
+                {project.relatedExperienceId ? <span>연관 경력</span> : null}
               </div>
               <p className="page-card__body">{project.summary}</p>
               {project.contentText ? (
                 <div className="resume-project-card__content">
-                  <p className="resume-section__helper">Project content</p>
+                  <p className="resume-section__helper">프로젝트 상세</p>
                   <p className="page-card__body resume-section__body--preserve">{project.contentText}</p>
                 </div>
               ) : null}
@@ -49,7 +49,7 @@ export function ResumeProjectsCard({ projects, sectionId }: ResumeProjectsCardPr
                 </div>
               ) : null}
               {project.techStackText ? (
-                <p className="resume-section__helper">Tech stack: {project.techStackText}</p>
+                <p className="resume-section__helper">기술 스택: {project.techStackText}</p>
               ) : null}
             </article>
           ))}

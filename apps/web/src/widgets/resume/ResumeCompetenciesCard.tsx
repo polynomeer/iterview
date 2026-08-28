@@ -8,18 +8,18 @@ type ResumeCompetenciesCardProps = {
 
 export function ResumeCompetenciesCard({ competencies, sectionId }: ResumeCompetenciesCardProps) {
   return (
-    <ResumeSectionCard count={competencies.length} eyebrow="Competencies" sectionId={sectionId} title="Long-form competency statements">
+    <ResumeSectionCard count={competencies.length} eyebrow="역량" sectionId={sectionId} title="길게 풀어쓴 핵심 역량">
       {competencies.length === 0 ? (
-        <p className="page-card__body">No competency statements were extracted for this version yet.</p>
+        <p className="page-card__body">아직 이 버전에서 역량 문장이 추출되지 않았습니다.</p>
       ) : (
         <div className="stack-list">
           {competencies.map((competency) => (
             <article className="page-card page-card--muted" key={competency.id}>
-              <span className="page-card__label">Competency</span>
+              <span className="page-card__label">역량</span>
               <h3 className="page-card__title">{competency.title}</h3>
               <p className="page-card__body resume-section__body--preserve">{competency.description}</p>
               {competency.sourceText ? (
-                <p className="resume-section__helper">Source: {competency.sourceText}</p>
+                <p className="resume-section__helper">출처: {competency.sourceText}</p>
               ) : null}
             </article>
           ))}

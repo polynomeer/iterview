@@ -36,11 +36,11 @@ export function ResumeSectionCard({
             }}
             type="button"
           >
-            {isOpen ? "Collapse" : "Expand"}
+            {isOpen ? "접기" : "펼치기"}
           </button>
         </div>
       </div>
-      {isOpen ? children : <p className="page-card__body">Section collapsed. Expand when you want to inspect this part of the resume.</p>}
+      {isOpen ? children : <p className="page-card__body">접힌 섹션입니다. 이력서 내용을 확인하려면 다시 펼치세요.</p>}
     </section>
   );
 }

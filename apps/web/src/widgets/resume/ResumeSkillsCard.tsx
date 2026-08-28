@@ -8,32 +8,32 @@ type ResumeSkillsCardProps = {
 
 function getSkillLevelLabel(skill: ResumeAnalysisModel["skills"][number]) {
   if (skill.confidenceScore === undefined) {
-    return "Mapped skill";
+    return "매핑된 스킬";
   }
 
   if (skill.confidenceScore >= 0.75) {
-    return "Strong signal";
+    return "강한 근거";
   }
 
   if (skill.confidenceScore >= 0.45) {
-    return "Moderate signal";
+    return "보통 근거";
   }
 
-  return "Needs review";
+  return "검토 필요";
 }
 
 function getSkillValueLabel(skill: ResumeAnalysisModel["skills"][number]) {
-  return skill.confidenceLabel ?? skill.value ?? "No confidence metadata";
+  return skill.confidenceLabel ?? skill.value ?? "신뢰도 정보 없음";
 }
 
 export function ResumeSkillsCard({ skills, sectionId }: ResumeSkillsCardProps) {
   return (
-    <ResumeSectionCard count={skills.length} eyebrow="Parsed skills" sectionId={sectionId} title="Skills extracted from this resume version">
+    <ResumeSectionCard count={skills.length} eyebrow="추출된 스킬" sectionId={sectionId} title="이력서 버전에서 추출한 스킬">
       <p className="page-card__body">
-        Stronger evidence stays more saturated, and each label opens a small detail preview on hover.
+        근거가 강할수록 강조도가 높고, 각 스킬에 마우스를 올리면 세부 근거를 바로 확인할 수 있습니다.
       </p>
       {skills.length === 0 ? (
-        <p className="page-card__body">No parsed skills are available yet for the active version.</p>
+        <p className="page-card__body">활성 버전에서 아직 추출된 스킬이 없습니다.</p>
       ) : (
         <div className="resume-skills-card__chip-cloud">
           {skills.map((skill) => (
@@ -46,11 +46,11 @@ export function ResumeSkillsCard({ skills, sectionId }: ResumeSkillsCardProps) {
               <span className="resume-skill-chip__detail">
                 <span className="resume-skill-chip__detail-title">{skill.label}</span>
                 <span className="resume-skill-chip__detail-meta">
-                  {skill.category ?? "General"} · {getSkillLevelLabel(skill)}
+                  {skill.category ?? "일반"} · {getSkillLevelLabel(skill)}
                 </span>
                 <span className="resume-skill-chip__detail-value">{getSkillValueLabel(skill)}</span>
                 <span className="resume-skill-chip__detail-body">
-                  {skill.helperText ?? "No source snippet was attached to this skill."}
+                  {skill.helperText ?? "이 스킬에 연결된 원문 근거가 아직 없습니다."}
                 </span>
               </span>
             </button>

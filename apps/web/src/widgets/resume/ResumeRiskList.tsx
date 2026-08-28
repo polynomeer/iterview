@@ -10,9 +10,9 @@ type ResumeRiskListProps = {
 
 export function ResumeRiskList({ risks, sectionId }: ResumeRiskListProps) {
   return (
-    <ResumeSectionCard count={risks.length} eyebrow="Resume risks" sectionId={sectionId} title="Claims and topics to defend more clearly">
+    <ResumeSectionCard count={risks.length} eyebrow="이력서 리스크" sectionId={sectionId} title="더 명확히 방어해야 할 주장과 주제">
       {risks.length === 0 ? (
-        <p className="page-card__body">No resume risks are available for the active version.</p>
+        <p className="page-card__body">활성 버전에서 확인된 이력서 리스크가 없습니다.</p>
       ) : (
         <div className="stack-list">
           {risks.map((risk) => (
@@ -20,7 +20,7 @@ export function ResumeRiskList({ risks, sectionId }: ResumeRiskListProps) {
               action={
                 risk.linkedQuestionId
                   ? {
-                      label: "Open question",
+                      label: "질문 열기",
                       to: routeConfig.questionDetail.buildPath({ questionId: risk.linkedQuestionId }),
                     }
                   : undefined

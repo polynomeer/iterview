@@ -29,13 +29,13 @@ export function ResumeVersionItem({
           <span>{version.versionNumberLabel}</span>
           {version.uploadedAtLabel ? <span>{version.uploadedAtLabel}</span> : null}
           {version.isActive ? (
-            <span className="question-status-badge question-status-badge--positive">Active</span>
+            <span className="question-status-badge question-status-badge--positive">활성</span>
           ) : null}
           <span className={`question-status-badge question-status-badge--${version.parsingTone}`}>
             {version.parsingStatusLabel}
           </span>
           <span className={`question-status-badge question-status-badge--${version.extractionTone}`}>
-            Extraction: {version.extractionStatusLabel}
+            추출: {version.extractionStatusLabel}
           </span>
         </div>
         <h3 className="list-item-card__title">{version.fileNameLabel}</h3>
@@ -45,7 +45,7 @@ export function ResumeVersionItem({
           <p className="list-item-card__body list-item-card__body--warning">{version.extractionErrorMessage}</p>
         ) : null}
         <p className="list-item-card__helper">
-          {isSelected ? "Inspecting below" : "Select to inspect and manage this version"}
+          {isSelected ? "아래에서 확인 중" : "선택해서 이 버전을 확인하고 관리하세요"}
         </p>
       </div>
     </article>

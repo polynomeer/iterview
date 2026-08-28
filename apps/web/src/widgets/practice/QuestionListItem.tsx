@@ -26,7 +26,7 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
             ) : null}
             {item.resumeRelevanceLabel ? (
               <p className="practice-list-item__progress">
-                Resume: {item.resumeRelevanceLabel}
+                이력서 연관도: {item.resumeRelevanceLabel}
                 {item.resumeRelevanceReason ? ` / ${item.resumeRelevanceReason}` : ""}
               </p>
             ) : null}
@@ -47,13 +47,13 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
           className="secondary-button"
           to={routeConfig.questionDetail.buildPath({ questionId: item.id })}
         >
-          View detail
+          상세 보기
         </Link>
         <Link
           className="primary-button"
           to={routeConfig.answerEditor.buildPath({ questionId: item.id })}
         >
-          Start answer
+          답변 시작
         </Link>
       </div>
     </article>

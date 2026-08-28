@@ -10,20 +10,20 @@ export function ResumeExperienceList({ experiences }: ResumeExperienceListProps)
     <section className="page-card">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Parsed experiences</p>
-          <h2 className="page-card__title">Experience evidence extracted from your resume</h2>
+          <p className="section-heading__eyebrow">추출된 경력</p>
+          <h2 className="page-card__title">이력서에서 추출한 경력 근거</h2>
         </div>
         <span className="section-heading__count">{experiences.length}</span>
       </div>
       {experiences.length === 0 ? (
-        <p className="page-card__body">No extracted experiences are available yet.</p>
+        <p className="page-card__body">아직 추출된 경력 정보가 없습니다.</p>
       ) : (
         <div className="stack-list">
           {experiences.map((experience) => (
             <InsightCard
               body={experience.summary}
               key={experience.id}
-              label="Experience"
+              label="경력"
               meta={experience.impactText ? [experience.impactText] : []}
               title={experience.title}
             />

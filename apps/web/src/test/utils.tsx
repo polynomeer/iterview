@@ -4,6 +4,7 @@ import type { PropsWithChildren, ReactElement } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { vi } from "vitest";
 import { LocaleProvider } from "../shared/i18n";
+import type { AppLocale } from "../shared/i18n";
 import { ThemeProvider } from "../shared/theme";
 
 function createTestQueryClient() {
@@ -21,15 +22,16 @@ function createTestQueryClient() {
 
 type RenderWithProvidersOptions = {
   route?: string;
+  locale?: AppLocale;
 };
 
 export function renderWithProviders(
   ui: ReactElement,
-  { route = "/" }: RenderWithProvidersOptions = {},
+  { route = "/", locale = "en" }: RenderWithProvidersOptions = {},
 ) {
   const queryClient = createTestQueryClient();
 
-  window.localStorage.setItem("iterview-locale", "en");
+  window.localStorage.setItem("iterview-locale", locale);
 
   function Wrapper({ children }: PropsWithChildren) {
     return (

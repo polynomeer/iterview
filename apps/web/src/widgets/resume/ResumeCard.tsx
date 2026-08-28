@@ -35,7 +35,7 @@ export function ResumeCard({
     >
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Resume</p>
+          <p className="section-heading__eyebrow">이력서</p>
           <h2 className="page-card__title">{resume.title}</h2>
         </div>
         <div className="resume-card__header-actions">
@@ -59,7 +59,7 @@ export function ResumeCard({
                 }}
                 type="file"
               />
-              {pendingUploadResumeId === resume.id ? "Uploading..." : "Upload PDF"}
+              {pendingUploadResumeId === resume.id ? "업로드 중..." : "PDF 업로드"}
             </label>
           ) : null}
         </div>

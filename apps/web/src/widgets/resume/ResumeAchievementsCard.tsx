@@ -8,9 +8,9 @@ type ResumeAchievementsCardProps = {
 
 export function ResumeAchievementsCard({ achievements, sectionId }: ResumeAchievementsCardProps) {
   return (
-    <ResumeSectionCard count={achievements.length} eyebrow="Achievements" sectionId={sectionId} title="Impact and outcomes worth defending">
+    <ResumeSectionCard count={achievements.length} eyebrow="성과" sectionId={sectionId} title="면접에서 방어해야 할 임팩트와 결과">
       {achievements.length === 0 ? (
-        <p className="page-card__body">No achievement records are available for this version yet.</p>
+        <p className="page-card__body">아직 이 버전의 성과 기록이 없습니다.</p>
       ) : (
         <div className="stack-list">
           {achievements.map((achievement) => (

@@ -38,17 +38,17 @@ import {
 } from "../../widgets/resume";
 
 const parsedSectionLinks = [
-  { id: "resume-section-profile", label: "Profile" },
-  { id: "resume-section-contacts", label: "Contacts" },
-  { id: "resume-section-competencies", label: "Competencies" },
-  { id: "resume-section-skills", label: "Skills" },
-  { id: "resume-section-experience", label: "Experience" },
-  { id: "resume-section-projects", label: "Projects" },
-  { id: "resume-section-achievements", label: "Achievements" },
-  { id: "resume-section-education", label: "Education" },
-  { id: "resume-section-certifications", label: "Certifications" },
-  { id: "resume-section-awards", label: "Awards" },
-  { id: "resume-section-risks", label: "Risks" },
+  { id: "resume-section-profile", label: "프로필" },
+  { id: "resume-section-contacts", label: "연락처" },
+  { id: "resume-section-competencies", label: "역량" },
+  { id: "resume-section-skills", label: "스킬" },
+  { id: "resume-section-experience", label: "경력" },
+  { id: "resume-section-projects", label: "프로젝트" },
+  { id: "resume-section-achievements", label: "성과" },
+  { id: "resume-section-education", label: "학력" },
+  { id: "resume-section-certifications", label: "자격증" },
+  { id: "resume-section-awards", label: "수상" },
+  { id: "resume-section-risks", label: "리스크" },
 ] as const;
 
 export function ResumePage() {
@@ -610,7 +610,9 @@ export function ResumePage() {
                               }}
                               type="file"
                             />
-                            {pendingUploadResumeId === selectedResumeId ? "Uploading..." : "Upload replacement PDF"}
+                            {pendingUploadResumeId === selectedResumeId
+                              ? (isKorean ? "업로드 중..." : "Uploading...")
+                              : (isKorean ? "대체 PDF 업로드" : "Upload replacement PDF")}
                           </label>
                         ) : null}
                         <button
@@ -621,44 +623,52 @@ export function ResumePage() {
                           }}
                           type="button"
                         >
-                          {pendingDownloadId === selectedVersionQuery.data.id ? "Downloading..." : "Download PDF"}
+                          {pendingDownloadId === selectedVersionQuery.data.id
+                            ? (isKorean ? "다운로드 중..." : "Downloading...")
+                            : (isKorean ? "PDF 다운로드" : "Download PDF")}
                         </button>
                       </div>
                       <div className="stats-grid">
                         <article className="stat-tile">
-                          <p className="stat-tile__label">Uploaded</p>
+                          <p className="stat-tile__label">{isKorean ? "업로드" : "Uploaded"}</p>
                           <strong className="stat-tile__value stat-tile__value--small">
-                            {selectedVersionQuery.data.uploadedAtLabel ?? "Unknown"}
+                            {selectedVersionQuery.data.uploadedAtLabel ?? (isKorean ? "알 수 없음" : "Unknown")}
                           </strong>
                         </article>
                         <article className="stat-tile">
-                          <p className="stat-tile__label">File</p>
+                          <p className="stat-tile__label">{isKorean ? "파일" : "File"}</p>
                           <strong className="stat-tile__value stat-tile__value--small">
-                            {selectedVersionQuery.data.fileSizeLabel ?? selectedVersionQuery.data.fileTypeLabel ?? "Unknown"}
+                            {selectedVersionQuery.data.fileSizeLabel ??
+                              selectedVersionQuery.data.fileTypeLabel ??
+                              (isKorean ? "알 수 없음" : "Unknown")}
                           </strong>
                         </article>
                         <article className="stat-tile">
-                          <p className="stat-tile__label">Parsing started</p>
+                          <p className="stat-tile__label">{isKorean ? "파싱 시작" : "Parsing started"}</p>
                           <strong className="stat-tile__value stat-tile__value--small">
-                            {selectedVersionQuery.data.parseStartedAtLabel ?? "Waiting"}
+                            {selectedVersionQuery.data.parseStartedAtLabel ?? (isKorean ? "대기 중" : "Waiting")}
                           </strong>
                         </article>
                         <article className="stat-tile">
-                          <p className="stat-tile__label">Parsing finished</p>
+                          <p className="stat-tile__label">{isKorean ? "파싱 완료" : "Parsing finished"}</p>
                           <strong className="stat-tile__value stat-tile__value--small">
-                            {selectedVersionQuery.data.parseCompletedAtLabel ?? "Not finished"}
+                            {selectedVersionQuery.data.parseCompletedAtLabel ?? (isKorean ? "미완료" : "Not finished")}
                           </strong>
                         </article>
                         <article className="stat-tile">
-                          <p className="stat-tile__label">Extraction started</p>
+                          <p className="stat-tile__label">{isKorean ? "추출 시작" : "Extraction started"}</p>
                           <strong className="stat-tile__value stat-tile__value--small">
-                            {selectedExtractionQuery.data?.startedAtLabel ?? selectedVersionQuery.data.extractionStartedAtLabel ?? "Waiting"}
+                            {selectedExtractionQuery.data?.startedAtLabel ??
+                              selectedVersionQuery.data.extractionStartedAtLabel ??
+                              (isKorean ? "대기 중" : "Waiting")}
                           </strong>
                         </article>
                         <article className="stat-tile">
-                          <p className="stat-tile__label">Extraction finished</p>
+                          <p className="stat-tile__label">{isKorean ? "추출 완료" : "Extraction finished"}</p>
                           <strong className="stat-tile__value stat-tile__value--small">
-                            {selectedExtractionQuery.data?.completedAtLabel ?? selectedVersionQuery.data.extractionCompletedAtLabel ?? "Not finished"}
+                            {selectedExtractionQuery.data?.completedAtLabel ??
+                              selectedVersionQuery.data.extractionCompletedAtLabel ??
+                              (isKorean ? "미완료" : "Not finished")}
                           </strong>
                         </article>
                       </div>
@@ -679,34 +689,50 @@ export function ResumePage() {
                       {selectedVersionQuery.data.parsingStatus === "pending" ||
                       selectedVersionQuery.data.parsingStatus === "processing" ? (
                         <FeedbackNotice
-                          message="Parsing is still in progress. The page will keep refreshing until the status changes."
+                          message={
+                            isKorean
+                              ? "파싱이 아직 진행 중입니다. 상태가 바뀔 때까지 페이지가 계속 새로고침됩니다."
+                              : "Parsing is still in progress. The page will keep refreshing until the status changes."
+                          }
                           tone="info"
                         />
                       ) : null}
                       {selectedExtractionQuery.isLoading && selectedVersionQuery.data.parsingStatus === "completed" ? (
                         <FeedbackNotice
-                          message="Structured extraction status is loading."
+                          message={isKorean ? "구조화 추출 상태를 불러오는 중입니다." : "Structured extraction status is loading."}
                           tone="info"
                         />
                       ) : null}
                       {selectedExtractionQuery.data?.extractionStatus === "pending" ||
                       selectedExtractionQuery.data?.extractionStatus === "processing" ? (
                         <FeedbackNotice
-                          message="Structured extraction is still running. Parsed snapshots will appear after the status changes."
+                          message={
+                            isKorean
+                              ? "구조화 추출이 아직 진행 중입니다. 상태가 바뀌면 파싱된 스냅샷이 표시됩니다."
+                              : "Structured extraction is still running. Parsed snapshots will appear after the status changes."
+                          }
                           tone="info"
                         />
                       ) : null}
                       {selectedExtractionQuery.data?.extractionStatus === "skipped" ? (
                         <div className="resume-version-feedback">
                           <FeedbackNotice
-                            message="Structured extraction was skipped. This resume version remains usable, and any available snapshots are still shown below."
+                            message={
+                              isKorean
+                                ? "구조화 추출이 건너뛰어졌습니다. 이 이력서 버전은 계속 사용할 수 있으며, 가능한 스냅샷은 아래에 표시됩니다."
+                                : "Structured extraction was skipped. This resume version remains usable, and any available snapshots are still shown below."
+                            }
                             tone="info"
                           />
                         </div>
                       ) : null}
                       {selectedExtractionQuery.data?.extractionStatus === "fallback" ? (
                         <FeedbackNotice
-                          message="Deterministic fallback extraction was used. This resume version remains usable for interview context."
+                          message={
+                            isKorean
+                              ? "결정론적 fallback 추출이 사용되었습니다. 이 이력서 버전은 인터뷰 컨텍스트에 계속 사용할 수 있습니다."
+                              : "Deterministic fallback extraction was used. This resume version remains usable for interview context."
+                          }
                           tone="info"
                         />
                       ) : null}
@@ -715,7 +741,9 @@ export function ResumePage() {
                           message={
                             selectedExtractionQuery.error instanceof Error
                               ? selectedExtractionQuery.error.message
-                              : "Structured extraction status could not be loaded."
+                              : isKorean
+                                ? "구조화 추출 상태를 불러오지 못했습니다."
+                                : "Structured extraction status could not be loaded."
                           }
                           details={getErrorDetails(selectedExtractionQuery.error)}
                           tone="error"
@@ -724,39 +752,43 @@ export function ResumePage() {
                       <section className="page-card page-card--muted">
                         <div className="section-heading">
                           <div>
-                            <p className="section-heading__eyebrow">Structured extraction</p>
-                            <h3 className="page-card__title">Extraction status and metadata</h3>
+                            <p className="section-heading__eyebrow">{isKorean ? "구조화 추출" : "Structured extraction"}</p>
+                            <h3 className="page-card__title">{isKorean ? "추출 상태와 메타데이터" : "Extraction status and metadata"}</h3>
                           </div>
                         </div>
                         <div className="stats-grid">
                           <article className="stat-tile">
-                            <p className="stat-tile__label">Raw parsing</p>
+                            <p className="stat-tile__label">{isKorean ? "원본 파싱" : "Raw parsing"}</p>
                             <strong className="stat-tile__value stat-tile__value--small">
                               {selectedExtractionQuery.data?.rawParsingStatusLabel ?? selectedVersionQuery.data.parsingStatusLabel}
                             </strong>
                           </article>
                           <article className="stat-tile">
-                            <p className="stat-tile__label">Structured extraction</p>
+                            <p className="stat-tile__label">{isKorean ? "구조화 추출" : "Structured extraction"}</p>
                             <strong className="stat-tile__value stat-tile__value--small">
                               {selectedExtractionQuery.data?.extractionStatusLabel ?? selectedVersionQuery.data.extractionStatusLabel}
                             </strong>
                           </article>
                           <article className="stat-tile">
-                            <p className="stat-tile__label">Model</p>
+                            <p className="stat-tile__label">{isKorean ? "모델" : "Model"}</p>
                             <strong className="stat-tile__value stat-tile__value--small">
-                              {selectedExtractionQuery.data?.modelLabel ?? selectedVersionQuery.data.extractionModelLabel ?? "Not available"}
+                              {selectedExtractionQuery.data?.modelLabel ??
+                                selectedVersionQuery.data.extractionModelLabel ??
+                                (isKorean ? "정보 없음" : "Not available")}
                             </strong>
                           </article>
                           <article className="stat-tile">
-                            <p className="stat-tile__label">Prompt version</p>
+                            <p className="stat-tile__label">{isKorean ? "프롬프트 버전" : "Prompt version"}</p>
                             <strong className="stat-tile__value stat-tile__value--small">
-                              {selectedExtractionQuery.data?.promptVersionLabel ?? selectedVersionQuery.data.extractionPromptVersion ?? "Not available"}
+                              {selectedExtractionQuery.data?.promptVersionLabel ??
+                                selectedVersionQuery.data.extractionPromptVersion ??
+                                (isKorean ? "정보 없음" : "Not available")}
                             </strong>
                           </article>
                           <article className="stat-tile">
-                            <p className="stat-tile__label">Confidence</p>
+                            <p className="stat-tile__label">{isKorean ? "신뢰도" : "Confidence"}</p>
                             <strong className="stat-tile__value stat-tile__value--small">
-                              {selectedVersionQuery.data.extractionConfidenceLabel ?? "Not available"}
+                              {selectedVersionQuery.data.extractionConfidenceLabel ?? (isKorean ? "정보 없음" : "Not available")}
                             </strong>
                           </article>
                         </div>
@@ -771,8 +803,12 @@ export function ResumePage() {
                               type="button"
                             >
                               {pendingReExtractId === selectedVersionQuery.data.id
-                                ? "Re-running extraction..."
-                                : "Re-run extraction"}
+                                ? isKorean
+                                  ? "추출 재실행 중..."
+                                  : "Re-running extraction..."
+                                : isKorean
+                                  ? "추출 다시 실행"
+                                  : "Re-run extraction"}
                             </button>
                             {selectedExtractionQuery.isError ? (
                               <button
@@ -782,7 +818,7 @@ export function ResumePage() {
                                 }}
                                 type="button"
                               >
-                                Retry status check
+                                {isKorean ? "상태 다시 확인" : "Retry status check"}
                               </button>
                             ) : null}
                           </div>
@@ -790,32 +826,50 @@ export function ResumePage() {
                       </section>
                       <section className="resume-version-activation-panel">
                         <div>
-                          <p className="section-heading__eyebrow">Interview context</p>
-                          <h3 className="page-card__title">Use this version for answer evaluation</h3>
+                          <p className="section-heading__eyebrow">{isKorean ? "인터뷰 컨텍스트" : "Interview context"}</p>
+                          <h3 className="page-card__title">{isKorean ? "이 버전을 답변 평가에 사용" : "Use this version for answer evaluation"}</h3>
                           <p className="page-card__body">
                             {selectedVersionQuery.data.isActive
-                              ? "This resume version is already active. New answers and resume-driven recommendations will use it."
+                              ? isKorean
+                                ? "이 이력서 버전은 이미 활성 상태입니다. 새 답변과 이력서 기반 추천에 이 버전이 사용됩니다."
+                                : "This resume version is already active. New answers and resume-driven recommendations will use it."
                               : selectedVersionQuery.data.canActivate
-                                ? "Activate this parsed version to drive question matching, answer evaluation, and resume intelligence."
+                                ? isKorean
+                                  ? "이 파싱된 버전을 활성화하면 질문 매칭, 답변 평가, 이력서 인텔리전스에 사용됩니다."
+                                  : "Activate this parsed version to drive question matching, answer evaluation, and resume intelligence."
                                 : selectedVersionQuery.data.parsingStatus === "failed"
-                                  ? "This version cannot become active until you upload a version that parses successfully."
-                                  : "Activation becomes available after parsing completes successfully."}
+                                  ? isKorean
+                                    ? "파싱에 성공한 버전을 다시 업로드하기 전까지 이 버전은 활성화할 수 없습니다."
+                                    : "This version cannot become active until you upload a version that parses successfully."
+                                  : isKorean
+                                    ? "파싱이 정상적으로 끝나면 활성화할 수 있습니다."
+                                    : "Activation becomes available after parsing completes successfully."}
                           </p>
                         </div>
                         <div className="resume-version-activation-panel__summary">
                           <article className="resume-version-activation-panel__summary-item">
-                            <span>Activation state</span>
+                            <span>{isKorean ? "활성화 상태" : "Activation state"}</span>
                             <strong>
                               {selectedVersionQuery.data.isActive
-                                ? "Already driving interview evaluation"
+                                ? isKorean
+                                  ? "이미 인터뷰 평가에 사용 중"
+                                  : "Already driving interview evaluation"
                                 : selectedVersionQuery.data.canActivate
-                                  ? "Ready to become the active interview context"
-                                  : "Blocked until parsing completes cleanly"}
+                                  ? isKorean
+                                    ? "활성 인터뷰 컨텍스트로 전환 가능"
+                                    : "Ready to become the active interview context"
+                                  : isKorean
+                                    ? "파싱이 정상 완료될 때까지 대기"
+                                    : "Blocked until parsing completes cleanly"}
                             </strong>
                           </article>
                           <article className="resume-version-activation-panel__summary-item">
-                            <span>Before activate</span>
-                            <strong>Confirm parsing, extraction, and the evidence sections you expect to defend</strong>
+                            <span>{isKorean ? "활성화 전 확인" : "Before activate"}</span>
+                            <strong>
+                              {isKorean
+                                ? "파싱, 추출, 그리고 실제로 방어할 근거 섹션을 먼저 확인하세요."
+                                : "Confirm parsing, extraction, and the evidence sections you expect to defend"}
+                            </strong>
                           </article>
                         </div>
                         <div className="page-card__actions">
@@ -832,13 +886,19 @@ export function ResumePage() {
                             type="button"
                           >
                             {selectedVersionQuery.data.isActive
-                              ? "Active version"
+                              ? isKorean
+                                ? "활성 버전"
+                                : "Active version"
                               : pendingActivationId === selectedVersionQuery.data.id
-                                ? "Activating..."
-                                : "Activate for interview context"}
+                                ? isKorean
+                                  ? "활성화 중..."
+                                  : "Activating..."
+                                : isKorean
+                                  ? "인터뷰 컨텍스트로 활성화"
+                                  : "Activate for interview context"}
                           </button>
                           <Link className="secondary-button" to={routeConfig.resumeAnalysis.buildPath()}>
-                            Open resume analysis
+                            {isKorean ? "이력서 분석 열기" : "Open resume analysis"}
                           </Link>
                           <Link
                             className="secondary-button"
@@ -846,7 +906,7 @@ export function ResumePage() {
                               versionId: selectedVersionQuery.data.id,
                             })}
                           >
-                            Open resume editor
+                            {isKorean ? "이력서 에디터 열기" : "Open resume editor"}
                           </Link>
                           <Link
                             className="secondary-button"
@@ -854,7 +914,7 @@ export function ResumePage() {
                               versionId: selectedVersionQuery.data.id,
                             })}
                           >
-                            Open interview heatmap
+                            {isKorean ? "인터뷰 히트맵 열기" : "Open interview heatmap"}
                           </Link>
                         </div>
                       </section>
@@ -865,13 +925,21 @@ export function ResumePage() {
                 {selectedVersionQuery.data?.parsingStatus === "completed" ? (
                   !canLoadSnapshots ? (
                     <LoadingStateCard
-                      body="Waiting for structured extraction to settle before loading version snapshots."
-                      title="Preparing resume details"
+                      body={
+                        isKorean
+                          ? "구조화 추출 상태가 안정되면 버전 스냅샷을 불러옵니다."
+                          : "Waiting for structured extraction to settle before loading version snapshots."
+                      }
+                      title={isKorean ? "이력서 상세 준비 중" : "Preparing resume details"}
                     />
                   ) : snapshotsQuery.isLoading ? (
                     <LoadingStateCard
-                      body="Loading extracted profile, contacts, competencies, skills, experience, projects, achievements, credentials, and risks."
-                      title="Preparing parsed resume details"
+                      body={
+                        isKorean
+                          ? "추출된 프로필, 연락처, 역량, 스킬, 경력, 프로젝트, 성과, 자격, 리스크를 불러오는 중입니다."
+                          : "Loading extracted profile, contacts, competencies, skills, experience, projects, achievements, credentials, and risks."
+                      }
+                      title={isKorean ? "파싱된 이력서 상세 준비 중" : "Preparing parsed resume details"}
                     />
                   ) : snapshotsQuery.isError ? (
                     selectedExtractionQuery.data?.extractionStatus === "failed" ? (
@@ -880,7 +948,9 @@ export function ResumePage() {
                         message={
                           snapshotsQuery.error instanceof Error
                             ? snapshotsQuery.error.message
-                            : "Structured extraction failed and no snapshot sections were available."
+                            : isKorean
+                              ? "구조화 추출에 실패했고 사용할 수 있는 스냅샷 섹션이 없습니다."
+                              : "Structured extraction failed and no snapshot sections were available."
                         }
                         tone="info"
                       />
@@ -889,13 +959,15 @@ export function ResumePage() {
                         body={
                           snapshotsQuery.error instanceof Error
                             ? snapshotsQuery.error.message
-                            : "The parsed resume details could not be loaded."
+                            : isKorean
+                              ? "파싱된 이력서 상세를 불러오지 못했습니다."
+                              : "The parsed resume details could not be loaded."
                         }
                         details={getErrorDetails(snapshotsQuery.error)}
                         onAction={() => {
                           void snapshotsQuery.refetch();
                         }}
-                        title="Unable to load parsed resume details"
+                        title={isKorean ? "파싱된 이력서 상세를 불러올 수 없습니다" : "Unable to load parsed resume details"}
                       />
                     )
                   ) : snapshotsQuery.data ? (
@@ -930,8 +1002,8 @@ export function ResumePage() {
                           sectionId="resume-section-achievements"
                         />
                         <ResumeCredentialSection
-                          emptyMessage="No education entries are available for this version yet."
-                          eyebrow="Education"
+                          emptyMessage={isKorean ? "아직 이 버전의 학력 정보가 없습니다." : "No education entries are available for this version yet."}
+                          eyebrow={isKorean ? "학력" : "Education"}
                           items={snapshotsQuery.data.education.map((item) => ({
                             id: item.id,
                             title: [item.institutionName, item.degreeName].filter(Boolean).join(" · ") || item.institutionName,
@@ -941,11 +1013,11 @@ export function ResumePage() {
                             body: item.description,
                           }))}
                           sectionId="resume-section-education"
-                          title="Education history"
+                          title={isKorean ? "학력 이력" : "Education history"}
                         />
                         <ResumeCredentialSection
-                          emptyMessage="No certification entries are available for this version yet."
-                          eyebrow="Certifications"
+                          emptyMessage={isKorean ? "아직 이 버전의 자격증 정보가 없습니다." : "No certification entries are available for this version yet."}
+                          eyebrow={isKorean ? "자격증" : "Certifications"}
                           items={snapshotsQuery.data.certifications.map((item) => ({
                             id: item.id,
                             title: item.name,
@@ -954,11 +1026,11 @@ export function ResumePage() {
                             ),
                           }))}
                           sectionId="resume-section-certifications"
-                          title="Certifications and credential evidence"
+                          title={isKorean ? "자격증 및 자격 근거" : "Certifications and credential evidence"}
                         />
                         <ResumeCredentialSection
-                          emptyMessage="No award entries are available for this version yet."
-                          eyebrow="Awards"
+                          emptyMessage={isKorean ? "아직 이 버전의 수상 정보가 없습니다." : "No award entries are available for this version yet."}
+                          eyebrow={isKorean ? "수상" : "Awards"}
                           items={snapshotsQuery.data.awards.map((item) => ({
                             id: item.id,
                             title: item.title,
@@ -968,7 +1040,7 @@ export function ResumePage() {
                             body: item.description,
                           }))}
                           sectionId="resume-section-awards"
-                          title="Awards and recognitions"
+                          title={isKorean ? "수상 및 인정 내역" : "Awards and recognitions"}
                         />
                         <ResumeRiskList
                           risks={snapshotsQuery.data.risks}
