@@ -119,7 +119,7 @@ export function ResumeTailorAnalysisListPage() {
               </article>
               <article className="resume-tailor-workspace-surface__guidance-card">
                 <span>{isKorean ? "이탈 조건" : "Exit rule"}</span>
-                <strong>{isKorean ? "수정 제안을 수락하거나 거절할 가치가 있는 실행 하나가 보이면 상세 워크스페이스로 이동하세요." : "Move to the detail workspace once one run is worth accepting or rejecting suggestions in."}</strong>
+                <strong>{isKorean ? "수정 제안을 수락하거나 거절할 가치가 있는 실행 하나가 보이면 상세 화면으로 이동하세요." : "Move to the detail workspace once one run is worth accepting or rejecting suggestions in."}</strong>
               </article>
             </div>
             <div className="resume-tailor-workspace-surface__chips">

@@ -60,7 +60,7 @@ export function ResumeTailorAnalysisDetailPage() {
 
   return (
     <PageContainer
-      description={isKorean ? "저장된 맞춤 분석을 검토하고, 직무별 스토리를 강화하는 수정안을 수락한 뒤, 다듬어진 미리보기를 export 하세요." : "Review one saved tailoring analysis, accept the rewrites that strengthen the role-specific story, and export the hardened preview."}
+      description={isKorean ? "저장된 맞춤 분석을 검토하고, 직무별 스토리를 강화하는 수정안을 수락한 뒤, 다듬어진 미리보기를 내보내세요." : "Review one saved tailoring analysis, accept the rewrites that strengthen the role-specific story, and export the hardened preview."}
       eyebrow={isKorean ? "맞춤 흐름" : "Tailor flow"}
       title={isKorean ? "직무별 수정 경로를 수락하거나 거절하세요" : "Accept or reject the role-specific rewrite path"}
     >
@@ -100,7 +100,7 @@ export function ResumeTailorAnalysisDetailPage() {
                 </p>
                 <h2 className="resume-tailor-workspace-surface__title">{analysisQuery.data.matchSummary}</h2>
                 <p className="resume-tailor-workspace-surface__body">
-                  {isKorean ? "이 워크스페이스에서 어떤 제안이 목표 직무에 맞는 스토리를 실제로 강화하는지 결정하세요. 수락한 변경은 맞춤 미리보기와 export 결과에만 반영되고 원본 소스 버전은 바뀌지 않습니다." : "Use this workspace to decide which suggestions actually harden the story for the target role. Accepted changes affect only the tailored preview and export outputs, never the original source version."}
+                  {isKorean ? "이 워크스페이스에서 어떤 제안이 목표 직무에 맞는 스토리를 실제로 강화하는지 결정하세요. 수락한 변경은 맞춤 미리보기와 내보내기 결과에만 반영되고 원본 소스 버전은 바뀌지 않습니다." : "Use this workspace to decide which suggestions actually harden the story for the target role. Accepted changes affect only the tailored preview and export outputs, never the original source version."}
                 </p>
               </div>
               <div className="resume-tailor-workspace-surface__stats">
@@ -128,7 +128,7 @@ export function ResumeTailorAnalysisDetailPage() {
                 <strong>{isKorean ? "보존된 미리보기는 제안 메모가 아니라 최종 면접용 문서로 읽어야 합니다." : "Read the persisted preview as the final interview-facing document, not as suggestion notes."}</strong>
               </article>
               <article className="resume-tailor-workspace-surface__guidance-card">
-                <span>{isKorean ? "export 원칙" : "Export rule"}</span>
+                <span>{isKorean ? "내보내기 원칙" : "Export rule"}</span>
                 <strong>{isKorean ? "수락한 경로가 원문보다 분명히 나아졌을 때만 PDF를 생성하세요." : "Generate PDF only after the accepted path clearly beats the original wording."}</strong>
               </article>
             </div>

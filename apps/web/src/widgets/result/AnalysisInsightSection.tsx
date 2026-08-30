@@ -33,7 +33,7 @@ export function AnalysisInsightSection({ result }: AnalysisInsightSectionProps) 
             <h2 className="page-card__title">{isKorean ? "다음 재시도에서 보완할 점" : "What to improve in the next retry"}</h2>
             <p className="page-card__body">
               {isKorean
-                ? "반복되는 약한 패턴은 더 깊게 브랜치를 타거나 source of truth를 수정해야 한다는 가장 강한 신호로 보세요."
+                ? "반복되는 약한 패턴은 더 깊게 브랜치를 타거나 기준 문서를 수정해야 한다는 가장 강한 신호로 보세요."
                 : "Treat repeated weak patterns as the highest-signal reason to branch deeper or revise the source-of-truth."}
             </p>
           </div>

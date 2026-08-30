@@ -1126,7 +1126,7 @@ export const messages = {
       practiceThisContext: "이 맥락으로 연습하기",
       operations: "운영",
       operationsTitle: "정체성에서 설정과 회사 준비로 의도적으로 이동하세요",
-      operationsBody: "연습 기본값, 화면 설정, 복습 동작, 회사 타기팅은 이제 각자의 워크스페이스를 가집니다.",
+      operationsBody: "연습 기본값, 화면 설정, 복습 동작, 회사 타기팅은 이제 각각의 전용 화면에서 관리됩니다.",
       separatedControls: "분리된 제어",
       settingsWorkspace: "설정 워크스페이스",
       settingsWorkspaceBody: "점수 기준, 언어, 화면 설정, 복습 알림 동작을 조정하세요.",

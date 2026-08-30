@@ -499,7 +499,7 @@ export function InterviewPage() {
           upstream={[
             {
               title: isKorean ? "이력서 분석" : "Resume analysis",
-              description: isKorean ? "활성 source of truth 검토를 기준으로 다음 가지를 결정하세요." : "Use the active source-of-truth review to decide the next branch.",
+              description: isKorean ? "활성 기준 문서 검토를 기준으로 다음 가지를 결정하세요." : "Use the active source-of-truth review to decide the next branch.",
               to: routeConfig.resumeAnalysis.buildPath(),
             },
           ]}
@@ -841,11 +841,11 @@ export function InterviewPage() {
                     </div>
                   </div>
                   <p className="page-card__body">
-                    {isKorean ? "다음 실행이 전체 DFS 트리를 훑어야 할 때만 coverage 모드를 사용하세요." : "Use coverage mode only when the next run should sweep the full DFS tree."}
+                    {isKorean ? "다음 실행이 전체 DFS 트리를 훑어야 할 때만 커버리지 모드를 사용하세요." : "Use coverage mode only when the next run should sweep the full DFS tree."}
                   </p>
                   <div className="interview-launch-step__selected">
                     <span>{isKorean ? "현재 실행 규칙" : "Current launch rule"}</span>
-                    <strong>{isKorean ? "한 번의 실행, 하나의 source of truth." : "One run, one source of truth."}</strong>
+                    <strong>{isKorean ? "한 번의 실행, 하나의 기준 문서." : "One run, one source of truth."}</strong>
                   </div>
                   <div className="stack-list">
                     {interviewModeOptions.map((option) => {
