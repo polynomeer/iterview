@@ -81,7 +81,7 @@ export function InterviewSessionPage() {
             { label: isKorean ? "세션 ID" : "Session id", value: isKorean ? "없음" : "Missing", tone: "warning" },
             {
               label: isKorean ? "안전한 다음 단계" : "Safe next move",
-              value: isKorean ? "인터뷰 실행 화면으로 다시 진입" : "Re-enter from the interview launcher",
+              value: isKorean ? "인터뷰 시작 화면으로 다시 진입" : "Re-enter from the interview launcher",
               tone: "accent",
             },
             {
@@ -424,7 +424,7 @@ export function InterviewSessionPage() {
           ]}
           upstream={[
             {
-              title: isKorean ? "인터뷰 실행 화면" : "Interview launcher",
+              title: isKorean ? "인터뷰 시작 화면" : "Interview launcher",
               description: isKorean
                 ? "이 활성 가지는 인터뷰 작업공간에서 경계와 순회 모드를 상속받습니다."
                 : "This active branch inherits its boundary and traversal mode from the interview workspace.",

@@ -54,7 +54,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
     {
       id: "dfs-payments-path",
       category: "paths",
-      title: isKorean ? "결제 DFS 드릴 경로" : "Payments DFS drill path",
+      title: isKorean ? "결제 DFS 심화 경로" : "Payments DFS drill path",
       summary: isKorean ? "멱등성, 락 경합, 재시도 의미론, 정산 롤백을 다루는 큐레이션 분기입니다." : "Curated branch covering idempotency, lock contention, retry semantics, and settlement rollback.",
       source: isKorean ? "질문 경로 / 결제 클러스터" : "Question path / Payments cluster",
       savedAt: isKorean ? "1시간 전" : "1 hour ago",
@@ -71,7 +71,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
     {
       id: "system-design-material",
       category: "materials",
-      title: isKorean ? "System design 기준 문서 묶음" : "System design source-of-truth pack",
+      title: isKorean ? "시스템 설계 기준 문서 묶음" : "System design source-of-truth pack",
       summary: isKorean ? "캐시 무효화, 쿼럼, 파티션 복구 트레이드오프를 위한 저장된 읽기 묶음입니다." : "Saved reading set for cache invalidation, quorum, and partition recovery trade-offs.",
       source: isKorean ? "학습 자료 / 분산 시스템" : "Learning materials / Distributed systems",
       savedAt: isKorean ? "오늘" : "Today",
@@ -105,7 +105,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
     {
       id: "kafka-rebalance-question",
       category: "questions",
-      title: isKorean ? "실제로 겪은 consumer group rebalance 문제 설명하기" : "Describe consumer group rebalance pain you actually experienced",
+      title: isKorean ? "실제로 겪은 컨슈머 그룹 리밸런스 문제 설명하기" : "Describe consumer group rebalance pain you actually experienced",
       summary: isKorean ? "현재 답변이 너무 추상적이고 운영 증상을 놓치고 있어서 저장했습니다." : "Saved because the current answer is too abstract and misses operational symptoms.",
       source: isKorean ? "질문 트리 / Kafka 분기" : "Question tree / Kafka branch",
       savedAt: isKorean ? "2일 전" : "2 days ago",

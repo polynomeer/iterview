@@ -1736,7 +1736,7 @@ export function PracticalInterviewReviewPage() {
                         <label className="form-field practical-editor-field">
                           <span className="form-field__label">{isKorean ? "정리된 텍스트" : "Cleaned text"}</span>
                           <span className="practical-editor-field__helper">
-                            {isKorean ? "명백한 ASR 잡음을 제거하되 화자의 의미는 유지하세요." : "Preserve the speaker meaning while removing obvious ASR noise."}
+                            {isKorean ? "명백한 음성 인식 잡음을 제거하되 화자의 의미는 유지하세요." : "Preserve the speaker meaning while removing obvious ASR noise."}
                           </span>
                           <textarea
                             className="form-input form-input--textarea"

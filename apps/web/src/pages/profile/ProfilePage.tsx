@@ -42,12 +42,12 @@ export function ProfilePage() {
   const currentCompanyLabel = targetCompanies[0] ?? "Dreamus";
   const targetRoleLabel =
     experienceYears >= 7
-      ? (isKorean ? "Staff Backend Engineer" : "Staff Backend Engineer")
+      ? (isKorean ? "스태프 백엔드 엔지니어" : "Staff Backend Engineer")
       : experienceYears >= 4
-        ? (isKorean ? "Senior Backend Engineer" : "Senior Backend Engineer")
-        : (isKorean ? "Backend Engineer" : "Backend Engineer");
+        ? (isKorean ? "시니어 백엔드 엔지니어" : "Senior Backend Engineer")
+        : (isKorean ? "백엔드 엔지니어" : "Backend Engineer");
   const readinessTopics = [
-    { label: isKorean ? "Backend 깊이" : "Backend depth", score: 92 },
+    { label: isKorean ? "백엔드 깊이" : "Backend depth", score: 92 },
     { label: isKorean ? "문제 해결" : "Problem solving", score: 85 },
     { label: isKorean ? "분산 시스템" : "Distributed systems", score: 78 },
     { label: isKorean ? "커뮤니케이션" : "Communication", score: 75 },

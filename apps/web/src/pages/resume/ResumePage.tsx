@@ -280,8 +280,8 @@ export function ResumePage() {
 
   return (
     <PageContainer
-      description={isKorean ? "이력서 컨테이너를 관리하고, PDF 버전을 업로드하고, 파싱 상태와 추출된 인터뷰 컨텍스트를 확인하세요." : "Manage resume containers, upload PDF versions, watch parsing status, and inspect extracted interview context."}
-      eyebrow={isKorean ? "이력서 소스" : "Resume sources"}
+      description={isKorean ? "이력서 묶음을 관리하고, PDF 버전을 업로드하고, 파싱 상태와 추출된 인터뷰 맥락을 확인하세요." : "Manage resume containers, upload PDF versions, watch parsing status, and inspect extracted interview context."}
+      eyebrow={isKorean ? "이력서 원본" : "Resume sources"}
       title={isKorean ? "이력서 관리" : "Resume management"}
     >
       <section className="page-card resume-workspace-surface">
@@ -292,7 +292,7 @@ export function ResumePage() {
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "근거 레인" : "Evidence lane"}</span>
             </div>
             <p className="resume-workspace-surface__breadcrumbs">
-              {isKorean ? "컨테이너" : "Containers"}
+              {isKorean ? "묶음" : "Containers"}
               <span>/</span>
               {isKorean ? "활성 버전" : "Active version"}
               <span>/</span>
@@ -307,7 +307,7 @@ export function ResumePage() {
           </div>
           <div className="resume-workspace-surface__stats">
             <article className="resume-workspace-surface__stat">
-              <span>{isKorean ? "컨테이너" : "Containers"}</span>
+              <span>{isKorean ? "묶음" : "Containers"}</span>
               <strong>{resumeCount}</strong>
             </article>
             <article className="resume-workspace-surface__stat">
@@ -424,8 +424,8 @@ export function ResumePage() {
           <section className="page-card page-card--muted">
             <div className="section-heading">
               <div>
-                <span className="page-card__label">{isKorean ? "이력서 라이브러리" : "Resume library"}</span>
-                <h2 className="page-card__title">{isKorean ? "이력서 컨테이너와 선택된 버전" : "Resume containers and selected version"}</h2>
+                <span className="page-card__label">{isKorean ? "이력서 보관함" : "Resume library"}</span>
+                <h2 className="page-card__title">{isKorean ? "이력서 묶음과 선택된 버전" : "Resume containers and selected version"}</h2>
                 <p className="page-card__body">
                   {isKorean
                     ? "이력서 컨테이너 하나를 고르고, 새 PDF 버전을 업로드한 뒤, 파싱 결과 화면이 너무 아래로 밀리지 않도록 현재 선택된 버전을 바로 점검하세요."
@@ -471,7 +471,7 @@ export function ResumePage() {
           <>
             {resumeListQuery.isLoading ? (
               <LoadingStateCard
-                body={isKorean ? "이력서 컨테이너와 버전 목록을 불러오는 중입니다." : "Loading resume containers and their versions."}
+                body={isKorean ? "이력서 묶음과 버전 목록을 불러오는 중입니다." : "Loading resume containers and their versions."}
                 title={isKorean ? "이력서 준비 중" : "Preparing resumes"}
               />
             ) : null}
