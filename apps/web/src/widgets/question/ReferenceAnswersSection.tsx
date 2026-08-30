@@ -72,7 +72,8 @@ export function ReferenceAnswersSection({
   onFormChange,
   onSubmit,
 }: ReferenceAnswersSectionProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
 
   return (
     <section className="page-card">
@@ -123,10 +124,10 @@ export function ReferenceAnswersSection({
               }}
               value={form.answerFormat}
             >
-              <option value="outline">{t("common.languageKorean") === "한국어" ? "개요" : "Outline"}</option>
-              <option value="full_answer">{t("common.languageKorean") === "한국어" ? "전체 답변" : "Full answer"}</option>
-              <option value="summary">{t("common.languageKorean") === "한국어" ? "요약" : "Summary"}</option>
-              <option value="transcript_excerpt">{t("common.languageKorean") === "한국어" ? "대화 발췌" : "Transcript excerpt"}</option>
+              <option value="outline">{isKorean ? "개요" : "Outline"}</option>
+              <option value="full_answer">{isKorean ? "전체 답변" : "Full answer"}</option>
+              <option value="summary">{isKorean ? "요약" : "Summary"}</option>
+              <option value="transcript_excerpt">{isKorean ? "대화 발췌" : "Transcript excerpt"}</option>
             </select>
           </div>
           <div className="form-field">

@@ -3841,13 +3841,13 @@ export function ResumeEditorPage() {
                             ? `마크다운 선택 · ${selectedMarkdownRange.startOffset}-${selectedMarkdownRange.endOffset}`
                             : `Markdown selection · ${selectedMarkdownRange.startOffset}-${selectedMarkdownRange.endOffset}`
                           : isKorean
-                            ? "선택된 텍스트 범위가 없습니다"
+                            ? "선택된 텍스트 범위 없음"
                             : "No text range selected"}
                       </span>
                       <p className="resume-tailor-muted">
                         {effectiveSelectedText
                           ? isKorean
-                            ? `현재 발췌문: ${effectiveSelectedText}`
+                            ? `현재 발췌: ${effectiveSelectedText}`
                             : `Current excerpt: ${effectiveSelectedText}`
                           : currentTab === "review"
                             ? isKorean
@@ -3919,7 +3919,7 @@ export function ResumeEditorPage() {
                             ? "폴백 앵커 숨기기"
                             : "Hide fallback anchors"
                           : isKorean
-                            ? "폴백 앵커 보기"
+                            ? "폴백 앵커 표시"
                             : "Show fallback anchors"}
                       </button>
                     </div>
@@ -4103,10 +4103,10 @@ export function ResumeEditorPage() {
                         <p className="section-heading__eyebrow">
                           {richTreeEnabled
                             ? isKorean
-                              ? "선택된 노드"
+                              ? "선택 노드"
                               : "Selected node"
                             : isKorean
-                              ? "선택된 블록"
+                              ? "선택 블록"
                               : "Selected block"}
                         </p>
                         <h3 className="page-card__title">
