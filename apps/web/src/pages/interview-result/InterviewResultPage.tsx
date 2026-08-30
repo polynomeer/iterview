@@ -168,7 +168,7 @@ export function InterviewResultPage() {
     unresolvedBranchCount > 0
       ? weakFacetCount > 0
         ? (isKorean ? "약한 가지 복구" : "Weak-branch recovery")
-        : (isKorean ? "건너뛴 facet 복구" : "Skipped-facet recovery")
+        : (isKorean ? "건너뛴 세부 항목 복구" : "Skipped-facet recovery")
       : (isKorean ? "인접 가지 확장" : "Adjacent branch expansion");
   const nextActionLabel = weakFacetCount > 0 || skippedFacetCount > 0 ? (isKorean ? "복구 패스" : "Recovery pass") : (isKorean ? "인접 가지" : "Neighbor branch");
   const recommendedActionLabel =
@@ -196,7 +196,7 @@ export function InterviewResultPage() {
             },
             {
               title: isKorean ? "이력서 분석" : "Resume analysis",
-              description: isKorean ? "약한 가지가 빈약한 주장으로 되돌아가면 source of truth 검토로 돌아가세요." : "Return to source-of-truth review when the weak branch points back to a thin claim.",
+              description: isKorean ? "약한 가지가 빈약한 주장으로 되돌아가면 기준 문서 검토로 돌아가세요." : "Return to source-of-truth review when the weak branch points back to a thin claim.",
               to: routeConfig.resumeAnalysis.buildPath(),
             },
           ]}
@@ -238,11 +238,11 @@ export function InterviewResultPage() {
             <span className="detail-chip">{session.interviewModeLabel}</span>
             <span className="detail-chip detail-chip--accent">{isKorean ? `세션 ${sessionId}` : `Session ${sessionId}`}</span>
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
-            {skippedFacetCount > 0 ? <span className="detail-chip">{isKorean ? `건너뛴 facet ${skippedFacetCount}` : `Skipped facets ${skippedFacetCount}`}</span> : null}
+            {skippedFacetCount > 0 ? <span className="detail-chip">{isKorean ? `건너뛴 세부 항목 ${skippedFacetCount}` : `Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
           <div className="interview-result-workspace-surface__principles" role="list" aria-label={isKorean ? "결과 워크스페이스 원칙" : "Result workspace principles"}>
             <span role="listitem">{isKorean ? "다시 검증할 가치가 있는 가지만 다음으로 가져가세요." : "Carry forward only the branches worth re-testing."}</span>
-            <span role="listitem">{isKorean ? "약한 facet과 건너뛴 facet으로 다음 패스 범위를 정하세요." : "Use weak and skipped facets to scope the next pass."}</span>
+            <span role="listitem">{isKorean ? "약한 세부 항목과 건너뛴 세부 항목으로 다음 패스 범위를 정하세요." : "Use weak and skipped facets to scope the next pass."}</span>
           </div>
         </section>
         <section className="page-card interview-result-layout__hero">
@@ -392,11 +392,11 @@ export function InterviewResultPage() {
                   </span>
                 </div>
                 <div className={`interview-result-layout__next-item${skippedFacetCount > 0 ? " interview-result-layout__next-item--accent" : ""}`}>
-                  <strong>{isKorean ? "건너뛴 facet 복구" : "Skipped facet recovery"}</strong>
+                  <strong>{isKorean ? "건너뛴 세부 항목 복구" : "Skipped facet recovery"}</strong>
                   <span>
                     {skippedFacetCount > 0
-                      ? isKorean ? `건너뛴 facet ${skippedFacetCount}개는 다음 세션에서 다시 다뤄야 합니다.` : `${skippedFacetCount} skipped facets should return in the next session.`
-                      : isKorean ? "복구를 기다리는 건너뛴 facet이 없습니다." : "No skipped facets are waiting for recovery."}
+                      ? isKorean ? `건너뛴 세부 항목 ${skippedFacetCount}개는 다음 세션에서 다시 다뤄야 합니다.` : `${skippedFacetCount} skipped facets should return in the next session.`
+                      : isKorean ? "복구를 기다리는 건너뛴 세부 항목이 없습니다." : "No skipped facets are waiting for recovery."}
                   </span>
                 </div>
                 <div className="interview-result-layout__next-item interview-result-layout__next-item--neutral">

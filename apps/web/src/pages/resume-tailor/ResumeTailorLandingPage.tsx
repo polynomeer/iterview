@@ -38,7 +38,7 @@ export function ResumeTailorLandingPage() {
     <PageContainer
       description={isKorean ? "소스 이력서를 고르고 회사 컨텍스트를 연결한 뒤, 특정 직무에 맞춘 이력서 분석으로 이동하세요." : "Choose the source resume, connect company context, and move into one tailoring analysis that hardens the resume for a specific role."}
       eyebrow={isKorean ? "맞춤 흐름" : "Tailor flow"}
-      title={isKorean ? "직무별 source of truth 흐름 시작" : "Start the role-specific source-of-truth flow"}
+      title={isKorean ? "직무별 기준 문서 흐름 시작" : "Start the role-specific source-of-truth flow"}
     >
       {resumeListQuery.isLoading ? (
         <LoadingStateCard
@@ -80,7 +80,7 @@ export function ResumeTailorLandingPage() {
                 </p>
                 <h2 className="resume-tailor-workspace-surface__title">{isKorean ? "변경하지 않는 이력서 버전 하나를 고른 뒤 실제 직무 하나에 맞춰 다듬으세요" : "Choose one immutable resume version, then tailor it toward one real role"}</h2>
                 <p className="resume-tailor-workspace-surface__body">
-                  {isKorean ? "맞춤 작업은 직무별 source of truth 강화 과정으로 다뤄야 합니다. 원본 이력서는 바뀌지 않고, 분석 결과와 수락한 수정안, export 결과가 선택한 버전 위에 쌓입니다." : "Treat tailoring as role-specific source-of-truth hardening. The original resume stays unchanged while analyses, accepted rewrites, and exports accumulate on top of one selected version."}
+                  {isKorean ? "맞춤 작업은 직무별 기준 문서 강화 과정으로 다뤄야 합니다. 원본 이력서는 바뀌지 않고, 분석 결과와 수락한 수정안, 내보내기 결과가 선택한 버전 위에 쌓입니다." : "Treat tailoring as role-specific source-of-truth hardening. The original resume stays unchanged while analyses, accepted rewrites, and exports accumulate on top of one selected version."}
                 </p>
               </div>
               <div className="resume-tailor-workspace-surface__stats">
@@ -113,9 +113,9 @@ export function ResumeTailorLandingPage() {
               </article>
             </div>
             <div className="resume-tailor-workspace-surface__chips">
-              <span className="detail-chip">{isKorean ? "원본 소스 유지" : "Original source preserved"}</span>
+              <span className="detail-chip">{isKorean ? "원본 이력서 유지" : "Original source preserved"}</span>
               <span className="detail-chip detail-chip--accent">{isKorean ? "직무 맞춤 흐름" : "Role-specific flow"}</span>
-              <span className="detail-chip">{isKorean ? "export 경로 포함" : "Export path included"}</span>
+              <span className="detail-chip">{isKorean ? "내보내기 경로 포함" : "Export path included"}</span>
             </div>
             <div className="page-card__actions">
               {selectedVersionId ? (

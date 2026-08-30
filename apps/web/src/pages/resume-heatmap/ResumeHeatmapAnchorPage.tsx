@@ -321,7 +321,7 @@ export function ResumeHeatmapAnchorPage() {
               </h2>
               <p className="resume-heatmap-anchor-workspace-surface__body">
                 {isKorean
-                  ? "상세 앵커 리뷰는 하나의 이력서 주장을 라우팅 하이라이트, 연결된 질문, 수동 재매핑으로 분해해 DFS 방식 꼬리질문을 버틸 만큼 source of truth를 정밀하게 만드는 곳입니다."
+                  ? "상세 앵커 리뷰는 하나의 이력서 주장을 라우팅 하이라이트, 연결된 질문, 수동 재매핑으로 분해해 DFS 방식 꼬리질문을 버틸 만큼 기준 문서를 정밀하게 만드는 곳입니다."
                   : "Detailed anchor review is where one resume claim is decomposed into routed highlights, linked questions, and manual remaps until the source-of-truth is precise enough to survive DFS-style follow-up questioning."}
               </p>
             </div>
@@ -401,7 +401,7 @@ export function ResumeHeatmapAnchorPage() {
                 <strong>
                   {selectedAnchor.weaknessCount > 0
                     ? isKorean
-                      ? "약한 답변은 현재 source of truth가 아직 충분히 구체적이지 않다는 뜻입니다."
+                      ? "약한 답변은 현재 기준 문서가 아직 충분히 구체적이지 않다는 뜻입니다."
                       : "Weak answers indicate the current source-of-truth is not specific enough."
                     : isKorean
                       ? "이 구간에는 약한 답변이 없으니, 대신 커버리지와 일관성을 점검하세요."

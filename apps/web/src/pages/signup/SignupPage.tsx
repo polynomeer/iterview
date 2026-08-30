@@ -75,7 +75,7 @@ export function SignupPage() {
 
   return (
     <PageContainer
-      description={isKorean ? "지속 가능한 하나의 이력서 기반 면접 워크스페이스에 접근하고, source of truth와 연습 연속성에서 바로 시작하세요." : "Create access to one persistent resume-grounded interview workspace, then start from source-of-truth and practice continuity."}
+      description={isKorean ? "지속 가능한 하나의 이력서 기반 면접 워크스페이스에 접근하고, 기준 문서와 연습 연속성에서 바로 시작하세요." : "Create access to one persistent resume-grounded interview workspace, then start from source-of-truth and practice continuity."}
       eyebrow={isKorean ? "워크스페이스 접근" : "Workspace access"}
       title={isKorean ? "이력서 기반 면접 워크스페이스로 들어가기" : "Enter the resume-grounded interview workspace"}
     >
@@ -121,7 +121,7 @@ export function SignupPage() {
             </article>
             <article className="auth-access-surface__guidance-card">
               <span>{isKorean ? "첫 행동" : "First move"}</span>
-              <strong>{isKorean ? "가입 후에는 워크스페이스를 특정 이력서 버전에 정착시켜 이후 후속 질문이 항상 source of truth를 가지게 하세요." : "After signup, ground the workspace in a resume version so later follow-up questions always have a source of truth."}</strong>
+              <strong>{isKorean ? "가입 후에는 워크스페이스를 특정 이력서 버전에 정착시켜 이후 후속 질문이 항상 기준 문서를 가지게 하세요." : "After signup, ground the workspace in a resume version so later follow-up questions always have a source of truth."}</strong>
             </article>
           </div>
         </section>
@@ -132,7 +132,7 @@ export function SignupPage() {
             <h2 className="page-card__title">{t("auth.signupCardTitle")}</h2>
             <p className="page-card__body">
               {isKorean
-                ? "연습, 면접 복기, source-of-truth 준비에 함께 쓰이는 동일한 워크스페이스 시스템에 접근 권한을 만드세요."
+                ? "연습, 면접 복기, 기준 문서 준비에 함께 쓰이는 동일한 워크스페이스 시스템에 접근 권한을 만드세요."
                 : "Create access to the same workspace system used for practice, interview review, and source-of-truth preparation."}
             </p>
             <div className="auth-access-form-card__summary">
@@ -197,7 +197,7 @@ export function SignupPage() {
               <div className="stack-list">
                 <article className="list-item-card">
                   <div className="list-item-card__content">
-                    <h3 className="list-item-card__title">{isKorean ? "Source of truth 우선" : "Source-of-truth first"}</h3>
+                    <h3 className="list-item-card__title">{isKorean ? "기준 문서 우선" : "Source-of-truth first"}</h3>
                     <p className="list-item-card__body">
                       {isKorean
                         ? "이력서 버전, 히트맵 연결, 후속 질문 연습은 가입 후 같은 시스템으로 모입니다."
