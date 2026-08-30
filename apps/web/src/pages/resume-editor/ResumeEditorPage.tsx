@@ -1053,7 +1053,7 @@ export function ResumeEditorPage() {
         : null,
       snapshotsQuery.data.experiences[0]
         ? {
-            title: isKorean ? "원본 경험" : "Source experience",
+            title: isKorean ? "원본 경력" : "Source experience",
             body: snapshotsQuery.data.experiences[0].impactText ?? snapshotsQuery.data.experiences[0].summary,
           }
         : null,
@@ -1074,7 +1074,7 @@ export function ResumeEditorPage() {
 
   const secondarySidePanels: Array<[EditorSidePanel, string]> = [
     ["source", isKorean ? "원본" : "Source"],
-    ["presence", isKorean ? "참여 상태" : "Presence"],
+    ["presence", isKorean ? "접속 상태" : "Presence"],
   ];
 
   const isSecondaryPanelActive = activeSidePanel === "source" || activeSidePanel === "presence";
@@ -1158,13 +1158,13 @@ export function ResumeEditorPage() {
   const slashMenuItems = [
     {
       id: "h1",
-      label: isKorean ? "헤딩 1" : "Heading 1",
+      label: isKorean ? "제목 1" : "Heading 1",
       matches: ["", "h1", "heading", "title"],
       onSelect: () => replaceSlashLine("# __TEXT__", isKorean ? "섹션 제목" : "Section title"),
     },
     {
       id: "h2",
-      label: isKorean ? "헤딩 2" : "Heading 2",
+      label: isKorean ? "제목 2" : "Heading 2",
       matches: ["h2", "subheading", "subtitle"],
       onSelect: () => replaceSlashLine("## __TEXT__", isKorean ? "하위 섹션" : "Subsection"),
     },
@@ -1876,14 +1876,14 @@ export function ResumeEditorPage() {
             onClick={() => handlePreviewLineAction("heading1", lineIndex, lineText)}
             type="button"
           >
-            {isKorean ? "헤딩 1" : "Heading 1"}
+            {isKorean ? "제목 1" : "Heading 1"}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("heading2", lineIndex, lineText)}
             type="button"
           >
-            {isKorean ? "헤딩 2" : "Heading 2"}
+            {isKorean ? "제목 2" : "Heading 2"}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
@@ -1910,7 +1910,7 @@ export function ResumeEditorPage() {
           onClick={() => setActivePreviewLineMenuView("turn-into")}
           type="button"
         >
-          {isKorean ? "형식 변경 →" : "Turn into →"}
+          {isKorean ? "형식 바꾸기 →" : "Turn into →"}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
@@ -2269,8 +2269,8 @@ export function ResumeEditorPage() {
       case "source":
         return (
           <section className="page-card">
-            <span className="page-card__label">{isKorean ? "원본 컨텍스트" : "Source context"}</span>
-            <h2 className="page-card__title">{isKorean ? "변경 불가능한 원본 이력서 컨텍스트" : "Immutable source resume context"}</h2>
+            <span className="page-card__label">{isKorean ? "원본 맥락" : "Source context"}</span>
+            <h2 className="page-card__title">{isKorean ? "변경 불가능한 원본 이력서 맥락" : "Immutable source resume context"}</h2>
             <div className="stack-list">
               {sourceContextCards.map((card) => (
                 <article className="page-card page-card--muted" key={card.title}>
@@ -2284,8 +2284,8 @@ export function ResumeEditorPage() {
       case "presence":
         return (
           <section className="page-card">
-            <span className="page-card__label">{isKorean ? "참여 상태" : "Presence"}</span>
-            <h2 className="page-card__title">{isKorean ? "작업공간 참여 상태" : "Workspace presence"}</h2>
+            <span className="page-card__label">{isKorean ? "접속 상태" : "Presence"}</span>
+            <h2 className="page-card__title">{isKorean ? "작업공간 접속 상태" : "Workspace presence"}</h2>
             <div className="filter-chip-row">
               {workspace.activePresence.length > 0 ? (
                 workspace.activePresence.map((presence) => (
@@ -2296,7 +2296,7 @@ export function ResumeEditorPage() {
                   </span>
                 ))
               ) : (
-                <span className="detail-chip">{isKorean ? "아직 활성 참여자가 없습니다" : "No active presence yet"}</span>
+                <span className="detail-chip">{isKorean ? "아직 활성 접속자가 없습니다" : "No active presence yet"}</span>
               )}
             </div>
           </section>
@@ -2679,7 +2679,7 @@ export function ResumeEditorPage() {
         title={isKorean ? "작업공간 준비 중" : "Preparing workspace"}
       >
         <LoadingStateCard
-          body={isKorean ? "초안 작업공간, 주석, 리비전 컨텍스트를 불러오는 중입니다." : "Loading the draft workspace, annotations, and revision context."}
+          body={isKorean ? "초안 작업공간, 주석, 리비전 맥락을 불러오는 중입니다." : "Loading the draft workspace, annotations, and revision context."}
           title={isKorean ? "이력서 에디터 준비 중" : "Preparing resume editor"}
         />
       </PageContainer>
@@ -2756,7 +2756,7 @@ export function ResumeEditorPage() {
               <p className="resume-editor-workspace-surface__breadcrumbs">
                 {isKorean ? "이력서 주장" : "Resume claim"}
                 <span>/</span>
-                {isKorean ? "근거 디테일" : "Evidence detail"}
+                {isKorean ? "근거 세부 정보" : "Evidence detail"}
                 <span>/</span>
                 {isKorean ? "꼬리질문 생존성" : "Follow-up survivability"}
               </p>
@@ -2785,7 +2785,7 @@ export function ResumeEditorPage() {
                 </strong>
               </article>
               <article className="resume-editor-workspace-surface__stat">
-                <span>{isKorean ? "뷰 모드" : "View modes"}</span>
+                <span>{isKorean ? "보기 모드" : "View modes"}</span>
                 <strong>{workspaceQuery.data.supportedViewModes.length}</strong>
               </article>
             </div>
@@ -2816,7 +2816,7 @@ export function ResumeEditorPage() {
                   : "Blocks"}
             </span>
             {workspaceQuery.data.selectionCapabilities.supportsOperations ? (
-              <span className="detail-chip">{isKorean ? "문서 연산 가능" : "Operations enabled"}</span>
+              <span className="detail-chip">{isKorean ? "문서 작업 가능" : "Operations enabled"}</span>
             ) : null}
             {workspaceQuery.data.selectionCapabilities.supportsInlineSelections ? (
               <span className="detail-chip">{isKorean ? "인라인 선택 가능" : "Inline selections enabled"}</span>
@@ -2984,7 +2984,7 @@ export function ResumeEditorPage() {
                       : "Blocks"}
                 </span>
                 {workspaceQuery.data.selectionCapabilities.supportsOperations ? (
-                  <span className="detail-chip">{isKorean ? "문서 연산 가능" : "Operations enabled"}</span>
+                  <span className="detail-chip">{isKorean ? "문서 작업 가능" : "Operations enabled"}</span>
                 ) : null}
                 {workspaceQuery.data.selectionCapabilities.supportsInlineSelections ? (
                   <span className="detail-chip">{isKorean ? "인라인 선택 가능" : "Inline selections enabled"}</span>
