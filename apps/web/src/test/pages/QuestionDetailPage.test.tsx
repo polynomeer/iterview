@@ -160,7 +160,7 @@ describe("QuestionDetailPage", () => {
       <Routes>
         <Route element={<QuestionDetailPage />} path="/questions/:questionId" />
       </Routes>,
-      { route: "/questions/question-12" },
+      { route: "/questions/question-12", locale: "ko" },
     );
 
     expect(screen.getByText("Walk through a difficult migration")).toBeInTheDocument();
@@ -168,13 +168,13 @@ describe("QuestionDetailPage", () => {
     expect(screen.getByText("migration")).toBeInTheDocument();
     expect(screen.getByText("Airbnb")).toBeInTheDocument();
     expect(screen.getByText("Migration notes")).toBeInTheDocument();
-    expect(screen.getByText("Model and reference answers")).toBeInTheDocument();
+    expect(screen.getByText("모범 답변과 참고 답변")).toBeInTheDocument();
     expect(screen.getByText("STAR answer pattern")).toBeInTheDocument();
-    expect(screen.getByText("Your recent attempts on this question")).toBeInTheDocument();
+    expect(screen.getByText("이 질문에 대한 최근 시도")).toBeInTheDocument();
     expect(screen.getByText("Score 84")).toBeInTheDocument();
-    expect(screen.getByText("Add your note")).toBeInTheDocument();
-    expect(screen.getByText("Add your material")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Start answer" })).toHaveAttribute(
+    expect(screen.getByText("내 노트 추가")).toBeInTheDocument();
+    expect(screen.getByText("내 자료 추가")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "답변 시작" })).toHaveAttribute(
       "href",
       "/questions/question-12/answer",
     );
@@ -257,7 +257,7 @@ describe("QuestionDetailPage", () => {
       <Routes>
         <Route element={<QuestionDetailPage />} path="/questions/:questionId" />
       </Routes>,
-      { route: "/questions/question-12" },
+      { route: "/questions/question-12", locale: "ko" },
     );
 
     expect(screen.getByText("Walk through a difficult migration")).toBeInTheDocument();

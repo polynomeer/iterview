@@ -66,17 +66,17 @@ describe("SignupPage", () => {
       <Routes>
         <Route element={<SignupPage />} path="/signup" />
       </Routes>,
-      { route: "/signup" },
+      { route: "/signup", locale: "ko" },
     );
 
-    expect(screen.getByText("Start rule")).toBeInTheDocument();
-    expect(screen.getByText("What opens")).toBeInTheDocument();
-    expect(screen.getByText("Quick path")).toBeInTheDocument();
-    await user.clear(screen.getByRole("textbox", { name: "Email" }));
-    await user.type(screen.getByRole("textbox", { name: "Email" }), "new@example.com");
-    await user.clear(screen.getByLabelText("Password"));
-    await user.type(screen.getByLabelText("Password"), "secret123");
-    await user.click(screen.getByRole("button", { name: "Sign up" }));
+    expect(screen.getByText("시작 규칙")).toBeInTheDocument();
+    expect(screen.getByText("열리는 작업")).toBeInTheDocument();
+    expect(screen.getByText("빠른 경로")).toBeInTheDocument();
+    await user.clear(screen.getByRole("textbox", { name: "이메일" }));
+    await user.type(screen.getByRole("textbox", { name: "이메일" }), "new@example.com");
+    await user.clear(screen.getByLabelText("비밀번호"));
+    await user.type(screen.getByLabelText("비밀번호"), "secret123");
+    await user.click(screen.getByRole("button", { name: "회원가입" }));
 
     expect(mutateAsyncMock).toHaveBeenCalledWith({
       email: "new@example.com",
