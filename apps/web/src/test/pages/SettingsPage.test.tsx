@@ -49,13 +49,15 @@ describe("SettingsPage", () => {
       <Routes>
         <Route element={<SettingsPage />} path="/settings" />
       </Routes>,
-      { route: "/settings" },
+      { route: "/settings", locale: "ko" },
     );
 
-    expect(screen.getByText("Practice settings workspace")).toBeInTheDocument();
-    expect(screen.getByText("Adjust evaluation defaults")).toBeInTheDocument();
-    expect(screen.getByText("Tune local reminder timing and interruption level")).toBeInTheDocument();
-    expect(screen.getByText("Recommended tweaks before the next review cycle")).toBeInTheDocument();
+    expect(screen.getByText("연습 설정 워크스페이스")).toBeInTheDocument();
+    expect(screen.getByText("평가 기본값 조정")).toBeInTheDocument();
+    expect(screen.getByText("로컬 알림 타이밍과 방해 수준 조정")).toBeInTheDocument();
+    expect(screen.getByText("다음 복습 사이클 전에 권장되는 조정")).toBeInTheDocument();
+    expect(screen.getByText("라이트")).toBeInTheDocument();
+    expect(screen.getAllByText("로컬 전용").length).toBeGreaterThan(0);
   });
 
   it("saves preferred language through the settings workspace", async () => {
@@ -97,11 +99,11 @@ describe("SettingsPage", () => {
       <Routes>
         <Route element={<SettingsPage />} path="/settings" />
       </Routes>,
-      { route: "/settings" },
+      { route: "/settings", locale: "ko" },
     );
 
-    await user.selectOptions(screen.getByLabelText("Preferred language"), "ko");
-    await user.click(screen.getByRole("button", { name: "Save settings" }));
+    await user.selectOptions(screen.getByLabelText("기본 언어"), "ko");
+    await user.click(screen.getByRole("button", { name: "설정 저장" }));
 
     expect(mutateAsync).toHaveBeenCalledWith({
       targetScoreThreshold: 85,
@@ -147,7 +149,7 @@ describe("SettingsPage", () => {
       <Routes>
         <Route element={<SettingsPage />} path="/settings" />
       </Routes>,
-      { route: "/settings" },
+      { route: "/settings", locale: "ko" },
     );
 
     expect(document.querySelector(".settings-layout--desktop")).not.toBeNull();
