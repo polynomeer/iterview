@@ -66,17 +66,17 @@ describe("LoginPage", () => {
       <Routes>
         <Route element={<LoginPage />} path="/login" />
       </Routes>,
-      { route: "/login" },
+      { route: "/login", locale: "ko" },
     );
 
-    expect(screen.getByText("Re-entry rule")).toBeInTheDocument();
-    expect(screen.getByText("What opens")).toBeInTheDocument();
-    expect(screen.getByText("Quick path")).toBeInTheDocument();
-    await user.clear(screen.getByRole("textbox", { name: "Email" }));
-    await user.type(screen.getByRole("textbox", { name: "Email" }), "learner@example.com");
-    await user.clear(screen.getByLabelText("Password"));
-    await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByRole("button", { name: "Login" }));
+    expect(screen.getByText("재진입 원칙")).toBeInTheDocument();
+    expect(screen.getByText("열리는 항목")).toBeInTheDocument();
+    expect(screen.getByText("빠른 경로")).toBeInTheDocument();
+    await user.clear(screen.getByRole("textbox", { name: "이메일" }));
+    await user.type(screen.getByRole("textbox", { name: "이메일" }), "learner@example.com");
+    await user.clear(screen.getByLabelText("비밀번호"));
+    await user.type(screen.getByLabelText("비밀번호"), "password123");
+    await user.click(screen.getByRole("button", { name: "로그인" }));
 
     expect(mutateAsyncMock).toHaveBeenCalledWith({
       email: "learner@example.com",
