@@ -1,4 +1,5 @@
 import type { SkillRadarModel } from "../../entities/skill-intelligence/model";
+import { useLocale } from "../../shared/i18n";
 
 type SkillRadarChartProps = {
   radar: SkillRadarModel;
@@ -11,16 +12,20 @@ function polarToCartesian(angle: number, radius: number) {
 }
 
 export function SkillRadarChart({ radar }: SkillRadarChartProps) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const categories = radar.categories.slice(0, 6);
   const pointCount = categories.length;
 
   if (pointCount < 3) {
     return (
       <section className="page-card">
-        <span className="page-card__label">Radar chart</span>
-        <h2 className="page-card__title">Not enough radar dimensions yet</h2>
+        <span className="page-card__label">{isKorean ? "레이더 차트" : "Radar chart"}</span>
+        <h2 className="page-card__title">{isKorean ? "아직 레이더 차원 수가 부족합니다" : "Not enough radar dimensions yet"}</h2>
         <p className="page-card__body">
-          At least three category scores are needed before the chart becomes useful.
+          {isKorean
+            ? "차트가 의미를 가지려면 최소 세 개 이상의 카테고리 점수가 필요합니다."
+            : "At least three category scores are needed before the chart becomes useful."}
         </p>
       </section>
     );
@@ -39,8 +44,8 @@ export function SkillRadarChart({ radar }: SkillRadarChartProps) {
     <section className="page-card">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Radar chart</p>
-          <h2 className="page-card__title">Current skill profile</h2>
+          <p className="section-heading__eyebrow">{isKorean ? "레이더 차트" : "Radar chart"}</p>
+          <h2 className="page-card__title">{isKorean ? "현재 스킬 프로필" : "Current skill profile"}</h2>
         </div>
       </div>
       <div className="skill-radar-chart">

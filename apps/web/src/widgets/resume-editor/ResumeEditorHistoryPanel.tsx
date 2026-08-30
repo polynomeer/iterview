@@ -1,5 +1,6 @@
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
+import { useLocale } from "../../shared/i18n";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 
 type RevisionItem = {
@@ -78,20 +79,26 @@ export default function ResumeEditorHistoryPanel({
   onChangeCompareTo,
   trackedChanges,
 }: Props) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
+
   return (
     <div className="resume-editor-workspace">
       <div className="resume-editor-workspace__document">
         <section className="page-card">
-          <span className="page-card__label">Revisions</span>
-          <h2 className="page-card__title">Revision history</h2>
+          <span className="page-card__label">{isKorean ? "리비전" : "Revisions"}</span>
+          <h2 className="page-card__title">{isKorean ? "리비전 기록" : "Revision history"}</h2>
           {revisionsLoading ? (
-            <LoadingStateCard body="Loading persisted workspace revisions." title="Preparing history" />
+            <LoadingStateCard
+              body={isKorean ? "저장된 워크스페이스 리비전을 불러오는 중입니다." : "Loading persisted workspace revisions."}
+              title={isKorean ? "기록 준비 중" : "Preparing history"}
+            />
           ) : revisionsError ? (
             <ErrorStateCard
               body={revisionsErrorMessage}
               details={revisionsErrorDetails ? [revisionsErrorDetails] : undefined}
               onAction={onRetryRevisions}
-              title="Unable to load revisions"
+              title={isKorean ? "리비전을 불러올 수 없습니다" : "Unable to load revisions"}
             />
           ) : revisions.length > 0 ? (
             <div className="stack-list">
@@ -100,24 +107,26 @@ export default function ResumeEditorHistoryPanel({
                   <div className="section-heading">
                     <div>
                       <p className="section-heading__eyebrow">{revision.changeSourceLabel}</p>
-                      <h3 className="page-card__title">Revision {revision.revisionNo}</h3>
+                      <h3 className="page-card__title">{isKorean ? `리비전 ${revision.revisionNo}` : `Revision ${revision.revisionNo}`}</h3>
                     </div>
                     <button
                       className="secondary-button"
                       onClick={() => onSelectRevision(revision.id)}
                       type="button"
                     >
-                      View detail
+                      {isKorean ? "상세 보기" : "View detail"}
                     </button>
                   </div>
                   <p className="resume-tailor-muted">{revision.createdAtLabel}</p>
                   <div className="filter-chip-row">
-                    <span className="detail-chip">Added {revision.changeSummary.addedBlockCount}</span>
-                    <span className="detail-chip">Updated {revision.changeSummary.updatedBlockCount}</span>
-                    <span className="detail-chip">Removed {revision.changeSummary.removedBlockCount}</span>
+                    <span className="detail-chip">{isKorean ? `추가 ${revision.changeSummary.addedBlockCount}` : `Added ${revision.changeSummary.addedBlockCount}`}</span>
+                    <span className="detail-chip">{isKorean ? `수정 ${revision.changeSummary.updatedBlockCount}` : `Updated ${revision.changeSummary.updatedBlockCount}`}</span>
+                    <span className="detail-chip">{isKorean ? `삭제 ${revision.changeSummary.removedBlockCount}` : `Removed ${revision.changeSummary.removedBlockCount}`}</span>
                     {revision.changeSummary.changedBlockIds.length > 0 ? (
                       <span className="detail-chip">
-                        Changed ids {revision.changeSummary.changedBlockIds.length}
+                        {isKorean
+                          ? `변경된 id ${revision.changeSummary.changedBlockIds.length}`
+                          : `Changed ids ${revision.changeSummary.changedBlockIds.length}`}
                       </span>
                     ) : null}
                   </div>
@@ -125,21 +134,24 @@ export default function ResumeEditorHistoryPanel({
               ))}
             </div>
           ) : (
-            <EmptyStateCard body="No revision history beyond the current draft yet." title="No revisions" />
+            <EmptyStateCard
+              body={isKorean ? "현재 드래프트 외에는 아직 리비전 기록이 없습니다." : "No revision history beyond the current draft yet."}
+              title={isKorean ? "리비전 없음" : "No revisions"}
+            />
           )}
         </section>
       </div>
       <div className="resume-editor-workspace__side">
         <section className="page-card">
-          <span className="page-card__label">Revision detail</span>
+          <span className="page-card__label">{isKorean ? "리비전 상세" : "Revision detail"}</span>
           <h2 className="page-card__title">{selectedRevisionTitle}</h2>
           {selectedRevisionBlocks.length > 0 ? (
             <div className="page-stack">
               {selectedRevisionCreatedAt ? <p className="resume-tailor-muted">{selectedRevisionCreatedAt}</p> : null}
               {selectedRevisionSummary ? (
                 <div className="filter-chip-row">
-                  <span className="detail-chip">Added {selectedRevisionSummary.addedBlockCount}</span>
-                  <span className="detail-chip">Updated {selectedRevisionSummary.updatedBlockCount}</span>
+                  <span className="detail-chip">{isKorean ? `추가 ${selectedRevisionSummary.addedBlockCount}` : `Added ${selectedRevisionSummary.addedBlockCount}`}</span>
+                  <span className="detail-chip">{isKorean ? `수정 ${selectedRevisionSummary.updatedBlockCount}` : `Updated ${selectedRevisionSummary.updatedBlockCount}`}</span>
                 </div>
               ) : null}
               <div className="stack-list">
@@ -156,34 +168,34 @@ export default function ResumeEditorHistoryPanel({
         </section>
 
         <section className="page-card">
-          <span className="page-card__label">Tracked changes</span>
-          <h2 className="page-card__title">Compare revisions</h2>
+          <span className="page-card__label">{isKorean ? "추적된 변경" : "Tracked changes"}</span>
+          <h2 className="page-card__title">{isKorean ? "리비전 비교" : "Compare revisions"}</h2>
           <label className="form-field">
-            <span className="form-field__label">From revision</span>
+            <span className="form-field__label">{isKorean ? "기준 리비전" : "From revision"}</span>
             <select
               className="form-field__input"
               onChange={(event) => onChangeCompareFrom(event.target.value)}
               value={compareFromRevisionId ?? ""}
             >
-              <option value="">Select revision</option>
+              <option value="">{isKorean ? "리비전 선택" : "Select revision"}</option>
               {revisions.map((revision) => (
                 <option key={`from-${revision.id}`} value={revision.id}>
-                  Revision {revision.revisionNo}
+                  {isKorean ? `리비전 ${revision.revisionNo}` : `Revision ${revision.revisionNo}`}
                 </option>
               ))}
             </select>
           </label>
           <label className="form-field">
-            <span className="form-field__label">To revision</span>
+            <span className="form-field__label">{isKorean ? "비교 리비전" : "To revision"}</span>
             <select
               className="form-field__input"
               onChange={(event) => onChangeCompareTo(event.target.value)}
               value={compareToRevisionId ?? ""}
             >
-              <option value="">Select revision</option>
+              <option value="">{isKorean ? "리비전 선택" : "Select revision"}</option>
               {revisions.map((revision) => (
                 <option key={`to-${revision.id}`} value={revision.id}>
-                  Revision {revision.revisionNo}
+                  {isKorean ? `리비전 ${revision.revisionNo}` : `Revision ${revision.revisionNo}`}
                 </option>
               ))}
             </select>
@@ -195,28 +207,28 @@ export default function ResumeEditorHistoryPanel({
                   <p className="section-heading__eyebrow">{change.changeTypeLabel}</p>
                   <h3 className="page-card__title">{change.nodeId ?? change.blockId}</h3>
                   <div className="filter-chip-row">
-                    {change.textChanged ? <span className="detail-chip">Text changed</span> : null}
-                    {change.structureChanged ? <span className="detail-chip">Structure changed</span> : null}
-                    {change.moveRelated ? <span className="detail-chip">Move related</span> : null}
+                    {change.textChanged ? <span className="detail-chip">{isKorean ? "텍스트 변경" : "Text changed"}</span> : null}
+                    {change.structureChanged ? <span className="detail-chip">{isKorean ? "구조 변경" : "Structure changed"}</span> : null}
+                    {change.moveRelated ? <span className="detail-chip">{isKorean ? "이동 관련" : "Move related"}</span> : null}
                   </div>
                   <div className="resume-editor-diff-card__grid">
                     <div className="resume-editor-diff-card__column">
-                      <p className="resume-tailor-muted">Before</p>
+                      <p className="resume-tailor-muted">{isKorean ? "이전" : "Before"}</p>
                       <div className="page-card__body resume-section__body--preserve resume-editor-diff-card__surface resume-editor-diff-card__surface--before">
                         {((change.beforeTextLines?.length ?? 0) > 0
                           ? change.beforeTextLines ?? []
-                          : [change.beforeText ?? "No previous text"]
+                          : [change.beforeText ?? (isKorean ? "이전 텍스트 없음" : "No previous text")]
                         ).map((line, index) => (
                           <p key={`${change.id}-before-${index}`}>{line || "\u00A0"}</p>
                         ))}
                       </div>
                     </div>
                     <div className="resume-editor-diff-card__column">
-                      <p className="resume-tailor-muted">After</p>
+                      <p className="resume-tailor-muted">{isKorean ? "이후" : "After"}</p>
                       <div className="page-card__body resume-section__body--preserve resume-editor-diff-card__surface resume-editor-diff-card__surface--after">
                         {((change.afterTextLines?.length ?? 0) > 0
                           ? change.afterTextLines ?? []
-                          : [change.afterText ?? "No next text"]
+                          : [change.afterText ?? (isKorean ? "다음 텍스트 없음" : "No next text")]
                         ).map((line, index) => (
                           <p key={`${change.id}-after-${index}`}>{line || "\u00A0"}</p>
                         ))}

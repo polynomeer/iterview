@@ -111,19 +111,19 @@ describe("SkillsPage", () => {
       <Routes>
         <Route element={<SkillsPage />} path="/skills" />
       </Routes>,
-      { route: "/skills" },
+      { route: "/skills", locale: "ko" },
     );
 
-    expect(screen.getByText("Turn raw skill signals into the next practice target")).toBeInTheDocument();
-    expect(screen.getByText("What this signal set should drive")).toBeInTheDocument();
-    expect(screen.getByText("Most actionable signal")).toBeInTheDocument();
-    expect(screen.getByText("Top gap: System Design")).toBeInTheDocument();
-    expect(screen.getByText("Weak-question load: System Design")).toBeInTheDocument();
-    expect(screen.getByText("Primary branch today")).toBeInTheDocument();
-    expect(screen.getByText("Open practice workspace")).toBeInTheDocument();
-    expect(screen.getByText("Current skill profile")).toBeInTheDocument();
-    expect(screen.getByText("Weak skills and benchmark gaps")).toBeInTheDocument();
-    expect(screen.getByText("Answered volume and weak-question load")).toBeInTheDocument();
-    expect(screen.getByText("Total weak questions")).toBeInTheDocument();
+    expect(screen.getByText("스킬 신호를 다음 가지 선택으로 연결하세요")).toBeInTheDocument();
+    expect(screen.getByText("이 신호 세트가 이끌어야 할 다음 행동")).toBeInTheDocument();
+    expect(screen.getByText("가장 바로 행동 가능한 신호")).toBeInTheDocument();
+    expect(screen.getByText("최대 격차: System Design")).toBeInTheDocument();
+    expect(screen.getByText("약한 질문 부하: System Design")).toBeInTheDocument();
+    expect(screen.getByText("오늘의 주 가지")).toBeInTheDocument();
+    expect(screen.getByText("연습 워크스페이스 열기")).toBeInTheDocument();
+    expect(screen.getByText("현재 스킬 프로필")).toBeInTheDocument();
+    expect(screen.getByText("약한 스킬과 벤치마크 격차")).toBeInTheDocument();
+    expect(screen.getByText("답변량과 약한 질문 부하")).toBeInTheDocument();
+    expect(screen.getByText("총 약한 질문 수")).toBeInTheDocument();
   });
 });
