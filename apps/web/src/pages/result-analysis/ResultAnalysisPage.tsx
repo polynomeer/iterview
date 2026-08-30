@@ -103,7 +103,7 @@ export function ResultAnalysisPage() {
                 <div className="result-analysis-workspace-surface__header">
                   <div className="result-analysis-workspace-surface__intro">
                     <div className="result-analysis-workspace-surface__eyebrow-row">
-                      <span className="page-card__label">{isKorean ? "결과 워크스페이스" : "Result workspace"}</span>
+                      <span className="page-card__label">{isKorean ? "결과 작업공간" : "Result workspace"}</span>
                       <span className="question-status-badge question-status-badge--accent">{isKorean ? "복습 루프" : "Review loop"}</span>
                     </div>
                     <p className="result-analysis-workspace-surface__breadcrumbs">
@@ -134,7 +134,7 @@ export function ResultAnalysisPage() {
                           : "Weakest Pending"}
                     </span>
                     <span className="result-analysis-workspace-surface__summary-item" role="listitem">{isKorean ? `개선 시그널 ${improvementSignals}` : `Improvement signals ${improvementSignals}`}</span>
-                    <span className="result-analysis-workspace-surface__summary-item result-analysis-workspace-surface__summary-item--accent" role="listitem">{isKorean ? `다음 프롬프트 ${resultQuery.data.followUpRecommendations.length}` : `Next prompts ${resultQuery.data.followUpRecommendations.length}`}</span>
+                    <span className="result-analysis-workspace-surface__summary-item result-analysis-workspace-surface__summary-item--accent" role="listitem">{isKorean ? `다음 질문 문구 ${resultQuery.data.followUpRecommendations.length}` : `Next prompts ${resultQuery.data.followUpRecommendations.length}`}</span>
                   </div>
                 </div>
                 <div className="result-analysis-workspace-surface__chips">

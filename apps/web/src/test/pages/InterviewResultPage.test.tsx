@@ -270,7 +270,7 @@ describe("InterviewResultPage", () => {
       { route: "/interviews/session-14/result", locale: "ko" },
     );
 
-    expect(screen.getByText("구조화된 이력서 커버리지")).toBeInTheDocument();
+    expect(screen.getByText("구조화된 이력서 범위")).toBeInTheDocument();
     expect(screen.getAllByText("약한 세부 항목 재검증").length).toBeGreaterThan(0);
     expect(screen.getAllByText("건너뛴 세부 항목 복구").length).toBeGreaterThan(0);
     expect(screen.getByText("이력서 프로젝트")).toBeInTheDocument();

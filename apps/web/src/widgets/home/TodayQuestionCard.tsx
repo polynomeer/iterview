@@ -21,7 +21,7 @@ export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
             <QuestionStatusBadge status={question.status} />
           </div>
           <p className="today-question-card__breadcrumbs">
-            {isKorean ? "핵심 프롬프트" : "Core prompt"}
+            {isKorean ? "핵심 질문 문구" : "Core prompt"}
             <span>/</span>
             {isKorean ? "이력서 방어" : "Resume defense"}
             <span>/</span>

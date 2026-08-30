@@ -50,7 +50,7 @@ export function InterviewResultPage() {
           eyebrow={isKorean ? "인터뷰 결과" : "Interview result"}
           signals={[
             { label: isKorean ? "세션 id" : "Session id", value: isKorean ? "없음" : "Missing", tone: "warning" },
-            { label: isKorean ? "안전한 다음 동작" : "Safe next move", value: isKorean ? "인터뷰 워크스페이스에서 다시 시작" : "Restart from the interview workspace", tone: "accent" },
+            { label: isKorean ? "안전한 다음 동작" : "Safe next move", value: isKorean ? "인터뷰 작업공간에서 다시 시작" : "Restart from the interview workspace", tone: "accent" },
             { label: isKorean ? "대체 경로" : "Alternative path", value: isKorean ? "복습 큐에서 보강 계속하기" : "Continue remediation from the review queue" },
           ]}
           summaryBody={isKorean ? "결과 경로는 실제 세션만 요약할 수 있습니다. 다음 패스가 실제 가지 맥락에서 시작되도록 런처나 복습 큐를 통해 다시 들어오세요." : "A result route can only summarize a concrete session. Re-enter through the launcher or the review queue so the next pass starts from real branch context."}
@@ -89,7 +89,7 @@ export function InterviewResultPage() {
               },
             },
             {
-              label: isKorean ? "인터뷰 워크스페이스로 돌아가기" : "Back to interview workspace",
+              label: isKorean ? "인터뷰 작업공간으로 돌아가기" : "Back to interview workspace",
               to: routeConfig.interview.buildPath(),
               variant: "secondary",
             },
@@ -131,7 +131,7 @@ export function InterviewResultPage() {
               to: routeConfig.interview.buildPath(),
             },
             {
-              label: isKorean ? "홈 워크스페이스로 돌아가기" : "Back to home workspace",
+              label: isKorean ? "홈 작업공간으로 돌아가기" : "Back to home workspace",
               to: routeConfig.home.buildPath(),
               variant: "secondary",
             },
@@ -141,10 +141,10 @@ export function InterviewResultPage() {
           eyebrow={isKorean ? "인터뷰 결과" : "Interview result"}
           signals={[
             { label: isKorean ? "세션 상태" : "Session status", value: isKorean ? "완료된 요약이 없습니다" : "No completed summary is available", tone: "warning" },
-            { label: isKorean ? "권장 다음 동작" : "Best next move", value: isKorean ? "인터뷰 워크스페이스에서 새 패스를 시작" : "Launch a fresh pass from the interview workspace", tone: "accent" },
+            { label: isKorean ? "권장 다음 동작" : "Best next move", value: isKorean ? "인터뷰 작업공간에서 새 패스를 시작" : "Launch a fresh pass from the interview workspace", tone: "accent" },
             { label: isKorean ? "탐색 대체 경로" : "Navigation fallback", value: isKorean ? "오래된 기록에서 온 경로면 홈으로 돌아가기" : "Return home if this route came from stale history" },
           ]}
-          summaryBody={isKorean ? "이 경로는 저장된 세션 요약으로 연결되지 않았습니다. 새 가지를 시작하거나, 이곳으로 연결한 워크스페이스로 돌아가세요." : "This route did not resolve to a stored session summary. Start a fresh branch or step back to the workspace that linked here."}
+          summaryBody={isKorean ? "이 경로는 저장된 세션 요약으로 연결되지 않았습니다. 새 가지를 시작하거나, 이곳으로 연결한 작업공간으로 돌아가세요." : "This route did not resolve to a stored session summary. Start a fresh branch or step back to the workspace that linked here."}
           summaryTitle={isKorean ? "결과 화면이 완료된 인터뷰 패스를 찾지 못했습니다." : "The result surface cannot find a finished interview pass."}
           title={t("result.notFoundTitle")}
         />
@@ -212,7 +212,7 @@ export function InterviewResultPage() {
           <div className="interview-result-workspace-surface__header">
             <div className="interview-result-workspace-surface__intro">
               <div className="interview-result-workspace-surface__eyebrow-row">
-                <span className="page-card__label">{isKorean ? "결과 워크스페이스" : "Result workspace"}</span>
+                <span className="page-card__label">{isKorean ? "결과 작업공간" : "Result workspace"}</span>
                 <span className="question-status-badge question-status-badge--accent">{isKorean ? "가지 복기" : "Branch review"}</span>
               </div>
               <p className="interview-result-workspace-surface__breadcrumbs">

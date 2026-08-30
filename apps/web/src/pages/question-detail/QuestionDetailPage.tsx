@@ -231,7 +231,7 @@ export function QuestionDetailPage() {
     >
       {questionDetailQuery.isLoading ? (
         <LoadingStateCard
-          body={isKorean ? "질문 프롬프트, 관련 메타데이터, 학습 자료, 진행 요약을 불러오는 중입니다." : "Loading the question prompt, related metadata, learning materials, and progress summary."}
+          body={isKorean ? "질문 문구, 관련 메타데이터, 학습 자료, 진행 요약을 불러오는 중입니다." : "Loading the question prompt, related metadata, learning materials, and progress summary."}
           title={isKorean ? "질문 상세 준비 중" : "Preparing question detail"}
         />
       ) : null}
@@ -464,7 +464,7 @@ export function QuestionDetailPage() {
                     </h2>
                     <p className="question-detail-workspace-surface__body">
                       {isKorean
-                        ? `${questionDetailQuery.data.title}. 이 프롬프트를 면접 체크포인트처럼 다루세요. 노드를 읽고, 보조 근거가 충분한지 확인한 뒤에만 다음 시도를 사용하세요.`
+                        ? `${questionDetailQuery.data.title}. 이 질문 문구를 면접 체크포인트처럼 다루세요. 노드를 읽고, 보조 근거가 충분한지 확인한 뒤에만 다음 시도를 사용하세요.`
                         : `${questionDetailQuery.data.title}. Treat the prompt like an interview checkpoint: read the node, check whether the support is strong enough, and only then spend the next attempt.`}
                     </p>
                   </div>
@@ -549,9 +549,9 @@ export function QuestionDetailPage() {
                     <p>{recommendedCount > 0 ? (isKorean ? "후속 공격 후보 가지" : "candidate attack branches") : (isKorean ? "아직 연결된 후속 질문이 없습니다" : "No linked follow-ups yet")}</p>
                   </article>
                   <article>
-                    <span>{isKorean ? "프롬프트 길이" : "Prompt size"}</span>
+                    <span>{isKorean ? "질문 문구 길이" : "Prompt size"}</span>
                     <strong>{promptDensity}</strong>
-                    <p>{isKorean ? "핵심 프롬프트 단어 수" : "words in the core prompt"}</p>
+                    <p>{isKorean ? "핵심 질문 문구 단어 수" : "words in the core prompt"}</p>
                   </article>
                 </div>
                 <div className="question-detail-insight-surface__actions">

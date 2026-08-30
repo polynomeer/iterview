@@ -39,7 +39,7 @@ export default function ResumeEditorHeatmapPanel({ versionId, heatmapAvailable, 
         </>
       ) : (
         <EmptyStateCard
-          body={isKorean ? "이 워크스페이스에서는 아직 이력서 히트맵을 사용할 수 없습니다." : "The resume heatmap is not available for this workspace yet."}
+          body={isKorean ? "이 작업공간에서는 아직 이력서 히트맵을 사용할 수 없습니다." : "The resume heatmap is not available for this workspace yet."}
           title={isKorean ? "히트맵 연결 없음" : "No heatmap connection"}
         />
       )}

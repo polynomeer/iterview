@@ -40,7 +40,7 @@ export function HomePage() {
       ? "이력서에서 분명한 기준 문서를 만들고, 모든 주장에 방어 논리가 생길 때까지 DFS 방식 꼬리질문을 연습하세요."
       : "Build a clear source of truth from your resume, then rehearse DFS-style follow-up questions until every claim is defensible."
     : isKorean
-      ? "이력서를 기준 문서로 삼고, 꼬리질문 압박과 재도전, 복구 흐름을 하나의 워크스페이스에서 이어가세요."
+      ? "이력서를 기준 문서로 삼고, 꼬리질문 압박과 재도전, 복구 흐름을 하나의 작업공간에서 이어가세요."
       : "Use your resume as source of truth, then move through follow-up pressure, retries, and recovery from one workspace.";
   const summaryCount = homeData?.summaryStats?.length ?? 0;
   const retryCount = homeData?.retryQuestions?.length ?? 0;
@@ -68,7 +68,7 @@ export function HomePage() {
           <div className="home-workspace-surface__header">
             <div className="home-workspace-surface__intro">
               <div className="home-workspace-surface__eyebrow-row">
-                <span className="page-card__label">{isKorean ? "오늘의 워크스페이스" : "Daily workspace"}</span>
+                <span className="page-card__label">{isKorean ? "오늘의 작업공간" : "Daily workspace"}</span>
                 <span className="question-status-badge question-status-badge--accent">{isKorean ? "집중 모드" : "Focus mode"}</span>
               </div>
               <p className="home-workspace-surface__breadcrumbs">

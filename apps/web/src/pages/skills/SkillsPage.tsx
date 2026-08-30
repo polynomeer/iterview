@@ -61,7 +61,7 @@ export function SkillsPage() {
           ? "스킬 레이더와 격차 신호는 다음에 어떤 인터뷰 가지를 보강할지 결정하는 용도로만 사용하세요."
           : "Use skill radar and gap signals only to decide which interview branch should be reinforced next."
       }
-      eyebrow={isKorean ? "보조 워크스페이스" : "Support workspace"}
+      eyebrow={isKorean ? "보조 작업공간" : "Support workspace"}
       title={isKorean ? "스킬 신호를 다음 가지 선택으로 연결하세요" : "Turn skill signals into the next branch choice"}
     >
       {radarQuery.isLoading || gapQuery.isLoading || progressQuery.isLoading ? (
@@ -197,7 +197,7 @@ export function SkillsPage() {
             </div>
             <div className="skills-workspace-surface__actions">
               <Link className="primary-button" to={routeConfig.practice.buildPath()}>
-                {isKorean ? "연습 워크스페이스 열기" : "Open practice workspace"}
+                {isKorean ? "연습 작업공간 열기" : "Open practice workspace"}
               </Link>
               <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
                 {isKorean ? "복습 큐 열기" : "Open review queue"}

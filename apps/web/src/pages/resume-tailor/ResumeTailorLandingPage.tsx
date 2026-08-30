@@ -42,7 +42,7 @@ export function ResumeTailorLandingPage() {
     >
       {resumeListQuery.isLoading ? (
         <LoadingStateCard
-          body={isKorean ? "맞춤 워크스페이스를 열기 전에 저장된 이력서 버전을 불러오는 중입니다." : "Loading saved resume versions before opening the tailoring workspace."}
+          body={isKorean ? "맞춤 작업공간을 열기 전에 저장된 이력서 버전을 불러오는 중입니다." : "Loading saved resume versions before opening the tailoring workspace."}
           title={isKorean ? "이력서 맞춤 준비 중" : "Preparing resume tailoring"}
         />
       ) : null}
@@ -58,7 +58,7 @@ export function ResumeTailorLandingPage() {
           onAction={() => {
             void resumeListQuery.refetch();
           }}
-          title={isKorean ? "이력서 맞춤 워크스페이스를 불러올 수 없습니다" : "Unable to load resume tailoring workspace"}
+          title={isKorean ? "이력서 맞춤 작업공간을 불러올 수 없습니다" : "Unable to load resume tailoring workspace"}
         />
       ) : null}
 
@@ -222,7 +222,7 @@ export function ResumeTailorLandingPage() {
                               analysisId: analysis.id,
                             })}
                           >
-                            {isKorean ? "워크스페이스 열기" : "Open workspace"}
+                            {isKorean ? "작업공간 열기" : "Open workspace"}
                           </Link>
                         </div>
                       </article>

@@ -588,7 +588,7 @@ export function PracticalInterviewReviewPage() {
       <PageContainer
         description={
           isKorean
-            ? "리뷰 워크스페이스를 열기 전에 가져온 면접 기록을 먼저 선택하세요."
+            ? "리뷰 작업공간을 열기 전에 가져온 면접 기록을 먼저 선택하세요."
             : "Choose an imported interview record before opening the review workspace."
         }
         eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
@@ -612,7 +612,7 @@ export function PracticalInterviewReviewPage() {
             : "Loading the review shell, transcript, question structuring, and replay guidance."
         }
         eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
-        title={isKorean ? "리뷰 워크스페이스 준비 중" : "Preparing review workspace"}
+        title={isKorean ? "리뷰 작업공간 준비 중" : "Preparing review workspace"}
       >
         <LoadingStateCard
           body={
@@ -756,7 +756,7 @@ export function PracticalInterviewReviewPage() {
                   ? "전사 실패는 업로드 실패와 다릅니다. 가능하면 전사 재시도를 사용하고, 아니면 서버 재시도 시간이 지난 뒤 기록을 다시 여세요."
                   : "A failed transcript is not the same as a failed upload. Use retry transcription when available, or reopen the record after the server retry window."
                 : isKorean
-                  ? "전사 대기는 오류가 아닙니다. 처리가 끝난 뒤 이 기록을 다시 열면 리뷰 워크스페이스가 자동으로 나타납니다."
+                  ? "전사 대기는 오류가 아닙니다. 처리가 끝난 뒤 이 기록을 다시 열면 리뷰 작업공간이 자동으로 나타납니다."
                   : "Pending transcript extraction is not an error. Re-open this record after processing completes and the review workspace will appear automatically."
             }
             tone={detail.isTranscriptFailed ? "error" : "info"}

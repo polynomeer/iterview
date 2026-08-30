@@ -133,7 +133,7 @@ export function InterviewSessionPage() {
               },
             },
             {
-              label: isKorean ? "인터뷰 워크스페이스로 돌아가기" : "Back to interview workspace",
+              label: isKorean ? "인터뷰 작업공간으로 돌아가기" : "Back to interview workspace",
               to: routeConfig.interview.buildPath(),
               variant: "secondary",
             },
@@ -160,7 +160,7 @@ export function InterviewSessionPage() {
           ]}
           summaryBody={
             isKorean
-              ? "현재 데이터 응답만으로는 활성 가지를 복원할 수 없습니다. 먼저 다시 시도하고, 이 가지가 더 이상 유효하지 않을 때만 인터뷰 워크스페이스로 돌아가세요."
+              ? "현재 데이터 응답만으로는 활성 가지를 복원할 수 없습니다. 먼저 다시 시도하고, 이 가지가 더 이상 유효하지 않을 때만 인터뷰 작업공간으로 돌아가세요."
               : "The active branch could not be reconstructed from the current data response. Retry first, then go back to the interview workspace only if this branch is no longer valid."
           }
           summaryTitle={
@@ -192,7 +192,7 @@ export function InterviewSessionPage() {
               to: routeConfig.interviewSessionResult.buildPath({ sessionId }),
             },
             {
-              label: isKorean ? "인터뷰 워크스페이스로 돌아가기" : "Back to interview workspace",
+              label: isKorean ? "인터뷰 작업공간으로 돌아가기" : "Back to interview workspace",
               to: routeConfig.interview.buildPath(),
               variant: "secondary",
             },

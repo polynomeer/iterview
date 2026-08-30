@@ -90,7 +90,7 @@ export default function ResumeEditorHistoryPanel({
           <h2 className="page-card__title">{isKorean ? "리비전 기록" : "Revision history"}</h2>
           {revisionsLoading ? (
             <LoadingStateCard
-              body={isKorean ? "저장된 워크스페이스 리비전을 불러오는 중입니다." : "Loading persisted workspace revisions."}
+              body={isKorean ? "저장된 작업공간 리비전을 불러오는 중입니다." : "Loading persisted workspace revisions."}
               title={isKorean ? "기록 준비 중" : "Preparing history"}
             />
           ) : revisionsError ? (

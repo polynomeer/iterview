@@ -120,7 +120,7 @@ describe("SkillsPage", () => {
     expect(screen.getByText("최대 격차: System Design")).toBeInTheDocument();
     expect(screen.getByText("약한 질문 부하: System Design")).toBeInTheDocument();
     expect(screen.getByText("오늘의 주 가지")).toBeInTheDocument();
-    expect(screen.getByText("연습 워크스페이스 열기")).toBeInTheDocument();
+    expect(screen.getByText("연습 작업공간 열기")).toBeInTheDocument();
     expect(screen.getByText("현재 스킬 프로필")).toBeInTheDocument();
     expect(screen.getByText("약한 스킬과 벤치마크 격차")).toBeInTheDocument();
     expect(screen.getByText("답변량과 약한 질문 부하")).toBeInTheDocument();

@@ -93,7 +93,7 @@ export function ArchivePage() {
         <div className="archive-workspace-surface__header">
           <div className="archive-workspace-surface__intro">
             <div className="archive-workspace-surface__eyebrow-row">
-              <span className="page-card__label">{isKorean ? "아카이브 워크스페이스" : "Archive workspace"}</span>
+              <span className="page-card__label">{isKorean ? "아카이브 작업공간" : "Archive workspace"}</span>
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "답변 라이브러리" : "Answer library"}</span>
             </div>
             <p className="archive-workspace-surface__breadcrumbs">

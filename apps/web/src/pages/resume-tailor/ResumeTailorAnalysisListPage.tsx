@@ -247,7 +247,7 @@ export function ResumeTailorAnalysisListPage() {
                           analysisId: analysis.id,
                         })}
                       >
-                        {isKorean ? "워크스페이스 열기" : "Open workspace"}
+                        {isKorean ? "작업공간 열기" : "Open workspace"}
                       </Link>
                     </div>
                   </article>

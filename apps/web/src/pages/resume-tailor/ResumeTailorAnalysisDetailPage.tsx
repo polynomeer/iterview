@@ -67,7 +67,7 @@ export function ResumeTailorAnalysisDetailPage() {
       {analysisQuery.isLoading ? (
         <LoadingStateCard
           body={isKorean ? "저장된 맞춤 분석과 보존된 맞춤 문서를 불러오는 중입니다." : "Loading the saved tailoring analysis and persisted tailored document."}
-          title={isKorean ? "맞춤 이력서 워크스페이스 준비 중" : "Preparing tailored resume workspace"}
+          title={isKorean ? "맞춤 이력서 작업공간 준비 중" : "Preparing tailored resume workspace"}
         />
       ) : analysisQuery.isError ? (
         <ErrorStateCard
@@ -88,7 +88,7 @@ export function ResumeTailorAnalysisDetailPage() {
             <div className="resume-tailor-workspace-surface__header">
               <div className="resume-tailor-workspace-surface__intro">
                 <div className="resume-tailor-workspace-surface__eyebrow-row">
-                  <span className="page-card__label">{isKorean ? "분석 워크스페이스" : "Analysis workspace"}</span>
+                  <span className="page-card__label">{isKorean ? "분석 작업공간" : "Analysis workspace"}</span>
                   <span className="question-status-badge question-status-badge--accent">{isKorean ? "4단계 중 4단계" : "Step 4 of 4"}</span>
                 </div>
                 <p className="resume-tailor-workspace-surface__breadcrumbs">
@@ -100,7 +100,7 @@ export function ResumeTailorAnalysisDetailPage() {
                 </p>
                 <h2 className="resume-tailor-workspace-surface__title">{analysisQuery.data.matchSummary}</h2>
                 <p className="resume-tailor-workspace-surface__body">
-                  {isKorean ? "이 워크스페이스에서 어떤 제안이 목표 직무에 맞는 스토리를 실제로 강화하는지 결정하세요. 수락한 변경은 맞춤 미리보기와 내보내기 결과에만 반영되고 원본 소스 버전은 바뀌지 않습니다." : "Use this workspace to decide which suggestions actually harden the story for the target role. Accepted changes affect only the tailored preview and export outputs, never the original source version."}
+                  {isKorean ? "이 작업공간에서 어떤 제안이 목표 직무에 맞는 스토리를 실제로 강화하는지 결정하세요. 수락한 변경은 맞춤 미리보기와 내보내기 결과에만 반영되고 원본 소스 버전은 바뀌지 않습니다." : "Use this workspace to decide which suggestions actually harden the story for the target role. Accepted changes affect only the tailored preview and export outputs, never the original source version."}
                 </p>
               </div>
               <div className="resume-tailor-workspace-surface__stats">

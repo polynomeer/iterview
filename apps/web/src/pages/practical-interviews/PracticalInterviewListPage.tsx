@@ -99,7 +99,7 @@ export function PracticalInterviewListPage() {
     <PageContainer
       description={
         isKorean
-          ? "실제 면접 아티팩트 하나를 가져와 전사 준비 상태를 안정화하고, 다음 복구 리뷰 워크스페이스로 연결하세요."
+          ? "실제 면접 아티팩트 하나를 가져와 전사 준비 상태를 안정화하고, 다음 복구 리뷰 작업공간으로 연결하세요."
           : "Import one real interview artifact, stabilize transcript readiness, and turn it into the next recovery review workspace."
       }
       eyebrow={isKorean ? "복구 루프" : "Recovery loop"}
@@ -107,7 +107,7 @@ export function PracticalInterviewListPage() {
     >
       {recordListQuery.isLoading ? (
         <LoadingStateCard
-          body={isKorean ? "가져온 면접 기록을 불러오고 업로드 워크스페이스를 준비하는 중입니다." : "Loading imported interview records and preparing the upload workspace."}
+          body={isKorean ? "가져온 면접 기록을 불러오고 업로드 작업공간을 준비하는 중입니다." : "Loading imported interview records and preparing the upload workspace."}
           title={isKorean ? "실전 면접 준비 중" : "Preparing practical interviews"}
         />
       ) : null}
@@ -153,7 +153,7 @@ export function PracticalInterviewListPage() {
                 </h2>
                 <p className="practical-list-workspace-surface__body">
                   {isKorean
-                    ? "각 업로드는 전사 품질, 연결된 이력서 컨텍스트, 꼬리질문 리플레이 경로가 깊은 분석 전부터 보이는 구조화된 리뷰 워크스페이스가 되어야 합니다."
+                    ? "각 업로드는 전사 품질, 연결된 이력서 컨텍스트, 꼬리질문 리플레이 경로가 깊은 분석 전부터 보이는 구조화된 리뷰 작업공간이 되어야 합니다."
                     : "Each upload should become a structured review workspace with transcript quality, linked resume context, and follow-up replay paths already visible before deep analysis starts."}
                 </p>
               </div>
@@ -217,7 +217,7 @@ export function PracticalInterviewListPage() {
                 <div>
                   <p className="section-heading__eyebrow">{isKorean ? "가져오기 흐름" : "Import flow"}</p>
                   <h2 className="page-card__title">
-                    {isKorean ? "이 워크스페이스의 역할" : "What this workspace is for"}
+                    {isKorean ? "이 작업공간의 역할" : "What this workspace is for"}
                   </h2>
                 </div>
               </div>
@@ -277,7 +277,7 @@ export function PracticalInterviewListPage() {
                   <span>{isKorean ? "리플레이 준비 완료" : "Replay ready"}</span>
                   <strong>
                     {isKorean
-                      ? `${readyReviewCount}개의 기록은 바로 리뷰 워크스페이스로 열 수 있습니다.`
+                      ? `${readyReviewCount}개의 기록은 바로 리뷰 작업공간으로 열 수 있습니다.`
                       : `${readyReviewCount} records can already be opened as review workspaces.`}
                   </strong>
                 </div>
@@ -469,7 +469,7 @@ export function PracticalInterviewListPage() {
                   <div className="section-heading">
                     <div>
                       <p className="section-heading__eyebrow">{isKorean ? "가져온 기록" : "Imported records"}</p>
-                      <h2 className="page-card__title">{isKorean ? "리뷰 워크스페이스 열기" : "Open a review workspace"}</h2>
+                      <h2 className="page-card__title">{isKorean ? "리뷰 작업공간 열기" : "Open a review workspace"}</h2>
                     </div>
                     <div className="chip-list">
                       <span className="detail-chip">{isKorean ? "최신 가져오기 기록을 여기서 바로 검토합니다" : "Newest imports stay actionable here"}</span>
@@ -520,7 +520,7 @@ export function PracticalInterviewListPage() {
                                   ? `다음 재시도 ${record.transcriptNextRetryAtLabel}`
                                   : `Next retry ${record.transcriptNextRetryAtLabel}`
                                 : isKorean
-                                  ? "하나의 워크스페이스에서 전사 리뷰, 구조화 질문, 꼬리질문 스레드, 리플레이 준비 상태를 함께 확인하세요."
+                                  ? "하나의 작업공간에서 전사 리뷰, 구조화 질문, 꼬리질문 스레드, 리플레이 준비 상태를 함께 확인하세요."
                                   : "Open transcript review, structured questions, follow-up threads, and replay readiness from one workspace."}
                           </p>
                         </div>
