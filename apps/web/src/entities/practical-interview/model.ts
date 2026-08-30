@@ -48,6 +48,45 @@ function mapTargetPayload(payload?: Record<string, string> | null) {
   return payload ?? {};
 }
 
+function localizePracticalInterviewText(value?: string | null) {
+  if (getCurrentAppLocale() !== "ko" || !value) {
+    return value ?? null;
+  }
+
+  switch (value) {
+    case "Start replay":
+      return "리플레이 시작";
+    case "Replay this interview":
+      return "이 면접 다시 연습하기";
+    case "Original replay":
+      return "원본 리플레이";
+    case "Pressure variant":
+      return "압박 변형";
+    case "Replay ready":
+      return "리플레이 준비 완료";
+    case "Replay unavailable":
+      return "리플레이 불가";
+    case "Review transcript lane":
+      return "전사 레인 검토";
+    case "Transcript lane":
+      return "전사 레인";
+    case "Question lane":
+      return "질문 레인";
+    case "Thread lane":
+      return "스레드 레인";
+    case "Review structured questions":
+      return "구조화 질문 검토";
+    case "Transcript needs final review":
+      return "전사 최종 검토 필요";
+    case "Check follow-up chains":
+      return "꼬리질문 체인 점검";
+    case "Review segment 1":
+      return "1번 세그먼트 검토";
+    default:
+      return value;
+  }
+}
+
 function mapReplayLaunchPreset(
   preset?: InterviewRecordReplayLaunchPresetDto | null,
 ) {
@@ -63,14 +102,25 @@ function mapReplayLaunchPreset(
         ? null
         : String(preset.sourceInterviewRecordId),
     replayMode: preset.replayMode ?? null,
-    recommendedReplayModeLabel: preset.recommendedReplayModeLabel ?? null,
+    recommendedReplayModeLabel: localizePracticalInterviewText(
+      preset.recommendedReplayModeLabel ?? null,
+    ),
     recommendedQuestionCount: preset.recommendedQuestionCount ?? 0,
     seedQuestionIds: toArray(preset.seedQuestionIds).map((id) => String(id)),
     availableReplayModes: toArray(preset.availableReplayModes),
-    availableReplayModeLabels: preset.availableReplayModeLabels ?? {},
-    presetTitle: preset.presetTitle ?? (isKorean ? "면접 리플레이" : "Replay interview"),
-    presetDescription: preset.presetDescription ?? "",
-    launchButtonLabel: preset.launchButtonLabel ?? (isKorean ? "리플레이 시작" : "Start replay"),
+    availableReplayModeLabels: Object.fromEntries(
+      Object.entries(preset.availableReplayModeLabels ?? {}).map(([key, label]) => [
+        key,
+        localizePracticalInterviewText(label) ?? label,
+      ]),
+    ),
+    presetTitle: localizePracticalInterviewText(
+      preset.presetTitle ?? (isKorean ? "면접 리플레이" : "Replay interview"),
+    ),
+    presetDescription: localizePracticalInterviewText(preset.presetDescription ?? ""),
+    launchButtonLabel: localizePracticalInterviewText(
+      preset.launchButtonLabel ?? (isKorean ? "리플레이 시작" : "Start replay"),
+    ),
   };
 }
 
@@ -125,14 +175,16 @@ function mapBlockerDetail(
   return {
     id: detail?.code ?? `blocker-${index}`,
     code: detail?.code ?? "unknown",
-    label: detail?.label ?? (isKorean ? "검토 차단 요인" : "Review blocker"),
-    description: detail?.description ?? "",
+    label: localizePracticalInterviewText(
+      detail?.label ?? (isKorean ? "검토 차단 요인" : "Review blocker"),
+    ),
+    description: localizePracticalInterviewText(detail?.description ?? ""),
     severity: detail?.severity ?? "info",
     priority: detail?.priority ?? "normal",
     highlightVariant: detail?.highlightVariant ?? "neutral",
     sortOrder: detail?.sortOrder ?? index,
-    recommendedAction: detail?.recommendedAction ?? null,
-    recommendedActionLabel: detail?.recommendedActionLabel ?? null,
+    recommendedAction: localizePracticalInterviewText(detail?.recommendedAction ?? null),
+    recommendedActionLabel: localizePracticalInterviewText(detail?.recommendedActionLabel ?? null),
     recommendedActionTarget: detail?.recommendedActionTarget ?? null,
     recommendedActionTargetPayload: mapTargetPayload(detail?.recommendedActionTargetPayload),
   };
@@ -147,16 +199,16 @@ function mapLaneItem(
     key,
     sortOrder: item?.sortOrder ?? 999,
     highlightVariant: item?.highlightVariant ?? "neutral",
-    badgeText: item?.badgeText ?? formatLabel(key),
-    summaryText: item?.summaryText ?? "",
+    badgeText: localizePracticalInterviewText(item?.badgeText ?? formatLabel(key)),
+    summaryText: localizePracticalInterviewText(item?.summaryText ?? "") ?? "",
     recommendedTab: item?.recommendedTab ?? key,
     defaultExpanded: item?.defaultExpanded ?? false,
     analyticsKey: item?.analyticsKey ?? key,
     trackingContext: item?.trackingContext ?? {},
-    helpText: item?.helpText ?? "",
-    whyItMatters: item?.whyItMatters ?? "",
-    accessibilityLabel: item?.accessibilityLabel ?? formatLabel(key),
-    screenReaderSummary: item?.screenReaderSummary ?? "",
+    helpText: localizePracticalInterviewText(item?.helpText ?? "") ?? "",
+    whyItMatters: localizePracticalInterviewText(item?.whyItMatters ?? "") ?? "",
+    accessibilityLabel: localizePracticalInterviewText(item?.accessibilityLabel ?? formatLabel(key)),
+    screenReaderSummary: localizePracticalInterviewText(item?.screenReaderSummary ?? "") ?? "",
     totalCount: item?.totalCount ?? 0,
     readyCount: item?.readyCount ?? 0,
     needsReviewCount: item?.needsReviewCount ?? 0,
@@ -164,21 +216,21 @@ function mapLaneItem(
     severity: item?.severity ?? "info",
     highestPriority: item?.highestPriority ?? "normal",
     primaryAction: item?.primaryAction ?? null,
-    primaryActionLabel: item?.primaryActionLabel ?? null,
+    primaryActionLabel: localizePracticalInterviewText(item?.primaryActionLabel ?? null),
     primaryActionTarget: item?.primaryActionTarget ?? null,
     primaryActionTargetPayload: mapTargetPayload(item?.primaryActionTargetPayload),
     secondaryAction: item?.secondaryAction ?? null,
-    secondaryActionLabel: item?.secondaryActionLabel ?? null,
+    secondaryActionLabel: localizePracticalInterviewText(item?.secondaryActionLabel ?? null),
     secondaryActionTarget: item?.secondaryActionTarget ?? null,
     secondaryActionTargetPayload: mapTargetPayload(item?.secondaryActionTargetPayload),
-    emptyStateMessage: item?.emptyStateMessage ?? null,
+    emptyStateMessage: localizePracticalInterviewText(item?.emptyStateMessage ?? null),
     emptyStateCtaAction: item?.emptyStateCtaAction ?? null,
-    emptyStateCtaLabel: item?.emptyStateCtaLabel ?? null,
+    emptyStateCtaLabel: localizePracticalInterviewText(item?.emptyStateCtaLabel ?? null),
     emptyStateCtaTarget: item?.emptyStateCtaTarget ?? null,
     emptyStateCtaTargetPayload: mapTargetPayload(item?.emptyStateCtaTargetPayload),
-    completionMessage: item?.completionMessage ?? null,
+    completionMessage: localizePracticalInterviewText(item?.completionMessage ?? null),
     completionCtaAction: item?.completionCtaAction ?? null,
-    completionCtaLabel: item?.completionCtaLabel ?? null,
+    completionCtaLabel: localizePracticalInterviewText(item?.completionCtaLabel ?? null),
     completionCtaTarget: item?.completionCtaTarget ?? null,
     completionCtaTargetPayload: mapTargetPayload(item?.completionCtaTargetPayload),
     blockingReasons: toArray(item?.blockingReasons),
@@ -224,9 +276,11 @@ function mapTranscriptAction(
     id: `segment-action-${action.sequence ?? index}`,
     sequence: action.sequence ?? index + 1,
     issueTypes: toArray(action.issueTypes),
-    recommendedAction: action.recommendedAction ?? "",
-    triageReason: action.triageReason ?? "",
-    ctaLabel: action.ctaLabel ?? (isKorean ? "검토" : "Review"),
+    recommendedAction: localizePracticalInterviewText(action.recommendedAction ?? "") ?? "",
+    triageReason: localizePracticalInterviewText(action.triageReason ?? "") ?? "",
+    ctaLabel: localizePracticalInterviewText(
+      action.ctaLabel ?? (isKorean ? "검토" : "Review"),
+    ),
     severity: action.severity ?? "info",
     priority: action.priority ?? "normal",
     reviewerLane: action.reviewerLane ?? "transcript",
@@ -288,7 +342,7 @@ function mapQuestionSummary(question: InterviewRecordReviewQuestionSummaryDto, i
         ? null
         : String(question.parentQuestionId),
     hasWeakAnswer: question.hasWeakAnswer ?? false,
-    answerSummary: question.answerSummary ?? null,
+    answerSummary: localizePracticalInterviewText(question.answerSummary ?? null),
     confidenceMarkers: toArray(question.confidenceMarkers),
     weaknessTags: toArray(question.weaknessTags),
     strengthTags: toArray(question.strengthTags),
@@ -342,7 +396,7 @@ function mapFollowUpThread(thread: InterviewRecordReviewFollowUpThreadDto, index
     structuredQuestionCount: thread.structuredQuestionCount ?? 0,
     tradeoffAwareQuestionCount: thread.tradeoffAwareQuestionCount ?? 0,
     uncertainQuestionCount: thread.uncertainQuestionCount ?? 0,
-    recommendedAction: thread.recommendedAction ?? "",
+    recommendedAction: localizePracticalInterviewText(thread.recommendedAction ?? "") ?? "",
     threadRange: mapReplayRange(thread.threadRange),
     replayLaunchPreset: mapReplayLaunchPreset(thread.replayLaunchPreset),
     structuringSources: toArray(thread.structuringSources),
@@ -390,8 +444,12 @@ function mapProvenanceComparisonSummary(
     summaryChangedFromDeterministic: summary?.summaryChangedFromDeterministic ?? false,
     changedQuestionCountFromDeterministic: summary?.changedQuestionCountFromDeterministic ?? 0,
     changedAnswerCountFromDeterministic: summary?.changedAnswerCountFromDeterministic ?? 0,
-    currentQuestionSource: summary?.currentQuestionSource ?? "deterministic",
-    currentAnswerSource: summary?.currentAnswerSource ?? "deterministic",
+    currentQuestionSource: localizePracticalInterviewText(
+      summary?.currentQuestionSource ?? "deterministic",
+    ) ?? "deterministic",
+    currentAnswerSource: localizePracticalInterviewText(
+      summary?.currentAnswerSource ?? "deterministic",
+    ) ?? "deterministic",
     currentInterviewerProfileSource: summary?.currentInterviewerProfileSource ?? null,
   };
 }
@@ -401,11 +459,18 @@ function mapActionRecommendations(
 ) {
   return {
     primaryAction: recommendations?.primaryAction ?? null,
-    primaryActionLabel: recommendations?.primaryActionLabel ?? null,
+    primaryActionLabel: localizePracticalInterviewText(
+      recommendations?.primaryActionLabel ?? null,
+    ),
     primaryActionTarget: recommendations?.primaryActionTarget ?? null,
     primaryActionTargetPayload: mapTargetPayload(recommendations?.primaryActionTargetPayload),
     availableActions: toArray(recommendations?.availableActions),
-    availableActionLabels: recommendations?.availableActionLabels ?? {},
+    availableActionLabels: Object.fromEntries(
+      Object.entries(recommendations?.availableActionLabels ?? {}).map(([key, label]) => [
+        key,
+        localizePracticalInterviewText(label) ?? label,
+      ]),
+    ),
     availableActionTargets: recommendations?.availableActionTargets ?? {},
     availableActionTargetPayloads: recommendations?.availableActionTargetPayloads ?? {},
     blockingReasons: toArray(recommendations?.blockingReasons),
@@ -726,12 +791,20 @@ export function mapInterviewRecordReviewDtoToModel(dto: InterviewRecordReviewDto
       followUpThreadCount: dto.replayReadiness?.followUpThreadCount ?? 0,
       hasInterviewerProfile: dto.replayReadiness?.hasInterviewerProfile ?? false,
       recommendedReplayMode: dto.replayReadiness?.recommendedReplayMode ?? null,
-      recommendedReplayModeLabel: dto.replayReadiness?.recommendedReplayModeLabel ?? null,
-      statusBadgeText: dto.replayReadiness?.statusBadgeText ?? (isKorean ? "알 수 없음" : "Unknown"),
+      recommendedReplayModeLabel: localizePracticalInterviewText(
+        dto.replayReadiness?.recommendedReplayModeLabel ?? null,
+      ),
+      statusBadgeText: localizePracticalInterviewText(
+        dto.replayReadiness?.statusBadgeText ?? (isKorean ? "알 수 없음" : "Unknown"),
+      ),
       statusVariant: dto.replayReadiness?.statusVariant ?? "neutral",
-      statusSummary: dto.replayReadiness?.statusSummary ?? "",
-      primaryCtaLabel: dto.replayReadiness?.primaryCtaLabel ?? (isKorean ? "리플레이 시작" : "Start replay"),
-      blockedCtaLabel: dto.replayReadiness?.blockedCtaLabel ?? (isKorean ? "리플레이 불가" : "Replay unavailable"),
+      statusSummary: localizePracticalInterviewText(dto.replayReadiness?.statusSummary ?? "") ?? "",
+      primaryCtaLabel:
+        localizePracticalInterviewText(dto.replayReadiness?.primaryCtaLabel) ??
+        (isKorean ? "리플레이 시작" : "Start replay"),
+      blockedCtaLabel:
+        localizePracticalInterviewText(dto.replayReadiness?.blockedCtaLabel) ??
+        (isKorean ? "리플레이 불가" : "Replay unavailable"),
       blockers: toArray(dto.replayReadiness?.blockers),
       blockerDetails: sortBySortOrder(
         toArray(dto.replayReadiness?.blockerDetails).map(mapBlockerDetail),

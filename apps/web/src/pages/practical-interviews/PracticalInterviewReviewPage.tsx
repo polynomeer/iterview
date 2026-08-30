@@ -1062,10 +1062,10 @@ export function PracticalInterviewReviewPage() {
   }
 
   const questionFilterOptions = [
-    { id: "all", label: "All", count: review.questionFilterSummary.allQuestions },
-    { id: "primary", label: "Primary", count: review.questionFilterSummary.primaryQuestions },
-    { id: "follow-up", label: "Follow-up", count: review.questionFilterSummary.followUpQuestions },
-    { id: "weak", label: "Weak answers", count: review.questionFilterSummary.weakAnswerQuestions },
+    { id: "all", label: isKorean ? "전체" : "All", count: review.questionFilterSummary.allQuestions },
+    { id: "primary", label: isKorean ? "메인" : "Primary", count: review.questionFilterSummary.primaryQuestions },
+    { id: "follow-up", label: isKorean ? "꼬리질문" : "Follow-up", count: review.questionFilterSummary.followUpQuestions },
+    { id: "weak", label: isKorean ? "약한 답변" : "Weak answers", count: review.questionFilterSummary.weakAnswerQuestions },
   ];
 
   const filteredQuestionSummaries = review.questionSummaries.filter((question) => {
@@ -1083,8 +1083,12 @@ export function PracticalInterviewReviewPage() {
 
   return (
     <PageContainer
-      description="Use one imported interview to inspect transcript failures, question structure, follow-up threads, and replay blockers before the next retry."
-      eyebrow="Recovery loop"
+      description={
+        isKorean
+          ? "가져온 면접 하나로 전사 실패, 질문 구조, 꼬리질문 스레드, 리플레이 차단 요인을 점검한 뒤 다음 재시도로 넘어가세요."
+          : "Use one imported interview to inspect transcript failures, question structure, follow-up threads, and replay blockers before the next retry."
+      }
+      eyebrow={isKorean ? "복구 루프" : "Recovery loop"}
       title={detail.title}
     >
       <div className="page-stack practical-review-layout">
@@ -1094,42 +1098,44 @@ export function PracticalInterviewReviewPage() {
               <div className="practical-review-workspace-surface__intro">
                 <div className="practical-review-workspace-surface__eyebrow-row">
                   <p className="practical-review-workspace-surface__breadcrumbs">
-                    <span>Imported interview</span>
+                    <span>{isKorean ? "가져온 면접" : "Imported interview"}</span>
                     <span>/</span>
-                    <span>Recovery lanes</span>
+                    <span>{isKorean ? "복구 레인" : "Recovery lanes"}</span>
                     <span>/</span>
-                    <span>Replay readiness</span>
+                    <span>{isKorean ? "리플레이 준비 상태" : "Replay readiness"}</span>
                   </p>
-                  <span className="detail-chip">Review stage</span>
+                  <span className="detail-chip">{isKorean ? "리뷰 단계" : "Review stage"}</span>
                   <span className="question-status-badge question-status-badge--accent">
                     {detail.structuringStageLabel}
                   </span>
                 </div>
-                <span className="page-card__label">Review overview</span>
+                <span className="page-card__label">{isKorean ? "리뷰 개요" : "Review overview"}</span>
                 <h2 className="practical-review-workspace-surface__title">
                   {review.overallSummary ?? detail.overallSummary ?? detail.title}
                 </h2>
                 <p className="practical-review-workspace-surface__body">
                   {detail.aiEnrichedSummary ??
                     detail.deterministicSummary ??
-                    "Use the lane dashboard below to repair transcript quality, structured questions, and replay readiness before another attempt."}
+                    (isKorean
+                      ? "아래 레인 대시보드를 사용해 전사 품질, 구조화 질문, 리플레이 준비 상태를 보완한 뒤 다음 시도를 진행하세요."
+                      : "Use the lane dashboard below to repair transcript quality, structured questions, and replay readiness before another attempt.")}
                 </p>
               </div>
               <div className="practical-review-workspace-surface__stats">
                 <article className="practical-review-workspace-surface__stat">
-                  <span>Segments</span>
+                  <span>{isKorean ? "세그먼트" : "Segments"}</span>
                   <strong>{review.totalSegmentCount}</strong>
                 </article>
                 <article className="practical-review-workspace-surface__stat">
-                  <span>Questions</span>
+                  <span>{isKorean ? "질문" : "Questions"}</span>
                   <strong>{review.totalQuestionCount}</strong>
                 </article>
                 <article className="practical-review-workspace-surface__stat">
-                  <span>Lanes needing review</span>
+                  <span>{isKorean ? "리뷰 필요 레인" : "Lanes needing review"}</span>
                   <strong>{laneNeedsReviewTotal}</strong>
                 </article>
                 <article className="practical-review-workspace-surface__stat">
-                  <span>Weak answers</span>
+                  <span>{isKorean ? "약한 답변" : "Weak answers"}</span>
                   <strong>{review.weakAnswerCount}</strong>
                 </article>
               </div>
@@ -1142,42 +1148,58 @@ export function PracticalInterviewReviewPage() {
                     : "question-status-badge--positive"
                 }`}
               >
-                {review.requiresConfirmation ? "Confirmation required" : "Ready to confirm"}
+                {review.requiresConfirmation
+                  ? isKorean
+                    ? "확인 필요"
+                    : "Confirmation required"
+                  : isKorean
+                    ? "확인 가능"
+                    : "Ready to confirm"}
               </span>
-              <span className="detail-chip">Changed questions {review.changedQuestionCount}</span>
-              <span className="detail-chip">Follow-ups {review.followUpQuestionCount}</span>
+              <span className="detail-chip">{isKorean ? `변경된 질문 ${review.changedQuestionCount}` : `Changed questions ${review.changedQuestionCount}`}</span>
+              <span className="detail-chip">{isKorean ? `꼬리질문 ${review.followUpQuestionCount}` : `Follow-ups ${review.followUpQuestionCount}`}</span>
               {detail.confirmedAtLabel ? (
                 <span className="question-status-badge question-status-badge--neutral">
-                  Confirmed {detail.confirmedAtLabel}
+                  {isKorean ? `확인됨 ${detail.confirmedAtLabel}` : `Confirmed ${detail.confirmedAtLabel}`}
                 </span>
               ) : null}
             </div>
             <div className="practical-review-workspace-surface__guidance">
               <article className="practical-review-workspace-surface__guidance-card">
-                <span>Review rule</span>
+                <span>{isKorean ? "리뷰 원칙" : "Review rule"}</span>
                 <strong>
-                  Stabilize the lane that can distort all downstream interpretation before you broaden into questions or threads.
+                  {isKorean
+                    ? "질문이나 스레드로 넓히기 전에 이후 해석 전체를 왜곡할 수 있는 레인을 먼저 안정화하세요."
+                    : "Stabilize the lane that can distort all downstream interpretation before you broaden into questions or threads."}
                 </strong>
               </article>
               <article className="practical-review-workspace-surface__guidance-card">
-                <span>Next recovery</span>
+                <span>{isKorean ? "다음 복구" : "Next recovery"}</span>
                 <strong>
                   {primaryReviewLane
-                    ? `${primaryReviewLane.badgeText} is the first recovery surface because ${primaryReviewLane.whyItMatters.toLowerCase()}`
-                    : "Open the most unstable lane first, then verify replay readiness."}
+                    ? isKorean
+                      ? `${primaryReviewLane.badgeText} 레인을 먼저 복구하세요. 이유: ${primaryReviewLane.whyItMatters.toLowerCase()}`
+                      : `${primaryReviewLane.badgeText} is the first recovery surface because ${primaryReviewLane.whyItMatters.toLowerCase()}`
+                    : isKorean
+                      ? "가장 불안정한 레인을 먼저 열고, 그다음 리플레이 준비 상태를 확인하세요."
+                      : "Open the most unstable lane first, then verify replay readiness."}
                 </strong>
               </article>
               <article className="practical-review-workspace-surface__guidance-card">
-                <span>Exit rule</span>
-                <strong>Leave this review only when one weak answer or follow-up chain has a clear correction path.</strong>
+                <span>{isKorean ? "이탈 조건" : "Exit rule"}</span>
+                <strong>{isKorean ? "약한 답변 하나 또는 꼬리질문 체인 하나에 명확한 교정 경로가 생겼을 때만 이 리뷰를 벗어나세요." : "Leave this review only when one weak answer or follow-up chain has a clear correction path."}</strong>
               </article>
             </div>
             {(updateReviewMutation.isSuccess || confirmMutation.isSuccess) && (
               <FeedbackNotice
                 message={
                   confirmMutation.isSuccess
-                    ? "The practical interview review was confirmed."
-                    : "Transcript edits were applied to the practical interview review."
+                    ? isKorean
+                      ? "실전 면접 리뷰를 확정했습니다."
+                      : "The practical interview review was confirmed."
+                    : isKorean
+                      ? "전사 수정 사항이 실전 면접 리뷰에 반영되었습니다."
+                      : "Transcript edits were applied to the practical interview review."
                 }
                 tone="success"
               />
@@ -1191,12 +1213,14 @@ export function PracticalInterviewReviewPage() {
                       ? confirmMutation.error.message
                       : createReplayMutation.error instanceof Error
                         ? createReplayMutation.error.message
-                        : "The requested review action failed."
+                        : isKorean
+                          ? "요청한 리뷰 동작에 실패했습니다."
+                          : "The requested review action failed."
                 }
                 details={getErrorDetails(
                   updateReviewMutation.error ?? confirmMutation.error ?? createReplayMutation.error,
                 )}
-                title="Unable to complete the review action"
+                title={isKorean ? "리뷰 동작을 완료할 수 없습니다" : "Unable to complete the review action"}
               />
             )}
             <div className="page-card__actions">
@@ -1210,7 +1234,7 @@ export function PracticalInterviewReviewPage() {
                 }
                 type="button"
               >
-                {review.actionRecommendations.primaryActionLabel ?? "Continue review"}
+                {review.actionRecommendations.primaryActionLabel ?? (isKorean ? "리뷰 계속" : "Continue review")}
               </button>
               <button
                 className="secondary-button"
@@ -1224,7 +1248,7 @@ export function PracticalInterviewReviewPage() {
                 }}
                 type="button"
               >
-                {confirmMutation.isPending ? "Confirming..." : "Confirm review"}
+                {confirmMutation.isPending ? (isKorean ? "확정 중..." : "Confirming...") : isKorean ? "리뷰 확정" : "Confirm review"}
               </button>
               {review.actionRecommendations.canReplay && review.replayLaunchPreset ? (
                 <button
@@ -1256,57 +1280,63 @@ export function PracticalInterviewReviewPage() {
           <SectionPanel className="practical-review-insight-surface" variant="muted">
             <div className="practical-review-insight-surface__header">
               <div>
-                <span className="page-card__label">Review insight</span>
-                <h2 className="page-card__title">Resolve the lane that distorts replay and question structure before widening the review</h2>
+                <span className="page-card__label">{isKorean ? "리뷰 인사이트" : "Review insight"}</span>
+                <h2 className="page-card__title">{isKorean ? "리뷰 범위를 넓히기 전에 리플레이와 질문 구조를 왜곡하는 레인을 먼저 해결하세요" : "Resolve the lane that distorts replay and question structure before widening the review"}</h2>
                 <p className="page-card__body">
-                  This layer should tell you what to stabilize first: transcript fidelity, structured questions, follow-up thread integrity, or replay readiness. Treat everything below as tactical work after that decision.
+                  {isKorean
+                    ? "이 레이어는 무엇을 먼저 안정화해야 하는지 알려줘야 합니다. 전사 정확도, 구조화 질문, 꼬리질문 스레드 무결성, 리플레이 준비 상태 중 무엇이 먼저인지 결정한 뒤 아래 작업을 전술적으로 진행하세요."
+                    : "This layer should tell you what to stabilize first: transcript fidelity, structured questions, follow-up thread integrity, or replay readiness. Treat everything below as tactical work after that decision."}
                 </p>
               </div>
               <span className="detail-chip detail-chip--accent">{reviewSignal}</span>
             </div>
             <div className="practical-review-insight-surface__stats">
               <article>
-                <span>Primary lane</span>
-                <strong>{primaryReviewLane?.badgeText ?? "No lane"}</strong>
+                <span>{isKorean ? "주요 레인" : "Primary lane"}</span>
+                <strong>{primaryReviewLane?.badgeText ?? (isKorean ? "레인 없음" : "No lane")}</strong>
                 <p>
                   {primaryReviewLane
-                    ? `${primaryReviewLane.needsReviewCount} item${primaryReviewLane.needsReviewCount === 1 ? "" : "s"} need review in this lane.`
-                    : "No server-prioritized lane is available."}
+                    ? isKorean
+                      ? `이 레인에는 ${primaryReviewLane.needsReviewCount}개의 리뷰 대상이 있습니다.`
+                      : `${primaryReviewLane.needsReviewCount} item${primaryReviewLane.needsReviewCount === 1 ? "" : "s"} need review in this lane.`
+                    : isKorean
+                      ? "서버가 우선순위를 준 레인이 없습니다."
+                      : "No server-prioritized lane is available."}
                 </p>
               </article>
               <article>
-                <span>Replay state</span>
-                <strong>{replayBlockerCount > 0 ? review.replayReadiness.statusBadgeText : "Replay clear"}</strong>
-                <p>{replayBlockerCount > 0 ? `${replayBlockerCount} blocker${replayBlockerCount === 1 ? "" : "s"} still gate replay launch.` : "Replay can start once the selected lane is stable."}</p>
+                <span>{isKorean ? "리플레이 상태" : "Replay state"}</span>
+                <strong>{replayBlockerCount > 0 ? review.replayReadiness.statusBadgeText : isKorean ? "리플레이 가능" : "Replay clear"}</strong>
+                <p>{replayBlockerCount > 0 ? (isKorean ? `${replayBlockerCount}개의 차단 요인이 아직 리플레이 시작을 막고 있습니다.` : `${replayBlockerCount} blocker${replayBlockerCount === 1 ? "" : "s"} still gate replay launch.`) : isKorean ? "선택한 레인이 안정화되면 리플레이를 시작할 수 있습니다." : "Replay can start once the selected lane is stable."}</p>
               </article>
               <article>
-                <span>Weak answer load</span>
+                <span>{isKorean ? "약한 답변 부하" : "Weak answer load"}</span>
                 <strong>{review.weakAnswerCount}</strong>
-                <p>answers that still need recovery-oriented replay or thread inspection</p>
+                <p>{isKorean ? "복구 지향 리플레이나 스레드 점검이 더 필요한 답변 수입니다." : "answers that still need recovery-oriented replay or thread inspection"}</p>
               </article>
             </div>
             <div className="practical-review-insight-surface__lanes">
               <div className="practical-review-insight-surface__lane">
-                <strong>Stabilize interpretation</strong>
-                <span>Fix the lane that can make every downstream question or thread read unreliable.</span>
+                <strong>{isKorean ? "해석 안정화" : "Stabilize interpretation"}</strong>
+                <span>{isKorean ? "이후의 모든 질문과 스레드 해석을 불안정하게 만드는 레인을 먼저 고치세요." : "Fix the lane that can make every downstream question or thread read unreliable."}</span>
               </div>
               <div className="practical-review-insight-surface__lane">
-                <strong>Recheck replayability</strong>
-                <span>Clear blockers before opening replay mock flows or thread-based re-simulation.</span>
+                <strong>{isKorean ? "리플레이 가능성 재점검" : "Recheck replayability"}</strong>
+                <span>{isKorean ? "리플레이 모의면접이나 스레드 기반 재시뮬레이션을 열기 전에 차단 요인을 제거하세요." : "Clear blockers before opening replay mock flows or thread-based re-simulation."}</span>
               </div>
               <div className="practical-review-insight-surface__lane">
-                <strong>Recover the weakest answer</strong>
-                <span>Use the weakest structured answer as the first target for deliberate re-practice.</span>
+                <strong>{isKorean ? "가장 약한 답변 복구" : "Recover the weakest answer"}</strong>
+                <span>{isKorean ? "가장 약한 구조화 답변을 의도적인 재연습의 첫 목표로 삼으세요." : "Use the weakest structured answer as the first target for deliberate re-practice."}</span>
               </div>
             </div>
           </SectionPanel>
 
           <div className="practical-review-layout__hero-side">
             <SectionPanel className="workspace-note-card workspace-note-card--accent practical-review-layout__hero-note" variant="muted">
-              <span className="page-card__label">Analysis flow</span>
-              <h2 className="page-card__title">Keep replay context and lane priorities above the detailed edits</h2>
+              <span className="page-card__label">{isKorean ? "분석 흐름" : "Analysis flow"}</span>
+              <h2 className="page-card__title">{isKorean ? "상세 수정 위에 리플레이 컨텍스트와 레인 우선순위를 유지하세요" : "Keep replay context and lane priorities above the detailed edits"}</h2>
               <p className="page-card__body">
-                Transcript edits stay tactical. Readiness, blockers, provenance, and launch decisions belong in a stable briefing layer above them.
+                {isKorean ? "전사 수정은 전술적 작업입니다. 준비 상태, 차단 요인, 출처, 실행 결정은 그 위의 안정적인 브리핑 레이어에 있어야 합니다." : "Transcript edits stay tactical. Readiness, blockers, provenance, and launch decisions belong in a stable briefing layer above them."}
               </p>
             </SectionPanel>
 
@@ -1332,40 +1362,44 @@ export function PracticalInterviewReviewPage() {
         <section className="page-card practical-review-brief">
           <div className="section-heading">
             <div>
-              <span className="page-card__label">Review brief</span>
-              <h2 className="page-card__title">Keep replay context above the transcript</h2>
+              <span className="page-card__label">{isKorean ? "리뷰 브리프" : "Review brief"}</span>
+              <h2 className="page-card__title">{isKorean ? "전사 위에 리플레이 컨텍스트를 유지하세요" : "Keep replay context above the transcript"}</h2>
             </div>
             <p className="page-card__body practical-review-brief__summary">
-              Transcript stays primary. Replay readiness, lane priorities, provenance, and supporting payloads are grouped here so the rest of the review can focus on the interview itself.
+              {isKorean ? "전사가 중심입니다. 나머지 리뷰가 면접 자체에 집중할 수 있도록 리플레이 준비 상태, 레인 우선순위, 출처, 보조 payload를 여기서 묶어 보여줍니다." : "Transcript stays primary. Replay readiness, lane priorities, provenance, and supporting payloads are grouped here so the rest of the review can focus on the interview itself."}
             </p>
           </div>
           <div className="practical-review-brief__summary-grid">
             <article className="practical-review-brief__summary-card">
-              <span>Open first</span>
-              <strong>{primaryReviewLane ? primaryReviewLane.summaryText : "No lane priority available"}</strong>
+              <span>{isKorean ? "먼저 열기" : "Open first"}</span>
+              <strong>{primaryReviewLane ? primaryReviewLane.summaryText : isKorean ? "사용 가능한 레인 우선순위 없음" : "No lane priority available"}</strong>
             </article>
             <article className="practical-review-brief__summary-card">
-              <span>Replay blockers</span>
+              <span>{isKorean ? "리플레이 차단 요인" : "Replay blockers"}</span>
               <strong>
                 {replayBlockerCount > 0
-                  ? `${replayBlockerCount} blocker${replayBlockerCount === 1 ? "" : "s"} should be cleared before replay.`
-                  : "Replay can start once the active lane review is stable."}
+                  ? isKorean
+                    ? `리플레이 전에 ${replayBlockerCount}개의 차단 요인을 정리해야 합니다.`
+                    : `${replayBlockerCount} blocker${replayBlockerCount === 1 ? "" : "s"} should be cleared before replay.`
+                  : isKorean
+                    ? "활성 레인 리뷰가 안정화되면 리플레이를 시작할 수 있습니다."
+                    : "Replay can start once the active lane review is stable."}
               </strong>
             </article>
             <article className="practical-review-brief__summary-card">
-              <span>Weak-answer load</span>
-              <strong>{review.weakAnswerCount} answers still need recovery-oriented inspection.</strong>
+              <span>{isKorean ? "약한 답변 부하" : "Weak-answer load"}</span>
+              <strong>{isKorean ? `${review.weakAnswerCount}개의 답변이 아직 복구 지향 점검이 필요합니다.` : `${review.weakAnswerCount} answers still need recovery-oriented inspection.`}</strong>
             </article>
           </div>
           <div className="practical-review-brief__grid">
             <section className="page-card page-card--inset practical-review-brief__card">
-              <span className="page-card__label">Replay readiness</span>
+              <span className="page-card__label">{isKorean ? "리플레이 준비 상태" : "Replay readiness"}</span>
               <h3 className="page-card__title">{review.replayReadiness.statusBadgeText}</h3>
               <p className="page-card__body">{review.replayReadiness.statusSummary}</p>
               <div className="stats-grid">
-                <MetricCard label="Replayable" value={String(review.replayReadiness.replayableQuestionCount)} />
-                <MetricCard label="Linked" value={String(review.replayReadiness.linkedQuestionCount)} />
-                <MetricCard label="Threads" tone="accent" value={String(review.replayReadiness.followUpThreadCount)} />
+                <MetricCard label={isKorean ? "리플레이 가능" : "Replayable"} value={String(review.replayReadiness.replayableQuestionCount)} />
+                <MetricCard label={isKorean ? "연결됨" : "Linked"} value={String(review.replayReadiness.linkedQuestionCount)} />
+                <MetricCard label={isKorean ? "스레드" : "Threads"} tone="accent" value={String(review.replayReadiness.followUpThreadCount)} />
               </div>
               {review.replayReadiness.blockerDetails.length > 0 ? (
                 <div className="stack-list">
@@ -1385,8 +1419,8 @@ export function PracticalInterviewReviewPage() {
             </section>
 
             <section className="page-card page-card--inset practical-review-brief__card">
-              <span className="page-card__label">Lane priorities</span>
-              <h3 className="page-card__title">Server-prioritized lanes</h3>
+              <span className="page-card__label">{isKorean ? "레인 우선순위" : "Lane priorities"}</span>
+              <h3 className="page-card__title">{isKorean ? "서버 우선순위 레인" : "Server-prioritized lanes"}</h3>
               <div className="stack-list">
                 {review.laneItems.map((lane) => (
                   <article
@@ -1397,7 +1431,7 @@ export function PracticalInterviewReviewPage() {
                       <div className="list-item-card__meta">
                         <span>{lane.badgeText}</span>
                         <span>{lane.readiness}</span>
-                        <span>{lane.needsReviewCount} need review</span>
+                        <span>{isKorean ? `${lane.needsReviewCount}개 검토 필요` : `${lane.needsReviewCount} need review`}</span>
                       </div>
                       <h3 className="list-item-card__title">{lane.summaryText}</h3>
                       <p className="list-item-card__body">{lane.whyItMatters}</p>
@@ -1421,28 +1455,32 @@ export function PracticalInterviewReviewPage() {
             </section>
 
             <section className="page-card page-card--inset practical-review-brief__card">
-              <span className="page-card__label">Provenance</span>
-              <h3 className="page-card__title">Deterministic vs AI vs confirmed</h3>
+              <span className="page-card__label">{isKorean ? "출처" : "Provenance"}</span>
+              <h3 className="page-card__title">{isKorean ? "결정적 생성 vs AI vs 확정본" : "Deterministic vs AI vs confirmed"}</h3>
               <div className="stack-list">
                 <article className="list-item-card">
                   <div className="list-item-card__content">
                     <div className="list-item-card__meta">
-                      <span>Question source</span>
+                      <span>{isKorean ? "질문 출처" : "Question source"}</span>
                       <span>{review.provenanceComparisonSummary.currentQuestionSource}</span>
                     </div>
                     <p className="list-item-card__body">
-                      Changed questions {review.provenanceComparisonSummary.changedQuestionCountFromDeterministic}
+                      {isKorean
+                        ? `변경된 질문 ${review.provenanceComparisonSummary.changedQuestionCountFromDeterministic}`
+                        : `Changed questions ${review.provenanceComparisonSummary.changedQuestionCountFromDeterministic}`}
                     </p>
                   </div>
                 </article>
                 <article className="list-item-card">
                   <div className="list-item-card__content">
                     <div className="list-item-card__meta">
-                      <span>Answer source</span>
+                      <span>{isKorean ? "답변 출처" : "Answer source"}</span>
                       <span>{review.provenanceComparisonSummary.currentAnswerSource}</span>
                     </div>
                     <p className="list-item-card__body">
-                      Changed answers {review.provenanceComparisonSummary.changedAnswerCountFromDeterministic}
+                      {isKorean
+                        ? `변경된 답변 ${review.provenanceComparisonSummary.changedAnswerCountFromDeterministic}`
+                        : `Changed answers ${review.provenanceComparisonSummary.changedAnswerCountFromDeterministic}`}
                     </p>
                   </div>
                 </article>
@@ -1450,13 +1488,13 @@ export function PracticalInterviewReviewPage() {
             </section>
 
             <section className="page-card page-card--inset practical-review-brief__card">
-              <span className="page-card__label">Supporting payloads</span>
-              <h3 className="page-card__title">Loaded context</h3>
+              <span className="page-card__label">{isKorean ? "보조 payload" : "Supporting payloads"}</span>
+              <h3 className="page-card__title">{isKorean ? "불러온 컨텍스트" : "Loaded context"}</h3>
               <div className="stats-grid">
-                <MetricCard label="Transcript rows" value={String(transcript.segments.length)} />
-                <MetricCard label="Structured questions" value={String(questions.items.length)} />
-                <MetricCard label="Topics" tone="muted" value={String(analysis.topicTags.length)} />
-                <MetricCard label="Interviewer profile" tone="accent" value={interviewerProfile ? "Ready" : "Missing"} />
+                <MetricCard label={isKorean ? "전사 행" : "Transcript rows"} value={String(transcript.segments.length)} />
+                <MetricCard label={isKorean ? "구조화 질문" : "Structured questions"} value={String(questions.items.length)} />
+                <MetricCard label={isKorean ? "주제" : "Topics"} tone="muted" value={String(analysis.topicTags.length)} />
+                <MetricCard label={isKorean ? "면접관 프로필" : "Interviewer profile"} tone="accent" value={interviewerProfile ? (isKorean ? "준비됨" : "Ready") : isKorean ? "없음" : "Missing"} />
               </div>
               {interviewerProfile ? (
                 <div className="chip-list">
@@ -1473,7 +1511,11 @@ export function PracticalInterviewReviewPage() {
 
         {dirtyEditCount > 0 ? (
           <FeedbackNotice
-            message={`You have ${dirtyEditCount} unsaved transcript edit${dirtyEditCount > 1 ? "s" : ""}. Apply or clear them before confirming review.`}
+            message={
+              isKorean
+                ? `저장하지 않은 전사 수정이 ${dirtyEditCount}개 있습니다. 리뷰를 확정하기 전에 적용하거나 정리하세요.`
+                : `You have ${dirtyEditCount} unsaved transcript edit${dirtyEditCount > 1 ? "s" : ""}. Apply or clear them before confirming review.`
+            }
             tone="info"
           />
         ) : null}
@@ -1481,11 +1523,11 @@ export function PracticalInterviewReviewPage() {
         <section className="page-card practical-review-tabs-card">
           <div className="section-heading">
             <div>
-              <span className="page-card__label">Lane switcher</span>
-              <h2 className="page-card__title">Move through transcript, question, and thread review</h2>
+              <span className="page-card__label">{isKorean ? "레인 전환" : "Lane switcher"}</span>
+              <h2 className="page-card__title">{isKorean ? "전사, 질문, 스레드 리뷰를 이동하며 점검하세요" : "Move through transcript, question, and thread review"}</h2>
             </div>
             <p className="page-card__body practical-review-tabs-card__summary">
-              Keep the active lane focused while preserving replay context and selected evidence.
+              {isKorean ? "리플레이 컨텍스트와 선택된 근거를 유지한 채 현재 레인에만 집중하세요." : "Keep the active lane focused while preserving replay context and selected evidence."}
             </p>
           </div>
           <div className="page-card__actions practical-review-tabs-card__actions">
@@ -1497,23 +1539,29 @@ export function PracticalInterviewReviewPage() {
                 type="button"
               >
                 {tab === "transcript"
-                  ? "Transcript review"
+                  ? isKorean
+                    ? "전사 리뷰"
+                    : "Transcript review"
                   : tab === "question"
-                    ? "Question review"
-                    : "Thread review"}
+                    ? isKorean
+                      ? "질문 리뷰"
+                      : "Question review"
+                    : isKorean
+                      ? "스레드 리뷰"
+                      : "Thread review"}
               </button>
             ))}
           </div>
 
           {activeTab === "transcript" ? (
             <div className="page-stack">
-              <span className="page-card__label">Transcript</span>
-              <h2 className="page-card__title">Transcript issues and segment edits</h2>
+              <span className="page-card__label">{isKorean ? "전사" : "Transcript"}</span>
+              <h2 className="page-card__title">{isKorean ? "전사 이슈와 세그먼트 수정" : "Transcript issues and segment edits"}</h2>
               <div className="stats-grid">
-                <MetricCard label="Low confidence" value={String(review.transcriptIssueSummary.lowConfidenceSegmentCount)} />
-                <MetricCard label="Speaker overrides" tone="muted" value={String(review.transcriptIssueSummary.speakerOverrideSegmentCount)} />
-                <MetricCard label="Confirmed overrides" tone="accent" value={String(review.transcriptIssueSummary.confirmedTextOverrideCount)} />
-                <MetricCard label="Unresolved" tone="muted" value={String(review.transcriptIssueSummary.unresolvedIssueCount)} />
+                <MetricCard label={isKorean ? "낮은 신뢰도" : "Low confidence"} value={String(review.transcriptIssueSummary.lowConfidenceSegmentCount)} />
+                <MetricCard label={isKorean ? "화자 수정" : "Speaker overrides"} tone="muted" value={String(review.transcriptIssueSummary.speakerOverrideSegmentCount)} />
+                <MetricCard label={isKorean ? "확정본 수정" : "Confirmed overrides"} tone="accent" value={String(review.transcriptIssueSummary.confirmedTextOverrideCount)} />
+                <MetricCard label={isKorean ? "미해결" : "Unresolved"} tone="muted" value={String(review.transcriptIssueSummary.unresolvedIssueCount)} />
               </div>
               <div className="stack-list">
                 {review.transcriptIssueSummary.topPrioritySegmentActions.map((action) => (
@@ -1522,7 +1570,7 @@ export function PracticalInterviewReviewPage() {
                     key={action.id}
                     onClick={() => {
                       jumpToSegment(action.sequence);
-                      void playRange(action.seekRange, `Segment ${action.sequence}`);
+                      void playRange(action.seekRange, isKorean ? `${action.sequence}번 세그먼트` : `Segment ${action.sequence}`);
                       if (action.linkedQuestionId) {
                         setSelectedQuestionId(action.linkedQuestionId);
                       }
@@ -1534,7 +1582,7 @@ export function PracticalInterviewReviewPage() {
                   >
                     <div className="list-item-card__content">
                       <div className="list-item-card__meta">
-                        <span>Segment {action.sequence}</span>
+                        <span>{isKorean ? `${action.sequence}번 세그먼트` : `Segment ${action.sequence}`}</span>
                         <span>{action.severity}</span>
                         <span>{action.priority}</span>
                       </div>
@@ -1553,7 +1601,7 @@ export function PracticalInterviewReviewPage() {
                   }}
                   type="button"
                 >
-                  {updateReviewMutation.isPending ? "Applying..." : "Apply reviewed edits"}
+                  {updateReviewMutation.isPending ? (isKorean ? "적용 중..." : "Applying...") : isKorean ? "검토한 수정 적용" : "Apply reviewed edits"}
                 </button>
               </div>
               <div className="stack-list">
@@ -1575,7 +1623,7 @@ export function PracticalInterviewReviewPage() {
                       <div className="section-heading">
                         <div>
                           <p className="section-heading__eyebrow">
-                            Segment {segment.sequence}
+                            {isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`}
                           </p>
                           <h3 className="page-card__title">
                             {segment.speakerLabel}
@@ -1584,20 +1632,20 @@ export function PracticalInterviewReviewPage() {
                         </div>
                         <div className="chip-list">
                           {isPlaybackActive ? (
-                            <span className="detail-chip detail-chip--accent">Playing now</span>
+                            <span className="detail-chip detail-chip--accent">{isKorean ? "현재 재생 중" : "Playing now"}</span>
                           ) : null}
                           {segment.confidenceLabel ? (
                             <span className="detail-chip">{segment.confidenceLabel}</span>
                           ) : null}
                           {segment.hasTextOverride ? (
-                            <span className="detail-chip detail-chip--accent">Edited</span>
+                            <span className="detail-chip detail-chip--accent">{isKorean ? "수정됨" : "Edited"}</span>
                           ) : null}
                         </div>
                       </div>
                       {segment.rawText ? (
                         <div className="practical-transcript-segment__source">
                           <p className="practical-transcript-segment__source-label">
-                            Original transcript
+                            {isKorean ? "원본 전사" : "Original transcript"}
                           </p>
                           <p className="page-card__body practical-transcript-segment__source-body">
                             {segment.rawText}
@@ -1606,7 +1654,7 @@ export function PracticalInterviewReviewPage() {
                       ) : null}
                       <div className="form-grid">
                         <label className="form-field">
-                          <span className="form-field__label">Speaker</span>
+                          <span className="form-field__label">{isKorean ? "화자" : "Speaker"}</span>
                           <input
                             className="form-input"
                             onChange={(event) =>
@@ -1624,9 +1672,9 @@ export function PracticalInterviewReviewPage() {
                           />
                         </label>
                         <label className="form-field practical-editor-field">
-                          <span className="form-field__label">Cleaned text</span>
+                          <span className="form-field__label">{isKorean ? "정리된 텍스트" : "Cleaned text"}</span>
                           <span className="practical-editor-field__helper">
-                            Preserve the speaker meaning while removing obvious ASR noise.
+                            {isKorean ? "명백한 ASR 잡음을 제거하되 화자의 의미는 유지하세요." : "Preserve the speaker meaning while removing obvious ASR noise."}
                           </span>
                           <textarea
                             className="form-input form-input--textarea"
@@ -1645,9 +1693,9 @@ export function PracticalInterviewReviewPage() {
                           />
                         </label>
                         <label className="form-field practical-editor-field">
-                          <span className="form-field__label">Confirmed text</span>
+                          <span className="form-field__label">{isKorean ? "확정 텍스트" : "Confirmed text"}</span>
                           <span className="practical-editor-field__helper">
-                            Use only when you want the final reviewed wording to differ from cleaned text.
+                            {isKorean ? "최종 검토 문구를 정리된 텍스트와 다르게 확정할 때만 사용하세요." : "Use only when you want the final reviewed wording to differ from cleaned text."}
                           </span>
                           <textarea
                             className="form-input form-input--textarea"
@@ -1675,7 +1723,7 @@ export function PracticalInterviewReviewPage() {
                           }}
                           type="button"
                         >
-                          Save segment
+                          {isKorean ? "세그먼트 저장" : "Save segment"}
                         </button>
                         {review.timelineNavigation?.find(
                           (item) => item.questionSegmentStartSequence === segment.sequence,
@@ -1692,7 +1740,7 @@ export function PracticalInterviewReviewPage() {
                               }
                               type="button"
                             >
-                              Jump to question
+                              {isKorean ? "질문으로 이동" : "Jump to question"}
                             </button>
                           ) : null}
                         <button
@@ -1706,12 +1754,12 @@ export function PracticalInterviewReviewPage() {
                                 startTimestampLabel: segment.timestampLabel,
                                 endTimestampLabel: null,
                               },
-                              `Segment ${segment.sequence}`,
+                              isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`,
                             );
                           }}
                           type="button"
                         >
-                          Play segment
+                          {isKorean ? "세그먼트 재생" : "Play segment"}
                         </button>
                       </div>
                     </article>
@@ -1723,13 +1771,13 @@ export function PracticalInterviewReviewPage() {
 
           {activeTab === "question" ? (
             <div className="page-stack">
-              <span className="page-card__label">Questions</span>
-              <h2 className="page-card__title">Question summaries and deep links</h2>
+              <span className="page-card__label">{isKorean ? "질문" : "Questions"}</span>
+              <h2 className="page-card__title">{isKorean ? "질문 요약과 딥링크" : "Question summaries and deep links"}</h2>
               <div className="stats-grid">
-                <MetricCard label="Resume-linked" value={String(review.questionOriginSummary.resumeLinkedQuestions)} />
-                <MetricCard label="Job-posting linked" tone="muted" value={String(review.questionOriginSummary.jobPostingLinkedQuestions)} />
-                <MetricCard label="Hybrid" tone="accent" value={String(review.questionOriginSummary.hybridLinkedQuestions)} />
-                <MetricCard label="General" tone="muted" value={String(review.questionOriginSummary.generalQuestions)} />
+                <MetricCard label={isKorean ? "이력서 연결" : "Resume-linked"} value={String(review.questionOriginSummary.resumeLinkedQuestions)} />
+                <MetricCard label={isKorean ? "공고 연결" : "Job-posting linked"} tone="muted" value={String(review.questionOriginSummary.jobPostingLinkedQuestions)} />
+                <MetricCard label={isKorean ? "혼합" : "Hybrid"} tone="accent" value={String(review.questionOriginSummary.hybridLinkedQuestions)} />
+                <MetricCard label={isKorean ? "일반" : "General"} tone="muted" value={String(review.questionOriginSummary.generalQuestions)} />
               </div>
               <div className="page-card__actions">
                 {questionFilterOptions.map((filter) => (
@@ -1770,17 +1818,17 @@ export function PracticalInterviewReviewPage() {
                       <div className="chip-list">
                         <span className="detail-chip">{question.originLabel}</span>
                         {question.isFollowUp ? (
-                          <span className="detail-chip detail-chip--accent">Follow-up</span>
+                          <span className="detail-chip detail-chip--accent">{isKorean ? "꼬리질문" : "Follow-up"}</span>
                         ) : null}
                         {question.hasWeakAnswer ? (
-                          <span className="detail-chip detail-chip--accent">Weak answer</span>
+                          <span className="detail-chip detail-chip--accent">{isKorean ? "약한 답변" : "Weak answer"}</span>
                         ) : null}
                       </div>
                     </div>
                     <div className="practical-review-meta">
                       {question.questionStructuringSource ? (
                         <div className="practical-review-meta__row">
-                          <span className="practical-review-meta__label">Question source</span>
+                          <span className="practical-review-meta__label">{isKorean ? "질문 출처" : "Question source"}</span>
                           <span className="practical-review-meta__value">
                             {question.questionStructuringSource}
                           </span>
@@ -1788,7 +1836,7 @@ export function PracticalInterviewReviewPage() {
                       ) : null}
                       {question.answerStructuringSource ? (
                         <div className="practical-review-meta__row">
-                          <span className="practical-review-meta__label">Answer source</span>
+                          <span className="practical-review-meta__label">{isKorean ? "답변 출처" : "Answer source"}</span>
                           <span className="practical-review-meta__value">
                             {question.answerStructuringSource}
                           </span>
@@ -1796,7 +1844,7 @@ export function PracticalInterviewReviewPage() {
                       ) : null}
                       {question.derivedFromResumeSection ? (
                         <div className="practical-review-meta__row">
-                          <span className="practical-review-meta__label">Resume section</span>
+                          <span className="practical-review-meta__label">{isKorean ? "이력서 섹션" : "Resume section"}</span>
                           <span className="practical-review-meta__value">
                             {question.derivedFromResumeSection}
                           </span>
@@ -1804,7 +1852,7 @@ export function PracticalInterviewReviewPage() {
                       ) : null}
                       {question.derivedFromJobPostingSection ? (
                         <div className="practical-review-meta__row">
-                          <span className="practical-review-meta__label">Job posting section</span>
+                          <span className="practical-review-meta__label">{isKorean ? "채용 공고 섹션" : "Job posting section"}</span>
                           <span className="practical-review-meta__value">
                             {question.derivedFromJobPostingSection}
                           </span>
@@ -1829,33 +1877,33 @@ export function PracticalInterviewReviewPage() {
                         <button
                           className="secondary-button"
                           onClick={() =>
-                            focusQuestionWithPlayback(question.id, question.questionRange, `Question ${question.orderIndex + 1}`)
+                            focusQuestionWithPlayback(question.id, question.questionRange, isKorean ? `${question.orderIndex + 1}번 질문` : `Question ${question.orderIndex + 1}`)
                           }
                           type="button"
                         >
-                          Play question
+                          {isKorean ? "질문 재생" : "Play question"}
                         </button>
                       ) : null}
                       {question.answerRange ? (
                         <button
                           className="secondary-button"
                           onClick={() =>
-                            focusQuestionWithPlayback(question.id, question.answerRange, `Answer ${question.orderIndex + 1}`)
+                            focusQuestionWithPlayback(question.id, question.answerRange, isKorean ? `${question.orderIndex + 1}번 답변` : `Answer ${question.orderIndex + 1}`)
                           }
                           type="button"
                         >
-                          Play answer
+                          {isKorean ? "답변 재생" : "Play answer"}
                         </button>
                       ) : null}
                       {question.questionAnswerRange ? (
                         <button
                           className="secondary-button"
                           onClick={() =>
-                            focusQuestionWithPlayback(question.id, question.questionAnswerRange, `Q&A ${question.orderIndex + 1}`)
+                            focusQuestionWithPlayback(question.id, question.questionAnswerRange, isKorean ? `${question.orderIndex + 1}번 문답` : `Q&A ${question.orderIndex + 1}`)
                           }
                           type="button"
                         >
-                          Play Q&amp;A
+                          {isKorean ? "문답 재생" : "Play Q&A"}
                         </button>
                       ) : null}
                       {question.linkedQuestionId ? (
@@ -1865,12 +1913,12 @@ export function PracticalInterviewReviewPage() {
                             questionId: question.linkedQuestionId,
                           })}
                         >
-                          Open question detail
+                          {isKorean ? "질문 상세 열기" : "Open question detail"}
                         </Link>
                       ) : null}
                       {heatmapAnchorPath ? (
                         <Link className="secondary-button" to={heatmapAnchorPath}>
-                          Open heatmap anchor
+                          {isKorean ? "heatmap anchor 열기" : "Open heatmap anchor"}
                         </Link>
                       ) : null}
                       {question.deepLink?.sourceInterviewQuestionId ? (
@@ -1878,7 +1926,7 @@ export function PracticalInterviewReviewPage() {
                           className="secondary-button"
                           to={`/archive?sourceInterviewRecordId=${recordId}&sourceInterviewQuestionId=${question.deepLink.sourceInterviewQuestionId}`}
                         >
-                          Open archive source
+                          {isKorean ? "아카이브 원본 열기" : "Open archive source"}
                         </Link>
                       ) : null}
                       {question.deepLink?.canStartReplayMock ? (
@@ -1896,7 +1944,7 @@ export function PracticalInterviewReviewPage() {
                           }
                           type="button"
                         >
-                          Start replay mock
+                          {isKorean ? "리플레이 모의면접 시작" : "Start replay mock"}
                         </button>
                       ) : null}
                     </div>
@@ -1909,8 +1957,8 @@ export function PracticalInterviewReviewPage() {
 
           {activeTab === "thread" ? (
             <div className="page-stack">
-              <span className="page-card__label">Threads</span>
-              <h2 className="page-card__title">Follow-up chains and replay presets</h2>
+              <span className="page-card__label">{isKorean ? "스레드" : "Threads"}</span>
+              <h2 className="page-card__title">{isKorean ? "꼬리질문 체인과 리플레이 프리셋" : "Follow-up chains and replay presets"}</h2>
               <div className="stack-list">
                 {review.followUpThreads.map((thread) => (
                   <article
@@ -1921,38 +1969,38 @@ export function PracticalInterviewReviewPage() {
                     <div className="section-heading">
                       <div>
                         <p className="section-heading__eyebrow">
-                          Root #{thread.rootOrderIndex + 1}
+                          {isKorean ? `루트 #${thread.rootOrderIndex + 1}` : `Root #${thread.rootOrderIndex + 1}`}
                         </p>
                         <h3 className="page-card__title">{thread.rootText}</h3>
                       </div>
                       <div className="chip-list">
                         {thread.weakQuestionCount > 0 ? (
-                          <span className="detail-chip detail-chip--accent">Weak chain</span>
+                          <span className="detail-chip detail-chip--accent">{isKorean ? "약한 체인" : "Weak chain"}</span>
                         ) : null}
                         {thread.quantifiedQuestionCount > 0 ? (
-                          <span className="detail-chip">Quantified</span>
+                          <span className="detail-chip">{isKorean ? "수치화됨" : "Quantified"}</span>
                         ) : null}
                         {thread.structuredQuestionCount > 0 ? (
-                          <span className="detail-chip">Structured</span>
+                          <span className="detail-chip">{isKorean ? "구조화됨" : "Structured"}</span>
                         ) : null}
                         {thread.tradeoffAwareQuestionCount > 0 ? (
-                          <span className="detail-chip">Tradeoff-aware</span>
+                          <span className="detail-chip">{isKorean ? "트레이드오프 인식" : "Tradeoff-aware"}</span>
                         ) : null}
                         {thread.uncertainQuestionCount > 0 ? (
-                          <span className="detail-chip detail-chip--accent">Uncertain</span>
+                          <span className="detail-chip detail-chip--accent">{isKorean ? "불확실" : "Uncertain"}</span>
                         ) : null}
                       </div>
                     </div>
                     <div className="practical-review-meta">
                       <div className="practical-review-meta__row">
-                        <span className="practical-review-meta__label">Recommended action</span>
+                        <span className="practical-review-meta__label">{isKorean ? "권장 동작" : "Recommended action"}</span>
                         <span className="practical-review-meta__value">
-                          {thread.recommendedAction || "Continue review"}
+                          {thread.recommendedAction || (isKorean ? "리뷰 계속" : "Continue review")}
                         </span>
                       </div>
                       {thread.structuringSources.length > 0 ? (
                         <div className="practical-review-meta__row">
-                          <span className="practical-review-meta__label">Structuring sources</span>
+                          <span className="practical-review-meta__label">{isKorean ? "구조화 출처" : "Structuring sources"}</span>
                           <span className="practical-review-meta__value">
                             {thread.structuringSources.join(" · ")}
                           </span>
@@ -1960,9 +2008,9 @@ export function PracticalInterviewReviewPage() {
                       ) : null}
                     </div>
                     <div className="stats-grid">
-                      <MetricCard label="Questions" value={String(thread.questionIds.length)} />
-                      <MetricCard label="Follow-ups" tone="muted" value={String(thread.followUpCount)} />
-                      <MetricCard label="Answered" tone="accent" value={String(thread.answeredQuestionCount)} />
+                      <MetricCard label={isKorean ? "질문" : "Questions"} value={String(thread.questionIds.length)} />
+                      <MetricCard label={isKorean ? "꼬리질문" : "Follow-ups"} tone="muted" value={String(thread.followUpCount)} />
+                      <MetricCard label={isKorean ? "답변 완료" : "Answered"} tone="accent" value={String(thread.answeredQuestionCount)} />
                     </div>
                     <div className="page-card__actions">
                       <button
@@ -1973,18 +2021,18 @@ export function PracticalInterviewReviewPage() {
                         }}
                         type="button"
                       >
-                        Focus root question
+                        {isKorean ? "루트 질문 집중" : "Focus root question"}
                       </button>
                       {thread.threadRange ? (
                         <button
                           className="secondary-button"
                           onClick={() => {
                             setSelectedThreadRootQuestionId(thread.id);
-                            void playRange(thread.threadRange, `Thread ${thread.rootOrderIndex + 1}`);
+                            void playRange(thread.threadRange, isKorean ? `${thread.rootOrderIndex + 1}번 스레드` : `Thread ${thread.rootOrderIndex + 1}`);
                           }}
                           type="button"
                         >
-                          Play thread
+                          {isKorean ? "스레드 재생" : "Play thread"}
                         </button>
                       ) : null}
                       {thread.replayLaunchPreset ? (
@@ -2008,7 +2056,7 @@ export function PracticalInterviewReviewPage() {
           <section className="page-card practical-replay-launch">
             <div className="practical-replay-launch__hero">
               <div>
-                <span className="page-card__label">Replay launch</span>
+                <span className="page-card__label">{isKorean ? "리플레이 시작" : "Replay launch"}</span>
                 <h2 className="page-card__title">{replayPreset.presetTitle}</h2>
                 <p className="page-card__body">{replayPreset.presetDescription}</p>
               </div>
@@ -2018,11 +2066,11 @@ export function PracticalInterviewReviewPage() {
                 </span>
                 {review.replayReadiness.ready ? (
                   <span className="question-status-badge question-status-badge--positive">
-                    Replay ready
+                    {isKorean ? "리플레이 준비 완료" : "Replay ready"}
                   </span>
                 ) : (
                   <span className="question-status-badge question-status-badge--warning">
-                    Review blockers
+                    {isKorean ? "리뷰 차단 요인" : "Review blockers"}
                   </span>
                 )}
               </div>
@@ -2030,15 +2078,15 @@ export function PracticalInterviewReviewPage() {
             <div className="interview-session-layout">
               <div className="interview-session-layout__main">
                 <section className="page-card page-card--inset">
-                  <span className="page-card__label">Preset</span>
+                  <span className="page-card__label">{isKorean ? "프리셋" : "Preset"}</span>
                   <div className="stats-grid">
-                    <MetricCard label="Recommended mode" value={replayPreset.recommendedReplayModeLabel ?? "Replay"} />
-                    <MetricCard label="Seed questions" tone="accent" value={String(replayPreset.seedQuestionIds.length)} />
-                    <MetricCard label="Replayable" tone="muted" value={String(review.replayReadiness.replayableQuestionCount)} />
+                    <MetricCard label={isKorean ? "권장 모드" : "Recommended mode"} value={replayPreset.recommendedReplayModeLabel ?? (isKorean ? "리플레이" : "Replay")} />
+                    <MetricCard label={isKorean ? "시드 질문" : "Seed questions"} tone="accent" value={String(replayPreset.seedQuestionIds.length)} />
+                    <MetricCard label={isKorean ? "리플레이 가능" : "Replayable"} tone="muted" value={String(review.replayReadiness.replayableQuestionCount)} />
                   </div>
                   <div className="form-grid">
                     <label className="form-field">
-                      <span className="form-field__label">Replay mode</span>
+                      <span className="form-field__label">{isKorean ? "리플레이 모드" : "Replay mode"}</span>
                       <select
                         className="form-input"
                         onChange={(event) => setSelectedReplayMode(event.target.value)}
@@ -2052,7 +2100,7 @@ export function PracticalInterviewReviewPage() {
                       </select>
                     </label>
                     <label className="form-field">
-                      <span className="form-field__label">Question count</span>
+                      <span className="form-field__label">{isKorean ? "질문 수" : "Question count"}</span>
                       <input
                         className="form-input"
                         max={10}
@@ -2067,8 +2115,8 @@ export function PracticalInterviewReviewPage() {
               </div>
               <div className="interview-facet-panels">
                 <section className="page-card page-card--inset">
-                  <span className="page-card__label">Readiness</span>
-                  <h3 className="page-card__title">Server readiness summary</h3>
+                  <span className="page-card__label">{isKorean ? "준비 상태" : "Readiness"}</span>
+                  <h3 className="page-card__title">{isKorean ? "서버 준비 상태 요약" : "Server readiness summary"}</h3>
                   <p className="page-card__body">{review.replayReadiness.statusSummary}</p>
                   {review.replayReadiness.blockerDetails.length > 0 && !review.replayReadiness.ready ? (
                     <div className="stack-list">
@@ -2098,7 +2146,9 @@ export function PracticalInterviewReviewPage() {
                 type="button"
               >
                 {createReplayMutation.isPending
-                  ? "Starting replay..."
+                  ? isKorean
+                    ? "리플레이 시작 중..."
+                    : "Starting replay..."
                   : replayPreset.launchButtonLabel}
               </button>
               <button
@@ -2106,24 +2156,24 @@ export function PracticalInterviewReviewPage() {
                 onClick={() => setReplayPreset(null)}
                 type="button"
               >
-                Close
+                {isKorean ? "닫기" : "Close"}
               </button>
             </div>
           </section>
         ) : null}
 
         <section className="page-card">
-          <span className="page-card__label">Cross-links</span>
-          <h2 className="page-card__title">Keep existing question and archive flows</h2>
+          <span className="page-card__label">{isKorean ? "교차 링크" : "Cross-links"}</span>
+          <h2 className="page-card__title">{isKorean ? "기존 질문과 아카이브 흐름을 유지하세요" : "Keep existing question and archive flows"}</h2>
           <div className="page-card__actions">
             <Link className="secondary-button" to={routeConfig.practicalInterviews.buildPath()}>
-              Back to records
+              {isKorean ? "기록 목록으로" : "Back to records"}
             </Link>
             <Link className="secondary-button" to={routeConfig.archive.buildPath()}>
-              Open archive
+              {isKorean ? "아카이브 열기" : "Open archive"}
             </Link>
             <Link className="secondary-button" to={routeConfig.interview.buildPath()}>
-              Open interview history
+              {isKorean ? "면접 기록 열기" : "Open interview history"}
             </Link>
           </div>
         </section>

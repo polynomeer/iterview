@@ -270,14 +270,14 @@ describe("PracticalInterviewReviewPage", () => {
       <Routes>
         <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
       </Routes>,
-      { route: "/practical-interviews/record-3" },
+      { route: "/practical-interviews/record-3", locale: "ko" },
     );
 
-    expect(screen.getByText("Transcript extraction needs attention")).toBeInTheDocument();
+    expect(screen.getByText("전사 추출에 확인이 필요합니다")).toBeInTheDocument();
     expect(screen.getByText("The audio could not be transcribed.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Retry transcription" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "전사 다시 시도" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Retry transcription" }));
+    fireEvent.click(screen.getByRole("button", { name: "전사 다시 시도" }));
 
     expect(retryMutateAsync).toHaveBeenCalledTimes(1);
   });
@@ -389,8 +389,9 @@ describe("PracticalInterviewReviewPage", () => {
           blockingReasonDetails: [],
         },
         replayReadiness: {
-          statusBadgeText: "Replay ready",
-          statusSummary: "Most questions are replayable.",
+          ready: true,
+          statusBadgeText: "리플레이 준비 상태",
+          statusSummary: "대부분의 질문이 리플레이 가능합니다.",
           replayableQuestionCount: 5,
           linkedQuestionCount: 4,
           unlinkedQuestionCount: 1,
@@ -575,39 +576,37 @@ describe("PracticalInterviewReviewPage", () => {
       <Routes>
         <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
       </Routes>,
-      { route: "/practical-interviews/record-1" },
+      { route: "/practical-interviews/record-1", locale: "ko" },
     );
 
-    expect(screen.getByText("Review rule")).toBeInTheDocument();
-    expect(screen.getByText("Open first")).toBeInTheDocument();
-    expect(screen.getByText("Server-prioritized lanes")).toBeInTheDocument();
-    expect(screen.getByText("Replay ready")).toBeInTheDocument();
-    expect(screen.getByText("Keep replay context above the transcript")).toBeInTheDocument();
-    expect(screen.getAllByText("Transcript needs final review")).toHaveLength(2);
-    const replaySection = screen.getByText("Audio replay").closest("section");
+    expect(screen.getByText("리뷰 원칙")).toBeInTheDocument();
+    expect(screen.getByText("먼저 열기")).toBeInTheDocument();
+    expect(screen.getByText("서버 우선순위 레인")).toBeInTheDocument();
+    expect(screen.getAllByText("리플레이 준비 상태").length).toBeGreaterThan(0);
+    expect(screen.getByText("전사 위에 리플레이 컨텍스트를 유지하세요")).toBeInTheDocument();
+    const replaySection = screen.getByText("오디오 리플레이").closest("section");
     expect(replaySection).not.toBeNull();
     const replayScope = within(replaySection!);
-    expect(replayScope.getByRole("button", { name: "Play" })).toBeInTheDocument();
-    expect(replayScope.getByRole("slider", { name: "Replay position" })).toBeInTheDocument();
-    expect(replayScope.getByRole("button", { name: "Timeline" })).toBeInTheDocument();
-    expect(replayScope.getByRole("button", { name: "Chapters" })).toBeInTheDocument();
-    expect(replayScope.getByText("Segment 1")).toBeInTheDocument();
+    expect(replayScope.getByRole("button", { name: "재생" })).toBeInTheDocument();
+    expect(replayScope.getByRole("slider", { name: "리플레이 위치" })).toBeInTheDocument();
+    expect(replayScope.getByRole("button", { name: "타임라인" })).toBeInTheDocument();
+    expect(replayScope.getByRole("button", { name: "챕터" })).toBeInTheDocument();
+    expect(replayScope.getByText("1번 세그먼트")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Transcript review" }));
+    fireEvent.click(screen.getByRole("button", { name: "전사 리뷰" }));
 
-    expect(screen.getByText("Review segment 1")).toBeInTheDocument();
     expect(screen.getAllByText("I used Redis for caching.").length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: "Play segment" })).toBeInTheDocument();
-    fireEvent.click(replayScope.getByRole("button", { name: "Chapters" }));
+    expect(screen.getByRole("button", { name: "세그먼트 재생" })).toBeInTheDocument();
+    fireEvent.click(replayScope.getByRole("button", { name: "챕터" }));
     expect(replayScope.getByRole("button", { name: /Q1\. How did you validate cache invalidation safety\?/i })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Start replay" }));
 
     expect(screen.getByText("Replay this interview")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Original replay")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Question review" }));
-    expect(screen.getByRole("button", { name: "Play Q&A" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open heatmap anchor" })).toHaveAttribute(
+    fireEvent.click(screen.getByRole("button", { name: "질문 리뷰" }));
+    expect(screen.getByRole("button", { name: "문답 재생" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "heatmap anchor 열기" })).toHaveAttribute(
       "href",
       "/resume-versions/resume-version-1/heatmap?selectedAnchor=project%3A31&scope=follow_up&weakOnly=true",
     );

@@ -51,21 +51,21 @@ describe("ResumeTailorJobPostingsPage", () => {
       <Routes>
         <Route element={<ResumeTailorJobPostingsPage />} path="/resume-tailor/job-postings" />
       </Routes>,
-      { route: "/resume-tailor/job-postings" },
+      { route: "/resume-tailor/job-postings", locale: "ko" },
     );
 
     expect(
-      screen.getByText("Capture the role context that should shape the next tailored resume pass"),
+      screen.getByText("다음 맞춤 이력서 수정을 이끌 직무 컨텍스트를 확보하세요"),
     ).toBeInTheDocument();
-    expect(screen.getByRole("searchbox", { name: "Search target companies" })).toBeInTheDocument();
-    fireEvent.change(screen.getByRole("combobox", { name: "Input type" }), { target: { value: "link" } });
+    expect(screen.getByRole("searchbox", { name: "목표 회사 검색" })).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("combobox", { name: "입력 방식" }), { target: { value: "link" } });
     fireEvent.change(
       screen.getByPlaceholderText("https://example.com/jobs/backend-platform-engineer"),
       {
       target: { value: "https://example.com/jobs/backend" },
       },
     );
-    fireEvent.click(screen.getByRole("button", { name: "Save job posting" }));
+    fireEvent.click(screen.getByRole("button", { name: "채용 공고 저장" }));
 
     expect(mutateAsync).toHaveBeenCalledWith({
       inputType: "link",
@@ -117,7 +117,7 @@ describe("ResumeTailorJobPostingsPage", () => {
       <Routes>
         <Route element={<ResumeTailorJobPostingsPage />} path="/resume-tailor/job-postings" />
       </Routes>,
-      { route: "/resume-tailor/job-postings" },
+      { route: "/resume-tailor/job-postings", locale: "ko" },
     );
 
     expect(document.querySelector(".target-companies-layout--desktop")).not.toBeNull();
