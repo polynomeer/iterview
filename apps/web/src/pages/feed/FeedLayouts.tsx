@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useLocale } from "../../shared/i18n";
 import { ContentGrid, SectionPanel } from "../../shared/ui/layout";
 
 type FeedLayoutProps = {
@@ -17,6 +18,7 @@ export function FeedMobileLayout({ sections }: FeedLayoutProps) {
 }
 
 export function FeedDesktopLayout({ sections }: FeedLayoutProps) {
+  const { t } = useLocale();
   const [featuredSection, ...otherSections] = sections;
 
   return (
@@ -24,16 +26,12 @@ export function FeedDesktopLayout({ sections }: FeedLayoutProps) {
       <div className="feed-layout__hero">
         <SectionPanel className="workspace-note-card workspace-note-card--accent feed-workspace-note" variant="muted">
           <div className="feed-workspace-note__header">
-            <span className="page-card__label">Entry support</span>
-            <span className="detail-chip detail-chip--accent">Lead lane</span>
+            <span className="page-card__label">{t("feed.entrySupport")}</span>
+            <span className="detail-chip detail-chip--accent">{t("feed.leadLane")}</span>
           </div>
-          <h2 className="page-card__title">Use external signal to narrow the next question, not to open endless browsing</h2>
-          <p className="page-card__body">
-            Keep popular, trend, and company groups visually separate so the next branch choice comes from contrast, not noise.
-          </p>
-          <p className="feed-workspace-note__body">
-            Start with the lead lane, compare one adjacent signal, and exit as soon as the next DFS answer path becomes clear.
-          </p>
+          <h2 className="page-card__title">{t("feed.desktopNoteTitle")}</h2>
+          <p className="page-card__body">{t("feed.desktopNoteBody")}</p>
+          <p className="feed-workspace-note__body">{t("feed.desktopNoteTail")}</p>
         </SectionPanel>
         {featuredSection}
       </div>

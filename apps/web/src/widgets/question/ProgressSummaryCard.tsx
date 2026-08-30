@@ -1,52 +1,53 @@
 import type { QuestionDetailModel } from "../../entities/question/model";
+import { useLocale } from "../../shared/i18n";
 
 type ProgressSummaryCardProps = {
   progress: NonNullable<QuestionDetailModel["userProgressSummary"]>;
 };
 
 export function ProgressSummaryCard({ progress }: ProgressSummaryCardProps) {
+  const { t } = useLocale();
+
   return (
     <section className="page-card question-detail-section-card">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Progress</p>
-          <h2 className="page-card__title">Your current status on this question</h2>
-          <p className="page-card__body">
-            Read this timeline as answer readiness, not just activity history.
-          </p>
+          <p className="section-heading__eyebrow">{t("question.progressEyebrow")}</p>
+          <h2 className="page-card__title">{t("question.progressTitle")}</h2>
+          <p className="page-card__body">{t("question.progressBody")}</p>
         </div>
         <span className="section-heading__count section-heading__count--text">{progress.status}</span>
       </div>
       <div className="stats-grid">
         <article className="stat-tile">
-          <p className="stat-tile__label">Attempts</p>
+          <p className="stat-tile__label">{t("question.attempts")}</p>
           <strong className="stat-tile__value">{progress.attemptsCount}</strong>
         </article>
         <article className="stat-tile">
-          <p className="stat-tile__label">Best score</p>
+          <p className="stat-tile__label">{t("question.bestScore")}</p>
           <strong className="stat-tile__value stat-tile__value--small">{progress.bestScoreLabel}</strong>
         </article>
         <article className="stat-tile stat-tile--wide">
-          <p className="stat-tile__label">Last reviewed</p>
+          <p className="stat-tile__label">{t("question.lastReviewed")}</p>
           <strong className="stat-tile__value stat-tile__value--small">{progress.lastReviewedLabel}</strong>
         </article>
         {progress.nextReviewLabel ? (
           <article className="stat-tile stat-tile--wide">
-            <p className="stat-tile__label">Next review</p>
+            <p className="stat-tile__label">{t("question.nextReview")}</p>
             <strong className="stat-tile__value stat-tile__value--small">{progress.nextReviewLabel}</strong>
           </article>
         ) : null}
         {progress.masteryLevelLabel ? (
           <article className="stat-tile">
-            <p className="stat-tile__label">Mastery</p>
+            <p className="stat-tile__label">{t("question.mastery")}</p>
             <strong className="stat-tile__value stat-tile__value--small">{progress.masteryLevelLabel}</strong>
           </article>
         ) : null}
       </div>
       <div className="question-progress-card__chips">
-        <span className="detail-chip">{`Attempts ${progress.attemptsCount}`}</span>
-        <span className="detail-chip detail-chip--accent">{`Best ${progress.bestScoreLabel}`}</span>
-        {progress.nextReviewLabel ? <span className="detail-chip">{`Next ${progress.nextReviewLabel}`}</span> : null}
+        <span className="detail-chip">{`${t("question.attempts")} ${progress.attemptsCount}`}</span>
+        <span className="detail-chip detail-chip--accent">{`${t("question.bestPrefix")} ${progress.bestScoreLabel}`}</span>
+        {progress.nextReviewLabel ? <span className="detail-chip">{`${t("question.nextPrefix")} ${progress.nextReviewLabel}`}</span> : null}
       </div>
     </section>
   );

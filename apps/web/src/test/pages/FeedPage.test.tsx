@@ -57,14 +57,14 @@ describe("FeedPage", () => {
       <Routes>
         <Route element={<FeedPage />} path="/feed" />
       </Routes>,
-      { route: "/feed" },
+      { route: "/feed", locale: "ko" },
     );
 
     expect(screen.getByText("Popular")).toBeInTheDocument();
     expect(screen.getByText("Trending")).toBeInTheDocument();
     expect(screen.getByText("Describe your incident response process")).toBeInTheDocument();
     expect(screen.getByText("Build a metrics pipeline")).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "Start answer" })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: "답변 시작" })).toHaveLength(2);
   });
 
   it("shows a sign-in state instead of a generic error for 401 responses", () => {
@@ -80,12 +80,12 @@ describe("FeedPage", () => {
       <Routes>
         <Route element={<FeedPage />} path="/feed" />
       </Routes>,
-      { route: "/feed" },
+      { route: "/feed", locale: "ko" },
     );
 
-    expect(screen.getByText("Your branch feed unlocks after sign-in")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute("href", "/login");
-    expect(screen.getByRole("link", { name: "Browse practice questions" })).toHaveAttribute(
+    expect(screen.getByText("로그인하면 가지 피드를 사용할 수 있습니다")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "로그인" })).toHaveAttribute("href", "/login");
+    expect(screen.getByRole("link", { name: "연습 질문 둘러보기" })).toHaveAttribute(
       "href",
       "/practice",
     );
@@ -110,11 +110,11 @@ describe("FeedPage", () => {
       <Routes>
         <Route element={<FeedPage />} path="/feed" />
       </Routes>,
-      { route: "/feed" },
+      { route: "/feed", locale: "ko" },
     );
 
     expect(
-      screen.getByText("Use external signal to narrow the next question, not to open endless browsing"),
+      screen.getByText("외부 시그널은 끝없는 탐색이 아니라 다음 질문을 좁히는 용도로 사용하세요"),
     ).toBeInTheDocument();
     expect(document.querySelector(".feed-layout--desktop")).not.toBeNull();
   });

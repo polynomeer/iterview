@@ -12,9 +12,9 @@ type FeedSectionProps = {
 export function FeedSection({ section, layout = "stack" }: FeedSectionProps) {
   const { t } = useLocale();
   const helperTextById: Record<string, string> = {
-    popular: "High-frequency questions that keep appearing across broad interview demand.",
-    trending: "Questions rising in attention right now and worth checking before they cool off.",
-    companyRelated: "Prompts linked to company context so your next practice branch stays targeted.",
+    popular: t("feed.popularHelper"),
+    trending: t("feed.trendingHelper"),
+    companyRelated: t("feed.companyRelatedHelper"),
   };
 
   return (

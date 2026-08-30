@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import type { FeedQuestionCardModel } from "../../entities/feed/model";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 
 type FeedQuestionCardProps = {
   item: FeedQuestionCardModel;
 };
 
 export function FeedQuestionCard({ item }: FeedQuestionCardProps) {
+  const { t } = useLocale();
+
   return (
     <article className="list-item-card feed-question-card">
       <div className="list-item-card__content">
@@ -31,7 +34,7 @@ export function FeedQuestionCard({ item }: FeedQuestionCardProps) {
           <p className="practice-list-item__progress">{item.progressSummaryLabel}</p>
         ) : null}
         <p className="feed-question-card__note">
-          Compare this prompt against the current section signal before adding it to your next practice block.
+          {t("feed.comparePromptNote")}
         </p>
       </div>
       <div className="list-item-card__actions">
@@ -39,13 +42,13 @@ export function FeedQuestionCard({ item }: FeedQuestionCardProps) {
           className="secondary-button"
           to={routeConfig.questionDetail.buildPath({ questionId: item.id })}
         >
-          View detail
+          {t("questionTree.viewDetail")}
         </Link>
         <Link
           className="primary-button"
           to={routeConfig.answerEditor.buildPath({ questionId: item.id })}
         >
-          Start answer
+          {t("question.startAnswer")}
         </Link>
       </div>
     </article>

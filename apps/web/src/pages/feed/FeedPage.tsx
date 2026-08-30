@@ -2,6 +2,7 @@ import { useFeedQuery } from "../../features/feed/api/useFeedQuery";
 import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { AuthRequiredStateCard } from "../../shared/ui/AuthRequiredStateCard";
+import { useLocale } from "../../shared/i18n";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -13,6 +14,7 @@ import { FeedSection } from "../../widgets/feed";
 export function FeedPage() {
   const feedQuery = useFeedQuery();
   const { isDesktop } = useLayoutMode();
+  const { t } = useLocale();
   const isUnauthorized = feedQuery.error instanceof ApiClientError && feedQuery.error.status === 401;
   const sectionCount = feedQuery.data?.sections.length ?? 0;
   const itemCount = feedQuery.data?.sections.reduce((sum, section) => sum + section.items.length, 0) ?? 0;
@@ -24,85 +26,82 @@ export function FeedPage() {
 
   return (
     <PageContainer
-      description="Compare public demand, active trends, and company signal to choose the next interview branch with less guesswork."
-      eyebrow="Branch feed"
-      title="Scan external signal before opening the next branch"
+      description={t("feed.pageDescription")}
+      eyebrow={t("feed.pageEyebrow")}
+      title={t("feed.pageTitle")}
     >
       <section className="page-card feed-workspace-surface">
         <div className="feed-workspace-surface__header">
           <div className="feed-workspace-surface__intro">
             <div className="feed-workspace-surface__eyebrow-row">
-              <span className="page-card__label">Signal scan</span>
-              <span className="question-status-badge question-status-badge--accent">Branch pressure</span>
+              <span className="page-card__label">{t("feed.signalScan")}</span>
+              <span className="question-status-badge question-status-badge--accent">{t("feed.branchPressure")}</span>
             </div>
             <p className="feed-workspace-surface__breadcrumbs">
-              External demand
+              {t("feed.externalDemand")}
               <span>/</span>
-              Active trend
+              {t("feed.activeTrend")}
               <span>/</span>
-              Company pressure
+              {t("feed.companyPressure")}
             </p>
-            <h2 className="feed-workspace-surface__title">Use the feed to decide which interview branch deserves practice next</h2>
-            <p className="feed-workspace-surface__body">
-              Treat each section as a signal lane. Compare only enough public demand, trend movement, and company context
-              to pick one defendable branch, then move back into focused DFS practice.
-            </p>
+            <h2 className="feed-workspace-surface__title">{t("feed.workspaceTitleLong")}</h2>
+            <p className="feed-workspace-surface__body">{t("feed.workspaceBodyLong")}</p>
           </div>
           <div className="feed-workspace-surface__stats">
             <article className="feed-workspace-surface__stat">
-              <span>Signal lanes</span>
+              <span>{t("feed.signalLanes")}</span>
               <strong>{sectionCount}</strong>
             </article>
             <article className="feed-workspace-surface__stat">
-              <span>Visible prompts</span>
+              <span>{t("feed.visiblePrompts")}</span>
               <strong>{itemCount}</strong>
             </article>
             <article className="feed-workspace-surface__stat">
-              <span>Company pressure</span>
+              <span>{t("feed.companyPressure")}</span>
               <strong>{companySignalCount}</strong>
             </article>
             <article className="feed-workspace-surface__stat">
-              <span>Entry lane</span>
-              <strong>{feedQuery.data?.sections[0] ? "Lead section set" : "None"}</strong>
+              <span>{t("feed.entryLane")}</span>
+              <strong>{feedQuery.data?.sections[0] ? t("feed.leadSectionSet") : t("feed.none")}</strong>
             </article>
           </div>
         </div>
-        <div className="feed-workspace-surface__guidance" aria-label="Feed branch selection guidance">
+        <div className="feed-workspace-surface__guidance" aria-label={t("feed.guidanceLabel")}>
           <article className="feed-workspace-surface__guidance-card">
-            <span>Selection rule</span>
-            <strong>Pick the section that sharpens one concrete follow-up branch.</strong>
+            <span>{t("feed.selectionRule")}</span>
+            <strong>{t("feed.selectionRuleBody")}</strong>
           </article>
           <article className="feed-workspace-surface__guidance-card">
-            <span>Comparison rule</span>
-            <strong>Check adjacent lanes only until the next answer path is obvious.</strong>
+            <span>{t("feed.comparisonRule")}</span>
+            <strong>{t("feed.comparisonRuleBody")}</strong>
           </article>
           <article className="feed-workspace-surface__guidance-card">
-            <span>Exit rule</span>
-            <strong>Leave the feed once one prompt is strong enough to enter DFS practice.</strong>
+            <span>{t("feed.exitRule")}</span>
+            <strong>{t("feed.exitRuleBody")}</strong>
           </article>
         </div>
         <div className="feed-workspace-surface__chips">
-          <span className="detail-chip">{`Signal lanes ${sectionCount}`}</span>
-          {itemCount > 0 ? <span className="detail-chip detail-chip--accent">{`Visible prompts ${itemCount}`}</span> : null}
-          {companySignalCount > 0 ? <span className="detail-chip">Company pressure loaded</span> : null}
-          {feedQuery.data?.sections[0] ? <span className="detail-chip">Entry lane ready</span> : null}
+          <span className="detail-chip">{`${t("feed.signalLanes")} ${sectionCount}`}</span>
+          {itemCount > 0 ? <span className="detail-chip detail-chip--accent">{`${t("feed.visiblePrompts")} ${itemCount}`}</span> : null}
+          {companySignalCount > 0 ? <span className="detail-chip">{t("feed.companyPressureLoaded")}</span> : null}
+          {feedQuery.data?.sections[0] ? <span className="detail-chip">{t("feed.entryLaneReady")}</span> : null}
         </div>
       </section>
       {feedQuery.isLoading ? (
         <LoadingStateCard
-          body="Loading the latest signal lanes for the next branch decision."
-          title="Preparing branch feed"
+          body={t("feed.loadingBody")}
+          title={t("feed.loadingTitle")}
         />
       ) : null}
 
       {feedQuery.isError && isUnauthorized ? (
         <AuthRequiredStateCard
-          body="Login to compare personalized public, trend, and company signal before choosing the next branch."
+          body={t("feed.authBody")}
           secondaryAction={{
-            label: "Browse practice questions",
+            label: t("feed.browsePracticeQuestions"),
             to: routeConfig.practice.buildPath(),
           }}
-          title="Your branch feed unlocks after sign-in"
+          title={t("feed.authTitle")}
         />
       ) : null}
 
@@ -111,20 +110,20 @@ export function FeedPage() {
           body={
             feedQuery.error instanceof Error
               ? feedQuery.error.message
-              : "The feed could not be loaded."
+              : t("feed.loadErrorBody")
           }
           details={getErrorDetails(feedQuery.error)}
           onAction={() => {
             void feedQuery.refetch();
           }}
-          title="Unable to load feed"
+          title={t("feed.loadErrorTitle")}
         />
       ) : null}
 
       {!feedQuery.isLoading && !feedQuery.isError && feedQuery.data && feedQuery.data.sections.length === 0 ? (
         <EmptyStateCard
-          body="No external signal lanes are available right now."
-          title="Branch feed is empty"
+          body={t("feed.emptyBody")}
+          title={t("feed.emptyTitle")}
         />
       ) : null}
 
