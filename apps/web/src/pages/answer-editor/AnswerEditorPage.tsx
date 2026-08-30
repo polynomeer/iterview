@@ -251,7 +251,7 @@ export function AnswerEditorPage() {
                 </div>
                 <div className="answer-editor-insight-surface__lane">
                   <strong>{isKorean ? "실제 근거 붙이기" : "Attach real evidence"}</strong>
-                  <span>{isKorean ? "답변을 구체적으로 만드는 지표, 제약, trade-off 하나를 이력서에서 고르세요." : "Pick one metric, constraint, or trade-off from the resume that makes the answer concrete."}</span>
+                  <span>{isKorean ? "답변을 구체적으로 만드는 지표, 제약, 트레이드오프 하나를 이력서에서 고르세요." : "Pick one metric, constraint, or trade-off from the resume that makes the answer concrete."}</span>
                 </div>
                 <div className="answer-editor-insight-surface__lane">
                   <strong>{isKorean ? "다음 가지 준비" : "Prepare the next branch"}</strong>

@@ -770,7 +770,7 @@ export function InterviewPage() {
                   <span className="page-card__label">{t("interview.sessionSetupLabel")}</span>
                   <h2 className="page-card__title">{t("interview.sessionSetupTitle")}</h2>
                   <p className="page-card__body">
-                    {isKorean ? "하나의 기준 source를 고정하고, 하나의 순회 방식을 선택한 뒤 다음 패스를 실행하세요." : "Lock one source, choose one traversal, then launch the next pass."}
+                    {isKorean ? "하나의 기준 근거를 고정하고, 하나의 순회 방식을 선택한 뒤 다음 패스를 실행하세요." : "Lock one source, choose one traversal, then launch the next pass."}
                   </p>
                 </div>
                 <div

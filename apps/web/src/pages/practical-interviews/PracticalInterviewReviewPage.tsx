@@ -596,7 +596,7 @@ export function PracticalInterviewReviewPage() {
       >
         <EmptyStateCard
           action={{ label: isKorean ? "실전 면접 목록 열기" : "Open practical interviews", to: routeConfig.practicalInterviews.buildPath() }}
-          body={isKorean ? "실전 면접 리뷰 경로에는 record id가 필요합니다." : "The practical interview review route needs a record id."}
+          body={isKorean ? "실전 면접 리뷰 경로에는 기록 ID가 필요합니다." : "The practical interview review route needs a record id."}
           title={isKorean ? "면접 기록이 없습니다" : "Missing interview record"}
         />
       </PageContainer>
@@ -1428,7 +1428,7 @@ export function PracticalInterviewReviewPage() {
               <h2 className="page-card__title">{isKorean ? "전사 위에 리플레이 컨텍스트를 유지하세요" : "Keep replay context above the transcript"}</h2>
             </div>
             <p className="page-card__body practical-review-brief__summary">
-              {isKorean ? "전사가 중심입니다. 나머지 리뷰가 면접 자체에 집중할 수 있도록 리플레이 준비 상태, 레인 우선순위, 출처, 보조 payload를 여기서 묶어 보여줍니다." : "Transcript stays primary. Replay readiness, lane priorities, provenance, and supporting payloads are grouped here so the rest of the review can focus on the interview itself."}
+              {isKorean ? "전사가 중심입니다. 나머지 리뷰가 면접 자체에 집중할 수 있도록 리플레이 준비 상태, 레인 우선순위, 출처, 보조 데이터 묶음을 여기서 함께 보여줍니다." : "Transcript stays primary. Replay readiness, lane priorities, provenance, and supporting payloads are grouped here so the rest of the review can focus on the interview itself."}
             </p>
           </div>
           <div className="practical-review-brief__summary-grid">
@@ -1518,7 +1518,7 @@ export function PracticalInterviewReviewPage() {
 
             <section className="page-card page-card--inset practical-review-brief__card">
               <span className="page-card__label">{isKorean ? "출처" : "Provenance"}</span>
-              <h3 className="page-card__title">{isKorean ? "결정적 생성 vs AI vs 확정본" : "Deterministic vs AI vs confirmed"}</h3>
+              <h3 className="page-card__title">{isKorean ? "규칙 생성 vs AI vs 확정본" : "Deterministic vs AI vs confirmed"}</h3>
               <div className="stack-list">
                 <article className="list-item-card">
                   <div className="list-item-card__content">
@@ -1550,7 +1550,7 @@ export function PracticalInterviewReviewPage() {
             </section>
 
             <section className="page-card page-card--inset practical-review-brief__card">
-              <span className="page-card__label">{isKorean ? "보조 payload" : "Supporting payloads"}</span>
+              <span className="page-card__label">{isKorean ? "보조 데이터 묶음" : "Supporting payloads"}</span>
               <h3 className="page-card__title">{isKorean ? "불러온 컨텍스트" : "Loaded context"}</h3>
               <div className="stats-grid">
                 <MetricCard label={isKorean ? "전사 행" : "Transcript rows"} value={String(transcript.segments.length)} />

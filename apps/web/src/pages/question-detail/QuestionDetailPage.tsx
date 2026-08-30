@@ -583,14 +583,14 @@ export function QuestionDetailPage() {
                       {referenceSection}
                       {referenceAnswersQuery.isError && questionDetailQuery.data.referenceAnswers.length > 0 ? (
                         <FeedbackNotice
-                          message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 payload에 포함된 모범 답변을 대신 표시했습니다." : "Reference answers were shown from the question detail payload while the dedicated study endpoint failed."}
+                          message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 응답에 포함된 모범 답변을 대신 표시했습니다." : "Reference answers were shown from the question detail payload while the dedicated study endpoint failed."}
                           tone="info"
                         />
                       ) : null}
                       {materialsSection}
                       {learningMaterialsQuery.isError && questionDetailQuery.data.learningMaterials.length > 0 ? (
                         <FeedbackNotice
-                          message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 payload에 포함된 학습 자료를 대신 표시했습니다." : "Learning materials were shown from the question detail payload while the dedicated study endpoint failed."}
+                          message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 응답에 포함된 학습 자료를 대신 표시했습니다." : "Learning materials were shown from the question detail payload while the dedicated study endpoint failed."}
                           tone="info"
                         />
                       ) : null}
@@ -614,14 +614,14 @@ export function QuestionDetailPage() {
                     {referenceSection}
                     {referenceAnswersQuery.isError && questionDetailQuery.data.referenceAnswers.length > 0 ? (
                       <FeedbackNotice
-                        message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 payload에 포함된 모범 답변을 대신 표시했습니다." : "Reference answers were shown from the question detail payload while the dedicated study endpoint failed."}
+                        message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 응답에 포함된 모범 답변을 대신 표시했습니다." : "Reference answers were shown from the question detail payload while the dedicated study endpoint failed."}
                         tone="info"
                       />
                     ) : null}
                     {materialsSection}
                     {learningMaterialsQuery.isError && questionDetailQuery.data.learningMaterials.length > 0 ? (
                       <FeedbackNotice
-                        message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 payload에 포함된 학습 자료를 대신 표시했습니다." : "Learning materials were shown from the question detail payload while the dedicated study endpoint failed."}
+                        message={isKorean ? "전용 학습 엔드포인트는 실패했지만 질문 상세 응답에 포함된 학습 자료를 대신 표시했습니다." : "Learning materials were shown from the question detail payload while the dedicated study endpoint failed."}
                         tone="info"
                       />
                     ) : null}

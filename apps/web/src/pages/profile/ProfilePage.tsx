@@ -54,17 +54,17 @@ export function ProfilePage() {
   ];
   const relatedQuestions = [
     {
-      title: isKorean ? "고처리량 settlement system을 어떻게 설계하겠습니까?" : "Design a high-throughput settlement system.",
+      title: isKorean ? "고처리량 정산 시스템을 어떻게 설계하겠습니까?" : "Design a high-throughput settlement system.",
       score: 85,
       label: "System Design",
     },
     {
-      title: isKorean ? "transaction 처리에서 idempotency를 어떻게 보장하겠습니까?" : "How would you ensure idempotency in transaction processing?",
+      title: isKorean ? "트랜잭션 처리에서 멱등성을 어떻게 보장하겠습니까?" : "How would you ensure idempotency in transaction processing?",
       score: 82,
       label: "System Design",
     },
     {
-      title: isKorean ? "audit logs에 Kafka를 선택한 이유는 무엇입니까?" : "Why did you choose Kafka for audit logs?",
+      title: isKorean ? "감사 로그에 Kafka를 선택한 이유는 무엇입니까?" : "Why did you choose Kafka for audit logs?",
       score: 80,
       label: isKorean ? "행동" : "Behavioral",
     },

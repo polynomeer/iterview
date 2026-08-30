@@ -40,7 +40,7 @@ export function ResultAnalysisPage() {
           onAction={() => {
             navigate(routeConfig.practice.buildPath());
           }}
-          title={isKorean ? "답변 시도 id가 없습니다" : "Missing answer attempt id"}
+          title={isKorean ? "답변 시도 ID가 없습니다" : "Missing answer attempt id"}
         />
       </PageContainer>
     );
