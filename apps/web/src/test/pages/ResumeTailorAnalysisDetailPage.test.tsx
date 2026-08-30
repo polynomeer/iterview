@@ -147,20 +147,20 @@ describe("ResumeTailorAnalysisDetailPage", () => {
           path="/resume-tailor/resume-versions/:versionId/analyses/:analysisId"
         />
       </Routes>,
-      { route: "/resume-tailor/resume-versions/version-1/analyses/analysis-1" },
+      { route: "/resume-tailor/resume-versions/version-1/analyses/analysis-1", locale: "ko" },
     );
 
-    expect(screen.getByText("Persisted tailored document")).toBeInTheDocument();
+    expect(screen.getByText("저장된 맞춤 문서")).toBeInTheDocument();
     expect(screen.getByText("Tailored summary line")).toBeInTheDocument();
     expect(screen.getByText("Example Corp · Backend Engineer")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Accept suggestion" }));
+    fireEvent.click(screen.getByRole("button", { name: "제안 수락" }));
     expect(toggleMutateAsync).toHaveBeenCalledWith({
       suggestionId: "suggestion-1",
       accepted: true,
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Create PDF export" }));
+    fireEvent.click(screen.getByRole("button", { name: "PDF 내보내기 만들기" }));
     expect(exportMutateAsync).toHaveBeenCalledTimes(1);
   });
 });

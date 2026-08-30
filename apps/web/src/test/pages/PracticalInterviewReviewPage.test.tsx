@@ -153,13 +153,13 @@ describe("PracticalInterviewReviewPage", () => {
       <Routes>
         <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
       </Routes>,
-      { route: "/practical-interviews/record-2?processing=1" },
+      { route: "/practical-interviews/record-2?processing=1", locale: "ko" },
     );
 
-    expect(screen.getByText("Transcript extraction in progress")).toBeInTheDocument();
-    expect(screen.getByText("Refresh status")).toBeInTheDocument();
-    expect(screen.getByText("Uploaded source is stored")).toBeInTheDocument();
-    expect(screen.getByText(/Processing started Mar 16, 2026, 10:00 AM/)).toBeInTheDocument();
+    expect(screen.getByText("전사 추출 진행 중")).toBeInTheDocument();
+    expect(screen.getByText("상태 새로고침")).toBeInTheDocument();
+    expect(screen.getByText("업로드한 원본이 보관되었습니다")).toBeInTheDocument();
+    expect(screen.getByText(/처리 시작 Mar 16, 2026, 10:00 AM/)).toBeInTheDocument();
   });
 
   it("renders retry controls when transcript extraction failed", () => {

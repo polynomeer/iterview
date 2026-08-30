@@ -77,26 +77,26 @@ describe("PracticalInterviewListPage", () => {
       <Routes>
         <Route element={<PracticalInterviewListPage />} path="/practical-interviews" />
       </Routes>,
-      { route: "/practical-interviews" },
+      { route: "/practical-interviews", locale: "ko" },
     );
 
-    expect(screen.getByText("Practical interview review")).toBeInTheDocument();
+    expect(screen.getByText("복구 리뷰를 열기 전에 실제 면접 근거를 가져오세요")).toBeInTheDocument();
     expect(screen.getByText("Datadog · Backend Engineer")).toBeInTheDocument();
-    expect(screen.getByText("Transcript Processing")).toBeInTheDocument();
-    expect(screen.getByText("Retry 1")).toBeInTheDocument();
-    expect(screen.getByText("Next retry Mar 16, 2026, 9:45 AM")).toBeInTheDocument();
-    expect(screen.getByText("Import rule")).toBeInTheDocument();
-    expect(screen.getByText("Queue habit")).toBeInTheDocument();
+    expect(screen.getByText("전사 Processing")).toBeInTheDocument();
+    expect(screen.getByText("재시도 1")).toBeInTheDocument();
+    expect(screen.getByText("다음 재시도 Mar 16, 2026, 9:45 AM")).toBeInTheDocument();
+    expect(screen.getByText("가져오기 원칙")).toBeInTheDocument();
+    expect(screen.getByText("큐 운영 원칙")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Upload interview" }));
+    fireEvent.click(screen.getByRole("button", { name: "면접 업로드" }));
 
-    expect(screen.getByText("Create an interview record")).toBeInTheDocument();
-    expect(screen.getByText("Best use")).toBeInTheDocument();
-    expect(screen.getByLabelText("Company")).toBeInTheDocument();
-    expect(screen.getByLabelText("Linked resume version")).toBeInTheDocument();
+    expect(screen.getByText("면접 기록 만들기")).toBeInTheDocument();
+    expect(screen.getByText("권장 사용")).toBeInTheDocument();
+    expect(screen.getByLabelText("회사")).toBeInTheDocument();
+    expect(screen.getByLabelText("연결할 이력서 버전")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Optional. If omitted, the server will try to extract a transcript from the audio and continue processing.",
+        "선택 사항입니다. 비워두면 서버가 오디오에서 전사를 추출하고 이후 처리를 계속합니다.",
       ),
     ).toBeInTheDocument();
   });

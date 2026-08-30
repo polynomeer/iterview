@@ -14,9 +14,12 @@ import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { useLocale } from "../../shared/i18n";
 import { ResumeExperienceTimeline, ResumeProfileCard, ResumeProjectsCard, ResumeSkillsCard } from "../../widgets/resume";
 
 export function ResumeTailorAnalysisDetailPage() {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const { versionId, analysisId } = useParams<{ versionId: string; analysisId: string }>();
   const [copiedPlainText, setCopiedPlainText] = useState(false);
   const analysisQuery = useResumeAnalysisDetailQuery(versionId ?? null, analysisId ?? null);
@@ -57,27 +60,27 @@ export function ResumeTailorAnalysisDetailPage() {
 
   return (
     <PageContainer
-      description="Review one saved tailoring analysis, accept the rewrites that strengthen the role-specific story, and export the hardened preview."
-      eyebrow="Tailor flow"
-      title="Accept or reject the role-specific rewrite path"
+      description={isKorean ? "저장된 맞춤 분석을 검토하고, 직무별 스토리를 강화하는 수정안을 수락한 뒤, 다듬어진 미리보기를 export 하세요." : "Review one saved tailoring analysis, accept the rewrites that strengthen the role-specific story, and export the hardened preview."}
+      eyebrow={isKorean ? "맞춤 흐름" : "Tailor flow"}
+      title={isKorean ? "직무별 수정 경로를 수락하거나 거절하세요" : "Accept or reject the role-specific rewrite path"}
     >
       {analysisQuery.isLoading ? (
         <LoadingStateCard
-          body="Loading the saved tailoring analysis and persisted tailored document."
-          title="Preparing tailored resume workspace"
+          body={isKorean ? "저장된 맞춤 분석과 보존된 맞춤 문서를 불러오는 중입니다." : "Loading the saved tailoring analysis and persisted tailored document."}
+          title={isKorean ? "맞춤 이력서 워크스페이스 준비 중" : "Preparing tailored resume workspace"}
         />
       ) : analysisQuery.isError ? (
         <ErrorStateCard
           body={
             analysisQuery.error instanceof Error
               ? analysisQuery.error.message
-              : "The resume analysis could not be loaded."
+              : isKorean ? "이력서 분석을 불러오지 못했습니다." : "The resume analysis could not be loaded."
           }
           details={getErrorDetails(analysisQuery.error)}
           onAction={() => {
             void analysisQuery.refetch();
           }}
-          title="Unable to load tailored analysis"
+          title={isKorean ? "맞춤 분석을 불러올 수 없습니다" : "Unable to load tailored analysis"}
         />
       ) : analysisQuery.data ? (
         <div className="page-stack">
@@ -85,49 +88,48 @@ export function ResumeTailorAnalysisDetailPage() {
             <div className="resume-tailor-workspace-surface__header">
               <div className="resume-tailor-workspace-surface__intro">
                 <div className="resume-tailor-workspace-surface__eyebrow-row">
-                  <span className="page-card__label">Analysis workspace</span>
-                  <span className="question-status-badge question-status-badge--accent">Step 4 of 4</span>
+                  <span className="page-card__label">{isKorean ? "분석 워크스페이스" : "Analysis workspace"}</span>
+                  <span className="question-status-badge question-status-badge--accent">{isKorean ? "4단계 중 4단계" : "Step 4 of 4"}</span>
                 </div>
                 <p className="resume-tailor-workspace-surface__breadcrumbs">
-                  Source resume
+                  {isKorean ? "소스 이력서" : "Source resume"}
                   <span>/</span>
-                  Target role
+                  {isKorean ? "목표 직무" : "Target role"}
                   <span>/</span>
-                  Accepted rewrite
+                  {isKorean ? "수락된 수정안" : "Accepted rewrite"}
                 </p>
                 <h2 className="resume-tailor-workspace-surface__title">{analysisQuery.data.matchSummary}</h2>
                 <p className="resume-tailor-workspace-surface__body">
-                  Use this workspace to decide which suggestions actually harden the story for the target role. Accepted changes
-                  affect only the tailored preview and export outputs, never the original source version.
+                  {isKorean ? "이 워크스페이스에서 어떤 제안이 목표 직무에 맞는 스토리를 실제로 강화하는지 결정하세요. 수락한 변경은 맞춤 미리보기와 export 결과에만 반영되고 원본 소스 버전은 바뀌지 않습니다." : "Use this workspace to decide which suggestions actually harden the story for the target role. Accepted changes affect only the tailored preview and export outputs, never the original source version."}
                 </p>
               </div>
               <div className="resume-tailor-workspace-surface__stats">
                 <article className="resume-tailor-workspace-surface__stat">
-                  <span>Overall score</span>
+                  <span>{isKorean ? "전체 점수" : "Overall score"}</span>
                   <strong>{analysisQuery.data.overallScoreLabel}</strong>
                 </article>
                 <article className="resume-tailor-workspace-surface__stat">
-                  <span>Suggestions</span>
+                  <span>{isKorean ? "제안" : "Suggestions"}</span>
                   <strong>{analysisQuery.data.suggestions.length}</strong>
                 </article>
                 <article className="resume-tailor-workspace-surface__stat">
-                  <span>Exports</span>
+                  <span>{isKorean ? "내보내기" : "Exports"}</span>
                   <strong>{(exportsQuery.data ?? analysisQuery.data.exports).length}</strong>
                 </article>
               </div>
             </div>
-            <div className="resume-tailor-workspace-surface__guidance" aria-label="Analysis detail guidance">
+            <div className="resume-tailor-workspace-surface__guidance" aria-label={isKorean ? "분석 상세 가이드" : "Analysis detail guidance"}>
               <article className="resume-tailor-workspace-surface__guidance-card">
-                <span>Accept rule</span>
-                <strong>Accept only the rewrites that make the role-specific claim more concrete.</strong>
+                <span>{isKorean ? "수락 원칙" : "Accept rule"}</span>
+                <strong>{isKorean ? "직무별 주장에 더 구체성을 주는 수정안만 수락하세요." : "Accept only the rewrites that make the role-specific claim more concrete."}</strong>
               </article>
               <article className="resume-tailor-workspace-surface__guidance-card">
-                <span>Preview rule</span>
-                <strong>Read the persisted preview as the final interview-facing document, not as suggestion notes.</strong>
+                <span>{isKorean ? "미리보기 원칙" : "Preview rule"}</span>
+                <strong>{isKorean ? "보존된 미리보기는 제안 메모가 아니라 최종 면접용 문서로 읽어야 합니다." : "Read the persisted preview as the final interview-facing document, not as suggestion notes."}</strong>
               </article>
               <article className="resume-tailor-workspace-surface__guidance-card">
-                <span>Export rule</span>
-                <strong>Generate PDF only after the accepted path clearly beats the original wording.</strong>
+                <span>{isKorean ? "export 원칙" : "Export rule"}</span>
+                <strong>{isKorean ? "수락한 경로가 원문보다 분명히 나아졌을 때만 PDF를 생성하세요." : "Generate PDF only after the accepted path clearly beats the original wording."}</strong>
               </article>
             </div>
             <div className="resume-tailor-workspace-surface__chips">
@@ -136,39 +138,39 @@ export function ResumeTailorAnalysisDetailPage() {
               {analysisQuery.data.recommendedFormatType ? (
                 <span className="detail-chip">{analysisQuery.data.recommendedFormatTypeLabel}</span>
               ) : null}
-              <span className="detail-chip">{analysisQuery.data.createdAtLabel ?? "Created date unavailable"}</span>
+              <span className="detail-chip">{analysisQuery.data.createdAtLabel ?? (isKorean ? "생성 일시 없음" : "Created date unavailable")}</span>
             </div>
           </section>
 
           <div className="resume-tailor-workspace">
             <div className="resume-tailor-workspace__primary">
               <section className="page-card">
-                <span className="page-card__label">Match insights</span>
-                <h2 className="page-card__title">Match gaps and strengths</h2>
+                <span className="page-card__label">{isKorean ? "매칭 인사이트" : "Match insights"}</span>
+                <h2 className="page-card__title">{isKorean ? "강점과 누락 신호" : "Match gaps and strengths"}</h2>
                 <div className="resume-tailor-card-grid">
                   <InsightListCard
                     items={analysisQuery.data.strongMatches}
-                    title="Strong matches"
+                    title={isKorean ? "강한 매치" : "Strong matches"}
                   />
                   <InsightListCard
                     items={analysisQuery.data.missingKeywords}
-                    title="Missing keywords"
+                    title={isKorean ? "누락 키워드" : "Missing keywords"}
                     tone="warning"
                   />
                   <InsightListCard
                     items={analysisQuery.data.weakSignals}
-                    title="Weak signals"
+                    title={isKorean ? "약한 신호" : "Weak signals"}
                     tone="warning"
                   />
                   <InsightListCard
                     items={analysisQuery.data.recommendedFocusAreas}
-                    title="Recommended focus areas"
+                    title={isKorean ? "권장 집중 영역" : "Recommended focus areas"}
                     tone="accent"
                   />
                 </div>
                 {analysisQuery.data.analysisNotes.length > 0 ? (
                   <div className="page-stack">
-                    <h3 className="page-card__title">Analysis notes</h3>
+                    <h3 className="page-card__title">{isKorean ? "분석 메모" : "Analysis notes"}</h3>
                     <ul className="resume-tailor-list">
                       {analysisQuery.data.analysisNotes.map((note) => (
                         <li key={note}>{note}</li>
@@ -181,8 +183,8 @@ export function ResumeTailorAnalysisDetailPage() {
               <section className="page-card">
                 <div className="section-heading">
                   <div>
-                    <p className="section-heading__eyebrow">Suggestions</p>
-                    <h2 className="page-card__title">Section rewrite suggestions</h2>
+                    <p className="section-heading__eyebrow">{isKorean ? "제안" : "Suggestions"}</p>
+                    <h2 className="page-card__title">{isKorean ? "섹션별 수정 제안" : "Section rewrite suggestions"}</h2>
                   </div>
                   <span className="section-heading__count">{analysisQuery.data.suggestions.length}</span>
                 </div>
@@ -191,17 +193,23 @@ export function ResumeTailorAnalysisDetailPage() {
                     body={
                       toggleSuggestionMutation.error instanceof Error
                         ? toggleSuggestionMutation.error.message
-                        : "The suggestion acceptance state could not be updated."
+                        : isKorean
+                          ? "제안 수락 상태를 갱신하지 못했습니다."
+                          : "The suggestion acceptance state could not be updated."
                     }
                     details={getErrorDetails(toggleSuggestionMutation.error)}
                     onAction={() => toggleSuggestionMutation.reset()}
-                    title="Unable to update suggestion"
+                    title={isKorean ? "제안을 갱신할 수 없습니다" : "Unable to update suggestion"}
                   />
                 ) : null}
                 {analysisQuery.data.suggestions.length === 0 ? (
                   <EmptyStateCard
-                    body="This analysis did not return any section-level rewrite suggestions."
-                    title="No suggestions"
+                    body={
+                      isKorean
+                        ? "이 분석은 섹션 단위 수정 제안을 반환하지 않았습니다."
+                        : "This analysis did not return any section-level rewrite suggestions."
+                    }
+                    title={isKorean ? "제안이 없습니다" : "No suggestions"}
                   />
                 ) : (
                   <div className="stack-list">
@@ -219,19 +227,25 @@ export function ResumeTailorAnalysisDetailPage() {
                                 : "question-status-badge--neutral"
                             }`}
                           >
-                            {suggestion.accepted ? "Accepted" : "Not accepted"}
+                            {suggestion.accepted
+                              ? isKorean
+                                ? "수락됨"
+                                : "Accepted"
+                              : isKorean
+                                ? "미수락"
+                                : "Not accepted"}
                           </span>
                         </div>
                         {suggestion.originalText ? (
                           <div className="resume-tailor-compare-block">
-                            <p className="resume-section__helper">Original source</p>
+                            <p className="resume-section__helper">{isKorean ? "원본 소스" : "Original source"}</p>
                             <p className="page-card__body resume-section__body--preserve">
                               {suggestion.originalText}
                             </p>
                           </div>
                         ) : null}
                         <div className="resume-tailor-compare-block">
-                          <p className="resume-section__helper">Suggested rewrite</p>
+                          <p className="resume-section__helper">{isKorean ? "제안된 수정안" : "Suggested rewrite"}</p>
                           <p className="page-card__body resume-section__body--preserve">
                             {suggestion.suggestedText}
                           </p>
@@ -249,7 +263,13 @@ export function ResumeTailorAnalysisDetailPage() {
                             }}
                             type="button"
                           >
-                            {suggestion.accepted ? "Remove acceptance" : "Accept suggestion"}
+                            {suggestion.accepted
+                              ? isKorean
+                                ? "수락 해제"
+                                : "Remove acceptance"
+                              : isKorean
+                                ? "제안 수락"
+                                : "Accept suggestion"}
                           </button>
                         </div>
                       </article>
@@ -263,8 +283,8 @@ export function ResumeTailorAnalysisDetailPage() {
               <section className="page-card">
                 <div className="section-heading">
                   <div>
-                    <p className="section-heading__eyebrow">Preview</p>
-                    <h2 className="page-card__title">Persisted tailored document</h2>
+                    <p className="section-heading__eyebrow">{isKorean ? "미리보기" : "Preview"}</p>
+                    <h2 className="page-card__title">{isKorean ? "저장된 맞춤 문서" : "Persisted tailored document"}</h2>
                   </div>
                   {analysisQuery.data.tailoredDocument?.formatType ? (
                     <span className="question-status-badge question-status-badge--neutral">
@@ -330,15 +350,25 @@ export function ResumeTailorAnalysisDetailPage() {
                           }}
                           type="button"
                         >
-                          {copiedPlainText ? "Copied" : "Copy plain text"}
+                          {copiedPlainText
+                            ? isKorean
+                              ? "복사됨"
+                              : "Copied"
+                            : isKorean
+                              ? "일반 텍스트 복사"
+                              : "Copy plain text"}
                         </button>
                       </div>
                     ) : null}
                   </div>
                 ) : (
                   <EmptyStateCard
-                    body="The backend has not persisted a tailored preview document for this analysis yet. Review the suggestions first."
-                    title="No tailored preview yet"
+                    body={
+                      isKorean
+                        ? "백엔드가 아직 이 분석의 맞춤 미리보기 문서를 저장하지 않았습니다. 먼저 제안을 검토하세요."
+                        : "The backend has not persisted a tailored preview document for this analysis yet. Review the suggestions first."
+                    }
+                    title={isKorean ? "아직 맞춤 미리보기가 없습니다" : "No tailored preview yet"}
                   />
                 )}
               </section>
@@ -346,25 +376,31 @@ export function ResumeTailorAnalysisDetailPage() {
 
             <div className="resume-tailor-workspace__aside">
               <section className="page-card">
-                <span className="page-card__label">Job posting</span>
-                <h2 className="page-card__title">Saved target role context</h2>
+                <span className="page-card__label">{isKorean ? "채용 공고" : "Job posting"}</span>
+                <h2 className="page-card__title">{isKorean ? "저장된 목표 직무 컨텍스트" : "Saved target role context"}</h2>
                 {analysisQuery.data.jobPostingId ? jobPostingDetailQuery.isLoading ? (
                   <LoadingStateCard
-                    body="Loading the saved job posting linked to this analysis."
-                    title="Loading job posting"
+                    body={
+                      isKorean
+                        ? "이 분석에 연결된 저장된 채용 공고를 불러오는 중입니다."
+                        : "Loading the saved job posting linked to this analysis."
+                    }
+                    title={isKorean ? "채용 공고 불러오는 중" : "Loading job posting"}
                   />
                 ) : jobPostingDetailQuery.isError ? (
                   <ErrorStateCard
                     body={
                       jobPostingDetailQuery.error instanceof Error
                         ? jobPostingDetailQuery.error.message
-                        : "The linked job posting could not be loaded."
+                        : isKorean
+                          ? "연결된 채용 공고를 불러오지 못했습니다."
+                          : "The linked job posting could not be loaded."
                     }
                     details={getErrorDetails(jobPostingDetailQuery.error)}
                     onAction={() => {
                       void jobPostingDetailQuery.refetch();
                     }}
-                    title="Unable to load job posting"
+                    title={isKorean ? "채용 공고를 불러올 수 없습니다" : "Unable to load job posting"}
                   />
                 ) : jobPostingDetailQuery.data ? (
                   <>
@@ -388,8 +424,12 @@ export function ResumeTailorAnalysisDetailPage() {
                   </>
                 ) : null : (
                   <EmptyStateCard
-                    body="This analysis was created without a saved job posting."
-                    title="No linked job posting"
+                    body={
+                      isKorean
+                        ? "이 분석은 저장된 채용 공고 없이 생성되었습니다."
+                        : "This analysis was created without a saved job posting."
+                    }
+                    title={isKorean ? "연결된 채용 공고가 없습니다" : "No linked job posting"}
                   />
                 )}
               </section>
@@ -397,8 +437,8 @@ export function ResumeTailorAnalysisDetailPage() {
               <section className="page-card">
                 <div className="section-heading">
                   <div>
-                    <p className="section-heading__eyebrow">Exports</p>
-                    <h2 className="page-card__title">PDF export history</h2>
+                    <p className="section-heading__eyebrow">{isKorean ? "내보내기" : "Exports"}</p>
+                    <h2 className="page-card__title">{isKorean ? "PDF 내보내기 기록" : "PDF export history"}</h2>
                   </div>
                   <span className="section-heading__count">
                     {(exportsQuery.data ?? analysisQuery.data.exports).length}
@@ -409,11 +449,13 @@ export function ResumeTailorAnalysisDetailPage() {
                     body={
                       createExportMutation.error instanceof Error
                         ? createExportMutation.error.message
-                        : "The PDF export could not be created."
+                        : isKorean
+                          ? "PDF 내보내기를 만들지 못했습니다."
+                          : "The PDF export could not be created."
                     }
                     details={getErrorDetails(createExportMutation.error)}
                     onAction={() => createExportMutation.reset()}
-                    title="Unable to create export"
+                    title={isKorean ? "내보내기를 만들 수 없습니다" : "Unable to create export"}
                   />
                 ) : null}
                 <div className="page-card__actions">
@@ -425,26 +467,34 @@ export function ResumeTailorAnalysisDetailPage() {
                     }}
                     type="button"
                   >
-                    {createExportMutation.isPending ? "Generating PDF..." : "Create PDF export"}
+                    {createExportMutation.isPending
+                      ? isKorean
+                        ? "PDF 생성 중..."
+                        : "Generating PDF..."
+                      : isKorean
+                        ? "PDF 내보내기 만들기"
+                        : "Create PDF export"}
                   </button>
                 </div>
                 {exportsQuery.isLoading && analysisQuery.data.exports.length === 0 ? (
                   <LoadingStateCard
-                    body="Loading export history for this analysis."
-                    title="Loading exports"
+                    body={isKorean ? "이 분석의 내보내기 기록을 불러오는 중입니다." : "Loading export history for this analysis."}
+                    title={isKorean ? "내보내기 불러오는 중" : "Loading exports"}
                   />
                 ) : exportsQuery.isError && analysisQuery.data.exports.length === 0 ? (
                   <ErrorStateCard
                     body={
                       exportsQuery.error instanceof Error
                         ? exportsQuery.error.message
-                        : "Export history could not be loaded."
+                        : isKorean
+                          ? "내보내기 기록을 불러오지 못했습니다."
+                          : "Export history could not be loaded."
                     }
                     details={getErrorDetails(exportsQuery.error)}
                     onAction={() => {
                       void exportsQuery.refetch();
                     }}
-                    title="Unable to load exports"
+                    title={isKorean ? "내보내기 기록을 불러올 수 없습니다" : "Unable to load exports"}
                   />
                 ) : (exportsQuery.data ?? analysisQuery.data.exports).length > 0 ? (
                   <div className="stack-list">
@@ -458,7 +508,13 @@ export function ResumeTailorAnalysisDetailPage() {
                           </div>
                           <h3 className="list-item-card__title">{exportItem.fileName}</h3>
                           <p className="resume-tailor-muted">
-                            {exportItem.pageCount ? `${exportItem.pageCount} pages` : "Page count unavailable"}
+                            {exportItem.pageCount
+                              ? isKorean
+                                ? `${exportItem.pageCount}페이지`
+                                : `${exportItem.pageCount} pages`
+                              : isKorean
+                                ? "페이지 수 없음"
+                                : "Page count unavailable"}
                             {exportItem.fileSizeBytes ? ` · ${exportItem.fileSizeBytes} bytes` : ""}
                           </p>
                         </div>
@@ -470,7 +526,7 @@ export function ResumeTailorAnalysisDetailPage() {
                             }}
                             type="button"
                           >
-                            Download PDF
+                            {isKorean ? "PDF 다운로드" : "Download PDF"}
                           </button>
                         </div>
                       </article>
@@ -478,32 +534,42 @@ export function ResumeTailorAnalysisDetailPage() {
                   </div>
                 ) : (
                   <EmptyStateCard
-                    body="No server-side PDF exports exist for this analysis yet."
-                    title="No exports yet"
+                    body={
+                      isKorean
+                        ? "아직 이 분석의 서버 측 PDF 내보내기 기록이 없습니다."
+                        : "No server-side PDF exports exist for this analysis yet."
+                    }
+                    title={isKorean ? "아직 내보내기가 없습니다" : "No exports yet"}
                   />
                 )}
               </section>
 
               <section className="page-card">
-                <span className="page-card__label">Source context</span>
-                <h2 className="page-card__title">Original resume evidence</h2>
+                <span className="page-card__label">{isKorean ? "원본 컨텍스트" : "Source context"}</span>
+                <h2 className="page-card__title">{isKorean ? "원본 이력서 근거" : "Original resume evidence"}</h2>
                 {snapshotsQuery.isLoading ? (
                   <LoadingStateCard
-                    body="Loading parsed resume snapshots for source comparison."
-                    title="Loading source resume"
+                    body={
+                      isKorean
+                        ? "원본 비교를 위한 파싱된 이력서 스냅샷을 불러오는 중입니다."
+                        : "Loading parsed resume snapshots for source comparison."
+                    }
+                    title={isKorean ? "원본 이력서 불러오는 중" : "Loading source resume"}
                   />
                 ) : snapshotsQuery.isError ? (
                   <ErrorStateCard
                     body={
                       snapshotsQuery.error instanceof Error
                         ? snapshotsQuery.error.message
-                        : "Resume source context could not be loaded."
+                        : isKorean
+                          ? "이력서 원본 컨텍스트를 불러오지 못했습니다."
+                          : "Resume source context could not be loaded."
                     }
                     details={getErrorDetails(snapshotsQuery.error)}
                     onAction={() => {
                       void snapshotsQuery.refetch();
                     }}
-                    title="Unable to load source context"
+                    title={isKorean ? "원본 컨텍스트를 불러올 수 없습니다" : "Unable to load source context"}
                   />
                 ) : snapshotsQuery.data ? (
                   <div className="page-stack">

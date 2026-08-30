@@ -1,5 +1,6 @@
 import { formatApiDateTime } from "../../shared/lib/date";
 import { toArray } from "../../shared/lib/collection";
+import { getCurrentAppLocale } from "../../shared/i18n";
 import type {
   JobPostingDto,
   ResumeAnalysisDto,
@@ -14,8 +15,9 @@ function toId(value: string | number | null | undefined, fallback: string) {
 }
 
 function formatLabel(value?: string | null) {
+  const isKorean = getCurrentAppLocale() === "ko";
   if (!value) {
-    return "Unknown";
+    return isKorean ? "알 수 없음" : "Unknown";
   }
 
   return value
@@ -41,18 +43,20 @@ function getFetchTone(status?: string | null) {
 }
 
 function getGenerationSourceLabel(value?: string | null) {
+  const isKorean = getCurrentAppLocale() === "ko";
   if (value === "openai") {
-    return "AI generated";
+    return isKorean ? "AI 생성" : "AI generated";
   }
 
   if (value === "deterministic") {
-    return "Generated from saved rules";
+    return isKorean ? "저장된 규칙으로 생성됨" : "Generated from saved rules";
   }
 
   return formatLabel(value);
 }
 
 function mapTailoredDocument(document?: ResumeTailoredDocumentDto | null) {
+  const isKorean = getCurrentAppLocale() === "ko";
   if (!document) {
     return null;
   }
@@ -60,7 +64,7 @@ function mapTailoredDocument(document?: ResumeTailoredDocumentDto | null) {
   const sections = toArray(document.sections).map((section, index) => ({
     id: `${section.sectionKey ?? "section"}-${index}`,
     sectionKey: section.sectionKey ?? `section-${index}`,
-    title: section.title ?? "Section",
+    title: section.title ?? (isKorean ? "섹션" : "Section"),
     lines: toArray(section.lines),
   }));
   const order = toArray(document.sectionOrder);
@@ -75,7 +79,7 @@ function mapTailoredDocument(document?: ResumeTailoredDocumentDto | null) {
         });
 
   return {
-    title: document.title ?? "Tailored resume",
+    title: document.title ?? (isKorean ? "맞춤 이력서" : "Tailored resume"),
     targetCompany: document.targetCompany ?? null,
     targetRole: document.targetRole ?? null,
     formatType: document.formatType ?? null,
@@ -126,6 +130,7 @@ function mapSuggestion(suggestion: ResumeAnalysisSuggestionDto, index: number) {
 }
 
 export function mapJobPostingDtoToModel(dto: JobPostingDto, index = 0) {
+  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id: toId(dto.id, `job-posting-${index}`),
     inputType: dto.inputType ?? "text",
@@ -143,7 +148,7 @@ export function mapJobPostingDtoToModel(dto: JobPostingDto, index = 0) {
     title:
       [dto.companyName, dto.roleName].filter(Boolean).join(" · ") ||
       dto.fetchedTitle ||
-      "Saved job posting",
+      (isKorean ? "저장된 채용 공고" : "Saved job posting"),
     parsedRequirements: toArray(dto.parsedRequirements),
     parsedNiceToHave: toArray(dto.parsedNiceToHave),
     parsedKeywords: toArray(dto.parsedKeywords),
@@ -164,6 +169,7 @@ export function mapJobPostingListDtoToModel(response: JobPostingDto[]) {
 }
 
 export function mapResumeAnalysisListDtoToModel(response: ResumeAnalysisListItemDto[]) {
+  const isKorean = getCurrentAppLocale() === "ko";
   return toArray(response).map((item, index) => ({
     id: toId(item.id, `analysis-${index}`),
     resumeVersionId:
@@ -177,7 +183,7 @@ export function mapResumeAnalysisListDtoToModel(response: ResumeAnalysisListItem
     overallScore: item.overallScore ?? 0,
     overallScoreLabel:
       item.overallScore === null || item.overallScore === undefined
-        ? "N/A"
+        ? isKorean ? "없음" : "N/A"
         : `${item.overallScore}`,
     matchSummary: item.matchSummary ?? "",
     suggestedHeadline: item.suggestedHeadline ?? null,
@@ -192,6 +198,7 @@ export function mapResumeAnalysisListDtoToModel(response: ResumeAnalysisListItem
 }
 
 export function mapResumeAnalysisDtoToModel(dto: ResumeAnalysisDto) {
+  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id: toId(dto.id, "analysis"),
     resumeVersionId:
@@ -204,7 +211,9 @@ export function mapResumeAnalysisDtoToModel(dto: ResumeAnalysisDto) {
     statusLabel: formatLabel(dto.status),
     overallScore: dto.overallScore ?? 0,
     overallScoreLabel:
-      dto.overallScore === null || dto.overallScore === undefined ? "N/A" : `${dto.overallScore}`,
+      dto.overallScore === null || dto.overallScore === undefined
+        ? isKorean ? "없음" : "N/A"
+        : `${dto.overallScore}`,
     matchSummary: dto.matchSummary ?? "",
     strongMatches: toArray(dto.strongMatches),
     missingKeywords: toArray(dto.missingKeywords),

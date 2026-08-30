@@ -19,6 +19,7 @@ import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { useLocale } from "../../shared/i18n";
 import { SectionPanel } from "../../shared/ui/layout";
 
 const REVIEW_TABS = ["transcript", "question", "thread"] as const;
@@ -135,6 +136,8 @@ function ReplayPlayer(props: {
   onPlayRange: (range: { startMs: number; endMs: number; durationMs: number; startTimestampLabel: string | null; endTimestampLabel: string | null; }, label: string) => void;
   onPlaybackRateChange: (rate: number) => void;
 }) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const [navigatorMode, setNavigatorMode] = useState<"timeline" | "chapters">("timeline");
 
   if (!props.playback?.playbackAvailable || !props.playback.sourceAudioFileUrl) {
@@ -147,14 +150,17 @@ function ReplayPlayer(props: {
 
   return (
     <section className="page-card practical-audio-player">
-      <span className="page-card__label">Audio replay</span>
+      <span className="page-card__label">{isKorean ? "오디오 리플레이" : "Audio replay"}</span>
       <div className="section-heading">
         <div>
           <h2 className="page-card__title">
-            {props.playback.sourceAudioFileName ?? "Interview recording"}
+            {props.playback.sourceAudioFileName ?? (isKorean ? "면접 녹음 파일" : "Interview recording")}
           </h2>
           <p className="page-card__body">
-            {props.activeRangeLabel ?? "Use transcript, question, or thread replay actions to jump to one clip."}
+            {props.activeRangeLabel ??
+              (isKorean
+                ? "전사, 질문, 스레드 리플레이 동작으로 원하는 구간으로 바로 이동할 수 있습니다."
+                : "Use transcript, question, or thread replay actions to jump to one clip.")}
           </p>
         </div>
         <div className="chip-list">
@@ -166,7 +172,7 @@ function ReplayPlayer(props: {
       <audio preload="metadata" ref={props.audioRef} src={props.playback.sourceAudioFileUrl} />
       <div className="practical-audio-player__progress">
         <input
-          aria-label="Replay position"
+          aria-label={isKorean ? "리플레이 위치" : "Replay position"}
           className="practical-audio-player__scrubber"
           max={durationMs || 0}
           min={0}
@@ -185,7 +191,7 @@ function ReplayPlayer(props: {
       </div>
       <div className="page-card__actions practical-audio-player__actions">
         <button className="primary-button practical-audio-player__button" onClick={props.onTogglePlay} type="button">
-          {props.isPlaying ? "Pause" : "Play"}
+          {props.isPlaying ? (isKorean ? "일시정지" : "Pause") : isKorean ? "재생" : "Play"}
         </button>
         <button
           className="secondary-button practical-audio-player__button"
@@ -202,7 +208,7 @@ function ReplayPlayer(props: {
           +5s
         </button>
         <select
-          aria-label="Playback rate"
+          aria-label={isKorean ? "재생 속도" : "Playback rate"}
           className="form-input practical-audio-player__rate-input"
           onChange={(event) => props.onPlaybackRateChange(Number(event.target.value))}
           value={props.playbackRate}
@@ -221,22 +227,26 @@ function ReplayPlayer(props: {
             onClick={() => setNavigatorMode("timeline")}
             type="button"
           >
-            Timeline
+            {isKorean ? "타임라인" : "Timeline"}
           </button>
           <button
             className={navigatorMode === "chapters" ? "primary-button" : "secondary-button"}
             onClick={() => setNavigatorMode("chapters")}
             type="button"
           >
-            Chapters
+            {isKorean ? "챕터" : "Chapters"}
           </button>
         </div>
         <div className="stack-list practical-audio-player__navigator-list">
           {playerItems.length === 0 ? (
             <p className="page-card__body">
               {navigatorMode === "timeline"
-                ? "Transcript timestamps will appear here when segment replay data is available."
-                : "Question chapters will appear here when question replay ranges are available."}
+                ? isKorean
+                  ? "세그먼트 리플레이 데이터가 준비되면 전사 시점이 여기에 표시됩니다."
+                  : "Transcript timestamps will appear here when segment replay data is available."
+                : isKorean
+                  ? "질문 리플레이 구간이 준비되면 질문 챕터가 여기에 표시됩니다."
+                  : "Question chapters will appear here when question replay ranges are available."}
             </p>
           ) : null}
           {navigatorMode === "timeline"
@@ -259,7 +269,7 @@ function ReplayPlayer(props: {
                           startTimestampLabel: segment.timestampLabel,
                           endTimestampLabel: null,
                         },
-                        `Segment ${segment.sequence}`,
+                        isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`,
                       )
                     }
                     type="button"
@@ -269,7 +279,9 @@ function ReplayPlayer(props: {
                         <span>{segment.timestampLabel ?? formatDurationLabel(segment.startMs)}</span>
                         <span>{segment.speakerLabel}</span>
                       </div>
-                      <h3 className="list-item-card__title">Segment {segment.sequence}</h3>
+                      <h3 className="list-item-card__title">
+                        {isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`}
+                      </h3>
                       <p className="list-item-card__body">{truncateText(segment.text)}</p>
                     </div>
                   </button>
@@ -302,7 +314,7 @@ function ReplayPlayer(props: {
                     <div className="list-item-card__content">
                       <div className="list-item-card__meta">
                         <span>{chapter.timestampLabel ?? formatDurationLabel(chapter.startMs)}</span>
-                        <span>{chapter.isFollowUp ? "Follow-up" : "Main"}</span>
+                        <span>{chapter.isFollowUp ? (isKorean ? "꼬리질문" : "Follow-up") : isKorean ? "메인" : "Main"}</span>
                       </div>
                       <h3 className="list-item-card__title">{chapter.label}</h3>
                       {chapter.supportingText ? (
@@ -319,6 +331,8 @@ function ReplayPlayer(props: {
 }
 
 export function PracticalInterviewReviewPage() {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const navigate = useNavigate();
   const location = useLocation();
   const { recordId, questionId } = useParams<{ recordId: string; questionId?: string }>();
@@ -520,14 +534,18 @@ export function PracticalInterviewReviewPage() {
   if (!recordId) {
     return (
       <PageContainer
-        description="Choose an imported interview record before opening the review workspace."
-        eyebrow="Practical Interview"
-        title="Review unavailable"
+        description={
+          isKorean
+            ? "리뷰 워크스페이스를 열기 전에 가져온 면접 기록을 먼저 선택하세요."
+            : "Choose an imported interview record before opening the review workspace."
+        }
+        eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
+        title={isKorean ? "리뷰를 열 수 없습니다" : "Review unavailable"}
       >
         <EmptyStateCard
-          action={{ label: "Open practical interviews", to: routeConfig.practicalInterviews.buildPath() }}
-          body="The practical interview review route needs a record id."
-          title="Missing interview record"
+          action={{ label: isKorean ? "실전 면접 목록 열기" : "Open practical interviews", to: routeConfig.practicalInterviews.buildPath() }}
+          body={isKorean ? "실전 면접 리뷰 경로에는 record id가 필요합니다." : "The practical interview review route needs a record id."}
+          title={isKorean ? "면접 기록이 없습니다" : "Missing interview record"}
         />
       </PageContainer>
     );
@@ -536,13 +554,21 @@ export function PracticalInterviewReviewPage() {
   if (isLoading) {
     return (
       <PageContainer
-        description="Loading the review shell, transcript, question structuring, and replay guidance."
-        eyebrow="Practical Interview"
-        title="Preparing review workspace"
+        description={
+          isKorean
+            ? "리뷰 셸, 전사, 질문 구조화, 리플레이 가이드를 불러오는 중입니다."
+            : "Loading the review shell, transcript, question structuring, and replay guidance."
+        }
+        eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
+        title={isKorean ? "리뷰 워크스페이스 준비 중" : "Preparing review workspace"}
       >
         <LoadingStateCard
-          body="Loading the backend review payload and linked practical interview data."
-          title="Preparing practical interview review"
+          body={
+            isKorean
+              ? "백엔드 리뷰 payload와 연결된 실전 면접 데이터를 불러오는 중입니다."
+              : "Loading the backend review payload and linked practical interview data."
+          }
+          title={isKorean ? "실전 면접 리뷰 준비 중" : "Preparing practical interview review"}
         />
       </PageContainer>
     );
@@ -559,12 +585,12 @@ export function PracticalInterviewReviewPage() {
 
     return (
       <PageContainer
-        description="The practical interview review could not be loaded."
-        eyebrow="Practical Interview"
-        title="Review unavailable"
+        description={isKorean ? "실전 면접 리뷰를 불러오지 못했습니다." : "The practical interview review could not be loaded."}
+        eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
+        title={isKorean ? "리뷰를 열 수 없습니다" : "Review unavailable"}
       >
         <ErrorStateCard
-          body={error instanceof Error ? error.message : "The practical interview review could not be loaded."}
+          body={error instanceof Error ? error.message : isKorean ? "실전 면접 리뷰를 불러오지 못했습니다." : "The practical interview review could not be loaded."}
           details={getErrorDetails(error)}
           onAction={() => {
             void Promise.all([
@@ -576,7 +602,7 @@ export function PracticalInterviewReviewPage() {
               interviewerProfileQuery.refetch(),
             ]);
           }}
-          title="Unable to load practical interview review"
+          title={isKorean ? "실전 면접 리뷰를 불러올 수 없습니다" : "Unable to load practical interview review"}
         />
       </PageContainer>
     );
@@ -591,33 +617,45 @@ export function PracticalInterviewReviewPage() {
       <PageContainer
         description={
           isProcessing
-            ? "The uploaded interview record was created successfully, and transcript extraction or structuring is still in progress."
-            : "The upload succeeded, but transcript extraction did not complete yet."
+            ? isKorean
+              ? "업로드한 면접 기록은 생성되었고, 전사 추출 또는 구조화가 아직 진행 중입니다."
+              : "The uploaded interview record was created successfully, and transcript extraction or structuring is still in progress."
+            : isKorean
+              ? "업로드는 성공했지만 전사 추출이 아직 끝나지 않았습니다."
+              : "The upload succeeded, but transcript extraction did not complete yet."
         }
-        eyebrow="Practical Interview"
+        eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
         title={detail.title}
       >
         <div className="page-stack">
           <section className="page-card">
-            <span className="page-card__label">Processing</span>
+            <span className="page-card__label">{isKorean ? "처리 중" : "Processing"}</span>
             <h2 className="page-card__title">
               {detail.isTranscriptFailed
-                ? "Transcript extraction needs attention"
-                : "Transcript extraction in progress"}
+                ? isKorean
+                  ? "전사 추출에 확인이 필요합니다"
+                  : "Transcript extraction needs attention"
+                : isKorean
+                  ? "전사 추출 진행 중"
+                  : "Transcript extraction in progress"}
             </h2>
             <p className="page-card__body">
               {detail.isTranscriptFailed
                 ? detail.transcriptErrorMessage ??
                   detail.transcriptErrorLabel ??
-                  "The upload succeeded, but the server could not prepare a transcript yet."
-                : "The upload succeeded. If you did not paste a transcript, the server is now trying to extract one from the audio and run the structuring pipeline."}
+                  (isKorean
+                    ? "업로드는 성공했지만 서버가 아직 전사를 준비하지 못했습니다."
+                    : "The upload succeeded, but the server could not prepare a transcript yet.")
+                : isKorean
+                  ? "업로드는 성공했습니다. 전사를 직접 붙여넣지 않았다면 서버가 오디오에서 전사를 추출하고 구조화 파이프라인을 진행하는 중입니다."
+                  : "The upload succeeded. If you did not paste a transcript, the server is now trying to extract one from the audio and run the structuring pipeline."}
             </p>
             <div className="stats-grid">
-              <MetricCard label="Transcript" value={detail.transcriptStatusLabel} />
-              <MetricCard label="Analysis" tone="accent" value={detail.analysisStatusLabel} />
-              <MetricCard label="Questions" tone="muted" value={String(detail.questionCount)} />
+              <MetricCard label={isKorean ? "전사" : "Transcript"} value={detail.transcriptStatusLabel} />
+              <MetricCard label={isKorean ? "분석" : "Analysis"} tone="accent" value={detail.analysisStatusLabel} />
+              <MetricCard label={isKorean ? "질문" : "Questions"} tone="muted" value={String(detail.questionCount)} />
               <MetricCard
-                label="Retries"
+                label={isKorean ? "재시도" : "Retries"}
                 tone="muted"
                 value={String(detail.transcriptRetryCount)}
               />
@@ -630,7 +668,7 @@ export function PracticalInterviewReviewPage() {
                 }}
                 type="button"
               >
-                Refresh status
+                {isKorean ? "상태 새로고침" : "Refresh status"}
               </button>
               {canRetry ? (
                 <button
@@ -642,15 +680,19 @@ export function PracticalInterviewReviewPage() {
                   type="button"
                 >
                   {retryTranscriptionMutation.isPending
-                    ? "Retrying..."
-                    : "Retry transcription"}
+                    ? isKorean
+                      ? "재시도 요청 중..."
+                      : "Retrying..."
+                    : isKorean
+                      ? "전사 다시 시도"
+                      : "Retry transcription"}
                 </button>
               ) : null}
               <Link
                 className="secondary-button"
                 to={routeConfig.practicalInterviews.buildPath()}
               >
-                Back to practical interviews
+                {isKorean ? "실전 면접 목록으로" : "Back to practical interviews"}
               </Link>
             </div>
           </section>
@@ -658,8 +700,12 @@ export function PracticalInterviewReviewPage() {
           <FeedbackNotice
             message={
               detail.isTranscriptFailed
-                ? "A failed transcript is not the same as a failed upload. Use retry transcription when available, or reopen the record after the server retry window."
-                : "Pending transcript extraction is not an error. Re-open this record after processing completes and the review workspace will appear automatically."
+                ? isKorean
+                  ? "전사 실패는 업로드 실패와 다릅니다. 가능하면 전사 재시도를 사용하고, 아니면 서버 재시도 시간이 지난 뒤 기록을 다시 여세요."
+                  : "A failed transcript is not the same as a failed upload. Use retry transcription when available, or reopen the record after the server retry window."
+                : isKorean
+                  ? "전사 대기는 오류가 아닙니다. 처리가 끝난 뒤 이 기록을 다시 열면 리뷰 워크스페이스가 자동으로 나타납니다."
+                  : "Pending transcript extraction is not an error. Re-open this record after processing completes and the review workspace will appear automatically."
             }
             tone={detail.isTranscriptFailed ? "error" : "info"}
           />
@@ -669,36 +715,42 @@ export function PracticalInterviewReviewPage() {
               body={
                 retryTranscriptionMutation.error instanceof Error
                   ? retryTranscriptionMutation.error.message
-                  : "The transcript retry request failed."
+                  : isKorean
+                    ? "전사 재시도 요청에 실패했습니다."
+                    : "The transcript retry request failed."
               }
               details={getErrorDetails(retryTranscriptionMutation.error)}
               onAction={() => retryTranscriptionMutation.reset()}
-              title="Unable to retry transcription"
+              title={isKorean ? "전사를 다시 시도할 수 없습니다" : "Unable to retry transcription"}
             />
           ) : null}
 
           <section className="page-card">
-            <span className="page-card__label">Current status</span>
-            <h2 className="page-card__title">What happens next</h2>
+            <span className="page-card__label">{isKorean ? "현재 상태" : "Current status"}</span>
+            <h2 className="page-card__title">{isKorean ? "다음에 일어나는 일" : "What happens next"}</h2>
             <div className="stack-list">
               <article className="list-item-card">
                 <div className="list-item-card__content">
                   <div className="list-item-card__meta">
-                    <span>Audio</span>
+                    <span>{isKorean ? "오디오" : "Audio"}</span>
                     {detail.sourceAudioFileName ? <span>{detail.sourceAudioFileName}</span> : null}
                   </div>
-                  <h3 className="list-item-card__title">Uploaded source is stored</h3>
+                  <h3 className="list-item-card__title">{isKorean ? "업로드한 원본이 보관되었습니다" : "Uploaded source is stored"}</h3>
                   <p className="list-item-card__body">
                     {detail.isTranscriptFailed
-                      ? "The uploaded audio is still stored. You can retry transcription without re-uploading the file."
-                      : "Once the transcript is confirmed, the transcript, question review, and thread review lanes will become available here."}
+                      ? isKorean
+                        ? "업로드한 오디오는 계속 보관됩니다. 파일을 다시 올리지 않아도 전사를 재시도할 수 있습니다."
+                        : "The uploaded audio is still stored. You can retry transcription without re-uploading the file."
+                      : isKorean
+                        ? "전사가 확정되면 여기에서 전사, 질문 리뷰, 스레드 리뷰 영역을 사용할 수 있습니다."
+                        : "Once the transcript is confirmed, the transcript, question review, and thread review lanes will become available here."}
                   </p>
                 </div>
               </article>
               <article className="list-item-card">
                 <div className="list-item-card__content">
                   <div className="list-item-card__meta">
-                    <span>Structuring stage</span>
+                    <span>{isKorean ? "구조화 단계" : "Structuring stage"}</span>
                   </div>
                   <h3 className="list-item-card__title">{detail.structuringStageLabel}</h3>
                   <p className="list-item-card__body">
@@ -706,17 +758,29 @@ export function PracticalInterviewReviewPage() {
                       detail.aiEnrichedSummary ??
                       detail.deterministicSummary ??
                       (detail.isTranscriptFailed
-                        ? "The backend did not finish transcript preparation. Review payloads will stay blocked until transcription succeeds."
-                        : "The backend will continue processing this interview record and update the review payload when ready.")}
+                        ? isKorean
+                          ? "백엔드가 전사 준비를 끝내지 못했습니다. 전사가 성공할 때까지 리뷰 payload가 막혀 있습니다."
+                          : "The backend did not finish transcript preparation. Review payloads will stay blocked until transcription succeeds."
+                        : isKorean
+                          ? "백엔드가 이 면접 기록 처리를 계속 진행하고, 준비가 되면 리뷰 payload를 갱신합니다."
+                          : "The backend will continue processing this interview record and update the review payload when ready.")}
                   </p>
                   <p className="list-item-card__body">
                     {detail.transcriptLastAttemptAtLabel
-                      ? `Last attempt ${detail.transcriptLastAttemptAtLabel}`
+                      ? isKorean
+                        ? `마지막 시도 ${detail.transcriptLastAttemptAtLabel}`
+                        : `Last attempt ${detail.transcriptLastAttemptAtLabel}`
                       : detail.transcriptProcessingStartedAtLabel
-                        ? `Processing started ${detail.transcriptProcessingStartedAtLabel}`
-                        : "The transcript worker has not reported a completed attempt yet."}
+                        ? isKorean
+                          ? `처리 시작 ${detail.transcriptProcessingStartedAtLabel}`
+                          : `Processing started ${detail.transcriptProcessingStartedAtLabel}`
+                        : isKorean
+                          ? "전사 워커가 아직 완료된 시도를 보고하지 않았습니다."
+                          : "The transcript worker has not reported a completed attempt yet."}
                     {detail.transcriptNextRetryAtLabel
-                      ? ` Next retry ${detail.transcriptNextRetryAtLabel}.`
+                      ? isKorean
+                        ? ` 다음 재시도 ${detail.transcriptNextRetryAtLabel}.`
+                        : ` Next retry ${detail.transcriptNextRetryAtLabel}.`
                       : ""}
                   </p>
                 </div>

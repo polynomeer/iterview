@@ -83,15 +83,15 @@ describe("ResumeTailorLandingPage", () => {
       <Routes>
         <Route element={<ResumeTailorLandingPage />} path="/resume-tailor" />
       </Routes>,
-      { route: "/resume-tailor" },
+      { route: "/resume-tailor", locale: "ko" },
     );
 
     expect(
-      screen.getByText("Choose one immutable resume version, then tailor it toward one real role"),
+      screen.getByText("변경하지 않는 이력서 버전 하나를 고른 뒤 실제 직무 하나에 맞춰 다듬으세요"),
     ).toBeInTheDocument();
     expect(screen.getByText("Platform engineer tailored summary")).toBeInTheDocument();
     expect(screen.getByText("Example Corp · Backend Platform Engineer")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Create analysis" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Manage job postings" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "분석 만들기" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "채용 공고 관리" })).toBeInTheDocument();
   });
 });
