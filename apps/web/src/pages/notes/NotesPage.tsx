@@ -31,7 +31,7 @@ function getNoteRecords(isKorean: boolean): NoteRecord[] {
       id: "dist-lock",
       title: isKorean ? "분산 락 패턴" : "Distributed Lock Patterns",
       summary: isKorean ? "분산 락 접근 방식, 트레이드오프, 실패 모드 개요입니다." : "Overview of distributed locking approaches, trade-offs, and failure modes.",
-      excerpt: isKorean ? "Redis SET NX PX, Redlock 트레이드오프, lease renewal 사용 시점을 정리합니다." : "Redis SET NX PX, Redlock trade-offs, and when to use lease renewal.",
+      excerpt: isKorean ? "Redis SET NX PX, Redlock 트레이드오프, 임대 갱신 사용 시점을 정리합니다." : "Redis SET NX PX, Redlock trade-offs, and when to use lease renewal.",
       updatedAt: isKorean ? "2시간 전" : "2 hours ago",
       createdAt: isKorean ? "2024년 5월 10일" : "May 10, 2024",
       pinned: false,
@@ -102,7 +102,7 @@ Distributed locking is rarely free. Prefer the simplest mechanism that still mat
       createdAt: isKorean ? "2024년 5월 11일" : "May 11, 2024",
       pinned: true,
       tags: ["System Design"],
-      linkedQuestions: [{ id: "url-shortener-scale", title: isKorean ? "URL shortener를 어떻게 확장하시겠습니까?" : "How would you scale a URL shortener?", score: 81 }],
+      linkedQuestions: [{ id: "url-shortener-scale", title: isKorean ? "URL 단축 서비스를 어떻게 확장하시겠습니까?" : "How would you scale a URL shortener?", score: 81 }],
       resumeContext: {
         title: isKorean ? "백엔드 플랫폼 현대화" : "Backend Platform Modernization",
         description: isKorean ? "트래픽이 큰 API 흐름과 캐시 기반 읽기 경로를 운영했습니다." : "Operated traffic-heavy API flows and cache-backed read paths.",
@@ -186,7 +186,7 @@ Frame CAP as a failure-mode discussion, not as a memorized acronym. The stronges
     {
       id: "redis-data-structures",
       title: isKorean ? "Redis 자료구조" : "Redis Data Structures",
-      summary: isKorean ? "list, set, sorted set, hash, stream을 위한 빠른 참고 노트입니다." : "Quick reference for lists, sets, sorted sets, hashes, and streams.",
+      summary: isKorean ? "list, set, sorted set, hash, stream을 빠르게 참고하기 위한 노트입니다." : "Quick reference for lists, sets, sorted sets, hashes, and streams.",
       excerpt: isKorean ? "면접 질문이 시스템에서 저장소 프리미티브로 전환될 때 유용합니다." : "Useful when interview questions pivot from systems to storage primitives.",
       updatedAt: isKorean ? "1일 전" : "1 day ago",
       createdAt: isKorean ? "2024년 5월 9일" : "May 9, 2024",
@@ -210,17 +210,17 @@ Choose the structure by access pattern first, not by memorized feature list. Exp
     },
     {
       id: "kafka-consumer-groups",
-      title: isKorean ? "Kafka Consumer Groups" : "Kafka Consumer Groups",
-      summary: isKorean ? "파티션 소유, 리밸런스 문제점, lag 대응을 정리한 노트입니다." : "Partition ownership, rebalance pain points, and lag handling.",
-      excerpt: isKorean ? "처리량, 장애 대응, replay 질문용 짧은 준비 메모입니다." : "Short notes for questions about throughput, failure handling, and replay.",
+      title: isKorean ? "Kafka 컨슈머 그룹" : "Kafka Consumer Groups",
+      summary: isKorean ? "파티션 소유, 리밸런스 문제점, 지연 적체 대응을 정리한 노트입니다." : "Partition ownership, rebalance pain points, and lag handling.",
+      excerpt: isKorean ? "처리량, 장애 대응, 재연 질문용 짧은 준비 메모입니다." : "Short notes for questions about throughput, failure handling, and replay.",
       updatedAt: isKorean ? "2일 전" : "2 days ago",
       createdAt: isKorean ? "2024년 5월 7일" : "May 7, 2024",
       pinned: false,
       tags: ["Kafka"],
-      linkedQuestions: [{ id: "kafka-rebalance", title: isKorean ? "consumer group은 어떻게 rebalance되나요?" : "How do consumer groups rebalance?", score: 71 }],
+      linkedQuestions: [{ id: "kafka-rebalance", title: isKorean ? "컨슈머 그룹은 어떻게 리밸런스되나요?" : "How do consumer groups rebalance?", score: 71 }],
       resumeContext: {
         title: isKorean ? "이벤트 처리 현대화" : "Event Processing Modernization",
-        description: isKorean ? "이벤트 컨슈머를 안정화하면서 파티션 skew와 replay 로직을 다뤘습니다." : "Handled partition skew and replay logic while stabilizing event consumers.",
+        description: isKorean ? "이벤트 컨슈머를 안정화하면서 파티션 쏠림과 재연 로직을 다뤘습니다." : "Handled partition skew and replay logic while stabilizing event consumers.",
         period: "2021.07 - 2022.06",
       },
       relatedSkills: [{ label: isKorean ? "스트리밍" : "Streaming", level: isKorean ? "숙련" : "Proficient" }],
@@ -355,7 +355,7 @@ export function NotesPage() {
           </Link>
         </>
       }
-      description={isKorean ? "연결된 질문 맥락을 잃지 않으면서 재사용 가능한 방어 조각, 트레이드오프 노트, 기준 문서 스니펫을 정리하세요." : "Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."}
+      description={isKorean ? "연결된 질문 맥락을 잃지 않으면서 재사용 가능한 방어 조각, 트레이드오프 노트, 기준 문서 발췌를 정리하세요." : "Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."}
       eyebrow={isKorean ? "답변 조각" : "Answer fragments"}
       title={isKorean ? "재사용 가능한 방어 노트 보관" : "Store reusable defense notes"}
     >
@@ -403,7 +403,7 @@ export function NotesPage() {
           <span className="detail-chip detail-chip--accent">{isKorean ? "재사용 가능한 답변 조각" : "Reusable answer fragments"}</span>
           <span className="detail-chip">{isKorean ? "이력서 연결" : "Resume-linked"}</span>
           <span className="detail-chip">{isKorean ? "질문 연결" : "Question-linked"}</span>
-          <span className="detail-chip">{isKorean ? "검색 가능한 스니펫" : "Searchable snippets"}</span>
+          <span className="detail-chip">{isKorean ? "검색 가능한 발췌" : "Searchable snippets"}</span>
         </div>
       </section>
 

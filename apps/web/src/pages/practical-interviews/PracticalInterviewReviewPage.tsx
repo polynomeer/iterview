@@ -617,7 +617,7 @@ export function PracticalInterviewReviewPage() {
         <LoadingStateCard
           body={
             isKorean
-              ? "백엔드 리뷰 payload와 연결된 실전 면접 데이터를 불러오는 중입니다."
+              ? "백엔드 리뷰 데이터 묶음과 연결된 실전 면접 데이터를 불러오는 중입니다."
               : "Loading the backend review payload and linked practical interview data."
           }
           title={isKorean ? "실전 면접 리뷰 준비 중" : "Preparing practical interview review"}
@@ -811,10 +811,10 @@ export function PracticalInterviewReviewPage() {
                       detail.deterministicSummary ??
                       (detail.isTranscriptFailed
                         ? isKorean
-                          ? "백엔드가 전사 준비를 끝내지 못했습니다. 전사가 성공할 때까지 리뷰 payload가 막혀 있습니다."
+                          ? "백엔드가 전사 준비를 끝내지 못했습니다. 전사가 성공할 때까지 리뷰 데이터 묶음이 막혀 있습니다."
                           : "The backend did not finish transcript preparation. Review payloads will stay blocked until transcription succeeds."
                         : isKorean
-                          ? "백엔드가 이 면접 기록 처리를 계속 진행하고, 준비가 되면 리뷰 payload를 갱신합니다."
+                          ? "백엔드가 이 면접 기록 처리를 계속 진행하고, 준비가 되면 리뷰 데이터 묶음을 갱신합니다."
                           : "The backend will continue processing this interview record and update the review payload when ready.")}
                   </p>
                   <p className="list-item-card__body">
@@ -1551,7 +1551,7 @@ export function PracticalInterviewReviewPage() {
 
             <section className="page-card page-card--inset practical-review-brief__card">
               <span className="page-card__label">{isKorean ? "보조 데이터 묶음" : "Supporting payloads"}</span>
-              <h3 className="page-card__title">{isKorean ? "불러온 컨텍스트" : "Loaded context"}</h3>
+              <h3 className="page-card__title">{isKorean ? "불러온 맥락" : "Loaded context"}</h3>
               <div className="stats-grid">
                 <MetricCard label={isKorean ? "전사 행" : "Transcript rows"} value={String(transcript.segments.length)} />
                 <MetricCard label={isKorean ? "구조화 질문" : "Structured questions"} value={String(questions.items.length)} />
