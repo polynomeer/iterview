@@ -1,4 +1,5 @@
 import { StateCard } from "./StateCard";
+import { useLocale } from "../i18n";
 
 type SectionErrorStateProps = {
   label?: string;
@@ -9,17 +10,24 @@ type SectionErrorStateProps = {
 };
 
 export function SectionErrorState({
-  label = "Error",
+  label,
   title,
   body,
-  actionLabel = "Try again",
+  actionLabel,
   onAction,
 }: SectionErrorStateProps) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
+
   return (
     <StateCard
-      action={onAction ? { label: actionLabel, onAction } : undefined}
+      action={
+        onAction
+          ? { label: actionLabel ?? (isKorean ? "다시 시도" : "Try again"), onAction }
+          : undefined
+      }
       body={body}
-      label={label}
+      label={label ?? (isKorean ? "오류" : "Error")}
       size="section"
       title={title}
       tone="error"

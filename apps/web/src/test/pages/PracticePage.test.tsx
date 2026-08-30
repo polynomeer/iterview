@@ -136,8 +136,8 @@ describe("PracticePage", () => {
     );
 
     expect(screen.getByText("Explain caching")).toBeInTheDocument();
-    expect(screen.getByText("다음에 연습할 질문을 고르세요")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Resume analysis/i })).toBeInTheDocument();
+    expect(screen.getByText("다음 면접 분기를 고르세요")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /이력서 분석/i })).toBeInTheDocument();
     expect(document.querySelector(".practice-layout--desktop")).not.toBeNull();
   });
 
@@ -186,10 +186,10 @@ describe("PracticePage", () => {
         />
         <Route element={<LocationDisplay />} path="/questions/:questionId/tree" />
       </Routes>,
-      { route: "/practice" },
+      { route: "/practice", locale: "ko" },
     );
 
-    await user.click(screen.getByRole("link", { name: "Open first visible map" }));
+    await user.click(screen.getByRole("link", { name: "첫 번째 보이는 지도 열기" }));
 
     expect(screen.getByTestId("location-display")).toHaveTextContent("/questions/question-21/tree");
   });

@@ -6,6 +6,7 @@ import {
 } from "../../entities/practice/model";
 import { usePracticeQuestionsQuery } from "../../features/practice/api/usePracticeQuestionsQuery";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 import { getErrorDetails } from "../../shared/api/errors";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -19,6 +20,8 @@ import { QuestionFilterBar, QuestionList, SearchInput } from "../../widgets/prac
 export function PracticePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isDesktop } = useLayoutMode();
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const [draftSearch, setDraftSearch] = useState(searchParams.get("search") ?? "");
   const filterState = normalizePracticeFilterState({
     category: searchParams.get("category") ?? undefined,
@@ -72,25 +75,35 @@ export function PracticePage() {
 
   return (
     <PageContainer
-      description="Filter the question set until one prompt is worth a focused DFS answer pass, then enter that branch on purpose."
-      eyebrow="Practice"
+      description={
+        isKorean
+          ? "질문 집합을 좁혀 하나의 프롬프트가 실제 DFS 답변 연습에 걸맞아질 때까지 고른 뒤, 의도적으로 그 분기로 들어가세요."
+          : "Filter the question set until one prompt is worth a focused DFS answer pass, then enter that branch on purpose."
+      }
+      eyebrow={isKorean ? "연습" : "Practice"}
       introVariant="minimal"
-      title="Choose the next interview branch"
+      title={isKorean ? "다음 면접 분기를 고르세요" : "Choose the next interview branch"}
     >
       <WorkspaceContinuityRail
         current={{
-          title: "Practice branch selection",
-          description: "Filter the catalog until one question deserves a deliberate DFS pass.",
+          title: isKorean ? "연습 분기 선택" : "Practice branch selection",
+          description: isKorean
+            ? "카탈로그를 좁혀 하나의 질문이 의도적인 DFS 점검을 받을 만한 상태가 되게 하세요."
+            : "Filter the catalog until one question deserves a deliberate DFS pass.",
         }}
         downstream={[
           {
-            title: "Review queue",
-            description: "Move into retry work when a weak branch should be cleared before new practice.",
+            title: isKorean ? "리뷰 큐" : "Review queue",
+            description: isKorean
+              ? "새 연습 전에 약한 분기를 먼저 정리해야 하면 재시도 작업으로 이동하세요."
+              : "Move into retry work when a weak branch should be cleared before new practice.",
             to: routeConfig.reviewQueue.buildPath(),
           },
           {
-            title: "Question tree",
-            description: "Open the branch map before answering when follow-up order matters.",
+            title: isKorean ? "질문 트리" : "Question tree",
+            description: isKorean
+              ? "꼬리질문 순서가 중요하면 답변 전에 분기 지도를 여세요."
+              : "Open the branch map before answering when follow-up order matters.",
             to: visibleItems[0]
               ? routeConfig.questionTree.buildPath({ questionId: visibleItems[0].id })
               : routeConfig.practice.buildPath(),
@@ -98,8 +111,10 @@ export function PracticePage() {
         ]}
         upstream={[
           {
-            title: "Resume analysis",
-            description: "Start from the source claim that needs interview pressure next.",
+            title: isKorean ? "이력서 분석" : "Resume analysis",
+            description: isKorean
+              ? "다음 면접 압박이 필요한 source claim에서 시작하세요."
+              : "Start from the source claim that needs interview pressure next.",
             to: routeConfig.resumeAnalysis.buildPath(),
           },
         ]}
@@ -108,32 +123,38 @@ export function PracticePage() {
         <div className="practice-workspace-surface__header">
           <div className="practice-workspace-surface__intro">
             <div className="practice-workspace-surface__eyebrow-row">
-              <span className="page-card__label">Practice workspace</span>
-              <span className="question-status-badge question-status-badge--accent">Branch entry</span>
+              <span className="page-card__label">{isKorean ? "연습 워크스페이스" : "Practice workspace"}</span>
+              <span className="question-status-badge question-status-badge--accent">
+                {isKorean ? "분기 진입" : "Branch entry"}
+              </span>
             </div>
             <p className="practice-workspace-surface__breadcrumbs">
-              Resume signal
+              {isKorean ? "이력서 신호" : "Resume signal"}
               <span>/</span>
-              DFS branch choice
+              {isKorean ? "DFS 분기 선택" : "DFS branch choice"}
               <span>/</span>
-              Retry awareness
+              {isKorean ? "재시도 인식" : "Retry awareness"}
             </p>
-            <h2 className="practice-workspace-surface__title">Pick the next branch on purpose</h2>
+            <h2 className="practice-workspace-surface__title">
+              {isKorean ? "다음 분기를 의도적으로 고르세요" : "Pick the next branch on purpose"}
+            </h2>
             <p className="practice-workspace-surface__body">
-              Filter until one question is worth a real defense pass, not another loose click through the catalog.
+              {isKorean
+                ? "카탈로그를 무심하게 넘기지 말고, 실제 방어형 답변 점검이 필요한 질문 하나가 남을 때까지 필터링하세요."
+                : "Filter until one question is worth a real defense pass, not another loose click through the catalog."}
             </p>
           </div>
           <div className="practice-workspace-surface__stats">
             <article className="practice-workspace-surface__stat">
-              <span>Visible questions</span>
+              <span>{isKorean ? "보이는 질문" : "Visible questions"}</span>
               <strong>{practiceQuery.data?.items.length ?? 0}</strong>
             </article>
             <article className="practice-workspace-surface__stat">
-              <span>Retry candidates</span>
+              <span>{isKorean ? "재시도 후보" : "Retry candidates"}</span>
               <strong>{retryItemCount}</strong>
             </article>
             <article className="practice-workspace-surface__stat">
-              <span>Active filters</span>
+              <span>{isKorean ? "활성 필터" : "Active filters"}</span>
               <strong>
                 {[filterState.category, filterState.company, filterState.difficulty, filterState.status, filterState.search]
                   .filter(Boolean)
@@ -144,21 +165,29 @@ export function PracticePage() {
         </div>
         <div className="practice-workspace-surface__guidance">
           <article className="practice-workspace-surface__guidance-card">
-            <span>Selection rule</span>
-            <strong>Pick the next question because it sharpens one branch.</strong>
+            <span>{isKorean ? "선택 원칙" : "Selection rule"}</span>
+            <strong>
+              {isKorean
+                ? "다음 질문은 하나의 분기를 더 날카롭게 만들기 때문에 골라야 합니다."
+                : "Pick the next question because it sharpens one branch."}
+            </strong>
           </article>
           <article className="practice-workspace-surface__guidance-card">
-            <span>Retry rule</span>
-            <strong>Check recovery pressure before opening fresh practice.</strong>
+            <span>{isKorean ? "재시도 원칙" : "Retry rule"}</span>
+            <strong>
+              {isKorean
+                ? "새 연습을 열기 전에 먼저 복구 압력을 확인하세요."
+                : "Check recovery pressure before opening fresh practice."}
+            </strong>
           </article>
         </div>
         <div className="practice-workspace-surface__chips">
-          {filterState.search ? <span className="detail-chip detail-chip--accent">{`Search ${filterState.search}`}</span> : null}
-          {filterState.category ? <span className="detail-chip">{`Category ${filterState.category}`}</span> : null}
-          {filterState.company ? <span className="detail-chip">{`Company ${filterState.company}`}</span> : null}
-          {filterState.difficulty ? <span className="detail-chip">{`Level ${filterState.difficulty}`}</span> : null}
-          {filterState.status ? <span className="detail-chip">{`Status ${filterState.status}`}</span> : null}
-          {retryItemCount > 0 ? <span className="detail-chip">Retry work present</span> : null}
+          {filterState.search ? <span className="detail-chip detail-chip--accent">{isKorean ? `검색 ${filterState.search}` : `Search ${filterState.search}`}</span> : null}
+          {filterState.category ? <span className="detail-chip">{isKorean ? `카테고리 ${filterState.category}` : `Category ${filterState.category}`}</span> : null}
+          {filterState.company ? <span className="detail-chip">{isKorean ? `회사 ${filterState.company}` : `Company ${filterState.company}`}</span> : null}
+          {filterState.difficulty ? <span className="detail-chip">{isKorean ? `난이도 ${filterState.difficulty}` : `Level ${filterState.difficulty}`}</span> : null}
+          {filterState.status ? <span className="detail-chip">{isKorean ? `상태 ${filterState.status}` : `Status ${filterState.status}`}</span> : null}
+          {retryItemCount > 0 ? <span className="detail-chip">{isKorean ? "재시도 작업 있음" : "Retry work present"}</span> : null}
         </div>
       </section>
       {(() => {
@@ -175,16 +204,20 @@ export function PracticePage() {
         const reviewQueueCard = (
           <SectionPanel className="practice-review-queue-card" variant="muted">
             <div className="practice-review-queue-card__topline">
-              <span className="page-card__label">Recovery queue</span>
-              <span className="question-status-badge">Retry first</span>
+              <span className="page-card__label">{isKorean ? "복구 큐" : "Recovery queue"}</span>
+              <span className="question-status-badge">{isKorean ? "재시도 우선" : "Retry first"}</span>
             </div>
-            <h2 className="page-card__title">Need to clear weak branches first?</h2>
+            <h2 className="page-card__title">
+              {isKorean ? "약한 분기를 먼저 정리해야 하나요?" : "Need to clear weak branches first?"}
+            </h2>
             <p className="page-card__body">
-              Jump into the review queue before choosing a fresh prompt when the weak branch is already known.
+              {isKorean
+                ? "이미 약한 분기가 보인다면 새 프롬프트를 고르기 전에 리뷰 큐로 먼저 이동하세요."
+                : "Jump into the review queue before choosing a fresh prompt when the weak branch is already known."}
             </p>
             <div className="page-card__actions">
               <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
-                Open review queue
+                {isKorean ? "리뷰 큐 열기" : "Open review queue"}
               </Link>
             </div>
           </SectionPanel>
@@ -193,22 +226,26 @@ export function PracticePage() {
         const focusSummaryCard = (
           <SectionPanel className="practice-focus-summary-card" variant="muted">
             <div className="practice-focus-summary-card__topline">
-              <span className="page-card__label">DFS focus</span>
-              <span className="detail-chip detail-chip--accent">Branch control</span>
+              <span className="page-card__label">{isKorean ? "DFS 집중" : "DFS focus"}</span>
+              <span className="detail-chip detail-chip--accent">{isKorean ? "분기 제어" : "Branch control"}</span>
             </div>
-            <h2 className="page-card__title">Make one deliberate pick instead of browsing loosely</h2>
+            <h2 className="page-card__title">
+              {isKorean
+                ? "느슨하게 둘러보지 말고 하나를 의도적으로 고르세요"
+                : "Make one deliberate pick instead of browsing loosely"}
+            </h2>
             <div className="practice-focus-summary-card__stats">
               <article>
-                <span>Weak nodes</span>
+                <span>{isKorean ? "약한 노드" : "Weak nodes"}</span>
                 <strong>{weakItemCount}</strong>
               </article>
               <article>
-                <span>Retry candidates</span>
+                <span>{isKorean ? "재시도 후보" : "Retry candidates"}</span>
                 <strong>{retryItemCount}</strong>
               </article>
             </div>
             <div className="practice-focus-summary-card__group">
-              <span>Current signals</span>
+              <span>{isKorean ? "현재 신호" : "Current signals"}</span>
               <div className="practice-focus-summary-card__chips">
                 {topCategories.length > 0
                   ? topCategories.map((category) => (
@@ -225,7 +262,9 @@ export function PracticePage() {
                     ))
                   : null}
                 {topCategories.length === 0 && topCompanies.length === 0 ? (
-                  <span className="detail-chip">No strong signal yet</span>
+                  <span className="detail-chip">
+                    {isKorean ? "아직 뚜렷한 신호가 없습니다" : "No strong signal yet"}
+                  </span>
                 ) : null}
               </div>
             </div>
@@ -235,12 +274,18 @@ export function PracticePage() {
         const mapLaunchCard = (
           <SectionPanel className="practice-map-launch-card workspace-note-card" variant="muted">
             <div className="practice-map-launch-card__topline">
-              <span className="page-card__label">Question map</span>
-              <span className="detail-chip">DFS view</span>
+              <span className="page-card__label">{isKorean ? "질문 지도" : "Question map"}</span>
+              <span className="detail-chip">{isKorean ? "DFS 보기" : "DFS view"}</span>
             </div>
-            <h2 className="page-card__title">Open the branch map when follow-up order matters</h2>
+            <h2 className="page-card__title">
+              {isKorean
+                ? "꼬리질문 순서가 중요하면 분기 지도를 여세요"
+                : "Open the branch map when follow-up order matters"}
+            </h2>
             <p className="page-card__body">
-              When one prompt looks important, switch to the tree before answering.
+              {isKorean
+                ? "중요해 보이는 프롬프트가 하나 보이면 답변 전에 트리로 전환하세요."
+                : "When one prompt looks important, switch to the tree before answering."}
             </p>
             <div className="page-card__actions">
               <Link
@@ -251,7 +296,7 @@ export function PracticePage() {
                     : routeConfig.practice.buildPath()
                 }
               >
-                Open first visible map
+                {isKorean ? "첫 번째 보이는 지도 열기" : "Open first visible map"}
               </Link>
             </div>
           </SectionPanel>
@@ -271,8 +316,12 @@ export function PracticePage() {
           <>
             {practiceQuery.isLoading ? (
               <LoadingStateCard
-                body="Loading the question list and available filters."
-                title="Preparing practice questions"
+                body={
+                  isKorean
+                    ? "질문 목록과 사용 가능한 필터를 불러오는 중입니다."
+                    : "Loading the question list and available filters."
+                }
+                title={isKorean ? "연습 질문 준비 중" : "Preparing practice questions"}
               />
             ) : null}
 
@@ -281,13 +330,15 @@ export function PracticePage() {
                 body={
                   practiceQuery.error instanceof Error
                     ? practiceQuery.error.message
-                    : "The practice list could not be loaded."
+                    : isKorean
+                      ? "연습 목록을 불러오지 못했습니다."
+                      : "The practice list could not be loaded."
                 }
                 details={getErrorDetails(practiceQuery.error)}
                 onAction={() => {
                   void practiceQuery.refetch();
                 }}
-                title="Unable to load practice questions"
+                title={isKorean ? "연습 질문을 불러올 수 없습니다" : "Unable to load practice questions"}
               />
             ) : null}
 
@@ -297,11 +348,15 @@ export function PracticePage() {
             practiceQuery.data.items.length === 0 ? (
               <EmptyStateCard
                 action={{
-                  label: "Clear filters",
+                  label: isKorean ? "필터 초기화" : "Clear filters",
                   to: routeConfig.practice.buildPath(),
                 }}
-                body="No questions matched the current filters. Try a broader search or reset the filters."
-                title="No practice questions found"
+                body={
+                  isKorean
+                    ? "현재 필터에 맞는 질문이 없습니다. 검색 범위를 넓히거나 필터를 초기화해보세요."
+                    : "No questions matched the current filters. Try a broader search or reset the filters."
+                }
+                title={isKorean ? "연습 질문이 없습니다" : "No practice questions found"}
               />
             ) : null}
 
