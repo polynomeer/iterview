@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
 
@@ -138,6 +139,8 @@ const BOOKMARK_RECORDS: BookmarkRecord[] = [
 
 export function BookmarksPage() {
   const { isDesktop } = useLayoutMode();
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const [activeFilter, setActiveFilter] = useState<BookmarkCategory>("questions");
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(
     BOOKMARK_RECORDS.find((record) => record.category === "questions")?.id ?? BOOKMARK_RECORDS[0]?.id ?? "",
@@ -179,40 +182,41 @@ export function BookmarksPage() {
       actions={
         <>
           <button className="secondary-button" type="button">
-            Save current view
+            {isKorean ? "현재 보기 저장" : "Save current view"}
           </button>
           <Link className="secondary-button" to={routeConfig.practice.buildPath()}>
-            Open practice
+            {isKorean ? "연습 열기" : "Open practice"}
           </Link>
         </>
       }
-      description="Collect the exact questions, paths, evidence packs, and company context you want to revisit without losing the source-of-truth connection."
-      eyebrow="Saved context"
-      title="Saved interview bookmarks"
+      description={isKorean ? "source of truth 연결을 잃지 않으면서 다시 볼 질문, 경로, 근거 묶음, 회사 맥락을 저장하세요." : "Collect the exact questions, paths, evidence packs, and company context you want to revisit without losing the source-of-truth connection."}
+      eyebrow={isKorean ? "저장된 맥락" : "Saved context"}
+      title={isKorean ? "저장된 인터뷰 북마크" : "Saved interview bookmarks"}
     >
       <section className="page-card bookmarks-workspace-surface">
         <div className="bookmarks-workspace-surface__intro">
           <div className="bookmarks-workspace-surface__eyebrow-row">
-            <span className="page-card__label">Saved focus stack</span>
+            <span className="page-card__label">{isKorean ? "저장된 집중 스택" : "Saved focus stack"}</span>
             <span className="question-status-badge question-status-badge--accent">DFS-ready</span>
           </div>
-          <h2 className="bookmarks-workspace-surface__title">Keep the most important drill paths and supporting evidence one click away</h2>
+          <h2 className="bookmarks-workspace-surface__title">{isKorean ? "가장 중요한 드릴 경로와 보조 근거를 한 번의 클릭 거리 안에 두세요" : "Keep the most important drill paths and supporting evidence one click away"}</h2>
           <p className="bookmarks-workspace-surface__body">
-            Bookmarks should reduce context switching. Save the exact prompt, proof, or company context that helps
-            you continue a deep interview branch without rebuilding the chain from memory.
+            {isKorean
+              ? "북마크는 맥락 전환을 줄여야 합니다. 기억으로 사슬을 다시 만들지 않고도 깊은 인터뷰 가지를 이어갈 수 있게 해주는 정확한 프롬프트, 근거, 회사 맥락을 저장하세요."
+              : "Bookmarks should reduce context switching. Save the exact prompt, proof, or company context that helps you continue a deep interview branch without rebuilding the chain from memory."}
           </p>
         </div>
         <div className="bookmarks-workspace-surface__stats">
           <article>
-            <span>Total saved</span>
+            <span>{isKorean ? "전체 저장 수" : "Total saved"}</span>
             <strong>{BOOKMARK_RECORDS.length}</strong>
           </article>
           <article>
-            <span>Current filter</span>
+            <span>{isKorean ? "현재 필터" : "Current filter"}</span>
             <strong>{categoryCount}</strong>
           </article>
           <article>
-            <span>High readiness</span>
+            <span>{isKorean ? "높은 준비도" : "High readiness"}</span>
             <strong>{highReadinessCount}</strong>
           </article>
         </div>
@@ -222,7 +226,7 @@ export function BookmarksPage() {
         <main className="bookmarks-layout__main page-stack">
           <section className="page-card bookmarks-panel">
             <div className="bookmarks-panel__topbar">
-              <div aria-label="Bookmark categories" className="bookmarks-filter-bar" role="tablist">
+              <div aria-label={isKorean ? "북마크 카테고리" : "Bookmark categories"} className="bookmarks-filter-bar" role="tablist">
                 {BOOKMARK_FILTERS.map((filter) => (
                   <button
                     aria-selected={filter.key === activeFilter}
@@ -236,7 +240,15 @@ export function BookmarksPage() {
                     role="tab"
                     type="button"
                   >
-                    {filter.label}
+                    {isKorean
+                      ? filter.key === "questions"
+                        ? "저장 질문"
+                        : filter.key === "paths"
+                          ? "경로"
+                          : filter.key === "materials"
+                            ? "자료"
+                            : "회사"
+                      : filter.label}
                   </button>
                 ))}
               </div>
@@ -244,26 +256,26 @@ export function BookmarksPage() {
               <div className="bookmarks-toolbar">
                 <label className="bookmarks-toolbar__search">
                   <input
-                    aria-label="Search bookmarks"
+                    aria-label={isKorean ? "북마크 검색" : "Search bookmarks"}
                     onChange={(event) => {
                       setSearch(event.target.value);
                     }}
-                    placeholder="Search saved items..."
+                    placeholder={isKorean ? "저장한 항목 검색..." : "Search saved items..."}
                     type="search"
                     value={search}
                   />
                 </label>
                 <label className="bookmarks-toolbar__sort">
-                  <span>Sort</span>
+                  <span>{isKorean ? "정렬" : "Sort"}</span>
                   <select
-                    aria-label="Sort bookmarks"
+                    aria-label={isKorean ? "북마크 정렬" : "Sort bookmarks"}
                     onChange={(event) => {
                       setSort(event.target.value as "recent" | "readiness");
                     }}
                     value={sort}
                   >
-                    <option value="recent">Most recent</option>
-                    <option value="readiness">Readiness</option>
+                    <option value="recent">{isKorean ? "최신순" : "Most recent"}</option>
+                    <option value="readiness">{isKorean ? "준비도" : "Readiness"}</option>
                   </select>
                 </label>
               </div>
@@ -309,33 +321,33 @@ export function BookmarksPage() {
         <aside className="bookmarks-layout__rail page-stack">
           {selectedBookmark ? (
             <section className="page-card bookmark-detail-rail">
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">Bookmark details</p>
+                <div className="section-heading">
+                  <div>
+                  <p className="section-heading__eyebrow">{isKorean ? "북마크 상세" : "Bookmark details"}</p>
                   <h2 className="page-card__title">{selectedBookmark.title}</h2>
                 </div>
               </div>
 
               <div className="bookmark-detail-rail__group">
-                <span className="bookmark-detail-rail__label">Why this is saved</span>
+                <span className="bookmark-detail-rail__label">{isKorean ? "저장한 이유" : "Why this is saved"}</span>
                 <p>{selectedBookmark.context}</p>
               </div>
 
               <div className="bookmark-detail-rail__meta-grid">
                 <article>
-                  <span>Status</span>
+                  <span>{isKorean ? "상태" : "Status"}</span>
                   <strong>{selectedBookmark.status}</strong>
                 </article>
                 <article>
-                  <span>Readiness</span>
+                  <span>{isKorean ? "준비도" : "Readiness"}</span>
                   <strong>{selectedBookmark.readiness}</strong>
                 </article>
                 <article>
-                  <span>Saved</span>
+                  <span>{isKorean ? "저장 시점" : "Saved"}</span>
                   <strong>{selectedBookmark.savedAt}</strong>
                 </article>
                 <article>
-                  <span>Source</span>
+                  <span>{isKorean ? "출처" : "Source"}</span>
                   <strong>{selectedBookmark.source}</strong>
                 </article>
               </div>
@@ -350,7 +362,7 @@ export function BookmarksPage() {
               </div>
 
               <div className="bookmark-detail-rail__group">
-                <span className="bookmark-detail-rail__label">Related bookmarks</span>
+                <span className="bookmark-detail-rail__label">{isKorean ? "연결 북마크" : "Related bookmarks"}</span>
                 <div className="bookmark-detail-rail__related-list">
                   {selectedBookmark.related.map((item) => (
                     <div className="bookmark-detail-rail__related-item" key={item}>
@@ -361,7 +373,7 @@ export function BookmarksPage() {
               </div>
 
               <div className="bookmark-detail-rail__group">
-                <span className="bookmark-detail-rail__label">Tag cluster</span>
+                <span className="bookmark-detail-rail__label">{isKorean ? "태그 클러스터" : "Tag cluster"}</span>
                 <div className="bookmark-detail-rail__chips">
                   {selectedBookmark.tags.map((tag) => (
                     <span className="detail-chip detail-chip--accent" key={tag}>
