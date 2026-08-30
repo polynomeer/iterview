@@ -267,23 +267,22 @@ describe("InterviewResultPage", () => {
       <Routes>
         <Route element={<InterviewResultPage />} path="/interviews/:sessionId/result" />
       </Routes>,
-      { route: "/interviews/session-14/result" },
+      { route: "/interviews/session-14/result", locale: "ko" },
     );
 
-    expect(screen.getByText("Structured resume coverage")).toBeInTheDocument();
-    expect(screen.getByText("One connected preparation loop")).toBeInTheDocument();
-    expect(screen.getAllByText("Weak facet recovery").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Skipped facet recovery").length).toBeGreaterThan(0);
-    expect(screen.getByText("Resume projects")).toBeInTheDocument();
+    expect(screen.getByText("구조화된 이력서 커버리지")).toBeInTheDocument();
+    expect(screen.getAllByText("약한 facet 재검증").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("건너뛴 facet 복구").length).toBeGreaterThan(0);
+    expect(screen.getByText("이력서 프로젝트")).toBeInTheDocument();
     expect(screen.getAllByText("Caching rollout").length).toBeGreaterThan(0);
-    expect(screen.getByText("Run a narrow recovery pass")).toBeInTheDocument();
-    expect(screen.getByText("1 weak branches first")).toBeInTheDocument();
-    expect(screen.getByText("Start a narrow recovery pass")).toBeInTheDocument();
-    expect(screen.getByText("Use weak and skipped facets to scope the next pass.")).toBeInTheDocument();
+    expect(screen.getByText("좁은 복구 패스를 실행")).toBeInTheDocument();
+    expect(screen.getByText("약한 가지 1개 우선")).toBeInTheDocument();
+    expect(screen.getByText("좁은 복구 패스 시작")).toBeInTheDocument();
+    expect(screen.getByText("약한 facet과 건너뛴 facet으로 다음 패스 범위를 정하세요.")).toBeInTheDocument();
 
     await userEvent.click(screen.getAllByRole("button", { name: /Caching rollout/i })[0]);
 
-    expect(screen.getByText("Pinned questions")).toBeInTheDocument();
+    expect(screen.getByText("고정된 질문")).toBeInTheDocument();
     expect(screen.getAllByText("Tell me about the cache migration").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Why did you choose cache-aside here?").length).toBeGreaterThan(0);
   });

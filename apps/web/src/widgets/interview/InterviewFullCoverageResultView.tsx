@@ -43,7 +43,8 @@ export function InterviewFullCoverageResultView({
   experiences,
   projects,
 }: InterviewFullCoverageResultViewProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
   const [pinnedJoinKey, setPinnedJoinKey] = useState<string | null>(null);
 
   const evidenceByJoinKey = useMemo(() => {
@@ -103,7 +104,7 @@ export function InterviewFullCoverageResultView({
           <span className="page-card__label">{t("interview.coverageSummaryLabel")}</span>
           <h2 className="page-card__title">{t("interview.coverageSummaryTitle")}</h2>
           <p className="page-card__body">{t("interview.coverageSummaryBody")}</p>
-          <div className="interview-coverage-summary__summary-row" role="list" aria-label="Coverage summary">
+          <div className="interview-coverage-summary__summary-row" role="list" aria-label={isKorean ? "커버리지 요약" : "Coverage summary"}>
             <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
               {`${t("interview.overallCoverage")} ${coverage.overallCoveragePercent}%`}
             </span>
@@ -125,12 +126,12 @@ export function InterviewFullCoverageResultView({
           </div>
           <div className="interview-coverage-summary__chips">
             <span className="detail-chip">{coverage.interviewModeLabel}</span>
-            <span className="detail-chip detail-chip--accent">{`Session ${session.id}`}</span>
+            <span className="detail-chip detail-chip--accent">{isKorean ? `세션 ${session.id}` : `Session ${session.id}`}</span>
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
           </div>
-          <div className="interview-coverage-summary__principles" role="list" aria-label="Coverage principles">
-            <span role="listitem">Use overall coverage to see the sweep, then use weak and skipped facets to decide recovery order.</span>
-            <span role="listitem">Pin one resume record at a time before following its related questions.</span>
+          <div className="interview-coverage-summary__principles" role="list" aria-label={isKorean ? "커버리지 원칙" : "Coverage principles"}>
+            <span role="listitem">{isKorean ? "전체 커버리지로 범위를 먼저 보고, 약한 facet과 건너뛴 facet으로 복구 순서를 정하세요." : "Use overall coverage to see the sweep, then use weak and skipped facets to decide recovery order."}</span>
+            <span role="listitem">{isKorean ? "연결 질문을 따라가기 전에 이력서 기록 하나만 먼저 고정하세요." : "Pin one resume record at a time before following its related questions."}</span>
           </div>
         </section>
 
@@ -358,7 +359,7 @@ export function InterviewFullCoverageResultView({
                           <span>{question.sourceLabel}</span>
                           <span>{question.status}</span>
                           {question.isFollowUp ? (
-                            <span className="question-status-badge question-status-badge--accent">Follow-up</span>
+                            <span className="question-status-badge question-status-badge--accent">{isKorean ? "꼬리질문" : "Follow-up"}</span>
                           ) : null}
                         </div>
                         <h3 className="list-item-card__title">{question.title}</h3>
@@ -367,12 +368,12 @@ export function InterviewFullCoverageResultView({
                   ))}
                 </div>
               ) : (
-                <p className="page-card__body">No related interview questions were returned for this evidence block.</p>
+                <p className="page-card__body">{isKorean ? "이 근거 블록에는 연결된 인터뷰 질문이 없습니다." : "No related interview questions were returned for this evidence block."}</p>
               )}
             </div>
           ) : (
             <p className="page-card__body">
-              Hover a highlighted resume block for a quick preview, then click it to pin all related questions here.
+              {isKorean ? "강조된 이력서 블록을 빠르게 훑은 뒤 클릭해서 연결된 질문을 여기에 고정하세요." : "Hover a highlighted resume block for a quick preview, then click it to pin all related questions here."}
             </p>
           )}
         </section>
