@@ -101,6 +101,58 @@ function truncateText(value: string, maxLength = 120) {
   return `${value.slice(0, maxLength - 1)}…`;
 }
 
+function localizeReviewPayloadText(value: string | null | undefined, isKorean: boolean) {
+  if (!value || !isKorean) {
+    return value ?? "";
+  }
+
+  const normalized = value.trim();
+  const dictionary: Record<string, string> = {
+    Reviewed: "검토 완료",
+    Pending: "대기 중",
+    Confirmed: "확정됨",
+    Completed: "완료",
+    Failed: "실패",
+    warning: "주의",
+    high: "높음",
+    needs_review: "검토 필요",
+    ready: "준비됨",
+    Question: "질문",
+    Answer: "답변",
+    Behavioral: "행동",
+    "Resume Linked": "이력서 연결",
+    "Question lane": "질문 레인",
+    "Transcript lane": "전사 레인",
+    "Thread lane": "스레드 레인",
+    "Review transcript lane": "전사 레인 검토",
+    "Review structured questions": "구조화 질문 검토",
+    "Transcript needs final review": "전사 최종 검토 필요",
+    "Check follow-up chains": "꼬리질문 체인 점검",
+    "Question structure is the replay backbone.": "질문 구조는 리플레이의 뼈대입니다.",
+    "Transcript issues affect all downstream structuring.": "전사 이슈는 이후의 모든 구조화에 영향을 줍니다.",
+    "Thread quality affects realistic replay.": "스레드 품질은 현실적인 리플레이에 영향을 줍니다.",
+    "Original replay": "원본 리플레이",
+    "Pressure variant": "압박 변형",
+    "Replay this interview": "이 면접 리플레이",
+    "Use the reviewed practical interview as a replay seed.": "검토한 실전 면접을 리플레이 시드로 사용합니다.",
+    "Start replay": "리플레이 시작",
+    "Low confidence words detected.": "신뢰도가 낮은 단어가 감지되었습니다.",
+    "Review segment 1": "1번 세그먼트 검토",
+    ai_enriched: "AI 보강",
+    confirmed: "확정본",
+    deep_dive: "딥 다이브",
+    Skeptical: "회의적",
+    candidate: "지원자",
+    Candidate: "지원자",
+  };
+
+  return dictionary[normalized] ?? value;
+}
+
+function localizeReplayModeLabel(value: string | null | undefined, isKorean: boolean) {
+  return localizeReviewPayloadText(value, isKorean);
+}
+
 function ReplayPlayer(props: {
   playback: {
     playbackAvailable: boolean;
@@ -811,10 +863,16 @@ export function PracticalInterviewReviewPage() {
   const replayBlockerCount = review.replayReadiness.blockerDetails.length;
   const reviewSignal =
     replayBlockerCount > 0
-      ? "Clear replay blockers"
+      ? isKorean
+        ? "리플레이 차단 요인 정리"
+        : "Clear replay blockers"
       : primaryReviewLane
-        ? `Open ${primaryReviewLane.badgeText}`
-        : "Stabilize active lane";
+        ? isKorean
+          ? `${localizeReviewPayloadText(primaryReviewLane.badgeText, true)} 열기`
+          : `Open ${primaryReviewLane.badgeText}`
+        : isKorean
+          ? "활성 레인 안정화"
+          : "Stabilize active lane";
   const playback = review.playback ?? transcript.playback ?? questions.playback ?? null;
   const activePlaybackSegmentSequence = useMemo(
     () =>
@@ -1104,10 +1162,10 @@ export function PracticalInterviewReviewPage() {
                     <span>/</span>
                     <span>{isKorean ? "리플레이 준비 상태" : "Replay readiness"}</span>
                   </p>
-                  <span className="detail-chip">{isKorean ? "리뷰 단계" : "Review stage"}</span>
-                  <span className="question-status-badge question-status-badge--accent">
-                    {detail.structuringStageLabel}
-                  </span>
+                <span className="detail-chip">{isKorean ? "리뷰 단계" : "Review stage"}</span>
+                <span className="question-status-badge question-status-badge--accent">
+                    {localizeReviewPayloadText(detail.structuringStageLabel, isKorean)}
+                </span>
                 </div>
                 <span className="page-card__label">{isKorean ? "리뷰 개요" : "Review overview"}</span>
                 <h2 className="practical-review-workspace-surface__title">
@@ -1178,7 +1236,7 @@ export function PracticalInterviewReviewPage() {
                 <strong>
                   {primaryReviewLane
                     ? isKorean
-                      ? `${primaryReviewLane.badgeText} 레인을 먼저 복구하세요. 이유: ${primaryReviewLane.whyItMatters.toLowerCase()}`
+                      ? `${localizeReviewPayloadText(primaryReviewLane.badgeText, true)}을 먼저 복구하세요. 이유: ${localizeReviewPayloadText(primaryReviewLane.whyItMatters, true)}`
                       : `${primaryReviewLane.badgeText} is the first recovery surface because ${primaryReviewLane.whyItMatters.toLowerCase()}`
                     : isKorean
                       ? "가장 불안정한 레인을 먼저 열고, 그다음 리플레이 준비 상태를 확인하세요."
@@ -1234,7 +1292,11 @@ export function PracticalInterviewReviewPage() {
                 }
                 type="button"
               >
-                {review.actionRecommendations.primaryActionLabel ?? (isKorean ? "리뷰 계속" : "Continue review")}
+                {review.actionRecommendations.primaryActionLabel
+                  ? localizeReviewPayloadText(review.actionRecommendations.primaryActionLabel, isKorean)
+                  : isKorean
+                    ? "리뷰 계속"
+                    : "Continue review"}
               </button>
               <button
                 className="secondary-button"
@@ -1256,7 +1318,7 @@ export function PracticalInterviewReviewPage() {
                   onClick={() => openReplayLauncher(review.replayLaunchPreset)}
                   type="button"
                 >
-                  {review.replayLaunchPreset.launchButtonLabel}
+                  {localizeReviewPayloadText(review.replayLaunchPreset.launchButtonLabel, isKorean)}
                 </button>
               ) : null}
             </div>
@@ -1266,8 +1328,8 @@ export function PracticalInterviewReviewPage() {
                   <article className="list-item-card" key={detail.id}>
                     <div className="list-item-card__content">
                       <div className="list-item-card__meta">
-                        <span>{detail.label}</span>
-                        <span>{detail.severity}</span>
+                        <span>{localizeReviewPayloadText(detail.label, isKorean)}</span>
+                        <span>{localizeReviewPayloadText(detail.severity, isKorean)}</span>
                       </div>
                       <p className="list-item-card__body">{detail.description}</p>
                     </div>
@@ -1293,7 +1355,7 @@ export function PracticalInterviewReviewPage() {
             <div className="practical-review-insight-surface__stats">
               <article>
                 <span>{isKorean ? "주요 레인" : "Primary lane"}</span>
-                <strong>{primaryReviewLane?.badgeText ?? (isKorean ? "레인 없음" : "No lane")}</strong>
+                <strong>{primaryReviewLane ? localizeReviewPayloadText(primaryReviewLane.badgeText, isKorean) : isKorean ? "레인 없음" : "No lane"}</strong>
                 <p>
                   {primaryReviewLane
                     ? isKorean
@@ -1306,7 +1368,7 @@ export function PracticalInterviewReviewPage() {
               </article>
               <article>
                 <span>{isKorean ? "리플레이 상태" : "Replay state"}</span>
-                <strong>{replayBlockerCount > 0 ? review.replayReadiness.statusBadgeText : isKorean ? "리플레이 가능" : "Replay clear"}</strong>
+                <strong>{replayBlockerCount > 0 ? localizeReviewPayloadText(review.replayReadiness.statusBadgeText, isKorean) : isKorean ? "리플레이 가능" : "Replay clear"}</strong>
                 <p>{replayBlockerCount > 0 ? (isKorean ? `${replayBlockerCount}개의 차단 요인이 아직 리플레이 시작을 막고 있습니다.` : `${replayBlockerCount} blocker${replayBlockerCount === 1 ? "" : "s"} still gate replay launch.`) : isKorean ? "선택한 레인이 안정화되면 리플레이를 시작할 수 있습니다." : "Replay can start once the selected lane is stable."}</p>
               </article>
               <article>
@@ -1372,7 +1434,7 @@ export function PracticalInterviewReviewPage() {
           <div className="practical-review-brief__summary-grid">
             <article className="practical-review-brief__summary-card">
               <span>{isKorean ? "먼저 열기" : "Open first"}</span>
-              <strong>{primaryReviewLane ? primaryReviewLane.summaryText : isKorean ? "사용 가능한 레인 우선순위 없음" : "No lane priority available"}</strong>
+              <strong>{primaryReviewLane ? localizeReviewPayloadText(primaryReviewLane.summaryText, isKorean) : isKorean ? "사용 가능한 레인 우선순위 없음" : "No lane priority available"}</strong>
             </article>
             <article className="practical-review-brief__summary-card">
               <span>{isKorean ? "리플레이 차단 요인" : "Replay blockers"}</span>
@@ -1394,7 +1456,7 @@ export function PracticalInterviewReviewPage() {
           <div className="practical-review-brief__grid">
             <section className="page-card page-card--inset practical-review-brief__card">
               <span className="page-card__label">{isKorean ? "리플레이 준비 상태" : "Replay readiness"}</span>
-              <h3 className="page-card__title">{review.replayReadiness.statusBadgeText}</h3>
+              <h3 className="page-card__title">{localizeReviewPayloadText(review.replayReadiness.statusBadgeText, isKorean)}</h3>
               <p className="page-card__body">{review.replayReadiness.statusSummary}</p>
               <div className="stats-grid">
                 <MetricCard label={isKorean ? "리플레이 가능" : "Replayable"} value={String(review.replayReadiness.replayableQuestionCount)} />
@@ -1407,8 +1469,8 @@ export function PracticalInterviewReviewPage() {
                     <article className="list-item-card practical-blocker-card" key={blocker.id}>
                       <div className="list-item-card__content">
                         <div className="list-item-card__meta">
-                          <span>{blocker.label}</span>
-                          <span>{blocker.severity}</span>
+                          <span>{localizeReviewPayloadText(blocker.label, isKorean)}</span>
+                          <span>{localizeReviewPayloadText(blocker.severity, isKorean)}</span>
                         </div>
                         <p className="list-item-card__body">{blocker.description}</p>
                       </div>
@@ -1429,12 +1491,12 @@ export function PracticalInterviewReviewPage() {
                   >
                     <div className="list-item-card__content">
                       <div className="list-item-card__meta">
-                        <span>{lane.badgeText}</span>
-                        <span>{lane.readiness}</span>
+                        <span>{localizeReviewPayloadText(lane.badgeText, isKorean)}</span>
+                        <span>{localizeReviewPayloadText(lane.readiness, isKorean)}</span>
                         <span>{isKorean ? `${lane.needsReviewCount}개 검토 필요` : `${lane.needsReviewCount} need review`}</span>
                       </div>
-                      <h3 className="list-item-card__title">{lane.summaryText}</h3>
-                      <p className="list-item-card__body">{lane.whyItMatters}</p>
+                      <h3 className="list-item-card__title">{localizeReviewPayloadText(lane.summaryText, isKorean)}</h3>
+                      <p className="list-item-card__body">{localizeReviewPayloadText(lane.whyItMatters, isKorean)}</p>
                     </div>
                     <div className="list-item-card__actions">
                       {lane.primaryActionLabel ? (
@@ -1445,7 +1507,7 @@ export function PracticalInterviewReviewPage() {
                           }
                           type="button"
                         >
-                          {lane.primaryActionLabel}
+                          {localizeReviewPayloadText(lane.primaryActionLabel, isKorean)}
                         </button>
                       ) : null}
                     </div>
@@ -1462,7 +1524,7 @@ export function PracticalInterviewReviewPage() {
                   <div className="list-item-card__content">
                     <div className="list-item-card__meta">
                       <span>{isKorean ? "질문 출처" : "Question source"}</span>
-                      <span>{review.provenanceComparisonSummary.currentQuestionSource}</span>
+                      <span>{localizeReviewPayloadText(review.provenanceComparisonSummary.currentQuestionSource, isKorean)}</span>
                     </div>
                     <p className="list-item-card__body">
                       {isKorean
@@ -1475,7 +1537,7 @@ export function PracticalInterviewReviewPage() {
                   <div className="list-item-card__content">
                     <div className="list-item-card__meta">
                       <span>{isKorean ? "답변 출처" : "Answer source"}</span>
-                      <span>{review.provenanceComparisonSummary.currentAnswerSource}</span>
+                      <span>{localizeReviewPayloadText(review.provenanceComparisonSummary.currentAnswerSource, isKorean)}</span>
                     </div>
                     <p className="list-item-card__body">
                       {isKorean
@@ -1500,7 +1562,7 @@ export function PracticalInterviewReviewPage() {
                 <div className="chip-list">
                   {interviewerProfile.styleTags.map((tag) => (
                     <span className="detail-chip detail-chip--accent" key={tag}>
-                      {tag}
+                      {localizeReviewPayloadText(tag, isKorean)}
                     </span>
                   ))}
                 </div>
@@ -1583,11 +1645,11 @@ export function PracticalInterviewReviewPage() {
                     <div className="list-item-card__content">
                       <div className="list-item-card__meta">
                         <span>{isKorean ? `${action.sequence}번 세그먼트` : `Segment ${action.sequence}`}</span>
-                        <span>{action.severity}</span>
-                        <span>{action.priority}</span>
+                        <span>{localizeReviewPayloadText(action.severity, isKorean)}</span>
+                        <span>{localizeReviewPayloadText(action.priority, isKorean)}</span>
                       </div>
-                      <h3 className="list-item-card__title">{action.ctaLabel}</h3>
-                      <p className="list-item-card__body">{action.triageReason}</p>
+                      <h3 className="list-item-card__title">{localizeReviewPayloadText(action.ctaLabel, isKorean)}</h3>
+                      <p className="list-item-card__body">{localizeReviewPayloadText(action.triageReason, isKorean)}</p>
                     </div>
                   </button>
                 ))}
@@ -1626,7 +1688,7 @@ export function PracticalInterviewReviewPage() {
                             {isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`}
                           </p>
                           <h3 className="page-card__title">
-                            {segment.speakerLabel}
+                            {localizeReviewPayloadText(segment.speakerLabel, isKorean)}
                             {segment.timestampLabel ? ` · ${segment.timestampLabel}` : ""}
                           </h3>
                         </div>
@@ -1811,12 +1873,12 @@ export function PracticalInterviewReviewPage() {
                     <div className="section-heading">
                       <div>
                         <p className="section-heading__eyebrow">
-                          #{question.orderIndex + 1} · {question.questionTypeLabel}
+                          #{question.orderIndex + 1} · {localizeReviewPayloadText(question.questionTypeLabel, isKorean)}
                         </p>
                         <h3 className="page-card__title">{question.text}</h3>
                       </div>
                       <div className="chip-list">
-                        <span className="detail-chip">{question.originLabel}</span>
+                        <span className="detail-chip">{localizeReviewPayloadText(question.originLabel, isKorean)}</span>
                         {question.isFollowUp ? (
                           <span className="detail-chip detail-chip--accent">{isKorean ? "꼬리질문" : "Follow-up"}</span>
                         ) : null}
@@ -1830,7 +1892,7 @@ export function PracticalInterviewReviewPage() {
                         <div className="practical-review-meta__row">
                           <span className="practical-review-meta__label">{isKorean ? "질문 출처" : "Question source"}</span>
                           <span className="practical-review-meta__value">
-                            {question.questionStructuringSource}
+                            {localizeReviewPayloadText(question.questionStructuringSource, isKorean)}
                           </span>
                         </div>
                       ) : null}
@@ -1838,7 +1900,7 @@ export function PracticalInterviewReviewPage() {
                         <div className="practical-review-meta__row">
                           <span className="practical-review-meta__label">{isKorean ? "답변 출처" : "Answer source"}</span>
                           <span className="practical-review-meta__value">
-                            {question.answerStructuringSource}
+                            {localizeReviewPayloadText(question.answerStructuringSource, isKorean)}
                           </span>
                         </div>
                       ) : null}
@@ -1918,7 +1980,7 @@ export function PracticalInterviewReviewPage() {
                       ) : null}
                       {heatmapAnchorPath ? (
                         <Link className="secondary-button" to={heatmapAnchorPath}>
-                          {isKorean ? "heatmap anchor 열기" : "Open heatmap anchor"}
+                          {isKorean ? "히트맵 앵커 열기" : "Open heatmap anchor"}
                         </Link>
                       ) : null}
                       {question.deepLink?.sourceInterviewQuestionId ? (
@@ -1995,14 +2057,18 @@ export function PracticalInterviewReviewPage() {
                       <div className="practical-review-meta__row">
                         <span className="practical-review-meta__label">{isKorean ? "권장 동작" : "Recommended action"}</span>
                         <span className="practical-review-meta__value">
-                          {thread.recommendedAction || (isKorean ? "리뷰 계속" : "Continue review")}
+                          {thread.recommendedAction
+                            ? localizeReviewPayloadText(thread.recommendedAction, isKorean)
+                            : isKorean
+                              ? "리뷰 계속"
+                              : "Continue review"}
                         </span>
                       </div>
                       {thread.structuringSources.length > 0 ? (
                         <div className="practical-review-meta__row">
                           <span className="practical-review-meta__label">{isKorean ? "구조화 출처" : "Structuring sources"}</span>
                           <span className="practical-review-meta__value">
-                            {thread.structuringSources.join(" · ")}
+                            {thread.structuringSources.map((item) => localizeReviewPayloadText(item, isKorean)).join(" · ")}
                           </span>
                         </div>
                       ) : null}
@@ -2041,7 +2107,7 @@ export function PracticalInterviewReviewPage() {
                           onClick={() => openReplayLauncher(thread.replayLaunchPreset)}
                           type="button"
                         >
-                          {thread.replayLaunchPreset.launchButtonLabel}
+                          {localizeReviewPayloadText(thread.replayLaunchPreset.launchButtonLabel, isKorean)}
                         </button>
                       ) : null}
                     </div>
@@ -2057,12 +2123,12 @@ export function PracticalInterviewReviewPage() {
             <div className="practical-replay-launch__hero">
               <div>
                 <span className="page-card__label">{isKorean ? "리플레이 시작" : "Replay launch"}</span>
-                <h2 className="page-card__title">{replayPreset.presetTitle}</h2>
-                <p className="page-card__body">{replayPreset.presetDescription}</p>
+                <h2 className="page-card__title">{localizeReviewPayloadText(replayPreset.presetTitle, isKorean)}</h2>
+                <p className="page-card__body">{localizeReviewPayloadText(replayPreset.presetDescription, isKorean)}</p>
               </div>
               <div className="chip-list">
                 <span className="question-status-badge question-status-badge--accent">
-                  {review.replayReadiness.statusBadgeText}
+                  {localizeReviewPayloadText(review.replayReadiness.statusBadgeText, isKorean)}
                 </span>
                 {review.replayReadiness.ready ? (
                   <span className="question-status-badge question-status-badge--positive">
@@ -2080,7 +2146,7 @@ export function PracticalInterviewReviewPage() {
                 <section className="page-card page-card--inset">
                   <span className="page-card__label">{isKorean ? "프리셋" : "Preset"}</span>
                   <div className="stats-grid">
-                    <MetricCard label={isKorean ? "권장 모드" : "Recommended mode"} value={replayPreset.recommendedReplayModeLabel ?? (isKorean ? "리플레이" : "Replay")} />
+                    <MetricCard label={isKorean ? "권장 모드" : "Recommended mode"} value={localizeReplayModeLabel(replayPreset.recommendedReplayModeLabel ?? (isKorean ? "리플레이" : "Replay"), isKorean)} />
                     <MetricCard label={isKorean ? "시드 질문" : "Seed questions"} tone="accent" value={String(replayPreset.seedQuestionIds.length)} />
                     <MetricCard label={isKorean ? "리플레이 가능" : "Replayable"} tone="muted" value={String(review.replayReadiness.replayableQuestionCount)} />
                   </div>
@@ -2094,7 +2160,7 @@ export function PracticalInterviewReviewPage() {
                       >
                         {replayPreset.availableReplayModes.map((mode) => (
                           <option key={mode} value={mode}>
-                            {replayPreset.availableReplayModeLabels[mode] ?? mode}
+                            {localizeReplayModeLabel(replayPreset.availableReplayModeLabels[mode] ?? mode, isKorean)}
                           </option>
                         ))}
                       </select>
@@ -2117,15 +2183,15 @@ export function PracticalInterviewReviewPage() {
                 <section className="page-card page-card--inset">
                   <span className="page-card__label">{isKorean ? "준비 상태" : "Readiness"}</span>
                   <h3 className="page-card__title">{isKorean ? "서버 준비 상태 요약" : "Server readiness summary"}</h3>
-                  <p className="page-card__body">{review.replayReadiness.statusSummary}</p>
+                  <p className="page-card__body">{localizeReviewPayloadText(review.replayReadiness.statusSummary, isKorean)}</p>
                   {review.replayReadiness.blockerDetails.length > 0 && !review.replayReadiness.ready ? (
                     <div className="stack-list">
                       {review.replayReadiness.blockerDetails.map((detail) => (
                         <article className="list-item-card practical-blocker-card" key={detail.id}>
                           <div className="list-item-card__content">
                             <div className="list-item-card__meta">
-                              <span>{detail.label}</span>
-                              <span>{detail.severity}</span>
+                              <span>{localizeReviewPayloadText(detail.label, isKorean)}</span>
+                              <span>{localizeReviewPayloadText(detail.severity, isKorean)}</span>
                             </div>
                             <p className="list-item-card__body">{detail.description}</p>
                           </div>
@@ -2149,7 +2215,7 @@ export function PracticalInterviewReviewPage() {
                   ? isKorean
                     ? "리플레이 시작 중..."
                     : "Starting replay..."
-                  : replayPreset.launchButtonLabel}
+                  : localizeReviewPayloadText(replayPreset.launchButtonLabel, isKorean)}
               </button>
               <button
                 className="secondary-button"

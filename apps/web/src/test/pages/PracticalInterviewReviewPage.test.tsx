@@ -600,13 +600,13 @@ describe("PracticalInterviewReviewPage", () => {
     fireEvent.click(replayScope.getByRole("button", { name: "챕터" }));
     expect(replayScope.getByRole("button", { name: /Q1\. How did you validate cache invalidation safety\?/i })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Start replay" }));
+    fireEvent.click(screen.getByRole("button", { name: "리플레이 시작" }));
 
-    expect(screen.getByText("Replay this interview")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Original replay")).toBeInTheDocument();
+    expect(screen.getByText("이 면접 리플레이")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("원본 리플레이")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "질문 리뷰" }));
     expect(screen.getByRole("button", { name: "문답 재생" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "heatmap anchor 열기" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "히트맵 앵커 열기" })).toHaveAttribute(
       "href",
       "/resume-versions/resume-version-1/heatmap?selectedAnchor=project%3A31&scope=follow_up&weakOnly=true",
     );
