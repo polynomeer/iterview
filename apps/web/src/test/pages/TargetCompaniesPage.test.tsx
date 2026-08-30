@@ -10,14 +10,14 @@ describe("TargetCompaniesPage", () => {
       <Routes>
         <Route element={<TargetCompaniesPage />} path="/target-companies" />
       </Routes>,
-      { route: "/target-companies" },
+      { route: "/target-companies", locale: "ko" },
     );
 
-    expect(screen.getByText("Company preparation board")).toBeInTheDocument();
-    expect(screen.getByRole("searchbox", { name: "Search target companies" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /prioritize by preparation pressure/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Company board" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Review imported job postings/i })).toHaveAttribute(
+    expect(screen.getByText("회사 준비 보드")).toBeInTheDocument();
+    expect(screen.getByRole("searchbox", { name: "목표 회사 검색" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /준비 압박 기준으로 우선순위를 정하세요/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "회사 보드" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /가져온 채용공고 검토/i })).toHaveAttribute(
       "href",
       "/resume-tailor/job-postings",
     );
@@ -30,7 +30,7 @@ describe("TargetCompaniesPage", () => {
       <Routes>
         <Route element={<TargetCompaniesPage />} path="/target-companies" />
       </Routes>,
-      { route: "/target-companies" },
+      { route: "/target-companies", locale: "ko" },
     );
 
     expect(document.querySelector(".target-companies-layout--desktop")).not.toBeNull();

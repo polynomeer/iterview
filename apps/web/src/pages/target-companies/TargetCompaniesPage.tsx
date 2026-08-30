@@ -241,14 +241,223 @@ const COMPANY_STATUS_FILTERS: Array<{ key: CompanyStatus | "all"; label: string 
   { key: "paused", label: "Paused" },
 ];
 
-function getPriorityLabel(priority: CompanyPriority) {
+function localizeTargetCompanyText(value: string, isKorean: boolean) {
+  if (!isKorean) {
+    return value;
+  }
+
+  switch (value) {
+    case "Backend engineer / payment infrastructure":
+      return "백엔드 엔지니어 / 결제 인프라";
+    case "Backend engineer / fintech platform":
+      return "백엔드 엔지니어 / 핀테크 플랫폼";
+    case "Platform backend / distributed systems":
+      return "플랫폼 백엔드 / 분산 시스템";
+    case "Backend engineer / product-scale reliability":
+      return "백엔드 엔지니어 / 제품 규모 신뢰성";
+    case "Tie payment correctness, retry discipline, and operational ownership into one credible infrastructure narrative.":
+      return "결제 정합성, 재시도 규율, 운영 책임을 하나의 설득력 있는 인프라 서사로 묶으세요.";
+    case "Stress transaction flow clarity, partner integration complexity, and Korean production-scale operational trade-offs.":
+      return "트랜잭션 흐름의 명확성, 파트너 연동 복잡도, 한국 실서비스 규모의 운영 트레이드오프를 강조하세요.";
+    case "Emphasize systems depth, traffic behavior, and trade-off reasoning over consumer product framing.":
+      return "소비자 제품 관점보다 시스템 깊이, 트래픽 거동, 트레이드오프 판단을 더 강조하세요.";
+    case "Focus on execution speed, correctness pressure, and product-facing engineering judgment.":
+      return "실행 속도, 정합성 압박, 제품 지향 엔지니어링 판단에 집중하세요.";
+    case "Today":
+      return "오늘";
+    case "Yesterday":
+      return "어제";
+    case "2 days ago":
+      return "2일 전";
+    case "4 days ago":
+      return "4일 전";
+    case "Payment correctness":
+      return "결제 정합성";
+    case "Reliability metrics":
+      return "신뢰성 지표";
+    case "Failure isolation":
+      return "장애 격리";
+    case "Operational ownership":
+      return "운영 책임";
+    case "Transaction flow clarity":
+      return "트랜잭션 흐름 명확성";
+    case "Partner integrations":
+      return "파트너 연동";
+    case "Monitoring":
+      return "모니터링";
+    case "Rollback strategy":
+      return "롤백 전략";
+    case "Distributed systems":
+      return "분산 시스템";
+    case "Traffic shaping":
+      return "트래픽 제어";
+    case "Observability":
+      return "관측 가능성";
+    case "Cache behavior":
+      return "캐시 동작";
+    case "Execution speed":
+      return "실행 속도";
+    case "Product trade-offs":
+      return "제품 트레이드오프";
+    case "Incident handling":
+      return "장애 대응";
+    case "Settlement retries and idempotency follow-ups":
+      return "정산 재시도와 멱등성 꼬리질문";
+    case "Redis lock failure modes under jitter":
+      return "지터 상황에서의 Redis 락 실패 모드";
+    case "Ownership stories around incident containment":
+      return "장애 확산 억제에 대한 오너십 스토리";
+    case "How partner failures change system boundaries":
+      return "파트너 장애가 시스템 경계를 어떻게 바꾸는지";
+    case "Trade-offs between operational speed and correctness":
+      return "운영 속도와 정합성 사이의 트레이드오프";
+    case "Explaining incident follow-up decisions in concrete terms":
+      return "장애 후속 의사결정을 구체적으로 설명하기";
+    case "Queueing and backpressure trade-offs":
+      return "큐잉과 백프레셔의 트레이드오프";
+    case "Cache consistency versus latency under load":
+      return "부하 상황에서 캐시 일관성과 지연시간의 균형";
+    case "Explaining infrastructure decisions without product-layer noise":
+      return "제품 레이어 잡음 없이 인프라 의사결정 설명하기";
+    case "Why a quick fix was acceptable or not":
+      return "빠른 수정이 왜 허용되거나 허용되지 않았는지";
+    case "Choosing between perfect architecture and shipment pressure":
+      return "완벽한 아키텍처와 출시 압박 사이 선택";
+    case "Explaining metrics in a product-impact frame":
+      return "지표를 제품 영향 관점으로 설명하기";
+    case "Payment API platform fit":
+      return "결제 API 플랫폼 적합성";
+    case "Strong overlap with settlement reliability resume claims":
+      return "정산 신뢰성 이력서 주장과 강하게 겹침";
+    case "Interview loop likely to punish vague metrics quickly":
+      return "애매한 지표 설명을 빠르게 압박할 가능성이 큼";
+    case "Strong fintech overlap with prior payments work":
+      return "이전 결제 경험과 핀테크 겹침이 큼";
+    case "Operational communication depth matters almost as much as raw system design":
+      return "순수 시스템 설계만큼 운영 커뮤니케이션 깊이도 중요함";
+    case "Localization and partner coordination examples can differentiate your stories":
+      return "현지화와 파트너 조율 사례가 스토리를 차별화할 수 있음";
+    case "Closer to pure platform narrative than fintech stories":
+      return "핀테크 스토리보다 순수 플랫폼 서사에 더 가까움";
+    case "Needs stronger infrastructure-specific examples outside payment domain":
+      return "결제 도메인 밖의 인프라 특화 사례가 더 필요함";
+    case "Good candidate for broader systems study after core fintech loops stabilize":
+      return "핵심 핀테크 루프가 안정되면 더 넓은 시스템 학습 후보가 됨";
+    case "Requires stronger behavioral and prioritization stories":
+      return "더 강한 행동형 답변과 우선순위 스토리가 필요함";
+    case "Good overlap with operational ownership if examples are sharper":
+      return "사례가 더 선명하면 운영 오너십과 잘 맞음";
+    case "Less urgent than active tracks this week":
+      return "이번 주 기준으로 활성 트랙보다 긴급도는 낮음";
+    case "Rehearse payment DFS branch":
+      return "결제 DFS 분기 리허설";
+    case "Run the strongest payment correctness branch before general system design practice.":
+      return "일반 시스템 설계 연습 전에 가장 강한 결제 정합성 분기를 먼저 점검하세요.";
+    case "Tighten source-of-truth metrics":
+      return "source of truth 지표 보강";
+    case "Re-validate the numbers and proof chain behind settlement bullet claims.":
+      return "정산 bullet claim 뒤의 수치와 증빙 체인을 다시 검증하세요.";
+    case "Review imported job postings":
+      return "가져온 채용공고 검토";
+    case "Compare current focus areas with the latest ingested Stripe-like roles.":
+      return "현재 집중 영역을 최근 수집한 Stripe 유사 포지션과 비교하세요.";
+    case "Open notes for partner-failure examples":
+      return "파트너 장애 사례 노트 열기";
+    case "Turn integration anecdotes into structured interview-safe notes.":
+      return "연동 일화를 면접용으로 안전한 구조화 노트로 바꾸세요.";
+    case "Review queue for weak payment nodes":
+      return "약한 결제 노드 리뷰 큐";
+    case "Revisit the branches where rollback and alerting details still collapse.":
+      return "롤백과 알림 디테일이 아직 무너지는 분기를 다시 점검하세요.";
+    case "Rebuild resume defense":
+      return "이력서 방어 논리 재정비";
+    case "Make sure every fintech claim is anchored to a specific project and period.":
+      return "모든 핀테크 claim이 구체적인 프로젝트와 기간에 anchored 되도록 하세요.";
+    case "Study saved system design materials":
+      return "저장된 시스템 설계 자료 학습";
+    case "Use saved materials to widen platform vocabulary before another DFS pass.":
+      return "다음 DFS 패스 전에 저장된 자료로 플랫폼 어휘를 넓히세요.";
+    case "Practice question map":
+      return "질문 지도 연습";
+    case "Open deeper infrastructure branches instead of payment-first branches.":
+      return "결제 우선 분기 대신 더 깊은 인프라 분기를 여세요.";
+    case "Edit supporting notes":
+      return "보조 노트 편집";
+    case "Promote platform examples that are currently buried inside mixed notes.":
+      return "섞여 있는 노트 속 플랫폼 사례를 위로 끌어올리세요.";
+    case "Open archive for validated answers":
+      return "검증된 답변 아카이브 열기";
+    case "Reuse proven response fragments instead of drafting from zero.":
+      return "처음부터 다시 쓰기보다 검증된 답변 조각을 재사용하세요.";
+    case "Run interview workspace":
+      return "면접 워크스페이스 실행";
+    case "Simulate a product-pressure loop and listen for vague prioritization language.":
+      return "제품 압박 루프를 시뮬레이션하고 모호한 우선순위 언어가 나오는지 점검하세요.";
+    case "Refresh answer drafts":
+      return "답변 초안 다듬기";
+    case "Tighten answers where speed-versus-correctness trade-offs still sound generic.":
+      return "속도와 정합성 트레이드오프가 아직도 추상적으로 들리는 답변을 다듬으세요.";
+    case "Resume proof":
+      return "이력서 증빙";
+    case "DFS branch depth":
+      return "DFS 분기 깊이";
+    case "Behavioral ownership":
+      return "행동형 오너십";
+    case "Narrative fit":
+      return "서사 적합도";
+    case "Evidence density":
+      return "증빙 밀도";
+    case "Retry coverage":
+      return "재시도 커버리지";
+    case "Platform examples":
+      return "플랫폼 사례";
+    case "Branch breadth":
+      return "분기 폭";
+    case "Trade-off clarity":
+      return "트레이드오프 명확성";
+    case "Behavioral depth":
+      return "행동형 깊이";
+    case "Product framing":
+      return "제품 관점 framing";
+    case "Operational detail":
+      return "운영 디테일";
+    case "Keep the duplicate-settlement reduction story quantitative and bounded.":
+      return "중복 정산 감소 스토리를 정량적이고 경계가 분명하게 유지하세요.";
+    case "Show what still failed after the fix instead of pretending the design became absolute.":
+      return "설계가 완벽해졌다고 말하기보다 수정 후에도 무엇이 남았는지 보여주세요.";
+    case "Connect payment correctness to on-call judgment, not only technical implementation.":
+      return "결제 정합성을 기술 구현만이 아니라 on-call 판단과도 연결하세요.";
+    case "Use one partner-failure story end to end instead of listing many small examples.":
+      return "작은 예시를 여러 개 나열하지 말고, 하나의 파트너 장애 스토리를 끝까지 가져가세요.";
+    case "Clarify where monitoring ended and business rollback policy began.":
+      return "모니터링의 경계와 비즈니스 롤백 정책의 시작 지점을 분명히 하세요.";
+    case "Prepare Korean-market scale context without overclaiming volumes you did not own directly.":
+      return "직접 소유하지 않은 규모를 과장하지 않으면서 한국 시장 스케일 맥락을 준비하세요.";
+    case "Do not force a payment framing where the platform story should stand alone.":
+      return "플랫폼 스토리가 독립적으로 서야 할 곳에 결제 framing을 억지로 넣지 마세요.";
+    case "Prepare one cache or queue story with concrete latency and failure trade-offs.":
+      return "지연시간과 장애 트레이드오프가 구체적인 캐시 또는 큐 스토리 하나를 준비하세요.";
+    case "Reduce business-language padding and speak in system constraints sooner.":
+      return "비즈니스식 수사를 줄이고 시스템 제약을 더 빨리 이야기하세요.";
+    case "Practice naming the decision rule, not only the outcome.":
+      return "결과만이 아니라 의사결정 규칙의 이름까지 말하는 연습을 하세요.";
+    case "Be concrete about what was deferred and what risk you accepted.":
+      return "무엇을 미뤘고 어떤 리스크를 받아들였는지 구체적으로 말하세요.";
+    case "Turn one production incident into a clean interview loop instead of mentioning several loosely.":
+      return "여러 장애를 느슨하게 언급하지 말고 하나의 프로덕션 장애를 깔끔한 면접 루프로 정리하세요.";
+    default:
+      return value;
+  }
+}
+
+function getPriorityLabel(priority: CompanyPriority, isKorean: boolean) {
   switch (priority) {
     case "high":
-      return "High priority";
+      return isKorean ? "높은 우선순위" : "High priority";
     case "medium":
-      return "Medium priority";
+      return isKorean ? "중간 우선순위" : "Medium priority";
     case "low":
-      return "Low priority";
+      return isKorean ? "낮은 우선순위" : "Low priority";
   }
 }
 
@@ -479,12 +688,12 @@ export function TargetCompaniesPage() {
                       <div className="target-company-card__headline">
                         <strong>{company.name}</strong>
                         <span className={`target-company-card__priority target-company-card__priority--${company.priority}`}>
-                          {getPriorityLabel(company.priority)}
+                          {getPriorityLabel(company.priority, isKorean)}
                         </span>
                       </div>
                       <div className="target-company-card__subline">
-                        <span>{company.roleTrack}</span>
-                        <span>{company.lastUpdated}</span>
+                        <span>{localizeTargetCompanyText(company.roleTrack, isKorean)}</span>
+                        <span>{localizeTargetCompanyText(company.lastUpdated, isKorean)}</span>
                       </div>
                     </div>
                   </div>
@@ -492,14 +701,14 @@ export function TargetCompaniesPage() {
                   <div className="target-company-card__content">
                     <section className="target-company-card__section">
                       <span>{isKorean ? "이 레인이 중요한 이유" : "Why this lane matters"}</span>
-                      <p className="page-card__body">{company.summary}</p>
+                      <p className="page-card__body">{localizeTargetCompanyText(company.summary, isKorean)}</p>
                     </section>
 
                     <section className="target-company-card__section">
                       <span>{isKorean ? "예상 루프" : "Likely loops"}</span>
                       <ul>
                         {company.likelyLoops.map((loop) => (
-                          <li key={loop}>{loop}</li>
+                          <li key={loop}>{localizeTargetCompanyText(loop, isKorean)}</li>
                         ))}
                       </ul>
                     </section>
@@ -515,7 +724,7 @@ export function TargetCompaniesPage() {
                   <div className="target-company-card__chips" aria-label={isKorean ? `${company.name} 포커스 영역` : `${company.name} focus areas`}>
                     {company.focusAreas.map((area) => (
                       <span className="detail-chip" key={area}>
-                        {area}
+                        {localizeTargetCompanyText(area, isKorean)}
                       </span>
                     ))}
                   </div>
@@ -533,7 +742,7 @@ export function TargetCompaniesPage() {
               </div>
               <div>
                 <strong>{selectedCompany.name}</strong>
-                <p>{selectedCompany.roleTrack}</p>
+                <p>{localizeTargetCompanyText(selectedCompany.roleTrack, isKorean)}</p>
               </div>
             </div>
 
@@ -545,7 +754,7 @@ export function TargetCompaniesPage() {
               <div className="target-company-detail-rail__bars">
                 {selectedCompany.readinessAreas.map((area) => (
                   <div className="target-company-detail-rail__bar-row" key={area.label}>
-                    <span>{area.label}</span>
+                    <span>{localizeTargetCompanyText(area.label, isKorean)}</span>
                     <div aria-hidden="true" className="target-company-detail-rail__bar-track">
                       <div className="target-company-detail-rail__bar-fill" style={{ width: `${area.value}%` }} />
                     </div>
@@ -563,13 +772,13 @@ export function TargetCompaniesPage() {
               <div className="target-company-card__chips">
                 {selectedCompany.focusAreas.map((area) => (
                   <span className="detail-chip" key={area}>
-                    {area}
+                    {localizeTargetCompanyText(area, isKorean)}
                   </span>
                 ))}
               </div>
               <ul className="page-card__list">
                 {selectedCompany.sourceSignals.map((signal) => (
-                  <li key={signal}>{signal}</li>
+                  <li key={signal}>{localizeTargetCompanyText(signal, isKorean)}</li>
                 ))}
               </ul>
             </section>
@@ -581,7 +790,7 @@ export function TargetCompaniesPage() {
               </div>
               <ul className="page-card__list">
                 {selectedCompany.proofNotes.map((note) => (
-                  <li key={note}>{note}</li>
+                  <li key={note}>{localizeTargetCompanyText(note, isKorean)}</li>
                 ))}
               </ul>
             </section>
@@ -595,8 +804,8 @@ export function TargetCompaniesPage() {
                 {selectedCompany.nextActions.map((action) => (
                   <Link className="target-company-detail-rail__action-card" key={action.title} to={action.to}>
                     <div>
-                      <strong>{action.title}</strong>
-                      <span>{action.body}</span>
+                      <strong>{localizeTargetCompanyText(action.title, isKorean)}</strong>
+                      <span>{localizeTargetCompanyText(action.body, isKorean)}</span>
                     </div>
                     <span aria-hidden="true">{isKorean ? "이동" : "->"}</span>
                   </Link>

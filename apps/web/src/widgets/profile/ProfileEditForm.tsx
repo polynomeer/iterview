@@ -1,4 +1,5 @@
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
+import { useLocale } from "../../shared/i18n";
 
 type ProfileEditFormProps = {
   className?: string;
@@ -16,6 +17,7 @@ type ProfileEditFormProps = {
 };
 
 export function ProfileEditForm(props: ProfileEditFormProps) {
+  const { t } = useLocale();
   const {
     className,
     nickname,
@@ -35,21 +37,21 @@ export function ProfileEditForm(props: ProfileEditFormProps) {
     <section className={`page-card${className ? ` ${className}` : ""}`}>
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">Profile details</p>
-          <h2 className="page-card__title">Edit your interview profile</h2>
+          <p className="section-heading__eyebrow">{t("profile.profileDetails")}</p>
+          <h2 className="page-card__title">{t("profile.editProfile")}</h2>
         </div>
       </div>
       <div className="auth-form">
         <label className="form-field">
-          <span className="form-field__label">Nickname</span>
+          <span className="form-field__label">{t("profile.nickname")}</span>
           <input className="form-field__input" onChange={(e) => onNicknameChange(e.target.value)} value={nickname} />
         </label>
         <label className="form-field">
-          <span className="form-field__label">Job role</span>
+          <span className="form-field__label">{t("profile.jobRoleField")}</span>
           <input className="form-field__input" onChange={(e) => onJobRoleChange(e.target.value)} value={jobRole} />
         </label>
         <label className="form-field">
-          <span className="form-field__label">Years of experience</span>
+          <span className="form-field__label">{t("profile.yearsOfExperienceField")}</span>
           <input
             className="form-field__input"
             inputMode="numeric"
@@ -61,7 +63,7 @@ export function ProfileEditForm(props: ProfileEditFormProps) {
         {errorMessage ? <FeedbackNotice details={errorDetails} message={errorMessage} tone="error" /> : null}
         <div className="page-card__actions">
           <button className="primary-button" disabled={isPending} onClick={onSubmit} type="button">
-            {isPending ? "Saving..." : "Save profile"}
+            {isPending ? t("profile.saving") : t("profile.saveProfile")}
           </button>
         </div>
       </div>

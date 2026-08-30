@@ -35,7 +35,7 @@ export function ProfileSummaryCard({
     <section className="page-card profile-summary-card">
       <div className="profile-summary-card__topline">
         <span className="page-card__label">{t("profile.summaryLabel")}</span>
-        <span className="detail-chip">Current account</span>
+        <span className="detail-chip">{t("profile.currentAccount")}</span>
       </div>
       <div className="profile-summary-card__header">
         <div className="profile-avatar">
@@ -105,7 +105,7 @@ export function ProfileSummaryCard({
         </article>
       </div>
       <div className="profile-summary-card__footer">
-        <span className="detail-chip">Identity stays separate from practice state</span>
+        <span className="detail-chip">{t("profile.identitySeparationHint")}</span>
       </div>
     </section>
   );

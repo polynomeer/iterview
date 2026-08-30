@@ -49,12 +49,13 @@ describe("ProfilePage", () => {
       <Routes>
         <Route element={<ProfilePage />} path="/profile" />
       </Routes>,
-      { route: "/profile" },
+      { route: "/profile", locale: "ko" },
     );
 
     expect(screen.getByText("Learner")).toBeInTheDocument();
-    expect(screen.getByText("Edit your interview profile")).toBeInTheDocument();
-    expect(screen.getByText("Open settings")).toBeInTheDocument();
+    expect(screen.getByText("인터뷰 프로필 편집")).toBeInTheDocument();
+    expect(screen.getByText("현재 계정")).toBeInTheDocument();
+    expect(screen.getByText("설정 열기")).toBeInTheDocument();
     expect(document.querySelector(".profile-layout--desktop")).not.toBeNull();
   });
 
@@ -90,10 +91,10 @@ describe("ProfilePage", () => {
       <Routes>
         <Route element={<ProfilePage />} path="/profile" />
       </Routes>,
-      { route: "/profile" },
+      { route: "/profile", locale: "ko" },
     );
 
-    expect(screen.getByRole("link", { name: "Open settings" })).toHaveAttribute("href", "/settings");
-    expect(screen.getByRole("link", { name: "Open target companies" })).toHaveAttribute("href", "/target-companies");
+    expect(screen.getByRole("link", { name: "설정 열기" })).toHaveAttribute("href", "/settings");
+    expect(screen.getByRole("link", { name: "목표 회사 열기" })).toHaveAttribute("href", "/target-companies");
   });
 });
