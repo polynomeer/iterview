@@ -25,7 +25,7 @@ export function ResumeMobileLayout({
       <section className="resume-layout__workspace-main">
         {overviewCard}
         <SectionPanel className="workspace-note-card workspace-note-card--accent" variant="muted">
-          <span className="page-card__label">{isKorean ? "소스 오브 트루스" : "Source of truth"}</span>
+          <span className="page-card__label">{isKorean ? "기준 문서" : "Source of truth"}</span>
           <h2 className="page-card__title">{isKorean ? "각 이력서 버전을 저장소가 아니라 근거로 다루세요" : "Treat each resume version as evidence, not storage"}</h2>
           <p className="page-card__body">
             {isKorean
@@ -62,7 +62,7 @@ export function ResumeDesktopLayout({
         <div className="resume-layout__workspace-main">
           {overviewCard}
           <SectionPanel className="workspace-note-card workspace-note-card--accent resume-layout__source-note" variant="muted">
-            <span className="page-card__label">{isKorean ? "소스 오브 트루스" : "Source of truth"}</span>
+            <span className="page-card__label">{isKorean ? "기준 문서" : "Source of truth"}</span>
             <h2 className="page-card__title">{isKorean ? "모의 면접 전에 방어 가능한 이력서 컨텍스트 하나를 만드세요" : "Build one defendable resume context before mock interviews begin"}</h2>
             <p className="page-card__body">
               {isKorean

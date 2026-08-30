@@ -37,10 +37,10 @@ export function HomePage() {
       : "Resume-grounded DFS interview practice";
   const pageDescription = isUnauthorized
     ? isKorean
-      ? "이력서에서 분명한 source of truth를 만들고, 모든 주장에 방어 논리가 생길 때까지 DFS 방식 꼬리질문을 연습하세요."
+      ? "이력서에서 분명한 기준 문서를 만들고, 모든 주장에 방어 논리가 생길 때까지 DFS 방식 꼬리질문을 연습하세요."
       : "Build a clear source of truth from your resume, then rehearse DFS-style follow-up questions until every claim is defensible."
     : isKorean
-      ? "이력서를 source of truth로 삼고, 꼬리질문 압박과 재도전, 복구 흐름을 하나의 워크스페이스에서 이어가세요."
+      ? "이력서를 기준 문서로 삼고, 꼬리질문 압박과 재도전, 복구 흐름을 하나의 워크스페이스에서 이어가세요."
       : "Use your resume as source of truth, then move through follow-up pressure, retries, and recovery from one workspace.";
   const summaryCount = homeData?.summaryStats?.length ?? 0;
   const retryCount = homeData?.retryQuestions?.length ?? 0;
@@ -72,7 +72,7 @@ export function HomePage() {
                 <span className="question-status-badge question-status-badge--accent">{isKorean ? "집중 모드" : "Focus mode"}</span>
               </div>
               <p className="home-workspace-surface__breadcrumbs">
-                {isKorean ? "이력서 source of truth" : "Resume source of truth"}
+                {isKorean ? "이력서 기준 문서" : "Resume source of truth"}
                 <span>/</span>
                 {isKorean ? "DFS 꼬리질문 압박" : "DFS follow-up pressure"}
                 <span>/</span>
@@ -116,7 +116,7 @@ export function HomePage() {
           </div>
           <div className="home-workspace-surface__guidance">
             <article className="home-workspace-surface__guidance-card">
-              <span>{isKorean ? "source of truth" : "Source of truth"}</span>
+              <span>{isKorean ? "기준 문서" : "Source of truth"}</span>
               <strong>{isKorean ? "방어 가능한 이력서 스토리 하나를 활성 상태로 유지하세요." : "Keep one defendable resume story active."}</strong>
             </article>
             <article className="home-workspace-surface__guidance-card">

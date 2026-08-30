@@ -118,12 +118,12 @@ describe("ResumeAnalysisPage", () => {
       { route: "/profile/resumes/analysis", locale: "ko" },
     );
 
-    expect(screen.getByText("source of truth")).toBeInTheDocument();
+    expect(screen.getByText("기준 문서")).toBeInTheDocument();
     expect(screen.getByText("방어 가이드")).toBeInTheDocument();
     expect(screen.getAllByText("Refactor leadership claim is still vague")).toHaveLength(2);
     expect(screen.getByText("Interview analytics platform")).toBeInTheDocument();
     expect(screen.getAllByText("Spring Boot").length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: "source of truth 편집" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "기준 문서 편집" })).toHaveAttribute(
       "href",
       "/resume-versions/version-1/editor",
     );
@@ -201,7 +201,7 @@ describe("ResumeAnalysisPage", () => {
       { route: "/profile/resumes/analysis", locale: "ko" },
     );
 
-    expect(screen.getByText("이력서 source of truth 점검")).toBeInTheDocument();
+    expect(screen.getByText("이력서 기준 문서 점검")).toBeInTheDocument();
     expect(screen.getByText("하나로 이어지는 준비 루프")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /이력서 편집기/i })).toBeInTheDocument();
     expect(document.querySelector(".resume-analysis-layout--desktop")).not.toBeNull();

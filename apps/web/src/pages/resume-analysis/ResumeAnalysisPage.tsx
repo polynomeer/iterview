@@ -40,15 +40,15 @@ export function ResumeAnalysisPage() {
       }
       description={
         isKorean
-          ? "활성 이력서를 source of truth로 검토하고, 면접 꼬리질문이 시작되기 전에 더 강한 증빙이 필요한 주장을 찾으세요."
+          ? "활성 이력서를 기준 문서로 검토하고, 면접 꼬리질문이 시작되기 전에 더 강한 증빙이 필요한 주장을 찾으세요."
           : "Review the active resume as source of truth, then find the claims that need stronger evidence before interview follow-ups begin."
       }
       eyebrow={isKorean ? "근거 검토" : "Source review"}
-      title={isKorean ? "이력서 source of truth 점검" : "Inspect resume source of truth"}
+      title={isKorean ? "이력서 기준 문서 점검" : "Inspect resume source of truth"}
     >
       <WorkspaceContinuityRail
         current={{
-          title: isKorean ? "이력서 source of truth 검토" : "Resume source-of-truth review",
+          title: isKorean ? "이력서 기준 문서 검토" : "Resume source-of-truth review",
           description: isKorean
             ? "활성 이력서 주장 중 어떤 항목이 아직 꼬리질문 압박을 버틸 만큼 충분한 증빙이 없는지 찾으세요."
             : "Find which active resume claims still lack enough evidence to survive follow-up pressure.",
@@ -63,7 +63,7 @@ export function ResumeAnalysisPage() {
           },
           {
             title: isKorean ? "면접 실행기" : "Interview launcher",
-            description: isKorean ? "source claim이 충분히 강해진 뒤에만 모의를 시작하세요." : "Start a mock only after the source claim is strong enough to defend.",
+            description: isKorean ? "기준 주장이 충분히 강해진 뒤에만 모의를 시작하세요." : "Start a mock only after the source claim is strong enough to defend.",
             to: routeConfig.interview.buildPath(),
           },
         ]}
@@ -109,7 +109,7 @@ export function ResumeAnalysisPage() {
                 label: isKorean ? "이력서 관리 열기" : "Open resume management",
                 to: routeConfig.resume.buildPath(),
               }}
-              body={isKorean ? "파싱된 스킬, 경력, 리스크가 분명한 source of truth를 갖도록 먼저 활성 이력서 버전을 선택하세요." : "Activate a resume version first so parsed skills, experiences, and risks have a clear source of truth."}
+              body={isKorean ? "파싱된 스킬, 경력, 리스크가 분명한 기준 문서를 갖도록 먼저 활성 이력서 버전을 선택하세요." : "Activate a resume version first so parsed skills, experiences, and risks have a clear source of truth."}
               title={isKorean ? "활성 이력서 버전이 없습니다" : "No active resume version"}
             />
           ) : analysisQuery.isLoading ? (
@@ -151,7 +151,7 @@ export function ResumeAnalysisPage() {
                   <div className="resume-analysis-workspace-surface__header">
                     <div className="resume-analysis-workspace-surface__intro">
                       <div className="resume-analysis-workspace-surface__eyebrow-row">
-                        <span className="page-card__label">{isKorean ? "source of truth" : "Source of truth"}</span>
+                        <span className="page-card__label">{isKorean ? "기준 문서" : "Source of truth"}</span>
                         <span className="question-status-badge question-status-badge--accent">{isKorean ? "방어 레인" : "Defense lane"}</span>
                       </div>
                       <p className="resume-analysis-workspace-surface__breadcrumbs">
@@ -202,7 +202,7 @@ export function ResumeAnalysisPage() {
                     </article>
                     <article className="resume-analysis-workspace-surface__guidance-card">
                       <span>{isKorean ? "수정 순서" : "Repair order"}</span>
-                      <strong>{isKorean ? "다음 모의 세션을 돌리기 전에 얇은 source text를 먼저 보강하세요." : "Fix thin source text before running another mock session."}</strong>
+                      <strong>{isKorean ? "다음 모의 세션을 돌리기 전에 얇은 근거 문장을 먼저 보강하세요." : "Fix thin source text before running another mock session."}</strong>
                     </article>
                   </div>
                 </section>
@@ -275,7 +275,7 @@ export function ResumeAnalysisPage() {
                       <h2 className="page-card__title">{isKorean ? "이 분석을 면접 압박처럼 읽으세요" : "Read this analysis like interview pressure"}</h2>
                       <p className="page-card__body">
                         {isKorean
-                          ? "강한 이력서 source of truth는 질문 트리가 더 깊어질수록 모든 강조된 주장이 구체적인 의사결정, 제약, 지표, 트레이드오프로 확장될 수 있는 상태입니다."
+                          ? "강한 이력서 기준 문서는 질문 트리가 더 깊어질수록 모든 강조된 주장이 구체적인 의사결정, 제약, 지표, 트레이드오프로 확장될 수 있는 상태입니다."
                           : "A strong resume source of truth is one where every highlighted claim can expand into concrete decisions, constraints, metrics, and trade-offs when the question tree keeps drilling deeper."}
                       </p>
                       <div className="resume-analysis-guide__signals">
@@ -305,7 +305,7 @@ export function ResumeAnalysisPage() {
                         </div>
                         <div className="resume-analysis-guide__rule">
                           <strong>{isKorean ? "3. 모의 전 보강" : "3. Repair before mock practice"}</strong>
-                          <span>{isKorean ? "약한 입력으로 또 한 세션을 쓰기 전에 source text를 먼저 조이세요." : "Tighten the source text before spending another session on weak inputs."}</span>
+                          <span>{isKorean ? "약한 입력으로 또 한 세션을 쓰기 전에 근거 문장부터 먼저 조이세요." : "Tighten the source text before spending another session on weak inputs."}</span>
                         </div>
                       </div>
                       <div className="page-card__actions">
@@ -313,7 +313,7 @@ export function ResumeAnalysisPage() {
                           className="secondary-button"
                           to={routeConfig.resumeEditor.buildPath({ versionId: activeResumeVersion.id })}
                         >
-                          {isKorean ? "source of truth 편집" : "Edit source of truth"}
+                          {isKorean ? "기준 문서 편집" : "Edit source of truth"}
                         </Link>
                         <Link className="primary-button" to={routeConfig.resume.buildPath()}>
                           {isKorean ? "활성 이력서 검토" : "Review active resume"}

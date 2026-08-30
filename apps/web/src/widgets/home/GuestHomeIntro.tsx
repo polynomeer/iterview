@@ -17,7 +17,7 @@ export function GuestHomeIntro() {
           </h2>
           <p className="guest-home__body">
             {isKorean
-              ? "Iterview는 이력서에서 상세한 source of truth를 만들고, 각 주제를 더 깊은 꼬리질문 분기로 확장하며, 실제 면접 전에 답변 시뮬레이션을 도와줍니다."
+              ? "Iterview는 이력서에서 상세한 기준 문서를 만들고, 각 주제를 더 깊은 꼬리질문 분기로 확장하며, 실제 면접 전에 답변 시뮬레이션을 도와줍니다."
               : "Iterview builds a detailed source of truth from your resume, expands each topic into deeper follow-up branches, and helps you simulate answers before the real interview."}
           </p>
           <div className="page-card__actions">
@@ -47,7 +47,7 @@ export function GuestHomeIntro() {
           </article>
           <article className="guest-home__metric">
             <span className="guest-home__metric-label">{isKorean ? "3. 답변 시뮬레이션" : "3. Simulate answers"}</span>
-            <strong className="guest-home__metric-value">{isKorean ? "약한 지점을 연습하고 재도전하며 source of truth를 조이기" : "Rehearse weak spots, retry, and tighten the source of truth"}</strong>
+            <strong className="guest-home__metric-value">{isKorean ? "약한 지점을 연습하고 재도전하며 기준 문서를 다듬기" : "Rehearse weak spots, retry, and tighten the source of truth"}</strong>
           </article>
         </div>
       </div>
@@ -63,7 +63,7 @@ export function GuestHomeIntro() {
           </p>
         </article>
         <article className="guest-home__card">
-          <span className="page-card__label">{isKorean ? "source of truth" : "Source of truth"}</span>
+          <span className="page-card__label">{isKorean ? "기준 문서" : "Source of truth"}</span>
           <h3 className="page-card__title">{isKorean ? "이력서가 실제로 무엇을 의미하는지 문서로 정리하세요" : "Keep a written understanding of what your resume really means"}</h3>
           <p className="page-card__body">
             {isKorean

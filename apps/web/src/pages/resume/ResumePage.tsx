@@ -298,7 +298,7 @@ export function ResumePage() {
               <span>/</span>
               {isKorean ? "파싱된 근거" : "Parsed evidence"}
             </p>
-            <h2 className="resume-workspace-surface__title">{isKorean ? "방어 가능한 source of truth를 하나 구축하세요" : "Build one defendable source of truth"}</h2>
+            <h2 className="resume-workspace-surface__title">{isKorean ? "방어 가능한 기준 문서를 하나 구축하세요" : "Build one defendable source of truth"}</h2>
             <p className="resume-workspace-surface__body">
               {isKorean
                 ? "이력서 업로드는 단순한 파일 보관이 아닙니다. 각 활성 버전은 가장 작은 주장까지 DFS 방식의 꼬리질문을 견뎌야 하는 인터뷰 근거가 됩니다."
@@ -343,7 +343,7 @@ export function ResumePage() {
         <div className="resume-workspace-surface__guidance">
           <article className="resume-workspace-surface__guidance-card">
             <span>{isKorean ? "활성 경계" : "Active boundary"}</span>
-            <strong>{isKorean ? "방어 가능한 수준으로 주장이 안정될 때까지 하나의 버전을 인터뷰 source of truth로 유지하세요." : "Keep one version active as the interview source of truth until its claims are stable enough to defend"}</strong>
+            <strong>{isKorean ? "방어 가능한 수준으로 주장이 안정될 때까지 하나의 버전을 인터뷰 기준 문서로 유지하세요." : "Keep one version active as the interview source of truth until its claims are stable enough to defend"}</strong>
           </article>
           <article className="resume-workspace-surface__guidance-card">
             <span>{isKorean ? "다음 단계" : "Next step"}</span>

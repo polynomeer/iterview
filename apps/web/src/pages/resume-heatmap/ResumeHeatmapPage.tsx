@@ -530,8 +530,8 @@ export function ResumeHeatmapPage() {
           </Link>
         </>
       }
-      description={isKorean ? "이력서 자체를 보강 보드로 사용하세요. 가장 뜨거운 주장, 약한 답변, 라우팅된 질문을 정확한 source of truth 줄까지 되짚어가세요." : "Use the resume itself as a repair board. Follow the hottest claims, weak answers, and routed questions back to the exact source line."}
-      eyebrow={isKorean ? "Source of truth 히트맵" : "Source-of-truth heatmap"}
+      description={isKorean ? "이력서 자체를 보강 보드로 사용하세요. 가장 뜨거운 주장, 약한 답변, 라우팅된 질문을 정확한 기준 문서 줄까지 되짚어가세요." : "Use the resume itself as a repair board. Follow the hottest claims, weak answers, and routed questions back to the exact source line."}
+      eyebrow={isKorean ? "기준 문서 히트맵" : "Source-of-truth heatmap"}
       title={versionQuery.data.fileNameLabel}
     >
       <div className="page-stack resume-heatmap-workspace">
@@ -540,7 +540,7 @@ export function ResumeHeatmapPage() {
             <div className="resume-heatmap-workspace-surface__intro">
               <div className="resume-heatmap-workspace-surface__eyebrow-row">
                 <p className="resume-heatmap-workspace-surface__breadcrumbs">
-                  <span>Source of truth</span>
+                  <span>{isKorean ? "기준 문서" : "Source of truth"}</span>
                   <span>/</span>
                   <span>{isKorean ? "보강 큐" : "Repair queue"}</span>
                   <span>/</span>
@@ -587,7 +587,7 @@ export function ResumeHeatmapPage() {
             </article>
             <article className="resume-heatmap-workspace-surface__guidance-card">
               <span>{isKorean ? "이탈 원칙" : "Exit rule"}</span>
-              <strong>{isKorean ? "취약한 주장 하나라도 더 깔끔한 source of truth 버전을 확보하면 편집으로 돌아가세요." : "Return to editing once one fragile claim has a cleaner source-of-truth version."}</strong>
+              <strong>{isKorean ? "취약한 주장 하나라도 더 깔끔한 기준 문서 버전을 확보하면 편집으로 돌아가세요." : "Return to editing once one fragile claim has a cleaner source-of-truth version."}</strong>
             </article>
           </div>
           <div className="resume-heatmap-workspace-surface__chips">
@@ -830,7 +830,7 @@ export function ResumeHeatmapPage() {
                       <div className="resume-heatmap-document__body">
                         {(section.bodyBlocks.length > 0
                           ? section.bodyBlocks
-                          : [isKorean ? "이 앵커에는 아직 파싱된 source of truth 텍스트가 없습니다." : "No parsed source text is available for this anchor yet."]
+                          : [isKorean ? "이 앵커에는 아직 파싱된 기준 문서 텍스트가 없습니다." : "No parsed source text is available for this anchor yet."]
                         ).map((block, index) => (
                           <p className="resume-heatmap-document__paragraph" key={`${section.id}-${index}`}>
                             {block}
