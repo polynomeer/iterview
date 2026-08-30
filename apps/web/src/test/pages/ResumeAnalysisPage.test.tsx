@@ -115,15 +115,15 @@ describe("ResumeAnalysisPage", () => {
       <Routes>
         <Route element={<ResumeAnalysisPage />} path="/profile/resumes/analysis" />
       </Routes>,
-      { route: "/profile/resumes/analysis" },
+      { route: "/profile/resumes/analysis", locale: "ko" },
     );
 
-    expect(screen.getByText("Source of truth")).toBeInTheDocument();
-    expect(screen.getByText("Defense guide")).toBeInTheDocument();
+    expect(screen.getByText("source of truth")).toBeInTheDocument();
+    expect(screen.getByText("방어 가이드")).toBeInTheDocument();
     expect(screen.getAllByText("Refactor leadership claim is still vague")).toHaveLength(2);
     expect(screen.getByText("Interview analytics platform")).toBeInTheDocument();
     expect(screen.getAllByText("Spring Boot").length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: "Edit source of truth" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "source of truth 편집" })).toHaveAttribute(
       "href",
       "/resume-versions/version-1/editor",
     );
@@ -198,12 +198,12 @@ describe("ResumeAnalysisPage", () => {
       <Routes>
         <Route element={<ResumeAnalysisPage />} path="/profile/resumes/analysis" />
       </Routes>,
-      { route: "/profile/resumes/analysis" },
+      { route: "/profile/resumes/analysis", locale: "ko" },
     );
 
-    expect(screen.getByText("Inspect resume source of truth")).toBeInTheDocument();
-    expect(screen.getByText("Stay inside one interview preparation loop")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Resume editor/i })).toBeInTheDocument();
+    expect(screen.getByText("이력서 source of truth 점검")).toBeInTheDocument();
+    expect(screen.getByText("하나로 이어지는 준비 루프")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /이력서 편집기/i })).toBeInTheDocument();
     expect(document.querySelector(".resume-analysis-layout--desktop")).not.toBeNull();
   });
 });

@@ -60,13 +60,14 @@ describe("HomePage", () => {
       <Routes>
         <Route element={<HomePage />} path="/" />
       </Routes>,
+      { locale: "ko" },
     );
 
     expect(screen.getByText("Tell me about a scaling issue you fixed")).toBeInTheDocument();
     expect(screen.getByText("Design a rate limiter")).toBeInTheDocument();
     expect(screen.getByText("Scaling playbook")).toBeInTheDocument();
     expect(screen.getByText("Weekly score")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open recovery queue" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "답변 시작" }).length).toBeGreaterThan(0);
   });
 
   it("shows a sign-in state instead of a generic error for 401 responses", () => {
@@ -82,11 +83,12 @@ describe("HomePage", () => {
       <Routes>
         <Route element={<HomePage />} path="/" />
       </Routes>,
+      { locale: "ko" },
     );
 
-    expect(screen.getByText("Pressure-test every resume claim until it holds up under DFS follow-ups")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute("href", "/login");
-    expect(screen.getByRole("link", { name: "Browse practice questions" })).toHaveAttribute(
+    expect(screen.getByText("모든 이력서 주장을 DFS 꼬리질문에도 버틸 때까지 점검하세요")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "로그인" })).toHaveAttribute("href", "/login");
+    expect(screen.getByRole("link", { name: "연습 질문 둘러보기" })).toHaveAttribute(
       "href",
       "/practice",
     );
@@ -125,6 +127,7 @@ describe("HomePage", () => {
       <Routes>
         <Route element={<HomePage />} path="/" />
       </Routes>,
+      { locale: "ko" },
     );
 
     expect(screen.getByText("Tell me about a scaling issue you fixed")).toBeInTheDocument();

@@ -30,11 +30,11 @@ describe("ArchivePage", () => {
       <Routes>
         <Route element={<ArchivePage />} path="/archive" />
       </Routes>,
-      { route: "/archive" },
+      { route: "/archive", locale: "ko" },
     );
 
-    expect(screen.getByText("Archive is empty")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Back to practice" })).toHaveAttribute("href", "/practice");
+    expect(screen.getByText("아카이브가 비어 있습니다")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "연습으로 돌아가기" })).toHaveAttribute("href", "/practice");
   });
 
   it("renders archived questions when data exists", () => {
@@ -75,15 +75,15 @@ describe("ArchivePage", () => {
       <Routes>
         <Route element={<ArchivePage />} path="/archive" />
       </Routes>,
-      { route: "/archive" },
+      { route: "/archive", locale: "ko" },
     );
 
-    expect(screen.getByText("Mastered questions")).toBeInTheDocument();
+    expect(screen.getByText("정리된 질문")).toBeInTheDocument();
     expect(screen.getByText("Design a search index")).toBeInTheDocument();
     expect(screen.getAllByText("Best score 95")).toHaveLength(2);
     expect(screen.getByText("Interview")).toBeInTheDocument();
-    expect(screen.getByText("Follow-up")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "View session" })).toHaveAttribute(
+    expect(screen.getByText("후속 질문")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "세션 보기" })).toHaveAttribute(
       "href",
       "/interviews/session-4",
     );
@@ -128,7 +128,7 @@ describe("ArchivePage", () => {
       <Routes>
         <Route element={<ArchivePage />} path="/archive" />
       </Routes>,
-      { route: "/archive" },
+      { route: "/archive", locale: "ko" },
     );
 
     expect(screen.getByText("Design a search index")).toBeInTheDocument();

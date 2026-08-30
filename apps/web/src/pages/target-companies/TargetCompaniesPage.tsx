@@ -372,7 +372,7 @@ function localizeTargetCompanyText(value: string, isKorean: boolean) {
     case "Rebuild resume defense":
       return "이력서 방어 논리 재정비";
     case "Make sure every fintech claim is anchored to a specific project and period.":
-      return "모든 핀테크 claim이 구체적인 프로젝트와 기간에 anchored 되도록 하세요.";
+      return "모든 핀테크 주장이 구체적인 프로젝트와 기간에 연결되도록 하세요.";
     case "Study saved system design materials":
       return "저장된 시스템 설계 자료 학습";
     case "Use saved materials to widen platform vocabulary before another DFS pass.":
@@ -418,7 +418,7 @@ function localizeTargetCompanyText(value: string, isKorean: boolean) {
     case "Behavioral depth":
       return "행동형 깊이";
     case "Product framing":
-      return "제품 관점 framing";
+      return "제품 관점 정렬";
     case "Operational detail":
       return "운영 디테일";
     case "Keep the duplicate-settlement reduction story quantitative and bounded.":
@@ -615,7 +615,7 @@ export function TargetCompaniesPage() {
                   ? "중요한 회사를 이미 골랐고, 회사별 인터뷰 루프에 맞는 준비 계획이 필요할 때 이 보드를 사용하세요."
                   : "Use this board when you have already chosen the companies that matter and need a preparation plan per loop."
                 : isKorean
-                  ? "외부 신호를 아직 수집 중이고 그것을 resume-tailor 파이프라인에 다시 연결해야 할 때 채용공고 수집 화면을 사용하세요."
+                  ? "외부 신호를 아직 수집 중이고 그것을 이력서 맞춤 파이프라인에 다시 연결해야 할 때 채용공고 수집 화면을 사용하세요."
                   : "Use job posting intake when you are still collecting external signals and mapping them back to your resume-tailor pipeline."}
             </p>
             {mode === "job-posting" ? (
