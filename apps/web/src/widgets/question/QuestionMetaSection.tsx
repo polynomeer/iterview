@@ -14,7 +14,7 @@ export function QuestionMetaSection({ question }: QuestionMetaSectionProps) {
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{isKorean ? "메타데이터" : "Metadata"}</p>
-          <h2 className="page-card__title">{isKorean ? "이 프롬프트의 맥락" : "Context for this prompt"}</h2>
+          <h2 className="page-card__title">{isKorean ? "이 질문 문구의 맥락" : "Context for this prompt"}</h2>
           <p className="page-card__body">
             {isKorean
               ? "이 레일을 사용해 답변이 카테고리, 회사, 역할 제약에 맞게 구체적으로 유지되도록 하세요."

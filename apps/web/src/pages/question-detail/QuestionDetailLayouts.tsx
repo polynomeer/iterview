@@ -69,7 +69,7 @@ export function QuestionDetailDesktopLayout({
           </div>
           <h2 className="page-card__title">
             {isKorean
-              ? "프롬프트를 중심에 두고 다음 결정을 위한 맥락만 읽으세요"
+              ? "질문 문구를 중심에 두고 다음 결정을 위한 맥락만 읽으세요"
               : "Keep the prompt dominant, then read only the context needed for the next decision"}
           </h2>
           <p className="page-card__body">

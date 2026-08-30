@@ -35,7 +35,7 @@ export function ResumeAnalysisPage() {
     <PageContainer
       actions={
         <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
-          {isKorean ? "이력서 워크스페이스 열기" : "Open resume workspace"}
+          {isKorean ? "이력서 작업공간 열기" : "Open resume workspace"}
         </Link>
       }
       description={

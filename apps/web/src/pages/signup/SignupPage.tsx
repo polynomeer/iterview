@@ -75,9 +75,9 @@ export function SignupPage() {
 
   return (
     <PageContainer
-      description={isKorean ? "지속 가능한 하나의 이력서 기반 면접 워크스페이스에 접근하고, 기준 문서와 연습 연속성에서 바로 시작하세요." : "Create access to one persistent resume-grounded interview workspace, then start from source-of-truth and practice continuity."}
-      eyebrow={isKorean ? "워크스페이스 접근" : "Workspace access"}
-      title={isKorean ? "이력서 기반 면접 워크스페이스로 들어가기" : "Enter the resume-grounded interview workspace"}
+      description={isKorean ? "지속 가능한 하나의 이력서 기반 면접 작업공간에 접근하고, 기준 문서와 연습 연속성에서 바로 시작하세요." : "Create access to one persistent resume-grounded interview workspace, then start from source-of-truth and practice continuity."}
+      eyebrow={isKorean ? "작업공간 접근" : "Workspace access"}
+      title={isKorean ? "이력서 기반 면접 작업공간으로 들어가기" : "Enter the resume-grounded interview workspace"}
     >
       <div className="auth-access-layout">
         <section className="auth-access-surface">
@@ -86,7 +86,7 @@ export function SignupPage() {
               <div className="auth-access-surface__eyebrow-row">
                 <span className="page-card__label">{t("auth.authFlowLabel")}</span>
                 <span className="question-status-badge question-status-badge--accent">
-                  {isKorean ? "워크스페이스 접근" : "Workspace access"}
+                  {isKorean ? "작업공간 접근" : "Workspace access"}
                 </span>
               </div>
               <p className="auth-access-surface__breadcrumbs">
@@ -102,7 +102,7 @@ export function SignupPage() {
             <div className="auth-access-surface__stats">
               <article className="auth-access-surface__stat">
                 <span>{isKorean ? "첫 목적지" : "First destination"}</span>
-                <strong>{isKorean ? "하나로 연결된 워크스페이스" : "One connected workspace"}</strong>
+                <strong>{isKorean ? "하나로 연결된 작업공간" : "One connected workspace"}</strong>
               </article>
               <article className="auth-access-surface__stat">
                 <span>{isKorean ? "가입 후" : "After signup"}</span>
@@ -117,11 +117,11 @@ export function SignupPage() {
           <div className="auth-access-surface__guidance">
             <article className="auth-access-surface__guidance-card">
               <span>{isKorean ? "시작 규칙" : "Start rule"}</span>
-              <strong>{isKorean ? "계정은 이력서 기반 DFS 면접 연습을 위한 지속 워크스페이스에 들어가기 위해서만 만드세요." : "Create an account only to enter one persistent workspace for resume-backed DFS interview practice."}</strong>
+              <strong>{isKorean ? "계정은 이력서 기반 DFS 면접 연습을 위한 지속 작업공간에 들어가기 위해서만 만드세요." : "Create an account only to enter one persistent workspace for resume-backed DFS interview practice."}</strong>
             </article>
             <article className="auth-access-surface__guidance-card">
               <span>{isKorean ? "첫 행동" : "First move"}</span>
-              <strong>{isKorean ? "가입 후에는 워크스페이스를 특정 이력서 버전에 정착시켜 이후 후속 질문이 항상 기준 문서를 가지게 하세요." : "After signup, ground the workspace in a resume version so later follow-up questions always have a source of truth."}</strong>
+              <strong>{isKorean ? "가입 후에는 작업공간을 특정 이력서 버전에 정착시켜 이후 후속 질문이 항상 기준 문서를 가지게 하세요." : "After signup, ground the workspace in a resume version so later follow-up questions always have a source of truth."}</strong>
             </article>
           </div>
         </section>
@@ -132,7 +132,7 @@ export function SignupPage() {
             <h2 className="page-card__title">{t("auth.signupCardTitle")}</h2>
             <p className="page-card__body">
               {isKorean
-                ? "연습, 면접 복기, 기준 문서 준비에 함께 쓰이는 동일한 워크스페이스 시스템에 접근 권한을 만드세요."
+                ? "연습, 면접 복기, 기준 문서 준비에 함께 쓰이는 동일한 작업공간 시스템에 접근 권한을 만드세요."
                 : "Create access to the same workspace system used for practice, interview review, and source-of-truth preparation."}
             </p>
             <div className="auth-access-form-card__summary">
@@ -193,7 +193,7 @@ export function SignupPage() {
               </p>
             </section>
             <section className="page-card page-card--muted auth-access-note-card">
-              <span className="page-card__label">{isKorean ? "워크스페이스 약속" : "Workspace promise"}</span>
+              <span className="page-card__label">{isKorean ? "작업공간 약속" : "Workspace promise"}</span>
               <div className="stack-list">
                 <article className="list-item-card">
                   <div className="list-item-card__content">

@@ -310,7 +310,7 @@ export function ResumeHeatmapAnchorPage() {
                   <span>/</span>
                   <span>{localizeAnchorLabel(selectedAnchor.anchorTypeLabel, isKorean)}</span>
                   <span>/</span>
-                  <span>{isKorean ? "보강 워크스페이스" : "Repair workspace"}</span>
+                  <span>{isKorean ? "보강 작업공간" : "Repair workspace"}</span>
                 </p>
                 <span className="question-status-badge question-status-badge--neutral">
                   {isKorean ? "열도" : "Heat"} {selectedAnchor.heatScoreLabel}
@@ -404,7 +404,7 @@ export function ResumeHeatmapAnchorPage() {
                       ? "약한 답변은 현재 기준 문서가 아직 충분히 구체적이지 않다는 뜻입니다."
                       : "Weak answers indicate the current source-of-truth is not specific enough."
                     : isKorean
-                      ? "이 구간에는 약한 답변이 없으니, 대신 커버리지와 일관성을 점검하세요."
+                      ? "이 구간에는 약한 답변이 없으니, 대신 범위와 일관성을 점검하세요."
                       : "No weak answers in this slice, so verify breadth and consistency instead."}
                 </strong>
               </div>

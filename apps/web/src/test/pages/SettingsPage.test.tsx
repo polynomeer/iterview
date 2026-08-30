@@ -52,7 +52,7 @@ describe("SettingsPage", () => {
       { route: "/settings", locale: "ko" },
     );
 
-    expect(screen.getByText("연습 설정 워크스페이스")).toBeInTheDocument();
+    expect(screen.getByText("연습 설정 작업공간")).toBeInTheDocument();
     expect(screen.getByText("평가 기본값 조정")).toBeInTheDocument();
     expect(screen.getByText("로컬 알림 타이밍과 방해 수준 조정")).toBeInTheDocument();
     expect(screen.getByText("다음 복습 사이클 전에 권장되는 조정")).toBeInTheDocument();

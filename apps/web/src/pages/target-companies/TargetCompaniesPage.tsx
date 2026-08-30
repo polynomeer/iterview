@@ -390,7 +390,7 @@ function localizeTargetCompanyText(value: string, isKorean: boolean) {
     case "Reuse proven response fragments instead of drafting from zero.":
       return "처음부터 다시 쓰기보다 검증된 답변 조각을 재사용하세요.";
     case "Run interview workspace":
-      return "면접 워크스페이스 실행";
+      return "면접 작업공간 실행";
     case "Simulate a product-pressure loop and listen for vague prioritization language.":
       return "제품 압박 루프를 시뮬레이션하고 모호한 우선순위 언어가 나오는지 점검하세요.";
     case "Refresh answer drafts":
@@ -408,7 +408,7 @@ function localizeTargetCompanyText(value: string, isKorean: boolean) {
     case "Evidence density":
       return "증빙 밀도";
     case "Retry coverage":
-      return "재시도 커버리지";
+      return "재시도 범위";
     case "Platform examples":
       return "플랫폼 사례";
     case "Branch breadth":

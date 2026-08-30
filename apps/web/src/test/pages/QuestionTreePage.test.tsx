@@ -78,7 +78,7 @@ describe("QuestionTreePage", () => {
       { route: "/questions/question-42/tree", locale: "ko" },
     );
 
-    expect(screen.getByText("질문 트리 워크스페이스")).toBeInTheDocument();
+    expect(screen.getByText("질문 트리 작업공간")).toBeInTheDocument();
     expect(screen.getAllByText("Explain your migration rollback strategy").length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText("How did you decide when to trigger rollback?")).toBeInTheDocument();
     expect(screen.getByText("DFS 준비됨")).toBeInTheDocument();

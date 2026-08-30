@@ -73,7 +73,7 @@ export function ArchiveDesktopLayout({
               <div className="archive-workspace-note__rules">
                 <article className="archive-workspace-note__rule">
                   <span>{isKorean ? "선반 품질" : "Shelf quality"}</span>
-                  <strong>{isKorean ? "프롬프트를 다시 읽지 않아도 방어할 수 있는 답변만 보관하기" : "Archive only answers you can defend without rereading the prompt"}</strong>
+                  <strong>{isKorean ? "질문 문구를 다시 읽지 않아도 방어할 수 있는 답변만 보관하기" : "Archive only answers you can defend without rereading the prompt"}</strong>
                 </article>
                 <article className="archive-workspace-note__rule">
                   <span>{isKorean ? "세션 연결" : "Session linkage"}</span>

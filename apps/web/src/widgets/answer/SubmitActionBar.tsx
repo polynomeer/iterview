@@ -39,7 +39,7 @@ export function SubmitActionBar({
           : "Ready to submit";
   const readinessItems = [
     {
-      label: isKorean ? "프롬프트 응답 상태" : "Prompt answered",
+      label: isKorean ? "질문 문구 응답 상태" : "Prompt answered",
       state: validationMessage ? (isKorean ? "보완 필요" : "Needs work") : isKorean ? "준비됨" : "Ready",
     },
     {

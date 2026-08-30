@@ -207,7 +207,7 @@ export function BookmarksPage() {
           <h2 className="bookmarks-workspace-surface__title">{isKorean ? "가장 중요한 드릴 경로와 보조 근거를 한 번의 클릭 거리 안에 두세요" : "Keep the most important drill paths and supporting evidence one click away"}</h2>
           <p className="bookmarks-workspace-surface__body">
             {isKorean
-              ? "북마크는 맥락 전환을 줄여야 합니다. 기억으로 사슬을 다시 만들지 않고도 깊은 인터뷰 가지를 이어갈 수 있게 해주는 정확한 프롬프트, 근거, 회사 맥락을 저장하세요."
+              ? "북마크는 맥락 전환을 줄여야 합니다. 기억으로 사슬을 다시 만들지 않고도 깊은 인터뷰 가지를 이어갈 수 있게 해주는 정확한 질문 문구, 근거, 회사 맥락을 저장하세요."
               : "Bookmarks should reduce context switching. Save the exact prompt, proof, or company context that helps you continue a deep interview branch without rebuilding the chain from memory."}
           </p>
         </div>

@@ -371,7 +371,7 @@ export function InterviewPage() {
           : "Open setup"
         : selectedInterviewMode === "full_coverage"
           ? isKorean
-            ? "커버리지 패스 준비 완료"
+            ? "범위 패스 준비 완료"
             : "Coverage pass ready"
           : isKorean
             ? "범위 지정 가지 준비 완료"
@@ -508,7 +508,7 @@ export function InterviewPage() {
             <div className="interview-workspace-surface__header">
               <div className="interview-workspace-surface__intro">
                 <div className="interview-workspace-surface__eyebrow-row">
-                  <span className="page-card__label">{isKorean ? "인터뷰 워크스페이스" : "Interview workspace"}</span>
+                  <span className="page-card__label">{isKorean ? "인터뷰 작업공간" : "Interview workspace"}</span>
                 </div>
                 <h2 className="interview-workspace-surface__title">
                   {isKorean ? "방어할 가지를 하나 선택하세요" : "Choose one branch to defend"}
@@ -841,7 +841,7 @@ export function InterviewPage() {
                     </div>
                   </div>
                   <p className="page-card__body">
-                    {isKorean ? "다음 실행이 전체 DFS 트리를 훑어야 할 때만 커버리지 모드를 사용하세요." : "Use coverage mode only when the next run should sweep the full DFS tree."}
+                    {isKorean ? "다음 실행이 전체 DFS 트리를 훑어야 할 때만 범위 모드를 사용하세요." : "Use coverage mode only when the next run should sweep the full DFS tree."}
                   </p>
                   <div className="interview-launch-step__selected">
                     <span>{isKorean ? "현재 실행 규칙" : "Current launch rule"}</span>

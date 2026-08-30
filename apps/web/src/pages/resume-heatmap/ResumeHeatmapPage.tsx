@@ -640,7 +640,7 @@ export function ResumeHeatmapPage() {
                           anchorId: section.anchorRecordId ?? section.anchorKey ?? section.id,
                         })}
                       >
-                        {isKorean ? "보강 워크스페이스 열기" : "Open repair workspace"}
+                        {isKorean ? "보강 작업공간 열기" : "Open repair workspace"}
                       </Link>
                     </div>
                   </div>
@@ -652,7 +652,7 @@ export function ResumeHeatmapPage() {
           <article className="page-card page-card--muted resume-heatmap-priority-board__side">
             <div className="section-heading">
               <div>
-                <p className="section-heading__eyebrow">{isKorean ? "커버리지 신호" : "Coverage signals"}</p>
+                <p className="section-heading__eyebrow">{isKorean ? "범위 신호" : "Coverage signals"}</p>
                 <h3 className="page-card__title">{isKorean ? "이번 패스에서 무엇을 보강할지 이 신호로 결정하세요" : "Use these signals to decide what to repair in this pass"}</h3>
               </div>
             </div>
@@ -674,7 +674,7 @@ export function ResumeHeatmapPage() {
                 </strong>
               </div>
               <div className="resume-heatmap-signal-list__item">
-                <span>{isKorean ? "회사 커버리지" : "Company coverage"}</span>
+                <span>{isKorean ? "회사 범위" : "Company coverage"}</span>
                 <strong>
                   {isKorean
                     ? `${heatmapQuery.data.filterSummary.distinctCompanyCount}개의 면접 컨텍스트가 현재 이 버전에 매핑되어 있습니다.`

@@ -66,7 +66,7 @@ export function ResumeDesktopLayout({
             <h2 className="page-card__title">{isKorean ? "모의 면접 전에 방어 가능한 이력서 컨텍스트 하나를 만드세요" : "Build one defendable resume context before mock interviews begin"}</h2>
             <p className="page-card__body">
               {isKorean
-                ? "목표는 업로드 개수가 아닙니다. 더 깊은 꼬리질문을 버틸 만큼 근거, 추출 품질, 주장 커버리지가 갖춰진 활성 버전 하나입니다."
+                ? "목표는 업로드 개수가 아닙니다. 더 깊은 꼬리질문을 버틸 만큼 근거, 추출 품질, 주장 범위가 갖춰진 활성 버전 하나입니다."
                 : "The goal is not upload volume. It is one active version with evidence, extraction quality, and claim coverage strong enough to support deeper follow-up questions."}
             </p>
           </SectionPanel>

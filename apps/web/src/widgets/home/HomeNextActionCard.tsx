@@ -31,7 +31,7 @@ function getNextAction(home: HomeModel, isKorean: boolean) {
       label: isKorean ? "복기" : "Review",
       title: isKorean ? "재도전 큐에서 하나를 먼저 해결하세요" : "Clear one retry item from the queue",
       body: isKorean
-        ? "지금은 새로운 오늘의 프롬프트가 없으므로, 예약된 꼬리질문 연습을 다시 보는 것이 가장 좋습니다."
+        ? "지금은 새로운 오늘의 질문 문구가 없으므로, 예약된 꼬리질문 연습을 다시 보는 것이 가장 좋습니다."
         : "There is no fresh daily prompt right now, so the best next action is to revisit scheduled follow-up practice.",
       primaryAction: {
         label: isKorean ? "복습 큐 열기" : "Open review queue",

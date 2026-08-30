@@ -104,7 +104,7 @@ export function InterviewFullCoverageResultView({
           <span className="page-card__label">{t("interview.coverageSummaryLabel")}</span>
           <h2 className="page-card__title">{t("interview.coverageSummaryTitle")}</h2>
           <p className="page-card__body">{t("interview.coverageSummaryBody")}</p>
-          <div className="interview-coverage-summary__summary-row" role="list" aria-label={isKorean ? "커버리지 요약" : "Coverage summary"}>
+          <div className="interview-coverage-summary__summary-row" role="list" aria-label={isKorean ? "범위 요약" : "Coverage summary"}>
             <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
               {`${t("interview.overallCoverage")} ${coverage.overallCoveragePercent}%`}
             </span>
@@ -129,8 +129,8 @@ export function InterviewFullCoverageResultView({
             <span className="detail-chip detail-chip--accent">{isKorean ? `세션 ${session.id}` : `Session ${session.id}`}</span>
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
           </div>
-          <div className="interview-coverage-summary__principles" role="list" aria-label={isKorean ? "커버리지 원칙" : "Coverage principles"}>
-            <span role="listitem">{isKorean ? "전체 커버리지로 범위를 먼저 보고, 약한 facet과 건너뛴 facet으로 복구 순서를 정하세요." : "Use overall coverage to see the sweep, then use weak and skipped facets to decide recovery order."}</span>
+          <div className="interview-coverage-summary__principles" role="list" aria-label={isKorean ? "범위 원칙" : "Coverage principles"}>
+            <span role="listitem">{isKorean ? "전체 범위로 흐름을 먼저 보고, 약한 세부 항목과 건너뛴 세부 항목으로 복구 순서를 정하세요." : "Use overall coverage to see the sweep, then use weak and skipped facets to decide recovery order."}</span>
             <span role="listitem">{isKorean ? "연결 질문을 따라가기 전에 이력서 기록 하나만 먼저 고정하세요." : "Pin one resume record at a time before following its related questions."}</span>
           </div>
         </section>

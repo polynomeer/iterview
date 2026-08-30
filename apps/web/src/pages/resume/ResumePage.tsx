@@ -288,7 +288,7 @@ export function ResumePage() {
         <div className="resume-workspace-surface__header">
           <div className="resume-workspace-surface__intro">
             <div className="resume-workspace-surface__eyebrow-row">
-              <span className="page-card__label">{isKorean ? "이력서 워크스페이스" : "Resume workspace"}</span>
+              <span className="page-card__label">{isKorean ? "이력서 작업공간" : "Resume workspace"}</span>
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "근거 레인" : "Evidence lane"}</span>
             </div>
             <p className="resume-workspace-surface__breadcrumbs">
@@ -778,7 +778,7 @@ export function ResumePage() {
                             </strong>
                           </article>
                           <article className="stat-tile">
-                            <p className="stat-tile__label">{isKorean ? "프롬프트 버전" : "Prompt version"}</p>
+                            <p className="stat-tile__label">{isKorean ? "질문 문구 버전" : "Prompt version"}</p>
                             <strong className="stat-tile__value stat-tile__value--small">
                               {selectedExtractionQuery.data?.promptVersionLabel ??
                                 selectedVersionQuery.data.extractionPromptVersion ??

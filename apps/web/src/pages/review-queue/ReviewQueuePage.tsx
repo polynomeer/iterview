@@ -201,7 +201,7 @@ export function ReviewQueuePage() {
         <div className="review-queue-workspace-surface__header">
           <div className="review-queue-workspace-surface__intro">
             <div className="review-queue-workspace-surface__eyebrow-row">
-              <span className="page-card__label">{isKorean ? "큐 워크스페이스" : "Queue workspace"}</span>
+              <span className="page-card__label">{isKorean ? "큐 작업공간" : "Queue workspace"}</span>
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "복구 실행" : "Recovery execution"}</span>
             </div>
             <p className="review-queue-workspace-surface__breadcrumbs">

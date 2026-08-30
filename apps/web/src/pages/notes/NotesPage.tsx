@@ -363,7 +363,7 @@ export function NotesPage() {
         <div className="notes-workspace-surface__header">
           <div className="notes-workspace-surface__intro">
             <div className="notes-workspace-surface__eyebrow-row">
-              <span className="page-card__label">{isKorean ? "지식 워크스페이스" : "Knowledge workspace"}</span>
+              <span className="page-card__label">{isKorean ? "지식 작업공간" : "Knowledge workspace"}</span>
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "방어 조각" : "Defense fragments"}</span>
             </div>
             <p className="notes-workspace-surface__breadcrumbs">
@@ -585,7 +585,7 @@ export function NotesPage() {
               <div className="notes-editor__footer">
                 <span>{isKorean ? `단어 ${selectedNote.body.split(/\s+/).filter(Boolean).length}개` : `${selectedNote.body.split(/\s+/).filter(Boolean).length} words`}</span>
                 <span>{isKorean ? `연결 질문 ${selectedNote.linkedQuestions.length}개` : `${selectedNote.linkedQuestions.length} linked questions`}</span>
-                <span>{isKorean ? "Markdown 워크스페이스" : "Markdown workspace"}</span>
+                <span>{isKorean ? "Markdown 작업공간" : "Markdown workspace"}</span>
               </div>
             </section>
           ) : null}

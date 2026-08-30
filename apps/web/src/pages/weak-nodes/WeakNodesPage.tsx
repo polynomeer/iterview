@@ -275,7 +275,7 @@ export function WeakNodesPage() {
         ? "가장 약한 가지를 연결된 그래프 노드로 확인해서, 구조 없는 재시도 목록이 아니라 실패한 관계에서부터 보강을 시작하세요."
         : "Inspect the weakest branches as connected graph nodes so remediation starts from the failing relationship, not from an unstructured retry list."}
       eyebrow={isKorean ? "복구 그래프" : "Recovery graph"}
-      title={isKorean ? "약한 노드 보강 워크스페이스" : "Weak node remediation workspace"}
+      title={isKorean ? "약한 노드 보강 작업공간" : "Weak node remediation workspace"}
     >
       <WorkspaceContinuityRail
         current={{
@@ -314,7 +314,7 @@ export function WeakNodesPage() {
             </h2>
             <p className="weak-nodes-workspace-surface__body">
               {isKorean
-                ? "여기의 모든 약한 노드는 실패한 설명 하나를 그것이 속한 질문 가지와 의존하는 이력서 근거에 연결합니다. 큐가 무엇이 약한지는 알려주지만 어떻게 연결되어 약한지는 알려주지 않을 때 이 워크스페이스를 사용하세요."
+                ? "여기의 모든 약한 노드는 실패한 설명 하나를 그것이 속한 질문 가지와 의존하는 이력서 근거에 연결합니다. 큐가 무엇이 약한지는 알려주지만 어떻게 연결되어 약한지는 알려주지 않을 때 이 작업공간을 사용하세요."
                 : "Every weak node here links one failing explanation to the question branch it lives in and the resume evidence it depends on. Use this workspace when the queue tells you something is weak but not how the weakness connects."}
             </p>
           </div>

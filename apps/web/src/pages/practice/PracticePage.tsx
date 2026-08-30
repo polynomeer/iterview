@@ -77,7 +77,7 @@ export function PracticePage() {
     <PageContainer
       description={
         isKorean
-          ? "질문 집합을 좁혀 하나의 프롬프트가 실제 DFS 답변 연습에 걸맞아질 때까지 고른 뒤, 의도적으로 그 분기로 들어가세요."
+          ? "질문 집합을 좁혀 하나의 질문 문구가 실제 DFS 답변 연습에 걸맞아질 때까지 고른 뒤, 의도적으로 그 분기로 들어가세요."
           : "Filter the question set until one prompt is worth a focused DFS answer pass, then enter that branch on purpose."
       }
       eyebrow={isKorean ? "연습" : "Practice"}
@@ -123,7 +123,7 @@ export function PracticePage() {
         <div className="practice-workspace-surface__header">
           <div className="practice-workspace-surface__intro">
             <div className="practice-workspace-surface__eyebrow-row">
-              <span className="page-card__label">{isKorean ? "연습 워크스페이스" : "Practice workspace"}</span>
+              <span className="page-card__label">{isKorean ? "연습 작업공간" : "Practice workspace"}</span>
               <span className="question-status-badge question-status-badge--accent">
                 {isKorean ? "분기 진입" : "Branch entry"}
               </span>
@@ -212,7 +212,7 @@ export function PracticePage() {
             </h2>
             <p className="page-card__body">
               {isKorean
-                ? "이미 약한 분기가 보인다면 새 프롬프트를 고르기 전에 리뷰 큐로 먼저 이동하세요."
+                ? "이미 약한 분기가 보인다면 새 질문 문구를 고르기 전에 리뷰 큐로 먼저 이동하세요."
                 : "Jump into the review queue before choosing a fresh prompt when the weak branch is already known."}
             </p>
             <div className="page-card__actions">
@@ -284,7 +284,7 @@ export function PracticePage() {
             </h2>
             <p className="page-card__body">
               {isKorean
-                ? "중요해 보이는 프롬프트가 하나 보이면 답변 전에 트리로 전환하세요."
+                ? "중요해 보이는 질문 문구가 하나 보이면 답변 전에 트리로 전환하세요."
                 : "When one prompt looks important, switch to the tree before answering."}
             </p>
             <div className="page-card__actions">

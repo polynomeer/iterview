@@ -49,7 +49,7 @@ function OperationsCluster({ children }: { children: ReactNode }) {
           <p className="section-heading__eyebrow">{isKorean ? "운영 레인" : "Operations lane"}</p>
           <h2 className="page-card__title">
             {isKorean
-              ? "시스템 동작 방식을 바꾸는 워크스페이스를 여기서 여세요"
+              ? "시스템 동작 방식을 바꾸는 작업공간을 여기서 여세요"
               : "Open the workspaces that change how the system behaves around you"}
           </h2>
           <p className="page-card__body">

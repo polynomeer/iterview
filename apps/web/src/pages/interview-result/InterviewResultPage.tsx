@@ -227,7 +227,7 @@ export function InterviewResultPage() {
                 {isKorean ? "버틴 가지는 유지하고, 얕게 남은 가지는 다시 들어가세요." : "Keep the branches that held up. Re-enter the ones that stayed shallow."}
               </p>
             </div>
-            <div className="interview-result-workspace-surface__summary-row" role="list" aria-label={isKorean ? "결과 워크스페이스 신호" : "Result workspace signals"}>
+            <div className="interview-result-workspace-surface__summary-row" role="list" aria-label={isKorean ? "결과 작업공간 신호" : "Result workspace signals"}>
               <span className="interview-result-workspace-surface__summary-item" role="listitem">{isKorean ? `답변 ${answeredCount}` : `Answered ${answeredCount}`}</span>
               <span className="interview-result-workspace-surface__summary-item" role="listitem">{isKorean ? `건너뜀 ${skippedCount}` : `Skipped ${skippedCount}`}</span>
               <span className="interview-result-workspace-surface__summary-item" role="listitem">{isKorean ? `평균 점수 ${averageScoreLabel}` : `Average score ${averageScoreLabel}`}</span>
@@ -240,7 +240,7 @@ export function InterviewResultPage() {
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
             {skippedFacetCount > 0 ? <span className="detail-chip">{isKorean ? `건너뛴 세부 항목 ${skippedFacetCount}` : `Skipped facets ${skippedFacetCount}`}</span> : null}
           </div>
-          <div className="interview-result-workspace-surface__principles" role="list" aria-label={isKorean ? "결과 워크스페이스 원칙" : "Result workspace principles"}>
+          <div className="interview-result-workspace-surface__principles" role="list" aria-label={isKorean ? "결과 작업공간 원칙" : "Result workspace principles"}>
             <span role="listitem">{isKorean ? "다시 검증할 가치가 있는 가지만 다음으로 가져가세요." : "Carry forward only the branches worth re-testing."}</span>
             <span role="listitem">{isKorean ? "약한 세부 항목과 건너뛴 세부 항목으로 다음 패스 범위를 정하세요." : "Use weak and skipped facets to scope the next pass."}</span>
           </div>
@@ -269,7 +269,7 @@ export function InterviewResultPage() {
             <span className="interview-result-layout__hero-summary-item" role="listitem">{recoverySignal}</span>
           </div>
           <div className="interview-result-layout__hero-principles" role="list" aria-label={isKorean ? "세션 복구 원칙" : "Session recovery principles"}>
-            <span role="listitem">{isKorean ? "커버리지를 다시 넓히기 전에 실패한 가지 하나를 먼저 복구하세요." : "Recover one failed branch before widening coverage again."}</span>
+            <span role="listitem">{isKorean ? "범위를 다시 넓히기 전에 실패한 가지 하나를 먼저 복구하세요." : "Recover one failed branch before widening coverage again."}</span>
             <span role="listitem">{isKorean ? "빠진 사실, 수치, 제약을 다음 패스로 가져가세요." : "Bring the missing fact, metric, or constraint into the next pass."}</span>
           </div>
         </section>
@@ -379,7 +379,7 @@ export function InterviewResultPage() {
                 <span className="interview-result-layout__actions-summary-chip" role="listitem">{recommendedActionLabel}</span>
               </div>
               <div className="interview-result-layout__actions-principles" role="list" aria-label={isKorean ? "다음 패스 원칙" : "Next pass principles"}>
-                <span role="listitem">{isKorean ? "가지가 아직 얕다면 넓은 커버리지를 다시 시작하지 마세요." : "Do not restart broad coverage while the branch is still shallow."}</span>
+                <span role="listitem">{isKorean ? "가지가 아직 얕다면 넓은 범위를 다시 시작하지 마세요." : "Do not restart broad coverage while the branch is still shallow."}</span>
                 <span role="listitem">{isKorean ? "복구 목표 하나를 고르고, 다음 세션이 그것을 증명하게 하세요." : "Pick one recovery target and make the next session prove it."}</span>
               </div>
               <div className="interview-result-layout__next-list">

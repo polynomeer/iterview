@@ -262,7 +262,7 @@ export function PracticalInterviewListPage() {
               className="workspace-note-card workspace-note-card--accent practical-list-priority-board__side"
               variant="muted"
             >
-              <span className="page-card__label">{isKorean ? "커버리지 신호" : "Coverage signals"}</span>
+              <span className="page-card__label">{isKorean ? "범위 신호" : "Coverage signals"}</span>
               <h2 className="page-card__title">{isKorean ? "현재 큐 상태" : "Current queue health"}</h2>
               <div className="practical-list-signal-list">
                 <div className="practical-list-signal-list__item">

@@ -16,7 +16,7 @@ export function FollowUpRecommendationSection({ items }: FollowUpRecommendationS
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{isKorean ? "꼬리질문" : "Follow-up questions"}</p>
-          <h2 className="page-card__title">{isKorean ? "추천 다음 프롬프트" : "Recommended next prompts"}</h2>
+          <h2 className="page-card__title">{isKorean ? "추천 다음 질문 문구" : "Recommended next prompts"}</h2>
           <p className="page-card__body">
             {isKorean
               ? "약점이 표현 문제가 아니라 깊이 부족에서 올 때만 이 추천을 사용하세요."

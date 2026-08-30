@@ -41,7 +41,7 @@ export function InterviewCoveragePanel({
         <div
           className="interview-coverage-summary__summary-row"
           role="list"
-          aria-label={isKorean ? "커버리지 패널 요약" : "Coverage panel summary"}
+          aria-label={isKorean ? "범위 패널 요약" : "Coverage panel summary"}
         >
           <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
             {`${t("interview.coverageMode")} ${coverage.interviewModeLabel}`}
@@ -58,7 +58,7 @@ export function InterviewCoveragePanel({
         <div
           className="interview-coverage-summary__principles"
           role="list"
-          aria-label={isKorean ? "커버리지 패널 원칙" : "Coverage panel principles"}
+          aria-label={isKorean ? "범위 패널 원칙" : "Coverage panel principles"}
         >
           <span role="listitem">
             {isKorean
@@ -86,7 +86,7 @@ export function InterviewCoveragePanel({
               <div
                 className="interview-coverage-panel__section-summary-row"
                 role="list"
-                aria-label={isKorean ? `${section} 커버리지 요약` : `${section} coverage summary`}
+                aria-label={isKorean ? `${section} 범위 요약` : `${section} coverage summary`}
               >
                 <span className="interview-coverage-panel__section-summary-item" role="listitem">
                   {isKorean ? `근거 ${items.length}개` : `${items.length} evidence item${items.length > 1 ? "s" : ""}`}

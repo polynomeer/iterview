@@ -212,7 +212,7 @@ export function InterviewSessionPage() {
             },
             {
               label: isKorean ? "순회 원칙" : "Traversal rule",
-              value: isKorean ? "결과를 검토하기 전에는 넓은 커버리지를 다시 시작하지 마세요" : "Do not restart broad coverage until the result is reviewed",
+              value: isKorean ? "결과를 검토하기 전에는 넓은 범위를 다시 시작하지 마세요" : "Do not restart broad coverage until the result is reviewed",
             },
           ]}
           summaryBody={
@@ -426,7 +426,7 @@ export function InterviewSessionPage() {
             {
               title: isKorean ? "인터뷰 실행 화면" : "Interview launcher",
               description: isKorean
-                ? "이 활성 가지는 인터뷰 워크스페이스에서 경계와 순회 모드를 상속받습니다."
+                ? "이 활성 가지는 인터뷰 작업공간에서 경계와 순회 모드를 상속받습니다."
                 : "This active branch inherits its boundary and traversal mode from the interview workspace.",
               to: routeConfig.interview.buildPath(),
             },
@@ -468,7 +468,7 @@ export function InterviewSessionPage() {
               aria-label={isKorean ? "세션 가지 신호" : "Session branch signals"}
             >
               <span className="interview-session-workspace-surface__summary-item" role="listitem">
-                {isKorean ? `커버리지 ${coveragePercent}%` : `Coverage ${coveragePercent}%`}
+                {isKorean ? `범위 ${coveragePercent}%` : `Coverage ${coveragePercent}%`}
               </span>
               <span className="interview-session-workspace-surface__summary-item" role="listitem">
                 {isKorean ? `답변 완료 ${answeredQuestionCount}` : `Answered ${answeredQuestionCount}`}
@@ -847,7 +847,7 @@ export function InterviewSessionPage() {
           <section className="page-card interview-facet-panels-shell">
             <div className="interview-facet-panels-shell__header">
               <div>
-                <span className="page-card__label">{isKorean ? "커버리지 복구" : "Coverage recovery"}</span>
+                <span className="page-card__label">{isKorean ? "범위 복구" : "Coverage recovery"}</span>
                 <h2 className="page-card__title">
                   {isKorean ? "어떤 이력서 사실이 한 번 더 검증돼야 하는지 추적하세요" : "Track which resume facts still need another pass"}
                 </h2>
@@ -870,7 +870,7 @@ export function InterviewSessionPage() {
               <InterviewFacetSummaryPanel
                 emptyMessage={isKorean ? "이 세션에서 현재 추적 중인 건너뜀 항목이 없습니다." : "No skipped facets are currently tracked in this session."}
                 eyebrow={isKorean ? "건너뜀 항목" : "Skipped facets"}
-                helperText={isKorean ? "이 영역은 건너뛰었거나 미완료 상태이며, 복구 프롬프트로 다시 돌아올 수 있습니다." : "These areas were skipped or left incomplete and may return as recovery prompts."}
+                helperText={isKorean ? "이 영역은 건너뛰었거나 미완료 상태이며, 복구 질문 문구로 다시 돌아올 수 있습니다." : "These areas were skipped or left incomplete and may return as recovery prompts."}
                 items={activeSession.summary.skippedFacetSummaries}
                 title={isKorean ? "건너뜀 복구" : "Skipped recovery"}
                 tone="accent"
@@ -881,17 +881,17 @@ export function InterviewSessionPage() {
         {isFullCoverage ? (
           coverageQuery.isLoading || resumeMapQuery.isLoading ? (
             <LoadingStateCard
-              body={isKorean ? "이력서 커버리지 진행도와 플래너 기반 근거 맵을 불러오는 중입니다." : "Loading resume coverage progress and the planner-driven evidence map."}
-              title={isKorean ? "커버리지 패널 준비 중" : "Preparing coverage panel"}
+              body={isKorean ? "이력서 범위 진행도와 플래너 기반 근거 맵을 불러오는 중입니다." : "Loading resume coverage progress and the planner-driven evidence map."}
+              title={isKorean ? "범위 패널 준비 중" : "Preparing coverage panel"}
             />
           ) : coverageQuery.isError || resumeMapQuery.isError ? (
             <ErrorStateCard
-              body={isKorean ? "이 전체 커버리지 세션의 커버리지 패널을 불러오지 못했습니다." : "The coverage panel could not be loaded for this full coverage session."}
+              body={isKorean ? "이 전체 범위 세션의 범위 패널을 불러오지 못했습니다." : "The coverage panel could not be loaded for this full coverage session."}
               details={getErrorDetails(coverageQuery.error ?? resumeMapQuery.error)}
               onAction={() => {
                 void Promise.all([coverageQuery.refetch(), resumeMapQuery.refetch()]);
               }}
-              title={isKorean ? "커버리지 상세를 불러올 수 없습니다" : "Unable to load coverage details"}
+              title={isKorean ? "범위 상세를 불러올 수 없습니다" : "Unable to load coverage details"}
             />
           ) : (
             <InterviewCoveragePanel

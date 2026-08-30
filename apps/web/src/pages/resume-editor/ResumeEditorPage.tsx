@@ -2045,7 +2045,7 @@ export function ResumeEditorPage() {
         baseRevisionNo: workspaceQuery.data.revisionNo,
         changeSource,
       });
-      setSaveMessage(isKorean ? "초안 워크스페이스를 저장했습니다." : "Draft workspace saved.");
+      setSaveMessage(isKorean ? "초안 작업공간을 저장했습니다." : "Draft workspace saved.");
       setMergePreviewMessage(null);
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -2111,7 +2111,7 @@ export function ResumeEditorPage() {
         baseRevisionNo: workspaceQuery.data.revisionNo,
         changeSource,
       });
-      setSaveMessage(isKorean ? "초안 워크스페이스를 저장했습니다." : "Draft workspace saved.");
+      setSaveMessage(isKorean ? "초안 작업공간을 저장했습니다." : "Draft workspace saved.");
       setMergePreviewMessage(null);
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -2192,7 +2192,7 @@ export function ResumeEditorPage() {
       clientSessionKey: sessionKey,
       clientChangeId: `${changeSource}-${Date.now().toString(36)}`,
     });
-    setSaveMessage(isKorean ? "초안 워크스페이스를 저장했습니다." : "Draft workspace saved.");
+    setSaveMessage(isKorean ? "초안 작업공간을 저장했습니다." : "Draft workspace saved.");
     setMergePreviewMessage(null);
   }
 
@@ -2285,7 +2285,7 @@ export function ResumeEditorPage() {
         return (
           <section className="page-card">
             <span className="page-card__label">{isKorean ? "참여 상태" : "Presence"}</span>
-            <h2 className="page-card__title">{isKorean ? "워크스페이스 참여 상태" : "Workspace presence"}</h2>
+            <h2 className="page-card__title">{isKorean ? "작업공간 참여 상태" : "Workspace presence"}</h2>
             <div className="filter-chip-row">
               {workspace.activePresence.length > 0 ? (
                 workspace.activePresence.map((presence) => (
@@ -2305,7 +2305,7 @@ export function ResumeEditorPage() {
         return (
           <section className="page-card">
             <span className="page-card__label">{isKorean ? "질문 카드" : "Question cards"}</span>
-            <h2 className="page-card__title">{isKorean ? "면접 및 학습 프롬프트" : "Interview and study prompts"}</h2>
+            <h2 className="page-card__title">{isKorean ? "면접 및 학습 질문 문구" : "Interview and study prompts"}</h2>
             <label className="form-field">
               <span className="form-field__label">{isKorean ? "제목" : "Title"}</span>
               <input
@@ -2674,12 +2674,12 @@ export function ResumeEditorPage() {
   if (workspaceQuery.isLoading) {
     return (
       <PageContainer
-        description={isKorean ? "변경 불가능한 이력서 버전에서 에디터 워크스페이스를 준비하고 있습니다." : "Bootstrapping the resume editor workspace from the immutable resume version."}
+        description={isKorean ? "변경 불가능한 이력서 버전에서 에디터 작업공간을 준비하고 있습니다." : "Bootstrapping the resume editor workspace from the immutable resume version."}
         eyebrow={isKorean ? "이력서 에디터" : "Resume Editor"}
-        title={isKorean ? "워크스페이스 준비 중" : "Preparing workspace"}
+        title={isKorean ? "작업공간 준비 중" : "Preparing workspace"}
       >
         <LoadingStateCard
-          body={isKorean ? "초안 워크스페이스, 주석, 리비전 컨텍스트를 불러오는 중입니다." : "Loading the draft workspace, annotations, and revision context."}
+          body={isKorean ? "초안 작업공간, 주석, 리비전 컨텍스트를 불러오는 중입니다." : "Loading the draft workspace, annotations, and revision context."}
           title={isKorean ? "이력서 에디터 준비 중" : "Preparing resume editor"}
         />
       </PageContainer>
@@ -2689,23 +2689,23 @@ export function ResumeEditorPage() {
   if (workspaceQuery.isError || !workspaceQuery.data) {
     return (
       <PageContainer
-        description={isKorean ? "이력서 에디터 워크스페이스를 불러오지 못했습니다." : "The resume editor workspace could not be loaded."}
+        description={isKorean ? "이력서 에디터 작업공간을 불러오지 못했습니다." : "The resume editor workspace could not be loaded."}
         eyebrow={isKorean ? "이력서 에디터" : "Resume Editor"}
-        title={isKorean ? "워크스페이스를 열 수 없습니다" : "Workspace unavailable"}
+        title={isKorean ? "작업공간을 열 수 없습니다" : "Workspace unavailable"}
       >
         <ErrorStateCard
           body={
             workspaceQuery.error instanceof Error
               ? workspaceQuery.error.message
               : isKorean
-                ? "이력서 에디터 워크스페이스를 불러오지 못했습니다."
+                ? "이력서 에디터 작업공간을 불러오지 못했습니다."
                 : "The resume editor workspace could not be loaded."
           }
           details={getErrorDetails(workspaceQuery.error)}
           onAction={() => {
             void workspaceQuery.refetch();
           }}
-          title={isKorean ? "이력서 에디터 워크스페이스를 불러올 수 없습니다" : "Unable to load resume editor workspace"}
+          title={isKorean ? "이력서 에디터 작업공간을 불러올 수 없습니다" : "Unable to load resume editor workspace"}
         />
       </PageContainer>
     );
@@ -2862,10 +2862,10 @@ export function ResumeEditorPage() {
                     >
                       {isWorkspaceInfoOpen
                         ? isKorean
-                          ? "워크스페이스 정보 숨기기"
+                          ? "작업공간 정보 숨기기"
                           : "Hide workspace info"
                         : isKorean
-                          ? "워크스페이스 정보"
+                          ? "작업공간 정보"
                           : "Workspace info"}
                     </button>
                     <button
@@ -3021,7 +3021,7 @@ export function ResumeEditorPage() {
             >
               <span className="page-card__label">{isKorean ? "마크다운 가져오기" : "Markdown import"}</span>
               <h2 className="page-card__title">
-                {isKorean ? "마크다운을 초안 워크스페이스로 가져오기" : "Import markdown into the draft workspace"}
+                {isKorean ? "마크다운을 초안 작업공간으로 가져오기" : "Import markdown into the draft workspace"}
               </h2>
               <p className="resume-tailor-muted">
                 {isKorean
@@ -3167,7 +3167,7 @@ export function ResumeEditorPage() {
                     }}
                     type="button"
                   >
-                    {isKorean ? "병합된 초안을 워크스페이스에 적용" : "Apply merged draft to workspace"}
+                    {isKorean ? "병합된 초안을 작업공간에 적용" : "Apply merged draft to workspace"}
                   </button>
                   <button
                     className="secondary-button"
@@ -3337,7 +3337,7 @@ export function ResumeEditorPage() {
                             <div className="section-heading">
                               <div>
                                 <p className="section-heading__eyebrow">{isKorean ? "인라인 질문 제안" : "Inline question suggestions"}</p>
-                                <h3 className="page-card__title">{isKorean ? "선택 영역 기반 프롬프트" : "Selection-based prompts"}</h3>
+                                <h3 className="page-card__title">{isKorean ? "선택 영역 기반 질문 문구" : "Selection-based prompts"}</h3>
                               </div>
                               <button
                                 className="secondary-button"
@@ -3708,7 +3708,7 @@ export function ResumeEditorPage() {
                                 <div className="resume-editor-inline-composer__header">
                                   <div>
                                     <p className="section-heading__eyebrow">{isKorean ? "인라인 질문 카드" : "Inline question card"}</p>
-                                    <h3 className="page-card__title">{isKorean ? "현재 선택 영역에서 질문 프롬프트 만들기" : "Create a prompt from the current selection"}</h3>
+                                    <h3 className="page-card__title">{isKorean ? "현재 선택 영역에서 질문 문구 만들기" : "Create a prompt from the current selection"}</h3>
                                   </div>
                                   <button
                                     aria-label={isKorean ? "인라인 질문 카드 닫기" : "Close inline question card"}
@@ -4174,7 +4174,7 @@ export function ResumeEditorPage() {
               </>
             ) : (
               <EmptyStateCard
-                body={isKorean ? "이 워크스페이스에서는 아직 이력서 히트맵을 사용할 수 없습니다." : "The resume heatmap is not available for this workspace yet."}
+                body={isKorean ? "이 작업공간에서는 아직 이력서 히트맵을 사용할 수 없습니다." : "The resume heatmap is not available for this workspace yet."}
                 title={isKorean ? "히트맵 연결 없음" : "No heatmap connection"}
               />
             )}
@@ -4240,7 +4240,7 @@ export function ResumeEditorPage() {
                 <h2 className="page-card__title">{isKorean ? "리비전 히스토리" : "Revision history"}</h2>
                 {revisionsQuery.isLoading ? (
                   <LoadingStateCard
-                    body={isKorean ? "저장된 워크스페이스 리비전을 불러오는 중입니다." : "Loading persisted workspace revisions."}
+                    body={isKorean ? "저장된 작업공간 리비전을 불러오는 중입니다." : "Loading persisted workspace revisions."}
                     title={isKorean ? "히스토리 준비 중" : "Preparing history"}
                   />
                 ) : revisionsQuery.isError ? (

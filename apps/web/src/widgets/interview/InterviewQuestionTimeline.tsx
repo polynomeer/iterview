@@ -57,7 +57,7 @@ export function InterviewQuestionTimeline({
       </div>
       <p className="page-card__body interview-timeline-workspace__intro">
         {isKorean
-          ? "질문 순서, 근거 앵커, 생성된 꼬리질문을 분리된 프롬프트가 아니라 하나의 연속된 방어 경로로 검토하세요."
+          ? "질문 순서, 근거 앵커, 생성된 꼬리질문을 분리된 질문 문구가 아니라 하나의 연속된 방어 경로로 검토하세요."
           : "Review the branch order, evidence anchors, and generated follow-ups as one continuous defense path rather than isolated prompts."}
       </p>
       <div
@@ -67,7 +67,7 @@ export function InterviewQuestionTimeline({
       >
         <span role="listitem">
           {isKorean
-            ? "가지를 개별 프롬프트가 아니라 하나의 방어 경로로 읽으세요."
+            ? "가지를 개별 질문 문구가 아니라 하나의 방어 경로로 읽으세요."
             : "Read the branch as one defense path, not as separate prompts."}
         </span>
         <span role="listitem">

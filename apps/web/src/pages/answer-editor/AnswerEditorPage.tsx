@@ -94,9 +94,9 @@ export function AnswerEditorPage() {
   return (
     <PageContainer
       description={isKorean
-        ? "현재 노드, 이력서 근거, 꼬리질문 압박을 한 워크스페이스에서 보며 답변 초안을 작성하세요."
+        ? "현재 노드, 이력서 근거, 꼬리질문 압박을 한 작업공간에서 보며 답변 초안을 작성하세요."
         : "Draft the answer with the current node, resume evidence, and follow-up pressure visible in one workspace."}
-      eyebrow={isKorean ? "답변 워크스페이스" : "Answer workspace"}
+      eyebrow={isKorean ? "답변 작업공간" : "Answer workspace"}
       title={isKorean ? "다음 꼬리질문이 오기 전에 방어 가능한 답변 하나를 완성하세요" : "Write one defendable answer before the next follow-up lands"}
     >
       {questionDetailQuery.isLoading ? (
@@ -152,7 +152,7 @@ export function AnswerEditorPage() {
               <div className="answer-editor-workspace-surface__header">
                 <div className="answer-editor-workspace-surface__intro">
                   <div className="answer-editor-workspace-surface__eyebrow-row">
-                    <span className="page-card__label">{isKorean ? "답변 워크스페이스" : "Answer workspace"}</span>
+                    <span className="page-card__label">{isKorean ? "답변 작업공간" : "Answer workspace"}</span>
                     <span className="question-status-badge question-status-badge--accent">
                       {isKorean ? "초안 레인" : "Draft lane"}
                     </span>
@@ -229,7 +229,7 @@ export function AnswerEditorPage() {
               </div>
               <div className="answer-editor-insight-surface__stats">
                 <article>
-                  <span>{isKorean ? "프롬프트 크기" : "Prompt size"}</span>
+                  <span>{isKorean ? "질문 문구 크기" : "Prompt size"}</span>
                   <strong>{promptDensity}</strong>
                   <p>{isKorean ? "답변 범위를 정하는 질문 본문의 단어 수" : "words in the question body that set the response scope"}</p>
                 </article>
@@ -324,7 +324,7 @@ export function AnswerEditorPage() {
                 <div className="answer-editor-context__rules">
                   <div className="answer-editor-context__rule">
                     <strong>{isKorean ? "1. 주장" : "1. Claim"}</strong>
-                    <span>{isKorean ? "배경을 늘리기 전에 정확한 프롬프트에 먼저 답하세요." : "Answer the exact prompt before expanding into background."}</span>
+                    <span>{isKorean ? "배경을 늘리기 전에 정확한 질문 문구에 먼저 답하세요." : "Answer the exact prompt before expanding into background."}</span>
                   </div>
                   <div className="answer-editor-context__rule">
                     <strong>{isKorean ? "2. 근거" : "2. Evidence"}</strong>

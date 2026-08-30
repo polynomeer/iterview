@@ -14,7 +14,7 @@ export function QuestionPromptCard({ question }: QuestionPromptCardProps) {
     <section className="question-hero question-hero--answer-workspace">
       <div className="question-hero__topline">
         <span className="page-card__label">{t("answer.promptLabel")}</span>
-        <span className="question-status-badge">{isKorean ? "프롬프트 노드" : "Prompt node"}</span>
+        <span className="question-status-badge">{isKorean ? "질문 문구 노드" : "Prompt node"}</span>
       </div>
       <h2 className="question-hero__title">{question.title}</h2>
       <div className="question-hero__meta">
