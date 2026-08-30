@@ -521,9 +521,9 @@ export function ResumePage() {
 
                 {selectedResumeId && !selectedVersionId ? (
                   <section className="page-card">
-                    <div className="section-heading">
-                      <div>
-                        <p className="section-heading__eyebrow">Selected resume</p>
+                      <div className="section-heading">
+                        <div>
+                        <p className="section-heading__eyebrow">{isKorean ? "선택한 이력서" : "Selected resume"}</p>
                         <h2 className="page-card__title">
                           {resumeListQuery.data.items.find((resume) => resume.id === selectedResumeId)?.title ?? (isKorean ? "이력서" : "Resume")}
                         </h2>
@@ -1087,14 +1087,14 @@ export function ResumePage() {
             }}
             type="button"
           >
-            {isOutlineOpen ? "Hide outline" : "Outline"}
+            {isOutlineOpen ? (isKorean ? "개요 숨기기" : "Hide outline") : (isKorean ? "개요" : "Outline")}
           </button>
           {isOutlineOpen ? (
             <aside className="page-card page-card--muted resume-floating-outline__panel">
               <div className="section-heading">
                 <div>
-                  <span className="page-card__label">Outline</span>
-                  <h3 className="page-card__title">Jump to a resume section</h3>
+                  <span className="page-card__label">{isKorean ? "개요" : "Outline"}</span>
+                  <h3 className="page-card__title">{isKorean ? "이력서 섹션으로 바로 이동" : "Jump to a resume section"}</h3>
                 </div>
               </div>
               <div className="resume-outline-list">

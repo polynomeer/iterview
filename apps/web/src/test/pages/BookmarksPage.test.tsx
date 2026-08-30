@@ -10,14 +10,14 @@ describe("BookmarksPage", () => {
       <Routes>
         <Route element={<BookmarksPage />} path="/bookmarks" />
       </Routes>,
-      { route: "/bookmarks" },
+      { route: "/bookmarks", locale: "ko" },
     );
 
-    expect(screen.getByText("Saved interview bookmarks")).toBeInTheDocument();
-    expect(screen.getByRole("searchbox", { name: "Search bookmarks" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Saved Questions" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Explain why Redis lock renewal/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Practice question" })).toHaveAttribute(
+    expect(screen.getByText("저장된 인터뷰 북마크")).toBeInTheDocument();
+    expect(screen.getByRole("searchbox", { name: "북마크 검색" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "저장 질문" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /네트워크 지터 상황에서도 Redis 락 갱신이 실패할 수 있는 이유 설명하기/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "질문 연습" })).toHaveAttribute(
       "href",
       "/questions/distributed-lock/tree",
     );
@@ -30,7 +30,7 @@ describe("BookmarksPage", () => {
       <Routes>
         <Route element={<BookmarksPage />} path="/bookmarks" />
       </Routes>,
-      { route: "/bookmarks" },
+      { route: "/bookmarks", locale: "ko" },
     );
 
     expect(document.querySelector(".bookmarks-layout--desktop")).not.toBeNull();
