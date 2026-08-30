@@ -148,6 +148,32 @@ function normalizeEditorTab(value: string | null): EditorTab {
   return "edit";
 }
 
+function formatSupportedViewModeLabel(mode: string, isKorean: boolean) {
+  if (!isKorean) {
+    switch (mode) {
+      case "print-preview":
+        return "Print preview";
+      default:
+        return mode.charAt(0).toUpperCase() + mode.slice(1);
+    }
+  }
+
+  switch (mode) {
+    case "edit":
+      return "편집";
+    case "review":
+      return "리뷰";
+    case "heatmap":
+      return "히트맵";
+    case "print-preview":
+      return "출력 미리보기";
+    case "history":
+      return "히스토리";
+    default:
+      return mode;
+  }
+}
+
 function mapEditableBlocks(
   blocks: Array<{
     blockId: string;
@@ -2715,8 +2741,8 @@ export function ResumeEditorPage() {
           </button>
         </>
       }
-      description={isKorean ? "이력서 source of truth를 작성하고, 각 주장을 댓글, 질문 카드, 연결된 인터뷰 맥락으로 압박 테스트하세요." : "Author the resume source of truth, then pressure-test each claim with comments, question cards, and linked interview context."}
-      eyebrow={isKorean ? "Source of truth 에디터" : "Source of truth editor"}
+      description={isKorean ? "이력서 기준 문서를 작성하고, 각 주장을 댓글, 질문 카드, 연결된 인터뷰 맥락으로 압박 테스트하세요." : "Author the resume source of truth, then pressure-test each claim with comments, question cards, and linked interview context."}
+      eyebrow={isKorean ? "기준 문서 에디터" : "Source of truth editor"}
       title={workspaceQuery.data.sourceFileName}
     >
       <div className="page-stack">
@@ -2724,7 +2750,7 @@ export function ResumeEditorPage() {
           <div className="resume-editor-workspace-surface__header">
             <div className="resume-editor-workspace-surface__intro">
               <div className="resume-editor-workspace-surface__eyebrow-row">
-                <span className="page-card__label">{isKorean ? "Source of truth 작성" : "Source-of-truth authoring"}</span>
+                <span className="page-card__label">{isKorean ? "기준 문서 작성" : "Source-of-truth authoring"}</span>
                 <span className="question-status-badge question-status-badge--accent">{isKorean ? "초안 레인" : "Draft lane"}</span>
               </div>
               <p className="resume-editor-workspace-surface__breadcrumbs">
@@ -2739,7 +2765,7 @@ export function ResumeEditorPage() {
               </h2>
               <p className="resume-editor-workspace-surface__body">
                 {isKorean
-                  ? "문서 꾸미기가 아니라 source of truth 작성이라고 생각하세요. 각 리비전은 하나의 주장을 더 명확하게 만들고, 근거를 보강하거나, 깊은 질문에도 덜 흔들리게 만들어야 합니다."
+                  ? "문서 꾸미기가 아니라 기준 문서 작성이라고 생각하세요. 각 리비전은 하나의 주장을 더 명확하게 만들고, 근거를 보강하거나, 깊은 질문에도 덜 흔들리게 만들어야 합니다."
                   : "Treat this as source-of-truth authoring, not document polishing. Each revision should make one claim clearer, better evidenced, or less fragile under deeper questioning."}
               </p>
             </div>
@@ -2790,10 +2816,10 @@ export function ResumeEditorPage() {
                   : "Blocks"}
             </span>
             {workspaceQuery.data.selectionCapabilities.supportsOperations ? (
-              <span className="detail-chip">{isKorean ? "연산 사용 가능" : "Operations enabled"}</span>
+              <span className="detail-chip">{isKorean ? "문서 연산 가능" : "Operations enabled"}</span>
             ) : null}
             {workspaceQuery.data.selectionCapabilities.supportsInlineSelections ? (
-              <span className="detail-chip">{isKorean ? "인라인 선택 사용 가능" : "Inline selections enabled"}</span>
+              <span className="detail-chip">{isKorean ? "인라인 선택 가능" : "Inline selections enabled"}</span>
             ) : null}
           </div>
         </section>
@@ -2810,7 +2836,7 @@ export function ResumeEditorPage() {
             </div>
             <div className="page-card__actions">
               <span className="question-status-badge question-status-badge--accent">
-                Revision {workspaceQuery.data.revisionNo}
+                {isKorean ? `리비전 ${workspaceQuery.data.revisionNo}` : `Revision ${workspaceQuery.data.revisionNo}`}
               </span>
               <span className="question-status-badge question-status-badge--neutral">
                 {workspaceQuery.data.workspaceStatusLabel}
@@ -2958,14 +2984,17 @@ export function ResumeEditorPage() {
                       : "Blocks"}
                 </span>
                 {workspaceQuery.data.selectionCapabilities.supportsOperations ? (
-                  <span className="detail-chip">{isKorean ? "연산 사용 가능" : "Operations enabled"}</span>
+                  <span className="detail-chip">{isKorean ? "문서 연산 가능" : "Operations enabled"}</span>
                 ) : null}
                 {workspaceQuery.data.selectionCapabilities.supportsInlineSelections ? (
-                  <span className="detail-chip">{isKorean ? "인라인 선택 사용 가능" : "Inline selections enabled"}</span>
+                  <span className="detail-chip">{isKorean ? "인라인 선택 가능" : "Inline selections enabled"}</span>
                 ) : null}
                 {workspaceQuery.data.supportedViewModes.length > 0 ? (
                   <span className="detail-chip">
-                    {isKorean ? "모드" : "Modes"} {workspaceQuery.data.supportedViewModes.join(", ")}
+                    {isKorean ? "모드" : "Modes"}{" "}
+                    {workspaceQuery.data.supportedViewModes
+                      .map((mode) => formatSupportedViewModeLabel(mode, isKorean))
+                      .join(", ")}
                   </span>
                 ) : null}
               </div>

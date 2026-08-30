@@ -354,7 +354,7 @@ function localizeTargetCompanyText(value: string, isKorean: boolean) {
     case "Run the strongest payment correctness branch before general system design practice.":
       return "일반 시스템 설계 연습 전에 가장 강한 결제 정합성 분기를 먼저 점검하세요.";
     case "Tighten source-of-truth metrics":
-      return "source of truth 지표 보강";
+      return "기준 근거 지표 보강";
     case "Re-validate the numbers and proof chain behind settlement bullet claims.":
       return "정산 bullet claim 뒤의 수치와 증빙 체인을 다시 검증하세요.";
     case "Review imported job postings":
@@ -539,7 +539,7 @@ export function TargetCompaniesPage() {
           </Link>
         </>
       }
-      description={isKorean ? "지금 중요한 회사와 해당 회사가 압박할 인터뷰 루프, 그리고 준비도를 가장 빨리 올려주는 source of truth 보강 지점을 추적하세요." : "Track which companies matter now, which interview loops they are likely to stress, and which source-of-truth repairs improve readiness fastest."}
+      description={isKorean ? "지금 중요한 회사와 해당 회사가 압박할 인터뷰 루프, 그리고 준비도를 가장 빨리 올려주는 기준 근거 보강 지점을 추적하세요." : "Track which companies matter now, which interview loops they are likely to stress, and which source-of-truth repairs improve readiness fastest."}
       eyebrow={isKorean ? "회사 신호" : "Company signals"}
       title={isKorean ? "회사 준비 보드" : "Company preparation board"}
     >
