@@ -212,7 +212,7 @@ function localizeWeakNodeText(value: string, isKorean: boolean) {
     "Replay boundaries": "Replay 경계",
     "Partition skew": "Partition skew",
     "Resume metrics proof chain": "이력서 지표 근거 사슬",
-    "Source of truth": "source of truth",
+    "Source of truth": "기준 문서",
     "Evidence bridge": "근거 브리지",
     "The branch uses strong numbers but the derivation path is still too compressed when the interviewer asks how the metric was produced.":
       "이 가지는 강한 수치를 쓰지만, 면접관이 지표 산출 방식을 물으면 도출 경로가 여전히 너무 압축되어 있습니다.",
@@ -285,7 +285,7 @@ export function WeakNodesPage() {
         downstream={[
           {
             title: isKorean ? "이력서 분석" : "Resume analysis",
-            description: isKorean ? "약한 가지가 빈약한 주장을 드러내면 source of truth 검토로 돌아가세요." : "Return to source-of-truth review when the weak branch exposes a thin claim.",
+            description: isKorean ? "약한 가지가 빈약한 주장을 드러내면 기준 문서 검토로 돌아가세요." : "Return to source-of-truth review when the weak branch exposes a thin claim.",
             to: routeConfig.resumeAnalysis.buildPath(),
           },
           {
@@ -340,7 +340,7 @@ export function WeakNodesPage() {
           </article>
           <article className="weak-nodes-workspace-surface__guidance-card">
             <span>{isKorean ? "이탈 원칙" : "Exit rule"}</span>
-            <strong>{isKorean ? "노드의 source of truth 경로가 전보다 더 선명해진 뒤에만 큐로 돌아가세요." : "Return to the queue only after the node has a clearer source-of-truth path than before."}</strong>
+            <strong>{isKorean ? "노드의 기준 문서 경로가 전보다 더 선명해진 뒤에만 큐로 돌아가세요." : "Return to the queue only after the node has a clearer source-of-truth path than before."}</strong>
           </article>
         </div>
       </section>
@@ -451,7 +451,7 @@ export function WeakNodesPage() {
               <div className="section-heading section-heading--compact">
                 <div>
                   <p className="section-heading__eyebrow">{isKorean ? "이력서 근거" : "Resume evidence"}</p>
-                  <h2 className="page-card__title">{isKorean ? "이 노드가 의존하는 source of truth 자료를 다시 여세요" : "Reopen the source-of-truth material this node depends on"}</h2>
+                  <h2 className="page-card__title">{isKorean ? "이 노드가 의존하는 기준 문서 자료를 다시 여세요" : "Reopen the source-of-truth material this node depends on"}</h2>
                 </div>
               </div>
               <div className="weak-nodes-detail-rail__list">

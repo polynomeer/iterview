@@ -676,10 +676,10 @@ export function InterviewSessionPage() {
                   <span role="listitem">
                     {evidenceAnchorCount > 0
                       ? isKorean
-                        ? `이 가지에는 source of truth 스니펫 ${evidenceAnchorCount}개가 연결되어 있습니다.`
+                        ? `이 가지에는 기준 문서 스니펫 ${evidenceAnchorCount}개가 연결되어 있습니다.`
                         : `${evidenceAnchorCount} source-of-truth snippet${evidenceAnchorCount > 1 ? "s are" : " is"} attached to the branch.`
                       : isKorean
-                        ? "이 가지에는 아직 source of truth 스니펫이 연결되지 않았습니다."
+                        ? "이 가지에는 아직 기준 문서 스니펫이 연결되지 않았습니다."
                         : "No source-of-truth snippet is attached to the branch yet."}
                   </span>
                   <span role="listitem">
@@ -726,10 +726,10 @@ export function InterviewSessionPage() {
                 <span className="interview-session-answer-surface__summary-item" role="listitem">
                   {evidenceAnchorCount > 0
                     ? isKorean
-                      ? `source of truth 스니펫 ${evidenceAnchorCount}개 연결됨`
+                      ? `기준 문서 스니펫 ${evidenceAnchorCount}개 연결됨`
                       : `${evidenceAnchorCount} source-of-truth snippet${evidenceAnchorCount > 1 ? "s" : ""} attached`
                     : isKorean
-                      ? "source of truth 스니펫이 아직 없습니다"
+                      ? "기준 문서 스니펫이 아직 없습니다"
                       : "No source-of-truth snippet yet"}
                 </span>
                 <span className="interview-session-answer-surface__summary-item interview-session-answer-surface__summary-item--accent" role="listitem">

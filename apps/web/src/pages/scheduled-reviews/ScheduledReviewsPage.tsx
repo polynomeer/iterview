@@ -63,7 +63,7 @@ const INITIAL_REVIEW_BLOCKS: ReviewBlock[] = [
   {
     id: "resume-metrics",
     title: "이력서 수치 방어 점검",
-    cluster: "Source of truth / 수치화 주장",
+    cluster: "기준 문서 / 수치화 주장",
     dueDate: "2026-08-28",
     impact: "다음 회사 루프 전 이력서 근거 신뢰도 강화",
     durationLabel: "30분",
@@ -347,7 +347,7 @@ export function ScheduledReviewsPage() {
               <span className="page-card__label">{isKorean ? "권장 다음 단계" : "Recommended next steps"}</span>
               <ul className="page-card__list">
                 <li>{isKorean ? "한 번에 끝낼 수 있을 때만 이 블록을 여세요." : "Open the block only when you can finish it in one sitting."}</li>
-                <li>{isKorean ? "답변 리허설 전에 source of truth 보강이 더 필요하면 일정을 바꾸세요." : "Reschedule if the branch still needs source-of-truth repair before answer rehearsal."}</li>
+                <li>{isKorean ? "답변 리허설 전에 기준 문서 보강이 더 필요하면 일정을 바꾸세요." : "Reschedule if the branch still needs source-of-truth repair before answer rehearsal."}</li>
                 <li>{isKorean ? "재시도 목표가 이전보다 실질적으로 더 명확해졌을 때만 완료 처리하세요." : "Use completion only after the retry target is materially clearer than before."}</li>
               </ul>
             </section>

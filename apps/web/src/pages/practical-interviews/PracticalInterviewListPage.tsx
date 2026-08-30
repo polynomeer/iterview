@@ -236,7 +236,7 @@ export function PracticalInterviewListPage() {
                 <article className="practical-list-priority-step">
                   <div className="practical-list-priority-step__index">2</div>
                   <div className="practical-list-priority-step__body">
-                    <strong>{isKorean ? "source of truth와 연결하세요" : "Link it to source-of-truth"}</strong>
+                    <strong>{isKorean ? "기준 문서와 연결하세요" : "Link it to source-of-truth"}</strong>
                     <span>
                       {isKorean
                         ? "나중의 약점 분석이 실제 주장으로 되돌아가도록 정확한 이력서 버전을 연결하세요."
@@ -286,7 +286,7 @@ export function PracticalInterviewListPage() {
                   <strong>
                     {resumeChoices.length > 0
                       ? isKorean
-                        ? "이력서와 연결된 가져오기는 이후 heatmap과 source-of-truth 보강으로 이어질 수 있습니다."
+                        ? "이력서와 연결된 가져오기는 이후 히트맵과 기준 문서 보강으로 이어질 수 있습니다."
                         : "Resume-linked imports can feed heatmap and source-of-truth repair later."
                       : isKorean
                         ? "아직 파싱된 이력서 버전이 없어 가져온 기록이 분리된 상태로 남습니다."
@@ -326,7 +326,7 @@ export function PracticalInterviewListPage() {
                       <span>{isKorean ? "제출 전 확인" : "Before submit"}</span>
                       <strong>
                         {isKorean
-                          ? "실제로 그 면접의 근거가 된 이력서 버전을 선택하세요. 그렇지 않으면 이후 약점 분석이 source of truth에서 벗어납니다."
+                          ? "실제로 그 면접의 근거가 된 이력서 버전을 선택하세요. 그렇지 않으면 이후 약점 분석이 기준 문서에서 벗어납니다."
                           : "Choose the resume version that actually grounded that interview, otherwise later weakness analysis will drift from source of truth."}
                       </strong>
                     </article>

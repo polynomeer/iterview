@@ -355,7 +355,7 @@ export function NotesPage() {
           </Link>
         </>
       }
-      description={isKorean ? "연결된 질문 맥락을 잃지 않으면서 재사용 가능한 방어 조각, 트레이드오프 노트, source of truth 스니펫을 정리하세요." : "Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."}
+      description={isKorean ? "연결된 질문 맥락을 잃지 않으면서 재사용 가능한 방어 조각, 트레이드오프 노트, 기준 문서 스니펫을 정리하세요." : "Organize reusable defense fragments, trade-off notes, and source-of-truth snippets without losing the linked question context."}
       eyebrow={isKorean ? "답변 조각" : "Answer fragments"}
       title={isKorean ? "재사용 가능한 방어 노트 보관" : "Store reusable defense notes"}
     >

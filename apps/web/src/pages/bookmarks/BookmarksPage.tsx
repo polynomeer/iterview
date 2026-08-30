@@ -71,7 +71,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
     {
       id: "system-design-material",
       category: "materials",
-      title: isKorean ? "System design source of truth 묶음" : "System design source-of-truth pack",
+      title: isKorean ? "System design 기준 문서 묶음" : "System design source-of-truth pack",
       summary: isKorean ? "캐시 무효화, 쿼럼, 파티션 복구 트레이드오프를 위한 저장된 읽기 묶음입니다." : "Saved reading set for cache invalidation, quorum, and partition recovery trade-offs.",
       source: isKorean ? "학습 자료 / 분산 시스템" : "Learning materials / Distributed systems",
       savedAt: isKorean ? "오늘" : "Today",
@@ -192,7 +192,7 @@ export function BookmarksPage() {
           </Link>
         </>
       }
-      description={isKorean ? "source of truth 연결을 잃지 않으면서 다시 볼 질문, 경로, 근거 묶음, 회사 맥락을 저장하세요." : "Collect the exact questions, paths, evidence packs, and company context you want to revisit without losing the source-of-truth connection."}
+      description={isKorean ? "기준 문서 연결을 잃지 않으면서 다시 볼 질문, 경로, 근거 묶음, 회사 맥락을 저장하세요." : "Collect the exact questions, paths, evidence packs, and company context you want to revisit without losing the source-of-truth connection."}
       eyebrow={isKorean ? "저장된 맥락" : "Saved context"}
       title={isKorean ? "저장된 인터뷰 북마크" : "Saved interview bookmarks"}
     >
