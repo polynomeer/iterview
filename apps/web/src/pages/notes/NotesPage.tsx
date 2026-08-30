@@ -25,34 +25,55 @@ type NoteRecord = {
   body: string;
 };
 
-const NOTE_RECORDS: NoteRecord[] = [
-  {
-    id: "dist-lock",
-    title: "Distributed Lock Patterns",
-    summary: "Overview of distributed locking approaches, trade-offs, and failure modes.",
-    excerpt: "Redis SET NX PX, Redlock trade-offs, and when to use lease renewal.",
-    updatedAt: "2 hours ago",
-    createdAt: "May 10, 2024",
-    pinned: false,
-    tags: ["Concurrency", "Distributed Systems", "Backend"],
-    linkedQuestions: [
-      { id: "distributed-lock", title: "What is a distributed lock?", score: 78 },
-      { id: "redlock", title: "How does Redlock algorithm work?", score: 72 },
-      { id: "tradeoffs", title: "What are the trade-offs of distributed locking?", score: 66 },
-    ],
-    resumeContext: {
-      title: "Scalable Payment Processing System",
-      description: "Implemented Redis-based idempotent locks to reduce duplicate transactions by 99.9%.",
-      period: "2022.08 - 2023.04",
-    },
-    relatedSkills: [
-      { label: "Distributed Systems", level: "Advanced" },
-      { label: "Concurrency", level: "Advanced" },
-      { label: "System Design", level: "Proficient" },
-      { label: "Redis", level: "Proficient" },
-    ],
-    backlinks: ["System Design: URL Shortener", "Redlock vs ZooKeeper"],
-    body: `## Overview
+function getNoteRecords(isKorean: boolean): NoteRecord[] {
+  return [
+    {
+      id: "dist-lock",
+      title: isKorean ? "분산 락 패턴" : "Distributed Lock Patterns",
+      summary: isKorean ? "분산 락 접근 방식, 트레이드오프, 실패 모드 개요입니다." : "Overview of distributed locking approaches, trade-offs, and failure modes.",
+      excerpt: isKorean ? "Redis SET NX PX, Redlock 트레이드오프, lease renewal 사용 시점을 정리합니다." : "Redis SET NX PX, Redlock trade-offs, and when to use lease renewal.",
+      updatedAt: isKorean ? "2시간 전" : "2 hours ago",
+      createdAt: isKorean ? "2024년 5월 10일" : "May 10, 2024",
+      pinned: false,
+      tags: isKorean ? ["동시성", "분산 시스템", "백엔드"] : ["Concurrency", "Distributed Systems", "Backend"],
+      linkedQuestions: [
+        { id: "distributed-lock", title: isKorean ? "분산 락이란 무엇인가요?" : "What is a distributed lock?", score: 78 },
+        { id: "redlock", title: isKorean ? "Redlock 알고리즘은 어떻게 동작하나요?" : "How does Redlock algorithm work?", score: 72 },
+        { id: "tradeoffs", title: isKorean ? "분산 락의 트레이드오프는 무엇인가요?" : "What are the trade-offs of distributed locking?", score: 66 },
+      ],
+      resumeContext: {
+        title: isKorean ? "확장형 결제 처리 시스템" : "Scalable Payment Processing System",
+        description: isKorean ? "Redis 기반 멱등 락을 도입해 중복 거래를 99.9% 줄였습니다." : "Implemented Redis-based idempotent locks to reduce duplicate transactions by 99.9%.",
+        period: "2022.08 - 2023.04",
+      },
+      relatedSkills: [
+        { label: isKorean ? "분산 시스템" : "Distributed Systems", level: isKorean ? "상급" : "Advanced" },
+        { label: isKorean ? "동시성" : "Concurrency", level: isKorean ? "상급" : "Advanced" },
+        { label: "System Design", level: isKorean ? "숙련" : "Proficient" },
+        { label: "Redis", level: isKorean ? "숙련" : "Proficient" },
+      ],
+      backlinks: isKorean ? ["System Design: URL Shortener", "Redlock vs ZooKeeper"] : ["System Design: URL Shortener", "Redlock vs ZooKeeper"],
+      body: isKorean
+        ? `## 개요
+
+분산 락은 여러 인스턴스나 서비스가 공유 자원에 접근할 때 조율을 돕습니다. 경쟁 상태를 막고 일관성을 유지하는 데 사용합니다.
+
+## 대표 접근
+
+- Redis SET NX PX: 단순하고 빠르며 널리 사용됨
+- Redlock Algorithm: 여러 Redis 노드를 써서 더 강한 보장을 노림
+- Database lock: 강한 트랜잭션 보장이 이미 있을 때 유용함
+
+## 실전 원칙
+
+- 데드락을 피하려면 항상 만료 시간을 둔다
+- 락 소유권 검증을 위해 고유 값을 사용한다
+- 락 해제는 안전하게 하고 실패 경로를 명시한다
+
+## 트레이드오프
+
+분산 락은 공짜가 아닙니다. 면접에서 주장하는 blast radius에 맞는 가장 단순한 메커니즘을 우선 선택하세요.`
+        : `## Overview
 
 Distributed locks help coordinate access to shared resources across multiple instances or services. They prevent race conditions and ensure consistency.
 
@@ -71,132 +92,149 @@ Distributed locks help coordinate access to shared resources across multiple ins
 ## Trade-offs
 
 Distributed locking is rarely free. Prefer the simplest mechanism that still matches the blast radius of the claim you are making in the interview.`,
-  },
-  {
-    id: "url-shortener",
-    title: "System Design: URL Shortener",
-    summary: "Collision strategy, redirect latency, and storage partitioning notes.",
-    excerpt: "Base62 encoding, cache strategy, and write hot-spot mitigation.",
-    updatedAt: "4 hours ago",
-    createdAt: "May 11, 2024",
-    pinned: true,
-    tags: ["System Design"],
-    linkedQuestions: [
-      { id: "url-shortener-scale", title: "How would you scale a URL shortener?", score: 81 },
-    ],
-    resumeContext: {
-      title: "Backend Platform Modernization",
-      description: "Operated traffic-heavy API flows and cache-backed read paths.",
-      period: "2021.03 - 2022.07",
     },
-    relatedSkills: [
-      { label: "System Design", level: "Advanced" },
-      { label: "Caching", level: "Proficient" },
-    ],
-    backlinks: ["Distributed Lock Patterns"],
-    body: `## Core idea
+    {
+      id: "url-shortener",
+      title: "System Design: URL Shortener",
+      summary: isKorean ? "충돌 전략, 리다이렉트 지연, 저장소 파티셔닝 노트입니다." : "Collision strategy, redirect latency, and storage partitioning notes.",
+      excerpt: isKorean ? "Base62 인코딩, 캐시 전략, 쓰기 핫스팟 완화 포인트를 정리합니다." : "Base62 encoding, cache strategy, and write hot-spot mitigation.",
+      updatedAt: isKorean ? "4시간 전" : "4 hours ago",
+      createdAt: isKorean ? "2024년 5월 11일" : "May 11, 2024",
+      pinned: true,
+      tags: ["System Design"],
+      linkedQuestions: [{ id: "url-shortener-scale", title: isKorean ? "URL shortener를 어떻게 확장하시겠습니까?" : "How would you scale a URL shortener?", score: 81 }],
+      resumeContext: {
+        title: isKorean ? "백엔드 플랫폼 현대화" : "Backend Platform Modernization",
+        description: isKorean ? "트래픽이 큰 API 흐름과 캐시 기반 읽기 경로를 운영했습니다." : "Operated traffic-heavy API flows and cache-backed read paths.",
+        period: "2021.03 - 2022.07",
+      },
+      relatedSkills: [
+        { label: "System Design", level: isKorean ? "상급" : "Advanced" },
+        { label: isKorean ? "캐싱" : "Caching", level: isKorean ? "숙련" : "Proficient" },
+      ],
+      backlinks: isKorean ? ["분산 락 패턴"] : ["Distributed Lock Patterns"],
+      body: isKorean
+        ? `## 핵심 아이디어
+
+읽기 중심 트래픽, 캐시 적중률, 충돌 처리부터 먼저 설명하고 부가 요소는 그 다음에 다루세요.
+
+## 실패 렌즈
+
+면접관이 더 깊게 파고들면 hot key 완화, 저장소 파티셔닝, 리다이렉트 관측성을 설명할 준비를 하세요.`
+        : `## Core idea
 
 Focus the answer on read-heavy traffic, cache hit ratio, and collision handling before discussing embellishments.
 
 ## Failure lens
 
 If the interviewer drills deeper, be ready to explain hot key mitigation, storage partitioning, and redirect observability.`,
-  },
-  {
-    id: "dist-lock-strategies",
-    title: "Distributed Lock Strategies",
-    summary: "When single-node Redis is enough and when quorum-based locking matters.",
-    excerpt: "Useful for clarifying Redlock skepticism during follow-up questioning.",
-    updatedAt: "1 day ago",
-    createdAt: "May 12, 2024",
-    pinned: true,
-    tags: ["Backend"],
-    linkedQuestions: [
-      { id: "redis-nx", title: "How does Redis SET NX PX work?", score: 72 },
-    ],
-    resumeContext: {
-      title: "Settlement Reliability Improvements",
-      description: "Compared lock strategies while reducing duplicate settlement incidents.",
-      period: "2022.08 - 2023.04",
     },
-    relatedSkills: [{ label: "Redis", level: "Proficient" }],
-    backlinks: ["Distributed Lock Patterns"],
-    body: `## Decision rule
+    {
+      id: "dist-lock-strategies",
+      title: isKorean ? "분산 락 전략" : "Distributed Lock Strategies",
+      summary: isKorean ? "단일 Redis로 충분한 경우와 쿼럼 기반 락이 중요한 경우를 구분합니다." : "When single-node Redis is enough and when quorum-based locking matters.",
+      excerpt: isKorean ? "꼬리질문에서 Redlock 회의론을 정리할 때 유용합니다." : "Useful for clarifying Redlock skepticism during follow-up questioning.",
+      updatedAt: isKorean ? "1일 전" : "1 day ago",
+      createdAt: isKorean ? "2024년 5월 12일" : "May 12, 2024",
+      pinned: true,
+      tags: isKorean ? ["백엔드"] : ["Backend"],
+      linkedQuestions: [{ id: "redis-nx", title: isKorean ? "Redis SET NX PX는 어떻게 동작하나요?" : "How does Redis SET NX PX work?", score: 72 }],
+      resumeContext: {
+        title: isKorean ? "정산 안정성 개선" : "Settlement Reliability Improvements",
+        description: isKorean ? "중복 정산 사고를 줄이면서 락 전략을 비교했습니다." : "Compared lock strategies while reducing duplicate settlement incidents.",
+        period: "2022.08 - 2023.04",
+      },
+      relatedSkills: [{ label: "Redis", level: isKorean ? "숙련" : "Proficient" }],
+      backlinks: isKorean ? ["분산 락 패턴"] : ["Distributed Lock Patterns"],
+      body: isKorean
+        ? `## 판단 기준
+
+실패 영향 범위가 제한적이고 운영 단순성이 이론적 안전성보다 중요할 때는 단일 노드 접근을 사용하세요.
+
+주장이 cross-node 보장에 의존하거나 중복 작업 비용이 크다면 더 강한 조율 방식을 선택하세요.`
+        : `## Decision rule
 
 Use the single-node approach when failure impact is bounded and operational simplicity matters more than theoretical safety.
 
 Use stronger coordination when the claim depends on cross-node guarantees or when duplicate work is materially expensive.`,
-  },
-  {
-    id: "cap-theorem",
-    title: "CAP Theorem Explained",
-    summary: "Practical framing for availability vs consistency trade-offs.",
-    excerpt: "Avoid textbook-only answers. Tie choices to concrete system behavior.",
-    updatedAt: "3 days ago",
-    createdAt: "May 8, 2024",
-    pinned: true,
-    tags: ["Distributed Systems"],
-    linkedQuestions: [
-      { id: "cap-theorem-q", title: "How do you explain CAP trade-offs in practice?", score: 69 },
-    ],
-    resumeContext: {
-      title: "Global Ticketing Infrastructure",
-      description: "Worked on systems where latency, replication, and failover trade-offs had real user impact.",
-      period: "2020.11 - 2021.12",
     },
-    relatedSkills: [{ label: "Distributed Systems", level: "Advanced" }],
-    backlinks: ["Kafka Consumer Groups"],
-    body: `## Interview angle
+    {
+      id: "cap-theorem",
+      title: isKorean ? "CAP 정리 설명" : "CAP Theorem Explained",
+      summary: isKorean ? "가용성과 일관성 트레이드오프를 실전적으로 설명하는 프레임입니다." : "Practical framing for availability vs consistency trade-offs.",
+      excerpt: isKorean ? "교과서식 설명만 하지 말고 구체적 시스템 동작에 연결하세요." : "Avoid textbook-only answers. Tie choices to concrete system behavior.",
+      updatedAt: isKorean ? "3일 전" : "3 days ago",
+      createdAt: isKorean ? "2024년 5월 8일" : "May 8, 2024",
+      pinned: true,
+      tags: isKorean ? ["분산 시스템"] : ["Distributed Systems"],
+      linkedQuestions: [{ id: "cap-theorem-q", title: isKorean ? "실무에서 CAP 트레이드오프를 어떻게 설명하나요?" : "How do you explain CAP trade-offs in practice?", score: 69 }],
+      resumeContext: {
+        title: isKorean ? "글로벌 티켓팅 인프라" : "Global Ticketing Infrastructure",
+        description: isKorean ? "지연, 복제, 페일오버 트레이드오프가 실제 사용자에게 영향을 주는 시스템을 다뤘습니다." : "Worked on systems where latency, replication, and failover trade-offs had real user impact.",
+        period: "2020.11 - 2021.12",
+      },
+      relatedSkills: [{ label: isKorean ? "분산 시스템" : "Distributed Systems", level: isKorean ? "상급" : "Advanced" }],
+      backlinks: isKorean ? ["Kafka Consumer Groups"] : ["Kafka Consumer Groups"],
+      body: isKorean
+        ? `## 면접 각도
+
+CAP을 암기한 약어가 아니라 실패 모드 관점의 대화로 설명하세요. 가장 좋은 답변은 partition 상황에서 무엇을 포기하고 왜 그런지 설명합니다.`
+        : `## Interview angle
 
 Frame CAP as a failure-mode discussion, not as a memorized acronym. The strongest answers explain what is sacrificed under partition and why.`,
-  },
-  {
-    id: "redis-data-structures",
-    title: "Redis Data Structures",
-    summary: "Quick reference for lists, sets, sorted sets, hashes, and streams.",
-    excerpt: "Useful when interview questions pivot from systems to storage primitives.",
-    updatedAt: "1 day ago",
-    createdAt: "May 9, 2024",
-    pinned: false,
-    tags: ["Redis"],
-    linkedQuestions: [
-      { id: "redis-structures", title: "Which Redis data structure would you choose and why?", score: 74 },
-    ],
-    resumeContext: {
-      title: "Real-time Inventory Service",
-      description: "Used Redis for counters, queues, and hot-state lookups.",
-      period: "2021.04 - 2022.02",
     },
-    relatedSkills: [{ label: "Redis", level: "Proficient" }],
-    backlinks: ["Distributed Lock Patterns"],
-    body: `## Recall model
+    {
+      id: "redis-data-structures",
+      title: isKorean ? "Redis 자료구조" : "Redis Data Structures",
+      summary: isKorean ? "list, set, sorted set, hash, stream을 위한 빠른 참고 노트입니다." : "Quick reference for lists, sets, sorted sets, hashes, and streams.",
+      excerpt: isKorean ? "면접 질문이 시스템에서 저장소 프리미티브로 전환될 때 유용합니다." : "Useful when interview questions pivot from systems to storage primitives.",
+      updatedAt: isKorean ? "1일 전" : "1 day ago",
+      createdAt: isKorean ? "2024년 5월 9일" : "May 9, 2024",
+      pinned: false,
+      tags: ["Redis"],
+      linkedQuestions: [{ id: "redis-structures", title: isKorean ? "어떤 Redis 자료구조를 고르고 왜 그렇게 선택하나요?" : "Which Redis data structure would you choose and why?", score: 74 }],
+      resumeContext: {
+        title: isKorean ? "실시간 재고 서비스" : "Real-time Inventory Service",
+        description: isKorean ? "카운터, 큐, 핫 상태 조회에 Redis를 사용했습니다." : "Used Redis for counters, queues, and hot-state lookups.",
+        period: "2021.04 - 2022.02",
+      },
+      relatedSkills: [{ label: "Redis", level: isKorean ? "숙련" : "Proficient" }],
+      backlinks: isKorean ? ["분산 락 패턴"] : ["Distributed Lock Patterns"],
+      body: isKorean
+        ? `## 회상 모델
+
+암기한 기능 목록이 아니라 접근 패턴부터 보고 자료구조를 고르세요. 조회 비용, 정렬 필요성, eviction 위험을 설명해야 합니다.`
+        : `## Recall model
 
 Choose the structure by access pattern first, not by memorized feature list. Explain lookup cost, ordering needs, and eviction risk.`,
-  },
-  {
-    id: "kafka-consumer-groups",
-    title: "Kafka Consumer Groups",
-    summary: "Partition ownership, rebalance pain points, and lag handling.",
-    excerpt: "Short notes for questions about throughput, failure handling, and replay.",
-    updatedAt: "2 days ago",
-    createdAt: "May 7, 2024",
-    pinned: false,
-    tags: ["Kafka"],
-    linkedQuestions: [
-      { id: "kafka-rebalance", title: "How do consumer groups rebalance?", score: 71 },
-    ],
-    resumeContext: {
-      title: "Event Processing Modernization",
-      description: "Handled partition skew and replay logic while stabilizing event consumers.",
-      period: "2021.07 - 2022.06",
     },
-    relatedSkills: [{ label: "Streaming", level: "Proficient" }],
-    backlinks: ["CAP Theorem Explained"],
-    body: `## Strong answer frame
+    {
+      id: "kafka-consumer-groups",
+      title: isKorean ? "Kafka Consumer Groups" : "Kafka Consumer Groups",
+      summary: isKorean ? "파티션 소유, 리밸런스 문제점, lag 대응을 정리한 노트입니다." : "Partition ownership, rebalance pain points, and lag handling.",
+      excerpt: isKorean ? "처리량, 장애 대응, replay 질문용 짧은 준비 메모입니다." : "Short notes for questions about throughput, failure handling, and replay.",
+      updatedAt: isKorean ? "2일 전" : "2 days ago",
+      createdAt: isKorean ? "2024년 5월 7일" : "May 7, 2024",
+      pinned: false,
+      tags: ["Kafka"],
+      linkedQuestions: [{ id: "kafka-rebalance", title: isKorean ? "consumer group은 어떻게 rebalance되나요?" : "How do consumer groups rebalance?", score: 71 }],
+      resumeContext: {
+        title: isKorean ? "이벤트 처리 현대화" : "Event Processing Modernization",
+        description: isKorean ? "이벤트 컨슈머를 안정화하면서 파티션 skew와 replay 로직을 다뤘습니다." : "Handled partition skew and replay logic while stabilizing event consumers.",
+        period: "2021.07 - 2022.06",
+      },
+      relatedSkills: [{ label: isKorean ? "스트리밍" : "Streaming", level: isKorean ? "숙련" : "Proficient" }],
+      backlinks: isKorean ? ["CAP 정리 설명"] : ["CAP Theorem Explained"],
+      body: isKorean
+        ? `## 강한 답변 프레임
+
+파티션 할당, 상태 handoff 비용, lag 가시성을 이야기하세요. 브로커 이론만이 아니라 운영 고통도 함께 언급해야 합니다.`
+        : `## Strong answer frame
 
 Talk about partition assignment, state handoff cost, and lag visibility. Mention operational pain, not just broker theory.`,
-  },
-];
+    },
+  ];
+}
 
 function NoteListSection({
   title,
@@ -257,7 +295,8 @@ export function NotesPage() {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
   const { isDesktop } = useLayoutMode();
-  const [selectedNoteId, setSelectedNoteId] = useState(NOTE_RECORDS[0]?.id ?? "");
+  const noteRecords = useMemo(() => getNoteRecords(isKorean), [isKorean]);
+  const [selectedNoteId, setSelectedNoteId] = useState("dist-lock");
   const [search, setSearch] = useState("");
   const [mode, setMode] = useState<"edit" | "preview">("edit");
 
@@ -265,20 +304,20 @@ export function NotesPage() {
     const normalizedSearch = search.trim().toLowerCase();
 
     if (!normalizedSearch) {
-      return NOTE_RECORDS;
+      return noteRecords;
     }
 
-    return NOTE_RECORDS.filter((note) => {
+    return noteRecords.filter((note) => {
       const haystack = [note.title, note.summary, note.excerpt, note.tags.join(" ")].join(" ").toLowerCase();
       return haystack.includes(normalizedSearch);
     });
-  }, [search]);
+  }, [noteRecords, search]);
 
   const selectedNote =
     filteredNotes.find((note) => note.id === selectedNoteId) ??
-    NOTE_RECORDS.find((note) => note.id === selectedNoteId) ??
+    noteRecords.find((note) => note.id === selectedNoteId) ??
     filteredNotes[0] ??
-    NOTE_RECORDS[0];
+    noteRecords[0];
 
   const pinnedNotes = filteredNotes.filter((note) => note.pinned);
   const otherNotes = filteredNotes.filter((note) => !note.pinned);
@@ -344,11 +383,11 @@ export function NotesPage() {
           <div className="notes-workspace-surface__stats">
             <article className="notes-workspace-surface__stat">
               <span>{isKorean ? "전체 노트" : "Total notes"}</span>
-              <strong>{NOTE_RECORDS.length}</strong>
+              <strong>{noteRecords.length}</strong>
             </article>
             <article className="notes-workspace-surface__stat">
               <span>{isKorean ? "고정 노트" : "Pinned notes"}</span>
-              <strong>{NOTE_RECORDS.filter((note) => note.pinned).length}</strong>
+              <strong>{noteRecords.filter((note) => note.pinned).length}</strong>
             </article>
             <article className="notes-workspace-surface__stat">
               <span>{isKorean ? "연결 질문" : "Linked questions"}</span>
@@ -470,9 +509,9 @@ export function NotesPage() {
               <div className="notes-editor__breadcrumbs">
                 <span>{isKorean ? "노트" : "Notes"}</span>
                 <span>/</span>
-                <span>Backend</span>
+                <span>{isKorean ? "백엔드" : "Backend"}</span>
                 <span>/</span>
-                <span>Concurrency</span>
+                <span>{isKorean ? "동시성" : "Concurrency"}</span>
                 <span>/</span>
                 <span>{selectedNote.title}</span>
               </div>

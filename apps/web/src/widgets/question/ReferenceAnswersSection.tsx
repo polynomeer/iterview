@@ -46,7 +46,18 @@ function formatBadgeLabel(item: ReferenceAnswerItem, t: ReturnType<typeof useLoc
 }
 
 function formatAnswerFormat(answerFormat: string) {
-  return answerFormat.split("_").join(" ");
+  switch (answerFormat) {
+    case "outline":
+      return "Outline";
+    case "full_answer":
+      return "Full answer";
+    case "summary":
+      return "Summary";
+    case "transcript_excerpt":
+      return "Transcript excerpt";
+    default:
+      return answerFormat.split("_").join(" ");
+  }
 }
 
 export function ReferenceAnswersSection({
@@ -112,10 +123,10 @@ export function ReferenceAnswersSection({
               }}
               value={form.answerFormat}
             >
-              <option value="outline">outline</option>
-              <option value="full_answer">full_answer</option>
-              <option value="summary">summary</option>
-              <option value="transcript_excerpt">transcript_excerpt</option>
+              <option value="outline">{t("common.languageKorean") === "한국어" ? "개요" : "Outline"}</option>
+              <option value="full_answer">{t("common.languageKorean") === "한국어" ? "전체 답변" : "Full answer"}</option>
+              <option value="summary">{t("common.languageKorean") === "한국어" ? "요약" : "Summary"}</option>
+              <option value="transcript_excerpt">{t("common.languageKorean") === "한국어" ? "대화 발췌" : "Transcript excerpt"}</option>
             </select>
           </div>
           <div className="form-field">

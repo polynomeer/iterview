@@ -10,15 +10,15 @@ describe("NotesPage", () => {
       <Routes>
         <Route element={<NotesPage />} path="/notes" />
       </Routes>,
-      { route: "/notes" },
+      { route: "/notes", locale: "ko" },
     );
 
-    expect(screen.getByText("Keep the explanation you want ready before the next DFS drill-down")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Distributed Lock Patterns" })).toBeInTheDocument();
-    expect(screen.getByRole("searchbox", { name: "Search notes" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
-    expect(screen.getAllByText("Linked questions").length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: "Open resume" })).toHaveAttribute(
+    expect(screen.getByText("다음 DFS 드릴다운 전에 원하는 설명을 준비해 두세요")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "분산 락 패턴" })).toBeInTheDocument();
+    expect(screen.getByRole("searchbox", { name: "노트 검색" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "편집" })).toBeInTheDocument();
+    expect(screen.getAllByText("연결 질문").length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: "이력서 열기" })).toHaveAttribute(
       "href",
       "/profile/resumes/analysis",
     );
@@ -31,7 +31,7 @@ describe("NotesPage", () => {
       <Routes>
         <Route element={<NotesPage />} path="/notes" />
       </Routes>,
-      { route: "/notes" },
+      { route: "/notes", locale: "ko" },
     );
 
     expect(document.querySelector(".notes-layout--desktop")).not.toBeNull();
