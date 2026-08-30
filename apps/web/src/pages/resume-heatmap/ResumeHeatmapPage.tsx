@@ -9,6 +9,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
+import { useLocale } from "../../shared/i18n";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import type { ResumeQuestionHeatmapFiltersDto } from "../../shared/types/resumeHeatmap";
 import {
@@ -43,6 +44,54 @@ type HeatmapAnchorSection = {
   anchorKey: string | null;
 };
 
+function localizeHeatmapLabel(value: string | null | undefined, isKorean: boolean) {
+  if (!value || !isKorean) {
+    return value ?? "";
+  }
+
+  const normalized = value.trim();
+  const dictionary: Record<string, string> = {
+    Profile: "프로필",
+    Projects: "프로젝트",
+    Experience: "경력",
+    Skills: "스킬",
+    Competencies: "역량",
+    "Other linked anchors": "기타 연결 앵커",
+    Project: "프로젝트",
+    Sentence: "문장",
+    block: "블록",
+    sentence: "문장",
+    keyword: "키워드",
+    Completed: "완료",
+    summary: "요약",
+    project: "프로젝트",
+    experience: "경력",
+    skill: "스킬",
+    competency: "역량",
+    "System Design": "시스템 설계",
+    Heuristic: "휴리스틱",
+  };
+
+  return dictionary[normalized] ?? value;
+}
+
+function localizeScopeLabel(value: string, isKorean: boolean) {
+  if (!isKorean) {
+    return value;
+  }
+
+  switch (value) {
+    case "All":
+      return "전체";
+    case "Main questions":
+      return "메인 질문";
+    case "Follow-up only":
+      return "꼬리질문만";
+    default:
+      return value;
+  }
+}
+
 function OverlayQuestionPopover({
   versionId,
   section,
@@ -54,17 +103,19 @@ function OverlayQuestionPopover({
   target: HeatmapAnchorSection["overlayTargets"][number];
   onClose: () => void;
 }) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   return (
     <div className="resume-heatmap-comment-popover" role="dialog">
       <div className="resume-heatmap-comment-popover__header">
         <div>
-          <p className="section-heading__eyebrow">Related interview questions</p>
+          <p className="section-heading__eyebrow">{isKorean ? "연결된 면접 질문" : "Related interview questions"}</p>
           <h4 className="page-card__title">
-            {target.targetTypeLabel} · {target.questionCount}
+            {localizeHeatmapLabel(target.targetTypeLabel, isKorean)} · {target.questionCount}
           </h4>
         </div>
         <button className="secondary-button" onClick={onClose} type="button">
-          Close
+          {isKorean ? "닫기" : "Close"}
         </button>
       </div>
       {target.textSnippet ? <p className="resume-tailor-muted">"{target.textSnippet}"</p> : null}
@@ -79,18 +130,18 @@ function OverlayQuestionPopover({
               <div className="resume-status-badges">
                 {question.isFollowUp ? (
                   <span className="question-status-badge question-status-badge--accent">
-                    Follow-up
+                    {isKorean ? "꼬리질문" : "Follow-up"}
                   </span>
                 ) : null}
                 {question.weakAnswer ? (
                   <span className="question-status-badge question-status-badge--warning">
-                    Weak answer
+                    {isKorean ? "약한 답변" : "Weak answer"}
                   </span>
                 ) : null}
               </div>
             </div>
             <p className="resume-tailor-muted">
-              {question.interviewDateLabel ?? "Interview date unavailable"}
+              {question.interviewDateLabel ?? (isKorean ? "면접 일자 없음" : "Interview date unavailable")}
             </p>
             <div className="page-card__actions">
               <Link
@@ -100,7 +151,7 @@ function OverlayQuestionPopover({
                   questionId: question.interviewRecordQuestionId,
                 })}
               >
-                Open interview review
+                {isKorean ? "면접 리뷰 열기" : "Open interview review"}
               </Link>
               {question.linkedQuestionId ? (
                 <Link
@@ -109,7 +160,7 @@ function OverlayQuestionPopover({
                     questionId: question.linkedQuestionId,
                   })}
                 >
-                  Open study question
+                  {isKorean ? "학습 질문 열기" : "Open study question"}
                 </Link>
               ) : null}
             </div>
@@ -124,7 +175,7 @@ function OverlayQuestionPopover({
               anchorType: section.anchorType,
             })}
           >
-            Open detailed analysis
+            {isKorean ? "상세 분석 열기" : "Open detailed analysis"}
           </Link>
         </div>
       </div>
@@ -133,6 +184,8 @@ function OverlayQuestionPopover({
 }
 
 export function ResumeHeatmapPage() {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
   const { versionId } = useParams<{ versionId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMemo(() => readFiltersFromSearchParams(searchParams), [searchParams]);
@@ -388,14 +441,14 @@ export function ResumeHeatmapPage() {
   if (!versionId) {
     return (
       <PageContainer
-        description="Choose a parsed resume version before opening the interview heatmap."
-        eyebrow="Resume Heatmap"
-        title="Heatmap unavailable"
+        description={isKorean ? "면접 히트맵을 열기 전에 파싱된 이력서 버전을 선택하세요." : "Choose a parsed resume version before opening the interview heatmap."}
+        eyebrow={isKorean ? "이력서 히트맵" : "Resume Heatmap"}
+        title={isKorean ? "히트맵을 열 수 없습니다" : "Heatmap unavailable"}
       >
         <EmptyStateCard
-          action={{ label: "Open resumes", to: routeConfig.resume.buildPath() }}
-          body="The heatmap route needs a resume version id."
-          title="Missing resume version"
+          action={{ label: isKorean ? "이력서 열기" : "Open resumes", to: routeConfig.resume.buildPath() }}
+          body={isKorean ? "히트맵 경로에는 이력서 버전 ID가 필요합니다." : "The heatmap route needs a resume version id."}
+          title={isKorean ? "이력서 버전이 없습니다" : "Missing resume version"}
         />
       </PageContainer>
     );
@@ -409,13 +462,13 @@ export function ResumeHeatmapPage() {
   ) {
     return (
       <PageContainer
-        description="Loading parsed resume anchors and linked interview questions."
-        eyebrow="Resume Heatmap"
-        title="Preparing interview heatmap"
+        description={isKorean ? "파싱된 이력서 앵커와 연결된 면접 질문을 불러오는 중입니다." : "Loading parsed resume anchors and linked interview questions."}
+        eyebrow={isKorean ? "이력서 히트맵" : "Resume Heatmap"}
+        title={isKorean ? "면접 히트맵 준비 중" : "Preparing interview heatmap"}
       >
         <LoadingStateCard
-          body="Loading the resume document and routed interview question overlays."
-          title="Preparing interview heatmap"
+          body={isKorean ? "이력서 문서와 라우팅된 면접 질문 오버레이를 불러오는 중입니다." : "Loading the resume document and routed interview question overlays."}
+          title={isKorean ? "면접 히트맵 준비 중" : "Preparing interview heatmap"}
         />
       </PageContainer>
     );
@@ -438,15 +491,17 @@ export function ResumeHeatmapPage() {
 
     return (
       <PageContainer
-        description="The resume interview heatmap could not be loaded."
-        eyebrow="Resume Heatmap"
-        title="Heatmap unavailable"
+        description={isKorean ? "이력서 면접 히트맵을 불러오지 못했습니다." : "The resume interview heatmap could not be loaded."}
+        eyebrow={isKorean ? "이력서 히트맵" : "Resume Heatmap"}
+        title={isKorean ? "히트맵을 열 수 없습니다" : "Heatmap unavailable"}
       >
         <ErrorStateCard
           body={
             error instanceof Error
               ? error.message
-              : "The interview heatmap could not be loaded."
+              : isKorean
+                ? "면접 히트맵을 불러오지 못했습니다."
+                : "The interview heatmap could not be loaded."
           }
           details={getErrorDetails(error)}
           onAction={() => {
@@ -457,7 +512,7 @@ export function ResumeHeatmapPage() {
               snapshotsQuery.refetch(),
             ]);
           }}
-          title="Unable to load resume interview heatmap"
+          title={isKorean ? "이력서 면접 히트맵을 불러올 수 없습니다" : "Unable to load resume interview heatmap"}
         />
       </PageContainer>
     );
@@ -468,15 +523,15 @@ export function ResumeHeatmapPage() {
       actions={
         <>
           <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
-            Back to resumes
+            {isKorean ? "이력서로 돌아가기" : "Back to resumes"}
           </Link>
           <Link className="secondary-button" to={routeConfig.practicalInterviews.buildPath()}>
-            Open practical interviews
+            {isKorean ? "실전 면접 열기" : "Open practical interviews"}
           </Link>
         </>
       }
-      description="Use the resume itself as a repair board. Follow the hottest claims, weak answers, and routed questions back to the exact source line."
-      eyebrow="Source-of-truth heatmap"
+      description={isKorean ? "이력서 자체를 보강 보드로 사용하세요. 가장 뜨거운 주장, 약한 답변, 라우팅된 질문을 정확한 source of truth 줄까지 되짚어가세요." : "Use the resume itself as a repair board. Follow the hottest claims, weak answers, and routed questions back to the exact source line."}
+      eyebrow={isKorean ? "Source of truth 히트맵" : "Source-of-truth heatmap"}
       title={versionQuery.data.fileNameLabel}
     >
       <div className="page-stack resume-heatmap-workspace">
@@ -487,65 +542,64 @@ export function ResumeHeatmapPage() {
                 <p className="resume-heatmap-workspace-surface__breadcrumbs">
                   <span>Source of truth</span>
                   <span>/</span>
-                  <span>Repair queue</span>
+                  <span>{isKorean ? "보강 큐" : "Repair queue"}</span>
                   <span>/</span>
-                  <span>Question routing</span>
+                  <span>{isKorean ? "질문 라우팅" : "Question routing"}</span>
                 </p>
                 <span className="question-status-badge question-status-badge--neutral">
-                  Parsing: {versionQuery.data.parsingStatusLabel}
+                  {isKorean ? "파싱" : "Parsing"}: {localizeHeatmapLabel(versionQuery.data.parsingStatusLabel, isKorean)}
                 </span>
               </div>
               <h2 className="resume-heatmap-workspace-surface__title">
-                Use the heatmap to find which resume claims break first under interview pressure
+                {isKorean ? "어떤 이력서 주장이 면접 압박에서 먼저 무너지는지 히트맵으로 찾으세요" : "Use the heatmap to find which resume claims break first under interview pressure"}
               </h2>
               <p className="resume-heatmap-workspace-surface__body">
-                This is not decorative analytics. It is the repair queue for claims that triggered repeated follow-ups,
-                weak answers, and pressure questions across real interview paths.
+                {isKorean ? "이 화면은 장식용 분석이 아닙니다. 실제 면접 경로에서 반복된 꼬리질문, 약한 답변, 압박 질문을 유발한 주장을 보강하는 큐입니다." : "This is not decorative analytics. It is the repair queue for claims that triggered repeated follow-ups, weak answers, and pressure questions across real interview paths."}
               </p>
             </div>
             <div className="resume-heatmap-workspace-surface__stats">
               <article className="resume-heatmap-workspace-surface__stat">
-                <span>Repair targets</span>
+                <span>{isKorean ? "보강 대상" : "Repair targets"}</span>
                 <strong>{heatmapQuery.data.summary.totalAnchors}</strong>
               </article>
               <article className="resume-heatmap-workspace-surface__stat">
-                <span>Linked questions</span>
+                <span>{isKorean ? "연결된 질문" : "Linked questions"}</span>
                 <strong>{heatmapQuery.data.summary.totalLinkedQuestions}</strong>
               </article>
               <article className="resume-heatmap-workspace-surface__stat">
-                <span>Weak answers</span>
+                <span>{isKorean ? "약한 답변" : "Weak answers"}</span>
                 <strong>{heatmapQuery.data.filterSummary.weakQuestionCount}</strong>
               </article>
               <article className="resume-heatmap-workspace-surface__stat">
-                <span>Routed highlights</span>
+                <span>{isKorean ? "라우팅 하이라이트" : "Routed highlights"}</span>
                 <strong>{overlayTargetCount}</strong>
               </article>
             </div>
           </div>
-          <div className="resume-heatmap-workspace-surface__guidance" aria-label="Heatmap repair guidance">
+          <div className="resume-heatmap-workspace-surface__guidance" aria-label={isKorean ? "히트맵 보강 가이드" : "Heatmap repair guidance"}>
             <article className="resume-heatmap-workspace-surface__guidance-card">
-              <span>Priority rule</span>
-              <strong>Repair the claim that combines weak answers with heavy follow-up pressure first.</strong>
+              <span>{isKorean ? "우선순위 원칙" : "Priority rule"}</span>
+              <strong>{isKorean ? "약한 답변과 높은 꼬리질문 압력이 함께 붙은 주장부터 보강하세요." : "Repair the claim that combines weak answers with heavy follow-up pressure first."}</strong>
             </article>
             <article className="resume-heatmap-workspace-surface__guidance-card">
-              <span>Routing rule</span>
-              <strong>Open the anchor only after the question pattern behind the heat is obvious.</strong>
+              <span>{isKorean ? "라우팅 원칙" : "Routing rule"}</span>
+              <strong>{isKorean ? "열기 전에 왜 뜨거워졌는지 질문 패턴이 분명해졌는지 먼저 확인하세요." : "Open the anchor only after the question pattern behind the heat is obvious."}</strong>
             </article>
             <article className="resume-heatmap-workspace-surface__guidance-card">
-              <span>Exit rule</span>
-              <strong>Return to editing once one fragile claim has a cleaner source-of-truth version.</strong>
+              <span>{isKorean ? "이탈 원칙" : "Exit rule"}</span>
+              <strong>{isKorean ? "취약한 주장 하나라도 더 깔끔한 source of truth 버전을 확보하면 편집으로 돌아가세요." : "Return to editing once one fragile claim has a cleaner source-of-truth version."}</strong>
             </article>
           </div>
           <div className="resume-heatmap-workspace-surface__chips">
             <span className="detail-chip">
-              Weakest anchor: {heatmapQuery.data.summary.weakestAnchorLabel ?? "Not available"}
+              {isKorean ? "가장 약한 앵커" : "Weakest anchor"}: {heatmapQuery.data.summary.weakestAnchorLabel ?? (isKorean ? "없음" : "Not available")}
             </span>
             <span className="detail-chip">
-              Most follow-ups:{" "}
-              {heatmapQuery.data.summary.mostFollowedUpAnchorLabel ?? "Not available"}
+              {isKorean ? "가장 많은 꼬리질문" : "Most follow-ups"}:{" "}
+              {heatmapQuery.data.summary.mostFollowedUpAnchorLabel ?? (isKorean ? "없음" : "Not available")}
             </span>
             <span className="detail-chip">
-              Hottest anchor: {heatmapQuery.data.summary.hottestAnchorLabel ?? "Not available"}
+              {isKorean ? "가장 뜨거운 앵커" : "Hottest anchor"}: {heatmapQuery.data.summary.hottestAnchorLabel ?? (isKorean ? "없음" : "Not available")}
             </span>
           </div>
         </section>
@@ -554,8 +608,8 @@ export function ResumeHeatmapPage() {
           <article className="page-card resume-heatmap-priority-board__main">
             <div className="section-heading">
               <div>
-                <p className="section-heading__eyebrow">Repair queue</p>
-                <h3 className="page-card__title">Start with the most fragile claims</h3>
+                <p className="section-heading__eyebrow">{isKorean ? "보강 큐" : "Repair queue"}</p>
+                <h3 className="page-card__title">{isKorean ? "가장 취약한 주장부터 시작하세요" : "Start with the most fragile claims"}</h3>
               </div>
             </div>
             <div className="resume-heatmap-priority-board__list">
@@ -566,17 +620,16 @@ export function ResumeHeatmapPage() {
                     <div className="resume-heatmap-document__header">
                       <div>
                         <p className="section-heading__eyebrow">
-                          {section.groupLabel} · {section.anchorTypeLabel}
+                          {localizeHeatmapLabel(section.groupLabel, isKorean)} · {localizeHeatmapLabel(section.anchorTypeLabel, isKorean)}
                         </p>
                         <h4 className="page-card__title">{section.title}</h4>
                       </div>
                       <span className="question-status-badge question-status-badge--neutral">
-                        Heat {section.heatScoreLabel}
+                        {isKorean ? "열도" : "Heat"} {section.heatScoreLabel}
                       </span>
                     </div>
                     <p className="resume-tailor-muted">
-                      Weak {section.weaknessCount} · Follow-ups {section.followUpCount} · Pressure{" "}
-                      {section.pressureQuestionCount} · Questions {section.directQuestionCount}
+                      {isKorean ? "약함" : "Weak"} {section.weaknessCount} · {isKorean ? "꼬리질문" : "Follow-ups"} {section.followUpCount} · {isKorean ? "압박" : "Pressure"} {section.pressureQuestionCount} · {isKorean ? "질문" : "Questions"} {section.directQuestionCount}
                     </p>
                     <div className="page-card__actions">
                       <Link
@@ -587,7 +640,7 @@ export function ResumeHeatmapPage() {
                           anchorId: section.anchorRecordId ?? section.anchorKey ?? section.id,
                         })}
                       >
-                        Open repair workspace
+                        {isKorean ? "보강 워크스페이스 열기" : "Open repair workspace"}
                       </Link>
                     </div>
                   </div>
@@ -599,30 +652,33 @@ export function ResumeHeatmapPage() {
           <article className="page-card page-card--muted resume-heatmap-priority-board__side">
             <div className="section-heading">
               <div>
-                <p className="section-heading__eyebrow">Coverage signals</p>
-                <h3 className="page-card__title">Use these signals to decide what to repair in this pass</h3>
+                <p className="section-heading__eyebrow">{isKorean ? "커버리지 신호" : "Coverage signals"}</p>
+                <h3 className="page-card__title">{isKorean ? "이번 패스에서 무엇을 보강할지 이 신호로 결정하세요" : "Use these signals to decide what to repair in this pass"}</h3>
               </div>
             </div>
             <div className="resume-heatmap-signal-list">
               <div className="resume-heatmap-signal-list__item">
-                <span>Weak answers</span>
+                <span>{isKorean ? "약한 답변" : "Weak answers"}</span>
                 <strong>
-                  {heatmapQuery.data.filterSummary.weakQuestionCount} answers need stronger
-                  evidence and clearer reasoning.
+                  {isKorean
+                    ? `${heatmapQuery.data.filterSummary.weakQuestionCount}개의 답변이 더 강한 근거와 더 명확한 논리를 필요로 합니다.`
+                    : `${heatmapQuery.data.filterSummary.weakQuestionCount} answers need stronger evidence and clearer reasoning.`}
                 </strong>
               </div>
               <div className="resume-heatmap-signal-list__item">
-                <span>Pressure moments</span>
+                <span>{isKorean ? "압박 순간" : "Pressure moments"}</span>
                 <strong>
-                  {heatmapQuery.data.filterSummary.pressureQuestionCount} questions pushed beyond
-                  surface-level claims.
+                  {isKorean
+                    ? `${heatmapQuery.data.filterSummary.pressureQuestionCount}개의 질문이 표면적인 주장을 넘어 더 깊게 밀어붙였습니다.`
+                    : `${heatmapQuery.data.filterSummary.pressureQuestionCount} questions pushed beyond surface-level claims.`}
                 </strong>
               </div>
               <div className="resume-heatmap-signal-list__item">
-                <span>Company coverage</span>
+                <span>{isKorean ? "회사 커버리지" : "Company coverage"}</span>
                 <strong>
-                  {heatmapQuery.data.filterSummary.distinctCompanyCount} interview contexts are
-                  currently mapped into this version.
+                  {isKorean
+                    ? `${heatmapQuery.data.filterSummary.distinctCompanyCount}개의 면접 컨텍스트가 현재 이 버전에 매핑되어 있습니다.`
+                    : `${heatmapQuery.data.filterSummary.distinctCompanyCount} interview contexts are currently mapped into this version.`}
                 </strong>
               </div>
             </div>
@@ -632,12 +688,14 @@ export function ResumeHeatmapPage() {
         <section className="page-card page-card--muted">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">Repair filters</p>
-              <h2 className="page-card__title">Change the analysis lens without changing the resume itself</h2>
+              <p className="section-heading__eyebrow">{isKorean ? "보강 필터" : "Repair filters"}</p>
+              <h2 className="page-card__title">{isKorean ? "이력서 자체는 건드리지 않고 분석 시야만 바꾸세요" : "Change the analysis lens without changing the resume itself"}</h2>
             </div>
           </div>
           <p className="page-card__body">
-            Keep the underlying resume untouched while narrowing the repair queue to one interview pattern at a time.
+            {isKorean
+              ? "원본 이력서는 그대로 두고, 보강 큐를 한 번에 하나의 면접 패턴으로 좁혀가세요."
+              : "Keep the underlying resume untouched while narrowing the repair queue to one interview pattern at a time."}
           </p>
           <div className="filter-chip-row">
             {HEATMAP_SCOPES.map((item) => (
@@ -647,13 +705,13 @@ export function ResumeHeatmapPage() {
                 onClick={() => updateFilters({ ...filters, scope: item.value })}
                 type="button"
               >
-                {item.label}
+                {localizeScopeLabel(item.label, isKorean)}
               </button>
             ))}
           </div>
           <div className="resume-heatmap-filters">
             <label className="form-field form-field--checkbox">
-              <span className="form-field__label">Weak only</span>
+              <span className="form-field__label">{isKorean ? "약한 답변만" : "Weak only"}</span>
               <input
                 checked={Boolean(filters.weakOnly)}
                 onChange={(event) => updateFilters({ ...filters, weakOnly: event.target.checked })}
@@ -661,12 +719,12 @@ export function ResumeHeatmapPage() {
               />
             </label>
             <label className="form-field">
-              <span className="form-field__label">Company</span>
+              <span className="form-field__label">{isKorean ? "회사" : "Company"}</span>
               <input
                 className="form-field__input"
                 list="resume-heatmap-companies"
                 onChange={(event) => updateFilters({ ...filters, companyName: event.target.value })}
-                placeholder="Filter by company"
+                placeholder={isKorean ? "회사로 필터" : "Filter by company"}
                 type="text"
                 value={filters.companyName ?? ""}
               />
@@ -677,7 +735,7 @@ export function ResumeHeatmapPage() {
               </datalist>
             </label>
             <label className="form-field">
-              <span className="form-field__label">Interview date from</span>
+              <span className="form-field__label">{isKorean ? "면접 시작일" : "Interview date from"}</span>
               <input
                 className="form-field__input"
                 onChange={(event) =>
@@ -688,7 +746,7 @@ export function ResumeHeatmapPage() {
               />
             </label>
             <label className="form-field">
-              <span className="form-field__label">Interview date to</span>
+              <span className="form-field__label">{isKorean ? "면접 종료일" : "Interview date to"}</span>
               <input
                 className="form-field__input"
                 onChange={(event) =>
@@ -705,7 +763,7 @@ export function ResumeHeatmapPage() {
               onClick={() => updateFilters({ ...filters, targetType: undefined })}
               type="button"
             >
-              All target types
+              {isKorean ? "전체 타깃 유형" : "All target types"}
             </button>
             {heatmapQuery.data.filterSummary.availableTargetTypes.map((targetType) => (
               <button
@@ -714,7 +772,7 @@ export function ResumeHeatmapPage() {
                 onClick={() => updateFilters({ ...filters, targetType })}
                 type="button"
               >
-                {TARGET_TYPE_LABELS[targetType]} (
+                {localizeHeatmapLabel(TARGET_TYPE_LABELS[targetType], isKorean)} (
                 {heatmapQuery.data.filterSummary.targetTypeCounts[targetType] ?? 0})
               </button>
             ))}
@@ -723,13 +781,17 @@ export function ResumeHeatmapPage() {
 
         {sections.length === 0 ? (
           <EmptyStateCard
-            action={{ label: "Open practical interviews", to: routeConfig.practicalInterviews.buildPath() }}
+            action={{ label: isKorean ? "실전 면접 열기" : "Open practical interviews", to: routeConfig.practicalInterviews.buildPath() }}
             body={
               heatmapQuery.data.filterSummary.totalQuestions > 0
-                ? "No resume anchors match the current filter set."
-                : "The heatmap appears after practical interview questions have been mapped back onto this resume version."
+                ? isKorean
+                  ? "현재 필터와 일치하는 이력서 앵커가 없습니다."
+                  : "No resume anchors match the current filter set."
+                : isKorean
+                  ? "히트맵은 실전 면접 질문이 이 이력서 버전으로 다시 매핑된 뒤 나타납니다."
+                  : "The heatmap appears after practical interview questions have been mapped back onto this resume version."
             }
-            title="No mapped interview questions for this view"
+            title={isKorean ? "이 화면에 매핑된 면접 질문이 없습니다" : "No mapped interview questions for this view"}
           />
         ) : (
           <div className="resume-heatmap-single-page">
@@ -737,8 +799,8 @@ export function ResumeHeatmapPage() {
               <section className="page-stack resume-heatmap-group" key={groupLabel}>
                 <div className="section-heading">
                   <div>
-                    <p className="section-heading__eyebrow">Resume section</p>
-                    <h2 className="page-card__title">{groupLabel}</h2>
+                    <p className="section-heading__eyebrow">{isKorean ? "이력서 섹션" : "Resume section"}</p>
+                    <h2 className="page-card__title">{localizeHeatmapLabel(groupLabel, isKorean)}</h2>
                   </div>
                 </div>
                 <div className="page-stack resume-heatmap-group__stack">
@@ -749,26 +811,26 @@ export function ResumeHeatmapPage() {
                     >
                       <div className="resume-heatmap-document__header">
                         <div>
-                          <p className="section-heading__eyebrow">{section.anchorTypeLabel}</p>
+                          <p className="section-heading__eyebrow">{localizeHeatmapLabel(section.anchorTypeLabel, isKorean)}</p>
                           <h3 className="page-card__title">{section.title}</h3>
                           {section.metaLabel ? (
                             <p className="resume-tailor-muted">{section.metaLabel}</p>
                           ) : null}
                         </div>
                         <span className="question-status-badge question-status-badge--neutral">
-                          Heat {section.heatScoreLabel}
+                          {isKorean ? "열도" : "Heat"} {section.heatScoreLabel}
                         </span>
                       </div>
                       <div className="resume-heatmap-inline-summary">
-                        <span className="detail-chip">Questions {section.directQuestionCount}</span>
-                        <span className="detail-chip">Follow-ups {section.followUpCount}</span>
-                        <span className="detail-chip">Pressure {section.pressureQuestionCount}</span>
-                        <span className="detail-chip">Weak {section.weaknessCount}</span>
+                        <span className="detail-chip">{isKorean ? "질문" : "Questions"} {section.directQuestionCount}</span>
+                        <span className="detail-chip">{isKorean ? "꼬리질문" : "Follow-ups"} {section.followUpCount}</span>
+                        <span className="detail-chip">{isKorean ? "압박" : "Pressure"} {section.pressureQuestionCount}</span>
+                        <span className="detail-chip">{isKorean ? "약함" : "Weak"} {section.weaknessCount}</span>
                       </div>
                       <div className="resume-heatmap-document__body">
                         {(section.bodyBlocks.length > 0
                           ? section.bodyBlocks
-                          : ["No parsed source text is available for this anchor yet."]
+                          : [isKorean ? "이 앵커에는 아직 파싱된 source of truth 텍스트가 없습니다." : "No parsed source text is available for this anchor yet."]
                         ).map((block, index) => (
                           <p className="resume-heatmap-document__paragraph" key={`${section.id}-${index}`}>
                             {block}
@@ -778,7 +840,7 @@ export function ResumeHeatmapPage() {
                       {section.overlayTargets.length > 0 ? (
                         <div className="resume-heatmap-document__group">
                           <p className="resume-tailor-muted">
-                            Click a highlighted block, sentence, phrase, or keyword to open related questions in place.
+                            {isKorean ? "하이라이트된 블록, 문장, 구문, 키워드를 눌러 이 위치에서 관련 질문을 여세요." : "Click a highlighted block, sentence, phrase, or keyword to open related questions in place."}
                           </p>
                           <div className="resume-heatmap-document__overlay-flow">
                             {section.overlayTargets.map((target) => {
@@ -802,16 +864,16 @@ export function ResumeHeatmapPage() {
                                     {!isKeyword ? (
                                       <>
                                         <span className="resume-heatmap-document__overlay-label">
-                                          {target.targetTypeLabel}
+                                          {localizeHeatmapLabel(target.targetTypeLabel, isKorean)}
                                         </span>
                                         <strong>{target.textSnippet ?? target.fieldPath ?? target.targetKey}</strong>
                                         <span className="resume-heatmap-document__overlay-meta">
-                                          {target.questionCount} questions
-                                          {target.followUpCount > 0 ? ` · ${target.followUpCount} follow-ups` : ""}
+                                          {target.questionCount} {isKorean ? "질문" : "questions"}
+                                          {target.followUpCount > 0 ? ` · ${target.followUpCount} ${isKorean ? "꼬리질문" : "follow-ups"}` : ""}
                                           {target.pressureQuestionCount > 0
-                                            ? ` · pressure ${target.pressureQuestionCount}`
+                                            ? ` · ${isKorean ? "압박" : "pressure"} ${target.pressureQuestionCount}`
                                             : ""}
-                                          {target.weaknessCount > 0 ? ` · weak ${target.weaknessCount}` : ""}
+                                          {target.weaknessCount > 0 ? ` · ${isKorean ? "약함" : "weak"} ${target.weaknessCount}` : ""}
                                         </span>
                                       </>
                                     ) : (
@@ -845,7 +907,7 @@ export function ResumeHeatmapPage() {
                             anchorId: section.anchorRecordId ?? section.anchorKey ?? section.id,
                           })}
                         >
-                          Open detailed analysis
+                          {isKorean ? "상세 분석 열기" : "Open detailed analysis"}
                         </Link>
                       </div>
                     </article>
