@@ -14,13 +14,9 @@ export function LearningMaterialList({ materials }: LearningMaterialListProps) {
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{isKorean ? "학습 자료" : "Learning materials"}</p>
-          <h2 className="page-card__title">{isKorean ? "오늘 연습에 쓰일 자료" : "Resources for today&apos;s practice"}</h2>
-          <p className="page-card__body home-collection-card__body">
-            {isKorean
-              ? "현재 답변 경로를 직접 강화하는 자료만 남겨두세요."
-              : "Keep only the material that directly strengthens the current answer path."}
-          </p>
+          <h2 className="page-card__title">{isKorean ? "오늘 바로 꺼내볼 자료" : "Materials worth opening today"}</h2>
         </div>
+        <span className="section-heading__count">{materials.length}</span>
       </div>
       <div className="stack-list">
         {materials.map((material) => (
@@ -30,10 +26,17 @@ export function LearningMaterialList({ materials }: LearningMaterialListProps) {
                 <span>{material.resourceTypeLabel}</span>
               </div>
               <h3 className="list-item-card__title">{material.title}</h3>
-              <p className="list-item-card__body">{material.description}</p>
+              {material.description ? (
+                <p className="list-item-card__body home-collection-card__item-body">{material.description}</p>
+              ) : null}
             </div>
             {material.url ? (
-              <a className="secondary-button" href={material.url} rel="noreferrer" target="_blank">
+              <a
+                className="secondary-button home-collection-card__action"
+                href={material.url}
+                rel="noreferrer"
+                target="_blank"
+              >
                 {isKorean ? "링크 열기" : "Open link"}
               </a>
             ) : null}

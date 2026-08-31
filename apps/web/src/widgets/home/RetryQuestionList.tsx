@@ -17,12 +17,7 @@ export function RetryQuestionList({ questions }: RetryQuestionListProps) {
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{isKorean ? "재도전 큐" : "Retry queue"}</p>
-          <h2 className="page-card__title">{isKorean ? "한 번 더 점검이 필요한 질문" : "Questions that need another pass"}</h2>
-          <p className="page-card__body home-collection-card__body">
-            {isKorean
-              ? "이전 답변이 아직 얕거나 불안정했던 질문을 이 레인에서 다시 다루세요."
-              : "Use this lane for questions where your previous answer was still shallow or unstable."}
-          </p>
+          <h2 className="page-card__title">{isKorean ? "다시 답해볼 질문" : "Questions that need another pass"}</h2>
         </div>
         <span className="section-heading__count">{questions.length}</span>
       </div>
@@ -33,9 +28,10 @@ export function RetryQuestionList({ questions }: RetryQuestionListProps) {
               <div className="list-item-card__meta">
                 <QuestionStatusBadge status={question.status} />
                 <span>{question.categoryLabel}</span>
+                <span>{question.companyLabel}</span>
               </div>
               <h3 className="list-item-card__title">{question.title}</h3>
-              <p className="list-item-card__body">{question.prompt}</p>
+              <p className="list-item-card__body home-collection-card__item-body">{question.prompt}</p>
             </div>
             <div className="list-item-card__actions">
               <Link

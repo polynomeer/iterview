@@ -45,16 +45,16 @@ function formatBadgeLabel(item: ReferenceAnswerItem, t: ReturnType<typeof useLoc
   return item.sourceLabel;
 }
 
-function formatAnswerFormat(answerFormat: string) {
+function formatAnswerFormat(answerFormat: string, isKorean: boolean) {
   switch (answerFormat) {
     case "outline":
-      return "Outline";
+      return isKorean ? "개요" : "Outline";
     case "full_answer":
-      return "Full answer";
+      return isKorean ? "전체 답변" : "Full answer";
     case "summary":
-      return "Summary";
+      return isKorean ? "요약" : "Summary";
     case "transcript_excerpt":
-      return "Transcript excerpt";
+      return isKorean ? "대화 발췌" : "Transcript excerpt";
     default:
       return answerFormat.split("_").join(" ");
   }
@@ -97,38 +97,47 @@ export function ReferenceAnswersSection({
             onSubmit?.();
           }}
         >
-          <div className="form-field">
-            <label className="form-field__label" htmlFor="reference-answer-title">
-              {t("question.referenceAnswerTitleLabel")}
-            </label>
-            <input
-              className="form-field__input"
-              id="reference-answer-title"
-              onChange={(event) => {
-                onFormChange?.("title", event.target.value);
-              }}
-              placeholder={t("question.referenceAnswerTitlePlaceholder")}
-              type="text"
-              value={form.title}
-            />
+          <div className="question-inline-composer__header">
+            <div>
+              <p className="section-heading__eyebrow">{t("question.referenceAnswersEyebrow")}</p>
+              <h3 className="question-inline-composer__title">{t("question.referenceAnswerComposerTitle")}</h3>
+            </div>
+            <p className="question-inline-composer__hint">{t("question.referenceAnswerComposerHint")}</p>
           </div>
-          <div className="form-field">
-            <label className="form-field__label" htmlFor="reference-answer-format">
-              {t("question.referenceAnswerFormatLabel")}
-            </label>
-            <select
-              className="form-field__input"
-              id="reference-answer-format"
-              onChange={(event) => {
-                onFormChange?.("answerFormat", event.target.value);
-              }}
-              value={form.answerFormat}
-            >
-              <option value="outline">{isKorean ? "개요" : "Outline"}</option>
-              <option value="full_answer">{isKorean ? "전체 답변" : "Full answer"}</option>
-              <option value="summary">{isKorean ? "요약" : "Summary"}</option>
-              <option value="transcript_excerpt">{isKorean ? "대화 발췌" : "Transcript excerpt"}</option>
-            </select>
+          <div className="question-inline-composer__grid">
+            <div className="form-field">
+              <label className="form-field__label" htmlFor="reference-answer-title">
+                {t("question.referenceAnswerTitleLabel")}
+              </label>
+              <input
+                className="form-field__input"
+                id="reference-answer-title"
+                onChange={(event) => {
+                  onFormChange?.("title", event.target.value);
+                }}
+                placeholder={t("question.referenceAnswerTitlePlaceholder")}
+                type="text"
+                value={form.title}
+              />
+            </div>
+            <div className="form-field">
+              <label className="form-field__label" htmlFor="reference-answer-format">
+                {t("question.referenceAnswerFormatLabel")}
+              </label>
+              <select
+                className="form-field__input"
+                id="reference-answer-format"
+                onChange={(event) => {
+                  onFormChange?.("answerFormat", event.target.value);
+                }}
+                value={form.answerFormat}
+              >
+                <option value="outline">{isKorean ? "개요" : "Outline"}</option>
+                <option value="full_answer">{isKorean ? "전체 답변" : "Full answer"}</option>
+                <option value="summary">{isKorean ? "요약" : "Summary"}</option>
+                <option value="transcript_excerpt">{isKorean ? "대화 발췌" : "Transcript excerpt"}</option>
+              </select>
+            </div>
           </div>
           <div className="form-field">
             <label className="form-field__label" htmlFor="reference-answer-text">
@@ -145,8 +154,17 @@ export function ReferenceAnswersSection({
               value={form.answerText}
             />
           </div>
-          {submitError ? <p className="form-feedback form-feedback--error">{submitError}</p> : null}
-          <div className="page-card__actions">
+          {submitError ? (
+            <div
+              aria-live="assertive"
+              className="form-feedback form-feedback--error question-inline-composer__feedback"
+              role="alert"
+            >
+              <strong>{t("question.referenceAnswerErrorTitle")}</strong>
+              <p>{submitError}</p>
+            </div>
+          ) : null}
+          <div className="page-card__actions question-inline-composer__actions">
             <button className="primary-button" disabled={isSubmitting} type="submit">
               {isSubmitting ? t("question.savingReferenceAnswer") : t("question.saveReferenceAnswer")}
             </button>
@@ -159,10 +177,10 @@ export function ReferenceAnswersSection({
 
       <div className="stack-list">
         {items.map((item) => (
-          <article className="list-item-card" key={item.id}>
+          <article className="list-item-card question-reference-answer-card" key={item.id}>
             <div className="list-item-card__content">
               <div className="list-item-card__meta question-source-meta">
-                <span>{formatAnswerFormat(item.answerFormat)}</span>
+                <span>{formatAnswerFormat(item.answerFormat, isKorean)}</span>
                 <span>{formatBadgeLabel(item, t)}</span>
                 {item.isOfficial ? <span>{t("question.sourceOfficial")}</span> : null}
                 {item.contentLocale ? <span>{item.contentLocale.toUpperCase()}</span> : null}
