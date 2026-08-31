@@ -32,119 +32,118 @@ type WeakNode = {
 const WEAK_NODES: WeakNode[] = [
   {
     id: "payments-idempotency",
-    title: "Payment idempotency defense",
-    dimension: "Correctness",
+    title: "결제 idempotency 방어",
+    dimension: "정확성",
     severity: "critical",
     weakness:
-      "The branch still explains the mechanism but not the failure envelope when duplicate settlement races survive the first safeguard.",
-    graphRole: "Root remediation hub",
+      "이 가지는 메커니즘은 설명하지만, 첫 번째 안전장치를 뚫고 중복 정산 경쟁이 살아남을 때의 실패 범위를 아직 설명하지 못합니다.",
+    graphRole: "루트 보강 허브",
     confidence: 42,
     remediation: [
-      "Restate the exact duplicate-settlement incident and where the first guard failed.",
-      "Trace how idempotency keys, lock ownership, and retry backoff interact under concurrent retries.",
-      "Show what remains imperfect after the fix so the answer does not sound absolute.",
+      "정확히 어떤 중복 정산 사고였는지, 그리고 첫 번째 방어선이 어디서 실패했는지 다시 말하세요.",
+      "동시 재시도 상황에서 idempotency key, lock ownership, retry backoff가 어떻게 상호작용하는지 추적하세요.",
+      "수정 이후에도 무엇이 완벽하지 않은지 보여줘서 답변이 절대적으로 들리지 않게 하세요.",
     ],
     relatedQuestions: [
       {
         id: "distributed-lock",
-        title: "How did you ensure idempotency in transaction processing?",
-        label: "Question tree",
+        title: "transaction 처리에서 idempotency를 어떻게 보장했나요?",
+        label: "질문 트리",
         to: routeConfig.questionTree.buildPath({ questionId: "distributed-lock" }),
       },
       {
         id: "distributed-lock-answer",
-        title: "Tighten the payment correctness answer draft",
-        label: "Answer editor",
+        title: "결제 정확성 답변 초안 다듬기",
+        label: "답변 편집기",
         to: routeConfig.answerEditor.buildPath({ questionId: "distributed-lock" }),
       },
     ],
     resumeEvidence: [
       {
-        title: "Settlement reliability improvement",
-        detail: "Reopen the quantified resume claim and verify the exact duplicate reduction proof chain.",
+        title: "정산 안정성 개선",
+        detail: "수치화된 이력서 주장으로 돌아가 중복 감소 근거 사슬을 정확히 검증하세요.",
         to: routeConfig.resumeAnalysis.buildPath(),
       },
       {
-        title: "Interview heatmap anchor",
-        detail: "Inspect where the summary claim still lacks defendable operational detail.",
+        title: "인터뷰 히트맵 앵커",
+        detail: "요약 주장에 아직 방어 가능한 운영 디테일이 부족한 지점을 확인하세요.",
         to: routeConfig.resumeHeatmap.buildPath({ versionId: "v4" }),
       },
     ],
-    connectedNodes: ["Retry semantics", "Redis lock ownership", "Settlement rollback"],
+    connectedNodes: ["재시도 의미론", "Redis lock ownership", "정산 롤백"],
   },
   {
     id: "kafka-rebalance",
-    title: "Kafka rebalance operational story",
-    dimension: "Operational depth",
+    title: "Kafka 리밸런스 운영 스토리",
+    dimension: "운영 깊이",
     severity: "high",
     weakness:
-      "The answer names rebalancing correctly but still sounds like platform theory rather than production pain and mitigation.",
-    graphRole: "Failure-mode branch",
+      "답변이 리밸런싱 자체는 맞게 설명하지만, 여전히 실서비스의 고통과 대응보다 플랫폼 이론처럼 들립니다.",
+    graphRole: "실패 모드 가지",
     confidence: 53,
     remediation: [
-      "Start from one real lag or partition skew incident before naming the rebalance protocol.",
-      "Explain what visibility you had, what was ambiguous, and which mitigation was fast enough under pressure.",
-      "Connect the operational lesson back to consumer ownership and state handoff.",
+      "리밸런스 프로토콜을 말하기 전에 실제 lag나 partition skew 사고 하나에서 시작하세요.",
+      "어떤 가시성이 있었고 무엇이 모호했는지, 그리고 압박 속에서 어떤 완화책이 충분히 빨랐는지 설명하세요.",
+      "운영 교훈을 consumer ownership과 state handoff로 다시 연결하세요.",
     ],
     relatedQuestions: [
       {
         id: "kafka-rebalance",
-        title: "Reopen the Kafka rebalance branch",
-        label: "Question tree",
+        title: "Kafka 리밸런스 가지 다시 열기",
+        label: "질문 트리",
         to: routeConfig.questionTree.buildPath({ questionId: "kafka-rebalance" }),
       },
       {
         id: "kafka-rebalance-answer",
-        title: "Draft a sharper operational answer",
-        label: "Answer editor",
+        title: "더 선명한 운영 답변 초안 만들기",
+        label: "답변 편집기",
         to: routeConfig.answerEditor.buildPath({ questionId: "kafka-rebalance" }),
       },
     ],
     resumeEvidence: [
       {
-        title: "Event processing modernization",
-        detail:
-          "Reconnect the branch to the experience bullet that actually involved consumer lag and replay decisions.",
+        title: "이벤트 처리 현대화",
+        detail: "consumer lag와 replay 결정이 실제로 들어간 경력 bullet에 이 가지를 다시 연결하세요.",
         to: routeConfig.resume.buildPath(),
       },
     ],
-    connectedNodes: ["Lag handling", "Replay boundaries", "Partition skew"],
+    connectedNodes: ["Lag 처리", "Replay 경계", "Partition skew"],
   },
   {
     id: "resume-metrics-proof",
-    title: "Resume metrics proof chain",
-    dimension: "Source of truth",
+    title: "이력서 지표 근거 사슬",
+    dimension: "기준 문서",
     severity: "medium",
     weakness:
-      "The branch uses strong numbers but the derivation path is still too compressed when the interviewer asks how the metric was produced.",
-    graphRole: "Evidence bridge",
+      "이 가지는 강한 수치를 쓰지만, 면접관이 지표 산출 방식을 물으면 도출 경로가 여전히 너무 압축되어 있습니다.",
+    graphRole: "근거 브리지",
     confidence: 61,
     remediation: [
-      "Break the metric into source data, aggregation rule, and business interpretation.",
-      "Say what was directly measured versus estimated from adjacent operational signals.",
-      "Link the metric to one follow-up branch where the same proof is likely to be attacked again.",
+      "지표를 원천 데이터, 집계 규칙, 비즈니스 해석으로 분해하세요.",
+      "직접 측정한 것과 인접 운영 시그널로 추정한 것을 구분해서 말하세요.",
+      "같은 근거가 다시 공격받기 쉬운 꼬리질문 가지 하나와 지표를 연결하세요.",
     ],
     relatedQuestions: [
       {
         id: "metrics-proof",
-        title: "Inspect the metrics follow-up cluster",
-        label: "Question detail",
+        title: "지표 꼬리질문 클러스터 보기",
+        label: "질문 상세",
         to: routeConfig.questionDetail.buildPath({ questionId: "metrics-proof" }),
       },
     ],
     resumeEvidence: [
       {
-        title: "Resume analysis risk board",
-        detail: "Check which metric-backed bullets still show a low defense score.",
+        title: "이력서 분석 리스크 보드",
+        detail: "지표 근거 bullet 중 어떤 항목이 여전히 낮은 방어 점수를 보이는지 확인하세요.",
         to: routeConfig.resumeAnalysis.buildPath(),
       },
       {
-        title: "Source notes",
-        detail: "Open supporting notes before rewriting the claim itself.",
+        title: "근거 노트",
+        detail: "주장 자체를 다시 쓰기 전에 보조 노트를 먼저 여세요.",
         to: routeConfig.notes.buildPath(),
       },
     ],
-    connectedNodes: ["Quantified impact", "Source notes", "Behavioral ownership"],
+    connectedNodes: ["정량 임팩트", "근거 노트", "행동 책임감"],
   },
 ];
 
@@ -168,69 +167,7 @@ function localizeWeakNodeText(value: string, isKorean: boolean) {
     Critical: "치명",
     High: "높음",
     Medium: "중간",
-    "Payment idempotency defense": "결제 멱등성 방어",
-    Correctness: "정확성",
-    "Root remediation hub": "루트 보강 허브",
-    "The branch still explains the mechanism but not the failure envelope when duplicate settlement races survive the first safeguard.":
-      "이 가지는 메커니즘은 설명하지만, 첫 번째 안전장치를 뚫고 중복 정산 경쟁이 살아남을 때의 실패 범위를 아직 설명하지 못합니다.",
-    "Restate the exact duplicate-settlement incident and where the first guard failed.":
-      "정확히 어떤 중복 정산 사고였는지, 그리고 첫 번째 방어선이 어디서 실패했는지 다시 말하세요.",
-    "Trace how idempotency keys, lock ownership, and retry backoff interact under concurrent retries.":
-      "동시 재시도 상황에서 idempotency key, lock ownership, retry backoff가 어떻게 상호작용하는지 추적하세요.",
-    "Show what remains imperfect after the fix so the answer does not sound absolute.":
-      "수정 이후에도 무엇이 완벽하지 않은지 보여줘서 답변이 절대적으로 들리지 않게 하세요.",
-    "How did you ensure idempotency in transaction processing?": "transaction 처리에서 idempotency를 어떻게 보장했나요?",
-    "Question tree": "질문 트리",
-    "Tighten the payment correctness answer draft": "결제 정확성 답변 초안 다듬기",
-    "Answer editor": "답변 편집기",
-    "Settlement reliability improvement": "정산 안정성 개선",
-    "Reopen the quantified resume claim and verify the exact duplicate reduction proof chain.":
-      "수치화된 이력서 주장으로 돌아가 중복 감소 근거 사슬을 정확히 검증하세요.",
-    "Interview heatmap anchor": "인터뷰 히트맵 앵커",
-    "Inspect where the summary claim still lacks defendable operational detail.":
-      "요약 주장에 아직 방어 가능한 운영 디테일이 부족한 지점을 확인하세요.",
-    "Retry semantics": "재시도 의미론",
-    "Redis lock ownership": "Redis lock ownership",
-    "Settlement rollback": "정산 롤백",
-    "Kafka rebalance operational story": "Kafka 리밸런스 운영 스토리",
-    "Operational depth": "운영 깊이",
-    "Failure-mode branch": "실패 모드 가지",
-    "The answer names rebalancing correctly but still sounds like platform theory rather than production pain and mitigation.":
-      "답변이 리밸런싱 자체는 맞게 설명하지만, 여전히 실서비스의 고통과 대응보다 플랫폼 이론처럼 들립니다.",
-    "Start from one real lag or partition skew incident before naming the rebalance protocol.":
-      "리밸런스 프로토콜을 말하기 전에 실제 lag나 partition skew 사고 하나에서 시작하세요.",
-    "Explain what visibility you had, what was ambiguous, and which mitigation was fast enough under pressure.":
-      "어떤 가시성이 있었고 무엇이 모호했는지, 그리고 압박 속에서 어떤 완화책이 충분히 빨랐는지 설명하세요.",
-    "Connect the operational lesson back to consumer ownership and state handoff.":
-      "운영 교훈을 consumer ownership과 state handoff로 다시 연결하세요.",
-    "Reopen the Kafka rebalance branch": "Kafka 리밸런스 가지 다시 열기",
-    "Draft a sharper operational answer": "더 선명한 운영 답변 초안 만들기",
-    "Event processing modernization": "이벤트 처리 현대화",
-    "Reconnect the branch to the experience bullet that actually involved consumer lag and replay decisions.":
-      "consumer lag와 replay 결정이 실제로 들어간 경력 bullet에 이 가지를 다시 연결하세요.",
-    "Lag handling": "Lag 처리",
-    "Replay boundaries": "Replay 경계",
-    "Partition skew": "Partition skew",
-    "Resume metrics proof chain": "이력서 지표 근거 사슬",
-    "Source of truth": "기준 문서",
-    "Evidence bridge": "근거 브리지",
-    "The branch uses strong numbers but the derivation path is still too compressed when the interviewer asks how the metric was produced.":
-      "이 가지는 강한 수치를 쓰지만, 면접관이 지표 산출 방식을 물으면 도출 경로가 여전히 너무 압축되어 있습니다.",
-    "Break the metric into source data, aggregation rule, and business interpretation.":
-      "지표를 원천 데이터, 집계 규칙, 비즈니스 해석으로 분해하세요.",
-    "Say what was directly measured versus estimated from adjacent operational signals.":
-      "직접 측정한 것과 인접 운영 시그널로 추정한 것을 구분해서 말하세요.",
-    "Link the metric to one follow-up branch where the same proof is likely to be attacked again.":
-      "같은 근거가 다시 공격받기 쉬운 꼬리질문 가지 하나와 지표를 연결하세요.",
-    "Inspect the metrics follow-up cluster": "지표 꼬리질문 클러스터 보기",
-    "Question detail": "질문 상세",
-    "Resume analysis risk board": "이력서 분석 리스크 보드",
-    "Check which metric-backed bullets still show a low defense score.":
-      "지표 근거 bullet 중 어떤 항목이 여전히 낮은 방어 점수를 보이는지 확인하세요.",
-    "Source notes": "근거 노트",
-    "Open supporting notes before rewriting the claim itself.": "주장 자체를 다시 쓰기 전에 보조 노트를 먼저 여세요.",
-    "Quantified impact": "정량 임팩트",
-    "Behavioral ownership": "행동 책임감",
+    "Payment idempotency defense": "결제 idempotency 방어",
   };
 
   return translations[value] ?? value;

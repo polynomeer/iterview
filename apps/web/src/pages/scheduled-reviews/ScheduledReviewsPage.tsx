@@ -28,13 +28,13 @@ type ReviewDay = {
 };
 
 const REVIEW_DAYS: ReviewDay[] = [
-  { date: "2026-08-25", label: "오늘", shortLabel: "화", load: 4, emphasis: "focus" },
-  { date: "2026-08-26", label: "내일", shortLabel: "수", load: 2, emphasis: "steady" },
-  { date: "2026-08-27", label: "목", shortLabel: "목", load: 1, emphasis: "light" },
-  { date: "2026-08-28", label: "금", shortLabel: "금", load: 3, emphasis: "steady" },
-  { date: "2026-08-29", label: "토", shortLabel: "토", load: 2, emphasis: "light" },
-  { date: "2026-08-30", label: "일", shortLabel: "일", load: 1, emphasis: "light" },
-  { date: "2026-08-31", label: "월", shortLabel: "월", load: 3, emphasis: "steady" },
+  { date: "2026-08-31", label: "오늘", shortLabel: "월", load: 4, emphasis: "focus" },
+  { date: "2026-09-01", label: "내일", shortLabel: "화", load: 2, emphasis: "steady" },
+  { date: "2026-09-02", label: "수", shortLabel: "수", load: 1, emphasis: "light" },
+  { date: "2026-09-03", label: "목", shortLabel: "목", load: 3, emphasis: "steady" },
+  { date: "2026-09-04", label: "금", shortLabel: "금", load: 2, emphasis: "light" },
+  { date: "2026-09-05", label: "토", shortLabel: "토", load: 1, emphasis: "light" },
+  { date: "2026-09-06", label: "일", shortLabel: "일", load: 3, emphasis: "steady" },
 ];
 
 const INITIAL_REVIEW_BLOCKS: ReviewBlock[] = [
@@ -42,7 +42,7 @@ const INITIAL_REVIEW_BLOCKS: ReviewBlock[] = [
     id: "payments-retry",
     title: "결제 정합성 재시도 블록",
     cluster: "정산 안정성 / 재시도 의미론",
-    dueDate: "2026-08-25",
+    dueDate: "2026-08-31",
     impact: "결제 DFS 루프 숙련도 +6",
     durationLabel: "25분",
     status: "today",
@@ -53,7 +53,7 @@ const INITIAL_REVIEW_BLOCKS: ReviewBlock[] = [
     id: "redis-branch",
     title: "Redis 락 꼬리질문 복구",
     cluster: "분산 락 / 장애 모드 입증",
-    dueDate: "2026-08-26",
+    dueDate: "2026-09-01",
     impact: "활성 브랜치 2개의 모호한 동시성 답변 축소",
     durationLabel: "20분",
     status: "upcoming",
@@ -64,7 +64,7 @@ const INITIAL_REVIEW_BLOCKS: ReviewBlock[] = [
     id: "resume-metrics",
     title: "이력서 수치 방어 점검",
     cluster: "기준 문서 / 수치화 주장",
-    dueDate: "2026-08-28",
+    dueDate: "2026-09-03",
     impact: "다음 회사 루프 전 이력서 근거 신뢰도 강화",
     durationLabel: "30분",
     status: "upcoming",
@@ -75,7 +75,7 @@ const INITIAL_REVIEW_BLOCKS: ReviewBlock[] = [
     id: "overdue-kafka",
     title: "Kafka 리밸런스 보강",
     cluster: "스트리밍 / 운영 디테일 복구",
-    dueDate: "2026-08-24",
+    dueDate: "2026-08-30",
     impact: "더 흐려지기 전에 연체된 약한 노드 1개 복구",
     durationLabel: "15분",
     status: "overdue",
@@ -116,15 +116,15 @@ export function ScheduledReviewsPage() {
     setReviewBlocks((current) =>
       current.map((block) =>
         block.id === blockId
-          ? {
-              ...block,
-              dueDate: "2026-08-31",
-              status: "upcoming",
-            }
+      ? {
+          ...block,
+          dueDate: "2026-09-02",
+          status: "upcoming",
+        }
           : block,
       ),
     );
-    setStatusMessage(isKorean ? "복습 블록 일정을 2026년 8월 31일로 변경했습니다." : "Review block rescheduled to Aug 31, 2026.");
+    setStatusMessage(isKorean ? "복습 블록 일정을 2026년 9월 2일로 변경했습니다." : "Review block rescheduled to Sep 2, 2026.");
   }
 
   function handleComplete(blockId: string) {
