@@ -16281,3 +16281,245 @@ textarea::placeholder {
     grid-template-columns: 1fr;
   }
 }
+
+.weak-nodes-layout--desktop {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr) 300px;
+  gap: 18px;
+  align-items: start;
+}
+
+.weak-nodes-layout--desktop > main {
+  display: contents;
+}
+
+.weak-nodes-graph-panel {
+  grid-column: 1;
+  position: sticky;
+  top: 94px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.weak-nodes-remediation-panel {
+  grid-column: 2;
+  min-width: 0;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.weak-nodes-layout__rail {
+  grid-column: 3;
+  position: sticky;
+  top: 94px;
+}
+
+.weak-node-card,
+.weak-nodes-detail-card,
+.weak-nodes-remediation-step {
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: none;
+}
+
+.weak-nodes-workspace-surface,
+.scheduled-reviews-workspace-surface,
+.resume-analysis-workspace-surface {
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 30%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.weak-nodes-workspace-surface__stats article,
+.scheduled-reviews-workspace-surface__stats article,
+.resume-analysis-workspace-surface__stat {
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.scheduled-reviews-layout--desktop {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+.scheduled-reviews-layout__plan-rail,
+.scheduled-reviews-detail-rail {
+  position: sticky;
+  top: 94px;
+}
+
+.scheduled-reviews-plan-note,
+.scheduled-reviews-calendar,
+.scheduled-reviews-timeline,
+.scheduled-reviews-queue,
+.scheduled-reviews-detail-rail {
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.scheduled-review-day-card,
+.scheduled-review-timeline-card,
+.scheduled-review-queue-card,
+.scheduled-reviews-detail-rail__panel {
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.resume-analysis-layout--desktop {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+.resume-analysis-layout__workspace-summary,
+.resume-analysis-layout__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: sticky;
+  top: 94px;
+}
+
+.resume-analysis-layout__main {
+  min-width: 0;
+}
+
+.resume-analysis-priority-card,
+.resume-analysis-guide {
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.resume-analysis-priority-card__signal,
+.resume-analysis-priority-card__playbook-step,
+.resume-analysis-guide__signal,
+.resume-analysis-guide__rule {
+  border: 1px solid rgba(125, 145, 176, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.interview-session-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+.interview-session-layout__main {
+  min-width: 0;
+}
+
+.interview-session-layout__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.interview-session-layout__hero-side,
+.interview-session-layout > .interview-session-workspace-surface + .interview-session-layout__hero .interview-session-side-summary,
+.interview-session-layout + .interview-question-timeline {
+  min-width: 0;
+}
+
+.interview-session-side-summary,
+.interview-session-answer-surface,
+.interview-facet-panels-shell {
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.interview-session-side-summary {
+  position: sticky;
+  top: 94px;
+}
+
+.interview-session-current__summary-item,
+.interview-session-side-summary__summary-item,
+.interview-session-side-summary__signal,
+.interview-session-answer-surface__summary-item,
+.interview-session-answer-surface__playbook-step {
+  border: 1px solid rgba(125, 145, 176, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.interview-result-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.interview-result-layout__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+.interview-result-layout__side {
+  position: sticky;
+  top: 94px;
+}
+
+.interview-result-layout__hero,
+.interview-result-layout__actions,
+.interview-result-layout__recap {
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.interview-result-layout__hero-summary-item,
+.interview-result-layout__actions-summary-chip,
+.interview-result-layout__next-item,
+.interview-result-layout__recap-card {
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 1099px) {
+  .weak-nodes-layout--desktop,
+  .scheduled-reviews-layout--desktop,
+  .resume-analysis-layout--desktop,
+  .interview-session-layout,
+  .interview-session-layout__hero,
+  .interview-result-layout__content {
+    grid-template-columns: 1fr;
+  }
+
+  .weak-nodes-layout--desktop > main {
+    display: block;
+  }
+
+  .weak-nodes-graph-panel,
+  .weak-nodes-layout__rail,
+  .scheduled-reviews-layout__plan-rail,
+  .scheduled-reviews-detail-rail,
+  .resume-analysis-layout__workspace-summary,
+  .resume-analysis-layout__rail,
+  .interview-session-side-summary,
+  .interview-result-layout__side {
+    position: static;
+  }
+}

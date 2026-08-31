@@ -62,3 +62,5 @@ Each ADR should include:
    Requires core authenticated screens to follow the captured desktop reference shell structurally, not only stylistically.
 18. [`0018-standardize-desktop-three-rail-workspaces-for-inspector-flows.md`](0018-standardize-desktop-three-rail-workspaces-for-inspector-flows.md)
    Standardizes left-rail, center-canvas, right-rail desktop composition for inspector and queue flows.
+19. [`0019-align-secondary-workspaces-to-shared-analysis-shell.md`](0019-align-secondary-workspaces-to-shared-analysis-shell.md)
+   Extends the shared desktop analysis shell to remediation, planning, session, and result workspaces.

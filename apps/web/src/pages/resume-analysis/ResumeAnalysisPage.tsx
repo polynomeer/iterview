@@ -210,7 +210,10 @@ export function ResumeAnalysisPage() {
 
               return (
                 <div className={`resume-analysis-layout ${isDesktop ? "resume-analysis-layout--desktop" : "resume-analysis-layout--mobile"}`}>
-                  <section className="resume-analysis-layout__workspace-summary">{workspaceSummary}</section>
+                  <aside className="resume-analysis-layout__workspace-summary">
+                    {workspaceSummary}
+                    <ActiveResumeOverviewCard resumeList={effectiveResumeList} />
+                  </aside>
                   <div className="resume-analysis-layout__main page-stack">
                     <section className="page-card resume-analysis-priority-card">
                       <div className="section-heading">
@@ -269,7 +272,6 @@ export function ResumeAnalysisPage() {
                     <ResumeSkillsCard skills={analysisQuery.data.skills} />
                   </div>
                   <aside className="resume-analysis-layout__rail page-stack">
-                    <ActiveResumeOverviewCard resumeList={effectiveResumeList} />
                     <section className="page-card section-panel section-panel--muted resume-analysis-guide">
                       <span className="page-card__label">{isKorean ? "방어 가이드" : "Defense guide"}</span>
                       <h2 className="page-card__title">{isKorean ? "이 분석을 면접 압박처럼 읽으세요" : "Read this analysis like interview pressure"}</h2>

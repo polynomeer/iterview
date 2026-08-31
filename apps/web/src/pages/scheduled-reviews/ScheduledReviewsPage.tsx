@@ -209,7 +209,7 @@ export function ScheduledReviewsPage() {
       {statusMessage ? <FeedbackNotice message={statusMessage} tone="success" /> : null}
 
       <div className={`scheduled-reviews-layout ${isDesktop ? "scheduled-reviews-layout--desktop" : ""}`}>
-        <main className="page-stack">
+        <aside className="page-stack scheduled-reviews-layout__plan-rail">
           <section className="page-card scheduled-reviews-calendar">
             <div className="section-heading section-heading--compact">
               <div>
@@ -233,7 +233,18 @@ export function ScheduledReviewsPage() {
               ))}
             </div>
           </section>
+          <section className="page-card scheduled-reviews-plan-note">
+            <span className="page-card__label">{isKorean ? "계획 레일" : "Planning rail"}</span>
+            <h2 className="page-card__title">{isKorean ? "오늘 끝낼 블록 하나만 전면에 두세요" : "Keep one finishable block in front"}</h2>
+            <p className="page-card__body">
+              {isKorean
+                ? "좌측 레일은 이번 주 압력과 블록 부하를 계속 보여줘야 합니다. 일정은 욕심이 아니라 완료 가능성을 기준으로 읽어야 합니다."
+                : "The left rail should keep weekly pressure and block load visible. Read the schedule through finishability, not ambition."}
+            </p>
+          </section>
+        </aside>
 
+        <main className="page-stack scheduled-reviews-layout__main">
           <section className="page-card scheduled-reviews-timeline">
             <div className="section-heading section-heading--compact">
               <div>
