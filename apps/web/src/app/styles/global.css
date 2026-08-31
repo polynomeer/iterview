@@ -21225,3 +21225,503 @@ textarea::placeholder {
     grid-template-columns: 1fr;
   }
 }
+
+:root[data-theme="workspace"] .scheduled-reviews-layout--desktop {
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.7fr) minmax(320px, 0.98fr);
+  align-items: start;
+}
+
+:root[data-theme="workspace"] .scheduled-reviews-layout__plan-rail,
+:root[data-theme="workspace"] .scheduled-review-detail-panel {
+  position: sticky;
+  top: 104px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail,
+:root[data-theme="workspace"] .scheduled-review-calendar-board,
+:root[data-theme="workspace"] .scheduled-review-session-table,
+:root[data-theme="workspace"] .scheduled-review-detail-panel {
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 32%),
+    rgba(10, 14, 23, 0.9);
+  box-shadow: 0 28px 64px rgba(5, 8, 15, 0.36);
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail,
+:root[data-theme="workspace"] .scheduled-review-detail-panel {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(137, 161, 203, 0.12);
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__tab {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__tab--active {
+  color: #8eb5ff;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__section,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__heading,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__impact,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__stats {
+  display: grid;
+  gap: 8px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__heading span,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__panel span,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__stats span {
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__heading strong,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__item strong,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__mini-card strong,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__queue-row strong,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__cluster-card strong,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-tab strong,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session strong,
+:root[data-theme="workspace"] .scheduled-review-session-table__session strong,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__topic strong,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__stats strong,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__impact strong {
+  color: var(--text-strong);
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__list,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__stack,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__queue,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__clusters,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__topics,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__actions {
+  display: grid;
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 140ms ease, transform 140ms ease, background 140ms ease;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__item:hover,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__item:focus-visible,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__item--active {
+  border-color: rgba(91, 140, 255, 0.24);
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 42%),
+    rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__item p,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__mini-card p,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__queue-row p,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__cluster-card p,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session p,
+:root[data-theme="workspace"] .scheduled-review-session-table__session p,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__panel p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__item span,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__mini-card span,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__cluster-card span,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session span,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-tab span,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-tab small,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session small,
+:root[data-theme="workspace"] .scheduled-review-session-table__row > span {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__mini-card,
+:root[data-theme="workspace"] .scheduled-review-browser-rail__cluster-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(137, 161, 203, 0.08);
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__queue-row {
+  display: grid;
+  gap: 8px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-browser-rail__queue-row i,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__impact i {
+  display: block;
+  width: 100%;
+  height: 7px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(91, 140, 255, 0.92) 0 var(--scheduled-review-queue-score, var(--scheduled-review-readiness)), rgba(255, 255, 255, 0.08) var(--scheduled-review-queue-score, var(--scheduled-review-readiness)) 100%);
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board,
+:root[data-theme="workspace"] .scheduled-review-session-table {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__header,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__actions,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__frame {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__actions {
+  justify-content: flex-end;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__nav,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__pill {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(137, 161, 203, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-main);
+  font: inherit;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__pill {
+  color: #8eb5ff;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__time-rail {
+  display: grid;
+  gap: 46px;
+  min-width: 52px;
+  padding-top: 78px;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__board {
+  flex: 1;
+  display: grid;
+  gap: 14px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-head {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-tab {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-tab--focus {
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.1), transparent 46%),
+    rgba(255, 255, 255, 0.03);
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(6, minmax(74px, 1fr));
+  gap: 12px;
+  min-height: 540px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-column {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(137, 161, 203, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.015)),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 72px,
+      rgba(137, 161, 203, 0.08) 72px,
+      rgba(137, 161, 203, 0.08) 73px
+    );
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__day-column-bar {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  height: 4px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(91, 140, 255, 0.2), rgba(91, 140, 255, 0.92) var(--scheduled-review-load), rgba(255, 255, 255, 0.08) var(--scheduled-review-load));
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session {
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(13, 19, 31, 0.96), rgba(17, 26, 41, 0.94));
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 18px 32px rgba(4, 8, 14, 0.24);
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session:hover,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session:focus-visible,
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session--active {
+  transform: translateY(-2px);
+  border-color: rgba(91, 140, 255, 0.28);
+  box-shadow: 0 24px 40px rgba(4, 8, 14, 0.32);
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session--today {
+  background:
+    linear-gradient(180deg, rgba(24, 39, 70, 0.96), rgba(13, 24, 45, 0.94));
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session--upcoming {
+  background:
+    linear-gradient(180deg, rgba(14, 22, 37, 0.96), rgba(15, 20, 35, 0.94));
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__session--overdue {
+  background:
+    linear-gradient(180deg, rgba(58, 27, 27, 0.9), rgba(35, 18, 18, 0.92));
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__legend-dot--today {
+  background: rgba(91, 140, 255, 0.96);
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__legend-dot--upcoming {
+  background: rgba(117, 197, 123, 0.88);
+}
+
+:root[data-theme="workspace"] .scheduled-review-calendar-board__legend-dot--overdue {
+  background: rgba(255, 116, 116, 0.92);
+}
+
+:root[data-theme="workspace"] .scheduled-review-session-table__table,
+:root[data-theme="workspace"] .scheduled-review-session-table__rows {
+  display: grid;
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-session-table__head,
+:root[data-theme="workspace"] .scheduled-review-session-table__row {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.6fr) minmax(120px, 0.7fr) minmax(90px, 0.5fr) minmax(90px, 0.5fr) minmax(90px, 0.55fr);
+  gap: 16px;
+  align-items: center;
+}
+
+:root[data-theme="workspace"] .scheduled-review-session-table__head {
+  padding: 0 16px 8px;
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="workspace"] .scheduled-review-session-table__row {
+  padding: 14px 16px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+:root[data-theme="workspace"] .scheduled-review-session-table__session {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+:root[data-theme="workspace"] .scheduled-review-session-table__session--active strong {
+  color: #8eb5ff;
+}
+
+:root[data-theme="workspace"] .scheduled-review-detail-panel__header,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__chips,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__stats {
+  display: grid;
+  gap: 12px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-detail-panel__chips {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+:root[data-theme="workspace"] .scheduled-review-detail-panel__topic {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-detail-panel__topic i {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(117, 197, 123, 0.92);
+  box-shadow: 0 0 0 4px rgba(117, 197, 123, 0.12);
+}
+
+:root[data-theme="workspace"] .scheduled-review-detail-panel__stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+:root[data-theme="workspace"] .scheduled-review-detail-panel__stats article {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+:root[data-theme="workspace"] .scheduled-review-detail-panel__actions .primary-button,
+:root[data-theme="workspace"] .scheduled-review-detail-panel__actions .secondary-button {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 1099px) {
+  :root[data-theme="workspace"] .scheduled-reviews-layout--desktop,
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__header,
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__frame,
+  :root[data-theme="workspace"] .scheduled-review-session-table__head,
+  :root[data-theme="workspace"] .scheduled-review-session-table__row,
+  :root[data-theme="workspace"] .scheduled-review-detail-panel__chips,
+  :root[data-theme="workspace"] .scheduled-review-detail-panel__stats {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  :root[data-theme="workspace"] .scheduled-reviews-layout__plan-rail,
+  :root[data-theme="workspace"] .scheduled-review-detail-panel {
+    position: static;
+    top: auto;
+  }
+
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__time-rail {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  :root[data-theme="workspace"] .scheduled-review-browser-rail,
+  :root[data-theme="workspace"] .scheduled-review-calendar-board,
+  :root[data-theme="workspace"] .scheduled-review-session-table,
+  :root[data-theme="workspace"] .scheduled-review-detail-panel {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__day-head,
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__grid,
+  :root[data-theme="workspace"] .scheduled-review-detail-panel__chips,
+  :root[data-theme="workspace"] .scheduled-review-detail-panel__stats {
+    grid-template-columns: 1fr;
+  }
+
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__grid {
+    min-height: auto;
+    grid-template-rows: none;
+  }
+
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__day-column {
+    display: none;
+  }
+
+  :root[data-theme="workspace"] .scheduled-review-calendar-board__session {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  :root[data-theme="workspace"] .scheduled-review-session-table__head {
+    display: none;
+  }
+}
