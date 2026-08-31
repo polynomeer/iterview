@@ -169,13 +169,11 @@ export function ScheduledReviewsPage() {
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "간격 반복" : "Spaced repetition"}</span>
             </div>
             <h2 className="scheduled-reviews-workspace-surface__title">
-              {isKorean
-                ? "날짜, 클러스터, 예상 숙련도 영향 기준으로 재시도 작업을 보이게 유지하세요"
-                : "Keep retry work visible by day, cluster, and projected mastery impact"}
+              {isKorean ? "이번 주 복습 부하를 눈에 보이게 두세요" : "Keep this week's review load visible"}
             </h2>
             <p className="scheduled-reviews-workspace-surface__body">
               {isKorean
-                ? "큐는 지금 무엇을 복구해야 하는지 알려주고, 일정은 어떤 브랜치를 언제 다시 볼지, 얼마나 작업이 쌓였는지, 어떤 복습 블록이 준비도를 가장 빨리 높일지 알려줍니다."
+                ? "무엇을 언제 다시 볼지, 어디가 밀리고 있는지, 어떤 블록이 준비도를 가장 빨리 높일지 바로 읽을 수 있어야 합니다."
                 : "The queue tells you what needs recovery now. The schedule tells you when to revisit a branch, how much work is stacking up, and which review block will improve preparation fastest."}
             </p>
           </div>
@@ -283,7 +281,7 @@ export function ScheduledReviewsPage() {
             <div className="section-heading section-heading--compact">
               <div>
                 <p className="section-heading__eyebrow">{isKorean ? "실행 큐" : "Execution queue"}</p>
-                <h2 className="section-heading__title">{isKorean ? "다음 복습 블록을 일정 변경, 완료, 또는 컨텍스트와 함께 열어보세요" : "Reschedule, complete, or open the next review block in context"}</h2>
+                <h2 className="section-heading__title">{isKorean ? "지금 정리할 복습 블록" : "Review blocks to clear now"}</h2>
               </div>
             </div>
             <div className="scheduled-reviews-queue__list">
@@ -349,7 +347,7 @@ export function ScheduledReviewsPage() {
               <span className="page-card__label">{isKorean ? "예상 영향" : "Projected impact"}</span>
               <p className="page-card__body">
                 {isKorean
-                  ? `${selectedBlock.impact}. 이 블록을 끝내면 활성 루프에서 약한 재시도 클러스터 하나를 제거하고, 내일 같은 모호한 브랜치에 다시 들어갈 가능성을 낮출 수 있습니다.`
+                  ? `${selectedBlock.impact}. 이 블록을 끝내면 활성 루프에서 약한 재시도 클러스터 하나를 지울 수 있습니다.`
                   : `${selectedBlock.impact}. Completing this block should remove one weak retry cluster from the active loop and lower the chance of re-entering the same vague branch tomorrow.`}
               </p>
             </section>

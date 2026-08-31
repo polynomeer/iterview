@@ -129,13 +129,6 @@ export function PracticePage() {
                 {isKorean ? "분기 진입" : "Branch entry"}
               </span>
             </div>
-            <p className="practice-workspace-surface__breadcrumbs">
-              {isKorean ? "이력서 신호" : "Resume signal"}
-              <span>/</span>
-              {isKorean ? "DFS 분기 선택" : "DFS branch choice"}
-              <span>/</span>
-              {isKorean ? "재시도 인식" : "Retry awareness"}
-            </p>
             <h2 className="practice-workspace-surface__title">
               {isKorean ? "다음 분기를 의도적으로 고르세요" : "Pick the next branch on purpose"}
             </h2>
@@ -182,14 +175,6 @@ export function PracticePage() {
             </strong>
           </article>
         </div>
-        <div className="practice-workspace-surface__chips">
-          {filterState.search ? <span className="detail-chip detail-chip--accent">{isKorean ? `검색 ${filterState.search}` : `Search ${filterState.search}`}</span> : null}
-          {filterState.category ? <span className="detail-chip">{isKorean ? `카테고리 ${filterState.category}` : `Category ${filterState.category}`}</span> : null}
-          {filterState.company ? <span className="detail-chip">{isKorean ? `회사 ${filterState.company}` : `Company ${filterState.company}`}</span> : null}
-          {filterState.difficulty ? <span className="detail-chip">{isKorean ? `난이도 ${filterState.difficulty}` : `Level ${filterState.difficulty}`}</span> : null}
-          {filterState.status ? <span className="detail-chip">{isKorean ? `상태 ${filterState.status}` : `Status ${filterState.status}`}</span> : null}
-          {retryItemCount > 0 ? <span className="detail-chip">{isKorean ? "재시도 작업 있음" : "Retry work present"}</span> : null}
-        </div>
       </section>
       {(() => {
         const searchControl = (
@@ -209,11 +194,11 @@ export function PracticePage() {
               <span className="question-status-badge">{isKorean ? "재시도 우선" : "Retry first"}</span>
             </div>
             <h2 className="page-card__title">
-              {isKorean ? "약한 분기를 먼저 정리해야 하나요?" : "Need to clear weak branches first?"}
+              {isKorean ? "새 질문 전에 재도전부터 정리하세요" : "Clear retries before new questions"}
             </h2>
             <p className="page-card__body">
               {isKorean
-                ? "이미 약한 분기가 보인다면 새 질문 문구를 고르기 전에 리뷰 큐로 먼저 이동하세요."
+                ? "약한 분기가 이미 보이면 새 질문을 열기 전에 큐부터 비우세요."
                 : "Jump into the review queue before choosing a fresh prompt when the weak branch is already known."}
             </p>
             <div className="page-card__actions">
@@ -231,9 +216,7 @@ export function PracticePage() {
               <span className="detail-chip detail-chip--accent">{isKorean ? "분기 제어" : "Branch control"}</span>
             </div>
             <h2 className="page-card__title">
-              {isKorean
-                ? "느슨하게 둘러보지 말고 하나를 의도적으로 고르세요"
-                : "Make one deliberate pick instead of browsing loosely"}
+              {isKorean ? "지금 고를 한 분기만 남기세요" : "Narrow to one branch now"}
             </h2>
             <div className="practice-focus-summary-card__stats">
               <article>
@@ -308,7 +291,7 @@ export function PracticePage() {
                   {highlightedQuestion.resumeRelevanceLabel ? (
                     <p>
                       {isKorean ? "이력서 연관도" : "Resume match"}: {highlightedQuestion.resumeRelevanceLabel}
-                      {highlightedQuestion.resumeRelevanceReason ? ` · ${highlightedQuestion.resumeRelevanceReason}` : ""}
+                      {highlightedQuestion.resumeRelevanceReason ? ` / ${highlightedQuestion.resumeRelevanceReason}` : ""}
                     </p>
                   ) : null}
                 </div>
@@ -350,13 +333,11 @@ export function PracticePage() {
               <span className="detail-chip">{isKorean ? "DFS 보기" : "DFS view"}</span>
             </div>
             <h2 className="page-card__title">
-              {isKorean
-                ? "꼬리질문 순서가 중요하면 분기 지도를 여세요"
-                : "Open the branch map when follow-up order matters"}
+              {isKorean ? "순서가 중요하면 트리부터 여세요" : "Open the tree when order matters"}
             </h2>
             <p className="page-card__body">
               {isKorean
-                ? "중요해 보이는 질문 문구가 하나 보이면 답변 전에 트리로 전환하세요."
+                ? "답변 전에 꼬리질문 순서를 먼저 확인하세요."
                 : "When one prompt looks important, switch to the tree before answering."}
             </p>
             <div className="page-card__actions">

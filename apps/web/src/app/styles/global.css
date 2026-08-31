@@ -18421,3 +18421,175 @@ textarea::placeholder {
     grid-template-columns: 1fr;
   }
 }
+
+:root[data-theme="workspace"] .practice-workspace-surface,
+:root[data-theme="workspace"] .archive-workspace-surface,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface {
+  padding: 20px;
+  border-radius: 22px;
+}
+
+:root[data-theme="workspace"] .practice-workspace-surface__header,
+:root[data-theme="workspace"] .archive-workspace-surface__header,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface__header,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface__header {
+  gap: 16px;
+}
+
+:root[data-theme="workspace"] .practice-workspace-surface__title,
+:root[data-theme="workspace"] .archive-workspace-surface__title,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface__title,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface__title {
+  max-width: 14ch;
+  font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+  line-height: 1.03;
+}
+
+:root[data-theme="workspace"] .practice-workspace-surface__body,
+:root[data-theme="workspace"] .archive-workspace-surface__body,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface__body,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface__body {
+  max-width: 56ch;
+  font-size: 0.93rem;
+}
+
+:root[data-theme="workspace"] .practice-workspace-surface__stats,
+:root[data-theme="workspace"] .archive-workspace-surface__stats,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface__stats,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface__stats {
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .practice-workspace-surface__stat,
+:root[data-theme="workspace"] .archive-workspace-surface__stat,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface__stats article,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface__stats article {
+  min-height: 76px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme="workspace"] .practice-workspace-surface__guidance,
+:root[data-theme="workspace"] .archive-workspace-surface__guidance,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface__guidance,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface__guidance {
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .practice-workspace-surface__guidance-card,
+:root[data-theme="workspace"] .archive-workspace-surface__guidance-card,
+:root[data-theme="workspace"] .scheduled-reviews-workspace-surface__guidance-card,
+:root[data-theme="workspace"] .weak-nodes-workspace-surface__guidance-card {
+  min-height: auto;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.022);
+}
+
+:root[data-theme="workspace"] .practice-layout__workspace {
+  grid-template-columns: 272px minmax(0, 1.62fr) 320px;
+  gap: 16px;
+}
+
+:root[data-theme="workspace"] .practice-layout__filters,
+:root[data-theme="workspace"] .practice-layout__cluster--rail,
+:root[data-theme="workspace"] .archive-layout__filters,
+:root[data-theme="workspace"] .archive-layout__rail,
+:root[data-theme="workspace"] .scheduled-reviews-layout__plan-rail,
+:root[data-theme="workspace"] .scheduled-reviews-detail-rail,
+:root[data-theme="workspace"] .weak-nodes-layout__rail {
+  gap: 12px;
+}
+
+:root[data-theme="workspace"] .practice-focus-summary-card,
+:root[data-theme="workspace"] .practice-review-queue-card,
+:root[data-theme="workspace"] .practice-map-launch-card,
+:root[data-theme="workspace"] .practice-focus-question-card,
+:root[data-theme="workspace"] .archive-workspace-note,
+:root[data-theme="workspace"] .scheduled-reviews-calendar,
+:root[data-theme="workspace"] .scheduled-reviews-plan-note,
+:root[data-theme="workspace"] .scheduled-reviews-timeline,
+:root[data-theme="workspace"] .scheduled-reviews-queue,
+:root[data-theme="workspace"] .scheduled-reviews-detail-rail,
+:root[data-theme="workspace"] .weak-nodes-graph-panel,
+:root[data-theme="workspace"] .weak-nodes-remediation-panel,
+:root[data-theme="workspace"] .weak-nodes-detail-rail {
+  border-radius: 20px;
+}
+
+:root[data-theme="workspace"] .practice-focus-summary-card,
+:root[data-theme="workspace"] .practice-review-queue-card,
+:root[data-theme="workspace"] .practice-map-launch-card {
+  padding: 16px;
+}
+
+:root[data-theme="workspace"] .practice-focus-summary-card__stats,
+:root[data-theme="workspace"] .scheduled-reviews-calendar__grid,
+:root[data-theme="workspace"] .scheduled-reviews-timeline__stack,
+:root[data-theme="workspace"] .scheduled-reviews-queue__list,
+:root[data-theme="workspace"] .weak-nodes-graph-panel__canvas,
+:root[data-theme="workspace"] .weak-nodes-remediation-panel__steps,
+:root[data-theme="workspace"] .weak-nodes-detail-rail__list {
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .practice-focus-summary-card__stats article,
+:root[data-theme="workspace"] .home-today-context-card__summary article,
+:root[data-theme="workspace"] .scheduled-review-queue-card,
+:root[data-theme="workspace"] .scheduled-review-timeline-card,
+:root[data-theme="workspace"] .scheduled-review-day-card,
+:root[data-theme="workspace"] .weak-node-card,
+:root[data-theme="workspace"] .weak-nodes-remediation-step,
+:root[data-theme="workspace"] .weak-nodes-detail-card {
+  border-radius: 14px;
+}
+
+:root[data-theme="workspace"] .scheduled-review-queue-card,
+:root[data-theme="workspace"] .scheduled-review-timeline-card,
+:root[data-theme="workspace"] .weak-node-card,
+:root[data-theme="workspace"] .weak-nodes-detail-card {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme="workspace"] .scheduled-review-queue-card__actions,
+:root[data-theme="workspace"] .scheduled-reviews-detail-rail__panel,
+:root[data-theme="workspace"] .weak-nodes-remediation-step,
+:root[data-theme="workspace"] .weak-nodes-detail-card {
+  gap: 8px;
+}
+
+:root[data-theme="workspace"] .scheduled-reviews-detail-rail__panel,
+:root[data-theme="workspace"] .weak-nodes-detail-rail {
+  padding: 16px;
+}
+
+:root[data-theme="workspace"] .archive-layout--desktop,
+:root[data-theme="workspace"] .scheduled-reviews-layout--desktop,
+:root[data-theme="workspace"] .weak-nodes-layout--desktop {
+  gap: 16px;
+}
+
+:root[data-theme="workspace"] .archive-layout__content,
+:root[data-theme="workspace"] .scheduled-reviews-layout__main,
+:root[data-theme="workspace"] .weak-nodes-layout--desktop > main {
+  gap: 16px;
+}
+
+@media (max-width: 1099px) {
+  :root[data-theme="workspace"] .practice-layout__workspace,
+  :root[data-theme="workspace"] .archive-layout--desktop,
+  :root[data-theme="workspace"] .scheduled-reviews-layout--desktop,
+  :root[data-theme="workspace"] .weak-nodes-layout--desktop,
+  :root[data-theme="workspace"] .practice-workspace-surface__stats,
+  :root[data-theme="workspace"] .archive-workspace-surface__stats,
+  :root[data-theme="workspace"] .scheduled-reviews-workspace-surface__stats,
+  :root[data-theme="workspace"] .weak-nodes-workspace-surface__stats,
+  :root[data-theme="workspace"] .practice-workspace-surface__guidance,
+  :root[data-theme="workspace"] .archive-workspace-surface__guidance,
+  :root[data-theme="workspace"] .scheduled-reviews-workspace-surface__guidance,
+  :root[data-theme="workspace"] .weak-nodes-workspace-surface__guidance {
+    grid-template-columns: 1fr;
+  }
+}

@@ -96,13 +96,6 @@ export function ArchivePage() {
               <span className="page-card__label">{isKorean ? "아카이브 작업공간" : "Archive workspace"}</span>
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "답변 라이브러리" : "Answer library"}</span>
             </div>
-            <p className="archive-workspace-surface__breadcrumbs">
-              {isKorean ? "검증된 답변" : "Proven answers"}
-              <span>/</span>
-              {isKorean ? "세션 역추적" : "Session backtrace"}
-              <span>/</span>
-              {isKorean ? "근거 검토" : "Source review"}
-            </p>
             <h2 className="archive-workspace-surface__title">{isKorean ? "이미 버텨낸 답변을 다시 여세요" : "Reopen answers that already held up"}</h2>
             <p className="archive-workspace-surface__body">
               {isKorean
@@ -129,12 +122,6 @@ export function ArchivePage() {
               </article>
             </div>
           </div>
-          <div className="archive-workspace-surface__chips">
-          <span className="detail-chip">{isKorean ? `아카이브 ${filteredItems.length}` : `Archive size ${filteredItems.length}`}</span>
-          {followupCount > 0 ? <span className="detail-chip detail-chip--accent">{isKorean ? "꼬리질문 경로 저장됨" : "Follow-up paths saved"}</span> : null}
-          {sessionLinkedCount > 0 ? <span className="detail-chip">{isKorean ? "세션 추적 가능" : "Session trace available"}</span> : null}
-          {filterCount > 0 ? <span className="detail-chip">{isKorean ? `필터 ${filterCount}` : `Filtered ${filterCount}`}</span> : null}
-        </div>
         <div className="archive-workspace-surface__guidance">
           <article className="archive-workspace-surface__guidance-card">
             <span>{isKorean ? "의도를 갖고 열기" : "Open with intent"}</span>

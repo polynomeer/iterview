@@ -247,11 +247,11 @@ export function WeakNodesPage() {
               <span className="question-status-badge question-status-badge--accent">{isKorean ? "약한 가지 집중" : "Weak branch focus"}</span>
             </div>
             <h2 className="weak-nodes-workspace-surface__title">
-              {isKorean ? "약한 가지를 평평한 재시도 백로그가 아니라 연결된 노드로 보강하세요" : "Repair weak branches as connected nodes, not as a flat backlog of retries"}
+              {isKorean ? "약한 가지를 연결 관계로 보강하세요" : "Repair weak branches through their connections"}
             </h2>
             <p className="weak-nodes-workspace-surface__body">
               {isKorean
-                ? "여기의 모든 약한 노드는 실패한 설명 하나를 그것이 속한 질문 가지와 의존하는 이력서 근거에 연결합니다. 큐가 무엇이 약한지는 알려주지만 어떻게 연결되어 약한지는 알려주지 않을 때 이 작업공간을 사용하세요."
+                ? "질문, 설명, 이력서 근거 사이에서 어디가 먼저 무너지는지 보고 보강 순서를 정하세요."
                 : "Every weak node here links one failing explanation to the question branch it lives in and the resume evidence it depends on. Use this workspace when the queue tells you something is weak but not how the weakness connects."}
             </p>
           </div>
