@@ -692,6 +692,43 @@ export function InterviewSessionPage() {
                   ) : null}
                 </div>
               </SectionPanel>
+              <SectionPanel className="workspace-note-card interview-session-action-inspector" variant="muted">
+                <div className="interview-session-action-inspector__topline">
+                  <span className="page-card__label">{isKorean ? "실행 판단" : "Execution decision"}</span>
+                  <span className="detail-chip detail-chip--accent">{sessionExecutionSignal}</span>
+                </div>
+                <h2 className="page-card__title">
+                  {isKorean ? "지금 이 노드에서 해야 할 한 가지 행동만 남기세요" : "Reduce this node to one immediate action"}
+                </h2>
+                <div className="interview-session-action-inspector__summary">
+                  <article>
+                    <span>{isKorean ? "초안 길이" : "Draft length"}</span>
+                    <strong>{trimmedDraftLength}</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "근거 스니펫" : "Evidence snippets"}</span>
+                    <strong>{evidenceAnchorCount}</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "남은 질문" : "Remaining"}</span>
+                    <strong>{activeSession.summary.remainingQuestions}</strong>
+                  </article>
+                </div>
+                <div className="interview-session-action-inspector__rules">
+                  <div className="interview-session-action-inspector__rule">
+                    <strong>{isKorean ? "답변" : "Answer"}</strong>
+                    <span>{isKorean ? "현재 노드에 대한 직접 답과 실제 근거가 이미 있으면 제출합니다." : "Submit when the direct answer and the real evidence are already present."}</span>
+                  </div>
+                  <div className="interview-session-action-inspector__rule">
+                    <strong>{isKorean ? "건너뛰기" : "Skip"}</strong>
+                    <span>{isKorean ? "근거가 전혀 없고 이 가지를 지금 복구할 수 없을 때만 건너뜁니다." : "Skip only when there is no evidence and the branch cannot be repaired now."}</span>
+                  </div>
+                  <div className="interview-session-action-inspector__rule">
+                    <strong>{isKorean ? "이동" : "Advance"}</strong>
+                    <span>{isKorean ? "현재 노드가 잠겼을 때만 다음 가지로 이동합니다." : "Advance only after the current node is locked."}</span>
+                  </div>
+                </div>
+              </SectionPanel>
             </div>
           </div>
           <div className="interview-session-layout__answer-stack">

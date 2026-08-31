@@ -12,9 +12,25 @@ export function QuestionPromptCard({ question }: QuestionPromptCardProps) {
 
   return (
     <section className="question-hero question-hero--answer-workspace">
-      <div className="question-hero__topline">
-        <span className="page-card__label">{t("answer.promptLabel")}</span>
-        <span className="question-status-badge">{isKorean ? "질문 문구 노드" : "Prompt node"}</span>
+      <div className="question-hero__header">
+        <div className="question-hero__topline">
+          <span className="page-card__label">{t("answer.promptLabel")}</span>
+          <span className="question-status-badge">{isKorean ? "질문 문구 노드" : "Prompt node"}</span>
+        </div>
+        <div className="question-hero__summary">
+          <article className="question-hero__summary-item">
+            <span>{isKorean ? "질문 유형" : "Category"}</span>
+            <strong>{question.category}</strong>
+          </article>
+          <article className="question-hero__summary-item">
+            <span>{isKorean ? "난이도" : "Difficulty"}</span>
+            <strong>{question.difficulty}</strong>
+          </article>
+          <article className="question-hero__summary-item">
+            <span>{isKorean ? "스킬 앵커" : "Skill anchors"}</span>
+            <strong>{relatedSkills.length}</strong>
+          </article>
+        </div>
       </div>
       <h2 className="question-hero__title">{question.title}</h2>
       <div className="question-hero__meta">

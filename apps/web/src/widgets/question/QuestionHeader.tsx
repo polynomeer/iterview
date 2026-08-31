@@ -13,9 +13,25 @@ export function QuestionHeader({ question }: QuestionHeaderProps) {
 
   return (
     <section className="question-hero question-hero--detail-workspace">
-      <div className="question-hero__topline">
-        <span className="page-card__label">{t("question.interviewQuestion")}</span>
-        <span className="detail-chip detail-chip--accent">{t("question.readyToAnswer")}</span>
+      <div className="question-hero__header">
+        <div className="question-hero__topline">
+          <span className="page-card__label">{t("question.interviewQuestion")}</span>
+          <span className="detail-chip detail-chip--accent">{t("question.readyToAnswer")}</span>
+        </div>
+        <div className="question-hero__summary">
+          <article className="question-hero__summary-item">
+            <span>{t("question.companyTargets")}</span>
+            <strong>{question.companies.length}</strong>
+          </article>
+          <article className="question-hero__summary-item">
+            <span>{t("question.roleAnchors")}</span>
+            <strong>{question.roles.length}</strong>
+          </article>
+          <article className="question-hero__summary-item">
+            <span>{t("question.skillAnchors")}</span>
+            <strong>{relatedSkills.length}</strong>
+          </article>
+        </div>
       </div>
       <h2 className="question-hero__title">{question.title}</h2>
       <div className="question-hero__meta" role="list">

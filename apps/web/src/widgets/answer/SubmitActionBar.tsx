@@ -74,6 +74,11 @@ export function SubmitActionBar({
             : "Submit only when the claim is direct, the evidence is concrete, and the weakest follow-up line is already anticipated."}
         </span>
       </div>
+      <div className="answer-submit-card__summary-bar">
+        <span className="detail-chip detail-chip--accent">{executionSignal}</span>
+        <span className="detail-chip">{isKorean ? "정확한 주장 확인" : "Confirm exact claim"}</span>
+        <span className="detail-chip">{isKorean ? "근거 한 줄 점검" : "Check one evidence line"}</span>
+      </div>
       <p className="answer-submit-card__body">
         {isKorean
           ? "현재 초안이 정확한 노드에 답하고, 다음 브랜치가 가장 먼저 파고들 사실까지 명시했을 때만 제출하세요."

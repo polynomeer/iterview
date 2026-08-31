@@ -26,8 +26,8 @@ export function QuestionDetailMobileLayout({
   return (
     <div className="question-detail-layout question-detail-layout--mobile">
       <section className="question-detail-layout__workspace-summary">{workspaceSummary}</section>
-      <section className="question-detail-layout__workspace-summary">{insightSummary}</section>
       <section className="question-detail-layout__hero">{headerSection}</section>
+      <section className="question-detail-layout__workspace-summary">{insightSummary}</section>
       <section className="question-detail-layout__sidebar">
         {progressSection}
         {metadataSection}
@@ -61,8 +61,7 @@ export function QuestionDetailDesktopLayout({
       <aside className="question-detail-layout__study-rail">
         <div className="page-stack question-detail-layout__cluster">
           <section className="question-detail-layout__workspace-summary">{workspaceSummary}</section>
-          <section className="question-detail-layout__workspace-summary">{insightSummary}</section>
-          {materialsSection}
+          {progressSection}
           <SectionPanel className="workspace-note-card question-detail-layout__inspector-note" variant="muted">
             <div className="question-detail-layout__note-header">
               <span className="page-card__label">{isKorean ? "준비 레인" : "Prep lane"}</span>
@@ -118,8 +117,9 @@ export function QuestionDetailDesktopLayout({
       </div>
       <aside className="question-detail-layout__sidebar">
         <div className="page-stack question-detail-layout__cluster">
-          {progressSection}
+          <section className="question-detail-layout__workspace-summary">{insightSummary}</section>
           {metadataSection}
+          {materialsSection}
           <SectionPanel className="workspace-note-card question-detail-layout__inspector-note" variant="muted">
             <div className="question-detail-layout__note-header">
               <span className="page-card__label">{isKorean ? "판단 레인" : "Decision lane"}</span>

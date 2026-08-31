@@ -20,8 +20,8 @@ export function AnswerEditorMobileLayout({
     <div className="page-stack">
       {workspaceSummary}
       {promptSection}
-      {insightSummary}
       {contextSection}
+      {insightSummary}
       {editorSection}
       {submitSection}
     </div>
@@ -38,20 +38,24 @@ export function AnswerEditorDesktopLayout({
 }: AnswerEditorLayoutProps) {
   return (
     <div className="answer-editor-layout answer-editor-layout--desktop">
-      <section className="answer-editor-layout__workspace-summary">{workspaceSummary}</section>
-      <aside className="answer-editor-layout__context">
+      <aside className="answer-editor-layout__prompt-rail">
         <div className="page-stack">
           {promptSection}
           {insightSummary}
-          {contextSection}
         </div>
       </aside>
       <div className="answer-editor-layout__workspace">
         <div className="page-stack">
+          {workspaceSummary}
           {editorSection}
           <div className="answer-editor-layout__submit-panel">{submitSection}</div>
         </div>
       </div>
+      <aside className="answer-editor-layout__context">
+        <div className="page-stack">
+          {contextSection}
+        </div>
+      </aside>
     </div>
   );
 }
