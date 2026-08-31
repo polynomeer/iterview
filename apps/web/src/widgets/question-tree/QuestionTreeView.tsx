@@ -31,7 +31,6 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
         </div>
         <span className="section-heading__count">{tree.nodes.length}</span>
       </div>
-      <p className="page-card__body question-tree-surface__intro">{t("questionTree.introBody")}</p>
       <div className={`question-tree-flow ${isDesktop ? "question-tree-flow--desktop" : "question-tree-flow--mobile"}`}>
         <div className="question-tree">
           {tree.nodes.map((node, index) => (
@@ -45,32 +44,24 @@ export function QuestionTreeView({ tree }: QuestionTreeViewProps) {
               type="button"
             >
               <div className="question-tree__line" />
-              <div className="question-tree__content">
-                <div className="question-tree__content-topline">
-                  <div className="question-tree__node-step">{index + 1}</div>
-                  <div className="question-tree__summary">
-                    <article className="question-tree__summary-item">
-                      <span>{t("questionTree.depth")}</span>
-                      <strong>{node.depth}</strong>
-                    </article>
-                    <article className="question-tree__summary-item">
-                      <span>{t("questionTree.type")}</span>
-                      <strong>{node.isRoot ? t("questionTree.root") : node.relationshipType ?? t("questionTree.node")}</strong>
-                    </article>
+              <div className="question-tree__content list-item-card">
+                <div className="list-item-card__content">
+                  <div className="question-tree__content-topline">
+                    <div className="question-tree__node-step">{index + 1}</div>
+                    <div className="list-item-card__meta question-tree__meta">
+                      <QuestionStatusBadge status={node.status} />
+                      <span>{t("questionTree.depth")} {node.depth}</span>
+                      <span>{node.isRoot ? t("questionTree.root") : node.relationshipType ?? t("questionTree.node")}</span>
+                      <span>{node.difficulty}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="question-tree__meta">
-                  <QuestionStatusBadge status={node.status} />
-                  <span>{t("questionTree.depth")} {node.depth}</span>
-                  <span>{node.difficulty}</span>
-                  {node.relationshipType ? <span>{node.relationshipType}</span> : null}
-                  {node.parentQuestionId ? <span>{t("questionTree.parent")} #{node.parentQuestionId}</span> : <span>{t("questionTree.root")}</span>}
-                </div>
-                <h3 className="list-item-card__title">{node.title}</h3>
-                <div className="list-item-card__actions">
-                  <span className="detail-chip detail-chip--accent">
-                    {node.id === selectedNode?.id ? t("questionTree.selected") : t("questionTree.inspectNode")}
-                  </span>
+                  <h3 className="list-item-card__title">{node.title}</h3>
+                  <div className="list-item-card__meta question-tree__meta question-tree__meta--secondary">
+                    {node.parentQuestionId ? <span>{t("questionTree.parent")} #{node.parentQuestionId}</span> : <span>{t("questionTree.root")}</span>}
+                    <span className={`detail-chip ${node.id === selectedNode?.id ? "detail-chip--accent" : ""}`}>
+                      {node.id === selectedNode?.id ? t("questionTree.selected") : t("questionTree.inspectNode")}
+                    </span>
+                  </div>
                 </div>
               </div>
             </button>

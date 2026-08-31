@@ -36,11 +36,6 @@ export function InterviewCoveragePanel({
     <section className="page-card interview-coverage-panel">
       <span className="page-card__label">{t("interview.coverageLabel")}</span>
       <h2 className="page-card__title">{t("interview.coverageTitle")}</h2>
-      <p className="page-card__body">
-        {isKorean
-          ? "전체 범위를 설명하기보다, 다시 열어야 할 이력서 근거와 연결 질문을 찾는 데 집중하세요."
-          : "Use this panel to find the resume evidence and linked questions that need reopening, not to restate full coverage."}
-      </p>
       {coverage ? (
         <div
           className="interview-coverage-summary__summary-row"
@@ -55,24 +50,6 @@ export function InterviewCoveragePanel({
           </span>
           <span className="interview-coverage-summary__summary-item" role="listitem">
             {`${t("interview.defendedCoverage")} ${coverage.defendedCoveragePercent}%`}
-          </span>
-        </div>
-      ) : null}
-      {coverage ? (
-        <div
-          className="interview-coverage-summary__principles"
-          role="list"
-          aria-label={isKorean ? "범위 패널 원칙" : "Coverage panel principles"}
-        >
-          <span role="listitem">
-            {isKorean
-              ? "이 수치는 전체 세션을 다시 설명하려는 용도가 아니라, 다음 복구 레인을 찾기 위한 기준입니다."
-              : "Use these numbers to identify the next recovery lane, not to restate the whole session."}
-          </span>
-          <span role="listitem">
-            {isKorean
-              ? "근거가 얇다면 이력서 항목에서 연결된 질문으로 바로 이동하세요."
-              : "Jump from one resume record straight into its linked question when evidence still feels thin."}
           </span>
         </div>
       ) : null}
@@ -117,9 +94,8 @@ export function InterviewCoveragePanel({
                       }
                     }}
                   >
-                    <div className="coverage-evidence-card__meta">
+                    <div className="coverage-evidence-card__meta list-item-card__meta">
                       <span>{item.coverageStatusLabel}</span>
-                      <span>{item.sectionLabel}</span>
                       {item.label ? <span>{item.label}</span> : null}
                     </div>
                     <p className="coverage-evidence-card__snippet">"{item.snippet}"</p>
@@ -153,8 +129,7 @@ export function InterviewCoveragePanel({
         <div className="stack-list">
           {coverage.evidenceItems.map((item) => (
             <article className="coverage-evidence-card" key={item.id}>
-              <div className="coverage-evidence-card__meta">
-                <span>{item.sectionLabel}</span>
+              <div className="coverage-evidence-card__meta list-item-card__meta">
                 <span>{item.coverageStatusLabel}</span>
                 {item.label ? <span>{item.label}</span> : null}
               </div>

@@ -19237,3 +19237,129 @@ textarea::placeholder {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Selection-heavy workspace flattening */
+
+.question-tree-surface {
+  gap: 14px;
+}
+
+.question-tree__content {
+  padding: 14px 16px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.question-tree__content-topline {
+  align-items: center;
+  gap: 10px;
+}
+
+.question-tree__meta {
+  flex: 1;
+  align-items: center;
+}
+
+.question-tree__meta--secondary {
+  justify-content: space-between;
+}
+
+.question-tree__node-step {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  font-size: 0.74rem;
+}
+
+.question-tree__node--active .question-tree__content {
+  border-color: rgba(91, 140, 255, 0.26);
+  box-shadow: none;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 42%),
+    rgba(255, 255, 255, 0.028);
+}
+
+.question-tree-inspector {
+  gap: 14px;
+  box-shadow: none;
+}
+
+.question-tree-inspector__stats article,
+.question-tree-inspector__panel {
+  border-color: rgba(125, 145, 176, 0.14);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.question-tree-inspector__actions {
+  justify-content: flex-end;
+}
+
+.interview-coverage-panel,
+.interview-result-coverage-summary,
+.interview-result-catalog-section,
+.interview-result-pinned-evidence {
+  gap: 12px;
+}
+
+.interview-coverage-panel .interview-coverage-summary__summary-row,
+.interview-result-coverage-summary .interview-coverage-summary__summary-row {
+  gap: 8px;
+}
+
+.interview-coverage-panel__section-summary-row {
+  gap: 8px;
+}
+
+.coverage-evidence-card {
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 16px;
+}
+
+.coverage-evidence-card__meta {
+  gap: 8px;
+}
+
+.coverage-evidence-card__related .page-card__actions {
+  gap: 8px;
+}
+
+.resume-result-block {
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.resume-result-block__header {
+  gap: 10px;
+}
+
+.resume-result-block__preview {
+  gap: 6px;
+}
+
+.interview-result-pinned-evidence__card {
+  box-shadow: none;
+}
+
+.interview-result-related-question {
+  padding: 14px 16px;
+  border-radius: 16px;
+}
+
+@media (max-width: 767px) {
+  .question-tree__content-topline,
+  .question-tree__meta--secondary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .question-tree-inspector__actions {
+    justify-content: stretch;
+  }
+
+  .interview-coverage-panel .interview-coverage-summary__summary-row,
+  .interview-result-coverage-summary .interview-coverage-summary__summary-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

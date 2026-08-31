@@ -103,11 +103,6 @@ export function InterviewFullCoverageResultView({
         <section className="page-card interview-result-coverage-summary">
           <span className="page-card__label">{t("interview.coverageSummaryLabel")}</span>
           <h2 className="page-card__title">{t("interview.coverageSummaryTitle")}</h2>
-          <p className="page-card__body">
-            {isKorean
-              ? "전체 범위보다 약한 세부 항목과 연결 근거를 먼저 읽고, 다음 복구 패스를 좁히세요."
-              : "Read the weak facets and attached evidence before the full sweep, then narrow the next recovery pass."}
-          </p>
           <div className="interview-coverage-summary__summary-row" role="list" aria-label={isKorean ? "범위 요약" : "Coverage summary"}>
             <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
               {`${t("interview.overallCoverage")} ${coverage.overallCoveragePercent}%`}
@@ -132,10 +127,6 @@ export function InterviewFullCoverageResultView({
             <span className="detail-chip">{coverage.interviewModeLabel}</span>
             <span className="detail-chip detail-chip--accent">{isKorean ? `세션 ${session.id}` : `Session ${session.id}`}</span>
             {session.endedAt ? <span className="detail-chip">{session.endedAt}</span> : null}
-          </div>
-          <div className="interview-coverage-summary__principles" role="list" aria-label={isKorean ? "범위 원칙" : "Coverage principles"}>
-            <span role="listitem">{isKorean ? "전체 범위로 흐름을 먼저 보고, 약한 세부 항목과 건너뛴 세부 항목으로 복구 순서를 정하세요." : "Use overall coverage to see the sweep, then use weak and skipped facets to decide recovery order."}</span>
-            <span role="listitem">{isKorean ? "연결 질문을 따라가기 전에 이력서 기록 하나만 먼저 고정하세요." : "Pin one resume record at a time before following its related questions."}</span>
           </div>
         </section>
 
@@ -202,9 +193,6 @@ export function InterviewFullCoverageResultView({
                       )}
                     </div>
                     <p className="resume-result-block__body">{experience.summary}</p>
-                    {experience.impactText ? (
-                      <p className="resume-result-block__helper">{experience.impactText}</p>
-                    ) : null}
                     {evidence ? (
                       <div className="resume-result-block__evidence">
                         <span className="page-card__label">{t("interview.matchedEvidence")}</span>
@@ -280,9 +268,6 @@ export function InterviewFullCoverageResultView({
                       </div>
                     ) : null}
                     <p className="resume-result-block__body">{project.summary}</p>
-                    {project.contentText ? (
-                      <p className="resume-result-block__helper">{project.contentText}</p>
-                    ) : null}
                     {project.tags.length > 0 ? (
                       <div className="chip-list">
                         {project.tags.map((tag) => (
@@ -325,14 +310,9 @@ export function InterviewFullCoverageResultView({
         <section className="page-card interview-result-pinned-evidence">
           <span className="page-card__label">{t("interview.pinnedQuestions")}</span>
           <h2 className="page-card__title">{t("interview.resumeEvidenceMapping")}</h2>
-          <p className="page-card__body">
-            {isKorean
-              ? "하나의 이력서 근거 블록을 고정한 뒤 연결된 질문을 따라가며 복구 대상을 정리하세요."
-              : "Pin one resume evidence block, then follow its linked questions to organize the recovery target."}
-          </p>
           {pinnedEvidence ? (
             <div className="stack-list">
-              <div className="list-item-card">
+              <div className="list-item-card interview-result-pinned-evidence__card">
                 <div className="list-item-card__content">
                   <div className="list-item-card__meta">
                     <span>{pinnedEvidence.sectionLabel}</span>
@@ -366,10 +346,9 @@ export function InterviewFullCoverageResultView({
                         <div className="list-item-card__meta">
                           <span>#{question.orderIndex + 1}</span>
                           <span>{question.sourceLabel}</span>
-                          <span>{question.status}</span>
                           {question.isFollowUp ? (
                             <span className="question-status-badge question-status-badge--accent">{isKorean ? "꼬리질문" : "Follow-up"}</span>
-                          ) : null}
+                          ) : <span>{question.status}</span>}
                         </div>
                         <h3 className="list-item-card__title">{question.title}</h3>
                       </div>
