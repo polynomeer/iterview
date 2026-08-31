@@ -100,10 +100,14 @@ export function InterviewFullCoverageResultView({
   return (
     <section className="interview-result-coverage-layout">
       <div className="interview-result-coverage-layout__viewer">
-        <section className="page-card">
+        <section className="page-card interview-result-coverage-summary">
           <span className="page-card__label">{t("interview.coverageSummaryLabel")}</span>
           <h2 className="page-card__title">{t("interview.coverageSummaryTitle")}</h2>
-          <p className="page-card__body">{t("interview.coverageSummaryBody")}</p>
+          <p className="page-card__body">
+            {isKorean
+              ? "전체 범위보다 약한 세부 항목과 연결 근거를 먼저 읽고, 다음 복구 패스를 좁히세요."
+              : "Read the weak facets and attached evidence before the full sweep, then narrow the next recovery pass."}
+          </p>
           <div className="interview-coverage-summary__summary-row" role="list" aria-label={isKorean ? "범위 요약" : "Coverage summary"}>
             <span className="interview-coverage-summary__summary-item interview-coverage-summary__summary-item--accent" role="listitem">
               {`${t("interview.overallCoverage")} ${coverage.overallCoveragePercent}%`}
@@ -154,7 +158,7 @@ export function InterviewFullCoverageResultView({
           />
         </div>
 
-        <section className="page-card">
+        <section className="page-card interview-result-catalog-section">
           <div className="section-heading">
             <div>
               <p className="section-heading__eyebrow">{t("interview.experienceEyebrow")}</p>
@@ -229,7 +233,7 @@ export function InterviewFullCoverageResultView({
           )}
         </section>
 
-        <section className="page-card">
+        <section className="page-card interview-result-catalog-section">
           <div className="section-heading">
             <div>
               <p className="section-heading__eyebrow">{t("interview.projectEyebrow")}</p>
@@ -318,9 +322,14 @@ export function InterviewFullCoverageResultView({
       </div>
 
       <div className="interview-result-coverage-layout__side">
-        <section className="page-card">
+        <section className="page-card interview-result-pinned-evidence">
           <span className="page-card__label">{t("interview.pinnedQuestions")}</span>
           <h2 className="page-card__title">{t("interview.resumeEvidenceMapping")}</h2>
+          <p className="page-card__body">
+            {isKorean
+              ? "하나의 이력서 근거 블록을 고정한 뒤 연결된 질문을 따라가며 복구 대상을 정리하세요."
+              : "Pin one resume evidence block, then follow its linked questions to organize the recovery target."}
+          </p>
           {pinnedEvidence ? (
             <div className="stack-list">
               <div className="list-item-card">
@@ -373,7 +382,7 @@ export function InterviewFullCoverageResultView({
             </div>
           ) : (
             <p className="page-card__body">
-              {isKorean ? "강조된 이력서 블록을 빠르게 훑은 뒤 클릭해서 연결된 질문을 여기에 고정하세요." : "Hover a highlighted resume block for a quick preview, then click it to pin all related questions here."}
+              {isKorean ? "왼쪽의 경력 또는 프로젝트 블록을 눌러 이력서 근거와 연결 질문을 여기에 고정하세요." : "Select an experience or project block on the left to pin its resume evidence and linked questions here."}
             </p>
           )}
         </section>

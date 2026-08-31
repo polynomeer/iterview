@@ -178,9 +178,9 @@ export function InterviewResultPage() {
 
   return (
     <PageContainer
-      description={t("result.pageDescription")}
+      description={isKorean ? "방금 끝난 세션을 복구 우선순위와 다음 DFS 패스로 바로 연결하세요." : "Turn the finished session directly into recovery priorities and the next DFS pass."}
       eyebrow={t("result.pageEyebrow")}
-      title={t("result.pageTitle")}
+      title={isKorean ? "결과를 읽고 다음 복구 패스를 고르세요" : "Read the result and choose the next recovery pass"}
     >
       <div className="interview-result-layout">
         <WorkspaceContinuityRail
@@ -215,16 +215,9 @@ export function InterviewResultPage() {
                 <span className="page-card__label">{isKorean ? "결과 작업공간" : "Result workspace"}</span>
                 <span className="question-status-badge question-status-badge--accent">{isKorean ? "가지 복기" : "Branch review"}</span>
               </div>
-              <p className="interview-result-workspace-surface__breadcrumbs">
-                {isKorean ? "세션 회고" : "Session recap"}
-                <span>/</span>
-                {isKorean ? "약한 가지 복구" : "Weak branch recovery"}
-                <span>/</span>
-                {isKorean ? "다음 DFS 패스" : "Next DFS pass"}
-              </p>
-              <h2 className="interview-result-workspace-surface__title">{isKorean ? "버틴 가지를 복기하세요" : "Review what held up"}</h2>
+              <h2 className="interview-result-workspace-surface__title">{isKorean ? "버틴 가지는 유지하고 약한 가지는 바로 복구하세요" : "Keep what held and repair what stayed weak"}</h2>
               <p className="interview-result-workspace-surface__body">
-                {isKorean ? "버틴 가지는 유지하고, 얕게 남은 가지는 다시 들어가세요." : "Keep the branches that held up. Re-enter the ones that stayed shallow."}
+                {isKorean ? "이 화면은 감상용이 아니라 다음 패스를 좁히는 용도입니다. 약한 가지와 건너뛴 세부 항목만 먼저 고르세요." : "This screen is for narrowing the next pass, not admiring the last one. Start with the weak and skipped branches only."}
               </p>
             </div>
             <div className="interview-result-workspace-surface__summary-row" role="list" aria-label={isKorean ? "결과 작업공간 신호" : "Result workspace signals"}>
@@ -242,7 +235,7 @@ export function InterviewResultPage() {
           </div>
           <div className="interview-result-workspace-surface__principles" role="list" aria-label={isKorean ? "결과 작업공간 원칙" : "Result workspace principles"}>
             <span role="listitem">{isKorean ? "다시 검증할 가치가 있는 가지만 다음으로 가져가세요." : "Carry forward only the branches worth re-testing."}</span>
-            <span role="listitem">{isKorean ? "약한 세부 항목과 건너뛴 세부 항목으로 다음 패스 범위를 정하세요." : "Use weak and skipped facets to scope the next pass."}</span>
+            <span role="listitem">{isKorean ? "다음 패스는 한 가지 실패 원인만 증명해도 충분합니다." : "The next pass only needs to prove one repaired failure."}</span>
           </div>
         </section>
         <section className="page-card interview-result-layout__hero">
@@ -263,7 +256,7 @@ export function InterviewResultPage() {
             </div>
           </div>
           <h2 className="page-card__title">{isKorean ? `세션 ${sessionId}` : `Session ${sessionId}`}</h2>
-          <p className="page-card__body">{isKorean ? "이 패스는 지난 답변을 감상하는 용도가 아니라 다음 가지를 고르는 용도입니다." : "Use this pass to choose the next branch, not to admire the last one."}</p>
+          <p className="page-card__body">{isKorean ? "이번 패스에서 드러난 실패 지점 하나만 정확히 고르면 다음 세션의 가치가 올라갑니다." : "The next session gets better as soon as you isolate one concrete failure from this pass."}</p>
           <div className="interview-result-layout__hero-summary-row" role="list" aria-label={isKorean ? "세션 복구 요약" : "Session recovery summary"}>
             <span
               className={`interview-result-layout__hero-summary-item interview-result-layout__hero-summary-item--${recoveryModeTone}`}
@@ -420,10 +413,6 @@ export function InterviewResultPage() {
                 <article className="interview-result-layout__decision-item interview-result-layout__decision-item--accent">
                   <span>{isKorean ? "복구 우선" : "Recovery first"}</span>
                   <strong>{recommendedActionLabel}</strong>
-                </article>
-                <article className="interview-result-layout__decision-item">
-                  <span>{isKorean ? "작업 원칙" : "Working rule"}</span>
-                  <strong>{isKorean ? "다음 패스는 한 가지 실패 원인만 증명하면 됩니다." : "The next pass only needs to prove one repaired failure."}</strong>
                 </article>
               </div>
               <div className="page-card__actions">

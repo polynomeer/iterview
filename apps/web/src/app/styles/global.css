@@ -16794,10 +16794,130 @@ textarea::placeholder {
 .interview-result-layout__hero-summary-item,
 .interview-result-layout__actions-summary-chip,
 .interview-result-layout__next-item,
-.interview-result-layout__recap-card {
+.interview-result-layout__recap-card,
+.interview-result-coverage-summary .interview-coverage-summary__summary-item,
+.interview-result-pinned-evidence .list-item-card,
+.interview-result-related-question,
+.resume-result-block {
   border: 1px solid rgba(125, 145, 176, 0.12);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.02);
+}
+
+.interview-result-coverage-summary,
+.interview-result-catalog-section,
+.interview-result-pinned-evidence,
+.interview-result-coverage-layout > .interview-result-coverage-layout__viewer > .page-card,
+.interview-result-coverage-layout__side > .page-card {
+  gap: 14px;
+  border-radius: 24px;
+  border: 1px solid rgba(137, 161, 203, 0.12);
+  background:
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+.interview-result-coverage-summary .interview-coverage-summary__summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.interview-result-coverage-summary .interview-coverage-summary__summary-item {
+  display: grid;
+  align-items: start;
+  min-height: 62px;
+  padding: 12px 14px;
+  border-color: rgba(137, 161, 203, 0.12);
+  color: var(--text-strong);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.interview-result-coverage-summary .interview-coverage-summary__summary-item--accent {
+  border-color: rgba(91, 140, 255, 0.2);
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.1), transparent 42%),
+    rgba(255, 255, 255, 0.025);
+}
+
+.interview-result-pinned-evidence .stack-list,
+.interview-result-catalog-section .stack-list {
+  gap: 12px;
+}
+
+.interview-result-pinned-evidence .page-card__body {
+  max-width: 54ch;
+}
+
+.interview-result-related-question,
+.resume-result-block {
+  box-shadow: none;
+}
+
+.interview-result-related-question:hover,
+.interview-result-related-question:focus-visible,
+.resume-result-block:hover,
+.resume-result-block:focus-visible {
+  border-color: rgba(91, 140, 255, 0.24);
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 42%),
+    rgba(255, 255, 255, 0.028);
+}
+
+.interview-result-layout__hero,
+.interview-result-layout__actions,
+.interview-result-layout__recap,
+.interview-result-coverage-summary,
+.interview-result-catalog-section,
+.interview-result-pinned-evidence {
+  box-shadow: none;
+}
+
+:root[data-theme="workspace"] .interview-result-layout {
+  gap: 16px;
+}
+
+:root[data-theme="workspace"] .interview-result-layout__content {
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.78fr);
+  gap: 16px;
+}
+
+:root[data-theme="workspace"] .interview-result-layout__hero,
+:root[data-theme="workspace"] .interview-result-layout__actions,
+:root[data-theme="workspace"] .interview-result-layout__recap,
+:root[data-theme="workspace"] .interview-result-coverage-summary,
+:root[data-theme="workspace"] .interview-result-catalog-section,
+:root[data-theme="workspace"] .interview-result-pinned-evidence {
+  padding: 18px;
+}
+
+:root[data-theme="workspace"] .interview-result-layout__hero-summary-row,
+:root[data-theme="workspace"] .interview-result-layout__actions-summary-row {
+  gap: 8px;
+}
+
+:root[data-theme="workspace"] .interview-result-layout__hero-summary-item,
+:root[data-theme="workspace"] .interview-result-layout__actions-summary-chip,
+:root[data-theme="workspace"] .interview-result-layout__next-item,
+:root[data-theme="workspace"] .interview-result-layout__decision-item {
+  border-color: rgba(137, 161, 203, 0.11);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+:root[data-theme="workspace"] .interview-result-layout__hero-status-grid,
+:root[data-theme="workspace"] .interview-result-coverage-summary .interview-coverage-summary__summary-row {
+  gap: 8px;
+}
+
+:root[data-theme="workspace"] .interview-result-layout__hero-status-item,
+:root[data-theme="workspace"] .interview-result-coverage-summary .interview-coverage-summary__summary-item {
+  min-height: 58px;
+}
+
+@media (max-width: 1099px) {
+  .interview-result-coverage-summary .interview-coverage-summary__summary-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1099px) {
