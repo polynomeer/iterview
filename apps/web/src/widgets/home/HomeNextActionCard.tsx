@@ -83,27 +83,40 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
   const nextAction = getNextAction(home, isKorean);
+  const progressLabel = home.todayQuestion ? "72%" : home.retryQuestions.length > 0 ? "64%" : "58%";
+  const weakAreaCount = home.retryQuestions.length > 0 ? home.retryQuestions.length : home.resumeRiskPreview.length;
 
   return (
     <section className="page-card home-next-action-card">
       <div className="home-next-action-card__header">
         <div className="home-next-action-card__intro">
           <div className="home-next-action-card__eyebrow-row">
-            <span className="page-card__label">{nextAction.label}</span>
-            <span className="detail-chip detail-chip--accent">{isKorean ? "다음 액션" : "Next action"}</span>
+            <span className="page-card__label">{isKorean ? "오늘의 액션" : "Today&apos;s action"}</span>
+            <span className="detail-chip detail-chip--accent">{nextAction.label}</span>
           </div>
           <h2 className="page-card__title">{nextAction.title}</h2>
           <p className="page-card__body">{nextAction.body}</p>
         </div>
         <div className="home-next-action-card__highlights">
           <article className="home-next-action-card__highlight">
-            <span>{isKorean ? "바로 실행" : "Now"}</span>
-            <strong>{nextAction.primaryAction.label}</strong>
+            <span>{isKorean ? "진행률" : "Progress"}</span>
+            <strong>{progressLabel}</strong>
           </article>
           <article className="home-next-action-card__highlight">
-            <span>{isKorean ? "대안 경로" : "Fallback"}</span>
-            <strong>{nextAction.secondaryAction.label}</strong>
+            <span>{isKorean ? "목표 점수" : "Score target"}</span>
+            <strong>{isKorean ? "70% 이상" : "70%+"}</strong>
           </article>
+        </div>
+      </div>
+      <div className="home-next-action-card__path-preview" aria-hidden="true">
+        <div className="home-next-action-card__path-node home-next-action-card__path-node--active">
+          <span>{isKorean ? "현재" : "Now"}</span>
+          <strong>{nextAction.primaryAction.label}</strong>
+        </div>
+        <div className="home-next-action-card__path-link" />
+        <div className="home-next-action-card__path-node">
+          <span>{isKorean ? "다음" : "Next"}</span>
+          <strong>{nextAction.secondaryAction.label}</strong>
         </div>
       </div>
       <div className="page-card__actions">
@@ -118,6 +131,10 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
         <article className="home-next-action-card__rail-item home-next-action-card__rail-item--accent">
           <span>{isKorean ? "우선 순서" : "Priority"}</span>
           <strong>{isKorean ? "오늘 질문 → 재도전 → 리스크 정리" : "Today → Retry → Risks"}</strong>
+        </article>
+        <article className="home-next-action-card__rail-item">
+          <span>{isKorean ? "약한 영역" : "Weak areas"}</span>
+          <strong>{isKorean ? `${weakAreaCount}개 점검` : `${weakAreaCount} to review`}</strong>
         </article>
       </div>
     </section>

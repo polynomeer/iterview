@@ -11,17 +11,48 @@ type TodayQuestionCardProps = {
 export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
+  const pathItems = [
+    {
+      key: "anchor",
+      label: isKorean ? "앵커 질문" : "Anchor prompt",
+      value: question.categoryLabel,
+      tone: "accent",
+    },
+    {
+      key: "probe",
+      label: isKorean ? "다음 탐색" : "Next probe",
+      value: question.companyLabel,
+      tone: "default",
+    },
+    {
+      key: "defense",
+      label: isKorean ? "방어 기준" : "Defense note",
+      value: isKorean ? "근거와 반례 정리" : "Evidence and counter-cases",
+      tone: "default",
+    },
+  ];
 
   return (
     <section className="today-question-card">
       <div className="today-question-card__header">
         <div className="today-question-card__intro">
           <div className="today-question-card__eyebrow-row">
-            <span className="page-card__label">{isKorean ? "오늘의 메인 질문" : "Today&apos;s main question"}</span>
+            <span className="page-card__label">{isKorean ? "오늘의 포커스" : "Today&apos;s focus"}</span>
             <QuestionStatusBadge status={question.status} />
           </div>
+          <p className="today-question-card__subtitle">
+            {isKorean ? "오늘의 메인 경로" : "Today&apos;s main path"}
+          </p>
         </div>
         <div className="today-question-card__summary">
+          <article className="today-question-card__summary-item">
+            <span>{isKorean ? "질문 수" : "Questions"}</span>
+            <strong>{isKorean ? "3개" : "3 items"}</strong>
+          </article>
+          <article className="today-question-card__summary-item">
+            <span>{isKorean ? "예상 시간" : "Time"}</span>
+            <strong>{isKorean ? "~25분" : "~25 min"}</strong>
+          </article>
           <article className="today-question-card__summary-item">
             <span>{isKorean ? "질문 유형" : "Track"}</span>
             <strong>{question.categoryLabel}</strong>
@@ -35,41 +66,70 @@ export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
       <div className="today-question-card__body-grid">
         <div className="today-question-card__content">
           <h2 className="today-question-card__title">{question.title}</h2>
-          <p className="today-question-card__meta">
-            {question.categoryLabel} · {question.companyLabel}
-          </p>
+          <p className="today-question-card__meta">{question.categoryLabel} · {question.companyLabel}</p>
           <p className="today-question-card__prompt">{question.prompt}</p>
           <div className="today-question-card__chips">
+            <span className="detail-chip detail-chip--accent">{isKorean ? "추천 경로" : "Recommended path"}</span>
             <span className="detail-chip">{question.categoryLabel}</span>
-            <span className="detail-chip detail-chip--accent">{question.companyLabel}</span>
+            <span className="detail-chip">{question.companyLabel}</span>
+          </div>
+          <div className="today-question-card__focus-map" aria-hidden="true">
+            <div className="today-question-card__focus-node today-question-card__focus-node--root">
+              <span>{question.categoryLabel}</span>
+              <strong>{isKorean ? "72%" : "72%"}</strong>
+            </div>
+            <div className="today-question-card__focus-branch" />
+            <div className="today-question-card__focus-node">
+              <span>{question.title}</span>
+              <strong>{isKorean ? "현재" : "Now"}</strong>
+            </div>
+            <div className="today-question-card__focus-node today-question-card__focus-node--muted">
+              <span>{isKorean ? "꼬리질문" : "Follow-up"}</span>
+              <strong>{isKorean ? "다음" : "Next"}</strong>
+            </div>
           </div>
           <div className="page-card__actions">
             <Link className="primary-button" to={routeConfig.answerEditor.buildPath({ questionId: question.id })}>
               {isKorean ? "답변 이어가기" : "Continue answering"}
             </Link>
             <Link className="secondary-button" to={routeConfig.questionDetail.buildPath({ questionId: question.id })}>
-              {isKorean ? "질문 상세" : "Question details"}
+              {isKorean ? "경로 보기" : "View path"}
             </Link>
           </div>
         </div>
         <div className="today-question-card__path">
-          <span className="page-card__label">{isKorean ? "오늘의 경로" : "Today's path"}</span>
-          <div className="today-question-card__path-list">
-            <article className="today-question-card__path-item today-question-card__path-item--active">
-              <strong>{isKorean ? "현재 앵커 질문" : "Current anchor prompt"}</strong>
-              <span>{question.title}</span>
-            </article>
-            <article className="today-question-card__path-item">
-              <strong>{isKorean ? "다음 행동" : "Next move"}</strong>
-              <span>{isKorean ? "질문을 잠그고 꼬리질문으로 이동" : "Lock this question, then move into follow-ups"}</span>
-            </article>
+          <div className="today-question-card__path-header">
+            <span className="page-card__label">{isKorean ? "오늘의 경로" : "Today&apos;s path"}</span>
+            <span className="detail-chip">{isKorean ? "3 / 3 단계" : "3 / 3 steps"}</span>
           </div>
+          <div className="today-question-card__path-list">
+            {pathItems.map((item, index) => (
+              <article
+                className={`today-question-card__path-item ${index === 0 ? "today-question-card__path-item--active" : ""}`}
+                key={item.key}
+              >
+                <div className="today-question-card__path-item-index">{index + 1}</div>
+                <div className="today-question-card__path-item-copy">
+                  <strong>{item.label}</strong>
+                  <span>{item.value}</span>
+                </div>
+                <div className={`today-question-card__path-item-status today-question-card__path-item-status--${item.tone}`}>
+                  {index < 2 ? (isKorean ? "준비됨" : "Ready") : (isKorean ? "확인" : "Check")}
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="today-question-card__path-footnote">
+            {isKorean
+              ? "현재 질문을 잠근 뒤 꼬리질문과 반례 검증으로 DFS를 이어갑니다."
+              : "Lock the anchor answer, then continue DFS with follow-ups and counter-cases."}
+          </p>
         </div>
       </div>
       <p className="today-question-card__note">
         {isKorean
-          ? "더 깊은 브랜치로 들어가기 전에 현재 연습 블록의 앵커 질문으로 다루세요."
-          : "Treat this as the anchor question for the current practice block before branching deeper."}
+          ? "샘플 워크스페이스처럼 메인 경로와 우측 컨텍스트를 함께 보며, 한 번에 한 분기만 깊게 방어하세요."
+          : "Keep the main path and context rail visible together, and defend one branch deeply at a time."}
       </p>
     </section>
   );

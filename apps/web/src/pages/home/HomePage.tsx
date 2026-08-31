@@ -68,23 +68,23 @@ export function HomePage() {
           <div className="home-workspace-surface__header">
             <div className="home-workspace-surface__intro">
               <div className="home-workspace-surface__eyebrow-row">
-                <span className="page-card__label">{isKorean ? "오늘의 작업공간" : "Daily workspace"}</span>
-                <span className="question-status-badge question-status-badge--accent">{isKorean ? "집중 모드" : "Focus mode"}</span>
+                <span className="page-card__label">{isKorean ? "워크스페이스" : "Workspace"}</span>
+                <span className="question-status-badge question-status-badge--accent">{isKorean ? "메인 경로 집중" : "Main path focus"}</span>
               </div>
               <p className="home-workspace-surface__breadcrumbs">
                 {isKorean ? "이력서 기준 문서" : "Resume source of truth"}
                 <span>/</span>
-                {isKorean ? "DFS 꼬리질문 압박" : "DFS follow-up pressure"}
+                {isKorean ? "DFS 꼬리질문 순회" : "DFS follow-up traversal"}
                 <span>/</span>
                 {isKorean ? "복구 루프" : "Recovery loop"}
               </p>
               <h2 className="home-workspace-surface__title">
-                {isKorean ? "이력서를 한 분기씩 방어하세요" : "Defend your resume one branch at a time"}
+                {isKorean ? "이력서를 한 분기씩 끝까지 방어하는 작업공간" : "A workspace for defending your resume branch by branch"}
               </h2>
               <p className="home-workspace-surface__body">
                 {isKorean
-                  ? "활성 이력서 주장부터 시작해 다음 질문으로 더 깊게 내려가고, 재도전과 이력서 리스크를 가까이에 두어 약한 분기를 빠르게 복구하세요."
-                  : "Start from the active resume claim, follow the next question deeper, and keep retries and resume risks close enough to recover weak branches fast."}
+                  ? "오늘의 포커스, 재도전 복구, 이력서 리스크를 한 화면에서 이어 보며 샘플 워크스페이스처럼 메인 흐름을 끊지 않고 DFS를 진행하세요."
+                  : "Keep the focus path, retry recovery, and resume risks in one view so you can continue DFS without breaking the main flow."}
               </p>
             </div>
             <div className="home-workspace-surface__stats">
@@ -108,19 +108,19 @@ export function HomePage() {
           </div>
           <div className="home-workspace-surface__chips">
             {homeData?.todayQuestion ? (
-              <span className="detail-chip detail-chip--accent">{isKorean ? "활성 분기 준비 완료" : "Active branch ready"}</span>
+              <span className="detail-chip detail-chip--accent">{isKorean ? "활성 경로 준비됨" : "Active path ready"}</span>
             ) : null}
             {retryCount > 0 ? <span className="detail-chip">{isKorean ? "재도전 복구 진행 중" : "Retry recovery live"}</span> : null}
-            {materialCount > 0 ? <span className="detail-chip">{isKorean ? "증빙 보조 자료 준비됨" : "Evidence support loaded"}</span> : null}
+            {materialCount > 0 ? <span className="detail-chip">{isKorean ? "보조 자료 연결됨" : "Support material linked"}</span> : null}
           </div>
           <div className="home-workspace-surface__guidance">
             <article className="home-workspace-surface__guidance-card">
               <span>{isKorean ? "기준 문서" : "Source of truth"}</span>
-              <strong>{isKorean ? "방어 가능한 이력서 스토리 하나를 활성 상태로 유지하세요." : "Keep one defendable resume story active."}</strong>
+              <strong>{isKorean ? "활성 이력서 주장 하나를 기준 문서처럼 고정하세요." : "Lock one resume claim as your source-of-truth anchor."}</strong>
             </article>
             <article className="home-workspace-surface__guidance-card">
               <span>{isKorean ? "탐색" : "Traversal"}</span>
-              <strong>{isKorean ? "오늘의 질문으로 다음 DFS 분기에 진입하세요." : "Use today&apos;s question to enter the next DFS branch."}</strong>
+              <strong>{isKorean ? "오늘의 질문에서 꼬리질문 트리를 깊이우선으로 내려가세요." : "Start from today&apos;s prompt and traverse the follow-up tree depth-first."}</strong>
             </article>
           </div>
         </section>
@@ -237,7 +237,7 @@ export function HomePage() {
             const todayContextSection = (
               <SectionPanel className="home-today-context-card" variant="muted">
                 <div className="home-today-context-card__topline">
-                  <span className="page-card__label">{isKorean ? "오늘 맥락" : "Today context"}</span>
+                  <span className="page-card__label">{isKorean ? "오늘 컨텍스트" : "Today context"}</span>
                   <span className="detail-chip detail-chip--accent">
                     {homeData.todayQuestion ? (isKorean ? "주 경로" : "Main path") : (isKorean ? "대기" : "Waiting")}
                   </span>
@@ -247,12 +247,12 @@ export function HomePage() {
                 </h2>
                 <p className="page-card__body">
                   {homeData.todayQuestion
-                    ? (isKorean
-                      ? "상단 포커스 카드의 질문을 오늘 세션의 기준 질문으로 보고, 우측 레일에서는 왜 이 질문을 먼저 다뤄야 하는지 계속 확인하세요."
-                      : "Treat the focus card question as today's anchor prompt and keep the reason for tackling it first visible in this rail.")
-                    : (isKorean
+                    ? isKorean
+                      ? "우측 레일은 오늘 이 질문을 먼저 방어해야 하는 이유와, 이 질문이 현재 준비 흐름에서 어떤 위치인지 계속 보여주는 영역입니다."
+                      : "This rail keeps the reason for defending this question first, and its role in today's preparation flow, visible at all times."
+                    : isKorean
                       ? "오늘의 질문이 아직 없으면 재도전 큐와 이력서 리스크를 먼저 정리하는 편이 더 낫습니다."
-                      : "When no daily question is assigned yet, clear the retry queue and resume risks before opening new branches.")} 
+                      : "When no daily question is assigned yet, clear the retry queue and resume risks before opening new branches."}
                 </p>
                 <div className="home-today-context-card__summary">
                   <article>
@@ -273,12 +273,24 @@ export function HomePage() {
                   </article>
                 </div>
                 <div className="home-today-context-card__reasons">
-                  <span>{isKorean ? "오늘 기준" : "Today focus"}</span>
-                  <p className="page-card__body">
-                    {isKorean
-                      ? "오늘 질문, 재도전 수, 이력서 리스크를 같이 보면서 한 분기만 깊게 내려가세요."
-                      : "Use the daily question, retry pressure, and resume risk together to go deep on one branch."}
-                  </p>
+                  <span>{isKorean ? "왜 오늘 이 경로인가" : "Why this today"}</span>
+                  <ul className="home-today-context-card__reason-list">
+                    <li>
+                      {isKorean
+                        ? "오늘 질문과 재도전 큐를 함께 보며 메인 경로를 끊지 않습니다."
+                        : "Keep the main path intact while tracking retries beside it."}
+                    </li>
+                    <li>
+                      {isKorean
+                        ? "이력서 리스크가 있는 경우 바로 아래 카드에서 방어 포인트를 확인합니다."
+                        : "Resume risks remain close enough to convert into defense notes immediately."}
+                    </li>
+                    <li>
+                      {isKorean
+                        ? "질문 트리는 깊이우선으로 한 분기씩 정리합니다."
+                        : "Traverse the question tree depth-first, one branch at a time."}
+                    </li>
+                  </ul>
                 </div>
               </SectionPanel>
             );

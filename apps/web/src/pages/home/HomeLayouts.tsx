@@ -56,25 +56,27 @@ export function HomeMobileLayout({
 }: HomeLayoutProps) {
   return (
     <div className="home-layout home-layout--mobile">
-      <section className="home-layout__hero">{todaySection}</section>
-      <section className="home-layout__band home-layout__band--context">
-        {todayContextSection}
-        {nextActionSection}
+      <section className="home-layout__stage home-layout__stage--mobile">
+        <div className="home-layout__stage-main">{todaySection}</div>
+        <aside className="home-layout__stage-rail">
+          {todayContextSection}
+          {nextActionSection}
+        </aside>
       </section>
-      <section className="home-layout__band home-layout__band--primary">
+      <section className="home-layout__band home-layout__band--summary">
         {summarySection}
         {radarSection}
+      </section>
+      <section className="home-layout__band home-layout__band--intelligence">
+        {weakSkillsSection}
+        {materialsSection}
       </section>
       <section className="home-layout__band home-layout__band--practice">
         <ReviewQueuePanel />
         {retrySection}
       </section>
-      <section className="home-layout__band home-layout__band--intelligence">
-        {weakSkillsSection}
-      </section>
       <section className="home-layout__band home-layout__band--resume">
         {resumeRiskSection}
-        {materialsSection}
       </section>
     </div>
   );
@@ -93,31 +95,25 @@ export function HomeDesktopLayout({
 }: HomeLayoutProps) {
   return (
     <div className="home-layout home-layout--desktop">
-      <section className="home-layout__hero">{todaySection}</section>
-      <div className="home-layout__workspace">
-        <div className="home-layout__main-column">
-          <section className="home-layout__band home-layout__band--primary">
-            {summarySection}
-            {radarSection}
-          </section>
-          <section className="home-layout__band home-layout__band--intelligence">
-            {weakSkillsSection}
-            {materialsSection}
-          </section>
-          <section className="home-layout__band home-layout__band--resume">
-            {resumeRiskSection}
-          </section>
+      <section className="home-layout__stage">
+        <div className="home-layout__stage-main">
+          <section className="home-layout__hero">{todaySection}</section>
+          <section className="home-layout__hero-side">{nextActionSection}</section>
         </div>
-        <aside className="home-layout__side-column">
-          <section className="home-layout__band home-layout__band--context">
-            {todayContextSection}
-            {nextActionSection}
-          </section>
-          <section className="home-layout__band home-layout__band--practice">
-            <ReviewQueuePanel />
-            {retrySection}
-          </section>
-        </aside>
+        <aside className="home-layout__stage-rail">{todayContextSection}</aside>
+      </section>
+      <div className="home-layout__workspace">
+        <section className="home-layout__band home-layout__band--summary">
+          {summarySection}
+          {radarSection}
+          {weakSkillsSection}
+        </section>
+        <section className="home-layout__band home-layout__band--cards">
+          <ReviewQueuePanel />
+          {retrySection}
+          {materialsSection}
+          {resumeRiskSection}
+        </section>
       </div>
     </div>
   );
