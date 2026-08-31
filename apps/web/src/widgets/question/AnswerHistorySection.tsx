@@ -9,7 +9,8 @@ type AnswerHistorySectionProps = {
 };
 
 export function AnswerHistorySection({ history }: AnswerHistorySectionProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
 
   return (
     <section className="page-card question-detail-section-card">
@@ -18,7 +19,9 @@ export function AnswerHistorySection({ history }: AnswerHistorySectionProps) {
           <p className="section-heading__eyebrow">{t("answer.historyEyebrow")}</p>
           <h2 className="page-card__title">{t("answer.historyTitle")}</h2>
           <p className="page-card__body">
-            Compare only the most recent attempts you can still learn from instead of rereading every past answer.
+            {isKorean
+              ? "지금 판단을 바꿀 수 있는 최근 시도만 비교하세요."
+              : "Compare only the recent attempts that can still change the current judgment."}
           </p>
         </div>
         <span className="section-heading__count">{history.items.length}</span>
@@ -47,7 +50,7 @@ export function AnswerHistorySection({ history }: AnswerHistorySectionProps) {
               {item.evaluationResultLabel && item.totalScoreLabel ? (
                 <p className="list-item-card__body">
                   <span>{item.totalScoreLabel}</span>
-                  {` · ${t("answer.compareLatest")}`}
+                  {` · ${isKorean ? "다음 수정 포인트 확인" : "Check the next revision point"}`}
                 </p>
               ) : null}
             </div>

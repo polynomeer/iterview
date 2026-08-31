@@ -8,7 +8,8 @@ type RecommendedQuestionSectionProps = {
 };
 
 export function RecommendedQuestionSection({ items }: RecommendedQuestionSectionProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
 
   return (
     <section className="page-card question-detail-section-card question-detail-section-card--recommended">
@@ -17,7 +18,9 @@ export function RecommendedQuestionSection({ items }: RecommendedQuestionSection
           <p className="section-heading__eyebrow">{t("question.recommendedEyebrow")}</p>
           <h2 className="page-card__title">{t("question.recommendedTitle")}</h2>
           <p className="page-card__body">
-            Open these only when the current node is understood well enough to branch deeper.
+            {isKorean
+              ? "현재 노드가 잠겼을 때만 다음 가지를 여세요."
+              : "Open these only after the current node is locked well enough to branch deeper."}
           </p>
         </div>
         <span className="section-heading__count">{items.length}</span>
@@ -26,9 +29,13 @@ export function RecommendedQuestionSection({ items }: RecommendedQuestionSection
         {items.map((item) => (
           <article className="list-item-card question-recommended-card" key={item.id}>
             <div className="list-item-card__content">
+              {item.metadataLabel ? (
+                <div className="list-item-card__meta">
+                  <span>{item.metadataLabel}</span>
+                </div>
+              ) : null}
               <h3 className="list-item-card__title">{item.title}</h3>
               {item.reason ? <p className="list-item-card__body">{item.reason}</p> : null}
-              {item.metadataLabel ? <p className="list-item-card__body">{item.metadataLabel}</p> : null}
             </div>
             <div className="list-item-card__actions">
               <Link className="secondary-button" to={routeConfig.questionDetail.buildPath({ questionId: item.id })}>

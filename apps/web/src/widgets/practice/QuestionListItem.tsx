@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { PracticeQuestionItemModel } from "../../entities/practice/model";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 import { QuestionStatusBadge } from "../../shared/ui/QuestionStatusBadge";
 
 type QuestionListItemProps = {
@@ -8,6 +9,9 @@ type QuestionListItemProps = {
 };
 
 export function QuestionListItem({ item }: QuestionListItemProps) {
+  const { locale } = useLocale();
+  const isKorean = locale === "ko";
+
   return (
     <article className="list-item-card practice-list-item-card">
       <div className="practice-list-item-card__header">
@@ -20,13 +24,13 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
         <div className="practice-list-item-card__summary">
           {item.progressSummaryLabel ? (
             <article className="practice-list-item-card__summary-item">
-              <span>진행</span>
+              <span>{isKorean ? "진행" : "Progress"}</span>
               <strong>{item.progressSummaryLabel}</strong>
             </article>
           ) : null}
           {item.resumeRelevanceLabel ? (
             <article className="practice-list-item-card__summary-item">
-              <span>이력서</span>
+              <span>{isKorean ? "이력서" : "Resume"}</span>
               <strong>{item.resumeRelevanceLabel}</strong>
             </article>
           ) : null}
@@ -55,13 +59,13 @@ export function QuestionListItem({ item }: QuestionListItemProps) {
           className="secondary-button"
           to={routeConfig.questionDetail.buildPath({ questionId: item.id })}
         >
-          상세 보기
+          {isKorean ? "상세 보기" : "Open detail"}
         </Link>
         <Link
           className="primary-button"
           to={routeConfig.answerEditor.buildPath({ questionId: item.id })}
         >
-          답변 시작
+          {isKorean ? "답변 시작" : "Start answer"}
         </Link>
       </div>
     </article>

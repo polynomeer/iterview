@@ -119,10 +119,6 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
           <span>{isKorean ? "우선 순서" : "Priority"}</span>
           <strong>{isKorean ? "오늘 질문 → 재도전 → 리스크 정리" : "Today → Retry → Risks"}</strong>
         </article>
-        <article className="home-next-action-card__rail-item">
-          <span>{isKorean ? "운영 원칙" : "Rule"}</span>
-          <strong>{isKorean ? "새 분기를 열기 전에 기존 약점을 먼저 닫습니다." : "Close weak branches before opening new ones."}</strong>
-        </article>
       </div>
     </section>
   );

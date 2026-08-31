@@ -18869,3 +18869,164 @@ textarea::placeholder {
   width: 28px;
   height: 28px;
 }
+
+/* List card alignment overrides */
+
+.question-learning-materials-section,
+.question-history-card,
+.question-recommended-card,
+.question-learning-material-card,
+.practice-list-item-card,
+.today-question-card,
+.home-next-action-card {
+  box-shadow: none;
+}
+
+.question-learning-materials-section .stack-list,
+.question-detail-section-card .stack-list,
+.practice-question-list,
+.today-question-card__path-list {
+  gap: 10px;
+}
+
+.question-history-card,
+.question-recommended-card,
+.question-learning-material-card,
+.practice-list-item-card {
+  border-color: rgba(137, 161, 203, 0.11);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.question-history-card .list-item-card__content,
+.question-recommended-card .list-item-card__content,
+.question-learning-material-card .list-item-card__content,
+.practice-list-item-card .list-item-card__content {
+  gap: 8px;
+}
+
+.question-history-card .list-item-card__meta,
+.question-recommended-card .list-item-card__meta,
+.question-learning-material-card .list-item-card__meta,
+.practice-list-item-card .list-item-card__meta {
+  font-size: 0.76rem;
+}
+
+.question-history-card .list-item-card__body,
+.question-recommended-card .list-item-card__body,
+.question-learning-material-card .list-item-card__body,
+.practice-list-item-card .list-item-card__body {
+  font-size: 0.84rem;
+}
+
+.question-learning-material__excerpt {
+  color: var(--text-muted);
+  line-height: 1.58;
+}
+
+.today-question-card {
+  gap: 16px;
+  padding: 20px;
+  border-radius: 24px;
+  box-shadow: none;
+}
+
+.today-question-card__header,
+.today-question-card__body-grid {
+  gap: 14px;
+}
+
+.today-question-card__body-grid {
+  grid-template-columns: minmax(0, 1.22fr) minmax(240px, 0.78fr);
+}
+
+.today-question-card__title {
+  max-width: 14ch;
+  font-size: clamp(1.85rem, 2.6vw, 2.5rem);
+}
+
+.today-question-card__path {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.today-question-card__path-item {
+  gap: 3px;
+  padding: 11px 12px;
+}
+
+.home-next-action-card {
+  gap: 14px;
+  padding: 18px;
+}
+
+.home-next-action-card__header,
+.home-next-action-card__highlights,
+.home-next-action-card__rail {
+  gap: 10px;
+}
+
+.home-next-action-card__rail {
+  grid-template-columns: 1fr;
+}
+
+.home-next-action-card__highlight,
+.home-next-action-card__rail-item {
+  border-color: rgba(137, 161, 203, 0.11);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.practice-list-item-card {
+  gap: 12px;
+  padding: 14px 16px;
+  box-shadow: none;
+}
+
+.practice-list-item-card:hover,
+.practice-list-item-card:focus-within {
+  box-shadow: none;
+}
+
+.practice-list-item-card__summary {
+  gap: 6px;
+}
+
+.practice-list-item-card__summary-item {
+  min-width: 96px;
+  padding: 9px 11px;
+}
+
+:root[data-theme="workspace"] .question-learning-materials-section,
+:root[data-theme="workspace"] .today-question-card,
+:root[data-theme="workspace"] .home-next-action-card,
+:root[data-theme="workspace"] .practice-list-item-card,
+:root[data-theme="workspace"] .question-history-card,
+:root[data-theme="workspace"] .question-recommended-card,
+:root[data-theme="workspace"] .question-learning-material-card {
+  border-color: rgba(137, 161, 203, 0.12);
+  box-shadow: none;
+}
+
+:root[data-theme="workspace"] .question-learning-materials-section {
+  background: linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+}
+
+:root[data-theme="workspace"] .question-history-card,
+:root[data-theme="workspace"] .question-recommended-card,
+:root[data-theme="workspace"] .question-learning-material-card,
+:root[data-theme="workspace"] .practice-list-item-card,
+:root[data-theme="workspace"] .home-next-action-card__highlight,
+:root[data-theme="workspace"] .home-next-action-card__rail-item,
+:root[data-theme="workspace"] .today-question-card__summary-item,
+:root[data-theme="workspace"] .today-question-card__path-item,
+:root[data-theme="workspace"] .practice-list-item-card__summary-item {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 1099px) {
+  .today-question-card__body-grid,
+  .today-question-card__header,
+  .home-next-action-card__highlights {
+    grid-template-columns: 1fr;
+  }
+}

@@ -76,14 +76,20 @@ export function LearningMaterialsSection({
   onFormChange,
   onSubmit,
 }: LearningMaterialsSectionProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
 
   return (
-    <section className="page-card">
+    <section className="page-card question-learning-materials-section">
       <div className="section-heading">
         <div>
           <p className="section-heading__eyebrow">{t("question.learningMaterialsEyebrow")}</p>
           <h2 className="page-card__title">{t("question.learningMaterialsTitle")}</h2>
+          <p className="page-card__body">
+            {isKorean
+              ? "현재 답변을 더 구체적으로 만드는 자료만 남기세요."
+              : "Keep only the material that makes the current answer more specific."}
+          </p>
         </div>
         {canAdd ? (
           <button className="secondary-button" onClick={onToggleComposer} type="button">
@@ -264,13 +270,13 @@ export function LearningMaterialsSection({
 
       <div className="stack-list">
         {materials.map((material) => (
-          <article className="list-item-card" key={material.id}>
+          <article className="list-item-card question-learning-material-card" key={material.id}>
             <div className="list-item-card__content">
               <div className="list-item-card__meta question-source-meta">
                 <span>{material.labelOverride ?? material.resourceTypeLabel}</span>
                 <span>{resolveMaterialSourceLabel(material, t)}</span>
                 {material.relationshipType ? <span>{material.relationshipType}</span> : null}
-                {material.estimatedMinutes ? <span>{`${material.estimatedMinutes} min`}</span> : null}
+                {material.estimatedMinutes ? <span>{isKorean ? `${material.estimatedMinutes}분` : `${material.estimatedMinutes} min`}</span> : null}
                 {material.contentLocale ? <span>{material.contentLocale.toUpperCase()}</span> : null}
               </div>
               <h3 className="list-item-card__title">{material.title}</h3>
@@ -284,7 +290,7 @@ export function LearningMaterialsSection({
                 {material.sourceName ? <span>{material.sourceName}</span> : null}
                 {material.difficultyLevel ? <span>{material.difficultyLevel}</span> : null}
                 {material.isOfficial ? <span>{t("question.sourceOfficial")}</span> : null}
-                {material.relevanceScore !== null ? <span>{`${material.relevanceScore}`}</span> : null}
+                {material.relevanceScore !== null ? <span>{isKorean ? `관련도 ${material.relevanceScore}` : `Relevance ${material.relevanceScore}`}</span> : null}
               </div>
             </div>
             {material.url ? (

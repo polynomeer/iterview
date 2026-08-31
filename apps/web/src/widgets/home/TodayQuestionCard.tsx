@@ -20,13 +20,6 @@ export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
             <span className="page-card__label">{isKorean ? "오늘의 메인 질문" : "Today&apos;s main question"}</span>
             <QuestionStatusBadge status={question.status} />
           </div>
-          <p className="today-question-card__breadcrumbs">
-            {isKorean ? "핵심 질문 문구" : "Core prompt"}
-            <span>/</span>
-            {isKorean ? "이력서 방어" : "Resume defense"}
-            <span>/</span>
-            {isKorean ? "답변 시뮬레이션" : "Answer simulation"}
-          </p>
         </div>
         <div className="today-question-card__summary">
           <article className="today-question-card__summary-item">
@@ -49,7 +42,6 @@ export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
           <div className="today-question-card__chips">
             <span className="detail-chip">{question.categoryLabel}</span>
             <span className="detail-chip detail-chip--accent">{question.companyLabel}</span>
-            <span className="detail-chip">{isKorean ? "추천 경로" : "Recommended path"}</span>
           </div>
           <div className="page-card__actions">
             <Link className="primary-button" to={routeConfig.answerEditor.buildPath({ questionId: question.id })}>
@@ -64,16 +56,12 @@ export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
           <span className="page-card__label">{isKorean ? "오늘의 경로" : "Today's path"}</span>
           <div className="today-question-card__path-list">
             <article className="today-question-card__path-item today-question-card__path-item--active">
-              <strong>{question.title}</strong>
-              <span>{isKorean ? "현재 앵커 질문" : "Current anchor prompt"}</span>
+              <strong>{isKorean ? "현재 앵커 질문" : "Current anchor prompt"}</strong>
+              <span>{question.title}</span>
             </article>
             <article className="today-question-card__path-item">
-              <strong>{isKorean ? "핵심 꼬리질문 정리" : "Follow-up consolidation"}</strong>
-              <span>{isKorean ? "세부 논리와 반례 정리" : "Tighten details and counterexamples"}</span>
-            </article>
-            <article className="today-question-card__path-item">
-              <strong>{isKorean ? "최종 답변 시뮬레이션" : "Final answer simulation"}</strong>
-              <span>{isKorean ? "면접 답변 흐름까지 연결" : "Connect back into answer delivery"}</span>
+              <strong>{isKorean ? "다음 행동" : "Next move"}</strong>
+              <span>{isKorean ? "질문을 잠그고 꼬리질문으로 이동" : "Lock this question, then move into follow-ups"}</span>
             </article>
           </div>
         </div>
