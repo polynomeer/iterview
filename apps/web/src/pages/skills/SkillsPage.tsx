@@ -1,22 +1,92 @@
 import { Link } from "react-router-dom";
 import { mapHomeResponseDtoToModel } from "../../entities/home/model";
-import { useSkillProgressQuery } from "../../features/skills/api/useSkillProgressQuery";
+import type { SkillGapModel, SkillProgressModel, SkillRadarModel } from "../../entities/skill-intelligence/model";
 import { useSkillGapQuery } from "../../features/skills/api/useSkillGapQuery";
+import { useSkillProgressQuery } from "../../features/skills/api/useSkillProgressQuery";
 import { useSkillRadarQuery } from "../../features/skills/api/useSkillRadarQuery";
 import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
 import { getHomeRequest } from "../../shared/api/homeApi";
+import { queryKeys } from "../../shared/api/queryKeys";
 import { routeConfig } from "../../shared/config/routes";
+import { useLocale } from "../../shared/i18n";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { MetricCard } from "../../shared/ui/MetricCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
-import { useLocale } from "../../shared/i18n";
 import { useQuery } from "@tanstack/react-query";
-import { queryKeys } from "../../shared/api/queryKeys";
-import { GapAnalysisSection } from "../../widgets/skills/GapAnalysisSection";
-import { SkillCategorySummaryCard } from "../../widgets/skills/SkillCategorySummaryCard";
-import { SkillRadarChart } from "../../widgets/skills/SkillRadarChart";
+
+const SKILL_NODE_TONES = ["core", "positive", "positive", "positive", "warning", "danger", "warning"] as const;
+const SKILL_NODE_POSITIONS = [
+  { top: "4%", left: "36%" },
+  { top: "18%", left: "12%" },
+  { top: "18%", left: "63%" },
+  { top: "47%", left: "8%" },
+  { top: "47%", left: "65%" },
+  { top: "69%", left: "29%" },
+  { top: "69%", left: "54%" },
+] as const;
+
+function parseNumberLabel(value: string | undefined) {
+  return Number.parseInt(value ?? "0", 10) || 0;
+}
+
+function scoreToStatus(score: number, isKorean: boolean) {
+  if (score >= 80) {
+    return isKorean ? "상" : "High";
+  }
+
+  if (score >= 65) {
+    return isKorean ? "중" : "Medium";
+  }
+
+  return isKorean ? "하" : "Low";
+}
+
+function scoreToTone(score: number) {
+  if (score >= 80) {
+    return "positive";
+  }
+
+  if (score >= 65) {
+    return "warning";
+  }
+
+  return "danger";
+}
+
+function buildSkillQuestionRecommendations(
+  radar: SkillRadarModel | undefined,
+  progress: SkillProgressModel | undefined,
+  gap: SkillGapModel | undefined,
+  isKorean: boolean,
+) {
+  const progressMap = new Map((progress?.items ?? []).map((item) => [item.label, item]));
+  const gapMap = new Map((gap?.items ?? []).map((item) => [item.label, item]));
+
+  return (radar?.categories ?? []).slice(0, 5).map((category, index) => {
+    const progressItem = progressMap.get(category.label);
+    const gapItem = gapMap.get(category.label);
+    const score = category.score;
+    const weakCount = parseNumberLabel(progressItem?.weakQuestionCountLabel);
+    const answeredCount = parseNumberLabel(progressItem?.answeredQuestionCountLabel);
+    const gapScore = parseNumberLabel(gapItem?.gapScoreLabel ?? category.helperText?.replace(/\D/g, ""));
+
+    return {
+      id: `${category.id}-question`,
+      order: index + 1,
+      title: isKorean
+        ? `${category.label}를 이력서 근거와 트레이드오프까지 방어할 수 있나요?`
+        : `Can you defend ${category.label} with resume evidence and trade-offs?`,
+      score,
+      scoreLabel: `${score}`,
+      tone: scoreToTone(score),
+      helper: isKorean
+        ? `약한 꼬리질문 ${weakCount}개 · 답변 ${answeredCount}개 · 격차 ${gapScore}`
+        : `${weakCount} weak follow-ups · ${answeredCount} answers · gap ${gapScore}`,
+    };
+  });
+}
 
 export function SkillsPage() {
   const { locale } = useLocale();
@@ -41,37 +111,63 @@ export function SkillsPage() {
         return item;
       }
 
-      const weakestWeakCount = Number.parseInt(weakest.weakQuestionCountLabel, 10) || 0;
-      const itemWeakCount = Number.parseInt(item.weakQuestionCountLabel, 10) || 0;
-      return itemWeakCount > weakestWeakCount ? item : weakest;
+      return parseNumberLabel(item.weakQuestionCountLabel) > parseNumberLabel(weakest.weakQuestionCountLabel) ? item : weakest;
     }, progressQuery.data.items[0]) ?? null;
   const totalAnsweredQuestions =
-    progressQuery.data?.items.reduce((sum, item) => {
-      return sum + (Number.parseInt(item.answeredQuestionCountLabel, 10) || 0);
-    }, 0) ?? 0;
+    progressQuery.data?.items.reduce((sum, item) => sum + parseNumberLabel(item.answeredQuestionCountLabel), 0) ?? 0;
   const totalWeakQuestions =
-    progressQuery.data?.items.reduce((sum, item) => {
-      return sum + (Number.parseInt(item.weakQuestionCountLabel, 10) || 0);
-    }, 0) ?? 0;
+    progressQuery.data?.items.reduce((sum, item) => sum + parseNumberLabel(item.weakQuestionCountLabel), 0) ?? 0;
+  const focusSkill =
+    weakestProgressItem
+      ? {
+          label: weakestProgressItem.label,
+          score: parseNumberLabel(weakestProgressItem.scoreLabel),
+          benchmarkLabel: weakestProgressItem.benchmarkLabel,
+          weakQuestionCountLabel: weakestProgressItem.weakQuestionCountLabel,
+          answeredQuestionCountLabel: weakestProgressItem.answeredQuestionCountLabel,
+          gapLabel: weakestProgressItem.gapLabel,
+        }
+      : radarQuery.data?.categories[0]
+        ? {
+            label: radarQuery.data.categories[0].label,
+            score: radarQuery.data.categories[0].score,
+            benchmarkLabel: radarQuery.data.categories[0].benchmarkLabel,
+            weakQuestionCountLabel: "0",
+            answeredQuestionCountLabel: "0",
+            gapLabel: radarQuery.data.categories[0].helperText,
+          }
+        : null;
+  const radarNodes = (radarQuery.data?.categories ?? []).slice(0, 7).map((category, index) => ({
+    ...category,
+    tone: SKILL_NODE_TONES[index] ?? "warning",
+    position: SKILL_NODE_POSITIONS[index] ?? { top: "50%", left: "50%" },
+  }));
+  const strengths = [...(radarQuery.data?.categories ?? [])].sort((left, right) => right.score - left.score).slice(0, 3);
+  const weakAreas = [...(radarQuery.data?.categories ?? [])].sort((left, right) => left.score - right.score).slice(0, 3);
+  const recentPractice = (progressQuery.data?.items ?? []).slice(0, 4);
+  const nextRecommendations = [...(gapQuery.data?.items ?? [])]
+    .sort((left, right) => parseNumberLabel(right.gapScoreLabel) - parseNumberLabel(left.gapScoreLabel))
+    .slice(0, 3);
+  const questionRecommendations = buildSkillQuestionRecommendations(radarQuery.data, progressQuery.data, gapQuery.data, isKorean);
 
   return (
     <PageContainer
       description={
         isKorean
-          ? "스킬 레이더와 격차 신호는 다음에 어떤 인터뷰 가지를 보강할지 결정하는 용도로만 사용하세요."
-          : "Use skill radar and gap signals only to decide which interview branch should be reinforced next."
+          ? "스킬 페이지는 이력서 기반 DFS 면접 루프에서 다음에 어디를 더 깊게 파고들지 고르는 보조 작업공간입니다."
+          : "The skills page is a support workspace for choosing which resume-backed DFS interview branch to go deeper on next."
       }
       eyebrow={isKorean ? "보조 작업공간" : "Support workspace"}
-      title={isKorean ? "스킬 신호를 다음 가지 선택으로 연결하세요" : "Turn skill signals into the next branch choice"}
+      title={isKorean ? "스킬 지형을 질문 트리 실행 계획으로 바꾸세요" : "Turn the skill landscape into the next question-tree plan"}
     >
       {radarQuery.isLoading || gapQuery.isLoading || progressQuery.isLoading ? (
         <LoadingStateCard
           body={
             isKorean
-              ? "현재 인터뷰 프로필의 스킬 레이더와 격차 분석을 불러오는 중입니다."
-              : "Loading skill radar and gap analysis for your current interview profile."
+              ? "현재 인터뷰 프로필의 스킬 지형과 격차 신호를 불러오는 중입니다."
+              : "Loading the skill landscape and gap signals for your current interview profile."
           }
-          title={isKorean ? "스킬 대시보드 준비 중" : "Preparing skill dashboard"}
+          title={isKorean ? "스킬 작업공간 준비 중" : "Preparing skill workspace"}
         />
       ) : null}
 
@@ -114,235 +210,277 @@ export function SkillsPage() {
       ((radarQuery.data && radarQuery.data.categories.length > 0) ||
         (gapQuery.data && gapQuery.data.items.length > 0) ||
         (progressQuery.data && progressQuery.data.items.length > 0)) ? (
-        <div className="page-stack skills-workspace">
-          <section className="skills-workspace-surface">
-            <div className="skills-workspace-surface__header">
-              <div className="skills-workspace-surface__intro">
-                <div className="skills-workspace-surface__eyebrow-row">
-                  <p className="skills-workspace-surface__breadcrumbs">
-                    <span>{isKorean ? "스킬 신호" : "Skill signal"}</span>
-                    <span>/</span>
-                    <span>{isKorean ? "격차 압박" : "Gap pressure"}</span>
-                    <span>/</span>
-                    <span>{isKorean ? "다음 가지" : "Next branch"}</span>
-                  </p>
-                  <span className="question-status-badge question-status-badge--accent">
-                    {isKorean ? "연습 보조" : "Practice companion"}
-                  </span>
-                </div>
-                <h2 className="skills-workspace-surface__title">
-                  {isKorean ? "스킬 신호는 다음에 방어할 가치가 있는 가지를 고르는 데만 쓰세요" : "Use skill signals only to choose the next branch worth defending"}
+        <div className="page-stack skills-landscape">
+          <section className="skills-landscape__shell">
+            <header className="skills-landscape__header">
+              <div className="skills-landscape__title-block">
+                <p className="skills-landscape__kicker">{isKorean ? "스킬 랜드스케이프" : "Skill landscape"}</p>
+                <h2 className="skills-landscape__title">
+                  {isKorean ? "이력서 근거를 방어할 스킬 지형을 한 화면에서 정리하세요" : "Organize the skill terrain that has to defend your resume in one screen"}
                 </h2>
-                <p className="skills-workspace-surface__body">
+                <p className="skills-landscape__body">
                   {isKorean
-                    ? "레이더, 격차 분석, 진행 상황은 인터뷰 DFS 루프에서 다음에 무엇을 방어해야 하는지 좁혀줄 때만 의미가 있습니다."
-                    : "Radar, gap analysis, and progress only matter if they narrow what you should defend next in the interview DFS loop."}
+                    ? "강점, 약점, 최근 연습, 다음 추천을 따로 보지 말고 중앙 지형에서 하나의 방어 시나리오로 묶어야 합니다."
+                    : "Do not read strengths, weaknesses, recent practice, and recommendations separately. Tie them into one defense scenario from the central landscape."}
                 </p>
               </div>
-              <div className="skills-workspace-surface__stats">
-                <article className="skills-workspace-surface__stat">
-                  <span>{isKorean ? "레이더 업데이트" : "Radar updated"}</span>
-                  <strong>{radarQuery.data?.updatedAtLabel ?? "-"}</strong>
-                </article>
-                <article className="skills-workspace-surface__stat">
-                  <span>{isKorean ? "레이더 카테고리" : "Radar categories"}</span>
-                  <strong>{radarCategoryCount}</strong>
-                </article>
-                <article className="skills-workspace-surface__stat">
-                  <span>{isKorean ? "추적 중인 진행도" : "Tracked progress"}</span>
-                  <strong>{trackedProgressCount}</strong>
-                </article>
-                <article className="skills-workspace-surface__stat">
-                  <span>{isKorean ? "격차 항목" : "Gap items"}</span>
-                  <strong>{gapQuery.data?.items.length ?? 0}</strong>
-                </article>
-              </div>
-            </div>
-            <div className="skills-workspace-surface__chips">
-              {topGapItem ? <span className="detail-chip">{isKorean ? `최대 격차: ${topGapItem.label}` : `Top gap: ${topGapItem.label}`}</span> : null}
-              {weakestProgressItem ? (
-                <span className="detail-chip">
-                  {isKorean ? `약한 질문 부하: ${weakestProgressItem.label}` : `Weak-question load: ${weakestProgressItem.label}`}
-                </span>
-              ) : null}
-              <span className="detail-chip detail-chip--accent">
-                {isKorean ? "목표: 다음에 연습할 가지 하나 선택" : "Goal: choose one branch to practice next"}
-              </span>
-            </div>
-            <div className="skills-workspace-surface__guidance">
-              <article className="skills-workspace-surface__guidance-card">
-                <span>{isKorean ? "오늘의 주 가지" : "Primary branch today"}</span>
-                <strong>
-                  {topGapItem
-                    ? isKorean
-                      ? `${topGapItem.label}을 다음 방어 가지로 삼아야 합니다.`
-                      : `${topGapItem.label} should become the next defended branch.`
-                    : isKorean
-                      ? "연습 범위를 넓히기 전에 더 분명한 격차 신호를 기다리세요."
-                      : "Wait for a clearer gap signal before broadening practice."}
-                </strong>
-              </article>
-              <article className="skills-workspace-surface__guidance-card">
-                <span>{isKorean ? "범위를 넓히기 전" : "Before you broaden"}</span>
-                <strong>
-                  {weakestProgressItem
-                    ? isKorean
-                      ? `${weakestProgressItem.label}의 약한 꼬리질문 부하가 가장 크므로 먼저 안정화하세요.`
-                      : `Stabilize ${weakestProgressItem.label} first, because weak follow-up load is still the heaviest there.`
-                    : isKorean
-                      ? "페이지가 불안정한 꼬리질문 깊이를 식별할 수 있도록 답변 이력을 먼저 쌓아보세요."
-                      : "Build one answered streak so the page can identify unstable follow-up depth."}
-                </strong>
-              </article>
-            </div>
-            <div className="skills-workspace-surface__actions">
-              <Link className="primary-button" to={routeConfig.practice.buildPath()}>
-                {isKorean ? "연습 작업공간 열기" : "Open practice workspace"}
-              </Link>
-              <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
-                {isKorean ? "복습 큐 열기" : "Open review queue"}
-              </Link>
-            </div>
-          </section>
-
-          <section className="skills-priority-board">
-            <article className="page-card skills-priority-board__main">
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">{isKorean ? "우선순위 보드" : "Priority board"}</p>
-                  <h2 className="page-card__title">{isKorean ? "이 신호 세트가 이끌어야 할 다음 행동" : "What this signal set should drive"}</h2>
+              <div className="skills-landscape__toolbar">
+                <div className="skills-landscape__tabs" role="tablist" aria-label={isKorean ? "스킬 보기 방식" : "Skill views"}>
+                  <button className="skills-landscape__tab skills-landscape__tab--active" type="button">
+                    {isKorean ? "랜드스케이프" : "Landscape"}
+                  </button>
+                  <button className="skills-landscape__tab" type="button">
+                    {isKorean ? "목록 보기" : "List view"}
+                  </button>
+                  <button className="skills-landscape__tab" type="button">
+                    {isKorean ? "열지도" : "Heatmap"}
+                  </button>
+                  <button className="skills-landscape__tab" type="button">
+                    {isKorean ? "레이더" : "Radar"}
+                  </button>
                 </div>
-              </div>
-              <div className="skills-priority-list">
-                <article className="skills-priority-item">
-                  <div className="skills-priority-item__rank">1</div>
-                  <div className="skills-priority-item__body">
-                    <strong>{isKorean ? "가장 약한 방어 가능 가지 찾기" : "Find the weakest defendable branch"}</strong>
-                    <span>
-                      {isKorean
-                        ? "격차와 약한 질문 부하를 따로 보지 말고 함께 해석하세요."
-                        : "Use gap and weak-question load together, not as separate dashboards."}
-                    </span>
+                <div className="skills-landscape__toolbar-actions">
+                  <div className="skills-landscape__toolbar-chip">
+                    <span>{isKorean ? "필터" : "Filter"}</span>
+                    <strong>{topGapItem?.label ?? (isKorean ? "전체" : "All")}</strong>
                   </div>
-                </article>
-                <article className="skills-priority-item">
-                  <div className="skills-priority-item__rank">2</div>
-                  <div className="skills-priority-item__body">
-                    <strong>{isKorean ? "실제 면접 근거로 다시 연결하기" : "Map it back to real interview evidence"}</strong>
-                    <span>
-                      {isKorean
-                        ? "이미 약한 답변이나 불안정한 꼬리질문을 만든 스킬을 우선하세요."
-                        : "Prefer skills that already produced weak answers or unstable follow-ups."}
-                    </span>
-                  </div>
-                </article>
-                <article className="skills-priority-item">
-                  <div className="skills-priority-item__rank">3</div>
-                  <div className="skills-priority-item__body">
-                    <strong>{isKorean ? "다음 연습 실행으로 전환하기" : "Convert it into the next practice run"}</strong>
-                    <span>
-                      {isKorean
-                        ? "이 페이지는 실제 질문 연습으로 가는 경로를 줄여야지, 분석 막다른길이 되어서는 안 됩니다."
-                        : "This page should shorten the path to actual question practice, not become an analytics dead end."}
-                    </span>
-                  </div>
-                </article>
+                  <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
+                    {isKorean ? "이력서 근거 보기" : "View resume evidence"}
+                  </Link>
+                </div>
               </div>
-            </article>
+            </header>
 
-            <article className="page-card page-card--muted skills-priority-board__side">
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">{isKorean ? "현재 집중" : "Current focus"}</p>
-                  <h2 className="page-card__title">{isKorean ? "가장 바로 행동 가능한 신호" : "Most actionable signal"}</h2>
+            <div className="skills-landscape__workspace">
+              <section className="skills-landscape__canvas">
+                <div className="skills-landscape__legend">
+                  <p className="skills-landscape__panel-label">{isKorean ? "범례" : "Legend"}</p>
+                  <ul className="skills-landscape__legend-list">
+                    <li><span className="skills-landscape__dot skills-landscape__dot--positive" />{isKorean ? "강한 방어 가능" : "Strong defense"}</li>
+                    <li><span className="skills-landscape__dot skills-landscape__dot--warning" />{isKorean ? "추가 보강 필요" : "Needs reinforcement"}</li>
+                    <li><span className="skills-landscape__dot skills-landscape__dot--danger" />{isKorean ? "깊은 꼬리질문 주의" : "Deep follow-up risk"}</li>
+                  </ul>
+                  <div className="skills-landscape__legend-stats">
+                    <article>
+                      <span>{isKorean ? "레이더 카테고리" : "Radar categories"}</span>
+                      <strong>{radarCategoryCount}</strong>
+                    </article>
+                    <article>
+                      <span>{isKorean ? "추적 중 진행도" : "Tracked progress"}</span>
+                      <strong>{trackedProgressCount}</strong>
+                    </article>
+                  </div>
                 </div>
-              </div>
-              <div className="skills-signal-list">
-                <div className="skills-signal-list__item">
-                  <span>{isKorean ? "최대 격차" : "Top gap"}</span>
-                  <strong>
-                    {topGapItem
-                      ? `${topGapItem.label} · ${topGapItem.gapScoreLabel}`
-                      : isKorean
-                        ? "아직 명시적인 격차 항목이 없습니다."
-                        : "No explicit gap item is available yet."}
-                  </strong>
-                </div>
-                <div className="skills-signal-list__item">
-                  <span>{isKorean ? "약한 질문 부하" : "Weak-question load"}</span>
-                  <strong>
-                    {weakestProgressItem
-                      ? isKorean
-                        ? `${weakestProgressItem.label} · 약한 질문 ${weakestProgressItem.weakQuestionCountLabel}`
-                        : `${weakestProgressItem.label} · weak questions ${weakestProgressItem.weakQuestionCountLabel}`
-                      : isKorean
-                        ? "아직 답변 기반 진행 스냅샷이 없습니다."
-                        : "No answered progress snapshot is available yet."}
-                  </strong>
-                </div>
-                <div className="skills-signal-list__item">
-                  <span>{isKorean ? "다음 액션" : "Next action"}</span>
-                  <strong>{isKorean ? "연습을 열고 범위를 넓히기 전에 약한 가지 하나를 먼저 보강하세요." : "Open practice and reinforce one weak branch before broadening coverage."}</strong>
-                </div>
-              </div>
-            </article>
-          </section>
 
-          {radarQuery.data ? <SkillRadarChart radar={radarQuery.data} /> : null}
-          {radarQuery.data ? <SkillCategorySummaryCard radar={radarQuery.data} /> : null}
-          {gapQuery.data ? <GapAnalysisSection gapModel={gapQuery.data} /> : null}
-          {progressQuery.data ? (
-            <section className="page-card">
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">{isKorean ? "진행도" : "Progress"}</p>
-                  <h2 className="page-card__title">{isKorean ? "답변량과 약한 질문 부하" : "Answered volume and weak-question load"}</h2>
-                </div>
-                <span className="section-heading__count">{progressQuery.data.items.length}</span>
-              </div>
-              <div className="skills-progress-summary">
-                <article className="skills-progress-summary__item">
-                  <span>{isKorean ? "총 답변 수" : "Total answered"}</span>
-                  <strong>{totalAnsweredQuestions}</strong>
-                </article>
-                <article className="skills-progress-summary__item">
-                  <span>{isKorean ? "총 약한 질문 수" : "Total weak questions"}</span>
-                  <strong>{totalWeakQuestions}</strong>
-                </article>
-                <article className="skills-progress-summary__item">
-                  <span>{isKorean ? "우선 복구" : "Priority recovery"}</span>
-                  <strong>
-                    {weakestProgressItem
-                      ? isKorean
-                        ? `${weakestProgressItem.label}이 다음 재도전 블록 대상입니다.`
-                        : `${weakestProgressItem.label} needs the next retry block.`
-                      : isKorean
-                        ? "아직 약한 답변 집중 구간이 없습니다."
-                        : "No weak-answer hotspot is available yet."}
-                  </strong>
-                </article>
-              </div>
-              <div className="stack-list">
-                {progressQuery.data.items.map((item) => (
-                  <article className="list-item-card" key={item.id}>
-                    <div className="list-item-card__content">
-                      <div className="list-item-card__meta">
-                        <span>{item.scoreLabel}</span>
-                        {item.benchmarkLabel ? <span>{item.benchmarkLabel}</span> : null}
-                        {item.gapLabel ? <span>{item.gapLabel}</span> : null}
+                <div className="skills-landscape__network">
+                  <div className="skills-landscape__grid" />
+                  <div className="skills-landscape__orbits">
+                    <span className="skills-landscape__orbit skills-landscape__orbit--outer" />
+                    <span className="skills-landscape__orbit skills-landscape__orbit--middle" />
+                  </div>
+                  {radarNodes.map((node, index) => (
+                    <article
+                      className={`skills-node skills-node--${node.tone} ${focusSkill?.label === node.label ? "skills-node--focus" : ""}`}
+                      key={node.id}
+                      style={node.position}
+                    >
+                      <div className="skills-node__icon" aria-hidden="true">
+                        {node.label.slice(0, 1)}
                       </div>
-                      <h3 className="list-item-card__title">{item.label}</h3>
-                      <p className="list-item-card__body">
+                      <div className="skills-node__content">
+                        <strong>{node.label}</strong>
+                        <span>{isKorean ? `숙련도 ${node.scoreLabel}%` : `Mastery ${node.scoreLabel}%`}</span>
+                      </div>
+                      <div className="skills-node__score">{node.scoreLabel}</div>
+                      {index === 0 ? <span className="skills-node__flag">{isKorean ? "핵심 강점" : "Core strength"}</span> : null}
+                    </article>
+                  ))}
+                  <div className="skills-landscape__zoom">
+                    <button type="button">+</button>
+                    <button type="button">-</button>
+                    <button type="button">{isKorean ? "맞춤" : "Fit"}</button>
+                  </div>
+                </div>
+              </section>
+
+              <aside className="skills-landscape__detail-panel">
+                <div className="skills-detail-card">
+                  <div className="skills-detail-card__header">
+                    <p className="skills-landscape__panel-label">{isKorean ? "스킬 상세" : "Skill details"}</p>
+                    <h3>{focusSkill?.label ?? (isKorean ? "선택된 스킬 없음" : "No selected skill")}</h3>
+                  </div>
+                  {focusSkill ? (
+                    <>
+                      <div className="skills-detail-card__badges">
+                        <span className="detail-chip detail-chip--accent">{isKorean ? "이력서 기반" : "Resume-backed"}</span>
+                        <span className="detail-chip">{focusSkill.score >= 75 ? (isKorean ? "방어 가능" : "Defendable") : isKorean ? "보강 필요" : "Needs work"}</span>
+                        {focusSkill.gapLabel ? <span className="detail-chip">{focusSkill.gapLabel}</span> : null}
+                      </div>
+
+                      <div className="skills-detail-card__metric">
+                        <div className="skills-detail-card__metric-row">
+                          <span>{isKorean ? "숙련도" : "Mastery"}</span>
+                          <strong>{focusSkill.score}%</strong>
+                        </div>
+                        <div className="skills-detail-card__bar">
+                          <span style={{ width: `${Math.max(12, focusSkill.score)}%` }} />
+                        </div>
+                        <p>
+                          {isKorean
+                            ? `${scoreToStatus(focusSkill.score, isKorean)} 수준 방어 가능성입니다. 꼬리질문이 원자단위까지 내려가도 설명이 이어지는지 확인해야 합니다.`
+                            : `${scoreToStatus(focusSkill.score, isKorean)} readiness. Verify that the explanation still holds when follow-ups drill down to atomic detail.`}
+                        </p>
+                      </div>
+
+                      <div className="skills-detail-card__summary-grid">
+                        <article>
+                          <span>{isKorean ? "답변 수" : "Answered"}</span>
+                          <strong>{focusSkill.answeredQuestionCountLabel}</strong>
+                        </article>
+                        <article>
+                          <span>{isKorean ? "약한 질문" : "Weak questions"}</span>
+                          <strong>{focusSkill.weakQuestionCountLabel}</strong>
+                        </article>
+                        <article>
+                          <span>{isKorean ? "벤치마크" : "Benchmark"}</span>
+                          <strong>{focusSkill.benchmarkLabel ?? "-"}</strong>
+                        </article>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="page-card__body">
+                      {isKorean ? "상세를 열 수 있는 스킬 데이터가 아직 없습니다." : "No skill data is available yet for the detail view."}
+                    </p>
+                  )}
+                </div>
+
+                <div className="skills-detail-card">
+                  <div className="skills-detail-card__header">
+                    <p className="skills-landscape__panel-label">{isKorean ? "이력서 연결" : "Resume links"}</p>
+                    <h3>{isKorean ? "이 스킬이 걸려 있는 경험" : "Experiences that depend on this skill"}</h3>
+                  </div>
+                  <div className="skills-detail-card__experience">
+                    <strong>{isKorean ? "현재 DFS 기준점" : "Current DFS anchor"}</strong>
+                    <p>
+                      {isKorean
+                        ? `${focusSkill?.label ?? "이 스킬"}은 실제 경험 문장과 연결해서 방어해야 합니다. 숫자, 선택 이유, 트레이드오프, 실패 복구까지 같은 흐름으로 준비하세요.`
+                        : `${focusSkill?.label ?? "This skill"} should be defended through concrete experience statements. Prepare numbers, choice rationale, trade-offs, and failure recovery in one flow.`}
+                    </p>
+                    <Link className="tertiary-link" to={routeConfig.resume.buildPath()}>
+                      {isKorean ? "이력서 문장 확인하기" : "Inspect resume statements"}
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="skills-detail-card">
+                  <div className="skills-detail-card__header">
+                    <p className="skills-landscape__panel-label">{isKorean ? "관련 질문" : "Related questions"}</p>
+                    <h3>{isKorean ? "다음에 바로 던질 꼬리질문" : "Follow-up questions to ask next"}</h3>
+                  </div>
+                  <div className="skills-question-list">
+                    {questionRecommendations.map((item) => (
+                      <article className="skills-question-list__item" key={item.id}>
+                        <span className="skills-question-list__order">{item.order}</span>
+                        <div className="skills-question-list__body">
+                          <strong>{item.title}</strong>
+                          <span>{item.helper}</span>
+                        </div>
+                        <span className={`skills-question-list__score skills-question-list__score--${item.tone}`}>{item.scoreLabel}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <Link className="primary-button" to={routeConfig.practice.buildPath()}>
+                    {isKorean ? "이 스킬로 연습 시작" : "Practice this skill"}
+                  </Link>
+                </div>
+              </aside>
+            </div>
+
+            <section className="skills-landscape__summary-grid">
+              <article className="skills-summary-card">
+                <div className="skills-summary-card__header">
+                  <p className="skills-landscape__panel-label">{isKorean ? "강점" : "Strengths"}</p>
+                  <span>{strengths.length}</span>
+                </div>
+                <div className="skills-summary-card__list">
+                  {strengths.map((item) => (
+                    <div className="skills-summary-card__row" key={item.id}>
+                      <strong>{item.label}</strong>
+                      <span className="skills-summary-card__pill skills-summary-card__pill--positive">{item.scoreLabel}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link className="tertiary-link" to={routeConfig.skills.buildPath()}>
+                  {isKorean ? "강점 정리 보기" : "View strength breakdown"}
+                </Link>
+              </article>
+
+              <article className="skills-summary-card">
+                <div className="skills-summary-card__header">
+                  <p className="skills-landscape__panel-label">{isKorean ? "약한 영역" : "Weak areas"}</p>
+                  <span>{weakAreas.length}</span>
+                </div>
+                <div className="skills-summary-card__list">
+                  {weakAreas.map((item) => (
+                    <div className="skills-summary-card__row" key={item.id}>
+                      <strong>{item.label}</strong>
+                      <span className="skills-summary-card__pill skills-summary-card__pill--danger">{item.scoreLabel}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link className="tertiary-link" to={routeConfig.reviewQueue.buildPath()}>
+                  {isKorean ? "약한 가지 복구하기" : "Recover weak branches"}
+                </Link>
+              </article>
+
+              <article className="skills-summary-card">
+                <div className="skills-summary-card__header">
+                  <p className="skills-landscape__panel-label">{isKorean ? "최근 연습" : "Recently practiced"}</p>
+                  <span>{recentPractice.length}</span>
+                </div>
+                <div className="skills-summary-card__list">
+                  {recentPractice.map((item) => (
+                    <div className="skills-summary-card__row skills-summary-card__row--meta" key={item.id}>
+                      <strong>{item.label}</strong>
+                      <span>
                         {isKorean
                           ? `답변 ${item.answeredQuestionCountLabel}개 · 약한 질문 ${item.weakQuestionCountLabel}개`
-                          : `Answered ${item.answeredQuestionCountLabel} questions · Weak questions ${item.weakQuestionCountLabel}`}
-                      </p>
+                          : `${item.answeredQuestionCountLabel} answers · ${item.weakQuestionCountLabel} weak`}
+                      </span>
                     </div>
-                  </article>
-                ))}
-              </div>
+                  ))}
+                </div>
+                <Link className="tertiary-link" to={routeConfig.archive.buildPath()}>
+                  {isKorean ? "연습 기록 보기" : "View practice history"}
+                </Link>
+              </article>
+
+              <article className="skills-summary-card skills-summary-card--accent">
+                <div className="skills-summary-card__header">
+                  <p className="skills-landscape__panel-label">{isKorean ? "다음 추천" : "Recommended next"}</p>
+                  <span>{nextRecommendations.length}</span>
+                </div>
+                <div className="skills-summary-card__list">
+                  {nextRecommendations.map((item) => (
+                    <div className="skills-summary-card__row" key={item.id}>
+                      <strong>{item.label}</strong>
+                      <span className="skills-summary-card__pill skills-summary-card__pill--warning">{item.gapScoreLabel}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="skills-summary-card__footer">
+                  <p>
+                    {isKorean
+                      ? `총 답변 ${totalAnsweredQuestions}개, 약한 질문 ${totalWeakQuestions}개를 기준으로 다음 DFS 방어 순서를 좁힙니다.`
+                      : `Narrow the next DFS defense order from ${totalAnsweredQuestions} answers and ${totalWeakQuestions} weak questions.`}
+                  </p>
+                  <Link className="tertiary-link" to={routeConfig.practice.buildPath()}>
+                    {isKorean ? "권장 시퀀스로 연습" : "Practice recommended sequence"}
+                  </Link>
+                </div>
+              </article>
             </section>
-          ) : null}
+          </section>
         </div>
       ) : null}
 
