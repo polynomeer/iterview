@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
-import { ContentGrid, SectionPanel } from "../../shared/ui/layout";
+import { SectionPanel } from "../../shared/ui/layout";
 
 type HomeLayoutProps = {
   todaySection: ReactNode;
@@ -108,12 +108,12 @@ export function HomeDesktopLayout({
             {materialsSection}
           </section>
         </div>
-        <div className="home-layout__side-column">
+        <aside className="home-layout__side-column">
           <section className="home-layout__band home-layout__band--practice">
             <ReviewQueuePanel />
             {retrySection}
           </section>
-        </div>
+        </aside>
       </div>
     </div>
   );

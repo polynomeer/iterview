@@ -52,3 +52,11 @@ Each ADR should include:
    Adds one keyboard-first, route-independent search and command overlay across the workspace shell.
 13. [`0013-consolidate-workspace-surface-tokens-for-secondary-workspaces.md`](0013-consolidate-workspace-surface-tokens-for-secondary-workspaces.md)
    Consolidates repeated workspace-surface structure through shared spacing, radius, and card tokens.
+14. [`0014-add-workspace-continuity-rails-to-core-journeys.md`](0014-add-workspace-continuity-rails-to-core-journeys.md)
+   Adds continuity rails that connect upstream source-of-truth work, the current step, and the next recovery path.
+15. [`0015-simplify-workspace-visual-hierarchy.md`](0015-simplify-workspace-visual-hierarchy.md)
+   Simplifies the redesign language so primary work surfaces read more cleanly and consistently.
+16. [`0016-default-ui-language-korean-with-manual-english-toggle.md`](0016-default-ui-language-korean-with-manual-english-toggle.md)
+   Makes Korean the default interface language while preserving an explicit English switch.
+17. [`0017-align-core-workspaces-to-reference-desktop-shell.md`](0017-align-core-workspaces-to-reference-desktop-shell.md)
+   Requires core authenticated screens to follow the captured desktop reference shell structurally, not only stylistically.

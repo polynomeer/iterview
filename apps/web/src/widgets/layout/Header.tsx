@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { useAuth } from "../../shared/auth/useAuth";
@@ -21,10 +21,12 @@ function getInitials(label: string) {
 
 export function Header({ onOpenCommandPalette }: HeaderProps) {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
   const currentUserQuery = useCurrentUserQuery();
   const updateSettingsMutation = useUpdateSettingsMutation();
   const logout = useLogout();
   const { locale, setLocale, t } = useLocale();
+  const isKorean = locale === "ko";
   const currentUser = currentUserQuery.data;
   const displayName =
     currentUser?.profile?.nickname?.trim() ||
@@ -36,6 +38,41 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
     currentUser?.jobRole?.trim() ||
     t("navigation.profile");
   const profileImageUrl = currentUser?.profile?.profileImageUrl?.trim() ?? "";
+
+  const pageHeader = (() => {
+    if (!isAuthenticated) {
+      return {
+        eyebrow: t("header.guestEyebrow"),
+        title: t("header.guestTitle"),
+      };
+    }
+
+    if (location.pathname.startsWith(routeConfig.practice.path)) {
+      return {
+        eyebrow: t("sidebar.questionMap"),
+        title: isKorean ? "연습 질문" : "Practice",
+      };
+    }
+
+    if (location.pathname.startsWith(routeConfig.resume.path)) {
+      return {
+        eyebrow: t("navigation.resume"),
+        title: isKorean ? "이력서" : "Resume",
+      };
+    }
+
+    if (location.pathname.startsWith(routeConfig.interview.path)) {
+      return {
+        eyebrow: t("sidebar.workspace"),
+        title: t("header.workspaceTitle"),
+      };
+    }
+
+    return {
+      eyebrow: t("header.workspaceEyebrow"),
+      title: t("sidebar.today"),
+    };
+  })();
 
   async function handleLocaleChange(nextLocale: AppLocale) {
     if (nextLocale === locale) {
@@ -61,12 +98,8 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
     <header className={`app-header${isAuthenticated ? "" : " app-header--guest"}`}>
       <div className="app-header__brand">
         <div>
-          <span className="app-header__eyebrow">
-            {isAuthenticated ? t("header.workspaceEyebrow") : t("header.guestEyebrow")}
-          </span>
-          <strong className="app-header__title">
-            {isAuthenticated ? t("header.workspaceTitle") : t("header.guestTitle")}
-          </strong>
+          <span className="app-header__eyebrow">{pageHeader.eyebrow}</span>
+          <strong className="app-header__title">{pageHeader.title}</strong>
         </div>
       </div>
       {isAuthenticated ? (
@@ -104,10 +137,10 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
         {isAuthenticated && currentUser ? (
           <>
             <button className="app-header__icon-action" type="button">
-              ⌂
+              ⌕
             </button>
             <button className="app-header__icon-action" type="button">
-              ○
+              ⌁
             </button>
             <Link className="app-header__action" to={routeConfig.profile.buildPath()}>
               <span className="app-header__avatar" aria-hidden="true">

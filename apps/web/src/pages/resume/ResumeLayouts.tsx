@@ -71,7 +71,7 @@ export function ResumeDesktopLayout({
             </p>
           </SectionPanel>
         </div>
-        <div className="resume-layout__workspace-side">
+        <aside className="resume-layout__workspace-side">
           {profileCard}
           <SectionPanel className="workspace-note-card" variant="muted">
             <span className="page-card__label">{isKorean ? "이력서 워크플로우" : "Resume workflow"}</span>
@@ -82,7 +82,7 @@ export function ResumeDesktopLayout({
                 : "Stabilize one active interview context while you inspect structured extraction, risks, and section-level evidence below."}
             </p>
           </SectionPanel>
-        </div>
+        </aside>
       </div>
       <div className="page-stack">
         {notices}

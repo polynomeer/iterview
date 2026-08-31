@@ -20,7 +20,9 @@ function MobileAppLayout({ children, topToolbar, mobileBottomBar }: SharedShellP
       <div aria-hidden="true" className="app-shell__ambient app-shell__ambient--secondary" />
       <div className="app-shell__frame">
         {topToolbar}
-        <main className="app-shell__content">{children}</main>
+        <main className="app-shell__content app-shell__content--mobile">
+          <div className="app-shell__canvas app-shell__canvas--mobile">{children}</div>
+        </main>
       </div>
       {mobileBottomBar}
     </div>
@@ -37,7 +39,11 @@ function DesktopAppLayout({ children, desktopSidebar, topToolbar }: SharedShellP
       {desktopSidebar}
       <div className="app-shell__workspace">
         {topToolbar}
-        <main className="app-shell__content app-shell__content--desktop">{children}</main>
+        <main className="app-shell__content app-shell__content--desktop">
+          <div className="app-shell__content-scroll">
+            <div className="app-shell__canvas app-shell__canvas--desktop">{children}</div>
+          </div>
+        </main>
       </div>
     </div>
   );
