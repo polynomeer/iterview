@@ -21,7 +21,7 @@ function readInitialTheme() {
   if (typeof document !== "undefined") {
     const domTheme = document.documentElement.dataset.theme;
 
-    if (domTheme === "light" || domTheme === "dark" || domTheme === "dracula") {
+    if (domTheme === "light" || domTheme === "dark" || domTheme === "workspace" || domTheme === "dracula") {
       return domTheme;
     }
   }

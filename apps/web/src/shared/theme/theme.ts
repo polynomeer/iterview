@@ -1,6 +1,7 @@
 export const themeOptions = [
   { id: "light", label: "Light", description: "Bright surfaces with the current default look." },
   { id: "dark", label: "Dark", description: "Muted dark surfaces for lower-glare browsing." },
+  { id: "workspace", label: "Workspace", description: "Reference-driven navy surfaces with cobalt focus accents." },
   { id: "dracula", label: "Dracula", description: "A saturated violet-night palette with strong contrast." },
 ] as const;
 

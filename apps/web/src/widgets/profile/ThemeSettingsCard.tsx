@@ -39,6 +39,10 @@ export function ThemeSettingsCard({ className, value, onChange }: ThemeSettingsC
                 ? isKorean
                   ? "다크"
                   : "Dark"
+                : option.id === "workspace"
+                  ? isKorean
+                    ? "워크스페이스"
+                    : "Workspace"
                 : "Dracula";
           const description =
             option.id === "light"
@@ -49,6 +53,10 @@ export function ThemeSettingsCard({ className, value, onChange }: ThemeSettingsC
                 ? isKorean
                   ? "눈부심을 줄인 차분한 어두운 화면입니다."
                   : "Muted dark surfaces for lower-glare browsing."
+                : option.id === "workspace"
+                  ? isKorean
+                    ? "레퍼런스 이미지에 맞춘 네이비 작업공간과 코발트 포커스 색상입니다."
+                    : "Reference-driven navy workspace surfaces with cobalt focus accents."
                 : isKorean
                   ? "강한 대비를 주는 채도 높은 드라큘라 팔레트입니다."
                   : "A saturated violet-night palette with strong contrast.";
