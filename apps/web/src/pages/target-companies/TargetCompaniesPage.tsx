@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
-import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
 
 type CompanyPriority = "high" | "medium" | "low";
@@ -461,10 +460,32 @@ function getPriorityLabel(priority: CompanyPriority, isKorean: boolean) {
   }
 }
 
+function getStatusLabel(status: CompanyStatus, isKorean: boolean) {
+  switch (status) {
+    case "active":
+      return isKorean ? "활성" : "Active";
+    case "watchlist":
+      return isKorean ? "관심 목록" : "Watchlist";
+    case "paused":
+      return isKorean ? "보류" : "Paused";
+  }
+}
+
+function getFitLabel(readiness: number, isKorean: boolean) {
+  if (readiness >= 75) {
+    return isKorean ? "잘 맞음" : "Great fit";
+  }
+
+  if (readiness >= 65) {
+    return isKorean ? "적합" : "Good fit";
+  }
+
+  return isKorean ? "보통" : "Fair fit";
+}
+
 export function TargetCompaniesPage() {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
-  const { isDesktop } = useLayoutMode();
   const [mode, setMode] = useState<"company" | "job-posting">("company");
   const [statusFilter, setStatusFilter] = useState<CompanyStatus | "all">("all");
   const [search, setSearch] = useState("");
@@ -507,6 +528,13 @@ export function TargetCompaniesPage() {
   const averageReadiness = Math.round(
     TARGET_COMPANIES.reduce((sum, company) => sum + company.readiness, 0) / TARGET_COMPANIES.length,
   );
+  const topImprovementAreas = Array.from(
+    new Set(
+      TARGET_COMPANIES.flatMap((company) =>
+        company.focusAreas.slice(0, 2).map((area) => localizeTargetCompanyText(area, isKorean)),
+      ),
+    ),
+  ).slice(0, 3);
   const statusFilters = COMPANY_STATUS_FILTERS.map((filter) => ({
     ...filter,
     label:
@@ -543,277 +571,285 @@ export function TargetCompaniesPage() {
       eyebrow={isKorean ? "회사 신호" : "Company signals"}
       title={isKorean ? "회사 준비 보드" : "Company preparation board"}
     >
-      <section className="page-card target-companies-workspace-surface">
-        <div className="target-companies-workspace-surface__header">
-          <div className="target-companies-workspace-surface__intro">
-            <div className="target-companies-workspace-surface__eyebrow-row">
-              <span className="page-card__label">{isKorean ? "준비 레인" : "Preparation lanes"}</span>
-              <span className="question-status-badge question-status-badge--accent">{isKorean ? "회사별 준비" : "Company-specific"}</span>
+      <div className="page-stack target-company-browser">
+        <section className="target-company-browser__shell">
+          <header className="target-company-browser__header">
+            <div className="target-company-browser__title-block">
+              <p className="target-company-browser__breadcrumbs">
+                <span>{isKorean ? "백엔드" : "Backend"}</span>
+                <span>/</span>
+                <span>{isKorean ? "목표 회사" : "Target companies"}</span>
+              </p>
+              <h2 className="target-company-browser__title">
+                {isKorean ? "회사별 인터뷰 압박에 맞춰 준비 레인을 관리하세요" : "Manage preparation lanes by company-specific interview pressure"}
+              </h2>
+              <p className="target-company-browser__body">
+                {isKorean
+                  ? "저장된 공고 수보다 중요한 것은 어떤 회사가 어떤 질문트리를 압박할지입니다. 이 화면은 회사별 준비도와 다음 액션을 한 번에 정리합니다."
+                  : "What matters is not the number of saved postings but which company will pressure which question tree. This screen keeps company readiness and next actions in one place."}
+              </p>
             </div>
-            <h2 className="target-companies-workspace-surface__title">
-              {isKorean ? "채용공고 수집과 회사 준비도를 분리하고, 인터뷰 압박 기준으로 준비하세요" : "Separate company readiness from job-posting ingestion and prepare by interview pressure"}
-            </h2>
-            <p className="target-companies-workspace-surface__body">
-              {isKorean
-                ? "채용공고는 시장에 무엇이 있는지 알려줍니다. 이 보드는 어떤 회사를 실제로 준비할지, 어떤 스토리를 집요하게 파고들지, 다음에 이력서와 DFS 가지에서 무엇을 보강할지 결정합니다."
-                : "Job postings tell you what exists in the market. This board decides which companies deserve active preparation, which stories they will probe, and what to repair next in your resume and DFS branches."}
-            </p>
-          </div>
-          <div className="target-companies-workspace-surface__stats">
-            <article>
-              <span>{isKorean ? "추적 중인 회사" : "Tracked companies"}</span>
-              <strong>{TARGET_COMPANIES.length}</strong>
-            </article>
-            <article>
-              <span>{isKorean ? "활성 레인" : "Active lanes"}</span>
-              <strong>{activeCount}</strong>
-            </article>
-            <article>
-              <span>{isKorean ? "높은 우선순위" : "High priority"}</span>
-              <strong>{highPriorityCount}</strong>
-            </article>
-            <article>
-              <span>{isKorean ? "평균 준비도" : "Average readiness"}</span>
-              <strong>{averageReadiness}%</strong>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <div className={`target-companies-layout ${isDesktop ? "target-companies-layout--desktop" : ""}`}>
-        <main className="page-stack">
-          <section className="page-card target-companies-create-card">
-            <div className="section-heading section-heading--compact">
-              <div>
-                <p className="section-heading__eyebrow">{isKorean ? "모드 분리" : "Mode split"}</p>
-                <h2 className="section-heading__title">{isKorean ? "회사 추적과 공고 수집을 분리하세요" : "Keep company tracking distinct from role ingestion"}</h2>
-              </div>
-            </div>
-            <div className="target-companies-create-card__mode-switch">
-              <button
-                className={`target-companies-create-card__mode${mode === "company" ? " target-companies-create-card__mode--active" : ""}`}
-                onClick={() => {
-                  setMode("company");
-                }}
-                type="button"
-              >
-                {isKorean ? "회사 보드" : "Company board"}
-              </button>
-              <button
-                className={`target-companies-create-card__mode${mode === "job-posting" ? " target-companies-create-card__mode--active" : ""}`}
-                onClick={() => {
-                  setMode("job-posting");
-                }}
-                type="button"
-              >
-                {isKorean ? "채용공고 수집" : "Job posting intake"}
-              </button>
-            </div>
-            <p className="page-card__body">
-              {mode === "company"
-                ? isKorean
-                  ? "중요한 회사를 이미 골랐고, 회사별 인터뷰 루프에 맞는 준비 계획이 필요할 때 이 보드를 사용하세요."
-                  : "Use this board when you have already chosen the companies that matter and need a preparation plan per loop."
-                : isKorean
-                  ? "외부 신호를 아직 수집 중이고 그것을 이력서 맞춤 파이프라인에 다시 연결해야 할 때 채용공고 수집 화면을 사용하세요."
-                  : "Use job posting intake when you are still collecting external signals and mapping them back to your resume-tailor pipeline."}
-            </p>
-            {mode === "job-posting" ? (
-              <Link className="primary-button" to={routeConfig.resumeTailorJobPostings.buildPath()}>
-                {isKorean ? "채용공고 수집으로 이동" : "Go to job posting intake"}
+            <div className="target-company-browser__top-actions">
+              <Link className="secondary-button" to={routeConfig.resumeTailorJobPostings.buildPath()}>
+                {isKorean ? "공고 관리" : "Manage postings"}
               </Link>
-            ) : (
-              <div className="chip-list" aria-label={isKorean ? "회사 보드 원칙" : "Company board rules"}>
-                <span className="detail-chip">{isKorean ? "1. 현재 집중할 회사를 고르기" : "1. Pick the active company"}</span>
-                <span className="detail-chip">{isKorean ? "2. 약한 증빙 체인 보강하기" : "2. Repair the weak proof chain"}</span>
-                <span className="detail-chip">{isKorean ? "3. 가능성 높은 가지 루프 리허설" : "3. Rehearse the likely branch loop"}</span>
-              </div>
-            )}
-          </section>
-
-          <section className="page-card target-companies-board">
-            <div className="target-companies-board__toolbar">
-              <div className="section-heading section-heading--compact">
-                <div>
-                  <p className="section-heading__eyebrow">{isKorean ? "회사 레인" : "Company lanes"}</p>
-                  <h2 className="section-heading__title">{isKorean ? "저장된 공고가 아니라 준비 압박 기준으로 우선순위를 정하세요" : "Prioritize by preparation pressure, not by saved postings alone"}</h2>
-                </div>
-              </div>
-              <div className="target-companies-board__filters">
-                <label className="target-companies-board__search">
-                  <input
-                    aria-label={isKorean ? "목표 회사 검색" : "Search target companies"}
-                    onChange={(event) => {
-                      setSearch(event.target.value);
-                    }}
-                    placeholder={isKorean ? "회사, 포커스 영역, 예상 루프 검색" : "Search companies, focus areas, or likely loops"}
-                    type="search"
-                    value={search}
-                  />
-                </label>
-                <label className="target-companies-board__select">
-                  <span>{isKorean ? "상태 레인" : "Status lane"}</span>
-                  <select
-                    aria-label={isKorean ? "상태별 목표 회사 필터" : "Filter target companies by status"}
-                    onChange={(event) => {
-                      setStatusFilter(event.target.value as CompanyStatus | "all");
-                    }}
-                    value={statusFilter}
-                  >
-                    {statusFilters.map((filter) => (
-                      <option key={filter.key} value={filter.key}>
-                        {filter.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
+              <button
+                className="target-company-browser__mode-action"
+                onClick={() => {
+                  setMode(mode === "company" ? "job-posting" : "company");
+                }}
+                type="button"
+              >
+                {mode === "company" ? (isKorean ? "공고 모드" : "Job mode") : isKorean ? "회사 모드" : "Company mode"}
+              </button>
             </div>
+          </header>
 
-            <div className="target-companies-board__list">
-              {visibleCompanies.map((company) => (
-                <button
-                  className={`target-company-card${company.id === selectedCompany?.id ? " target-company-card--active" : ""}`}
-                  key={company.id}
-                  onClick={() => {
-                    setSelectedCompanyId(company.id);
+          <section className="target-company-browser__toolbar">
+            <div className="target-company-browser__toolbar-tabs" role="tablist" aria-label={isKorean ? "회사 보기" : "Company views"}>
+              <button className="target-company-browser__toolbar-tab target-company-browser__toolbar-tab--active" type="button">
+                {isKorean ? "내 회사" : "My targets"} ({visibleCompanies.length})
+              </button>
+              <button className="target-company-browser__toolbar-tab" type="button">
+                {isKorean ? "전체 회사" : "All companies"} ({TARGET_COMPANIES.length})
+              </button>
+            </div>
+            <div className="target-company-browser__toolbar-filters">
+              <label className="target-company-browser__filter-chip">
+                <span>{isKorean ? "필터" : "Filter"}</span>
+                <input
+                  aria-label={isKorean ? "목표 회사 검색" : "Search target companies"}
+                  onChange={(event) => {
+                    setSearch(event.target.value);
                   }}
-                  type="button"
+                  placeholder={isKorean ? "회사, 포커스, 질문 검색" : "Search companies, focus, or questions"}
+                  type="search"
+                  value={search}
+                />
+              </label>
+              <label className="target-company-browser__filter-select">
+                <span>{isKorean ? "우선 레인" : "Status lane"}</span>
+                <select
+                  aria-label={isKorean ? "상태별 목표 회사 필터" : "Filter target companies by status"}
+                  onChange={(event) => {
+                    setStatusFilter(event.target.value as CompanyStatus | "all");
+                  }}
+                  value={statusFilter}
                 >
-                  <div className="target-company-card__identity">
-                    <div aria-hidden="true" className="target-company-card__logo">
-                      {company.shortName}
-                    </div>
-                    <div className="target-company-card__title-block">
-                      <div className="target-company-card__headline">
-                        <strong>{company.name}</strong>
-                        <span className={`target-company-card__priority target-company-card__priority--${company.priority}`}>
-                          {getPriorityLabel(company.priority, isKorean)}
-                        </span>
-                      </div>
-                      <div className="target-company-card__subline">
-                        <span>{localizeTargetCompanyText(company.roleTrack, isKorean)}</span>
-                        <span>{localizeTargetCompanyText(company.lastUpdated, isKorean)}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="target-company-card__content">
-                    <section className="target-company-card__section">
-                      <span>{isKorean ? "이 레인이 중요한 이유" : "Why this lane matters"}</span>
-                      <p className="page-card__body">{localizeTargetCompanyText(company.summary, isKorean)}</p>
-                    </section>
-
-                    <section className="target-company-card__section">
-                      <span>{isKorean ? "예상 루프" : "Likely loops"}</span>
-                      <ul>
-                        {company.likelyLoops.map((loop) => (
-                          <li key={loop}>{localizeTargetCompanyText(loop, isKorean)}</li>
-                        ))}
-                      </ul>
-                    </section>
-
-                    <div className="target-company-card__readiness">
-                      <span>{isKorean ? "준비도" : "Readiness"}</span>
-                      <div className="target-company-card__readiness-ring">
-                        <strong>{company.readiness}%</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="target-company-card__chips" aria-label={isKorean ? `${company.name} 포커스 영역` : `${company.name} focus areas`}>
-                    {company.focusAreas.map((area) => (
-                      <span className="detail-chip" key={area}>
-                        {localizeTargetCompanyText(area, isKorean)}
-                      </span>
-                    ))}
-                  </div>
-                </button>
-              ))}
+                  {statusFilters.map((filter) => (
+                    <option key={filter.key} value={filter.key}>
+                      {filter.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
           </section>
-        </main>
 
-        {selectedCompany ? (
-          <aside className="page-card target-company-detail-rail">
-            <div className="target-company-detail-rail__hero">
-              <div aria-hidden="true" className="target-company-detail-rail__logo">
-                {selectedCompany.shortName}
-              </div>
+          {mode === "job-posting" ? (
+            <section className="target-company-browser__job-mode">
               <div>
-                <strong>{selectedCompany.name}</strong>
-                <p>{localizeTargetCompanyText(selectedCompany.roleTrack, isKorean)}</p>
+                <h3>{isKorean ? "채용공고 수집 모드" : "Job posting intake mode"}</h3>
+                <p>
+                  {isKorean
+                    ? "외부 채용 신호를 먼저 수집하고 이력서 맞춤 파이프라인으로 연결해야 한다면 전용 공고 화면으로 이동하세요."
+                    : "If you still need to ingest external job signals and map them into the resume-tailor pipeline, move to the dedicated posting workspace."}
+                </p>
               </div>
-            </div>
+              <Link className="primary-button" to={routeConfig.resumeTailorJobPostings.buildPath()}>
+                {isKorean ? "채용공고 수집 열기" : "Open job posting intake"}
+              </Link>
+            </section>
+          ) : (
+            <>
+              <div className="target-company-browser__workspace">
+                <main className="target-company-browser__list-panel">
+                  <div className="target-company-browser__list">
+                    {visibleCompanies.map((company) => (
+                      <button
+                        className={`target-company-row${company.id === selectedCompany?.id ? " target-company-row--active" : ""}`}
+                        key={company.id}
+                        onClick={() => {
+                          setSelectedCompanyId(company.id);
+                        }}
+                        type="button"
+                      >
+                        <div className="target-company-row__identity">
+                          <div aria-hidden="true" className="target-company-row__logo">
+                            {company.shortName}
+                          </div>
+                          <div className="target-company-row__headline">
+                            <div className="target-company-row__title">
+                              <strong>{company.name}</strong>
+                              <span className={`target-company-row__priority target-company-row__priority--${company.priority}`}>
+                                {getPriorityLabel(company.priority, isKorean)}
+                              </span>
+                            </div>
+                            <div className="target-company-row__meta">
+                              <span>{localizeTargetCompanyText(company.roleTrack, isKorean)}</span>
+                              <span>{getFitLabel(company.readiness, isKorean)}</span>
+                            </div>
+                          </div>
+                        </div>
 
-            <section className="target-company-detail-rail__panel">
-              <div className="target-company-detail-rail__panel-header">
-                <span>{isKorean ? "준비도 구성" : "Readiness shape"}</span>
-                <strong>{isKorean ? `${selectedCompany.readiness}% 준비됨` : `${selectedCompany.readiness}% ready`}</strong>
-              </div>
-              <div className="target-company-detail-rail__bars">
-                {selectedCompany.readinessAreas.map((area) => (
-                  <div className="target-company-detail-rail__bar-row" key={area.label}>
-                    <span>{localizeTargetCompanyText(area.label, isKorean)}</span>
-                    <div aria-hidden="true" className="target-company-detail-rail__bar-track">
-                      <div className="target-company-detail-rail__bar-fill" style={{ width: `${area.value}%` }} />
-                    </div>
-                    <strong>{area.value}%</strong>
+                        <div className="target-company-row__focus">
+                          <span>{isKorean ? "포커스 토픽" : "Focus Topics"}</span>
+                          <div className="target-company-row__chips">
+                            {company.focusAreas.slice(0, 3).map((area) => (
+                              <span className="detail-chip" key={area}>
+                                {localizeTargetCompanyText(area, isKorean)}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="target-company-row__themes">
+                          <span>{isKorean ? "자주 나올 질문" : "Frequent Themes"}</span>
+                          <ul>
+                            {company.likelyLoops.slice(0, 3).map((loop) => (
+                              <li key={loop}>{localizeTargetCompanyText(loop, isKorean)}</li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="target-company-row__readiness">
+                          <div className="target-company-row__ring">
+                            <strong>{company.readiness}%</strong>
+                          </div>
+                          <span>{isKorean ? "준비도" : "Readiness"}</span>
+                        </div>
+                      </button>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </section>
 
-            <section className="target-company-detail-rail__panel">
-              <div className="target-company-detail-rail__panel-header">
-                <span>{isKorean ? "신호 요약" : "Signal summary"}</span>
-                <strong>{isKorean ? "예상되는 압박" : "What to expect"}</strong>
-              </div>
-              <div className="target-company-card__chips">
-                {selectedCompany.focusAreas.map((area) => (
-                  <span className="detail-chip" key={area}>
-                    {localizeTargetCompanyText(area, isKorean)}
-                  </span>
-                ))}
-              </div>
-              <ul className="page-card__list">
-                {selectedCompany.sourceSignals.map((signal) => (
-                  <li key={signal}>{localizeTargetCompanyText(signal, isKorean)}</li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="target-company-detail-rail__panel">
-              <div className="target-company-detail-rail__panel-header">
-                <span>{isKorean ? "증빙 노트" : "Proof notes"}</span>
-                <strong>{isKorean ? "다음 루프 전에 보강할 것" : "Repairs before the next loop"}</strong>
-              </div>
-              <ul className="page-card__list">
-                {selectedCompany.proofNotes.map((note) => (
-                  <li key={note}>{localizeTargetCompanyText(note, isKorean)}</li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="target-company-detail-rail__panel">
-              <div className="target-company-detail-rail__panel-header">
-                <span>{isKorean ? "다음 액션" : "Next actions"}</span>
-                <strong>{isKorean ? "이 레인에서 이어서 진행" : "Continue from this lane"}</strong>
-              </div>
-              <div className="target-company-detail-rail__actions-list">
-                {selectedCompany.nextActions.map((action) => (
-                  <Link className="target-company-detail-rail__action-card" key={action.title} to={action.to}>
-                    <div>
-                      <strong>{localizeTargetCompanyText(action.title, isKorean)}</strong>
-                      <span>{localizeTargetCompanyText(action.body, isKorean)}</span>
+                  <section className="target-company-summary">
+                    <div className="target-company-summary__header">
+                      <div>
+                        <h3>{isKorean ? "회사 준비 요약" : "Company Preparation Summary"}</h3>
+                        <p>{isKorean ? "현재 타깃과 준비 신호를 기준으로 정리한 요약입니다." : "A summary based on current targets and preparation signals."}</p>
+                      </div>
                     </div>
-                    <span aria-hidden="true">{isKorean ? "이동" : "->"}</span>
-                  </Link>
-                ))}
+                    <div className="target-company-summary__stats">
+                      <article>
+                        <strong>{TARGET_COMPANIES.length}</strong>
+                        <span>{isKorean ? "목표 회사" : "Target companies"}</span>
+                      </article>
+                      <article>
+                        <strong>{highPriorityCount}</strong>
+                        <span>{isKorean ? "높은 우선순위" : "High priority"}</span>
+                      </article>
+                      <article>
+                        <strong>{averageReadiness}%</strong>
+                        <span>{isKorean ? "평균 준비도" : "Avg. readiness"}</span>
+                      </article>
+                      <article>
+                        <strong>{visibleCompanies.reduce((sum, company) => sum + company.focusAreas.length, 0)}</strong>
+                        <span>{isKorean ? "보강 토픽" : "Topics to improve"}</span>
+                      </article>
+                    </div>
+                    <div className="target-company-summary__chips">
+                      {topImprovementAreas.map((area) => (
+                        <span className="detail-chip" key={area}>{area}</span>
+                      ))}
+                    </div>
+                  </section>
+                </main>
+
+                {selectedCompany ? (
+                  <aside className="target-company-inspector">
+                    <div className="target-company-inspector__hero">
+                      <div aria-hidden="true" className="target-company-inspector__logo">
+                        {selectedCompany.shortName}
+                      </div>
+                      <div className="target-company-inspector__hero-body">
+                        <strong>{selectedCompany.name}</strong>
+                        <span>{localizeTargetCompanyText(selectedCompany.roleTrack, isKorean)}</span>
+                        <div className="target-company-inspector__hero-meta">
+                          <span className="detail-chip detail-chip--accent">{getPriorityLabel(selectedCompany.priority, isKorean)}</span>
+                          <span className="detail-chip">{getStatusLabel(selectedCompany.status, isKorean)}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="target-company-inspector__tabs">
+                      <button className="target-company-inspector__tab target-company-inspector__tab--active" type="button">
+                        {isKorean ? "개요" : "Overview"}
+                      </button>
+                      <button className="target-company-inspector__tab" type="button">
+                        {isKorean ? "테마" : "Themes"}
+                      </button>
+                      <button className="target-company-inspector__tab" type="button">
+                        {isKorean ? `질문 (${selectedCompany.likelyLoops.length + selectedCompany.nextActions.length})` : `Questions (${selectedCompany.likelyLoops.length + selectedCompany.nextActions.length})`}
+                      </button>
+                      <button className="target-company-inspector__tab" type="button">
+                        {isKorean ? "노트" : "Notes"}
+                      </button>
+                    </div>
+
+                    <section className="target-company-inspector__panel">
+                      <div className="target-company-inspector__panel-head">
+                        <strong>{isKorean ? "나와의 적합도" : "Fit for You"}</strong>
+                        <span className="target-company-inspector__fit">{getFitLabel(selectedCompany.readiness, isKorean)}</span>
+                      </div>
+                      <p>{localizeTargetCompanyText(selectedCompany.summary, isKorean)}</p>
+                    </section>
+
+                    <section className="target-company-inspector__panel">
+                      <div className="target-company-inspector__panel-head">
+                        <strong>{isKorean ? "주제별 준비도" : "Readiness by Topic"}</strong>
+                      </div>
+                      <div className="target-company-inspector__bars">
+                        {selectedCompany.readinessAreas.map((area) => (
+                          <div className="target-company-inspector__bar-row" key={area.label}>
+                            <span>{localizeTargetCompanyText(area.label, isKorean)}</span>
+                            <div className="target-company-inspector__bar-track">
+                              <div className="target-company-inspector__bar-fill" style={{ width: `${area.value}%` }} />
+                            </div>
+                            <strong>{area.value}%</strong>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+
+                    <section className="target-company-inspector__panel">
+                      <div className="target-company-inspector__panel-head">
+                        <strong>{isKorean ? "다음 추천" : "Recommended Next"}</strong>
+                      </div>
+                      <div className="target-company-inspector__action-list">
+                        {selectedCompany.nextActions.map((action) => (
+                          <Link className="target-company-inspector__action-card" key={action.title} to={action.to}>
+                            <div>
+                              <strong>{localizeTargetCompanyText(action.title, isKorean)}</strong>
+                              <span>{localizeTargetCompanyText(action.body, isKorean)}</span>
+                            </div>
+                            <b>{isKorean ? "시작" : "Start"}</b>
+                          </Link>
+                        ))}
+                      </div>
+                    </section>
+
+                    <section className="target-company-inspector__panel">
+                      <div className="target-company-inspector__panel-head">
+                        <strong>{isKorean ? "최근 활동" : "Recent Activity"}</strong>
+                      </div>
+                      <div className="target-company-inspector__activity-list">
+                        {selectedCompany.proofNotes.map((note, index) => (
+                          <article className="target-company-inspector__activity-item" key={note}>
+                            <span className="target-company-inspector__activity-dot" />
+                            <div>
+                              <strong>{localizeTargetCompanyText(note, isKorean)}</strong>
+                              <span>{index === 0 ? localizeTargetCompanyText(selectedCompany.lastUpdated, isKorean) : isKorean ? `${index + 1}일 전` : `${index + 1} days ago`}</span>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </section>
+                  </aside>
+                ) : null}
               </div>
-            </section>
-          </aside>
-        ) : null}
+            </>
+          )}
+        </section>
       </div>
     </PageContainer>
   );
