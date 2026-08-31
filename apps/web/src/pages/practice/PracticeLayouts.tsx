@@ -64,8 +64,8 @@ export function PracticeDesktopLayout({
         </div>
         <aside className="page-stack practice-layout__cluster practice-layout__cluster--rail practice-layout__cluster--browser">
           {focusQuestionCard}
-          {reviewQueueCard}
           {mapLaunchCard}
+          {reviewQueueCard}
           <SectionPanel className="workspace-note-card practice-workflow-note" variant="muted">
             <div className="practice-workflow-note__topline">
               <span className="page-card__label">{isKorean ? "연습 워크플로우" : "Practice workflow"}</span>

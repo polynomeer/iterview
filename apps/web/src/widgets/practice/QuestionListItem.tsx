@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import type { PracticeQuestionItemModel } from "../../entities/practice/model";
 import { routeConfig } from "../../shared/config/routes";
@@ -17,6 +18,13 @@ function getScoreLabel(item: PracticeQuestionItemModel) {
   return match ? `${match[1]}%` : "미정";
 }
 
+function getScoreValue(item: PracticeQuestionItemModel) {
+  const candidate = item.progressSummaryLabel ?? item.resumeRelevanceLabel ?? "";
+  const match = candidate.match(/(\d+)/);
+
+  return match ? Number.parseInt(match[1], 10) : 0;
+}
+
 export function QuestionListItem({
   item,
   isSelected = false,
@@ -24,6 +32,8 @@ export function QuestionListItem({
 }: QuestionListItemProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
+  const scoreValue = getScoreValue(item);
+  const scoreLabel = getScoreLabel(item);
 
   return (
     <article
@@ -43,7 +53,7 @@ export function QuestionListItem({
       tabIndex={onSelect ? 0 : undefined}
     >
       <div aria-hidden="true" className="practice-browser-row__icon">
-        <span>{item.categoryLabel.slice(0, 2)}</span>
+        <span>{item.categoryLabel.slice(0, 2).toUpperCase()}</span>
       </div>
       <div className="practice-browser-row__main">
         <div className="practice-browser-row__topline">
@@ -62,9 +72,14 @@ export function QuestionListItem({
         </div>
         <p className="list-item-card__body practice-browser-row__body">{item.prompt}</p>
       </div>
-      <div className="practice-browser-row__metric">
+      <div className="practice-browser-row__metric practice-browser-row__metric--score">
         <span>{isKorean ? "숙련도" : "Mastery"}</span>
-        <strong>{getScoreLabel(item)}</strong>
+        <strong>{scoreLabel}</strong>
+        <i
+          aria-hidden="true"
+          className="practice-browser-row__score-bar"
+          style={{ "--practice-score": `${scoreValue}%` } as CSSProperties}
+        />
       </div>
       <div className="practice-browser-row__metric">
         <span>{isKorean ? "최근 기록" : "Last attempt"}</span>

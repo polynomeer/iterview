@@ -16,6 +16,15 @@ import { PageContainer } from "../../shared/ui/PageContainer";
 import { PracticeDesktopLayout, PracticeMobileLayout } from "./PracticeLayouts";
 import { QuestionFilterBar, QuestionList, SearchInput } from "../../widgets/practice";
 
+function parsePracticeScore(label?: string | null) {
+  if (!label) {
+    return 0;
+  }
+
+  const match = label.match(/(\d+)/);
+  return match ? Number.parseInt(match[1], 10) : 0;
+}
+
 export function PracticePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isDesktop } = useLayoutMode();
@@ -50,6 +59,9 @@ export function PracticePage() {
     filterState.status,
     filterState.search,
   ].filter(Boolean).length;
+  const highlightedScore = parsePracticeScore(
+    highlightedQuestion?.progressSummaryLabel ?? highlightedQuestion?.resumeRelevanceLabel,
+  );
 
   useEffect(() => {
     setDraftSearch(filterState.search);
@@ -189,9 +201,17 @@ export function PracticePage() {
           <SectionPanel className="practice-focus-question-card practice-inspector-card" variant="muted">
             <div className="practice-focus-question-card__topline">
               <span className="page-card__label">{isKorean ? "질문 상세" : "Question details"}</span>
-              <span className="detail-chip detail-chip--accent">{isKorean ? "선택됨" : "Selected"}</span>
+              <div className="practice-focus-question-card__toolbar">
+                <span className="detail-chip detail-chip--accent">{isKorean ? "선택됨" : "Selected"}</span>
+                <button className="secondary-button secondary-button--static" type="button">
+                  {isKorean ? "핀 고정" : "Pin"}
+                </button>
+              </div>
             </div>
-            <h2 className="page-card__title">{highlightedQuestion.title}</h2>
+            <div className="practice-focus-question-card__headline">
+              <span className="detail-chip">{highlightedQuestion.categoryLabel}</span>
+              <h2 className="page-card__title">{highlightedQuestion.title}</h2>
+            </div>
             <div className="practice-focus-question-card__meta">
               <span className="list-item-card__meta-pill">{highlightedQuestion.categoryLabel}</span>
               <span className="list-item-card__meta-pill">{highlightedQuestion.companyLabel}</span>
@@ -200,7 +220,10 @@ export function PracticePage() {
                 <span className="list-item-card__meta-pill">{highlightedQuestion.statusLabel}</span>
               ) : null}
             </div>
-            <p className="page-card__body">{highlightedQuestion.prompt}</p>
+            <div className="practice-focus-question-card__prompt">
+              <span>{isKorean ? "질문" : "Prompt"}</span>
+              <p className="page-card__body">{highlightedQuestion.prompt}</p>
+            </div>
             {(highlightedQuestion.relatedSkillLabels ?? []).length > 0 ? (
               <div className="practice-focus-question-card__section">
                 <span className="page-card__label">{isKorean ? "핵심 개념" : "Key concepts"}</span>
@@ -238,9 +261,28 @@ export function PracticePage() {
                 ) : null}
               </div>
             </div>
+            <div className="practice-focus-question-card__section">
+              <span className="page-card__label">{isKorean ? "최근 시도" : "Recent attempts"}</span>
+              <div className="practice-focus-question-card__attempts">
+                <article className="practice-focus-question-card__attempt">
+                  <div>
+                    <strong>{isKorean ? "마스터리" : "Mastery"}</strong>
+                    <p>{highlightedQuestion.progressSummaryLabel ?? (isKorean ? "최근 기록 없음" : "No recent record")}</p>
+                  </div>
+                  <span>{highlightedScore}%</span>
+                </article>
+                <article className="practice-focus-question-card__attempt">
+                  <div>
+                    <strong>{isKorean ? "이력서 연관도" : "Resume link"}</strong>
+                    <p>{highlightedQuestion.resumeRelevanceReason ?? (isKorean ? "관련 경험을 답변에 연결해보세요." : "Connect a concrete experience in the answer.")}</p>
+                  </div>
+                  <span>{highlightedQuestion.resumeRelevanceLabel ?? (isKorean ? "미정" : "Pending")}</span>
+                </article>
+              </div>
+            </div>
             {highlightedQuestion.progressSummaryLabel || highlightedQuestion.resumeRelevanceLabel ? (
               <div className="practice-focus-question-card__section">
-                <span className="page-card__label">{isKorean ? "최근 시도" : "Recent attempts"}</span>
+                <span className="page-card__label">{isKorean ? "진입 판단" : "Readiness check"}</span>
                 <div className="practice-focus-question-card__signals">
                   {highlightedQuestion.progressSummaryLabel ? <p>{highlightedQuestion.progressSummaryLabel}</p> : null}
                   {highlightedQuestion.resumeRelevanceLabel ? (
@@ -306,6 +348,16 @@ export function PracticePage() {
               >
                 {isKorean ? "선택 질문 트리 열기" : "Open selected question tree"}
               </Link>
+            </div>
+            <div className="practice-map-launch-card__items">
+              <article>
+                <span>{isKorean ? "현재 분기" : "Current branch"}</span>
+                <strong>{highlightedQuestion?.categoryLabel ?? (isKorean ? "미선택" : "Not selected")}</strong>
+              </article>
+              <article>
+                <span>{isKorean ? "예상 꼬리질문" : "Likely follow-ups"}</span>
+                <strong>{Math.max(1, highlightedQuestion?.relatedSkillLabels?.length ?? 0)}</strong>
+              </article>
             </div>
           </SectionPanel>
         );
