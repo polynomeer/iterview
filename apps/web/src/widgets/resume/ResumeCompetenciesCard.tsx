@@ -14,12 +14,20 @@ export function ResumeCompetenciesCard({ competencies, sectionId }: ResumeCompet
       ) : (
         <div className="stack-list">
           {competencies.map((competency) => (
-            <article className="page-card page-card--muted" key={competency.id}>
-              <span className="page-card__label">역량</span>
-              <h3 className="page-card__title">{competency.title}</h3>
-              <p className="page-card__body resume-section__body--preserve">{competency.description}</p>
+            <article className="list-item-card resume-competency-card" key={competency.id}>
+              <div className="list-item-card__content">
+                <div className="list-item-card__meta">
+                  <span>역량 근거</span>
+                  {competency.sourceRecordId ? <span>{`기록 ${competency.sourceRecordId}`}</span> : null}
+                  {competency.sourceText ? <span>{`출처 ${competency.sourceText}`}</span> : null}
+                </div>
+                <h3 className="list-item-card__title">{competency.title}</h3>
+                <p className="list-item-card__body resume-section__body--preserve">{competency.description}</p>
+              </div>
               {competency.sourceText ? (
-                <p className="resume-section__helper">출처: {competency.sourceText}</p>
+                <div className="list-item-card__actions">
+                  <span className="question-status-badge question-status-badge--neutral">문장 근거 확인됨</span>
+                </div>
               ) : null}
             </article>
           ))}

@@ -20,6 +20,14 @@ export function ResumeCard({
   onUploadVersion,
   onSelectVersion,
 }: ResumeCardProps) {
+  const summaryItems = [
+    { label: "버전 수", value: `${resume.versions.length}개` },
+    {
+      label: "선택 상태",
+      value: isSelected ? "현재 확인 중" : "대기 중",
+    },
+  ];
+
   return (
     <section
       className={`page-card resume-card ${isSelected ? "page-card--selected resume-card--selected" : ""}`}
@@ -45,30 +53,44 @@ export function ResumeCard({
         </div>
         <div className="resume-card__header-actions">
           <span className="section-heading__count">{resume.versions.length}</span>
-          {isSelected ? (
-            <label className="secondary-button resume-upload-button">
-              <input
-                accept="application/pdf"
-                className="resume-upload-button__input"
-                disabled={pendingUploadResumeId === resume.id}
-                onChange={(event) => {
-                  event.stopPropagation();
-                  const file = event.target.files?.[0];
-                  if (file) {
-                    onUploadVersion(resume.id, file);
-                  }
-                  event.target.value = "";
-                }}
-                onClick={(event) => {
-                  event.stopPropagation();
-                }}
-                type="file"
-              />
-              {pendingUploadResumeId === resume.id ? "업로드 중..." : "PDF 업로드"}
-            </label>
-          ) : null}
+          <span className={`question-status-badge question-status-badge--${isSelected ? "positive" : "neutral"}`}>
+            {isSelected ? "활성 작업면" : "선택 가능"}
+          </span>
         </div>
       </div>
+      <div className="resume-card__summary" role="list">
+        {summaryItems.map((item) => (
+          <article className="resume-card__summary-item" key={item.label} role="listitem">
+            <span>{item.label}</span>
+            <strong>{item.value}</strong>
+          </article>
+        ))}
+      </div>
+      {isSelected ? (
+        <div className="resume-card__toolbar">
+          <p className="resume-card__toolbar-note">현재 선택된 묶음에 PDF 버전을 추가하면 아래 버전 목록에 바로 반영됩니다.</p>
+          <label className="secondary-button resume-upload-button">
+            <input
+              accept="application/pdf"
+              className="resume-upload-button__input"
+              disabled={pendingUploadResumeId === resume.id}
+              onChange={(event) => {
+                event.stopPropagation();
+                const file = event.target.files?.[0];
+                if (file) {
+                  onUploadVersion(resume.id, file);
+                }
+                event.target.value = "";
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+              type="file"
+            />
+            {pendingUploadResumeId === resume.id ? "업로드 중..." : "PDF 업로드"}
+          </label>
+        </div>
+      ) : null}
       <div className="resume-card__versions">
         <ResumeVersionList
           onSelectVersion={onSelectVersion}

@@ -17525,6 +17525,54 @@ textarea::placeholder {
   justify-content: flex-end;
 }
 
+.resume-card__summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.resume-card__summary-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(137, 161, 203, 0.12);
+  background: rgba(255, 255, 255, 0.028);
+}
+
+.resume-card__summary-item span {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-card__summary-item strong {
+  color: var(--text-strong);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.resume-card__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(137, 161, 203, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.resume-card__toolbar-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  max-width: 52ch;
+}
+
 .resume-card__versions {
   padding-top: 2px;
 }
@@ -17534,6 +17582,50 @@ textarea::placeholder {
   box-shadow:
     inset 0 0 0 1px rgba(91, 140, 255, 0.16),
     0 18px 40px rgba(2, 10, 24, 0.22);
+}
+
+.resume-create-form {
+  gap: 18px;
+}
+
+.resume-create-form__intro {
+  max-width: 54ch;
+}
+
+.resume-create-form__body {
+  display: grid;
+  gap: 14px;
+}
+
+.resume-create-form__feedback {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-create-form__actions {
+  padding-top: 4px;
+}
+
+.resume-competency-card,
+.resume-achievement-card,
+.resume-contact-card {
+  gap: 14px;
+}
+
+.resume-competency-card .list-item-card__content,
+.resume-achievement-card .list-item-card__content,
+.resume-contact-card .list-item-card__content {
+  gap: 10px;
+}
+
+.resume-competency-card .list-item-card__actions,
+.resume-achievement-card .list-item-card__actions,
+.resume-contact-card .list-item-card__actions {
+  justify-content: flex-end;
+}
+
+.resume-contact-card__link {
+  align-self: center;
 }
 
 @media (max-width: 1099px) {
@@ -17556,6 +17648,18 @@ textarea::placeholder {
   .practice-list-item-card__summary,
   .practice-list-item-card .list-item-card__actions,
   .practice-question-list__summary {
+    justify-content: flex-start;
+  }
+
+  .resume-card__summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .resume-card__toolbar,
+  .resume-card__header-actions,
+  .resume-competency-card .list-item-card__actions,
+  .resume-achievement-card .list-item-card__actions,
+  .resume-contact-card .list-item-card__actions {
     justify-content: flex-start;
   }
 }

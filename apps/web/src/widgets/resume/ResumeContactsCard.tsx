@@ -14,7 +14,7 @@ export function ResumeContactsCard({ contacts, sectionId }: ResumeContactsCardPr
       ) : (
         <div className="stack-list">
           {contacts.map((contact) => (
-            <article className="list-item-card" key={contact.id}>
+            <article className="list-item-card resume-contact-card" key={contact.id}>
               <div className="list-item-card__content">
                 <div className="list-item-card__meta">
                   <span>{contact.title}</span>
@@ -22,12 +22,19 @@ export function ResumeContactsCard({ contacts, sectionId }: ResumeContactsCardPr
                   {contact.isPrimary ? <span>기본</span> : null}
                 </div>
                 <h3 className="list-item-card__title">{contact.value}</h3>
+                <p className="list-item-card__helper">
+                  {contact.url ? "바깥 링크를 열어 원문 프로필이나 공개 페이지를 확인할 수 있습니다." : "텍스트로만 추출된 연락 정보입니다."}
+                </p>
               </div>
               {contact.url ? (
-                <a className="secondary-button" href={contact.url} rel="noreferrer" target="_blank">
+                <a className="secondary-button resume-contact-card__link" href={contact.url} rel="noreferrer" target="_blank">
                   열기
                 </a>
-              ) : null}
+              ) : (
+                <div className="list-item-card__actions">
+                  <span className="question-status-badge question-status-badge--neutral">링크 없음</span>
+                </div>
+              )}
             </article>
           ))}
         </div>
