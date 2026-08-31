@@ -373,7 +373,7 @@ export function NotesPage() {
               <span>/</span>
               {isKorean ? "이력서 근거" : "Resume evidence"}
             </p>
-            <h2 className="notes-workspace-surface__title">{isKorean ? "다음 DFS 드릴다운 전에 원하는 설명을 준비해 두세요" : "Keep the explanation you want ready before the next DFS drill-down"}</h2>
+            <h2 className="notes-workspace-surface__title">{isKorean ? "다음 DFS 심화 질문 전에 원하는 설명을 준비해 두세요" : "Keep the explanation you want ready before the next DFS drill-down"}</h2>
             <p className="notes-workspace-surface__body">
               {isKorean
                 ? "노트를 재사용 가능한 방어 조각으로 작성하세요. 좋은 노트는 꼬리질문에 더 빨리 답하게 하고, 뒷받침하는 이력서 근거와 다시 연결되며, 압박 상황에서 모호한 설명을 줄여야 합니다."
@@ -403,7 +403,7 @@ export function NotesPage() {
           <span className="detail-chip detail-chip--accent">{isKorean ? "재사용 가능한 답변 조각" : "Reusable answer fragments"}</span>
           <span className="detail-chip">{isKorean ? "이력서 연결" : "Resume-linked"}</span>
           <span className="detail-chip">{isKorean ? "질문 연결" : "Question-linked"}</span>
-          <span className="detail-chip">{isKorean ? "검색 가능한 발췌" : "Searchable snippets"}</span>
+          <span className="detail-chip">{isKorean ? "검색 가능한 발췌문" : "Searchable snippets"}</span>
         </div>
       </section>
 
@@ -549,7 +549,7 @@ export function NotesPage() {
                 </div>
               </div>
               <div className="notes-editor__toolbar">
-                {["H2", "H3", "B", "I", "Code", "Link", "List", "Table"].map((item) => (
+                {["H2", "H3", "B", "I", isKorean ? "코드" : "Code", isKorean ? "링크" : "Link", isKorean ? "목록" : "List", isKorean ? "표" : "Table"].map((item) => (
                   <button className="notes-editor__tool" key={item} type="button">
                     {item}
                   </button>
@@ -585,7 +585,7 @@ export function NotesPage() {
               <div className="notes-editor__footer">
                 <span>{isKorean ? `단어 ${selectedNote.body.split(/\s+/).filter(Boolean).length}개` : `${selectedNote.body.split(/\s+/).filter(Boolean).length} words`}</span>
                 <span>{isKorean ? `연결 질문 ${selectedNote.linkedQuestions.length}개` : `${selectedNote.linkedQuestions.length} linked questions`}</span>
-                <span>{isKorean ? "Markdown 작업공간" : "Markdown workspace"}</span>
+                <span>{isKorean ? "마크다운 작업공간" : "Markdown workspace"}</span>
               </div>
             </section>
           ) : null}
@@ -640,7 +640,7 @@ export function NotesPage() {
                 </div>
               </div>
               <div className="notes-detail-rail__group">
-                <span className="notes-detail-rail__label">{isKorean ? "연결된 이력서 컨텍스트" : "Linked resume context"}</span>
+                <span className="notes-detail-rail__label">{isKorean ? "연결된 이력서 맥락" : "Linked resume context"}</span>
                 <article className="notes-detail-rail__context-card">
                   <strong>{selectedNote.resumeContext.title}</strong>
                   <p>{selectedNote.resumeContext.description}</p>

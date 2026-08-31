@@ -96,7 +96,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
       readiness: 61,
       tags: isKorean ? ["회사", "결제", "서사"] : ["Company", "Payments", "Narrative"],
       context: isKorean ? "가장 강한 경험담을 정확성과 인프라 성숙도에 대한 회사 기대와 맞추는 데 사용하세요." : "Use this bookmark to align your strongest stories with the company’s likely expectations around correctness and infrastructure maturity.",
-      related: isKorean ? ["결제 DFS 드릴 경로", "정산 안정성 노트", "타깃 채용 공고"] : ["Payments DFS drill path", "Settlement reliability note", "Target job posting"],
+      related: isKorean ? ["결제 DFS 심화 경로", "정산 안정성 노트", "타깃 채용 공고"] : ["Payments DFS drill path", "Settlement reliability note", "Target job posting"],
       primaryActionLabel: isKorean ? "회사 보드 열기" : "Open company board",
       primaryActionTo: routeConfig.targetCompanies.buildPath(),
       secondaryActionLabel: isKorean ? "이력서 열기" : "Open resume",
@@ -113,7 +113,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
       readiness: 49,
       tags: isKorean ? ["Kafka", "스트리밍", "운영 디테일"] : ["Kafka", "Streaming", "Operational detail"],
       context: isKorean ? "교과서식 설명 대신 구체적인 프로덕션 사례를 강제로 꺼내기 위해 만든 북마크입니다." : "The bookmark exists to force a concrete production example instead of a textbook explanation.",
-      related: isKorean ? ["Kafka consumer group 노트", "lag 대응 답변", "파티션 skew 예시"] : ["Kafka consumer group note", "Lag handling answer", "Partition skew example"],
+      related: isKorean ? ["Kafka 컨슈머 그룹 노트", "지연 적체 대응 답변", "파티션 쏠림 예시"] : ["Kafka consumer group note", "Lag handling answer", "Partition skew example"],
       primaryActionLabel: isKorean ? "질문 연습" : "Practice question",
       primaryActionTo: routeConfig.questionTree.buildPath({ questionId: "kafka-rebalance" }),
       secondaryActionLabel: isKorean ? "답변 에디터 열기" : "Open answer editor",
@@ -201,10 +201,10 @@ export function BookmarksPage() {
           <div className="bookmarks-workspace-surface__eyebrow-row">
             <span className="page-card__label">{isKorean ? "저장된 집중 스택" : "Saved focus stack"}</span>
             <span className="question-status-badge question-status-badge--accent">
-              {isKorean ? "DFS 준비됨" : "DFS-ready"}
+              {isKorean ? "DFS 준비 완료" : "DFS-ready"}
             </span>
           </div>
-          <h2 className="bookmarks-workspace-surface__title">{isKorean ? "가장 중요한 드릴 경로와 보조 근거를 한 번의 클릭 거리 안에 두세요" : "Keep the most important drill paths and supporting evidence one click away"}</h2>
+          <h2 className="bookmarks-workspace-surface__title">{isKorean ? "가장 중요한 심화 경로와 보조 근거를 한 번의 클릭 거리 안에 두세요" : "Keep the most important drill paths and supporting evidence one click away"}</h2>
           <p className="bookmarks-workspace-surface__body">
             {isKorean
               ? "북마크는 맥락 전환을 줄여야 합니다. 기억으로 사슬을 다시 만들지 않고도 깊은 인터뷰 가지를 이어갈 수 있게 해주는 정확한 질문 문구, 근거, 회사 맥락을 저장하세요."

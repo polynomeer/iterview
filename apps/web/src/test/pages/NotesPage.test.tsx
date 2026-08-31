@@ -13,7 +13,7 @@ describe("NotesPage", () => {
       { route: "/notes", locale: "ko" },
     );
 
-    expect(screen.getByText("다음 DFS 드릴다운 전에 원하는 설명을 준비해 두세요")).toBeInTheDocument();
+    expect(screen.getByText("다음 DFS 심화 질문 전에 원하는 설명을 준비해 두세요")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "분산 락 패턴" })).toBeInTheDocument();
     expect(screen.getByRole("searchbox", { name: "노트 검색" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "편집" })).toBeInTheDocument();
