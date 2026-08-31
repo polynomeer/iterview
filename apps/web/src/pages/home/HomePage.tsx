@@ -7,6 +7,7 @@ import { useLocale } from "../../shared/i18n";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { SectionPanel } from "../../shared/ui/layout";
 import { SectionEmptyState } from "../../shared/ui/SectionEmptyState";
 import { HomeDesktopLayout, HomeMobileLayout } from "./HomeLayouts";
 import {
@@ -239,6 +240,55 @@ export function HomePage() {
                 />
               );
 
+            const todayContextSection = (
+              <SectionPanel className="home-today-context-card" variant="muted">
+                <div className="home-today-context-card__topline">
+                  <span className="page-card__label">{isKorean ? "오늘 맥락" : "Today context"}</span>
+                  <span className="detail-chip detail-chip--accent">
+                    {homeData.todayQuestion ? (isKorean ? "주 경로" : "Main path") : (isKorean ? "대기" : "Waiting")}
+                  </span>
+                </div>
+                <h2 className="page-card__title">
+                  {homeData.todayQuestion?.title ?? (isKorean ? "오늘의 중심 질문을 준비 중입니다" : "Preparing today's central question")}
+                </h2>
+                <p className="page-card__body">
+                  {homeData.todayQuestion
+                    ? (isKorean
+                      ? "상단 포커스 카드의 질문을 오늘 세션의 기준 질문으로 보고, 우측 레일에서는 왜 이 질문을 먼저 다뤄야 하는지 계속 확인하세요."
+                      : "Treat the focus card question as today's anchor prompt and keep the reason for tackling it first visible in this rail.")
+                    : (isKorean
+                      ? "오늘의 질문이 아직 없으면 재도전 큐와 이력서 리스크를 먼저 정리하는 편이 더 낫습니다."
+                      : "When no daily question is assigned yet, clear the retry queue and resume risks before opening new branches.")} 
+                </p>
+                <div className="home-today-context-card__summary">
+                  <article>
+                    <span>{isKorean ? "오늘 질문" : "Today"}</span>
+                    <strong>{homeData.todayQuestion ? homeData.todayQuestion.categoryLabel : (isKorean ? "미배정" : "Unassigned")}</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "난이도" : "Level"}</span>
+                    <strong>{homeData.todayQuestion ? homeData.todayQuestion.companyLabel : (isKorean ? "준비 중" : "Pending")}</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "재도전" : "Retries"}</span>
+                    <strong>{homeData.retryQuestions.length}</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "리스크" : "Risks"}</span>
+                    <strong>{homeData.resumeRiskPreview.length}</strong>
+                  </article>
+                </div>
+                <div className="home-today-context-card__reasons">
+                  <span>{isKorean ? "오늘 먼저 볼 이유" : "Why this today?"}</span>
+                  <ul className="home-today-context-card__reason-list">
+                    <li>{isKorean ? "질문 트리를 DFS로 내려가기 전 기준 분기를 하나 고정합니다." : "Lock one reference branch before traversing the DFS tree."}</li>
+                    <li>{isKorean ? "재도전과 이력서 리스크 수를 함께 보면서 우선순위를 조절합니다." : "Balance priority using retry and resume-risk pressure together."}</li>
+                    <li>{isKorean ? "상세 화면과 답변 화면으로 바로 이어지는 진입점을 유지합니다." : "Keep direct entry points into detail and answer flows visible."}</li>
+                  </ul>
+                </div>
+              </SectionPanel>
+            );
+
             if (!isDesktop) {
               return (
                 <HomeMobileLayout
@@ -250,6 +300,7 @@ export function HomePage() {
                   summarySection={
                     homeData.summaryStats.length > 0 ? <SummaryStatsCard stats={homeData.summaryStats} /> : null
                   }
+                  todayContextSection={todayContextSection}
                   todaySection={todaySection}
                   weakSkillsSection={weakSkillsSection}
                 />
@@ -266,6 +317,7 @@ export function HomePage() {
                 summarySection={
                   homeData.summaryStats.length > 0 ? <SummaryStatsCard stats={homeData.summaryStats} /> : null
                 }
+                todayContextSection={todayContextSection}
                 todaySection={todaySection}
                 weakSkillsSection={weakSkillsSection}
               />

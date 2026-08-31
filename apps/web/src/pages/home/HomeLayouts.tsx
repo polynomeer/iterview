@@ -6,6 +6,7 @@ import { SectionPanel } from "../../shared/ui/layout";
 
 type HomeLayoutProps = {
   todaySection: ReactNode;
+  todayContextSection: ReactNode;
   retrySection: ReactNode;
   materialsSection: ReactNode;
   summarySection: ReactNode;
@@ -49,6 +50,7 @@ function ReviewQueuePanel() {
 
 export function HomeMobileLayout({
   todaySection,
+  todayContextSection,
   retrySection,
   materialsSection,
   summarySection,
@@ -60,16 +62,19 @@ export function HomeMobileLayout({
   return (
     <div className="home-layout home-layout--mobile">
       <section className="home-layout__hero">{todaySection}</section>
-      <section className="home-layout__band home-layout__band--primary">
+      <section className="home-layout__band home-layout__band--context">
+        {todayContextSection}
         {nextActionSection}
+      </section>
+      <section className="home-layout__band home-layout__band--primary">
         {summarySection}
+        {radarSection}
       </section>
       <section className="home-layout__band home-layout__band--practice">
         <ReviewQueuePanel />
         {retrySection}
       </section>
       <section className="home-layout__band home-layout__band--intelligence">
-        {radarSection}
         {weakSkillsSection}
       </section>
       <section className="home-layout__band home-layout__band--resume">
@@ -82,6 +87,7 @@ export function HomeMobileLayout({
 
 export function HomeDesktopLayout({
   todaySection,
+  todayContextSection,
   retrySection,
   materialsSection,
   summarySection,
@@ -96,19 +102,22 @@ export function HomeDesktopLayout({
       <div className="home-layout__workspace">
         <div className="home-layout__main-column">
           <section className="home-layout__band home-layout__band--primary">
-            {nextActionSection}
             {summarySection}
+            {radarSection}
           </section>
           <section className="home-layout__band home-layout__band--intelligence">
-            {radarSection}
             {weakSkillsSection}
+            {materialsSection}
           </section>
           <section className="home-layout__band home-layout__band--resume">
             {resumeRiskSection}
-            {materialsSection}
           </section>
         </div>
         <aside className="home-layout__side-column">
+          <section className="home-layout__band home-layout__band--context">
+            {todayContextSection}
+            {nextActionSection}
+          </section>
           <section className="home-layout__band home-layout__band--practice">
             <ReviewQueuePanel />
             {retrySection}

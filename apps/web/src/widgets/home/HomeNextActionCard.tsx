@@ -104,11 +104,11 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
         </div>
         <div className="home-next-action-card__highlights">
           <article className="home-next-action-card__highlight">
-            <span>{isKorean ? "주 경로" : "Primary lane"}</span>
+            <span>{isKorean ? "주 액션" : "Primary action"}</span>
             <strong>{nextAction.primaryAction.label}</strong>
           </article>
           <article className="home-next-action-card__highlight">
-            <span>{isKorean ? "보조 경로" : "Fallback lane"}</span>
+            <span>{isKorean ? "보조 액션" : "Fallback action"}</span>
             <strong>{nextAction.secondaryAction.label}</strong>
           </article>
         </div>
@@ -120,6 +120,16 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
         <Link className="secondary-button" to={nextAction.secondaryAction.to}>
           {nextAction.secondaryAction.label}
         </Link>
+      </div>
+      <div className="home-next-action-card__rail">
+        <article className="home-next-action-card__rail-item home-next-action-card__rail-item--accent">
+          <span>{isKorean ? "우선 순서" : "Priority"}</span>
+          <strong>{isKorean ? "오늘 질문 → 재도전 → 리스크 정리" : "Today → Retry → Risks"}</strong>
+        </article>
+        <article className="home-next-action-card__rail-item">
+          <span>{isKorean ? "운영 원칙" : "Rule"}</span>
+          <strong>{isKorean ? "새 분기를 열기 전에 기존 약점을 먼저 닫습니다." : "Close weak branches before opening new ones."}</strong>
+        </article>
       </div>
       <div className="home-next-action-card__footer">
         <span className="detail-chip">{isKorean ? "다음 한 수를 명확하게" : "Single clear next move"}</span>
