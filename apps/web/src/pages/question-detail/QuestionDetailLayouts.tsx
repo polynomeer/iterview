@@ -65,8 +65,8 @@ export function QuestionDetailDesktopLayout({
         <div className="question-detail-layout__hero">{headerSection}</div>
         <div className="page-stack question-detail-layout__cluster">
           {progressSection}
-          {answerHistorySection}
           {recommendedSection}
+          {answerHistorySection}
         </div>
       </div>
       <aside className="question-detail-layout__sidebar">

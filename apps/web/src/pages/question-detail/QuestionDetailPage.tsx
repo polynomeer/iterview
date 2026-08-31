@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useQuestionDetailQuery } from "../../features/question/api/useQuestionDetailQuery";
@@ -44,6 +44,15 @@ function mergeById<T extends { id: string }>(primary: T[], fallback: T[]) {
   });
 
   return [...merged.values()];
+}
+
+function parseScoreLabel(scoreLabel?: string | null) {
+  if (!scoreLabel) {
+    return 0;
+  }
+
+  const parsed = Number.parseInt(scoreLabel, 10);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 export function QuestionDetailPage() {
@@ -435,6 +444,7 @@ export function QuestionDetailPage() {
               learningMaterials.length +
               (answerHistoryQuery.data?.items.length ?? 0);
             const recommendedCount = recommendedItems.length;
+            const masteryScore = parseScoreLabel(progress?.bestScoreLabel);
             const weaknessSignal =
               progress?.status === "retry"
                 ? isKorean ? "재시도 필요" : "Retry required"
@@ -457,20 +467,21 @@ export function QuestionDetailPage() {
                     {isKorean ? `깊이 ${Math.max(pathNodes.length, 2)}` : `Depth ${Math.max(pathNodes.length, 2)}`}
                   </span>
                 </div>
-                <div className="question-path-context-card__path" role="list">
+                <div className="question-path-context-card__path question-path-context-card__path--vertical" role="list">
                   {pathNodes.map((node, index) => (
-                    <article
-                      className={`question-path-context-card__node ${index === pathNodes.length - 1 ? "question-path-context-card__node--active" : ""}`}
-                      key={`${node}-${index}`}
-                      role="listitem"
-                    >
-                      <strong>{node}</strong>
-                      <span>
-                        {index === pathNodes.length - 1
-                          ? progress?.bestScoreLabel ?? (isKorean ? "미응답" : "Unanswered")
-                          : `${Math.max(58, 74 - index * 6)}%`}
-                      </span>
-                    </article>
+                    <div className="question-path-context-card__node-stack" key={`${node}-${index}`} role="listitem">
+                      <article
+                        className={`question-path-context-card__node ${index === pathNodes.length - 1 ? "question-path-context-card__node--active" : ""}`}
+                      >
+                        <strong>{node}</strong>
+                        <span>
+                          {index === pathNodes.length - 1
+                            ? progress?.bestScoreLabel ?? (isKorean ? "미응답" : "Unanswered")
+                            : `${Math.max(58, 74 - index * 6)}%`}
+                        </span>
+                      </article>
+                      {index < pathNodes.length - 1 ? <i className="question-path-context-card__connector" aria-hidden="true" /> : null}
+                    </div>
                   ))}
                 </div>
                 <div className="question-path-context-card__footer">
@@ -492,6 +503,25 @@ export function QuestionDetailPage() {
                   </div>
                   <span className="detail-chip detail-chip--accent">{weaknessSignal}</span>
                 </div>
+                <div className="question-inspector-rail-card__mastery">
+                  <div
+                    className="question-inspector-rail-card__mastery-ring"
+                    style={{ "--question-mastery-score": `${masteryScore}%` } as CSSProperties}
+                  >
+                    <strong>{masteryScore}</strong>
+                    <span>/100</span>
+                  </div>
+                  <div className="question-inspector-rail-card__mastery-meta">
+                    <article>
+                      <span>{isKorean ? "내 평균" : "Your avg"}</span>
+                      <strong>{progress?.bestScoreLabel ?? "0"}%</strong>
+                    </article>
+                    <article>
+                      <span>{isKorean ? "상위 구간" : "Top band"}</span>
+                      <strong>{masteryScore >= 80 ? "Top 20%" : masteryScore >= 65 ? "Top 35%" : isKorean ? "보강 필요" : "Needs work"}</strong>
+                    </article>
+                  </div>
+                </div>
                 <div className="question-inspector-rail-card__score-row">
                   <article>
                     <span>{isKorean ? "현재 최고" : "Best"}</span>
@@ -505,6 +535,32 @@ export function QuestionDetailPage() {
                     <span>{isKorean ? "후속 가지" : "Follow-ups"}</span>
                     <strong>{recommendedCount}</strong>
                   </article>
+                </div>
+                <div className="question-inspector-rail-card__group">
+                  <div className="question-inspector-rail-card__group-header">
+                    <h3>{isKorean ? "최근 시도" : "Last attempts"}</h3>
+                    <span>{Math.min(answerHistoryQuery.data?.items.length ?? 0, 3)}</span>
+                  </div>
+                  <div className="question-inspector-rail-card__attempts">
+                    {(answerHistoryQuery.data?.items ?? []).slice(0, 3).map((item, index) => (
+                      <article className="question-inspector-rail-card__attempt" key={item.answerAttemptId}>
+                        <span>{index + 1}</span>
+                        <div>
+                          <strong>{item.submittedAtLabel}</strong>
+                          <p>{item.totalScoreLabel ?? (isKorean ? "미평가" : "Pending review")}</p>
+                        </div>
+                      </article>
+                    ))}
+                    {(answerHistoryQuery.data?.items.length ?? 0) === 0 ? (
+                      <article className="question-inspector-rail-card__attempt">
+                        <span>1</span>
+                        <div>
+                          <strong>{isKorean ? "첫 시도 전" : "Before first attempt"}</strong>
+                          <p>{isKorean ? "아직 저장된 답변 이력이 없습니다." : "No saved answer attempts yet."}</p>
+                        </div>
+                      </article>
+                    ) : null}
+                  </div>
                 </div>
                 <div className="question-inspector-rail-card__group">
                   <div className="question-inspector-rail-card__group-header">
@@ -550,6 +606,9 @@ export function QuestionDetailPage() {
                   <Link className="primary-button" to={routeConfig.answerEditor.buildPath({ questionId })}>
                     {isKorean ? "답변 시작" : "Start answering"}
                   </Link>
+                  <Link className="secondary-button" to={routeConfig.practice.buildPath()}>
+                    {isKorean ? "빠른 복습" : "Quick review"}
+                  </Link>
                   <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
                     {isKorean ? "리뷰에 추가" : "Add to review"}
                   </Link>
@@ -582,16 +641,28 @@ export function QuestionDetailPage() {
                   </div>
                 </div>
                 <div className="question-inspector-main-card__hero">
-                  <div className="question-inspector-main-card__hero-topline">
-                    <span className="list-item-card__meta-pill">{question.category}</span>
-                    <span className="question-status-badge question-status-badge--accent">{question.difficulty}</span>
+                  <div className="question-inspector-main-card__hero-copy">
+                    <div className="question-inspector-main-card__hero-topline">
+                      <span className="list-item-card__meta-pill">{question.category}</span>
+                      <span className="question-status-badge question-status-badge--accent">{question.difficulty}</span>
+                    </div>
+                    <h2 className="question-inspector-main-card__title">{question.title}</h2>
+                    <p className="question-inspector-main-card__body">{question.body}</p>
+                    <div className="question-inspector-main-card__metrics">
+                      <span className="list-item-card__meta-pill">{isKorean ? `시도 ${progress?.attemptsCount ?? 0}회` : `${progress?.attemptsCount ?? 0} attempts`}</span>
+                      <span className="list-item-card__meta-pill">{isKorean ? `보조 ${supportCount}개` : `${supportCount} supports`}</span>
+                      <span className="list-item-card__meta-pill">{isKorean ? `후속 ${recommendedCount}개` : `${recommendedCount} follow-ups`}</span>
+                    </div>
                   </div>
-                  <h2 className="question-inspector-main-card__title">{question.title}</h2>
-                  <p className="question-inspector-main-card__body">{question.body}</p>
-                  <div className="question-inspector-main-card__metrics">
-                    <span className="list-item-card__meta-pill">{isKorean ? `시도 ${progress?.attemptsCount ?? 0}회` : `${progress?.attemptsCount ?? 0} attempts`}</span>
-                    <span className="list-item-card__meta-pill">{isKorean ? `보조 ${supportCount}개` : `${supportCount} supports`}</span>
-                    <span className="list-item-card__meta-pill">{isKorean ? `후속 ${recommendedCount}개` : `${recommendedCount} follow-ups`}</span>
+                  <div className="question-inspector-main-card__hero-aside">
+                    <span>{isKorean ? "예상 핵심 개념" : "Expected concepts"}</span>
+                    <div className="chip-list">
+                      {(question.tags.length > 0 ? question.tags : question.companies).slice(0, 6).map((item) => (
+                        <span className="detail-chip" key={item}>
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="question-inspector-main-card__prompt">
@@ -604,13 +675,16 @@ export function QuestionDetailPage() {
                   <p>{question.body}</p>
                 </div>
                 <div className="question-inspector-main-card__concepts">
-                  <span>{isKorean ? "예상 핵심 개념" : "Expected concepts"}</span>
-                  <div className="chip-list">
-                    {(question.tags.length > 0 ? question.tags : question.companies).slice(0, 6).map((item) => (
-                      <span className="detail-chip" key={item}>
-                        {item}
-                      </span>
-                    ))}
+                  <span>{isKorean ? "답변 전 체크포인트" : "Before-you-answer checks"}</span>
+                  <div className="question-inspector-main-card__checks">
+                    <article>
+                      <strong>{isKorean ? "질문 밀도" : "Prompt density"}</strong>
+                      <p>{isKorean ? `${promptDensity}개 단어 기준으로 설계, 제약, 장애 대응을 함께 답해야 합니다.` : `${promptDensity} prompt words suggest a multi-constraint answer with design, trade-offs, and failure handling.`}</p>
+                    </article>
+                    <article>
+                      <strong>{isKorean ? "필수 근거" : "Required evidence"}</strong>
+                      <p>{isKorean ? "이력서 근거와 운영 경험을 최소 1개씩 연결해 말하는 편이 안전합니다." : "Anchor the answer with at least one resume proof point and one operational example."}</p>
+                    </article>
                   </div>
                 </div>
               </section>
