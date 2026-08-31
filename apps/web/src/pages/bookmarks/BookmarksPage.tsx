@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
@@ -179,6 +179,22 @@ export function BookmarksPage() {
 
   const categoryCount = bookmarkRecords.filter((record) => record.category === activeFilter).length;
   const highReadinessCount = bookmarkRecords.filter((record) => record.readiness >= 70).length;
+  const selectedBookmarkCategoryLabel =
+    activeFilter === "questions"
+      ? isKorean
+        ? "저장 질문"
+        : "Saved Questions"
+      : activeFilter === "paths"
+        ? isKorean
+          ? "경로"
+          : "Paths"
+        : activeFilter === "materials"
+          ? isKorean
+            ? "자료"
+            : "Materials"
+          : isKorean
+            ? "회사"
+            : "Companies";
 
   return (
     <PageContainer
@@ -230,6 +246,26 @@ export function BookmarksPage() {
       <div className={`bookmarks-layout ${isDesktop ? "bookmarks-layout--desktop" : "bookmarks-layout--mobile"}`}>
         <main className="bookmarks-layout__main page-stack">
           <section className="page-card bookmarks-panel">
+            <div className="bookmarks-panel__hero">
+              <div>
+                <h2 className="page-card__title">{isKorean ? "북마크" : "Bookmarks"}</h2>
+                <p className="page-card__body">
+                  {isKorean
+                    ? "저장한 질문, 경로, 자료, 회사 맥락을 빠르게 다시 열 수 있는 개인 선반입니다."
+                    : "A personal shelf for reopening saved questions, paths, materials, and company context."}
+                </p>
+              </div>
+              <div className="bookmarks-panel__hero-stats">
+                <article>
+                  <span>{isKorean ? "현재 분류" : "Current section"}</span>
+                  <strong>{categoryCount}</strong>
+                </article>
+                <article>
+                  <span>{isKorean ? "즉시 진입 가능" : "Ready to open"}</span>
+                  <strong>{filteredBookmarks.filter((record) => record.readiness >= 70).length}</strong>
+                </article>
+              </div>
+            </div>
             <div className="bookmarks-panel__topbar">
               <div aria-label={isKorean ? "북마크 카테고리" : "Bookmark categories"} className="bookmarks-filter-bar" role="tablist">
                 {BOOKMARK_FILTERS.map((filter) => (
@@ -257,6 +293,10 @@ export function BookmarksPage() {
                   </button>
                 ))}
               </div>
+              <div className="bookmarks-panel__tab-count">
+                <span>{selectedBookmarkCategoryLabel}</span>
+                <strong>{categoryCount}</strong>
+              </div>
 
               <div className="bookmarks-toolbar">
                 <label className="bookmarks-toolbar__search">
@@ -283,19 +323,31 @@ export function BookmarksPage() {
                     <option value="readiness">{isKorean ? "준비도" : "Readiness"}</option>
                   </select>
                 </label>
+                <button className="secondary-button secondary-button--static" type="button">
+                  {isKorean ? "보기" : "View"}
+                </button>
               </div>
+            </div>
+            <div className="bookmarks-panel__table-head" aria-hidden="true">
+              <span>{isKorean ? "항목" : "Item"}</span>
+              <span>{isKorean ? "준비도" : "Mastery"}</span>
+              <span>{isKorean ? "최근 저장" : "Last saved"}</span>
+              <span>{isKorean ? "상태" : "Status"}</span>
             </div>
 
             <div className="bookmarks-list">
               {filteredBookmarks.map((bookmark) => (
                 <button
-                  className={`bookmark-list-card${bookmark.id === selectedBookmark?.id ? " bookmark-list-card--active" : ""}`}
+                  className={`bookmark-list-card bookmark-browser-row${bookmark.id === selectedBookmark?.id ? " bookmark-list-card--active bookmark-browser-row--active" : ""}`}
                   key={bookmark.id}
                   onClick={() => {
                     setSelectedBookmarkId(bookmark.id);
                   }}
                   type="button"
                 >
+                  <div className="bookmark-browser-row__icon" aria-hidden="true">
+                    <span>{bookmark.title.slice(0, 2).toUpperCase()}</span>
+                  </div>
                   <div className="bookmark-list-card__header">
                     <div>
                       <span className="bookmark-list-card__source">{bookmark.source}</span>
@@ -303,7 +355,7 @@ export function BookmarksPage() {
                     </div>
                     <div className="bookmark-list-card__metrics">
                       <span>{bookmark.savedAt}</span>
-                      <strong>{bookmark.readiness}</strong>
+                      <strong>{bookmark.readiness}<small>/100</small></strong>
                     </div>
                   </div>
                   <p>{bookmark.summary}</p>
@@ -317,8 +369,25 @@ export function BookmarksPage() {
                     </div>
                     <span className="bookmark-list-card__status">{bookmark.status}</span>
                   </div>
+                  <div className="bookmark-browser-row__progress">
+                    <i style={{ "--bookmark-score": `${bookmark.readiness}%` } as CSSProperties} />
+                  </div>
                 </button>
               ))}
+            </div>
+            <div className="bookmarks-panel__footer">
+              <span>
+                {isKorean
+                  ? `${Math.min(filteredBookmarks.length, 8)}개 표시 / 총 ${filteredBookmarks.length}개`
+                  : `Showing ${Math.min(filteredBookmarks.length, 8)} of ${filteredBookmarks.length}`}
+              </span>
+              <div className="bookmarks-panel__pagination">
+                <button className="secondary-button secondary-button--static" type="button">‹</button>
+                <button className="secondary-button secondary-button--static" type="button">1</button>
+                <button className="secondary-button secondary-button--static" type="button">2</button>
+                <button className="secondary-button secondary-button--static" type="button">3</button>
+                <button className="secondary-button secondary-button--static" type="button">›</button>
+              </div>
             </div>
           </section>
         </main>
@@ -326,11 +395,31 @@ export function BookmarksPage() {
         <aside className="bookmarks-layout__rail page-stack">
           {selectedBookmark ? (
             <section className="page-card bookmark-detail-rail">
+              <div className="bookmark-detail-rail__window-actions">
+                <span>{isKorean ? "북마크 상세" : "Bookmark Details"}</span>
+                <div>
+                  <button className="bookmark-detail-rail__window-action" type="button">
+                    {isKorean ? "핀" : "Pin"}
+                  </button>
+                  <button className="bookmark-detail-rail__window-action" type="button">
+                    ×
+                  </button>
+                </div>
+              </div>
                 <div className="section-heading">
                   <div>
                   <p className="section-heading__eyebrow">{isKorean ? "북마크 상세" : "Bookmark details"}</p>
                   <h2 className="page-card__title">{selectedBookmark.title}</h2>
                 </div>
+              </div>
+
+              <div className="bookmark-detail-rail__chips">
+                {selectedBookmark.tags.slice(0, 3).map((tag) => (
+                  <span className="detail-chip" key={tag}>
+                    {tag}
+                  </span>
+                ))}
+                <span className="detail-chip detail-chip--accent">{selectedBookmark.status}</span>
               </div>
 
               <div className="bookmark-detail-rail__group">
@@ -357,6 +446,27 @@ export function BookmarksPage() {
                 </article>
               </div>
 
+              <div className="bookmark-detail-rail__performance">
+                <div className="bookmark-detail-rail__performance-ring" style={{ "--bookmark-score": `${selectedBookmark.readiness}%` } as CSSProperties}>
+                  <strong>{selectedBookmark.readiness}</strong>
+                  <span>/100</span>
+                </div>
+                <div className="bookmark-detail-rail__performance-meta">
+                  <article>
+                    <span>{isKorean ? "마스터리 점수" : "Mastery Score"}</span>
+                    <strong>{selectedBookmark.readiness}/100</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "최근 확인" : "Last Reviewed"}</span>
+                    <strong>{selectedBookmark.savedAt}</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "저장일" : "Saved On"}</span>
+                    <strong>{selectedBookmark.savedAt}</strong>
+                  </article>
+                </div>
+              </div>
+
               <div className="bookmark-detail-rail__actions">
                 <Link className="primary-button" to={selectedBookmark.primaryActionTo}>
                   {selectedBookmark.primaryActionLabel}
@@ -367,7 +477,10 @@ export function BookmarksPage() {
               </div>
 
               <div className="bookmark-detail-rail__group">
-                <span className="bookmark-detail-rail__label">{isKorean ? "연결 북마크" : "Related bookmarks"}</span>
+                <div className="bookmark-detail-rail__group-header">
+                  <span className="bookmark-detail-rail__label">{isKorean ? "연결 북마크" : "Related bookmarks"}</span>
+                  <span>{isKorean ? "전체 보기" : "View all"}</span>
+                </div>
                 <div className="bookmark-detail-rail__related-list">
                   {selectedBookmark.related.map((item) => (
                     <div className="bookmark-detail-rail__related-item" key={item}>
