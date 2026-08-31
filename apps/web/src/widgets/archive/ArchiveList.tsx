@@ -5,9 +5,16 @@ import { ArchiveListItem } from "./ArchiveListItem";
 type ArchiveListProps = {
   items: ArchiveItemModel[];
   layout?: "stack" | "grid";
+  selectedItemId?: string | null;
+  onSelectItem?: (itemId: string) => void;
 };
 
-export function ArchiveList({ items, layout = "stack" }: ArchiveListProps) {
+export function ArchiveList({
+  items,
+  layout = "stack",
+  selectedItemId = null,
+  onSelectItem,
+}: ArchiveListProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
   const followUpCount = items.filter((item) => item.isFollowUp).length;
@@ -48,9 +55,21 @@ export function ArchiveList({ items, layout = "stack" }: ArchiveListProps) {
           </article>
         </div>
       </div>
+      <div className="archive-browser__table-head" aria-hidden="true">
+        <span>{isKorean ? "질문" : "Question"}</span>
+        <span>{isKorean ? "최고 점수" : "Best score"}</span>
+        <span>{isKorean ? "마지막 보관" : "Archived at"}</span>
+        <span>{isKorean ? "관련 정보" : "Related to"}</span>
+        <span>{isKorean ? "실행" : "Action"}</span>
+      </div>
       <div className={layout === "grid" ? "card-grid" : "stack-list"}>
         {items.map((item) => (
-          <ArchiveListItem item={item} key={item.id} />
+          <ArchiveListItem
+            isSelected={selectedItemId === item.id}
+            item={item}
+            key={item.id}
+            onSelect={onSelectItem ? () => onSelectItem(item.id) : undefined}
+          />
         ))}
       </div>
     </section>

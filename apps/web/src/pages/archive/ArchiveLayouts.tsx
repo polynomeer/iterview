@@ -5,11 +5,13 @@ import { FilterPanel, SectionPanel } from "../../shared/ui/layout";
 type ArchiveLayoutProps = {
   filterControls: ReactNode;
   listContent: ReactNode;
+  detailRail?: ReactNode;
 };
 
 export function ArchiveMobileLayout({
   filterControls,
   listContent,
+  detailRail,
 }: ArchiveLayoutProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
@@ -18,6 +20,7 @@ export function ArchiveMobileLayout({
     <div className="archive-layout archive-layout--mobile">
       <section className="archive-layout__content">{listContent}</section>
       <section className="archive-layout__rail">
+        {detailRail}
         {filterControls}
         <SectionPanel className="workspace-note-card archive-workspace-note" variant="muted">
           <div className="archive-workspace-note__header">
@@ -49,6 +52,7 @@ export function ArchiveMobileLayout({
 export function ArchiveDesktopLayout({
   filterControls,
   listContent,
+  detailRail,
 }: ArchiveLayoutProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
@@ -74,6 +78,7 @@ export function ArchiveDesktopLayout({
       </aside>
       <div className="archive-layout__content">{listContent}</div>
       <aside className="page-stack archive-layout__rail">
+        {detailRail}
         <SectionPanel className="workspace-note-card archive-workspace-note" variant="muted">
           <div className="archive-workspace-note__header">
             <span className="page-card__label">{isKorean ? "세션 연결" : "Session linkage"}</span>

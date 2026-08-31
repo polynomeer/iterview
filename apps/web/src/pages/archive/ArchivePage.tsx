@@ -1,4 +1,5 @@
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState, type CSSProperties } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   normalizeArchiveFilterState,
   type ArchiveFilterState,
@@ -50,6 +51,7 @@ export function ArchivePage() {
 
       return true;
     }) ?? [];
+  const [selectedArchiveId, setSelectedArchiveId] = useState<string | null>(null);
   const followupCount = filteredItems.filter((item) => item.isFollowUp).length;
   const sessionLinkedCount = filteredItems.filter((item) => Boolean(item.sourceSessionId)).length;
   const filterCount = [
@@ -59,6 +61,22 @@ export function ArchivePage() {
     filterState.sourceInterviewRecordId,
     filterState.sourceInterviewQuestionId,
   ].filter(Boolean).length;
+  const selectedItem =
+    filteredItems.find((item) => item.id === selectedArchiveId) ??
+    filteredItems[0] ??
+    archiveQuery.data?.items[0] ??
+    null;
+
+  useEffect(() => {
+    if (filteredItems.length === 0) {
+      setSelectedArchiveId(null);
+      return;
+    }
+
+    if (!selectedArchiveId || !filteredItems.some((item) => item.id === selectedArchiveId)) {
+      setSelectedArchiveId(filteredItems[0].id);
+    }
+  }, [filteredItems, selectedArchiveId]);
 
   function updateFilters(next: ArchiveFilterState) {
     const nextSearchParams = new URLSearchParams();
@@ -147,6 +165,87 @@ export function ArchivePage() {
             />
           ) : null;
 
+        const scoreValue = Number.parseInt(selectedItem?.bestScoreLabel?.match(/(\d+)/)?.[1] ?? "0", 10);
+        const detailRail = selectedItem ? (
+          <section className="page-card archive-detail-rail">
+            <div className="archive-detail-rail__window-actions">
+              <span>{isKorean ? "보관 질문" : "Archived Question"}</span>
+              <div>
+                <button className="archive-detail-rail__window-action" type="button">
+                  {isKorean ? "핀" : "Pin"}
+                </button>
+                <button className="archive-detail-rail__window-action" type="button">
+                  ×
+                </button>
+              </div>
+            </div>
+            <div className="archive-detail-rail__header">
+              <span className="detail-chip">{selectedItem.difficultyLabel}</span>
+              <h2 className="page-card__title">{selectedItem.questionTitle}</h2>
+              <div className="archive-detail-rail__chips">
+                <span className="detail-chip detail-chip--accent">{selectedItem.archivedStatusLabel}</span>
+                {selectedItem.bestScoreLabel ? <span className="detail-chip">{selectedItem.bestScoreLabel}</span> : null}
+                {selectedItem.sourceLabel ? <span className="detail-chip">{selectedItem.sourceLabel}</span> : null}
+              </div>
+            </div>
+            <div className="archive-detail-rail__tabs">
+              <button className="archive-detail-rail__tab archive-detail-rail__tab--active" type="button">
+                {isKorean ? "개요" : "Overview"}
+              </button>
+              <button className="archive-detail-rail__tab" type="button">
+                {isKorean ? "점수 이력" : "Score History"}
+              </button>
+              <button className="archive-detail-rail__tab" type="button">
+                {isKorean ? "메모" : "Notes"}
+              </button>
+            </div>
+            <div className="archive-detail-rail__group">
+              <span className="archive-detail-rail__label">{isKorean ? "최고 답변 요약" : "Best answer summary"}</span>
+              <article className="archive-detail-rail__summary-card">
+                <p>{selectedItem.summary}</p>
+                <Link className="secondary-button" to={routeConfig.questionDetail.buildPath({ questionId: selectedItem.questionId })}>
+                  {isKorean ? "질문 전체 보기" : "View full question"}
+                </Link>
+              </article>
+            </div>
+            <div className="archive-detail-rail__group">
+              <div className="archive-detail-rail__group-header">
+                <span className="archive-detail-rail__label">{isKorean ? "점수 이력" : "Score History"}</span>
+                <span>{isKorean ? "전체 보기" : "View all"}</span>
+              </div>
+              <div className="archive-detail-rail__chart">
+                {[Math.max(48, scoreValue - 24), Math.max(58, scoreValue - 14), Math.max(64, scoreValue - 8), Math.max(68, scoreValue - 4), scoreValue].map((value) => (
+                  <div className="archive-detail-rail__chart-point" key={value}>
+                    <span>{value}</span>
+                    <i style={{ "--archive-chart-height": `${Math.max(28, value)}%` } as CSSProperties} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="archive-detail-rail__group">
+              <span className="archive-detail-rail__label">{isKorean ? "연결된 DFS" : "Related in DFS"}</span>
+              <div className="archive-detail-rail__dfs-grid">
+                {[selectedItem.questionTitle, isKorean ? "후속 질문" : "Follow-up", isKorean ? "답변 근거" : "Evidence", isKorean ? "재복습" : "Review again"].map((node, index) => (
+                  <article className={`archive-detail-rail__dfs-node${index === 0 ? " archive-detail-rail__dfs-node--active" : ""}`} key={node}>
+                    <strong>{node}</strong>
+                    <span>{Math.max(64, scoreValue - index * 6)}%</span>
+                  </article>
+                ))}
+              </div>
+            </div>
+            <div className="archive-detail-rail__actions">
+              {selectedItem.sourceSessionId ? (
+                <Link className="primary-button" to={routeConfig.interviewSession.buildPath({ sessionId: selectedItem.sourceSessionId })}>
+                  {isKorean ? "다시 복기하기" : "Review again"}
+                </Link>
+              ) : null}
+              <Link className="secondary-button" to={routeConfig.practice.buildPath()}>
+                {isKorean ? "연습으로 돌아가기" : "Back to practice"}
+              </Link>
+            </div>
+          </section>
+        ) : null;
+
         const listContent = (
           <>
             {archiveQuery.isLoading ? (
@@ -191,16 +290,21 @@ export function ArchivePage() {
             !archiveQuery.isError &&
             archiveQuery.data &&
             filteredItems.length > 0 ? (
-              <ArchiveList items={filteredItems} layout={isDesktop ? "grid" : "stack"} />
+              <ArchiveList
+                items={filteredItems}
+                layout="stack"
+                onSelectItem={setSelectedArchiveId}
+                selectedItemId={selectedItem?.id ?? null}
+              />
             ) : null}
           </>
         );
 
         if (!isDesktop) {
-          return <ArchiveMobileLayout filterControls={filterControls} listContent={listContent} />;
+          return <ArchiveMobileLayout detailRail={detailRail} filterControls={filterControls} listContent={listContent} />;
         }
 
-        return <ArchiveDesktopLayout filterControls={filterControls} listContent={listContent} />;
+        return <ArchiveDesktopLayout detailRail={detailRail} filterControls={filterControls} listContent={listContent} />;
       })()}
     </PageContainer>
   );
