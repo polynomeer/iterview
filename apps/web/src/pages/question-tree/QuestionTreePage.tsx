@@ -43,9 +43,9 @@ export function QuestionTreePage() {
 
   return (
     <PageContainer
-      description={t("questionTree.pageDescription")}
+      description={t("questionTree.workspaceBodyShort")}
       eyebrow={t("questionTree.pageEyebrow")}
-      title={t("questionTree.pageTitle")}
+      title={t("questionTree.workspaceTitleShort")}
     >
       {questionDetailQuery.isLoading || questionTreeQuery.isLoading ? (
         <LoadingStateCard
@@ -112,15 +112,8 @@ export function QuestionTreePage() {
                   <span className="page-card__label">{t("questionTree.mapLabel")}</span>
                   <span className="question-status-badge question-status-badge--accent">{t("questionTree.dfsReady")}</span>
                 </div>
-                <p className="question-tree-workspace-surface__breadcrumbs">
-                  {t("questionTree.rootPrompt")}
-                  <span>/</span>
-                  {t("questionTree.followupHierarchy")}
-                  <span>/</span>
-                  {t("questionTree.branchCoverage")}
-                </p>
-                <h2 className="question-tree-workspace-surface__title">{t("questionTree.workspaceTitleLong")}</h2>
-                <p className="question-tree-workspace-surface__body">{t("questionTree.workspaceBodyLong")}</p>
+                <h2 className="question-tree-workspace-surface__title">{t("questionTree.workspaceTitleShort")}</h2>
+                <p className="question-tree-workspace-surface__body">{t("questionTree.workspaceBodyShort")}</p>
               </div>
               <div className="question-tree-workspace-surface__stats">
                 <article className="question-tree-workspace-surface__stat">
@@ -158,7 +151,7 @@ export function QuestionTreePage() {
               <span className="question-status-badge">{t("questionTree.rootNode")}</span>
             </div>
             <h2 className="page-card__title">{questionDetailQuery.data.title}</h2>
-            <p className="page-card__body">{t("questionTree.rootQuestionBody")}</p>
+            <p className="page-card__body">{t("questionTree.traversalRuleBody")}</p>
             <div className="question-tree-root-brief__supporting">
               <article className="question-tree-root-brief__supporting-item">
                 <span>{t("questionTree.category")}</span>

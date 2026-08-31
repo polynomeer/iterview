@@ -439,27 +439,14 @@ export function InterviewSessionPage() {
                 <span className="page-card__label">{isKorean ? "세션 가지" : "Session branch"}</span>
                 <span className="question-status-badge question-status-badge--accent">{branchDepthLabel}</span>
               </div>
-              <p className="interview-session-workspace-surface__breadcrumbs">
-                {activeSession.interviewModeLabel}
-                <span>/</span>
-                {currentQuestion.categoryName ?? (isKorean ? "인터뷰 경로" : "Interview path")}
-                <span>/</span>
-                {currentQuestion.isFollowUp
-                  ? isKorean
-                    ? "생성된 가지"
-                    : "Generated branch"
-                  : isKorean
-                    ? "루트 가지"
-                    : "Root branch"}
-              </p>
               <h2 className="interview-session-workspace-surface__title">
                 {isKorean ? "이 가지를 먼저 방어하세요" : "Defend this branch first"}
               </h2>
               <p className="interview-session-workspace-surface__body">
                 {currentQuestion.title}.{" "}
                 {isKorean
-                  ? "답변이 구체적이고 근거로 뒷받침될 때까지 이 DFS 경로를 유지하세요."
-                  : "Stay on this DFS path until the answer is specific and evidence-backed."}
+                  ? "지금은 옆 가지로 새지 말고, 이 노드의 주장과 근거를 먼저 잠그세요."
+                  : "Do not branch sideways yet. Lock the claim and evidence on this node first."}
               </p>
             </div>
             <div
@@ -642,7 +629,7 @@ export function InterviewSessionPage() {
                   </span>
                 </div>
                 <h2 className="page-card__title">{isKorean ? "이 노드를 근거로 답변하세요" : "Answer this node with evidence"}</h2>
-                <p className="page-card__body">{isKorean ? "다음 가지는 길어지기보다 더 좁아져야 합니다." : "Make the next branch narrower, not longer."}</p>
+                <p className="page-card__body">{isKorean ? "다음 단계는 확장이 아니라 현재 노드의 방어 완료입니다." : "The next step is not expansion. It is finishing the defense of this node."}</p>
                 <div
                   className="interview-session-side-summary__summary-row"
                   role="list"
@@ -690,43 +677,6 @@ export function InterviewSessionPage() {
                       {isKorean ? "약한 항목과 건너뛴 항목은 DFS 맵에서 의도적으로 다시 방문할 대상이 됩니다." : "Weak and skipped facets become deliberate revisit targets in the DFS map."}
                     </span>
                   ) : null}
-                </div>
-              </SectionPanel>
-              <SectionPanel className="workspace-note-card interview-session-action-inspector" variant="muted">
-                <div className="interview-session-action-inspector__topline">
-                  <span className="page-card__label">{isKorean ? "실행 판단" : "Execution decision"}</span>
-                  <span className="detail-chip detail-chip--accent">{sessionExecutionSignal}</span>
-                </div>
-                <h2 className="page-card__title">
-                  {isKorean ? "지금 이 노드에서 해야 할 한 가지 행동만 남기세요" : "Reduce this node to one immediate action"}
-                </h2>
-                <div className="interview-session-action-inspector__summary">
-                  <article>
-                    <span>{isKorean ? "초안 길이" : "Draft length"}</span>
-                    <strong>{trimmedDraftLength}</strong>
-                  </article>
-                  <article>
-                    <span>{isKorean ? "근거 스니펫" : "Evidence snippets"}</span>
-                    <strong>{evidenceAnchorCount}</strong>
-                  </article>
-                  <article>
-                    <span>{isKorean ? "남은 질문" : "Remaining"}</span>
-                    <strong>{activeSession.summary.remainingQuestions}</strong>
-                  </article>
-                </div>
-                <div className="interview-session-action-inspector__rules">
-                  <div className="interview-session-action-inspector__rule">
-                    <strong>{isKorean ? "답변" : "Answer"}</strong>
-                    <span>{isKorean ? "현재 노드에 대한 직접 답과 실제 근거가 이미 있으면 제출합니다." : "Submit when the direct answer and the real evidence are already present."}</span>
-                  </div>
-                  <div className="interview-session-action-inspector__rule">
-                    <strong>{isKorean ? "건너뛰기" : "Skip"}</strong>
-                    <span>{isKorean ? "근거가 전혀 없고 이 가지를 지금 복구할 수 없을 때만 건너뜁니다." : "Skip only when there is no evidence and the branch cannot be repaired now."}</span>
-                  </div>
-                  <div className="interview-session-action-inspector__rule">
-                    <strong>{isKorean ? "이동" : "Advance"}</strong>
-                    <span>{isKorean ? "현재 노드가 잠겼을 때만 다음 가지로 이동합니다." : "Advance only after the current node is locked."}</span>
-                  </div>
                 </div>
               </SectionPanel>
             </div>

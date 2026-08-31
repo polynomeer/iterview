@@ -94,10 +94,10 @@ export function AnswerEditorPage() {
   return (
     <PageContainer
       description={isKorean
-        ? "현재 노드, 이력서 근거, 꼬리질문 압박을 한 작업공간에서 보며 답변 초안을 작성하세요."
-        : "Draft the answer with the current node, resume evidence, and follow-up pressure visible in one workspace."}
+        ? "현재 노드에 바로 답하고, 필요한 근거만 곁에 둔 채 초안을 완성하세요."
+        : "Finish the draft with the current node in focus and only the evidence you need nearby."}
       eyebrow={isKorean ? "답변 작업공간" : "Answer workspace"}
-      title={isKorean ? "다음 꼬리질문이 오기 전에 방어 가능한 답변 하나를 완성하세요" : "Write one defendable answer before the next follow-up lands"}
+      title={isKorean ? "이 노드를 버틸 답변 하나만 쓰세요" : "Write one answer that can hold this node"}
     >
       {questionDetailQuery.isLoading ? (
         <LoadingStateCard
@@ -157,18 +157,11 @@ export function AnswerEditorPage() {
                       {isKorean ? "초안 레인" : "Draft lane"}
                     </span>
                   </div>
-                  <p className="answer-editor-workspace-surface__breadcrumbs">
-                    {isKorean ? "현재 노드" : "Current node"}
-                    <span>/</span>
-                    {isKorean ? "이력서 근거" : "Resume evidence"}
-                    <span>/</span>
-                    {isKorean ? "제출 점검" : "Submission check"}
-                  </p>
-                  <h2 className="answer-editor-workspace-surface__title">{isKorean ? "다음 꼬리질문이 쉽게 깨지 못할 답변 하나를 쓰세요" : "Write one answer the next follow-up cannot easily break"}</h2>
+                  <h2 className="answer-editor-workspace-surface__title">{isKorean ? "현재 가지를 버틸 답변을 짧고 단단하게 쓰세요" : "Write a short, durable answer for the current branch"}</h2>
                   <p className="answer-editor-workspace-surface__body">
                     {isKorean
-                      ? "현재 노드, 활성 이력서 맥락, 질문 트리를 가까이 두고 초안이 일반적인 인터뷰 문장으로 흐르지 않게 하세요."
-                      : "Keep the current node, the active resume context, and the follow-up tree close enough that the draft stays specific instead of drifting into generic interview language."}
+                      ? "주장부터 쓰고, 실제 업무 근거 하나를 붙이고, 가장 약한 꼬리질문을 버틸 수 있는지만 확인하세요."
+                      : "Lead with the claim, attach one real work anchor, and check whether the weakest follow-up can be defended."}
                   </p>
                 </div>
                 <div className="answer-editor-workspace-surface__stats">
@@ -199,10 +192,6 @@ export function AnswerEditorPage() {
                   <span>{isKorean ? "근거 다음" : "Evidence second"}</span>
                   <strong>{isKorean ? "실제 업무에서 나온 구체적 사실, 지표, 제약 하나를 붙이세요." : "Attach one concrete fact, metric, or constraint from real work."}</strong>
                 </article>
-                <article className="answer-editor-workspace-surface__guidance-card">
-                  <span>{isKorean ? "제출은 마지막" : "Submit last"}</span>
-                  <strong>{isKorean ? "가장 약할 것 같은 꼬리질문에 대한 답변 줄이 이미 준비됐을 때만 제출하세요." : "Only submit when the weakest likely follow-up already has a prepared answer line."}</strong>
-                </article>
               </div>
               <div className="answer-editor-workspace-surface__chips">
                 <span className="detail-chip">{questionDetailQuery.data.difficulty}</span>
@@ -220,9 +209,9 @@ export function AnswerEditorPage() {
               <div className="answer-editor-insight-surface__header">
                 <div>
                   <span className="page-card__label">{isKorean ? "제출 판독" : "Submission read"}</span>
-                  <h2 className="page-card__title">{isKorean ? "이 점검으로 초안이 구조 보강이 필요한지, 근거 보강이 필요한지, 바로 제출 가능한지 결정하세요" : "Use this check to decide whether the draft needs more structure, more evidence, or a clean submit"}</h2>
+                  <h2 className="page-card__title">{isKorean ? "초안이 비어 있는지, 얇은지, 제출 가능한지만 판독하세요" : "Read whether the draft is blank, thin, or ready"}</h2>
                   <p className="page-card__body">
-                    {isKorean ? "답변은 현재 노드에 좁게 붙어 있어야 합니다. 주장이 아직 모호하면 문장을 늘리기 전에 그 점부터 고치세요." : "The answer should stay narrowly attached to the current node. If the claim is still vague, fix that before adding more words."}
+                    {isKorean ? "문장을 늘리기 전에 현재 노드에 대한 직접 답이 있는지부터 보세요." : "Before adding length, check whether the draft already answers the current node directly."}
                   </p>
                 </div>
                 <span className="detail-chip detail-chip--accent">{branchSignal}</span>
@@ -285,7 +274,7 @@ export function AnswerEditorPage() {
           const contextSection = (
               <SectionPanel as="aside" className="answer-editor-context" variant="muted">
                 <span className="page-card__label">{t("answer.contextLabel")}</span>
-                <h2 className="page-card__title">{isKorean ? "초안 판단을 바꾸는 보조 맥락만 남기세요" : "Keep only the supporting context that changes the draft decision"}</h2>
+                <h2 className="page-card__title">{isKorean ? "판단을 바꾸는 보조 맥락만 남기세요" : "Keep only context that changes the decision"}</h2>
                 <div className="stats-grid">
                   <article className="stat-tile">
                     <p className="stat-tile__label">{t("answer.resumeStatus")}</p>
@@ -319,7 +308,7 @@ export function AnswerEditorPage() {
                 </article>
                 </div>
                 <p className="page-card__body">
-                  {isKorean ? "이력서 연결, 가지 깊이, 관련 스킬은 현재 답변을 더 선명하게 만드는 경우에만 여기에 두세요." : "Resume linkage, branch depth, and related skills belong here only when they help tighten the current answer."}
+                  {isKorean ? "이 레일은 현재 답변을 더 구체적으로 만들 때만 참고하세요." : "Use this rail only when it makes the current answer more concrete."}
                 </p>
                 <div className="answer-editor-context__rules">
                   <div className="answer-editor-context__rule">
