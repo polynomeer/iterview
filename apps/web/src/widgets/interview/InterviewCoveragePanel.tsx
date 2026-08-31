@@ -33,10 +33,14 @@ export function InterviewCoveragePanel({
   const sectionEntries = Object.entries(groupedEvidence);
 
   return (
-    <section className="page-card">
+    <section className="page-card interview-coverage-panel">
       <span className="page-card__label">{t("interview.coverageLabel")}</span>
       <h2 className="page-card__title">{t("interview.coverageTitle")}</h2>
-      <p className="page-card__body">{t("interview.coverageBody")}</p>
+      <p className="page-card__body">
+        {isKorean
+          ? "전체 범위를 설명하기보다, 다시 열어야 할 이력서 근거와 연결 질문을 찾는 데 집중하세요."
+          : "Use this panel to find the resume evidence and linked questions that need reopening, not to restate full coverage."}
+      </p>
       {coverage ? (
         <div
           className="interview-coverage-summary__summary-row"
@@ -73,9 +77,9 @@ export function InterviewCoveragePanel({
         </div>
       ) : null}
       {sectionEntries.length > 0 ? (
-        <div className="page-stack">
+        <div className="page-stack interview-coverage-panel__sections">
           {sectionEntries.map(([section, items]) => (
-            <section className="page-card page-card--inset" key={section}>
+            <section className="page-card page-card--inset interview-coverage-panel__section" key={section}>
               <div className="section-heading">
                 <div>
                   <p className="section-heading__eyebrow">{t("interview.resumeMapLabel")}</p>

@@ -39,20 +39,6 @@ export function QuestionHeader({ question }: QuestionHeaderProps) {
         <span className="question-hero__meta-pill" role="listitem">{question.difficulty}</span>
       </div>
       <p className="question-hero__body">{question.body}</p>
-      <div className="question-hero__supporting">
-        <article className="question-hero__supporting-item">
-          <span>{t("question.companyTargets")}</span>
-          <strong>{question.companies.length}</strong>
-        </article>
-        <article className="question-hero__supporting-item">
-          <span>{t("question.roleAnchors")}</span>
-          <strong>{question.roles.length}</strong>
-        </article>
-        <article className="question-hero__supporting-item">
-          <span>{t("question.skillAnchors")}</span>
-          <strong>{relatedSkills.length}</strong>
-        </article>
-      </div>
       <div className="question-hero__chips">
         {question.companies.slice(0, 2).map((company) => (
           <span className="detail-chip" key={company}>{`${t("question.targetPrefix")} ${company}`}</span>

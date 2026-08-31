@@ -55,11 +55,6 @@ export function InterviewQuestionTimeline({
           </span>
         </div>
       </div>
-      <p className="page-card__body interview-timeline-workspace__intro">
-        {isKorean
-          ? "질문 순서, 근거 앵커, 생성된 꼬리질문을 분리된 질문 문구가 아니라 하나의 연속된 방어 경로로 검토하세요."
-          : "Review the branch order, evidence anchors, and generated follow-ups as one continuous defense path rather than isolated prompts."}
-      </p>
       <div
         className="interview-timeline-workspace__principles"
         role="list"
@@ -67,13 +62,13 @@ export function InterviewQuestionTimeline({
       >
         <span role="listitem">
           {isKorean
-            ? "가지를 개별 질문 문구가 아니라 하나의 방어 경로로 읽으세요."
-            : "Read the branch as one defense path, not as separate prompts."}
+            ? "개별 질문이 아니라 하나의 방어 경로로 읽으세요."
+            : "Read the branch as one defense path."}
         </span>
         <span role="listitem">
           {isKorean
-            ? "노드가 가지 판단을 실제로 바꿀 때만 재검토와 결과 링크를 사용하세요."
-            : "Use revisit and result links only when a node still changes the branch decision."}
+            ? "현재 판단을 바꾸는 노드만 다시 여세요."
+            : "Reopen only the nodes that still change the current decision."}
         </span>
       </div>
       <div className="stack-list interview-timeline-workspace__stack">
