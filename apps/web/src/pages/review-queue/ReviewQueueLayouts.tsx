@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useLocale } from "../../shared/i18n";
-import { ContentGrid, SectionPanel } from "../../shared/ui/layout";
+import { SectionPanel } from "../../shared/ui/layout";
 
 type ReviewQueueLayoutProps = {
   actionError: ReactNode;
@@ -31,7 +31,7 @@ export function ReviewQueueDesktopLayout({
   const isKorean = locale === "ko";
   return (
     <div className="review-queue-layout review-queue-layout--desktop">
-      <ContentGrid columns="two">
+      <aside className="review-queue-layout__support">
         <SectionPanel className="review-queue-note-card" variant="muted">
           <div className="review-queue-note-card__header">
             <span className="page-card__label">{isKorean ? "큐 작업" : "Queue actions"}</span>
@@ -58,11 +58,25 @@ export function ReviewQueueDesktopLayout({
           </div>
         </SectionPanel>
         {decisionSupport}
-      </ContentGrid>
-      <div className="page-stack">
+      </aside>
+      <div className="page-stack review-queue-layout__content">
         {actionError}
         {listContent}
       </div>
+      <aside className="page-stack review-queue-layout__inspector">
+        <SectionPanel className="workspace-note-card review-queue-layout__inspector-card" variant="muted">
+          <div className="review-queue-note-card__header">
+            <span className="page-card__label">{isKorean ? "실행 레일" : "Execution rail"}</span>
+            <span className="detail-chip">{isKorean ? "짧은 결정" : "Short decisions"}</span>
+          </div>
+          <h2 className="page-card__title">{isKorean ? "큐는 탐색 화면이 아니라 정리 화면입니다" : "The queue is for clearing, not browsing"}</h2>
+          <p className="page-card__body">
+            {isKorean
+              ? "우측 레일은 이 항목을 지금 끝낼지, 미룰지, 다시 학습할지 빠르게 판단하는 용도입니다."
+              : "Use the right rail to decide quickly whether this item should be resolved now, deferred, or studied again."}
+          </p>
+        </SectionPanel>
+      </aside>
     </div>
   );
 }

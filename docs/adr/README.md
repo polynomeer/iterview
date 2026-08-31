@@ -60,3 +60,5 @@ Each ADR should include:
    Makes Korean the default interface language while preserving an explicit English switch.
 17. [`0017-align-core-workspaces-to-reference-desktop-shell.md`](0017-align-core-workspaces-to-reference-desktop-shell.md)
    Requires core authenticated screens to follow the captured desktop reference shell structurally, not only stylistically.
+18. [`0018-standardize-desktop-three-rail-workspaces-for-inspector-flows.md`](0018-standardize-desktop-three-rail-workspaces-for-inspector-flows.md)
+   Standardizes left-rail, center-canvas, right-rail desktop composition for inspector and queue flows.
