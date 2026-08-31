@@ -272,7 +272,10 @@ function NoteListSection({
             <div className="notes-list-item__content">
               <div className="notes-list-item__topline">
                 <strong>{note.title}</strong>
-                <span>{note.updatedAt}</span>
+                <div className="notes-list-item__topline-meta">
+                  {note.pinned ? <span className="notes-list-item__pin">✦</span> : null}
+                  <span>{note.updatedAt}</span>
+                </div>
               </div>
               <p>{note.summary}</p>
               <p className="notes-list-item__excerpt">{note.excerpt}</p>
@@ -464,7 +467,7 @@ export function NotesPage() {
           <section className="page-card notes-panel">
             <div className="notes-panel__toolbar">
               <button className="primary-button notes-panel__new-button" type="button">
-                {isKorean ? "새 노트" : "New note"}
+                {isKorean ? "새 노트" : "New Note"}
               </button>
               <button
                 aria-label={isKorean ? "노트 필터" : "Filter notes"}
@@ -473,6 +476,10 @@ export function NotesPage() {
               >
                 {isKorean ? "필터" : "Filter"}
               </button>
+            </div>
+            <div className="notes-panel__browser-meta">
+              <span>{isKorean ? "노트 브라우저" : "Notes browser"}</span>
+              <strong>{filteredNotes.length}</strong>
             </div>
             <label className="notes-panel__search">
               <input
@@ -515,19 +522,8 @@ export function NotesPage() {
                 <span>/</span>
                 <span>{selectedNote.title}</span>
               </div>
-              <div className="notes-editor__header">
-                <div>
-                  <h2 className="notes-editor__title">{selectedNote.title}</h2>
-                  <p className="notes-editor__summary">{selectedNote.summary}</p>
-                  <div className="notes-editor__chips">
-                    {selectedNote.tags.map((tag) => (
-                      <span className="detail-chip" key={tag}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="notes-editor__actions">
+              <div className="notes-editor__window-toolbar">
+                <div className="notes-editor__window-tabs">
                   <button
                     className={`secondary-button notes-editor__tab${mode === "edit" ? " notes-editor__tab--active" : ""}`}
                     onClick={() => {
@@ -547,9 +543,36 @@ export function NotesPage() {
                     {isKorean ? "미리보기" : "Preview"}
                   </button>
                 </div>
+                <div className="notes-editor__window-actions">
+                  <span>{selectedNote.updatedAt}</span>
+                  {["⟲", "⇪", "⋯"].map((item) => (
+                    <button className="notes-editor__window-action" key={item} type="button">
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="notes-editor__header">
+                <div>
+                  <h2 className="notes-editor__title">{selectedNote.title}</h2>
+                  <p className="notes-editor__summary">{selectedNote.summary}</p>
+                  <div className="notes-editor__chips">
+                    {selectedNote.tags.map((tag) => (
+                      <span className="detail-chip" key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                    <button className="notes-editor__chip-action" type="button">
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="notes-editor__actions">
+                  <span className="notes-editor__save-status">{isKorean ? `${selectedNote.updatedAt} 저장` : `Saved ${selectedNote.updatedAt}`}</span>
+                </div>
               </div>
               <div className="notes-editor__toolbar">
-                {["H2", "H3", "B", "I", isKorean ? "코드" : "Code", isKorean ? "링크" : "Link", isKorean ? "목록" : "List", isKorean ? "표" : "Table"].map((item) => (
+                {["H2", "H3", "B", "I", isKorean ? "코드" : "Code", isKorean ? "링크" : "Link", isKorean ? "목록" : "List", isKorean ? "체크" : "Check", isKorean ? "표" : "Table", isKorean ? "이미지" : "Image"].map((item) => (
                   <button className="notes-editor__tool" key={item} type="button">
                     {item}
                   </button>
@@ -594,6 +617,17 @@ export function NotesPage() {
         <aside className="notes-layout__rail page-stack">
           {selectedNote ? (
             <section className="page-card notes-detail-rail">
+              <div className="notes-detail-rail__window-actions">
+                <span>{isKorean ? "노트 상세" : "Note Details"}</span>
+                <div>
+                  <button className="notes-detail-rail__window-action" type="button">
+                    {isKorean ? "핀" : "Pin"}
+                  </button>
+                  <button className="notes-detail-rail__window-action" type="button">
+                    ×
+                  </button>
+                </div>
+              </div>
               <div className="section-heading">
                 <div>
                   <p className="section-heading__eyebrow">{isKorean ? "노트 상세" : "Note details"}</p>

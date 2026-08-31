@@ -22332,3 +22332,256 @@ textarea::placeholder {
     border-radius: 22px;
   }
 }
+
+:root[data-theme="workspace"] .notes-layout--desktop {
+  grid-template-columns: minmax(300px, 0.95fr) minmax(0, 1.75fr) minmax(320px, 0.96fr);
+  gap: 18px;
+  align-items: start;
+}
+
+:root[data-theme="workspace"] .notes-layout__sidebar,
+:root[data-theme="workspace"] .notes-layout__rail {
+  position: sticky;
+  top: 104px;
+}
+
+:root[data-theme="workspace"] .notes-panel,
+:root[data-theme="workspace"] .notes-editor,
+:root[data-theme="workspace"] .notes-detail-rail,
+:root[data-theme="workspace"] .notes-insight-surface {
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.07), transparent 34%),
+    rgba(10, 14, 23, 0.92);
+  box-shadow: 0 28px 64px rgba(5, 8, 15, 0.34);
+}
+
+:root[data-theme="workspace"] .notes-panel,
+:root[data-theme="workspace"] .notes-editor,
+:root[data-theme="workspace"] .notes-detail-rail {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+:root[data-theme="workspace"] .notes-panel__toolbar,
+:root[data-theme="workspace"] .notes-panel__browser-meta,
+:root[data-theme="workspace"] .notes-editor__window-toolbar,
+:root[data-theme="workspace"] .notes-editor__window-tabs,
+:root[data-theme="workspace"] .notes-editor__window-actions,
+:root[data-theme="workspace"] .notes-detail-rail__window-actions,
+:root[data-theme="workspace"] .notes-detail-rail__window-actions div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:root[data-theme="workspace"] .notes-panel__browser-meta,
+:root[data-theme="workspace"] .notes-editor__save-status,
+:root[data-theme="workspace"] .notes-editor__window-actions span,
+:root[data-theme="workspace"] .notes-detail-rail__window-actions span {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+:root[data-theme="workspace"] .notes-panel__search input {
+  border-radius: 16px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme="workspace"] .notes-panel__section,
+:root[data-theme="workspace"] .notes-detail-rail__group {
+  display: grid;
+  gap: 12px;
+}
+
+:root[data-theme="workspace"] .notes-list {
+  display: grid;
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .notes-list-item__content {
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(137, 161, 203, 0.09);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+:root[data-theme="workspace"] .notes-list-item:hover .notes-list-item__content,
+:root[data-theme="workspace"] .notes-list-item:focus-visible .notes-list-item__content,
+:root[data-theme="workspace"] .notes-list-item--active .notes-list-item__content {
+  border-color: rgba(91, 140, 255, 0.24);
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.09), transparent 42%),
+    rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+:root[data-theme="workspace"] .notes-list-item__topline-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:root[data-theme="workspace"] .notes-list-item__pin {
+  color: #f3bf5b;
+}
+
+:root[data-theme="workspace"] .notes-editor__window-toolbar,
+:root[data-theme="workspace"] .notes-editor__toolbar,
+:root[data-theme="workspace"] .notes-editor__mini-stats,
+:root[data-theme="workspace"] .notes-editor__footer {
+  padding: 0 0 12px;
+  border-bottom: 1px solid rgba(137, 161, 203, 0.08);
+}
+
+:root[data-theme="workspace"] .notes-editor__header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+}
+
+:root[data-theme="workspace"] .notes-editor__title {
+  font-size: clamp(2rem, 2.8vw, 3rem);
+  line-height: 1.02;
+}
+
+:root[data-theme="workspace"] .notes-editor__summary,
+:root[data-theme="workspace"] .notes-detail-rail__context-card p {
+  color: var(--text-muted);
+}
+
+:root[data-theme="workspace"] .notes-editor__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .notes-editor__chip-action,
+:root[data-theme="workspace"] .notes-editor__window-action,
+:root[data-theme="workspace"] .notes-detail-rail__window-action {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(137, 161, 203, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-main);
+}
+
+:root[data-theme="workspace"] .notes-editor__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .notes-editor__tool {
+  min-width: 42px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme="workspace"] .notes-editor__mini-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .notes-editor__mini-stats article,
+:root[data-theme="workspace"] .notes-detail-rail__meta-grid article,
+:root[data-theme="workspace"] .notes-detail-rail__context-card,
+:root[data-theme="workspace"] .notes-detail-rail__backlink,
+:root[data-theme="workspace"] .notes-detail-rail__link-card {
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme="workspace"] .notes-editor__textarea,
+:root[data-theme="workspace"] .notes-editor__preview {
+  min-height: 560px;
+  padding: 22px;
+  border-radius: 20px;
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  background:
+    linear-gradient(180deg, rgba(10, 16, 28, 0.96), rgba(10, 14, 23, 0.98));
+  color: var(--text-main);
+}
+
+:root[data-theme="workspace"] .notes-editor__textarea {
+  font: inherit;
+  line-height: 1.7;
+}
+
+:root[data-theme="workspace"] .notes-detail-rail__window-actions {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(137, 161, 203, 0.08);
+}
+
+:root[data-theme="workspace"] .notes-detail-rail__spotlight,
+:root[data-theme="workspace"] .notes-insight-surface__stats article,
+:root[data-theme="workspace"] .notes-insight-surface__lane {
+  border: 1px solid rgba(137, 161, 203, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme="workspace"] .notes-detail-rail__meta-grid,
+:root[data-theme="workspace"] .notes-detail-rail__list {
+  display: grid;
+  gap: 10px;
+}
+
+:root[data-theme="workspace"] .notes-detail-rail__link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-main);
+}
+
+:root[data-theme="workspace"] .notes-detail-rail__link-card strong {
+  color: #8eb5ff;
+}
+
+@media (max-width: 1099px) {
+  :root[data-theme="workspace"] .notes-layout--desktop,
+  :root[data-theme="workspace"] .notes-editor__header,
+  :root[data-theme="workspace"] .notes-editor__mini-stats {
+    grid-template-columns: 1fr;
+  }
+
+  :root[data-theme="workspace"] .notes-layout__sidebar,
+  :root[data-theme="workspace"] .notes-layout__rail {
+    position: static;
+    top: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  :root[data-theme="workspace"] .notes-panel,
+  :root[data-theme="workspace"] .notes-editor,
+  :root[data-theme="workspace"] .notes-detail-rail {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  :root[data-theme="workspace"] .notes-panel__toolbar,
+  :root[data-theme="workspace"] .notes-panel__browser-meta,
+  :root[data-theme="workspace"] .notes-editor__window-toolbar,
+  :root[data-theme="workspace"] .notes-detail-rail__window-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  :root[data-theme="workspace"] .notes-editor__textarea,
+  :root[data-theme="workspace"] .notes-editor__preview {
+    min-height: 420px;
+  }
+}
