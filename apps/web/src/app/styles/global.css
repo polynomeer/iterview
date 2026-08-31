@@ -19363,3 +19363,107 @@ textarea::placeholder {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Result guidance and resume evidence streamlining */
+
+.result-analysis-section-card,
+.result-next-action-card,
+.resume-section-card {
+  gap: 12px;
+}
+
+.result-analysis-section-card .section-heading,
+.resume-section-card .section-heading {
+  align-items: flex-start;
+}
+
+.result-model-answer {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.result-model-answer__body {
+  margin: 0;
+  color: var(--text-body);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.feedback-card {
+  gap: 8px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.feedback-card .list-item-card__meta {
+  margin-bottom: 2px;
+}
+
+.result-followup-card {
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.score-row {
+  align-items: center;
+  gap: 12px;
+}
+
+.score-row__side {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 56px;
+}
+
+.result-next-action-card__summary-row {
+  gap: 8px;
+}
+
+.result-next-action-card__decision-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.result-next-action-card .page-card__actions {
+  justify-content: flex-end;
+}
+
+.resume-project-card {
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.resume-project-card .list-item-card__content {
+  gap: 8px;
+}
+
+.resume-project-card .list-item-card__actions {
+  justify-content: flex-end;
+}
+
+.resume-project-card__content {
+  display: grid;
+  gap: 6px;
+}
+
+@media (max-width: 767px) {
+  .result-next-action-card__decision-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .score-row {
+    align-items: flex-start;
+  }
+
+  .score-row__side {
+    justify-content: flex-start;
+  }
+}

@@ -25,11 +25,6 @@ export function DimensionScoreList({ dimensions }: DimensionScoreListProps) {
         <div>
           <p className="section-heading__eyebrow">{isKorean ? "차원별 점수" : "Dimension scores"}</p>
           <h2 className="page-card__title">{isKorean ? "답변 평가 방식" : "How the answer was evaluated"}</h2>
-          <p className="page-card__body">
-            {isKorean
-              ? "더 강한 부분을 손대기 전에 가장 낮은 차원부터 첫 수정 대상으로 삼으세요."
-              : "Use the lowest dimension as the first edit target before touching stronger parts of the answer."}
-          </p>
         </div>
         <span className="section-heading__count section-heading__count--text">
           {isKorean ? `${dimensions.length}개 항목` : `${dimensions.length} checks`}
@@ -55,7 +50,9 @@ export function DimensionScoreList({ dimensions }: DimensionScoreListProps) {
                 />
               </div>
             </div>
-            <strong className="score-row__value">{dimension.value}</strong>
+            <div className="score-row__side">
+              <strong className="score-row__value">{dimension.value}</strong>
+            </div>
           </article>
         ))}
       </div>

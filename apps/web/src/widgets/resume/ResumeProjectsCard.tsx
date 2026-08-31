@@ -14,42 +14,42 @@ export function ResumeProjectsCard({ projects, sectionId }: ResumeProjectsCardPr
       ) : (
         <div className="stack-list">
           {projects.map((project) => (
-            <article className="page-card page-card--muted" key={project.id}>
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">프로젝트</p>
-                  <h3 className="page-card__title">{project.title}</h3>
+            <article className="list-item-card resume-project-card" key={project.id}>
+              <div className="list-item-card__content">
+                <div className="list-item-card__meta">
+                  <span>프로젝트</span>
+                  {project.organizationName ? <span>{project.organizationName}</span> : null}
+                  {project.roleName ? <span>{project.roleName}</span> : null}
+                  <span>{project.dateLabel}</span>
+                  {project.relatedExperienceId ? <span>연관 경력</span> : null}
                 </div>
-                {project.categoryName || project.categoryCode ? (
+                <h3 className="list-item-card__title">{project.title}</h3>
+                <p className="list-item-card__body">{project.summary}</p>
+                {project.contentText ? (
+                  <div className="resume-project-card__content">
+                    <p className="resume-section__helper">프로젝트 상세</p>
+                    <p className="page-card__body resume-section__body--preserve">{project.contentText}</p>
+                  </div>
+                ) : null}
+                {project.tags.length > 0 ? (
+                  <div className="insight-card__meta">
+                    {project.tags.map((tag) => (
+                      <span className="insight-card__chip" key={tag.id}>
+                        {tag.type ? `${tag.label} · ${tag.type}` : tag.label}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+                {project.techStackText ? (
+                  <p className="resume-section__helper">기술 스택: {project.techStackText}</p>
+                ) : null}
+              </div>
+              {project.categoryName || project.categoryCode ? (
+                <div className="list-item-card__actions">
                   <span className="question-status-badge question-status-badge--neutral">
                     {project.categoryName ?? project.categoryCode}
                   </span>
-                ) : null}
-              </div>
-              <div className="list-item-card__meta">
-                {project.organizationName ? <span>{project.organizationName}</span> : null}
-                {project.roleName ? <span>{project.roleName}</span> : null}
-                <span>{project.dateLabel}</span>
-                {project.relatedExperienceId ? <span>연관 경력</span> : null}
-              </div>
-              <p className="page-card__body">{project.summary}</p>
-              {project.contentText ? (
-                <div className="resume-project-card__content">
-                  <p className="resume-section__helper">프로젝트 상세</p>
-                  <p className="page-card__body resume-section__body--preserve">{project.contentText}</p>
                 </div>
-              ) : null}
-              {project.tags.length > 0 ? (
-                <div className="insight-card__meta">
-                  {project.tags.map((tag) => (
-                    <span className="insight-card__chip" key={tag.id}>
-                      {tag.type ? `${tag.label} · ${tag.type}` : tag.label}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-              {project.techStackText ? (
-                <p className="resume-section__helper">기술 스택: {project.techStackText}</p>
               ) : null}
             </article>
           ))}

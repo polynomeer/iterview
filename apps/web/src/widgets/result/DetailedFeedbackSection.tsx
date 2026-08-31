@@ -48,11 +48,6 @@ export function DetailedFeedbackSection({ result }: DetailedFeedbackSectionProps
         <div>
           <p className="section-heading__eyebrow">{isKorean ? "상세 피드백" : "Detailed feedback"}</p>
           <h2 className="page-card__title">{isKorean ? "이 답변을 개선하는 방법" : "How to improve this answer"}</h2>
-          <p className="page-card__body">
-            {isKorean
-              ? "이 영역을 핵심 개선 내러티브로 읽고, 아래의 작은 카드는 이를 뒷받침하는 근거로 활용하세요."
-              : "Read this as the main improvement narrative, then use the smaller cards below as supporting evidence."}
-          </p>
         </div>
       </div>
 
@@ -77,18 +72,27 @@ export function DetailedFeedbackSection({ result }: DetailedFeedbackSectionProps
           <div className="stack-list">
             {result.strengthSummary ? (
               <article className="feedback-card feedback-card--positive">
+                <div className="list-item-card__meta">
+                  <span>{isKorean ? "강점" : "Strength"}</span>
+                </div>
                 <h3 className="list-item-card__title">{isKorean ? "강점 요약" : "Strength summary"}</h3>
                 <p className="list-item-card__body">{result.strengthSummary}</p>
               </article>
             ) : null}
             {result.weaknessSummary ? (
               <article className="feedback-card feedback-card--improving">
+                <div className="list-item-card__meta">
+                  <span>{isKorean ? "약점" : "Weakness"}</span>
+                </div>
                 <h3 className="list-item-card__title">{isKorean ? "약점 요약" : "Weakness summary"}</h3>
                 <p className="list-item-card__body">{result.weaknessSummary}</p>
               </article>
             ) : null}
             {result.recommendedNextStep ? (
               <article className="feedback-card feedback-card--neutral">
+                <div className="list-item-card__meta">
+                  <span>{isKorean ? "다음 단계" : "Next step"}</span>
+                </div>
                 <h3 className="list-item-card__title">{isKorean ? "권장 다음 단계" : "Recommended next step"}</h3>
                 <p className="list-item-card__body">{result.recommendedNextStep}</p>
               </article>

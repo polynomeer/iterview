@@ -29,11 +29,6 @@ export function NextActionCard({
         <span className="question-status-badge question-status-badge--accent">{isKorean ? "실행 레인" : "Action lane"}</span>
       </div>
       <h2 className="page-card__title">{isKorean ? "이 결과 이후 무엇을 할지" : "What to do after this result"}</h2>
-      <p className="page-card__body">
-        {isKorean
-          ? "경로는 하나만 고르세요. 즉시 수정, 나중 재시도, 혹은 답변이 충분히 안정된 뒤 아카이브 검토입니다."
-          : "Choose one path only: immediate revision, later retry, or archive review after the answer is stable enough."}
-      </p>
       <div className="result-next-action-card__summary-row" role="list" aria-label={isKorean ? "다음 액션 요약" : "Next action summary"}>
         {progressStatusLabel ? (
           <span className="result-next-action-card__summary-item" role="listitem">{isKorean ? `상태 ${progressStatusLabel}` : `Status ${progressStatusLabel}`}</span>
@@ -50,16 +45,12 @@ export function NextActionCard({
       <div className="result-next-action-card__decision-grid">
         <article className="result-next-action-card__decision-item result-next-action-card__decision-item--accent">
           <span>{isKorean ? "즉시 재시도" : "Immediate retry"}</span>
-          <strong>{isKorean ? "표현은 맞지만 압축이 안 되면 바로 수정합니다." : "Revise now when the idea is right but the phrasing is loose."}</strong>
+          <strong>{isKorean ? "핵심은 맞고 표현만 느슨할 때" : "When the core idea is right but phrasing is loose"}</strong>
         </article>
         <article className="result-next-action-card__decision-item">
           <span>{isKorean ? "나중 재시도" : "Retry later"}</span>
-          <strong>{isKorean ? "근거가 더 필요하면 질문과 자료를 다시 점검한 뒤 돌아옵니다." : "Return later after rechecking question context and evidence."}</strong>
+          <strong>{isKorean ? "근거와 꼬리질문을 더 보강해야 할 때" : "When evidence and follow-ups need more work"}</strong>
         </article>
-      </div>
-      <div className="result-next-action-card__principles" role="list" aria-label={isKorean ? "다음 액션 원칙" : "Next action principles"}>
-        <span role="listitem">{isKorean ? "답변 전체를 고치기 전에 가장 약한 가지를 다시 읽으세요." : "Re-read the weakest branch before editing the whole answer."}</span>
-        <span role="listitem">{isKorean ? "표현 문제는 즉시 재시도로, 근거가 얇으면 더 깊은 꼬리질문으로 가세요." : "Use immediate retry for phrasing issues and follow-up depth for thin evidence."}</span>
       </div>
       <div className="page-card__actions">
         <Link className="secondary-button" to={questionPath}>
