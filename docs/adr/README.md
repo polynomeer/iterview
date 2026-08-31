@@ -64,3 +64,5 @@ Each ADR should include:
    Standardizes left-rail, center-canvas, right-rail desktop composition for inspector and queue flows.
 19. [`0019-align-secondary-workspaces-to-shared-analysis-shell.md`](0019-align-secondary-workspaces-to-shared-analysis-shell.md)
    Extends the shared desktop analysis shell to remediation, planning, session, and result workspaces.
+20. [`0020-tighten-workspace-density-and-card-rhythm.md`](0020-tighten-workspace-density-and-card-rhythm.md)
+   Tightens shared card padding, text widths, chip sizing, and internal spacing to better match the desktop references.

@@ -16523,3 +16523,413 @@ textarea::placeholder {
     position: static;
   }
 }
+
+/* High-fidelity workspace polish */
+:root {
+  --workspace-card-radius: 22px;
+  --workspace-inner-radius: 16px;
+  --workspace-card-padding: 20px;
+  --workspace-compact-gap: 12px;
+  --workspace-reading-width: 66ch;
+}
+
+.page-card,
+.section-panel,
+.workspace-note-card,
+.workspace-continuity-rail,
+.detail-sidebar,
+.filter-panel,
+.interview-session-current,
+.interview-session-side-summary,
+.interview-session-answer-surface,
+.interview-result-layout__hero,
+.interview-result-layout__actions,
+.interview-result-layout__recap {
+  border-radius: var(--workspace-card-radius);
+}
+
+.page-card {
+  padding: var(--workspace-card-padding);
+}
+
+.page-card__label,
+.section-heading__eyebrow {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.page-card__title,
+.section-heading__title {
+  max-width: 18ch;
+  font-size: clamp(1.2rem, 1.6vw, 1.55rem);
+  line-height: 1.1;
+}
+
+.page-card__body,
+.section-heading + .page-card__body,
+.resume-section__helper {
+  max-width: var(--workspace-reading-width);
+  font-size: 0.92rem;
+  line-height: 1.62;
+}
+
+.detail-chip,
+.question-status-badge {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 42px;
+  padding: 0 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.sidebar-navigation__link:hover,
+.list-item-card:hover,
+.weak-node-card:hover,
+.scheduled-review-timeline-card:hover,
+.scheduled-review-queue-card:hover {
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.sidebar-navigation__link,
+.list-item-card,
+.weak-node-card,
+.scheduled-review-timeline-card,
+.scheduled-review-queue-card,
+.archive-workspace-note__rule,
+.question-detail-layout__note-rule,
+.review-queue-insight-surface__lane,
+.resume-analysis-guide__rule,
+.resume-analysis-priority-card__playbook-step,
+.resume-analysis-priority-card__signal,
+.resume-analysis-guide__signal,
+.interview-result-layout__next-item,
+.interview-result-layout__hero-summary-item,
+.interview-result-layout__actions-summary-chip,
+.interview-session-current__summary-item,
+.interview-session-side-summary__signal,
+.interview-session-answer-surface__summary-item,
+.interview-session-answer-surface__playbook-step {
+  backdrop-filter: blur(10px);
+}
+
+.workspace-continuity-rail {
+  position: relative;
+  padding: 16px;
+}
+
+.workspace-continuity-rail__header,
+.workspace-continuity-rail__columns,
+.home-workspace-surface__header,
+.practice-workspace-surface__header,
+.question-detail-workspace-surface__header,
+.review-queue-workspace-surface__header,
+.archive-workspace-surface__header,
+.resume-analysis-workspace-surface__header,
+.scheduled-reviews-workspace-surface__header,
+.interview-workspace-surface__header,
+.interview-session-workspace-surface__header,
+.interview-result-workspace-surface__header {
+  gap: 16px;
+}
+
+.workspace-continuity-rail__surface,
+.workspace-continuity-rail__surface--current,
+.home-workspace-surface__guidance-card,
+.practice-workspace-surface__guidance-card,
+.question-detail-workspace-surface__guidance-card,
+.review-queue-workspace-surface__guidance-card,
+.archive-workspace-surface__guidance-card,
+.resume-analysis-workspace-surface__guidance-card,
+.scheduled-reviews-workspace-surface__guidance-card,
+.interview-workspace-surface__guidance-card {
+  min-height: 96px;
+  padding: 14px 15px;
+  border-radius: var(--workspace-inner-radius);
+}
+
+.home-workspace-surface__title,
+.practice-workspace-surface__title,
+.question-detail-workspace-surface__title,
+.review-queue-workspace-surface__title,
+.archive-workspace-surface__title,
+.resume-analysis-workspace-surface__title,
+.scheduled-reviews-workspace-surface__title,
+.interview-workspace-surface__title,
+.interview-session-workspace-surface__title,
+.interview-result-workspace-surface__title {
+  max-width: 15ch;
+  line-height: 1.03;
+  letter-spacing: -0.04em;
+}
+
+.home-workspace-surface__body,
+.practice-workspace-surface__body,
+.question-detail-workspace-surface__body,
+.review-queue-workspace-surface__body,
+.archive-workspace-surface__body,
+.resume-analysis-workspace-surface__body,
+.scheduled-reviews-workspace-surface__body,
+.interview-workspace-surface__body,
+.interview-session-workspace-surface__body,
+.interview-result-workspace-surface__body {
+  max-width: var(--workspace-reading-width);
+}
+
+.home-workspace-surface__stat,
+.practice-workspace-surface__stat,
+.question-detail-workspace-surface__stat,
+.archive-workspace-surface__stat,
+.resume-analysis-workspace-surface__stat,
+.interview-workspace-surface__stat,
+.interview-session-workspace-surface__stat,
+.interview-result-workspace-surface__stat,
+.scheduled-reviews-workspace-surface__stats article,
+.weak-nodes-workspace-surface__stats article {
+  min-height: 82px;
+  padding: 12px 14px;
+  justify-content: space-between;
+}
+
+.home-workspace-surface__stat span,
+.practice-workspace-surface__stat span,
+.question-detail-workspace-surface__stat span,
+.archive-workspace-surface__stat span,
+.resume-analysis-workspace-surface__stat span,
+.interview-workspace-surface__stat span,
+.interview-session-workspace-surface__stat-label,
+.interview-result-workspace-surface__stat span,
+.scheduled-reviews-workspace-surface__stats span,
+.weak-nodes-workspace-surface__stats span {
+  font-size: 0.73rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-workspace-surface__stat strong,
+.practice-workspace-surface__stat strong,
+.question-detail-workspace-surface__stat strong,
+.archive-workspace-surface__stat strong,
+.resume-analysis-workspace-surface__stat strong,
+.interview-workspace-surface__stat strong,
+.interview-session-workspace-surface__stat-value,
+.interview-result-workspace-surface__stat strong,
+.scheduled-reviews-workspace-surface__stats strong,
+.weak-nodes-workspace-surface__stats strong {
+  font-size: 1.08rem;
+  line-height: 1.1;
+}
+
+.list-item-card,
+.resume-card,
+.practice-list-item-card,
+.scheduled-review-queue-card,
+.scheduled-review-timeline-card,
+.weak-node-card,
+.weak-nodes-detail-card,
+.interview-session-workspace-surface__branch,
+.interview-result-layout__recap-card {
+  padding: 14px;
+  border-radius: var(--workspace-inner-radius);
+}
+
+.list-item-card__content,
+.scheduled-review-queue-card__body,
+.weak-node-card,
+.weak-nodes-detail-card {
+  gap: 10px;
+}
+
+.list-item-card__meta,
+.list-item-card__actions,
+.scheduled-review-queue-card__meta,
+.scheduled-review-timeline-card__meta,
+.weak-node-card__topline,
+.weak-node-card__confidence {
+  gap: 8px;
+}
+
+.list-item-card__title,
+.scheduled-review-timeline-card h3,
+.scheduled-review-queue-card strong,
+.weak-node-card strong,
+.weak-nodes-detail-card strong,
+.archive-workspace-note__rule strong {
+  font-size: 0.98rem;
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+  color: var(--text-strong);
+}
+
+.list-item-card__body,
+.scheduled-review-timeline-card p,
+.scheduled-review-queue-card p,
+.weak-node-card p,
+.weak-nodes-detail-card p,
+.archive-workspace-note__rule span,
+.resume-analysis-guide__rule span,
+.resume-analysis-priority-card__playbook-step strong,
+.interview-result-layout__next-item span {
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.list-item-card__meta,
+.scheduled-review-queue-card__meta,
+.scheduled-review-timeline-card__meta {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.weak-node-card--active,
+.scheduled-review-timeline-card--active,
+.sidebar-navigation__link--active,
+.interview-session-workspace-surface__branch--active {
+  box-shadow: inset 0 0 0 1px rgba(91, 140, 255, 0.18);
+}
+
+.weak-node-card--active,
+.scheduled-review-timeline-card--active {
+  border-color: rgba(91, 140, 255, 0.26);
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(14, 23, 38, 0.98), rgba(11, 18, 30, 0.98));
+}
+
+.weak-node-card__connections,
+.question-detail-workspace-surface__chips,
+.archive-workspace-surface__chips,
+.resume-analysis-workspace-surface__chips,
+.interview-result-workspace-surface__chips {
+  gap: 8px;
+}
+
+.scheduled-reviews-detail-rail,
+.review-queue-layout__support,
+.review-queue-layout__inspector,
+.archive-layout__filters,
+.archive-layout__rail,
+.practice-layout__filters,
+.practice-layout__cluster--rail,
+.question-detail-layout__study-rail,
+.question-detail-layout__sidebar,
+.resume-analysis-layout__workspace-summary,
+.resume-analysis-layout__rail,
+.weak-nodes-layout__rail,
+.scheduled-reviews-layout__plan-rail,
+.interview-session-side-summary,
+.interview-result-layout__side,
+.interview-workspace-inspector {
+  align-self: start;
+}
+
+.scheduled-reviews-detail-rail__panel,
+.weak-nodes-detail-rail,
+.review-queue-note-card,
+.review-queue-layout__inspector-card,
+.review-queue-insight-surface,
+.archive-workspace-note,
+.resume-analysis-priority-card,
+.resume-analysis-guide,
+.question-detail-layout__hero-note,
+.question-detail-layout__inspector-note,
+.interview-session-side-summary,
+.interview-session-answer-surface,
+.interview-result-layout__hero,
+.interview-result-layout__actions,
+.interview-result-layout__recap {
+  padding: 18px;
+}
+
+.interview-session-answer-surface__header,
+.interview-result-layout__hero,
+.interview-result-layout__actions,
+.scheduled-reviews-detail-rail__panel,
+.resume-analysis-priority-card,
+.resume-analysis-guide {
+  gap: 14px;
+}
+
+.interview-session-answer-surface__actions {
+  padding-top: 10px;
+  border-top: 1px solid rgba(125, 145, 176, 0.12);
+}
+
+.interview-session-answer-surface__primary-actions,
+.interview-session-answer-surface__secondary-actions,
+.page-card__actions {
+  gap: 10px;
+}
+
+.interview-session-answer-surface textarea,
+.question-hero--detail-workspace textarea {
+  min-height: 220px;
+}
+
+.scheduled-review-day-card span,
+.scheduled-review-day-card p,
+.scheduled-review-day-card small,
+.weak-node-card__confidence span,
+.weak-node-card__topline span {
+  font-size: 0.74rem;
+}
+
+.scheduled-review-day-card strong,
+.weak-node-card__confidence strong {
+  font-size: 1rem;
+}
+
+.section-heading {
+  gap: 10px;
+}
+
+.section-heading__title {
+  max-width: 22ch;
+}
+
+@media (max-width: 1099px) {
+  .page-card__title,
+  .section-heading__title,
+  .home-workspace-surface__title,
+  .practice-workspace-surface__title,
+  .question-detail-workspace-surface__title,
+  .review-queue-workspace-surface__title,
+  .archive-workspace-surface__title,
+  .resume-analysis-workspace-surface__title,
+  .scheduled-reviews-workspace-surface__title,
+  .interview-workspace-surface__title,
+  .interview-session-workspace-surface__title,
+  .interview-result-workspace-surface__title {
+    max-width: none;
+    font-size: 1.28rem;
+  }
+
+  .workspace-continuity-rail__surface,
+  .workspace-continuity-rail__surface--current,
+  .home-workspace-surface__guidance-card,
+  .practice-workspace-surface__guidance-card,
+  .question-detail-workspace-surface__guidance-card,
+  .review-queue-workspace-surface__guidance-card,
+  .archive-workspace-surface__guidance-card,
+  .resume-analysis-workspace-surface__guidance-card,
+  .scheduled-reviews-workspace-surface__guidance-card,
+  .interview-workspace-surface__guidance-card {
+    min-height: auto;
+  }
+}
