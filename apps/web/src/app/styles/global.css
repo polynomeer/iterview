@@ -15284,6 +15284,288 @@ button {
   line-height: 1.6;
 }
 
+.settings-browser,
+.settings-browser__shell,
+.settings-browser__title-block,
+.settings-browser__header-actions,
+.settings-browser__main,
+.settings-browser__grid,
+.settings-browser__rail,
+.settings-browser__display-list,
+.settings-browser__profile-stats,
+.settings-browser__tweak-list,
+.settings-browser__quick-list {
+  display: grid;
+  gap: 18px;
+}
+
+.settings-browser__shell {
+  padding: 22px;
+  border-radius: 28px;
+  border: 1px solid rgba(109, 130, 168, 0.16);
+  background:
+    radial-gradient(circle at top, rgba(31, 77, 164, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(9, 16, 28, 0.98), rgba(7, 13, 24, 0.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 24px 60px rgba(0, 0, 0, 0.22);
+}
+
+.settings-browser__header {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-browser__breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  color: rgba(170, 191, 226, 0.7);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.settings-browser__title {
+  margin: 0;
+  max-width: 14ch;
+  color: #f8fbff;
+  font-size: clamp(2rem, 2.8vw, 2.7rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.settings-browser__body {
+  margin: 0;
+  max-width: 70ch;
+  color: rgba(212, 224, 244, 0.78);
+  line-height: 1.68;
+}
+
+.settings-browser__header-actions {
+  grid-template-columns: repeat(2, auto);
+  justify-content: start;
+}
+
+.settings-browser__ghost-action,
+.settings-browser__tab {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(95, 114, 146, 0.2);
+  border-radius: 14px;
+  background: rgba(17, 25, 40, 0.82);
+  color: rgba(203, 216, 237, 0.74);
+  font: inherit;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.settings-browser__ghost-action:hover,
+.settings-browser__tab:hover,
+.settings-browser__ghost-action:focus-visible,
+.settings-browser__tab:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(91, 140, 255, 0.28);
+}
+
+.settings-browser__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 18px;
+  border: 1px solid rgba(95, 114, 146, 0.16);
+  background: rgba(11, 18, 30, 0.9);
+}
+
+.settings-browser__tab--active {
+  background: rgba(32, 114, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(78, 144, 255, 0.44);
+  color: #f8fbff;
+}
+
+.settings-browser__workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.72fr) minmax(320px, 0.7fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.settings-browser__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.settings-browser__card,
+.settings-browser__profile-card,
+.settings-browser__health-card {
+  border-radius: 24px;
+  border: 1px solid rgba(100, 119, 152, 0.16);
+  background: rgba(11, 18, 30, 0.9);
+}
+
+.settings-browser__card,
+.settings-browser__profile-card,
+.settings-browser__health-card {
+  padding: 18px;
+}
+
+.settings-browser__theme-card {
+  height: 100%;
+}
+
+.settings-browser__display-list article,
+.settings-browser__profile-stats article {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(95, 114, 146, 0.16);
+  background: rgba(17, 25, 40, 0.82);
+}
+
+.settings-browser__display-list span,
+.settings-browser__profile-stats span,
+.settings-browser__health-head span,
+.settings-browser__tweak-item span,
+.settings-browser__quick-item span {
+  color: rgba(212, 224, 244, 0.72);
+}
+
+.settings-browser__display-list strong,
+.settings-browser__profile-top strong,
+.settings-browser__profile-stats strong,
+.settings-browser__health-head strong,
+.settings-browser__health-ring-value strong,
+.settings-browser__tweak-item strong,
+.settings-browser__quick-item strong {
+  color: #f8fbff;
+}
+
+.settings-browser__profile-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.settings-browser__avatar {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.45));
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.settings-browser__health-head,
+.settings-browser__tweak-item,
+.settings-browser__quick-item {
+  display: grid;
+  gap: 12px;
+}
+
+.settings-browser__health-head {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.settings-browser__health-ring {
+  display: grid;
+  place-items: center;
+  width: 126px;
+  height: 126px;
+  margin: 0 auto;
+  border-radius: 999px;
+  border: 7px solid rgba(41, 182, 246, 0.92);
+  box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.05);
+}
+
+.settings-browser__health-ring-value {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+}
+
+.settings-browser__health-ring-value strong {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.settings-browser__health-ring-value span {
+  color: rgba(212, 224, 244, 0.68);
+}
+
+.settings-browser__health-card p {
+  margin: 0;
+  color: rgba(212, 224, 244, 0.78);
+  line-height: 1.65;
+}
+
+.settings-browser__tweak-item,
+.settings-browser__quick-item {
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(95, 114, 146, 0.16);
+  background: rgba(17, 25, 40, 0.82);
+}
+
+.settings-browser__tweak-item {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.settings-browser__quick-item {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.settings-browser__quick-item:hover,
+.settings-browser__quick-item:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(91, 140, 255, 0.28);
+}
+
+@media (min-width: 1080px) {
+  .settings-browser__header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+}
+
+@media (max-width: 1280px) {
+  .settings-browser__workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .settings-browser__header-actions,
+  .settings-browser__grid,
+  .settings-browser__tweak-item,
+  .settings-browser__quick-item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .settings-browser__shell {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .settings-browser__tabs {
+    flex-direction: column;
+  }
+}
+
 .weak-nodes-workspace-surface {
   --workspace-surface-body-color: rgba(245, 224, 224, 0.74);
   --workspace-surface-stat-label-color: rgba(236, 188, 188, 0.68);
