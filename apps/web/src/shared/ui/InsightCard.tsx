@@ -22,20 +22,20 @@ export function InsightCard({
 }: InsightCardProps) {
   return (
     <section className={`page-card insight-card insight-card--${tone}`}>
-      <span className="page-card__label">{label}</span>
-      <h2 className="page-card__title">{title}</h2>
-      <p className="page-card__body">{body}</p>
-      {meta.length > 0 ? (
-        <div className="insight-card__meta" role="list">
+      <div className="list-item-card__content">
+        <div className="list-item-card__meta insight-card__meta-row">
+          <span className="page-card__label insight-card__label">{label}</span>
           {meta.map((item) => (
             <span key={item} className="insight-card__chip" role="listitem">
               {item}
             </span>
           ))}
         </div>
-      ) : null}
+        <h2 className="page-card__title insight-card__title">{title}</h2>
+        <p className="page-card__body insight-card__body">{body}</p>
+      </div>
       {action ? (
-        <div className="page-card__actions">
+        <div className="page-card__actions insight-card__actions">
           <Link className="secondary-button" to={action.to}>
             {action.label}
           </Link>

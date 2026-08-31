@@ -85,11 +85,6 @@ export function LearningMaterialsSection({
         <div>
           <p className="section-heading__eyebrow">{t("question.learningMaterialsEyebrow")}</p>
           <h2 className="page-card__title">{t("question.learningMaterialsTitle")}</h2>
-          <p className="page-card__body">
-            {isKorean
-              ? "현재 답변을 더 구체적으로 만드는 자료만 남기세요."
-              : "Keep only the material that makes the current answer more specific."}
-          </p>
         </div>
         {canAdd ? (
           <button className="secondary-button" onClick={onToggleComposer} type="button">
@@ -106,7 +101,14 @@ export function LearningMaterialsSection({
             onSubmit?.();
           }}
         >
-          <div className="card-grid card-grid--two-column">
+          <div className="question-inline-composer__header">
+            <div>
+              <p className="section-heading__eyebrow">{t("question.learningMaterialsEyebrow")}</p>
+              <h3 className="question-inline-composer__title">{t("question.learningMaterialComposerTitle")}</h3>
+            </div>
+            <p className="question-inline-composer__hint">{t("question.learningMaterialComposerHint")}</p>
+          </div>
+          <div className="question-inline-composer__grid">
             <div className="form-field">
               <label className="form-field__label" htmlFor="learning-material-title">
                 {t("question.learningMaterialTitleLabel")}
@@ -160,7 +162,7 @@ export function LearningMaterialsSection({
               value={form.contentText}
             />
           </div>
-          <div className="card-grid card-grid--two-column">
+          <div className="question-inline-composer__grid">
             <div className="form-field">
               <label className="form-field__label" htmlFor="learning-material-url">
                 {t("question.learningMaterialContentUrlLabel")}
@@ -188,7 +190,7 @@ export function LearningMaterialsSection({
               />
             </div>
           </div>
-          <div className="card-grid card-grid--three-column">
+          <div className="card-grid card-grid--three-column question-inline-composer__grid question-inline-composer__grid--triple">
             <div className="form-field">
               <label className="form-field__label" htmlFor="learning-material-difficulty">
                 {t("question.learningMaterialDifficultyLabel")}
@@ -227,7 +229,7 @@ export function LearningMaterialsSection({
               />
             </div>
           </div>
-          <div className="card-grid card-grid--two-column">
+          <div className="question-inline-composer__grid">
             <div className="form-field">
               <label className="form-field__label" htmlFor="learning-material-label">
                 {t("question.learningMaterialLabelOverrideLabel")}
@@ -254,8 +256,17 @@ export function LearningMaterialsSection({
               />
             </div>
           </div>
-          {submitError ? <p className="form-feedback form-feedback--error">{submitError}</p> : null}
-          <div className="page-card__actions">
+          {submitError ? (
+            <div
+              aria-live="assertive"
+              className="form-feedback form-feedback--error question-inline-composer__feedback"
+              role="alert"
+            >
+              <strong>{t("question.learningMaterialErrorTitle")}</strong>
+              <p>{submitError}</p>
+            </div>
+          ) : null}
+          <div className="page-card__actions question-inline-composer__actions">
             <button className="primary-button" disabled={isSubmitting} type="submit">
               {isSubmitting ? t("question.savingLearningMaterial") : t("question.saveLearningMaterial")}
             </button>
@@ -280,7 +291,9 @@ export function LearningMaterialsSection({
                 {material.contentLocale ? <span>{material.contentLocale.toUpperCase()}</span> : null}
               </div>
               <h3 className="list-item-card__title">{material.title}</h3>
-              {material.description ? <p className="list-item-card__body">{material.description}</p> : null}
+              {material.description ? (
+                <p className="list-item-card__body home-collection-card__item-body">{material.description}</p>
+              ) : null}
               {material.contentText ? (
                 <p className="list-item-card__body question-learning-material__excerpt">
                   {material.contentText}
@@ -294,7 +307,7 @@ export function LearningMaterialsSection({
               </div>
             </div>
             {material.url ? (
-              <a className="secondary-button" href={material.url} rel="noreferrer" target="_blank">
+              <a className="secondary-button home-collection-card__action" href={material.url} rel="noreferrer" target="_blank">
                 {t("common.openLink")}
               </a>
             ) : null}
