@@ -19176,8 +19176,528 @@ textarea::placeholder {
   top: 24px;
 }
 
-.practice-focus-question-card,
-.practice-focus-summary-card,
+/* Experience explorer redesign */
+
+.resume-analysis-explorer {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+}
+
+.resume-analysis-explorer--desktop {
+  grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1.7fr) minmax(320px, 0.96fr);
+}
+
+.resume-analysis-explorer__left,
+.resume-analysis-explorer__right {
+  display: grid;
+  gap: 18px;
+  align-self: start;
+}
+
+.resume-analysis-explorer--desktop .resume-analysis-explorer__left,
+.resume-analysis-explorer--desktop .resume-analysis-explorer__right {
+  position: sticky;
+  top: 24px;
+}
+
+.resume-analysis-explorer__main {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.resume-analysis-explorer__hero,
+.resume-analysis-explorer__workspace,
+.resume-analysis-explorer__insight-panel,
+.resume-analysis-explorer__inspector,
+.resume-analysis-explorer__question-panel,
+.resume-analysis-explorer__queue-panel,
+.resume-analysis-explorer__summary-card {
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
+  box-shadow: none;
+}
+
+.resume-analysis-explorer__hero {
+  display: grid;
+  gap: 18px;
+}
+
+.resume-analysis-explorer__hero-topline,
+.resume-analysis-explorer__inspector-topline,
+.resume-analysis-explorer__map-topline,
+.resume-analysis-explorer__project-title-row,
+.resume-analysis-explorer__inspector-head,
+.resume-analysis-explorer__achievement-list article,
+.resume-analysis-explorer__risk-list article,
+.resume-analysis-explorer__question-list article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.resume-analysis-explorer__hero-title {
+  margin: 0;
+  max-width: 14ch;
+  color: #f5f7fb;
+  font-size: clamp(1.45rem, 2vw, 2.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.resume-analysis-explorer__hero-body,
+.resume-analysis-explorer__inspector-section p,
+.resume-analysis-explorer__queue-list article span,
+.resume-analysis-explorer__question-list p {
+  margin: 0;
+  color: rgba(186, 198, 216, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.62;
+}
+
+.resume-analysis-explorer__hero-stats,
+.resume-analysis-explorer__summary-grid,
+.resume-analysis-explorer__career-metrics {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.resume-analysis-explorer__hero-stats article,
+.resume-analysis-explorer__summary-grid article,
+.resume-analysis-explorer__career-metrics article {
+  display: grid;
+  gap: 6px;
+  padding: 14px 15px;
+  border-radius: 18px;
+  border: 1px solid rgba(125, 145, 176, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.resume-analysis-explorer__hero-stats span,
+.resume-analysis-explorer__summary-grid span,
+.resume-analysis-explorer__career-metrics span {
+  color: rgba(175, 189, 211, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-analysis-explorer__hero-stats strong,
+.resume-analysis-explorer__summary-grid strong,
+.resume-analysis-explorer__career-metrics strong {
+  color: #f7fbff;
+  font-size: 1.05rem;
+  line-height: 1.1;
+}
+
+.resume-analysis-explorer__workspace {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+}
+
+.resume-analysis-explorer__workspace-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.resume-analysis-explorer__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: rgba(175, 189, 211, 0.72);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-analysis-explorer__tab-row,
+.resume-analysis-explorer__actions-row,
+.resume-analysis-explorer__project-tags,
+.resume-analysis-explorer__skill-cloud,
+.resume-analysis-explorer__tech-cloud,
+.resume-analysis-explorer__question-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.resume-analysis-explorer__tab-row .secondary-button,
+.resume-analysis-explorer__actions-row .secondary-button,
+.resume-analysis-explorer__question-tabs .secondary-button {
+  border-color: rgba(125, 145, 176, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.resume-analysis-explorer__tab-row .secondary-button.is-active,
+.resume-analysis-explorer__question-tabs .secondary-button.is-active {
+  border-color: rgba(91, 140, 255, 0.3);
+  color: #f7fbff;
+  background: rgba(91, 140, 255, 0.12);
+}
+
+.resume-analysis-explorer__map-shell {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  background:
+    radial-gradient(circle at center, rgba(91, 140, 255, 0.04), transparent 54%),
+    linear-gradient(180deg, rgba(10, 16, 27, 0.96), rgba(9, 14, 24, 0.98));
+}
+
+.resume-analysis-explorer__map-topline strong {
+  color: #f7fbff;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.resume-analysis-explorer__map {
+  display: grid;
+  gap: 18px;
+  padding: 8px 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 0.8px, transparent 0.8px);
+  background-size: 14px 14px;
+}
+
+.resume-analysis-explorer__lane {
+  display: grid;
+  grid-template-columns: 92px minmax(180px, 0.86fr) minmax(0, 1.5fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.resume-analysis-explorer__lane-rail {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding-right: 12px;
+}
+
+.resume-analysis-explorer__lane-rail::after {
+  content: "";
+  position: absolute;
+  right: 7px;
+  top: 12px;
+  bottom: -22px;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(138, 155, 180, 0.44), rgba(138, 155, 180, 0.08));
+}
+
+.resume-analysis-explorer__lane:last-child .resume-analysis-explorer__lane-rail::after {
+  display: none;
+}
+
+.resume-analysis-explorer__lane-period {
+  color: rgba(188, 199, 216, 0.78);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.resume-analysis-explorer__lane-dot,
+.resume-analysis-explorer__project-bullet {
+  display: inline-flex;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(114, 164, 255, 0.6);
+  background: rgba(14, 20, 32, 0.95);
+  box-shadow: 0 0 0 4px rgba(91, 140, 255, 0.08);
+}
+
+.resume-analysis-explorer__company-card,
+.resume-analysis-explorer__project-card {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.resume-analysis-explorer__company-card::after,
+.resume-analysis-explorer__project-card::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -14px;
+  width: 14px;
+  height: 1px;
+  background: rgba(138, 155, 180, 0.44);
+}
+
+.resume-analysis-explorer__company-card strong,
+.resume-analysis-explorer__project-card strong,
+.resume-analysis-explorer__inspector-head h2,
+.resume-analysis-explorer__queue-list article strong,
+.resume-analysis-explorer__question-list strong {
+  color: #f7fbff;
+  font-size: 0.98rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.resume-analysis-explorer__company-card span,
+.resume-analysis-explorer__project-card span,
+.resume-analysis-explorer__inspector-head p,
+.resume-analysis-explorer__risk-list span,
+.resume-analysis-explorer__risk-list strong {
+  color: rgba(175, 189, 211, 0.76);
+  font-size: 0.8rem;
+}
+
+.resume-analysis-explorer__company-card.is-active,
+.resume-analysis-explorer__project-card.is-active,
+.resume-analysis-explorer__company-card:hover,
+.resume-analysis-explorer__project-card:hover {
+  border-color: rgba(91, 140, 255, 0.34);
+  background:
+    radial-gradient(circle at top right, rgba(91, 140, 255, 0.12), transparent 40%),
+    rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+.resume-analysis-explorer__project-flow {
+  display: grid;
+  gap: 12px;
+}
+
+.resume-analysis-explorer__project-flow .resume-analysis-explorer__project-card:last-child::after {
+  display: none;
+}
+
+.resume-analysis-explorer__impact-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(125, 145, 176, 0.12);
+  color: rgba(214, 223, 236, 0.86);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.resume-analysis-explorer__impact-chip--core {
+  border-color: rgba(244, 190, 104, 0.34);
+  color: #f6d9a5;
+}
+
+.resume-analysis-explorer__impact-chip--high {
+  border-color: rgba(91, 140, 255, 0.34);
+  color: #b6ccff;
+}
+
+.resume-analysis-explorer__impact-chip--medium {
+  border-color: rgba(110, 211, 159, 0.32);
+  color: #a6e8c6;
+}
+
+.resume-analysis-explorer__impact-chip--low {
+  border-color: rgba(138, 155, 180, 0.26);
+  color: rgba(214, 223, 236, 0.78);
+}
+
+.resume-analysis-explorer__insights-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.resume-analysis-explorer__insight-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.resume-analysis-explorer__skill-cloud .detail-chip,
+.resume-analysis-explorer__tech-cloud .detail-chip {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.resume-analysis-explorer__risk-list,
+.resume-analysis-explorer__achievement-list,
+.resume-analysis-explorer__question-list,
+.resume-analysis-explorer__queue-list {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-analysis-explorer__risk-list article,
+.resume-analysis-explorer__achievement-list article,
+.resume-analysis-explorer__question-list article,
+.resume-analysis-explorer__queue-list article {
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(125, 145, 176, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.resume-analysis-explorer__risk-list article div,
+.resume-analysis-explorer__question-list article div {
+  display: grid;
+  gap: 6px;
+}
+
+.resume-analysis-explorer__risk-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.resume-analysis-explorer__risk-score--danger {
+  background: rgba(40, 171, 111, 0.14);
+  color: #5ee19a;
+}
+
+.resume-analysis-explorer__risk-score--warning {
+  background: rgba(244, 190, 104, 0.14);
+  color: #f2c56b;
+}
+
+.resume-analysis-explorer__risk-score--stable {
+  background: rgba(91, 140, 255, 0.14);
+  color: #9cbcff;
+}
+
+.resume-analysis-explorer__inspector,
+.resume-analysis-explorer__question-panel,
+.resume-analysis-explorer__queue-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.resume-analysis-explorer__close-button {
+  border: 0;
+  background: transparent;
+  color: rgba(186, 198, 216, 0.72);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.resume-analysis-explorer__inspector-head {
+  align-items: start;
+  flex-direction: column;
+}
+
+.resume-analysis-explorer__inspector-head h2,
+.resume-analysis-explorer__inspector-section h3 {
+  margin: 0;
+}
+
+.resume-analysis-explorer__inspector-section {
+  display: grid;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(125, 145, 176, 0.12);
+}
+
+.resume-analysis-explorer__inspector-section h3 {
+  color: #f7fbff;
+  font-size: 0.9rem;
+}
+
+.resume-analysis-explorer__bullet-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(186, 198, 216, 0.8);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.resume-analysis-explorer__achievement-list article span {
+  color: rgba(186, 198, 216, 0.8);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.resume-analysis-explorer__achievement-list article strong {
+  color: #63e39e;
+  font-size: 0.88rem;
+}
+
+.resume-analysis-explorer__practice-button {
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 1279px) {
+  .resume-analysis-explorer__insights-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1099px) {
+  .resume-analysis-explorer--desktop,
+  .resume-analysis-explorer__lane {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-analysis-explorer__lane-rail {
+    justify-items: start;
+  }
+
+  .resume-analysis-explorer__lane-rail::after,
+  .resume-analysis-explorer__company-card::after,
+  .resume-analysis-explorer__project-card::after {
+    display: none;
+  }
+
+  .resume-analysis-explorer__hero-stats,
+  .resume-analysis-explorer__summary-grid,
+  .resume-analysis-explorer__career-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .resume-analysis-explorer__hero-stats,
+  .resume-analysis-explorer__summary-grid,
+  .resume-analysis-explorer__career-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-analysis-explorer__workspace-header,
+  .resume-analysis-explorer__map-topline,
+  .resume-analysis-explorer__hero-topline,
+  .resume-analysis-explorer__inspector-topline,
+  .resume-analysis-explorer__risk-list article,
+  .resume-analysis-explorer__achievement-list article,
+  .resume-analysis-explorer__question-list article {
+    align-items: start;
+    flex-direction: column;
+  }
+}
 .practice-map-launch-card,
 .practice-review-queue-card,
 .practice-workflow-note,

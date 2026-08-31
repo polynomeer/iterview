@@ -1,8 +1,10 @@
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { getActiveResumeVersion } from "../../entities/resume/model";
 import { useActiveResumeAnalysisQuery } from "../../features/resume/api/useActiveResumeAnalysisQuery";
 import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
+import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
@@ -12,12 +14,102 @@ import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { PageContainer } from "../../shared/ui/PageContainer";
 import { WorkspaceContinuityRail } from "../../shared/ui/WorkspaceContinuityRail";
-import {
-  ActiveResumeOverviewCard,
-  ResumeExperienceList,
-  ResumeRiskList,
-  ResumeSkillsCard,
-} from "../../widgets/resume";
+import { ActiveResumeOverviewCard } from "../../widgets/resume";
+
+type ExplorerNode = {
+  id: string;
+  companyName: string;
+  roleName: string;
+  dateLabel: string;
+  summary: string;
+  impactText?: string;
+  projectName?: string;
+  current: boolean;
+  employmentType?: string;
+  projects: Array<{
+    id: string;
+    title: string;
+    summary: string;
+    dateLabel?: string;
+    tags: string[];
+  }>;
+  technologies: string[];
+  riskTitles: string[];
+  severityScore: number;
+  impactLevel: "core" | "high" | "medium" | "low";
+};
+
+function normalizeText(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function includesKeyword(source: string, target: string) {
+  return normalizeText(source).includes(normalizeText(target));
+}
+
+function buildFallbackQuestions(node: ExplorerNode, isKorean: boolean) {
+  const prompts = [
+    isKorean
+      ? `${node.companyName}에서 ${node.roleName}로 가장 복잡했던 의사결정을 설명해보세요.`
+      : `Describe the most complex decision you made as ${node.roleName} at ${node.companyName}.`,
+    isKorean
+      ? `${node.projectName ?? node.projects[0]?.title ?? node.companyName}의 제약과 트레이드오프를 어떻게 설명하겠습니까?`
+      : `How would you explain the constraints and trade-offs in ${node.projectName ?? node.projects[0]?.title ?? node.companyName}?`,
+    isKorean
+      ? "정량 지표가 없다면 무엇을 근거로 성과를 방어할 수 있나요?"
+      : "If metrics are thin, what evidence would you use to defend the outcome?",
+  ];
+
+  return prompts;
+}
+
+function getImpactLevel(node: {
+  current: boolean;
+  impactText?: string;
+  projects: Array<unknown>;
+}) {
+  if (node.current || node.projects.length >= 2) {
+    return "high" as const;
+  }
+
+  if (node.impactText && node.impactText.length > 36) {
+    return "core" as const;
+  }
+
+  if (node.impactText) {
+    return "medium" as const;
+  }
+
+  return "low" as const;
+}
+
+function getImpactLabel(level: ExplorerNode["impactLevel"], isKorean: boolean) {
+  if (level === "core") {
+    return isKorean ? "핵심 프로젝트" : "Core project";
+  }
+
+  if (level === "high") {
+    return isKorean ? "고임팩트" : "High impact";
+  }
+
+  if (level === "medium") {
+    return isKorean ? "중간 임팩트" : "Medium impact";
+  }
+
+  return isKorean ? "보조 프로젝트" : "Low impact";
+}
+
+function getSeverityTone(score: number) {
+  if (score >= 80) {
+    return "danger";
+  }
+
+  if (score >= 60) {
+    return "warning";
+  }
+
+  return "stable";
+}
 
 export function ResumeAnalysisPage() {
   const resumeListQuery = useResumeListQuery();
@@ -28,8 +120,160 @@ export function ResumeAnalysisPage() {
   const effectiveResumeList = latestResumeQuery.data ?? resumeListQuery.data;
   const activeResumeVersion = getActiveResumeVersion(effectiveResumeList);
   const analysisQuery = useActiveResumeAnalysisQuery(activeResumeVersion?.id ?? null);
+  const snapshotsQuery = useResumeVersionSnapshotsQuery(activeResumeVersion?.id ?? null, Boolean(activeResumeVersion?.id));
   const isAnalysisUnavailable =
     analysisQuery.error instanceof ApiClientError && analysisQuery.error.status === 404;
+  const [selectedExperienceId, setSelectedExperienceId] = useState<string | null>(null);
+
+  const explorerNodes = useMemo<ExplorerNode[]>(() => {
+    if (snapshotsQuery.data) {
+      const snapshotRisks = snapshotsQuery.data.risks;
+      const snapshotSkills = snapshotsQuery.data.skills;
+
+      return snapshotsQuery.data.experiences.map((experience, index) => {
+        const relatedProjects = snapshotsQuery.data.projects.filter(
+          (project) => project.relatedExperienceId === experience.id,
+        );
+        const fallbackProjectTitle =
+          experience.projectName ?? `${experience.companyName} ${isKorean ? "대표 프로젝트" : "Primary project"}`;
+        const projects =
+          relatedProjects.length > 0
+            ? relatedProjects.map((project) => ({
+                id: project.id,
+                title: project.title,
+                summary: project.summary,
+                dateLabel: project.dateLabel,
+                tags: project.tags.map((tag) => tag.label),
+              }))
+            : [
+                {
+                  id: `${experience.id}-primary`,
+                  title: fallbackProjectTitle,
+                  summary: experience.summary,
+                  dateLabel: experience.dateLabel,
+                  tags: [],
+                },
+              ];
+
+        const technologies = Array.from(
+          new Set([
+            ...projects.flatMap((project) => project.tags),
+            ...snapshotSkills
+              .filter(
+                (skill) =>
+                  includesKeyword(experience.summary, skill.label) ||
+                  (experience.impactText ? includesKeyword(experience.impactText, skill.label) : false),
+              )
+              .map((skill) => skill.label),
+          ]),
+        ).slice(0, 8);
+
+        const riskTitles = snapshotRisks
+          .filter(
+            (risk) =>
+              includesKeyword(risk.title, experience.companyName) ||
+              includesKeyword(risk.description, experience.companyName) ||
+              includesKeyword(risk.title, experience.roleName) ||
+              includesKeyword(risk.description, experience.roleName) ||
+              projects.some(
+                (project) =>
+                  includesKeyword(risk.title, project.title) || includesKeyword(risk.description, project.title),
+              ),
+          )
+          .map((risk) => risk.title);
+
+        const severityScore = Math.max(48, 92 - index * 9 - riskTitles.length * 3);
+        const impactLevel = getImpactLevel({
+          current: experience.current,
+          impactText: experience.impactText,
+          projects,
+        });
+
+        return {
+          id: experience.id,
+          companyName: experience.companyName,
+          roleName: experience.roleName,
+          dateLabel: experience.dateLabel,
+          summary: experience.summary,
+          impactText: experience.impactText,
+          projectName: experience.projectName,
+          current: experience.current,
+          employmentType: experience.employmentType,
+          projects,
+          technologies,
+          riskTitles,
+          severityScore,
+          impactLevel,
+        };
+      });
+    }
+
+    if (!analysisQuery.data) {
+      return [];
+    }
+
+    return analysisQuery.data.experiences.map((experience, index) => {
+      const parts = experience.title.split(" · ");
+      const companyName = parts[0] ?? (isKorean ? "경력 항목" : "Experience");
+      const roleName = parts[1] ?? (isKorean ? "직무 정보 정리 필요" : "Role needs refinement");
+      const riskTitles = analysisQuery.data?.risks
+        .filter(
+          (risk) =>
+            includesKeyword(risk.title, companyName) ||
+            includesKeyword(risk.description, companyName) ||
+            includesKeyword(risk.title, roleName),
+        )
+        .map((risk) => risk.title);
+
+      return {
+        id: experience.id,
+        companyName,
+        roleName,
+        dateLabel: isKorean ? "기간 정보는 스냅샷 동기화 후 표시됩니다" : "Dates appear after snapshot sync",
+        summary: experience.summary,
+        impactText: experience.impactText,
+        projectName: undefined,
+        current: index === 0,
+        employmentType: undefined,
+        projects: [
+          {
+            id: `${experience.id}-primary`,
+            title: experience.title,
+            summary: experience.summary,
+            dateLabel: undefined,
+            tags: [],
+          },
+        ],
+        technologies: analysisQuery.data.skills.slice(index, index + 5).map((skill) => skill.label),
+        riskTitles,
+        severityScore: Math.max(48, 90 - index * 8),
+        impactLevel: getImpactLevel({
+          current: index === 0,
+          impactText: experience.impactText,
+          projects: [{ id: "fallback" }],
+        }),
+      };
+    });
+  }, [analysisQuery.data, isKorean, snapshotsQuery.data]);
+
+  useEffect(() => {
+    if (explorerNodes.length === 0) {
+      setSelectedExperienceId(null);
+      return;
+    }
+
+    if (!selectedExperienceId || !explorerNodes.some((node) => node.id === selectedExperienceId)) {
+      setSelectedExperienceId(explorerNodes[0].id);
+    }
+  }, [explorerNodes, selectedExperienceId]);
+
+  const selectedNode =
+    explorerNodes.find((node) => node.id === selectedExperienceId) ?? explorerNodes[0] ?? null;
+  const totalProjects = explorerNodes.reduce((count, node) => count + node.projects.length, 0);
+  const technologies = Array.from(new Set(explorerNodes.flatMap((node) => node.technologies)));
+  const topSkills = (snapshotsQuery.data?.skills ?? analysisQuery.data?.skills ?? []).slice(0, 6);
+  const severeRisks = (analysisQuery.data?.risks ?? []).slice(0, 5);
+  const coreProjects = explorerNodes.filter((node) => node.impactLevel === "core" || node.impactLevel === "high").length;
 
   return (
     <PageContainer
@@ -40,45 +284,45 @@ export function ResumeAnalysisPage() {
       }
       description={
         isKorean
-          ? "활성 이력서를 기준 문서로 검토하고, 면접 꼬리질문이 시작되기 전에 더 강한 증빙이 필요한 주장을 찾으세요."
-          : "Review the active resume as source of truth, then find the claims that need stronger evidence before interview follow-ups begin."
+          ? "활성 이력서를 실제 면접용 경력 탐색기로 펼쳐서, DFS 꼬리질문이 어디까지 들어와도 방어 가능한지 확인하세요."
+          : "Open the active resume as an experience explorer and verify how deep DFS follow-up questioning can go."
       }
-      eyebrow={isKorean ? "근거 검토" : "Source review"}
-      title={isKorean ? "이력서 기준 문서 점검" : "Inspect resume source of truth"}
+      eyebrow={isKorean ? "경력 탐색" : "Experience explorer"}
+      title={isKorean ? "경력 기반 면접 방어 워크스페이스" : "Experience-grounded interview workspace"}
     >
       <WorkspaceContinuityRail
         current={{
-          title: isKorean ? "이력서 기준 문서 검토" : "Resume source-of-truth review",
+          title: isKorean ? "경력 익스플로러" : "Experience explorer",
           description: isKorean
-            ? "활성 이력서 주장 중 어떤 항목이 아직 꼬리질문 압박을 버틸 만큼 충분한 증빙이 없는지 찾으세요."
-            : "Find which active resume claims still lack enough evidence to survive follow-up pressure.",
+            ? "회사, 프로젝트, 기술, 리스크를 한 화면에서 연결해 꼬리질문 준비 단위를 만드세요."
+            : "Connect companies, projects, skills, and risks in one place to prepare follow-up units.",
         }}
         downstream={[
           {
             title: isKorean ? "이력서 편집기" : "Resume editor",
-            description: isKorean ? "리스크가 분명해지면 얇은 주장을 다시 쓰세요." : "Rewrite the thin claim once the risk is clear.",
+            description: isKorean ? "약한 설명은 기준 문서부터 보강하세요." : "Strengthen weak claims in the source text first.",
             to: activeResumeVersion
               ? routeConfig.resumeEditor.buildPath({ versionId: activeResumeVersion.id })
               : routeConfig.resume.buildPath(),
           },
           {
             title: isKorean ? "면접 실행기" : "Interview launcher",
-            description: isKorean ? "기준 주장이 충분히 강해진 뒤에만 모의를 시작하세요." : "Start a mock only after the source claim is strong enough to defend.",
+            description: isKorean ? "정리된 경력을 바로 모의 질문 트리로 넘기세요." : "Send the cleaned-up experience map into the interview tree.",
             to: routeConfig.interview.buildPath(),
           },
         ]}
         upstream={[
           {
             title: isKorean ? "약한 노드" : "Weak nodes",
-            description: isKorean ? "실패한 분기가 약한 이력서 주장을 가리킬 때 여기로 돌아오세요." : "Come back here when a failing branch points to a weak resume claim.",
+            description: isKorean ? "실패한 분기가 어떤 경력 설명에서 시작됐는지 다시 확인하세요." : "Trace failing branches back to the originating experience claim.",
             to: routeConfig.weakNodes.buildPath(),
           },
         ]}
       />
       {resumeListQuery.isLoading && latestResumeQuery.isLoading ? (
         <LoadingStateCard
-          body={isKorean ? "이력서 컨테이너와 활성 버전을 불러온 뒤 분석 화면을 여는 중입니다." : "Loading resume containers and the active version before opening analysis."}
-          title={isKorean ? "이력서 분석 화면을 준비하는 중입니다" : "Preparing resume intelligence"}
+          body={isKorean ? "이력서 컨테이너와 활성 버전을 불러온 뒤 경력 익스플로러를 여는 중입니다." : "Loading resume containers and the active version before opening the experience explorer."}
+          title={isKorean ? "경력 워크스페이스를 준비하는 중입니다" : "Preparing the experience workspace"}
         />
       ) : null}
 
@@ -95,7 +339,7 @@ export function ResumeAnalysisPage() {
           onAction={() => {
             void resumeListQuery.refetch();
           }}
-          title={isKorean ? "이력서 분석을 불러올 수 없습니다" : "Unable to load resume analysis"}
+          title={isKorean ? "경력 워크스페이스를 불러올 수 없습니다" : "Unable to load the experience workspace"}
         />
       ) : null}
 
@@ -109,13 +353,13 @@ export function ResumeAnalysisPage() {
                 label: isKorean ? "이력서 관리 열기" : "Open resume management",
                 to: routeConfig.resume.buildPath(),
               }}
-              body={isKorean ? "파싱된 스킬, 경력, 리스크가 분명한 기준 문서를 갖도록 먼저 활성 이력서 버전을 선택하세요." : "Activate a resume version first so parsed skills, experiences, and risks have a clear source of truth."}
+              body={isKorean ? "경력 탐색기와 꼬리질문 트리를 만들려면 먼저 활성 이력서 버전을 선택하세요." : "Activate a resume version first to build the experience explorer and follow-up tree."}
               title={isKorean ? "활성 이력서 버전이 없습니다" : "No active resume version"}
             />
           ) : analysisQuery.isLoading ? (
             <LoadingStateCard
-              body={isKorean ? "활성 버전의 추출 스킬, 경력, 리스크 신호를 불러오는 중입니다." : "Loading extracted skills, experiences, and risk signals for the active version."}
-              title={isKorean ? "활성 이력서를 분석하는 중입니다" : "Analyzing active resume"}
+              body={isKorean ? "활성 버전의 경력, 스킬, 리스크를 탐색기 화면에 맞게 정리하는 중입니다." : "Organizing experience, skills, and risks into the explorer workspace."}
+              title={isKorean ? "경력 지도를 생성하는 중입니다" : "Building the experience map"}
             />
           ) : isAnalysisUnavailable ? (
             <EmptyStateCard
@@ -123,7 +367,7 @@ export function ResumeAnalysisPage() {
                 label: isKorean ? "이력서로 돌아가기" : "Back to resumes",
                 to: routeConfig.resume.buildPath(),
               }}
-              body={isKorean ? "백엔드에서 아직 이력서 분석을 지원하지 않습니다. 활성 버전 개요는 계속 볼 수 있고, 나머지 학습 흐름은 막히지 않습니다." : "Resume analysis is not available from the backend yet. The active-version overview remains available, and the rest of the learning flow stays unblocked."}
+              body={isKorean ? "백엔드에서 아직 분석 결과를 주지 않지만, 경력 스냅샷이 준비되면 이 화면은 자동으로 더 풍부해집니다." : "The backend does not return analysis yet, but this page becomes richer as soon as snapshot data is available."}
               title={isKorean ? "아직 이력서 분석을 지원하지 않습니다" : "Resume analysis is not supported yet"}
             />
           ) : analysisQuery.isError ? (
@@ -139,193 +383,355 @@ export function ResumeAnalysisPage() {
               onAction={() => {
                 void analysisQuery.refetch();
               }}
-              title={isKorean ? "이력서 인사이트를 불러올 수 없습니다" : "Unable to load resume insights"}
+              title={isKorean ? "경력 인사이트를 불러올 수 없습니다" : "Unable to load experience insights"}
             />
           ) : analysisQuery.data ? (
-            (() => {
-              const highRiskCount = analysisQuery.data.risks.filter((risk) =>
-                risk.severityLabel.toLowerCase().includes("high"),
-              ).length;
-              const workspaceSummary = (
-                <section className="page-card resume-analysis-workspace-surface">
-                  <div className="resume-analysis-workspace-surface__header">
-                    <div className="resume-analysis-workspace-surface__intro">
-                      <div className="resume-analysis-workspace-surface__eyebrow-row">
-                        <span className="page-card__label">{isKorean ? "기준 문서" : "Source of truth"}</span>
-                        <span className="question-status-badge question-status-badge--accent">{isKorean ? "방어 레인" : "Defense lane"}</span>
-                      </div>
-                      <p className="resume-analysis-workspace-surface__breadcrumbs">
-                        {isKorean ? "근거 주장 품질" : "Source claim quality"}
-                        <span>/</span>
-                        {isKorean ? "증빙 밀도" : "Evidence density"}
-                        <span>/</span>
-                        {isKorean ? "꼬리질문 생존력" : "Follow-up survivability"}
-                      </p>
-                      <h2 className="resume-analysis-workspace-surface__title">
-                        {isKorean ? "활성 이력서가 DFS 꼬리질문 압박을 버틸 수 있는지 확인하세요" : "Check whether the active resume can survive DFS follow-up pressure"}
-                      </h2>
-                      <p className="resume-analysis-workspace-surface__body">
-                        {isKorean
-                          ? "이 페이지에서 얇은 주장, 약한 증빙 블록, 그리고 면접 세션이 파고들기 전에 더 강한 근거가 필요한 정확한 이력서 구간을 찾으세요."
-                          : "Use this page to find thin claims, weak evidence blocks, and the exact resume sections that need stronger grounding before an interview session drills into them."}
-                      </p>
-                    </div>
-                    <div className="resume-analysis-workspace-surface__stats">
-                      <article className="resume-analysis-workspace-surface__stat">
-                        <span>{isKorean ? "매핑된 스킬" : "Skills mapped"}</span>
-                        <strong>{analysisQuery.data.skills.length}</strong>
-                      </article>
-                      <article className="resume-analysis-workspace-surface__stat">
-                        <span>{isKorean ? "경력 블록" : "Experience blocks"}</span>
-                        <strong>{analysisQuery.data.experiences.length}</strong>
-                      </article>
-                      <article className="resume-analysis-workspace-surface__stat">
-                        <span>{isKorean ? "방어 리스크" : "Defense risks"}</span>
-                        <strong>{analysisQuery.data.risks.length}</strong>
-                      </article>
-                      <article className="resume-analysis-workspace-surface__stat">
-                        <span>{isKorean ? "고위험 주장" : "High-risk claims"}</span>
-                        <strong>{highRiskCount}</strong>
-                      </article>
-                    </div>
+            <div className={`resume-analysis-explorer ${isDesktop ? "resume-analysis-explorer--desktop" : "resume-analysis-explorer--mobile"}`}>
+              <aside className="resume-analysis-explorer__left">
+                <section className="page-card resume-analysis-explorer__hero">
+                  <div className="resume-analysis-explorer__hero-topline">
+                    <span className="page-card__label">{isKorean ? "경력 탐색기" : "Experience explorer"}</span>
+                    <span className="question-status-badge question-status-badge--accent">
+                      {isKorean ? "DFS 준비" : "DFS ready"}
+                    </span>
                   </div>
-                  <div className="resume-analysis-workspace-surface__chips">
-                    <span className="detail-chip">{activeResumeVersion.versionNumberLabel}</span>
-                    <span className="detail-chip detail-chip--accent">{activeResumeVersion.parsingStatusLabel}</span>
-                    <span className="detail-chip">{activeResumeVersion.extractionStatusLabel}</span>
-                    <span className="detail-chip">{activeResumeVersion.fileNameLabel}</span>
-                  </div>
-                  <div className="resume-analysis-workspace-surface__guidance">
-                    <article className="resume-analysis-workspace-surface__guidance-card">
-                      <span>{isKorean ? "첫 읽기" : "First read"}</span>
-                      <strong>{isKorean ? "구체적인 트레이드오프 질문에서 가장 먼저 무너질 가능성이 큰 주장부터 보세요." : "Start with the claim most likely to fail under concrete trade-off questions."}</strong>
+                  <h2 className="resume-analysis-explorer__hero-title">
+                    {isKorean ? "회사, 프로젝트, 면접 질문을 하나의 경력 지도에 고정하세요" : "Pin companies, projects, and interview questions into one experience map"}
+                  </h2>
+                  <p className="resume-analysis-explorer__hero-body">
+                    {isKorean
+                      ? "샘플처럼 좌측에는 커리어 타임라인, 중앙에는 프로젝트 탐색기, 우측에는 상세 인스펙터를 두고 현재 활성 이력서를 면접용 기준 문서로 압축했습니다."
+                      : "This compresses the active resume into an interview-ready source of truth with a career timeline, project explorer, and detail inspector."}
+                  </p>
+                  <div className="resume-analysis-explorer__hero-stats">
+                    <article>
+                      <span>{isKorean ? "회사" : "Companies"}</span>
+                      <strong>{explorerNodes.length}</strong>
                     </article>
-                    <article className="resume-analysis-workspace-surface__guidance-card">
-                      <span>{isKorean ? "수정 순서" : "Repair order"}</span>
-                      <strong>{isKorean ? "다음 모의 세션을 돌리기 전에 얇은 근거 문장을 먼저 보강하세요." : "Fix thin source text before running another mock session."}</strong>
+                    <article>
+                      <span>{isKorean ? "프로젝트" : "Projects"}</span>
+                      <strong>{totalProjects}</strong>
+                    </article>
+                    <article>
+                      <span>{isKorean ? "핵심 경력" : "Core lanes"}</span>
+                      <strong>{coreProjects}</strong>
+                    </article>
+                    <article>
+                      <span>{isKorean ? "기술" : "Technologies"}</span>
+                      <strong>{technologies.length}</strong>
                     </article>
                   </div>
                 </section>
-              );
-
-              return (
-                <div className={`resume-analysis-layout ${isDesktop ? "resume-analysis-layout--desktop" : "resume-analysis-layout--mobile"}`}>
-                  <aside className="resume-analysis-layout__workspace-summary">
-                    {workspaceSummary}
-                    <ActiveResumeOverviewCard resumeList={effectiveResumeList} />
-                  </aside>
-                  <div className="resume-analysis-layout__main page-stack">
-                    <section className="page-card resume-analysis-priority-card">
-                      <div className="section-heading">
-                        <div>
-                          <p className="section-heading__eyebrow">{isKorean ? "우선 읽기" : "Priority read"}</p>
-                          <h2 className="page-card__title">{isKorean ? "꼬리질문에서 가장 먼저 무너질 주장부터 시작하세요" : "Start with the claims most likely to fail under follow-up"}</h2>
-                        </div>
-                      </div>
-                      <div className="resume-analysis-priority-card__signals">
-                        <article className="resume-analysis-priority-card__signal">
-                          <span>{isKorean ? "즉시 수정 대상" : "Immediate fix target"}</span>
-                          <strong>
-                            {analysisQuery.data.risks[0]
-                              ? isKorean
-                                ? `집중: ${analysisQuery.data.risks[0].title}`
-                                : `Focus: ${analysisQuery.data.risks[0].title}`
-                              : isKorean
-                                ? "긴급한 주장 리스크가 없습니다"
-                                : "No urgent claim risk detected"}
-                          </strong>
-                        </article>
-                        <article className="resume-analysis-priority-card__signal">
-                          <span>{isKorean ? "증빙 범위" : "Evidence coverage"}</span>
-                          <strong>
-                            {analysisQuery.data.experiences.length > 0
-                              ? isKorean
-                                ? `${analysisQuery.data.experiences.length}개의 경력 블록이 drill-down 준비 상태입니다`
-                                : `${analysisQuery.data.experiences.length} experience blocks are ready for drill-down`
-                              : isKorean
-                                ? "아직 추출된 경력 블록이 없습니다"
-                                : "No extracted experience blocks yet"}
-                          </strong>
-                        </article>
-                      </div>
-                      <div className="resume-analysis-priority-card__playbook">
-                        <article className="resume-analysis-priority-card__playbook-step">
-                          <span>{isKorean ? "1. 가장 약한 주장 선택" : "1. Pick the weakest claim"}</span>
-                          <strong>
-                            {analysisQuery.data.risks[0]
-                              ? isKorean
-                                ? `"${analysisQuery.data.risks[0].title}"를 하나의 구체적 사례로 방어할 수 있을 때까지 다시 다듬으세요`
-                                : `Rework "${analysisQuery.data.risks[0].title}" until it can be defended with one concrete example`
-                              : isKorean
-                                ? "다음 모의 진행을 막는 긴급 주장 실패가 없습니다"
-                                : "No urgent claim failure is blocking the next mock pass"}
-                          </strong>
-                        </article>
-                        <article className="resume-analysis-priority-card__playbook-step">
-                          <span>{isKorean ? "2. 증빙 추적" : "2. Trace the evidence"}</span>
-                          <strong>{isKorean ? "보조 경력 블록에 지표, 제약, 의사결정이 포함되어 있는지 확인하세요." : "Make sure the supporting experience block contains metrics, constraints, and decisions."}</strong>
-                        </article>
-                      </div>
-                    </section>
-                    <ResumeRiskList risks={analysisQuery.data.risks} />
-                    <ResumeExperienceList experiences={analysisQuery.data.experiences} />
-                    <ResumeSkillsCard skills={analysisQuery.data.skills} />
+                <ActiveResumeOverviewCard resumeList={effectiveResumeList} />
+                <section className="page-card resume-analysis-explorer__summary-card">
+                  <div className="section-heading">
+                    <div>
+                      <p className="section-heading__eyebrow">{isKorean ? "경력 개요" : "Career summary"}</p>
+                      <h2 className="page-card__title">{isKorean ? "지금 바로 답변에 연결할 수 있는 단위" : "Units you can connect into answers now"}</h2>
+                    </div>
                   </div>
-                  <aside className="resume-analysis-layout__rail page-stack">
-                    <section className="page-card section-panel section-panel--muted resume-analysis-guide">
-                      <span className="page-card__label">{isKorean ? "방어 가이드" : "Defense guide"}</span>
-                      <h2 className="page-card__title">{isKorean ? "이 분석을 면접 압박처럼 읽으세요" : "Read this analysis like interview pressure"}</h2>
-                      <p className="page-card__body">
-                        {isKorean
-                          ? "강한 이력서 기준 문서는 질문 트리가 더 깊어질수록 모든 강조된 주장이 구체적인 의사결정, 제약, 지표, 트레이드오프로 확장될 수 있는 상태입니다."
-                          : "A strong resume source of truth is one where every highlighted claim can expand into concrete decisions, constraints, metrics, and trade-offs when the question tree keeps drilling deeper."}
+                  <div className="resume-analysis-explorer__summary-grid">
+                    <article>
+                      <span>{isKorean ? "활성 버전" : "Active version"}</span>
+                      <strong>{activeResumeVersion.versionNumberLabel}</strong>
+                    </article>
+                    <article>
+                      <span>{isKorean ? "파싱 상태" : "Parsing"}</span>
+                      <strong>{activeResumeVersion.parsingStatusLabel}</strong>
+                    </article>
+                    <article>
+                      <span>{isKorean ? "리스크" : "Risks"}</span>
+                      <strong>{analysisQuery.data.risks.length}</strong>
+                    </article>
+                    <article>
+                      <span>{isKorean ? "스킬 근거" : "Skill proofs"}</span>
+                      <strong>{analysisQuery.data.skills.length}</strong>
+                    </article>
+                  </div>
+                </section>
+              </aside>
+
+              <main className="resume-analysis-explorer__main">
+                <section className="page-card resume-analysis-explorer__workspace">
+                  <div className="resume-analysis-explorer__workspace-header">
+                    <div>
+                      <p className="resume-analysis-explorer__breadcrumbs">
+                        <span>{isKorean ? "경력" : "Career"}</span>
+                        <span>/</span>
+                        <span>{isKorean ? "프로젝트" : "Projects"}</span>
+                        <span>/</span>
+                        <span>{isKorean ? "질문 트리" : "Question tree"}</span>
                       </p>
-                      <div className="resume-analysis-guide__signals">
-                        <article className="resume-analysis-guide__signal">
-                          <span>{isKorean ? "즉시 보강 대상" : "Immediate repair target"}</span>
-                          <strong>
-                            {analysisQuery.data.risks[0]
-                              ? analysisQuery.data.risks[0].title
-                              : isKorean
-                                ? "현재 표시된 높은 우선순위 보강 대상이 없습니다"
-                                : "No high-priority claim repair is currently flagged"}
-                          </strong>
+                      <div className="resume-analysis-explorer__tab-row">
+                        <button className="secondary-button is-active" type="button">
+                          {isKorean ? "경력 익스플로러" : "Experience explorer"}
+                        </button>
+                        <button className="secondary-button" type="button">
+                          {isKorean ? "임팩트 분석" : "Impact analytics"}
+                        </button>
+                        <button className="secondary-button" type="button">
+                          {isKorean ? "이력서 빌더" : "Resume builder"}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="resume-analysis-explorer__actions-row">
+                      <button className="secondary-button" type="button">
+                        {isKorean ? "필터" : "Filter"}
+                      </button>
+                      <button className="secondary-button" type="button">
+                        {isKorean ? "정렬" : "Sort"}
+                      </button>
+                      <Link className="primary-button" to={routeConfig.resumeEditor.buildPath({ versionId: activeResumeVersion.id })}>
+                        {isKorean ? "경력 보강" : "Add experience"}
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="resume-analysis-explorer__map-shell">
+                    <div className="resume-analysis-explorer__map-topline">
+                      <strong>
+                        {isKorean
+                          ? `${explorerNodes.length}개 회사 · ${totalProjects}개 프로젝트 · ${technologies.length}개 기술`
+                          : `${explorerNodes.length} companies · ${totalProjects} projects · ${technologies.length} technologies`}
+                      </strong>
+                      <button className="secondary-button" type="button">
+                        {isKorean ? "보기 맞춤" : "Fit view"}
+                      </button>
+                    </div>
+                    <div className="resume-analysis-explorer__map">
+                      {explorerNodes.map((node) => (
+                        <article className="resume-analysis-explorer__lane" key={node.id}>
+                          <div className="resume-analysis-explorer__lane-rail">
+                            <span className="resume-analysis-explorer__lane-period">{node.dateLabel}</span>
+                            <span className="resume-analysis-explorer__lane-dot" />
+                          </div>
+                          <button
+                            aria-pressed={selectedNode?.id === node.id}
+                            className={`resume-analysis-explorer__company-card${selectedNode?.id === node.id ? " is-active" : ""}`}
+                            onClick={() => {
+                              setSelectedExperienceId(node.id);
+                            }}
+                            type="button"
+                          >
+                            <strong>{node.companyName}</strong>
+                            <span>{node.roleName}</span>
+                          </button>
+                          <div className="resume-analysis-explorer__project-flow">
+                            {node.projects.map((project, index) => (
+                              <button
+                                className={`resume-analysis-explorer__project-card${selectedNode?.id === node.id && index === 0 ? " is-active" : ""}`}
+                                key={project.id}
+                                onClick={() => {
+                                  setSelectedExperienceId(node.id);
+                                }}
+                                type="button"
+                              >
+                                <div className="resume-analysis-explorer__project-title-row">
+                                  <span className="resume-analysis-explorer__project-bullet" />
+                                  <strong>{project.title}</strong>
+                                </div>
+                                <span>{project.dateLabel ?? node.dateLabel}</span>
+                                <div className="resume-analysis-explorer__project-tags">
+                                  <span className={`resume-analysis-explorer__impact-chip resume-analysis-explorer__impact-chip--${node.impactLevel}`}>
+                                    {getImpactLabel(node.impactLevel, isKorean)}
+                                  </span>
+                                  {node.riskTitles.length > 0 ? (
+                                    <span className="resume-analysis-explorer__impact-chip">
+                                      {isKorean ? `리스크 ${node.riskTitles.length}` : `${node.riskTitles.length} risks`}
+                                    </span>
+                                  ) : null}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
                         </article>
-                        <article className="resume-analysis-guide__signal">
-                          <span>{isKorean ? "다음 면접 전" : "Before next interview"}</span>
-                          <strong>{isKorean ? "리스크가 있는 주장과 그 증빙 블록을 추가 설명 없이 읽히도록 만드세요." : "Make the risky claim and its evidence block readable without extra explanation."}</strong>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                <section className="resume-analysis-explorer__insights-grid">
+                  <section className="page-card resume-analysis-explorer__insight-panel">
+                    <div className="section-heading">
+                      <div>
+                        <p className="section-heading__eyebrow">{isKorean ? "커리어 요약" : "Career summary"}</p>
+                        <h2 className="page-card__title">{isKorean ? "탐색 가능한 경력 볼륨" : "Explorable career volume"}</h2>
+                      </div>
+                    </div>
+                    <div className="resume-analysis-explorer__career-metrics">
+                      <article>
+                        <strong>{explorerNodes.length}</strong>
+                        <span>{isKorean ? "회사" : "Companies"}</span>
+                      </article>
+                      <article>
+                        <strong>{totalProjects}</strong>
+                        <span>{isKorean ? "프로젝트" : "Projects"}</span>
+                      </article>
+                      <article>
+                        <strong>{topSkills.length}</strong>
+                        <span>{isKorean ? "대표 스킬" : "Top skills"}</span>
+                      </article>
+                      <article>
+                        <strong>{technologies.length}+</strong>
+                        <span>{isKorean ? "기술 태그" : "Tech tags"}</span>
+                      </article>
+                    </div>
+                  </section>
+
+                  <section className="page-card resume-analysis-explorer__insight-panel">
+                    <div className="section-heading">
+                      <div>
+                        <p className="section-heading__eyebrow">{isKorean ? "상위 스킬" : "Top skills"}</p>
+                        <h2 className="page-card__title">{isKorean ? "경력에 가장 많이 걸린 스킬" : "Skills most connected to experience"}</h2>
+                      </div>
+                    </div>
+                    <div className="resume-analysis-explorer__skill-cloud">
+                      {topSkills.map((skill) => (
+                        <span className="detail-chip" key={skill.id}>
+                          {skill.label}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="page-card__body">
+                      {isKorean
+                        ? "샘플의 하단 스킬 영역처럼, 가장 자주 등장하는 기술 근거를 빠르게 훑고 질문 확률이 높은 항목부터 보강합니다."
+                        : "Like the sample footer skill area, this surfaces the most repeated evidence so you can strengthen likely question targets first."}
+                    </p>
+                  </section>
+
+                  <section className="page-card resume-analysis-explorer__insight-panel">
+                    <div className="section-heading">
+                      <div>
+                        <p className="section-heading__eyebrow">{isKorean ? "리스크 분포" : "Risk distribution"}</p>
+                        <h2 className="page-card__title">{isKorean ? "꼬리질문 압박 레벨" : "Follow-up pressure levels"}</h2>
+                      </div>
+                    </div>
+                    <div className="resume-analysis-explorer__risk-list">
+                      {explorerNodes.slice(0, 4).map((node) => (
+                        <article key={node.id}>
+                          <div>
+                            <strong>{node.companyName}</strong>
+                            <span>{getImpactLabel(node.impactLevel, isKorean)}</span>
+                          </div>
+                          <span className={`resume-analysis-explorer__risk-score resume-analysis-explorer__risk-score--${getSeverityTone(node.severityScore)}`}>
+                            {node.severityScore}
+                          </span>
                         </article>
+                      ))}
+                    </div>
+                  </section>
+                </section>
+              </main>
+
+              <aside className="resume-analysis-explorer__right">
+                <section className="page-card resume-analysis-explorer__inspector">
+                  <div className="resume-analysis-explorer__inspector-topline">
+                    <span className="page-card__label">{isKorean ? "프로젝트 상세" : "Project details"}</span>
+                    <button aria-label={isKorean ? "닫기" : "Close"} className="resume-analysis-explorer__close-button" type="button">
+                      ×
+                    </button>
+                  </div>
+                  {selectedNode ? (
+                    <>
+                      <div className="resume-analysis-explorer__inspector-head">
+                        <span className={`resume-analysis-explorer__impact-chip resume-analysis-explorer__impact-chip--${selectedNode.impactLevel}`}>
+                          {getImpactLabel(selectedNode.impactLevel, isKorean)}
+                        </span>
+                        <h2>{selectedNode.projectName ?? selectedNode.projects[0]?.title ?? selectedNode.companyName}</h2>
+                        <p>{selectedNode.dateLabel}</p>
                       </div>
-                      <div className="resume-analysis-guide__rules">
-                        <div className="resume-analysis-guide__rule">
-                          <strong>{isKorean ? "1. 모호한 주장부터 찾기" : "1. Find vague claims first"}</strong>
-                          <span>{isKorean ? "리스크 항목은 보통 그럴듯해 보이지만 디테일에서 무너지는 주장을 가리킵니다." : "Risk items usually point to claims that sound impressive but collapse under detail."}</span>
-                        </div>
-                        <div className="resume-analysis-guide__rule">
-                          <strong>{isKorean ? "2. 증빙 블록 확인" : "2. Check the evidence block"}</strong>
-                          <span>{isKorean ? "경력과 파싱된 스킬은 그 주장이 어떻게 만들어졌는지 설명할 만큼 충분한 맥락을 드러내야 합니다." : "Experiences and parsed skills should expose enough context to explain how the claim happened."}</span>
-                        </div>
-                        <div className="resume-analysis-guide__rule">
-                          <strong>{isKorean ? "3. 모의 전 보강" : "3. Repair before mock practice"}</strong>
-                          <span>{isKorean ? "약한 입력으로 또 한 세션을 쓰기 전에 근거 문장부터 먼저 조이세요." : "Tighten the source text before spending another session on weak inputs."}</span>
+                      <div className="resume-analysis-explorer__inspector-section">
+                        <h3>{isKorean ? "프로젝트 설명" : "About this project"}</h3>
+                        <p>{selectedNode.impactText ?? selectedNode.summary}</p>
+                      </div>
+                      <div className="resume-analysis-explorer__inspector-section">
+                        <h3>{isKorean ? "핵심 책임" : "Key responsibilities"}</h3>
+                        <ul className="resume-analysis-explorer__bullet-list">
+                          {selectedNode.projects.map((project) => (
+                            <li key={project.id}>{project.summary}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="resume-analysis-explorer__inspector-section">
+                        <h3>{isKorean ? "주요 성과" : "Key achievements"}</h3>
+                        <div className="resume-analysis-explorer__achievement-list">
+                          {(selectedNode.riskTitles.length > 0 ? selectedNode.riskTitles : [selectedNode.summary]).slice(0, 4).map((item, index) => (
+                            <article key={`${selectedNode.id}-achievement-${index}`}>
+                              <span>{item}</span>
+                              <strong>{Math.max(52, selectedNode.severityScore - index * 7)}%</strong>
+                            </article>
+                          ))}
                         </div>
                       </div>
-                      <div className="page-card__actions">
-                        <Link
-                          className="secondary-button"
-                          to={routeConfig.resumeEditor.buildPath({ versionId: activeResumeVersion.id })}
-                        >
-                          {isKorean ? "기준 문서 편집" : "Edit source of truth"}
-                        </Link>
-                        <Link className="primary-button" to={routeConfig.resume.buildPath()}>
-                          {isKorean ? "활성 이력서 검토" : "Review active resume"}
-                        </Link>
+                      <div className="resume-analysis-explorer__inspector-section">
+                        <h3>{isKorean ? "사용 기술" : "Technologies used"}</h3>
+                        <div className="resume-analysis-explorer__tech-cloud">
+                          {selectedNode.technologies.length > 0 ? (
+                            selectedNode.technologies.map((technology) => (
+                              <span className="detail-chip" key={technology}>
+                                {technology}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="detail-chip">{isKorean ? "기술 태그 준비 중" : "Tags pending"}</span>
+                          )}
+                        </div>
                       </div>
-                    </section>
-                  </aside>
-                </div>
-              );
-            })()
+                    </>
+                  ) : null}
+                </section>
+
+                <section className="page-card resume-analysis-explorer__question-panel">
+                  <div className="resume-analysis-explorer__question-tabs">
+                    <button className="secondary-button is-active" type="button">
+                      {isKorean ? "생성 질문" : "Generated questions"}
+                    </button>
+                    <button className="secondary-button" type="button">
+                      {isKorean ? "연결 스킬" : "Connected skills"}
+                    </button>
+                  </div>
+                  <div className="resume-analysis-explorer__question-list">
+                    {(selectedNode ? buildFallbackQuestions(selectedNode, isKorean) : []).map((question, index) => (
+                      <article key={`${selectedNode?.id ?? "question"}-${index}`}>
+                        <div>
+                          <strong>{index + 1}</strong>
+                          <p>{question}</p>
+                        </div>
+                        <span className={`resume-analysis-explorer__risk-score resume-analysis-explorer__risk-score--${index === 0 ? "danger" : index === 1 ? "warning" : "stable"}`}>
+                          {Math.max(72, 92 - index * 8)}
+                        </span>
+                      </article>
+                    ))}
+                  </div>
+                  <Link className="primary-button resume-analysis-explorer__practice-button" to={routeConfig.interview.buildPath()}>
+                    {isKorean ? "이 경력으로 모의 시작" : "Practice this project"}
+                  </Link>
+                </section>
+
+                <section className="page-card resume-analysis-explorer__queue-panel">
+                  <div className="section-heading">
+                    <div>
+                      <p className="section-heading__eyebrow">{isKorean ? "수정 큐" : "Repair queue"}</p>
+                      <h2 className="page-card__title">{isKorean ? "우선 보강할 리스크" : "Risks to repair next"}</h2>
+                    </div>
+                  </div>
+                  <div className="resume-analysis-explorer__queue-list">
+                    {severeRisks.length > 0 ? (
+                      severeRisks.map((risk) => (
+                        <article key={risk.id}>
+                          <strong>{risk.title}</strong>
+                          <span>{risk.description}</span>
+                        </article>
+                      ))
+                    ) : (
+                      <p className="page-card__body">
+                        {isKorean ? "지금은 즉시 보강이 필요한 리스크가 없습니다." : "There are no urgent repair risks right now."}
+                      </p>
+                    )}
+                  </div>
+                </section>
+              </aside>
+            </div>
           ) : null}
         </div>
       ) : null}
