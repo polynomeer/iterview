@@ -29,9 +29,21 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
 
   return (
     <section className="result-score-card result-score-card--workspace">
-      <div className="result-score-card__topline">
-        <span className="page-card__label">{isKorean ? "종합 점수" : "Overall score"}</span>
-        <span className="result-score-card__eyebrow-pill">{isKorean ? "평가 리드아웃" : "Evaluation readout"}</span>
+      <div className="result-score-card__header">
+        <div className="result-score-card__topline">
+          <span className="page-card__label">{isKorean ? "종합 점수" : "Overall score"}</span>
+          <span className="result-score-card__eyebrow-pill">{isKorean ? "평가 리드아웃" : "Evaluation readout"}</span>
+        </div>
+        <div className="result-score-card__status-grid">
+          <article className="result-score-card__status-item">
+            <span>{isKorean ? "판정" : "Verdict"}</span>
+            <strong>{result.evaluationResult}</strong>
+          </article>
+          <article className="result-score-card__status-item">
+            <span>{isKorean ? "다음 복습" : "Next review"}</span>
+            <strong>{result.nextReviewLabel ?? (isKorean ? "즉시 재시도" : "Retry now")}</strong>
+          </article>
+        </div>
       </div>
       <p className="result-score-card__kicker">{isKorean ? "인터뷰 평가" : "Interview evaluation"}</p>
       <div className="result-score-card__hero">

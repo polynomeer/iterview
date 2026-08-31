@@ -246,9 +246,21 @@ export function InterviewResultPage() {
           </div>
         </section>
         <section className="page-card interview-result-layout__hero">
-          <div className="interview-result-layout__hero-topline">
-            <span className="page-card__label">{t("result.summaryLabel")}</span>
-            <span className="question-status-badge question-status-badge--accent">{isKorean ? "판단 리드아웃" : "Decision readout"}</span>
+          <div className="interview-result-layout__hero-header">
+            <div className="interview-result-layout__hero-topline">
+              <span className="page-card__label">{t("result.summaryLabel")}</span>
+              <span className="question-status-badge question-status-badge--accent">{isKorean ? "판단 리드아웃" : "Decision readout"}</span>
+            </div>
+            <div className="interview-result-layout__hero-status-grid">
+              <article className="interview-result-layout__hero-status-item">
+                <span>{isKorean ? "미해결 가지" : "Unresolved"}</span>
+                <strong>{unresolvedBranchCount}</strong>
+              </article>
+              <article className="interview-result-layout__hero-status-item">
+                <span>{isKorean ? "평균 점수" : "Average"}</span>
+                <strong>{averageScoreLabel}</strong>
+              </article>
+            </div>
           </div>
           <h2 className="page-card__title">{isKorean ? `세션 ${sessionId}` : `Session ${sessionId}`}</h2>
           <p className="page-card__body">{isKorean ? "이 패스는 지난 답변을 감상하는 용도가 아니라 다음 가지를 고르는 용도입니다." : "Use this pass to choose the next branch, not to admire the last one."}</p>
@@ -403,6 +415,16 @@ export function InterviewResultPage() {
                   <strong>{isKorean ? "범위 원칙" : "Scope rule"}</strong>
                   <span>{isKorean ? "다음 패스는 가지 깊이가 실제로 좋아질 만큼만 좁게 유지하세요." : "Keep the next pass narrow enough to improve branch depth."}</span>
                 </div>
+              </div>
+              <div className="interview-result-layout__decision-grid">
+                <article className="interview-result-layout__decision-item interview-result-layout__decision-item--accent">
+                  <span>{isKorean ? "복구 우선" : "Recovery first"}</span>
+                  <strong>{recommendedActionLabel}</strong>
+                </article>
+                <article className="interview-result-layout__decision-item">
+                  <span>{isKorean ? "작업 원칙" : "Working rule"}</span>
+                  <strong>{isKorean ? "다음 패스는 한 가지 실패 원인만 증명하면 됩니다." : "The next pass only needs to prove one repaired failure."}</strong>
+                </article>
               </div>
               <div className="page-card__actions">
                 <Link className="primary-button" to={routeConfig.interview.buildPath()}>

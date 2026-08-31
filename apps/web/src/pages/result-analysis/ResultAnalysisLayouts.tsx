@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { ContentGrid } from "../../shared/ui/layout";
 
 type ResultAnalysisLayoutProps = {
   workspaceSummary: ReactNode;
@@ -58,25 +57,27 @@ export function ResultAnalysisDesktopLayout({
 }: ResultAnalysisLayoutProps) {
   return (
     <div className="result-analysis-layout result-analysis-layout--desktop">
-      <section className="result-analysis-layout__workspace-summary">{workspaceSummary}</section>
-      <div className="result-analysis-layout__hero result-analysis-layout__hero-grid">
-        <div className="result-analysis-layout__hero-score">{scoreSection}</div>
-        <div className="result-analysis-layout__hero-action">
+      <aside className="result-analysis-layout__workspace-summary">
+        <div className="page-stack">
+          {workspaceSummary}
+          {scoreSection}
           {nextActionSection}
-          {recommendationSection}
         </div>
-      </div>
-      <ContentGrid columns="two">
+      </aside>
+      <div className="result-analysis-layout__main">
         <div className="page-stack result-analysis-layout__panel">
           {dimensionSection}
           {insightSection}
           {detailedFeedbackSection}
+          {recommendationSection}
         </div>
+      </div>
+      <aside className="result-analysis-layout__side">
         <div className="page-stack result-analysis-layout__panel">
           {modelAnswerSection}
           {feedbackSection}
         </div>
-      </ContentGrid>
+      </aside>
     </div>
   );
 }

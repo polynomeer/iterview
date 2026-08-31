@@ -47,6 +47,16 @@ export function NextActionCard({
           <span className="result-next-action-card__summary-item" role="listitem">{isKorean ? `복습 ${nextReviewLabel}` : `Review ${nextReviewLabel}`}</span>
         ) : null}
       </div>
+      <div className="result-next-action-card__decision-grid">
+        <article className="result-next-action-card__decision-item result-next-action-card__decision-item--accent">
+          <span>{isKorean ? "즉시 재시도" : "Immediate retry"}</span>
+          <strong>{isKorean ? "표현은 맞지만 압축이 안 되면 바로 수정합니다." : "Revise now when the idea is right but the phrasing is loose."}</strong>
+        </article>
+        <article className="result-next-action-card__decision-item">
+          <span>{isKorean ? "나중 재시도" : "Retry later"}</span>
+          <strong>{isKorean ? "근거가 더 필요하면 질문과 자료를 다시 점검한 뒤 돌아옵니다." : "Return later after rechecking question context and evidence."}</strong>
+        </article>
+      </div>
       <div className="result-next-action-card__principles" role="list" aria-label={isKorean ? "다음 액션 원칙" : "Next action principles"}>
         <span role="listitem">{isKorean ? "답변 전체를 고치기 전에 가장 약한 가지를 다시 읽으세요." : "Re-read the weakest branch before editing the whole answer."}</span>
         <span role="listitem">{isKorean ? "표현 문제는 즉시 재시도로, 근거가 얇으면 더 깊은 꼬리질문으로 가세요." : "Use immediate retry for phrasing issues and follow-up depth for thin evidence."}</span>
