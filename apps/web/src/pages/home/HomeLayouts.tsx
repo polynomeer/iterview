@@ -25,19 +25,14 @@ function ReviewQueuePanel() {
       <div className="home-layout__review-panel-header">
         <div>
           <span className="page-card__label">{isKorean ? "재도전 복구" : "Retry recovery"}</span>
-          <h2 className="page-card__title">{isKorean ? "메인 흐름을 끊지 않고 약한 분기를 정리하세요" : "Process weak branches without breaking the main run"}</h2>
+          <h2 className="page-card__title">{isKorean ? "메인 흐름을 끊지 않고 재도전만 정리하세요" : "Clear retries without breaking the main run"}</h2>
         </div>
         <span className="detail-chip detail-chip--accent">{isKorean ? "복구 레인" : "Recovery lane"}</span>
       </div>
       <p className="page-card__body">
         {isKorean
-          ? "약한 답변 여러 개를 연달아 보강하고 싶을 때 전용 복습 큐를 여세요."
+          ? "약한 답변을 짧게 연속 정리할 때 이 큐를 사용하세요."
           : "Open the dedicated review queue when you want to tighten several weak answers back-to-back."}
-      </p>
-      <p className="home-layout__review-panel-note">
-        {isKorean
-          ? "세션이나 결과 검토에서 얕은 분기가 드러난 직후에 가장 효과적입니다."
-          : "Best used after a session or result review exposes shallow branches."}
       </p>
       <div className="page-card__actions">
         <Link className="primary-button" to={routeConfig.reviewQueue.buildPath()}>

@@ -47,8 +47,6 @@ export function ReviewQueueItem({
         <div className="review-queue-item-card__topline">
           <div className="list-item-card__meta">
             <span>{item.reasonTypeLabel}</span>
-            {item.priorityLabel ? <span>{item.priorityLabel}</span> : null}
-            {item.scheduledLabel ? <span>{item.scheduledLabel}</span> : null}
             <QuestionStatusBadge status={item.statusLabel} />
           </div>
           <span className="detail-chip detail-chip--accent">{executionLane}</span>
@@ -58,12 +56,11 @@ export function ReviewQueueItem({
         <div className="review-queue-item-card__chips">
           <span className="detail-chip detail-chip--accent">{priorityText}</span>
           <span className="detail-chip">{timingText}</span>
-          <span className="detail-chip">{executionLane}</span>
         </div>
         {(item.relatedSkillLabels ?? []).length > 0 ? (
-          <div className="chip-list">
+          <div className="chip-list review-queue-item-card__skills">
             {(item.relatedSkillLabels ?? []).map((skill) => (
-              <span className="detail-chip detail-chip--accent" key={skill}>
+              <span className="detail-chip" key={skill}>
                 {skill}
               </span>
             ))}
@@ -95,8 +92,8 @@ export function ReviewQueueItem({
       <div className="review-queue-item-card__footer">
         <p className="review-queue-item-card__note">
           {isKorean
-            ? "답변 루프를 지금 끝낼 수 있을 때만 바로 처리하고, 아니면 의도적으로 미루세요."
-            : "Resolve now only if you can finish the answer loop; otherwise defer intentionally."}
+            ? "지금 끝낼 수 있으면 처리하고, 아니면 미루세요."
+            : "Resolve now only if you can finish it; otherwise defer."}
         </p>
         <QueueActionButtons
           disabled={disabled}

@@ -38,6 +38,23 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
     currentUser?.jobRole?.trim() ||
     t("navigation.profile");
   const profileImageUrl = currentUser?.profile?.profileImageUrl?.trim() ?? "";
+  const pageTitle = location.pathname.startsWith(routeConfig.reviewQueue.path)
+    ? isKorean
+      ? "리뷰 큐"
+      : "Review queue"
+    : location.pathname.startsWith(routeConfig.archive.path)
+      ? isKorean
+        ? "아카이브"
+        : "Archive"
+      : location.pathname.startsWith(routeConfig.scheduledReviews.path)
+        ? isKorean
+          ? "예정된 복습"
+          : "Scheduled reviews"
+        : location.pathname.startsWith(routeConfig.weakNodes.path)
+          ? isKorean
+            ? "약한 노드"
+            : "Weak nodes"
+          : null;
 
   const pageHeader = (() => {
     if (!isAuthenticated) {
@@ -65,6 +82,13 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
       return {
         eyebrow: t("sidebar.workspace"),
         title: t("header.workspaceTitle"),
+      };
+    }
+
+    if (pageTitle) {
+      return {
+        eyebrow: t("sidebar.workspace"),
+        title: pageTitle,
       };
     }
 
@@ -137,10 +161,10 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
         {isAuthenticated && currentUser ? (
           <>
             <button className="app-header__icon-action" type="button">
-              ⌕
+              {isKorean ? "알" : "A"}
             </button>
             <button className="app-header__icon-action" type="button">
-              ⌁
+              {isKorean ? "활" : "L"}
             </button>
             <Link className="app-header__action" to={routeConfig.profile.buildPath()}>
               <span className="app-header__avatar" aria-hidden="true">
@@ -161,8 +185,8 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
                 <span className="app-header__action-meta">{profileMeta}</span>
               </span>
             </Link>
-            <button className="app-header__action app-header__action--secondary" onClick={logout} type="button">
-              {t("common.logout")}
+            <button aria-label={t("common.logout")} className="app-header__icon-action" onClick={logout} type="button">
+              {isKorean ? "종" : "O"}
             </button>
           </>
         ) : (

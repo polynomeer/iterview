@@ -6,26 +6,27 @@ import { useLocale } from "../../shared/i18n";
 function getNavigationGlyph(label: string) {
   const normalized = label.toLowerCase();
 
-  if (normalized.includes("today") || normalized.includes("오늘")) return "T";
-  if (normalized.includes("workspace") || normalized.includes("인터뷰")) return "W";
-  if (normalized.includes("question") || normalized.includes("질문")) return "Q";
-  if (normalized.includes("review") || normalized.includes("복습") || normalized.includes("리뷰")) return "R";
-  if (normalized.includes("schedule") || normalized.includes("예정")) return "S";
-  if (normalized.includes("weak") || normalized.includes("약한")) return "!";
-  if (normalized.includes("archive") || normalized.includes("아카이브")) return "A";
+  if (normalized.includes("today") || normalized.includes("오늘")) return "TD";
+  if (normalized.includes("workspace") || normalized.includes("인터뷰")) return "WS";
+  if (normalized.includes("question") || normalized.includes("질문")) return "QM";
+  if (normalized.includes("review") || normalized.includes("복습") || normalized.includes("리뷰")) return "RV";
+  if (normalized.includes("schedule") || normalized.includes("예정")) return "SC";
+  if (normalized.includes("weak") || normalized.includes("약한")) return "WN";
+  if (normalized.includes("archive") || normalized.includes("아카이브")) return "AR";
   if (normalized.includes("resume") || normalized.includes("이력서")) return "CV";
   if (normalized.includes("skill") || normalized.includes("스킬")) return "SK";
-  if (normalized.includes("note") || normalized.includes("노트")) return "N";
-  if (normalized.includes("book") || normalized.includes("북마크")) return "B";
-  if (normalized.includes("company") || normalized.includes("기업")) return "C";
-  if (normalized.includes("setting") || normalized.includes("설정")) return "P";
+  if (normalized.includes("note") || normalized.includes("노트")) return "NT";
+  if (normalized.includes("book") || normalized.includes("북마크")) return "BM";
+  if (normalized.includes("company") || normalized.includes("기업")) return "TC";
+  if (normalized.includes("setting") || normalized.includes("설정")) return "ST";
 
-  return "•";
+  return "IT";
 }
 
 export function SidebarNavigation() {
   const { isAuthenticated } = useAuth();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
   const workspaceLinks = isAuthenticated
     ? [
         {
@@ -34,10 +35,10 @@ export function SidebarNavigation() {
             { label: t("header.workspaceTitle"), meta: t("sidebar.brandSummary"), to: routeConfig.interview.buildPath() },
             { label: t("sidebar.today"), meta: t("header.workspaceEyebrow"), to: routeConfig.home.buildPath() },
             { label: t("sidebar.questionMap"), meta: t("practice.searchQuestions"), to: routeConfig.practice.buildPath() },
-            { label: t("navigation.reviewQueue"), meta: t("sidebar.workflow"), to: routeConfig.reviewQueue.buildPath() },
-            { label: t("sidebar.scheduledReviews"), meta: t("sidebar.workflowRange"), to: routeConfig.scheduledReviews.buildPath() },
-            { label: t("sidebar.weakNodes"), meta: t("sidebar.workflowFocusBody"), to: routeConfig.weakNodes.buildPath() },
-            { label: t("navigation.archive"), meta: isAuthenticated ? "Interview record" : "Records", to: routeConfig.archive.buildPath() },
+            { label: t("navigation.reviewQueue"), meta: isAuthenticated ? t("sidebar.workflow") : "Review", to: routeConfig.reviewQueue.buildPath() },
+            { label: t("sidebar.scheduledReviews"), meta: isAuthenticated ? t("sidebar.workflowRange") : "Schedule", to: routeConfig.scheduledReviews.buildPath() },
+            { label: t("sidebar.weakNodes"), meta: isAuthenticated ? t("sidebar.workflowFocusBody") : "Weak nodes", to: routeConfig.weakNodes.buildPath() },
+            { label: t("navigation.archive"), meta: isAuthenticated ? (isKorean ? "답변 선반" : "Answer shelf") : "Records", to: routeConfig.archive.buildPath() },
           ],
         },
       ]
@@ -53,9 +54,9 @@ export function SidebarNavigation() {
       ];
   const careerLinks = isAuthenticated
     ? [
-        { label: t("navigation.resume"), meta: isAuthenticated ? "Source library" : "Resume", to: routeConfig.resume.buildPath() },
+        { label: t("navigation.resume"), meta: isAuthenticated ? (isKorean ? "기준 문서" : "Source library") : "Resume", to: routeConfig.resume.buildPath() },
         { label: t("navigation.resumeAnalysis"), meta: t("sidebar.coreLoop"), to: routeConfig.resumeAnalysis.buildPath() },
-        { label: t("navigation.skills"), meta: isAuthenticated ? "Capability map" : "Skills", to: routeConfig.skills.buildPath() },
+        { label: t("navigation.skills"), meta: isAuthenticated ? (isKorean ? "역량 맵" : "Capability map") : "Skills", to: routeConfig.skills.buildPath() },
       ]
     : [
         { label: t("common.login"), meta: t("sidebar.account"), to: routeConfig.login.buildPath() },
@@ -77,9 +78,7 @@ export function SidebarNavigation() {
           <strong className="sidebar-navigation__title">Iterview</strong>
           <span className="sidebar-navigation__pro-badge">{t("sidebar.brandBadge")}</span>
         </div>
-        <p className="sidebar-navigation__summary">
-          {t("sidebar.brandSummary")}
-        </p>
+        <p className="sidebar-navigation__summary">{t("sidebar.brandSummary")}</p>
       </div>
 
       {workspaceLinks.map((section) => (

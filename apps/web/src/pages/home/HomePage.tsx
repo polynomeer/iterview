@@ -43,7 +43,6 @@ export function HomePage() {
     : isKorean
       ? "이력서를 기준 문서로 삼고, 꼬리질문 압박과 재도전, 복구 흐름을 하나의 작업공간에서 이어가세요."
       : "Use your resume as source of truth, then move through follow-up pressure, retries, and recovery from one workspace.";
-  const summaryCount = homeData?.summaryStats?.length ?? 0;
   const retryCount = homeData?.retryQuestions?.length ?? 0;
   const materialCount = homeData?.learningMaterials?.length ?? 0;
   const riskCount = homeData?.resumeRiskPreview?.length ?? 0;
@@ -108,7 +107,6 @@ export function HomePage() {
             </div>
           </div>
           <div className="home-workspace-surface__chips">
-            <span className="detail-chip">{isKorean ? `요약 ${summaryCount}` : `Summary ${summaryCount}`}</span>
             {homeData?.todayQuestion ? (
               <span className="detail-chip detail-chip--accent">{isKorean ? "활성 분기 준비 완료" : "Active branch ready"}</span>
             ) : null}
@@ -123,10 +121,6 @@ export function HomePage() {
             <article className="home-workspace-surface__guidance-card">
               <span>{isKorean ? "탐색" : "Traversal"}</span>
               <strong>{isKorean ? "오늘의 질문으로 다음 DFS 분기에 진입하세요." : "Use today&apos;s question to enter the next DFS branch."}</strong>
-            </article>
-            <article className="home-workspace-surface__guidance-card">
-              <span>{isKorean ? "복구" : "Recovery"}</span>
-              <strong>{isKorean ? "범위를 넓히기 전에 재도전과 이력서 리스크를 먼저 정리하세요." : "Clear retries and resume risks before broadening scope."}</strong>
             </article>
           </div>
         </section>
@@ -266,7 +260,7 @@ export function HomePage() {
                     <strong>{homeData.todayQuestion ? homeData.todayQuestion.categoryLabel : (isKorean ? "미배정" : "Unassigned")}</strong>
                   </article>
                   <article>
-                    <span>{isKorean ? "난이도" : "Level"}</span>
+                    <span>{isKorean ? "회사" : "Company"}</span>
                     <strong>{homeData.todayQuestion ? homeData.todayQuestion.companyLabel : (isKorean ? "준비 중" : "Pending")}</strong>
                   </article>
                   <article>
@@ -279,12 +273,12 @@ export function HomePage() {
                   </article>
                 </div>
                 <div className="home-today-context-card__reasons">
-                  <span>{isKorean ? "오늘 먼저 볼 이유" : "Why this today?"}</span>
-                  <ul className="home-today-context-card__reason-list">
-                    <li>{isKorean ? "질문 트리를 DFS로 내려가기 전 기준 분기를 하나 고정합니다." : "Lock one reference branch before traversing the DFS tree."}</li>
-                    <li>{isKorean ? "재도전과 이력서 리스크 수를 함께 보면서 우선순위를 조절합니다." : "Balance priority using retry and resume-risk pressure together."}</li>
-                    <li>{isKorean ? "상세 화면과 답변 화면으로 바로 이어지는 진입점을 유지합니다." : "Keep direct entry points into detail and answer flows visible."}</li>
-                  </ul>
+                  <span>{isKorean ? "오늘 기준" : "Today focus"}</span>
+                  <p className="page-card__body">
+                    {isKorean
+                      ? "오늘 질문, 재도전 수, 이력서 리스크를 같이 보면서 한 분기만 깊게 내려가세요."
+                      : "Use the daily question, retry pressure, and resume risk together to go deep on one branch."}
+                  </p>
                 </div>
               </SectionPanel>
             );
