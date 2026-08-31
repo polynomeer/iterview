@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ResumeAnalysisModel } from "../../entities/resume/model";
 import { ResumeSectionCard } from "./ResumeSectionCard";
 
@@ -27,19 +28,36 @@ function getSkillValueLabel(skill: ResumeAnalysisModel["skills"][number]) {
 }
 
 export function ResumeSkillsCard({ skills, sectionId }: ResumeSkillsCardProps) {
+  const [activeSkillId, setActiveSkillId] = useState<string | null>(null);
+
   return (
     <ResumeSectionCard count={skills.length} eyebrow="추출된 스킬" sectionId={sectionId} title="이력서 버전에서 추출한 스킬">
-      <p className="page-card__body">
-        근거가 강할수록 강조도가 높고, 각 스킬에 마우스를 올리면 세부 근거를 바로 확인할 수 있습니다.
-      </p>
       {skills.length === 0 ? (
         <p className="page-card__body">활성 버전에서 아직 추출된 스킬이 없습니다.</p>
       ) : (
         <div className="resume-skills-card__chip-cloud">
           {skills.map((skill) => (
             <button
-              className={`resume-skill-chip resume-skill-chip--${skill.tone}`}
+              aria-pressed={activeSkillId === skill.id}
+              className={`resume-skill-chip resume-skill-chip--${skill.tone}${activeSkillId === skill.id ? " resume-skill-chip--active" : ""}`}
               key={skill.id}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  setActiveSkillId((current) => (current === skill.id ? null : current));
+                }
+              }}
+              onClick={() => {
+                setActiveSkillId((current) => (current === skill.id ? null : skill.id));
+              }}
+              onFocus={() => {
+                setActiveSkillId(skill.id);
+              }}
+              onMouseEnter={() => {
+                setActiveSkillId(skill.id);
+              }}
+              onMouseLeave={() => {
+                setActiveSkillId((current) => (current === skill.id ? null : current));
+              }}
               type="button"
             >
               <span className="resume-skill-chip__name">{skill.label}</span>

@@ -19467,3 +19467,93 @@ textarea::placeholder {
     justify-content: flex-start;
   }
 }
+
+/* Resume evidence panel alignment */
+
+.resume-active-overview-card,
+.resume-profile-card,
+.resume-skills-card,
+.resume-experience-card {
+  box-shadow: none;
+}
+
+.resume-active-overview-card {
+  gap: 12px;
+}
+
+.resume-active-overview-card__summary,
+.resume-profile-card,
+.resume-experience-card {
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.resume-active-overview-card__summary .list-item-card__content,
+.resume-profile-card .list-item-card__content,
+.resume-experience-card .list-item-card__content {
+  gap: 8px;
+}
+
+.resume-profile-card__identity {
+  gap: 6px;
+}
+
+.resume-profile-card__name {
+  font-size: 1.08rem;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.resume-profile-card__headline {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.resume-skills-card {
+  gap: 12px;
+}
+
+.resume-skills-card__chip-cloud {
+  gap: 10px;
+}
+
+.resume-skill-chip {
+  min-height: 40px;
+  padding: 9px 14px;
+  box-shadow: none;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.resume-skill-chip--active,
+.resume-skill-chip:hover,
+.resume-skill-chip:focus-visible {
+  transform: translateY(-1px);
+}
+
+.resume-skill-chip--active {
+  border-color: rgba(91, 140, 255, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.resume-skill-chip__detail {
+  width: min(320px, 78vw);
+  border-color: rgba(125, 145, 176, 0.16);
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.resume-skill-chip--active .resume-skill-chip__detail,
+.resume-skill-chip:hover .resume-skill-chip__detail,
+.resume-skill-chip:focus-visible .resume-skill-chip__detail {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.resume-experience-card__meta {
+  gap: 8px;
+}
+
+.resume-section-card .page-card__body {
+  max-width: 64ch;
+}

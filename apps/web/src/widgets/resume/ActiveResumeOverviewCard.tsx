@@ -11,12 +11,10 @@ export function ActiveResumeOverviewCard({ resumeList }: ActiveResumeOverviewCar
 
   if (!activeVersion) {
     return (
-      <section className="page-card">
+      <section className="page-card resume-active-overview-card">
         <span className="page-card__label">활성 이력서</span>
         <h2 className="page-card__title">활성 이력서 버전이 없습니다</h2>
-        <p className="page-card__body">
-          업로드한 버전 중 하나를 활성화하면 질문 분석과 점수 흐름이 현재 이력서 기준으로 연결됩니다.
-        </p>
+        <p className="page-card__body">업로드한 버전 중 하나를 활성화하면 현재 워크스페이스 기준 문서가 연결됩니다.</p>
       </section>
     );
   }
@@ -25,16 +23,23 @@ export function ActiveResumeOverviewCard({ resumeList }: ActiveResumeOverviewCar
     resumeList.items.find((resume) => resume.id === activeVersion.resumeId)?.versions.length ?? 1;
 
   return (
-      <section className="page-card">
-        <div className="section-heading">
-          <div>
-            <p className="section-heading__eyebrow">활성 이력서</p>
-            <h2 className="page-card__title">현재 활성 버전 요약</h2>
-          </div>
+    <section className="page-card resume-active-overview-card">
+      <div className="section-heading">
+        <div>
+          <p className="section-heading__eyebrow">활성 이력서</p>
+          <h2 className="page-card__title">현재 활성 버전 요약</h2>
         </div>
-      <p className="page-card__body">
-        {activeVersion.resumeTitle} · {activeVersion.fileNameLabel}
-      </p>
+      </div>
+      <div className="list-item-card resume-active-overview-card__summary">
+        <div className="list-item-card__content">
+          <div className="list-item-card__meta">
+            <span>{activeVersion.resumeTitle}</span>
+            <span>{activeVersion.fileNameLabel}</span>
+          </div>
+          <h3 className="list-item-card__title">{activeVersion.versionNumberLabel}</h3>
+          <p className="list-item-card__body">{activeVersion.parsingStatusLabel}</p>
+        </div>
+      </div>
       <div className="stats-grid">
         <MetricCard label="버전" value={activeVersion.versionNumberLabel} />
         <MetricCard label="파싱" value={activeVersion.parsingStatusLabel} tone="accent" />

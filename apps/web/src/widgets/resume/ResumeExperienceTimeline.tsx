@@ -14,7 +14,7 @@ export function ResumeExperienceTimeline({ experiences, sectionId }: ResumeExper
       ) : (
         <div className="stack-list">
           {experiences.map((experience) => (
-            <article className="list-item-card" key={experience.id}>
+            <article className="list-item-card resume-experience-card" key={experience.id}>
               <div className="list-item-card__content">
                 <div className="list-item-card__meta">
                   <span>{experience.companyName}</span>
@@ -27,11 +27,11 @@ export function ResumeExperienceTimeline({ experiences, sectionId }: ResumeExper
                   {[experience.companyName, experience.roleName].filter(Boolean).join(" · ")}
                 </h3>
                 <p className="list-item-card__body">{experience.summary}</p>
-                {experience.impactText ? (
-                  <p className="resume-section__helper">임팩트: {experience.impactText}</p>
-                ) : null}
-                {experience.projectName ? (
-                  <p className="resume-section__helper">프로젝트: {experience.projectName}</p>
+                {(experience.impactText || experience.projectName) ? (
+                  <div className="list-item-card__meta resume-experience-card__meta">
+                    {experience.impactText ? <span>{`임팩트 ${experience.impactText}`}</span> : null}
+                    {experience.projectName ? <span>{`프로젝트 ${experience.projectName}`}</span> : null}
+                  </div>
                 ) : null}
               </div>
             </article>
