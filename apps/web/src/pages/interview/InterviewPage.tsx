@@ -20,7 +20,7 @@ type WorkspaceNode = {
   label: string;
   score: number;
   state: "mastered" | "strong" | "medium" | "weak";
-  badge?: "Frequent" | "From Resume" | "Weak Area";
+  badge?: string;
   lane: "root" | "focus" | "branch";
 };
 
@@ -31,8 +31,130 @@ type WorkspaceInspectorModel = {
   relatedExperience: string;
   weakness: string;
   relatedQuestions: Array<{ title: string; score: number }>;
-  badge?: "Frequent" | "From Resume" | "Weak Area";
+  badge?: string;
 };
+
+function localizeInterviewWorkspaceText(value: string, isKorean: boolean) {
+  if (!isKorean) {
+    return value;
+  }
+
+  const dictionary: Record<string, string> = {
+    Backend: "백엔드",
+    Java: "자바",
+    Database: "데이터베이스",
+    Architecture: "아키텍처",
+    "System Design": "시스템 설계",
+    Lock: "락",
+    Index: "인덱스",
+    Transaction: "트랜잭션",
+    Deadlock: "데드락",
+    "Distributed TX": "분산 트랜잭션",
+    Propagation: "전파",
+    "Isolation Level": "격리 수준",
+    "Read Uncommitted": "읽기 미확정",
+    "Read Committed": "읽기 확정",
+    "Repeatable Read": "반복 가능 읽기",
+    "Undo Log": "언두 로그",
+    "Snapshot Read": "스냅샷 읽기",
+    "MVCC (Multi-Version Concurrency Control)": "MVCC(다중 버전 동시성 제어)",
+    "System design": "시스템 설계",
+    Concurrency: "동시성",
+    Queue: "큐",
+    Cache: "캐시",
+    Reliability: "신뢰성",
+    Scale: "확장성",
+    Boundary: "경계",
+    "Failure isolation": "장애 격리",
+    Pessimistic: "비관적 락",
+    Optimistic: "낙관적 락",
+    Cardinality: "카디널리티",
+    Covering: "커버링",
+    "Execution plan": "실행 계획",
+    Rollback: "롤백",
+    Compensation: "보상 처리",
+    Idempotency: "멱등성",
+    Saga: "사가",
+    Atomicity: "원자성",
+    Consistency: "일관성",
+    Durability: "지속성",
+    "Dirty read": "더티 리드",
+    "Phantom read": "팬텀 리드",
+    Snapshot: "스냅샷",
+    "Read View": "리드 뷰",
+    "Version Chain": "버전 체인",
+    "Consistency snapshot": "일관성 스냅샷",
+    "Statement scope": "문장 범위",
+    "Read stability": "읽기 안정성",
+    "Phantom risk": "팬텀 위험",
+    "Version chain": "버전 체인",
+    "Consistency risk": "일관성 위험",
+    Frequent: "자주 등장",
+    "From Resume": "이력서 기반",
+    "Weak Area": "약한 영역",
+    "Dreamus Settlement System": "드림어스 정산 시스템",
+    "Monticker API Runtime": "Monticker API 런타임",
+    "Creator Platform Services": "크리에이터 플랫폼 서비스",
+    "Traffic Rollout Platform": "트래픽 롤아웃 플랫폼",
+    "Settlement Batch Coordination": "정산 배치 조율",
+    "Reporting Query Tuning": "리포팅 쿼리 튜닝",
+    "Batch Update Coordination": "배치 업데이트 조율",
+    "Cross-service Payment Flow": "서비스 간 결제 흐름",
+    "Data Integrity Controls": "데이터 무결성 제어",
+    "Admin Workflow Orchestration": "관리 작업 흐름 조율",
+    "Legacy Reporting Constraints": "레거시 리포팅 제약",
+    "Operational Query Safety": "운영 쿼리 안정성",
+    "Settlement Reconciliation": "정산 대사 처리",
+    "Settlement Recovery Path": "정산 복구 경로",
+    "Coverage breadth": "범위 폭",
+    "Runtime specificity": "런타임 구체성",
+    "Branch depth": "가지 깊이",
+    "Decision rationale": "의사결정 근거",
+    "Trade-off clarity": "트레이드오프 선명도",
+    "Lock scope precision": "락 범위 정밀도",
+    "Edge-case recall": "예외 상황 회상력",
+    "Rollback narrative": "롤백 설명력",
+    "Recovery detail": "복구 세부 설명",
+    "Compensation specifics": "보상 처리 구체성",
+    "Practical examples": "실무 예시",
+    "Nested edge cases": "중첩 예외 상황",
+    "Phenomenon recall": "현상 회상력",
+    Specificity: "구체성",
+    "Practical trade-offs": "실무 트레이드오프",
+    "Anomaly explanation": "이상 현상 설명",
+    "Lock interaction": "락 상호작용",
+    "Storage detail": "저장소 세부 설명",
+    "Boundary explanation": "경계 설명",
+    "What backend systems did you own end to end?": "처음부터 끝까지 직접 맡아 운영한 백엔드 시스템은 무엇이었나요?",
+    "Which trade-offs mattered most in production?": "운영 환경에서 가장 중요했던 트레이드오프는 무엇이었나요?",
+    "How did you debug JVM memory pressure?": "JVM 메모리 압박은 어떻게 디버깅했나요?",
+    "What Java trade-offs affected latency?": "지연 시간에 영향을 준 자바 트레이드오프는 무엇이었나요?",
+    "How did index strategy affect your reporting query?": "인덱스 전략이 리포팅 쿼리에 어떤 영향을 줬나요?",
+    "Which transaction boundary was hardest to defend?": "가장 방어하기 어려웠던 트랜잭션 경계는 무엇이었나요?",
+    "Why was the service split structured this way?": "서비스 분리를 왜 이런 구조로 설계했나요?",
+    "What architectural debt remained?": "남아 있던 아키텍처 부채는 무엇이었나요?",
+    "What failed first under growth?": "트래픽이 커졌을 때 가장 먼저 무너진 것은 무엇이었나요?",
+    "Which bottleneck became visible in production?": "운영에서 드러난 병목은 무엇이었나요?",
+    "When was lock contention unavoidable?": "락 경합이 불가피했던 순간은 언제였나요?",
+    "How did you reduce wait time safely?": "대기 시간을 어떻게 안전하게 줄였나요?",
+    "What changed after adding the index?": "인덱스를 추가한 뒤 무엇이 달라졌나요?",
+    "Why was that index shape correct?": "그 인덱스 구조가 왜 맞았나요?",
+    "How did you decide the transaction boundary?": "트랜잭션 경계는 어떻게 결정했나요?",
+    "When did propagation choice matter?": "전파 옵션 선택이 중요했던 순간은 언제였나요?",
+    "How did you detect deadlock in production?": "운영 환경에서 데드락을 어떻게 감지했나요?",
+    "What retry policy was safe?": "어떤 재시도 정책이 안전했나요?",
+    "Why not use a global transaction?": "왜 전역 트랜잭션을 쓰지 않았나요?",
+    "How did you design a safe rollback path?": "안전한 롤백 경로는 어떻게 설계했나요?",
+    "Which ACID property mattered most here?": "이 상황에서 가장 중요했던 ACID 속성은 무엇이었나요?",
+    "How did your code rely on durability?": "코드가 지속성에 어떻게 의존했나요?",
+    "Why not keep everything in one transaction?": "왜 모든 작업을 하나의 트랜잭션으로 묶지 않았나요?",
+    "When did REQUIRES_NEW become necessary?": "REQUIRES_NEW가 꼭 필요했던 순간은 언제였나요?",
+    "Which anomaly were you preventing?": "어떤 이상 현상을 막으려 했나요?",
+    "Why was Repeatable Read not enough here?": "왜 여기서는 Repeatable Read만으로 충분하지 않았나요?",
+  };
+
+  return dictionary[value] ?? value;
+}
 
 const WORKSPACE_COLUMNS: WorkspaceNode[][] = [
   [{ id: "backend", label: "Backend", score: 0, state: "strong", lane: "root" }],
@@ -591,11 +713,11 @@ export function InterviewPage() {
                   aria-label={isKorean ? "집중 레인 신호" : "Focus lane signals"}
                 >
                   <span className="interview-graph-panel__summary-item interview-graph-panel__summary-item--accent" role="listitem">
-                    {selectedInspector.title}
+                    {localizeInterviewWorkspaceText(selectedInspector.title, isKorean)}
                   </span>
                   <span className="interview-graph-panel__summary-item" role="listitem">{selectedReadinessLabel}</span>
                   <span className="interview-graph-panel__summary-item" role="listitem">
-                    {isKorean ? `레인 내 노드 ${selectedLaneCount}개` : `${selectedLaneCount} nodes in lane`}
+                    {isKorean ? `구간 내 노드 ${selectedLaneCount}개` : `${selectedLaneCount} nodes in lane`}
                   </span>
                 </div>
                 <div
@@ -610,7 +732,7 @@ export function InterviewPage() {
                   </span>
                   <span role="listitem">
                     {isKorean
-                      ? "패스를 다시 시작하기 전에 인스펙터로 정확한 이력서 주장을 확인하세요."
+                      ? "패스를 다시 시작하기 전에 점검 패널로 정확한 이력서 주장을 확인하세요."
                       : "Use the inspector to confirm the exact resume claim before restarting the pass."}
                   </span>
                 </div>
@@ -629,7 +751,9 @@ export function InterviewPage() {
                             onClick={() => setSelectedGraphNodeId(node.id)}
                             type="button"
                           >
-                            <span className="interview-graph-node__label">{node.label}</span>
+                            <span className="interview-graph-node__label">
+                              {localizeInterviewWorkspaceText(node.label, isKorean)}
+                            </span>
                             <span className="interview-graph-node__score">
                               {node.score > 0 ? `${node.score}%` : isKorean ? "핵심" : "Core"}
                             </span>
@@ -645,13 +769,17 @@ export function InterviewPage() {
                 <div className="interview-workspace-inspector__panel">
                   <div className="interview-workspace-inspector__eyebrow-row">
                     <span className="question-status-badge question-status-badge--neutral">
-                      {isKorean ? "가지 인스펙터" : "Branch inspector"}
+                      {isKorean ? "가지 점검" : "Branch inspector"}
                     </span>
                     {selectedInspector.badge ? (
-                      <span className="question-status-badge question-status-badge--accent">{selectedInspector.badge}</span>
+                      <span className="question-status-badge question-status-badge--accent">
+                        {localizeInterviewWorkspaceText(selectedInspector.badge, isKorean)}
+                      </span>
                     ) : null}
                   </div>
-                  <h2 className="interview-workspace-inspector__title">{selectedInspector.title}</h2>
+                  <h2 className="interview-workspace-inspector__title">
+                    {localizeInterviewWorkspaceText(selectedInspector.title, isKorean)}
+                  </h2>
                   <div
                     className="interview-workspace-inspector__summary-row"
                     role="list"
@@ -661,9 +789,13 @@ export function InterviewPage() {
                       {isKorean ? `${selectedInspector.score}/100 숙련도` : `${selectedInspector.score}/100 mastery`}
                     </span>
                     <span className="interview-workspace-inspector__summary-item" role="listitem">{selectedReadinessLabel}</span>
-                    <span className="interview-workspace-inspector__summary-item" role="listitem">{selectedInspector.relatedExperience}</span>
+                    <span className="interview-workspace-inspector__summary-item" role="listitem">
+                      {localizeInterviewWorkspaceText(selectedInspector.relatedExperience, isKorean)}
+                    </span>
                   </div>
-                  <p className="interview-workspace-inspector__summary">{selectedInspector.weakness}</p>
+                  <p className="interview-workspace-inspector__summary">
+                    {localizeInterviewWorkspaceText(selectedInspector.weakness, isKorean)}
+                  </p>
                   <div
                     className="interview-workspace-inspector__principles"
                     role="list"
@@ -687,7 +819,7 @@ export function InterviewPage() {
                     <div>
                       <p className="section-heading__eyebrow">{isKorean ? "가지 앵커" : "Branch anchor"}</p>
                       <h3 className="page-card__title interview-workspace-inspector__section-title">
-                        {selectedInspector.relatedExperience}
+                        {localizeInterviewWorkspaceText(selectedInspector.relatedExperience, isKorean)}
                       </h3>
                     </div>
                   </div>
@@ -698,7 +830,9 @@ export function InterviewPage() {
                   </p>
                   <div className="chip-list">
                     {selectedInspector.concepts.map((concept) => (
-                      <span className="detail-chip" key={concept}>{concept}</span>
+                      <span className="detail-chip" key={concept}>
+                        {localizeInterviewWorkspaceText(concept, isKorean)}
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -723,7 +857,9 @@ export function InterviewPage() {
                             <span>{index + 1}</span>
                             <span>{index === 0 ? (isKorean ? "강함" : "Strong") : isKorean ? "열림" : "Open"}</span>
                           </div>
-                          <h3 className="list-item-card__title">{question.title}</h3>
+                          <h3 className="list-item-card__title">
+                            {localizeInterviewWorkspaceText(question.title, isKorean)}
+                          </h3>
                         </div>
                         <span className="question-status-badge question-status-badge--positive">{question.score}</span>
                       </article>

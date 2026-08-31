@@ -49,7 +49,7 @@ export function InterviewResultPage() {
           body={t("result.missingBody")}
           eyebrow={isKorean ? "인터뷰 결과" : "Interview result"}
           signals={[
-            { label: isKorean ? "세션 id" : "Session id", value: isKorean ? "없음" : "Missing", tone: "warning" },
+            { label: isKorean ? "세션 식별자" : "Session id", value: isKorean ? "없음" : "Missing", tone: "warning" },
             { label: isKorean ? "안전한 다음 동작" : "Safe next move", value: isKorean ? "인터뷰 작업공간에서 다시 시작" : "Restart from the interview workspace", tone: "accent" },
             { label: isKorean ? "대체 경로" : "Alternative path", value: isKorean ? "복습 큐에서 보강 계속하기" : "Continue remediation from the review queue" },
           ]}

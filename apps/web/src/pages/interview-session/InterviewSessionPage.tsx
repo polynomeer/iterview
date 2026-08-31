@@ -78,7 +78,7 @@ export function InterviewSessionPage() {
           body={t("interview.sessionMissingBody")}
           eyebrow={isKorean ? "인터뷰 세션" : "Interview session"}
           signals={[
-            { label: isKorean ? "세션 ID" : "Session id", value: isKorean ? "없음" : "Missing", tone: "warning" },
+            { label: isKorean ? "세션 식별자" : "Session id", value: isKorean ? "없음" : "Missing", tone: "warning" },
             {
               label: isKorean ? "안전한 다음 단계" : "Safe next move",
               value: isKorean ? "인터뷰 시작 화면으로 다시 진입" : "Re-enter from the interview launcher",
@@ -91,7 +91,7 @@ export function InterviewSessionPage() {
           ]}
           summaryBody={
             isKorean
-              ? "직접 세션 경로로 들어오려면 구체적인 세션 ID가 필요합니다. 다음 가지가 올바른 이력서와 순회 모드를 상속하도록 실행 화면에서 다시 들어오세요."
+              ? "직접 세션 경로로 들어오려면 구체적인 세션 식별자가 필요합니다. 다음 가지가 올바른 이력서와 순회 모드를 상속하도록 실행 화면에서 다시 들어오세요."
               : "A direct session route needs a concrete session id. Re-enter from the launcher so the next branch inherits the right resume and traversal mode."
           }
           summaryTitle={

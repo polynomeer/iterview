@@ -8,7 +8,27 @@ type InterviewSessionHistoryListProps = {
 };
 
 export function InterviewSessionHistoryList({ items }: InterviewSessionHistoryListProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const isKorean = locale === "ko";
+
+  function localizeSessionLabel(value: string | null | undefined) {
+    if (!value || !isKorean) {
+      return value ?? "";
+    }
+
+    const dictionary: Record<string, string> = {
+      "Resume Mock": "이력서 모의면접",
+      Completed: "완료",
+      "In Progress": "진행 중",
+      "Quick Screen": "퀵 스크린",
+      "Mock 30": "모의 30",
+      "Mock 60": "모의 60",
+      "Free Interview": "자유 인터뷰",
+      "Full Coverage": "전체 범위",
+    };
+
+    return dictionary[value] ?? value;
+  }
 
   return (
     <div className="interview-session-history">
@@ -18,14 +38,16 @@ export function InterviewSessionHistoryList({ items }: InterviewSessionHistoryLi
             <div className="list-item-card__content">
               <div className="interview-session-history__meta-row">
                 <div className="list-item-card__meta interview-session-history__meta">
-                  <span>{item.sessionTypeLabel}</span>
-                  <span>{item.interviewModeLabel}</span>
-                  <span>{item.statusLabel}</span>
+                  <span>{localizeSessionLabel(item.sessionTypeLabel)}</span>
+                  <span>{localizeSessionLabel(item.interviewModeLabel)}</span>
+                  <span>{localizeSessionLabel(item.statusLabel)}</span>
                 </div>
               </div>
               <div className="interview-session-history__header">
                 <div className="interview-session-history__title-block">
-                  <h3 className="list-item-card__title">{`${item.sessionTypeLabel} ${t("interview.sessionSuffix")}`}</h3>
+                  <h3 className="list-item-card__title">
+                    {`${localizeSessionLabel(item.sessionTypeLabel)} ${t("interview.sessionSuffix")}`}
+                  </h3>
                   <p className="list-item-card__body">
                     {[
                       item.startedAtLabel ? `${t("interview.startedPrefix")} ${item.startedAtLabel}` : null,

@@ -596,7 +596,7 @@ export function PracticalInterviewReviewPage() {
       >
         <EmptyStateCard
           action={{ label: isKorean ? "실전 면접 목록 열기" : "Open practical interviews", to: routeConfig.practicalInterviews.buildPath() }}
-          body={isKorean ? "실전 면접 리뷰 경로에는 기록 ID가 필요합니다." : "The practical interview review route needs a record id."}
+          body={isKorean ? "실전 면접 리뷰 경로에는 기록 식별자가 필요합니다." : "The practical interview review route needs a record id."}
           title={isKorean ? "면접 기록이 없습니다" : "Missing interview record"}
         />
       </PageContainer>

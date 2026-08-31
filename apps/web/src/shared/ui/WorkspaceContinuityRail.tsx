@@ -28,13 +28,13 @@ export function WorkspaceContinuityRail({
 
   return (
     <section
-      aria-label={isKorean ? "워크스페이스 연속성" : "Workspace continuity"}
+      aria-label={isKorean ? "작업공간 연속성" : "Workspace continuity"}
       className="page-card workspace-continuity-rail"
     >
       <div className="workspace-continuity-rail__header">
         <div>
           <span className="page-card__label">
-            {isKorean ? "워크스페이스 연속성" : "Workspace continuity"}
+            {isKorean ? "작업공간 연속성" : "Workspace continuity"}
           </span>
           <h2 className="page-card__title">
             {isKorean ? "하나로 이어지는 준비 루프" : "One connected preparation loop"}

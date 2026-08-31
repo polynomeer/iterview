@@ -58,9 +58,13 @@ function localizeHeatmapLabel(value: string | null | undefined, isKorean: boolea
     Competencies: "역량",
     "Other linked anchors": "기타 연결 앵커",
     Project: "프로젝트",
+    Block: "블록",
     Sentence: "문장",
+    Phrase: "구문",
+    Keyword: "키워드",
     block: "블록",
     sentence: "문장",
+    phrase: "구문",
     keyword: "키워드",
     Completed: "완료",
     summary: "요약",
@@ -80,16 +84,7 @@ function localizeScopeLabel(value: string, isKorean: boolean) {
     return value;
   }
 
-  switch (value) {
-    case "All":
-      return "전체";
-    case "Main questions":
-      return "메인 질문";
-    case "Follow-up only":
-      return "꼬리질문만";
-    default:
-      return value;
-  }
+  return localizeHeatmapLabel(value, isKorean);
 }
 
 function OverlayQuestionPopover({
@@ -763,7 +758,7 @@ export function ResumeHeatmapPage() {
               onClick={() => updateFilters({ ...filters, targetType: undefined })}
               type="button"
             >
-              {isKorean ? "전체 타깃 유형" : "All target types"}
+              {isKorean ? "전체 대상 유형" : "All target types"}
             </button>
             {heatmapQuery.data.filterSummary.availableTargetTypes.map((targetType) => (
               <button
@@ -818,7 +813,7 @@ export function ResumeHeatmapPage() {
                           ) : null}
                         </div>
                         <span className="question-status-badge question-status-badge--neutral">
-                          {isKorean ? "열도" : "Heat"} {section.heatScoreLabel}
+                          {isKorean ? "집중도" : "Heat"} {section.heatScoreLabel}
                         </span>
                       </div>
                       <div className="resume-heatmap-inline-summary">
