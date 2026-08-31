@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useQuestionDetailQuery } from "../../features/question/api/useQuestionDetailQuery";
 import { routeConfig } from "../../shared/config/routes";
@@ -30,7 +31,6 @@ import {
   AnswerHistorySection,
   LearningMaterialsSection,
   ProgressSummaryCard,
-  QuestionHeader,
   QuestionMetaSection,
   RecommendedQuestionSection,
   ReferenceAnswersSection,
@@ -264,6 +264,7 @@ export function QuestionDetailPage() {
 
       {!questionDetailQuery.isLoading && !questionDetailQuery.isError && questionDetailQuery.data
         ? (() => {
+            const question = questionDetailQuery.data;
             const progressSection = questionDetailQuery.data.userProgressSummary ? (
               <ProgressSummaryCard progress={questionDetailQuery.data.userProgressSummary} />
             ) : (
@@ -442,134 +443,230 @@ export function QuestionDetailPage() {
                   : supportCount < 3
                     ? isKorean ? "보조 근거 부족" : "Thin support"
                     : isKorean ? "안정된 가지" : "Stable branch";
+            const pathNodes = [
+              question.category,
+              ...(question.tags.slice(0, 2).length > 0 ? question.tags.slice(0, 2) : question.companies.slice(0, 2)),
+              question.title,
+            ];
+            const bestAttempt = answerHistoryQuery.data?.items[0] ?? null;
             const workspaceSummary = (
-              <section className="page-card question-detail-workspace-surface">
-                <div className="question-detail-workspace-surface__header">
-                  <div className="question-detail-workspace-surface__intro">
-                    <div className="question-detail-workspace-surface__eyebrow-row">
-                      <span className="page-card__label">{isKorean ? "노드 인스펙터" : "Node inspector"}</span>
-                      <span className="question-status-badge question-status-badge--accent">{questionDetailQuery.data.difficulty}</span>
-                    </div>
-                    <p className="question-detail-workspace-surface__breadcrumbs">
-                      {isKorean ? "질문 노드" : "Question node"}
-                      <span>/</span>
-                      {isKorean ? "이력서 근거" : "Resume evidence"}
-                      <span>/</span>
-                      {isKorean ? "후속 압박" : "Follow-up pressure"}
-                    </p>
-                    <h2 className="question-detail-workspace-surface__title">
-                      {isKorean
-                        ? "답변, 학습, 더 깊은 분기 중 무엇을 할지 결정하기 전에 이 노드를 점검하세요"
-                        : "Inspect this node before you decide to answer, study, or branch deeper"}
-                    </h2>
-                    <p className="question-detail-workspace-surface__body">
-                      {isKorean
-                        ? `${questionDetailQuery.data.title}. 이 질문 문구를 면접 체크포인트처럼 다루세요. 노드를 읽고, 보조 근거가 충분한지 확인한 뒤에만 다음 시도를 사용하세요.`
-                        : `${questionDetailQuery.data.title}. Treat the prompt like an interview checkpoint: read the node, check whether the support is strong enough, and only then spend the next attempt.`}
-                    </p>
-                  </div>
-                  <div className="question-detail-workspace-surface__stats">
-                    <article className="question-detail-workspace-surface__stat">
-                      <span>{isKorean ? "시도 수" : "Attempts"}</span>
-                      <strong>{progress?.attemptsCount ?? 0}</strong>
-                    </article>
-                    <article className="question-detail-workspace-surface__stat">
-                      <span>{isKorean ? "최고 점수" : "Best score"}</span>
-                      <strong>{progress?.bestScoreLabel ?? (isKorean ? "아직 시작 전" : "Not started")}</strong>
-                    </article>
-                    <article className="question-detail-workspace-surface__stat">
-                      <span>{isKorean ? "재도전 압박" : "Retry pressure"}</span>
-                      <strong>{weaknessSignal}</strong>
-                    </article>
-                    <article className="question-detail-workspace-surface__stat">
-                      <span>{isKorean ? "보조 항목" : "Support items"}</span>
-                      <strong>{supportCount}</strong>
-                    </article>
-                  </div>
+              <section className="page-card question-path-context-card">
+                <div className="question-path-context-card__topline">
+                  <span className="page-card__label">{isKorean ? "질문 경로 맥락" : "Question path context"}</span>
+                  <span className="detail-chip detail-chip--accent">
+                    {isKorean ? `깊이 ${Math.max(pathNodes.length, 2)}` : `Depth ${Math.max(pathNodes.length, 2)}`}
+                  </span>
                 </div>
-                <div className="question-detail-workspace-surface__guidance" aria-label={isKorean ? "질문 노드 가이드" : "Question node guidance"}>
-                  <article className="question-detail-workspace-surface__guidance-card">
-                    <span>{isKorean ? "지금 답변" : "Answer now"}</span>
-                    <strong>{isKorean ? "핵심 주장이 이미 분명할 때만 다음 시도를 사용하세요." : "Use the next attempt only when the main claim is already obvious."}</strong>
-                  </article>
-                  <article className="question-detail-workspace-surface__guidance-card">
-                    <span>{isKorean ? "먼저 학습" : "Study first"}</span>
-                    <strong>{isKorean ? "이력서 기반 근거가 아직 모호하거나 얇다면 여기서 멈추세요." : "Pause here when the resume-backed evidence is still vague or thin."}</strong>
-                  </article>
-                  <article className="question-detail-workspace-surface__guidance-card">
-                    <span>{isKorean ? "트리 열기" : "Open the tree"}</span>
-                    <strong>{isKorean ? "다음에 어떤 후속 공격이 들어올지 봐야 한다면 더 깊게 분기하세요." : "Branch deeper when you need to see which follow-up attack lands next."}</strong>
-                  </article>
+                <div className="question-path-context-card__path" role="list">
+                  {pathNodes.map((node, index) => (
+                    <article
+                      className={`question-path-context-card__node ${index === pathNodes.length - 1 ? "question-path-context-card__node--active" : ""}`}
+                      key={`${node}-${index}`}
+                      role="listitem"
+                    >
+                      <strong>{node}</strong>
+                      <span>
+                        {index === pathNodes.length - 1
+                          ? progress?.bestScoreLabel ?? (isKorean ? "미응답" : "Unanswered")
+                          : `${Math.max(58, 74 - index * 6)}%`}
+                      </span>
+                    </article>
+                  ))}
                 </div>
-                <div className="question-detail-workspace-surface__chips">
-                  <span className="detail-chip">{isKorean ? `카테고리 ${questionDetailQuery.data.category}` : `Category ${questionDetailQuery.data.category}`}</span>
-                  {questionDetailQuery.data.tags.slice(0, 4).map((tag) => (
-                    <span className="detail-chip" key={tag}>
-                      {isKorean ? `주제 ${tag}` : `Topic ${tag}`}
-                    </span>
-                  ))}
-                  {questionDetailQuery.data.companies.slice(0, 3).map((company) => (
-                    <span className="detail-chip detail-chip--accent" key={company}>
-                      {isKorean ? `회사 ${company}` : `Company ${company}`}
-                    </span>
-                  ))}
-                  {progress?.status ? (
-                    <span className="detail-chip">{isKorean ? `진행 ${progress.status}` : `Progress ${progress.status}`}</span>
-                  ) : null}
+                <div className="question-path-context-card__footer">
+                  <span>{isKorean ? `분기 ${recommendedCount + 1}개 중 1개` : `Branch 1 of ${recommendedCount + 1}`}</span>
+                  <Link className="secondary-button" to={routeConfig.questionTree.buildPath({ questionId })}>
+                    {isKorean ? "질문 맵 열기" : "View in question map"}
+                  </Link>
                 </div>
               </section>
             );
             const insightSummary = (
-              <SectionPanel className="question-detail-insight-surface" variant="muted">
-                <div className="question-detail-insight-surface__header">
+              <section className="page-card question-inspector-rail-card">
+                <div className="question-inspector-rail-card__header">
                   <div>
-                    <span className="page-card__label">{isKorean ? "판단 읽기" : "Decision read"}</span>
+                    <span className="page-card__label">{isKorean ? "마스터리 점수" : "Mastery score"}</span>
                     <h2 className="page-card__title">
-                      {isKorean
-                        ? "이 노드에서 더 작업하기 전에 가장 작은 누락 조각부터 읽으세요"
-                        : "Read the smallest missing piece before doing more work on this node"}
+                      {progress?.bestScoreLabel ?? (isKorean ? "미응답 노드" : "Unanswered node")}
                     </h2>
-                    <p className="page-card__body">
-                      {isKorean
-                        ? "이 화면은 누락된 작업이 명확성인지, 근거인지, 가지 인식인지를 알려줘야 합니다."
-                        : "This surface should tell you whether the missing work is clarity, evidence, or branch awareness."}
-                    </p>
                   </div>
                   <span className="detail-chip detail-chip--accent">{weaknessSignal}</span>
                 </div>
-                <div className="question-detail-insight-surface__stats">
+                <div className="question-inspector-rail-card__score-row">
                   <article>
-                    <span>{isKorean ? "보조 밀도" : "Support density"}</span>
-                    <strong>{supportCount}</strong>
-                    <p>{supportCount > 0 ? (isKorean ? "답변 + 자료 + 히스토리" : "answers + materials + history") : (isKorean ? "아직 연결된 보조 자료가 없습니다" : "No support attached yet")}</p>
+                    <span>{isKorean ? "현재 최고" : "Best"}</span>
+                    <strong>{progress?.bestScoreLabel ?? "0"}/100</strong>
                   </article>
                   <article>
-                    <span>{isKorean ? "다음 후속 질문" : "Next follow-ups"}</span>
+                    <span>{isKorean ? "시도 수" : "Attempts"}</span>
+                    <strong>{progress?.attemptsCount ?? 0}</strong>
+                  </article>
+                  <article>
+                    <span>{isKorean ? "후속 가지" : "Follow-ups"}</span>
                     <strong>{recommendedCount}</strong>
-                    <p>{recommendedCount > 0 ? (isKorean ? "후속 공격 후보 가지" : "candidate attack branches") : (isKorean ? "아직 연결된 후속 질문이 없습니다" : "No linked follow-ups yet")}</p>
-                  </article>
-                  <article>
-                    <span>{isKorean ? "질문 문구 길이" : "Prompt size"}</span>
-                    <strong>{promptDensity}</strong>
-                    <p>{isKorean ? "핵심 질문 문구 단어 수" : "words in the core prompt"}</p>
                   </article>
                 </div>
-                <div className="question-detail-insight-surface__actions">
-                  <div className="question-detail-insight-surface__action">
-                    <strong>{isKorean ? "지금 답변" : "Answer now"}</strong>
-                    <span>{isKorean ? "주 라인이 이미 분명하고 이 노드에 깔끔한 한 번의 재정리만 더 필요할 때 사용하세요." : "Use this when the main line is already clear and the node just needs another clean pass."}</span>
+                <div className="question-inspector-rail-card__group">
+                  <div className="question-inspector-rail-card__group-header">
+                    <h3>{isKorean ? "관련 노트" : "Related notes"}</h3>
+                    <span>{Math.min(learningMaterials.length, 2)}</span>
                   </div>
-                  <div className="question-detail-insight-surface__action">
-                    <strong>{isKorean ? "먼저 학습" : "Study first"}</strong>
-                    <span>{isKorean ? "보조 자료가 얇거나 이력서 기반 근거가 여전히 모호하면 여기서 멈추세요." : "Pause here when support is thin or the resume-backed evidence is still vague."}</span>
-                  </div>
-                  <div className="question-detail-insight-surface__action">
-                    <strong>{isKorean ? "트리 열기" : "Open the tree"}</strong>
-                    <span>{isKorean ? "면접관이 다음에 어느 가지를 파고들 가능성이 큰지 이해해야 한다면 맵으로 전환하세요." : "Switch to the map when you need to understand which branch the interviewer is most likely to probe next."}</span>
+                  <div className="question-inspector-rail-card__stack">
+                    {learningMaterials.slice(0, 2).map((material) => (
+                      <article className="question-inspector-rail-card__item" key={material.id}>
+                        <strong>{material.title}</strong>
+                        <p>{material.description || material.resourceTypeLabel}</p>
+                      </article>
+                    ))}
+                    {learningMaterials.length === 0 ? (
+                      <article className="question-inspector-rail-card__item">
+                        <strong>{isKorean ? "노트 없음" : "No notes yet"}</strong>
+                        <p>{isKorean ? "이 노드에 연결된 학습 노트나 자료가 아직 없습니다." : "There are no linked study notes for this node yet."}</p>
+                      </article>
+                    ) : null}
                   </div>
                 </div>
-              </SectionPanel>
+                <div className="question-inspector-rail-card__group">
+                  <div className="question-inspector-rail-card__group-header">
+                    <h3>{isKorean ? "관련 이력서 근거" : "Related resume links"}</h3>
+                    <span>{Math.min(referenceAnswers.length, 2)}</span>
+                  </div>
+                  <div className="question-inspector-rail-card__stack">
+                    {referenceAnswers.slice(0, 2).map((answer) => (
+                      <article className="question-inspector-rail-card__item" key={answer.id}>
+                        <strong>{answer.title}</strong>
+                        <p>{answer.answerText.slice(0, 120)}{answer.answerText.length > 120 ? "..." : ""}</p>
+                      </article>
+                    ))}
+                    {referenceAnswers.length === 0 ? (
+                      <article className="question-inspector-rail-card__item">
+                        <strong>{isKorean ? "근거 없음" : "No linked evidence"}</strong>
+                        <p>{isKorean ? "이 질문과 연결된 모범 답변 근거가 아직 없습니다." : "No linked evidence answer is available for this question yet."}</p>
+                      </article>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="question-inspector-rail-card__actions">
+                  <Link className="primary-button" to={routeConfig.answerEditor.buildPath({ questionId })}>
+                    {isKorean ? "답변 시작" : "Start answering"}
+                  </Link>
+                  <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
+                    {isKorean ? "리뷰에 추가" : "Add to review"}
+                  </Link>
+                  <Link className="secondary-button" to={routeConfig.notes.buildPath()}>
+                    {isKorean ? "노트로 이동" : "Add to notes"}
+                  </Link>
+                </div>
+              </section>
             );
+            const headerSection = (
+              <section className="page-card question-inspector-main-card">
+                <div className="question-inspector-main-card__breadcrumbs">
+                  <span>{isKorean ? "질문 맵" : "Question Map"}</span>
+                  <span>›</span>
+                  <span>{question.category}</span>
+                  <span>›</span>
+                  <span>{isKorean ? "질문 인스펙터" : "Question Inspector"}</span>
+                </div>
+                <div className="question-inspector-main-card__toolbar">
+                  <Link className="secondary-button" to={routeConfig.questionTree.buildPath({ questionId })}>
+                    {isKorean ? "맵으로 돌아가기" : "Back to map"}
+                  </Link>
+                  <div className="question-inspector-main-card__nav">
+                    <button className="secondary-button secondary-button--static" type="button">
+                      {isKorean ? "이전" : "Previous"}
+                    </button>
+                    <button className="secondary-button secondary-button--static" type="button">
+                      {isKorean ? "다음" : "Next"}
+                    </button>
+                  </div>
+                </div>
+                <div className="question-inspector-main-card__hero">
+                  <div className="question-inspector-main-card__hero-topline">
+                    <span className="list-item-card__meta-pill">{question.category}</span>
+                    <span className="question-status-badge question-status-badge--accent">{question.difficulty}</span>
+                  </div>
+                  <h2 className="question-inspector-main-card__title">{question.title}</h2>
+                  <p className="question-inspector-main-card__body">{question.body}</p>
+                  <div className="question-inspector-main-card__metrics">
+                    <span className="list-item-card__meta-pill">{isKorean ? `시도 ${progress?.attemptsCount ?? 0}회` : `${progress?.attemptsCount ?? 0} attempts`}</span>
+                    <span className="list-item-card__meta-pill">{isKorean ? `보조 ${supportCount}개` : `${supportCount} supports`}</span>
+                    <span className="list-item-card__meta-pill">{isKorean ? `후속 ${recommendedCount}개` : `${recommendedCount} follow-ups`}</span>
+                  </div>
+                </div>
+                <div className="question-inspector-main-card__prompt">
+                  <div className="question-inspector-main-card__prompt-header">
+                    <span>{isKorean ? "전체 질문" : "Full prompt"}</span>
+                    <button className="secondary-button secondary-button--static" type="button">
+                      {isKorean ? "복사" : "Copy"}
+                    </button>
+                  </div>
+                  <p>{question.body}</p>
+                </div>
+                <div className="question-inspector-main-card__concepts">
+                  <span>{isKorean ? "예상 핵심 개념" : "Expected concepts"}</span>
+                  <div className="chip-list">
+                    {(question.tags.length > 0 ? question.tags : question.companies).slice(0, 6).map((item) => (
+                      <span className="detail-chip" key={item}>
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            );
+            const desktopProgressSection = bestAttempt ? (
+              <section className="page-card question-answer-snapshot-card">
+                <div className="section-heading">
+                  <div>
+                    <p className="section-heading__eyebrow">{isKorean ? "내 최고 답변 스냅샷" : "Your best answer snapshot"}</p>
+                    <h2 className="page-card__title">{bestAttempt.evaluationResultLabel ?? (isKorean ? "최근 시도" : "Recent attempt")}</h2>
+                  </div>
+                  <span className="section-heading__count">{bestAttempt.totalScoreLabel ?? "-"}</span>
+                </div>
+                <div className="question-answer-snapshot-card__body">
+                  <p>{bestAttempt.submittedAtLabel}</p>
+                  <p>
+                    {bestAttempt.progressStatusLabel
+                      ? `${bestAttempt.progressStatusLabel} · `
+                      : ""}
+                    {isKorean ? "이 스냅샷을 기준으로 다음 답변을 더 짧고 강하게 다듬으세요." : "Use this snapshot to tighten the next answer pass."}
+                  </p>
+                </div>
+                <div className="page-card__actions">
+                  <Link className="secondary-button" to={routeConfig.resultAnalysis.buildPath({ answerAttemptId: bestAttempt.answerAttemptId })}>
+                    {isKorean ? "전체 답변 보기" : "View full answer"}
+                  </Link>
+                </div>
+              </section>
+            ) : progressSection;
+            const desktopRecommendedSection = recommendedItems.length > 0 ? (
+              <section className="page-card question-branch-children-card">
+                <div className="section-heading">
+                  <div>
+                    <p className="section-heading__eyebrow">{isKorean ? "DFS 자식 가지" : "Children in DFS branch"}</p>
+                    <h2 className="page-card__title">{isKorean ? "이어서 들어올 가능성이 큰 후속 질문" : "Likely follow-up branches"}</h2>
+                  </div>
+                  <span className="section-heading__count">{recommendedItems.length}</span>
+                </div>
+                <div className="stack-list">
+                  {recommendedItems.slice(0, 4).map((item) => (
+                    <article className="list-item-card question-branch-children-card__item" key={item.id}>
+                      <div className="list-item-card__content">
+                        {item.metadataLabel ? <div className="list-item-card__meta"><span>{item.metadataLabel}</span></div> : null}
+                        <h3 className="list-item-card__title">{item.title}</h3>
+                        {item.reason ? <p className="list-item-card__body">{item.reason}</p> : null}
+                      </div>
+                      <div className="list-item-card__actions">
+                        <Link className="secondary-button" to={routeConfig.questionDetail.buildPath({ questionId: item.id })}>
+                          {isKorean ? "열기" : "Open"}
+                        </Link>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ) : recommendedSection;
 
             if (!isDesktop) {
               return (
@@ -577,7 +674,7 @@ export function QuestionDetailPage() {
                   workspaceSummary={workspaceSummary}
                   insightSummary={insightSummary}
                   answerHistorySection={answerHistorySection}
-                  headerSection={<QuestionHeader question={questionDetailQuery.data} />}
+                  headerSection={headerSection}
                   materialsSection={
                     <>
                       {referenceSection}
@@ -596,7 +693,7 @@ export function QuestionDetailPage() {
                       ) : null}
                     </>
                   }
-                  metadataSection={<QuestionMetaSection question={questionDetailQuery.data} />}
+                  metadataSection={<QuestionMetaSection question={question} />}
                   progressSection={progressSection}
                   recommendedSection={recommendedSection}
                 />
@@ -608,7 +705,7 @@ export function QuestionDetailPage() {
                 workspaceSummary={workspaceSummary}
                 insightSummary={insightSummary}
                 answerHistorySection={answerHistorySection}
-                headerSection={<QuestionHeader question={questionDetailQuery.data} />}
+                headerSection={headerSection}
                 materialsSection={
                   <>
                     {referenceSection}
@@ -627,9 +724,9 @@ export function QuestionDetailPage() {
                     ) : null}
                   </>
                 }
-                metadataSection={<QuestionMetaSection question={questionDetailQuery.data} />}
-                progressSection={progressSection}
-                recommendedSection={recommendedSection}
+                metadataSection={<QuestionMetaSection question={question} />}
+                progressSection={desktopProgressSection}
+                recommendedSection={desktopRecommendedSection}
               />
             );
           })()

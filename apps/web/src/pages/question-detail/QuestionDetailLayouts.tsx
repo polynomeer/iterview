@@ -54,16 +54,17 @@ export function QuestionDetailDesktopLayout({
   useLocale();
 
   return (
-    <div className="question-detail-layout question-detail-layout--desktop">
+    <div className="question-detail-layout question-detail-layout--desktop question-detail-layout--inspector">
       <aside className="question-detail-layout__study-rail">
         <div className="page-stack question-detail-layout__cluster">
           <section className="question-detail-layout__workspace-summary">{workspaceSummary}</section>
-          {progressSection}
+          {metadataSection}
         </div>
       </aside>
       <div className="question-detail-layout__main question-detail-layout__main--primary">
         <div className="question-detail-layout__hero">{headerSection}</div>
         <div className="page-stack question-detail-layout__cluster">
+          {progressSection}
           {answerHistorySection}
           {recommendedSection}
         </div>
@@ -71,7 +72,6 @@ export function QuestionDetailDesktopLayout({
       <aside className="question-detail-layout__sidebar">
         <div className="page-stack question-detail-layout__cluster">
           <section className="question-detail-layout__workspace-summary">{insightSummary}</section>
-          {metadataSection}
           {materialsSection}
         </div>
       </aside>
