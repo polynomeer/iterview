@@ -12,7 +12,7 @@ export function SearchInput({ value, onChange }: SearchInputProps) {
     <label className="practice-search">
       <span className="practice-search__label">{t("practice.searchQuestions")}</span>
       <input
-        className="form-field__input"
+        className="form-field__input practice-search__input"
         onChange={(event) => onChange(event.target.value)}
         placeholder={t("practice.searchPlaceholder")}
         type="search"

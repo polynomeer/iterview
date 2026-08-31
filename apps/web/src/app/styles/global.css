@@ -19213,6 +19213,301 @@ textarea::placeholder {
   justify-content: flex-end;
 }
 
+.practice-layout__workspace--browser {
+  grid-template-columns: minmax(240px, 0.82fr) minmax(0, 1.9fr) minmax(300px, 0.94fr);
+  align-items: start;
+}
+
+.practice-layout__filters--browser,
+.practice-layout__cluster--browser {
+  position: sticky;
+  top: 94px;
+}
+
+.practice-layout__filters--browser .filter-panel,
+.practice-layout__cluster--browser > .page-card,
+.practice-layout__cluster--browser > .section-panel,
+.practice-browser,
+.practice-focus-summary-card {
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(13, 20, 33, 0.98), rgba(10, 16, 27, 0.98));
+  border: 1px solid rgba(123, 144, 182, 0.14);
+  box-shadow: 0 18px 40px rgba(3, 9, 19, 0.18);
+}
+
+.practice-filter-bar--embedded {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.practice-filter-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.practice-filter-stack__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.practice-filter-stack__reset {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.practice-filter-section {
+  display: grid;
+  gap: 10px;
+}
+
+.practice-filter-section__label {
+  color: var(--text-strong);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.practice-filter-section__options {
+  display: grid;
+  gap: 6px;
+}
+
+.practice-filter-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.practice-filter-option__check {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(122, 146, 186, 0.28);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.practice-filter-option--selected {
+  color: var(--text-main);
+}
+
+.practice-filter-option--selected .practice-filter-option__check {
+  border-color: rgba(73, 126, 255, 0.9);
+  background: linear-gradient(180deg, rgba(54, 110, 249, 0.96), rgba(37, 83, 206, 0.96));
+  box-shadow: 0 0 0 3px rgba(73, 126, 255, 0.12);
+}
+
+.practice-browser {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+}
+
+.practice-browser__header,
+.practice-browser__toolbar,
+.practice-browser__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.practice-browser__toolbar {
+  align-items: stretch;
+}
+
+.practice-browser__search {
+  min-width: 0;
+  flex: 1;
+}
+
+.practice-search {
+  gap: 6px;
+}
+
+.practice-search__label {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practice-search__input {
+  min-height: 50px;
+}
+
+.practice-browser__toolbar-actions,
+.practice-browser__pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.practice-browser__page-copy {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.practice-question-list__stack {
+  gap: 10px;
+}
+
+.practice-browser-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1.5fr) 110px 160px auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.practice-browser-row:hover,
+.practice-browser-row:focus-within {
+  transform: translateY(-1px);
+}
+
+.practice-browser-row--selected {
+  border-color: rgba(73, 126, 255, 0.78);
+  background:
+    linear-gradient(180deg, rgba(24, 39, 67, 0.92), rgba(17, 29, 49, 0.92));
+  box-shadow:
+    inset 0 0 0 1px rgba(73, 126, 255, 0.16),
+    0 18px 34px rgba(4, 10, 20, 0.22);
+}
+
+.practice-browser-row__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  border: 1px solid rgba(123, 144, 182, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.practice-browser-row__main {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.practice-browser-row__topline {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.practice-browser-row__pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.practice-browser-row__meta {
+  text-transform: none;
+}
+
+.practice-browser-row__body {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.practice-browser-row__metric {
+  display: grid;
+  gap: 4px;
+}
+
+.practice-browser-row__metric span {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practice-browser-row__metric strong {
+  color: var(--text-main);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.practice-browser-row__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.practice-inspector-card__followups {
+  display: grid;
+  gap: 10px;
+}
+
+.practice-inspector-card__followup {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(123, 144, 182, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.practice-inspector-card__followup strong {
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.practice-inspector-card__followup p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 1099px) {
+  .practice-layout__workspace--browser {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .practice-browser__header,
+  .practice-browser__toolbar,
+  .practice-browser__footer,
+  .practice-browser-row,
+  .practice-browser-row__topline {
+    grid-template-columns: none;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .practice-browser__toolbar-actions,
+  .practice-browser__pagination,
+  .practice-browser-row__pills,
+  .practice-browser-row__actions {
+    justify-content: flex-start;
+  }
+}
+
 .question-reference-answer-card {
   gap: 14px;
   box-shadow: none;

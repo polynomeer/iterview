@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { PracticeQuestionItemModel } from "../../entities/practice/model";
 import { QuestionListItem } from "./QuestionListItem";
 
@@ -5,32 +6,62 @@ type QuestionListProps = {
   items: PracticeQuestionItemModel[];
   hasMore: boolean;
   layout?: "stack" | "grid";
+  selectedQuestionId?: string | null;
+  onSelectQuestion?: (questionId: string) => void;
+  searchControl?: ReactNode;
 };
 
-export function QuestionList({ items, hasMore, layout = "stack" }: QuestionListProps) {
+export function QuestionList({
+  items,
+  hasMore,
+  layout = "stack",
+  selectedQuestionId = null,
+  onSelectQuestion,
+  searchControl,
+}: QuestionListProps) {
   return (
-    <section className="page-card practice-question-list">
-      <div className="section-heading practice-question-list__header">
+    <section className="page-card practice-question-list practice-browser">
+      <div className="practice-browser__header">
         <div>
           <p className="section-heading__eyebrow">질문 목록</p>
-          <h2 className="page-card__title">다음에 연습할 질문을 고르세요</h2>
+          <h2 className="page-card__title">All Questions</h2>
         </div>
-        <div className="practice-question-list__summary">
+        <div className="practice-question-list__summary practice-browser__count">
           <span className="section-heading__count">{items.length}</span>
-          <span className="detail-chip">{layout === "grid" ? "레이아웃 고정" : "모바일 스택"}</span>
         </div>
       </div>
-      <p className="page-card__body practice-question-list__intro">
-        지금 보완하려는 약점, 목표 회사, 다시 답해볼 꼬리질문 흐름에 맞는 항목을 빠르게 찾아 연습을 이어가세요.
-      </p>
+      <div className="practice-browser__toolbar">
+        <div className="practice-browser__search">{searchControl}</div>
+        <div className="practice-browser__toolbar-actions">
+          <button className="secondary-button secondary-button--static" type="button">태그</button>
+          <button className="secondary-button secondary-button--static" type="button">정렬: 최근</button>
+          <button className="secondary-button secondary-button--static" type="button">
+            {layout === "grid" ? "그리드" : "리스트"}
+          </button>
+        </div>
+      </div>
       <div className={layout === "grid" ? "card-grid practice-question-list__grid" : "stack-list practice-question-list__stack"}>
         {items.map((item) => (
-          <QuestionListItem item={item} key={item.id} />
+          <QuestionListItem
+            isSelected={selectedQuestionId === item.id}
+            item={item}
+            key={item.id}
+            onSelect={onSelectQuestion ? () => onSelectQuestion(item.id) : undefined}
+          />
         ))}
       </div>
-      {hasMore ? (
-        <p className="page-card__body">백엔드 pagination이 연결되면 더 많은 질문을 이어서 불러올 수 있습니다.</p>
-      ) : null}
+      <div className="practice-browser__footer">
+        <div className="practice-browser__pagination">
+          <button className="secondary-button secondary-button--static" type="button">‹</button>
+          <button className="secondary-button secondary-button--static" type="button">1</button>
+          <button className="secondary-button secondary-button--static" type="button">2</button>
+          <button className="secondary-button secondary-button--static" type="button">3</button>
+          <button className="secondary-button secondary-button--static" type="button">›</button>
+        </div>
+        <p className="page-card__body practice-browser__page-copy">
+          {hasMore ? `1-${items.length} of many` : `1-${items.length} of ${items.length}`}
+        </p>
+      </div>
     </section>
   );
 }
