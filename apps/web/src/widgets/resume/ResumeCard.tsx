@@ -22,7 +22,7 @@ export function ResumeCard({
 }: ResumeCardProps) {
   return (
     <section
-      className={`page-card ${isSelected ? "page-card--selected" : ""}`}
+      className={`page-card resume-card ${isSelected ? "page-card--selected resume-card--selected" : ""}`}
       onClick={() => onSelectResume(resume.id)}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -33,10 +33,15 @@ export function ResumeCard({
       role="button"
       tabIndex={0}
     >
-      <div className="section-heading">
-        <div>
+      <div className="section-heading resume-card__header">
+        <div className="resume-card__heading">
           <p className="section-heading__eyebrow">이력서</p>
           <h2 className="page-card__title">{resume.title}</h2>
+          <p className="page-card__body resume-card__caption">
+            {isSelected
+              ? "현재 화면에 선택된 이력서 묶음입니다."
+              : "클릭해서 이 이력서 묶음과 버전을 자세히 봅니다."}
+          </p>
         </div>
         <div className="resume-card__header-actions">
           <span className="section-heading__count">{resume.versions.length}</span>
@@ -64,11 +69,13 @@ export function ResumeCard({
           ) : null}
         </div>
       </div>
-      <ResumeVersionList
-        onSelectVersion={onSelectVersion}
-        selectedVersionId={selectedVersionId}
-        versions={resume.versions}
-      />
+      <div className="resume-card__versions">
+        <ResumeVersionList
+          onSelectVersion={onSelectVersion}
+          selectedVersionId={selectedVersionId}
+          versions={resume.versions}
+        />
+      </div>
     </section>
   );
 }

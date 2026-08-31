@@ -16933,3 +16933,207 @@ textarea::placeholder {
     min-height: auto;
   }
 }
+
+/* Reference-closer practice and resume alignment */
+
+.practice-layout__workspace {
+  grid-template-columns: minmax(248px, 0.74fr) minmax(0, 1.48fr) minmax(312px, 0.9fr);
+  align-items: start;
+}
+
+.practice-layout__filters,
+.practice-layout__cluster--rail,
+.resume-layout__workspace-side {
+  position: sticky;
+  top: 24px;
+}
+
+.practice-focus-question-card,
+.practice-focus-summary-card,
+.practice-map-launch-card,
+.practice-review-queue-card,
+.practice-workflow-note,
+.resume-card,
+.resume-layout__source-note {
+  border: 1px solid rgba(137, 161, 203, 0.14);
+  background:
+    radial-gradient(circle at top right, rgba(53, 107, 246, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(13, 21, 34, 0.98), rgba(9, 16, 28, 0.98));
+}
+
+.practice-focus-question-card {
+  display: grid;
+  gap: 14px;
+}
+
+.practice-focus-question-card__topline,
+.practice-question-list__header,
+.resume-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.practice-focus-question-card__meta,
+.practice-question-list__summary,
+.resume-card__versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.practice-focus-question-card__section,
+.practice-focus-question-card__signals {
+  display: grid;
+  gap: 8px;
+}
+
+.practice-focus-question-card__signals p,
+.resume-card__caption {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.practice-question-list {
+  gap: 18px;
+}
+
+.practice-question-list__summary {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.practice-question-list__grid,
+.practice-question-list__stack {
+  gap: 12px;
+}
+
+.practice-list-item-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.practice-list-item-card:hover,
+.practice-list-item-card:focus-within {
+  border-color: rgba(91, 140, 255, 0.28);
+  box-shadow: 0 18px 34px rgba(4, 10, 20, 0.28);
+  transform: translateY(-1px);
+}
+
+.practice-list-item-card__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+}
+
+.practice-list-item-card__summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.practice-list-item-card__summary-item {
+  display: grid;
+  gap: 4px;
+  min-width: 104px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(137, 161, 203, 0.12);
+  background: rgba(255, 255, 255, 0.025);
+  text-align: left;
+}
+
+.practice-list-item-card__summary-item span {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.practice-list-item-card__summary-item strong {
+  color: var(--text-strong);
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.practice-list-item-card .list-item-card__actions {
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.resume-layout__workspace {
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.82fr);
+  align-items: start;
+}
+
+.resume-layout__workspace-main {
+  min-width: 0;
+}
+
+.resume-layout__workspace-side {
+  display: grid;
+  gap: 14px;
+}
+
+.resume-layout__document {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.resume-card {
+  display: grid;
+  gap: 16px;
+}
+
+.resume-card__heading {
+  display: grid;
+  gap: 6px;
+}
+
+.resume-card__header-actions {
+  justify-content: flex-end;
+}
+
+.resume-card__versions {
+  padding-top: 2px;
+}
+
+.resume-card--selected {
+  border-color: rgba(91, 140, 255, 0.34);
+  box-shadow:
+    inset 0 0 0 1px rgba(91, 140, 255, 0.16),
+    0 18px 40px rgba(2, 10, 24, 0.22);
+}
+
+@media (max-width: 1099px) {
+  .practice-layout__workspace,
+  .resume-layout__workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .practice-layout__filters,
+  .practice-layout__cluster--rail,
+  .resume-layout__workspace-side {
+    position: static;
+    top: auto;
+  }
+
+  .practice-list-item-card__header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .practice-list-item-card__summary,
+  .practice-list-item-card .list-item-card__actions,
+  .practice-question-list__summary {
+    justify-content: flex-start;
+  }
+}

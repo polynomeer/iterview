@@ -60,19 +60,28 @@ export function ResumeDesktopLayout({
     <div className="resume-layout resume-layout--desktop">
       <div className="resume-layout__workspace">
         <div className="resume-layout__workspace-main">
-          {overviewCard}
-          <SectionPanel className="workspace-note-card workspace-note-card--accent resume-layout__source-note" variant="muted">
-            <span className="page-card__label">{isKorean ? "기준 문서" : "Source of truth"}</span>
-            <h2 className="page-card__title">{isKorean ? "모의 면접 전에 방어 가능한 이력서 컨텍스트 하나를 만드세요" : "Build one defendable resume context before mock interviews begin"}</h2>
-            <p className="page-card__body">
-              {isKorean
-                ? "목표는 업로드 개수가 아닙니다. 더 깊은 꼬리질문을 버틸 만큼 근거, 추출 품질, 주장 범위가 갖춰진 활성 버전 하나입니다."
-                : "The goal is not upload volume. It is one active version with evidence, extraction quality, and claim coverage strong enough to support deeper follow-up questions."}
-            </p>
-          </SectionPanel>
+          <div className="page-stack">
+            {notices}
+            {libraryIntro}
+            <div className="resume-layout__document">
+              <div className="page-stack">
+                {listContent}
+              </div>
+            </div>
+          </div>
         </div>
         <aside className="resume-layout__workspace-side">
+          {overviewCard}
           {profileCard}
+          <SectionPanel className="workspace-note-card workspace-note-card--accent resume-layout__source-note" variant="muted">
+            <span className="page-card__label">{isKorean ? "기준 문서" : "Source of truth"}</span>
+            <h2 className="page-card__title">{isKorean ? "활성 버전 하나를 면접의 단일 기준 문서로 유지하세요" : "Keep one active version as the interview source of truth"}</h2>
+            <p className="page-card__body">
+              {isKorean
+                ? "업로드 수를 늘리는 대신 현재 버전의 주장, 근거, 추출 결과를 먼저 단단하게 만든 뒤 DFS 질문 트리로 내려가세요."
+                : "Instead of adding more uploads, harden the current version's claims, evidence, and extraction before going deeper into the DFS question tree."}
+            </p>
+          </SectionPanel>
           <SectionPanel className="workspace-note-card" variant="muted">
             <span className="page-card__label">{isKorean ? "이력서 워크플로우" : "Resume workflow"}</span>
             <h2 className="page-card__title">{isKorean ? "생성, 업로드, 활성화 후 한 버전씩 점검하세요" : "Create, upload, activate, then inspect one version at a time"}</h2>
@@ -83,15 +92,6 @@ export function ResumeDesktopLayout({
             </p>
           </SectionPanel>
         </aside>
-      </div>
-      <div className="page-stack">
-        {notices}
-        {libraryIntro}
-        <div className="resume-layout__document">
-          <div className="page-stack">
-            {listContent}
-          </div>
-        </div>
       </div>
     </div>
   );

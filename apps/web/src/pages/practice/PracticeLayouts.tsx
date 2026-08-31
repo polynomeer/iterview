@@ -7,6 +7,7 @@ type PracticeLayoutProps = {
   filterControls: ReactNode;
   reviewQueueCard: ReactNode;
   focusSummaryCard: ReactNode;
+  focusQuestionCard: ReactNode;
   mapLaunchCard: ReactNode;
   resultsContent: ReactNode;
 };
@@ -16,6 +17,7 @@ export function PracticeMobileLayout({
   filterControls,
   reviewQueueCard,
   focusSummaryCard,
+  focusQuestionCard,
   mapLaunchCard,
   resultsContent,
 }: PracticeLayoutProps) {
@@ -24,6 +26,7 @@ export function PracticeMobileLayout({
       <section className="practice-layout__search">{searchControl}</section>
       <section className="practice-layout__results">{resultsContent}</section>
       <section className="practice-layout__cluster practice-layout__cluster--support">
+        {focusQuestionCard}
         {focusSummaryCard}
         {mapLaunchCard}
         {filterControls}
@@ -38,6 +41,7 @@ export function PracticeDesktopLayout({
   filterControls,
   reviewQueueCard,
   focusSummaryCard,
+  focusQuestionCard,
   mapLaunchCard,
   resultsContent,
 }: PracticeLayoutProps) {
@@ -50,8 +54,8 @@ export function PracticeDesktopLayout({
       <div className="practice-layout__workspace">
         <aside className="practice-layout__filters">
           <FilterPanel
-            description={isKorean ? "레퍼런스처럼 필터와 상태 요약을 왼쪽에 고정합니다." : "Pin filters and state summary on the left like the reference."}
-            title={isKorean ? "연습 제어" : "Practice controls"}
+            description={isKorean ? "샘플처럼 왼쪽에 필터를 고정해 질문 풀을 빠르게 좁힙니다." : "Pin filters on the left like the reference to narrow the pool quickly."}
+            title={isKorean ? "필터" : "Filter"}
           >
             {filterControls}
           </FilterPanel>
@@ -61,6 +65,7 @@ export function PracticeDesktopLayout({
           {resultsContent}
         </div>
         <aside className="page-stack practice-layout__cluster practice-layout__cluster--rail">
+          {focusQuestionCard}
           {mapLaunchCard}
           {reviewQueueCard}
           <SectionPanel className="workspace-note-card practice-workflow-note" variant="muted">

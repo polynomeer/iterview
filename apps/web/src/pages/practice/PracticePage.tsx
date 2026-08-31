@@ -38,6 +38,7 @@ export function PracticePage() {
     search: filterState.search || undefined,
   });
   const visibleItems = practiceQuery.data?.items ?? [];
+  const highlightedQuestion = visibleItems[0] ?? null;
   const weakItemCount = visibleItems.filter((item) => (item.statusLabel ?? "").toLowerCase().includes("weak")).length;
   const retryItemCount = visibleItems.filter((item) => (item.statusLabel ?? "").toLowerCase().includes("retry")).length;
   const topCategories = practiceQuery.data?.filters.categories.slice(0, 3) ?? [];
@@ -271,6 +272,77 @@ export function PracticePage() {
           </SectionPanel>
         );
 
+        const focusQuestionCard = highlightedQuestion ? (
+          <SectionPanel className="practice-focus-question-card" variant="muted">
+            <div className="practice-focus-question-card__topline">
+              <span className="page-card__label">{isKorean ? "질문 상세" : "Question details"}</span>
+              <span className="detail-chip detail-chip--accent">{isKorean ? "우선 검토" : "Priority review"}</span>
+            </div>
+            <h2 className="page-card__title">{highlightedQuestion.title}</h2>
+            <div className="practice-focus-question-card__meta">
+              <span className="list-item-card__meta-pill">{highlightedQuestion.categoryLabel}</span>
+              <span className="list-item-card__meta-pill">{highlightedQuestion.companyLabel}</span>
+              <span className="list-item-card__meta-pill">{highlightedQuestion.difficultyLabel}</span>
+              {highlightedQuestion.statusLabel ? (
+                <span className="list-item-card__meta-pill">{highlightedQuestion.statusLabel}</span>
+              ) : null}
+            </div>
+            <p className="page-card__body">{highlightedQuestion.prompt}</p>
+            {(highlightedQuestion.relatedSkillLabels ?? []).length > 0 ? (
+              <div className="practice-focus-question-card__section">
+                <span className="page-card__label">{isKorean ? "핵심 주제" : "Key concepts"}</span>
+                <div className="chip-list">
+                  {highlightedQuestion.relatedSkillLabels.map((skill) => (
+                    <span className="detail-chip" key={skill}>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {highlightedQuestion.progressSummaryLabel || highlightedQuestion.resumeRelevanceLabel ? (
+              <div className="practice-focus-question-card__section">
+                <span className="page-card__label">{isKorean ? "최근 신호" : "Recent signals"}</span>
+                <div className="practice-focus-question-card__signals">
+                  {highlightedQuestion.progressSummaryLabel ? <p>{highlightedQuestion.progressSummaryLabel}</p> : null}
+                  {highlightedQuestion.resumeRelevanceLabel ? (
+                    <p>
+                      {isKorean ? "이력서 연관도" : "Resume match"}: {highlightedQuestion.resumeRelevanceLabel}
+                      {highlightedQuestion.resumeRelevanceReason ? ` · ${highlightedQuestion.resumeRelevanceReason}` : ""}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+            <div className="page-card__actions">
+              <Link
+                className="primary-button"
+                to={routeConfig.answerEditor.buildPath({ questionId: highlightedQuestion.id })}
+              >
+                {isKorean ? "바로 답변 시작" : "Start answering"}
+              </Link>
+              <Link
+                className="secondary-button"
+                to={routeConfig.questionDetail.buildPath({ questionId: highlightedQuestion.id })}
+              >
+                {isKorean ? "질문 상세 보기" : "View question details"}
+              </Link>
+            </div>
+          </SectionPanel>
+        ) : (
+          <SectionPanel className="practice-focus-question-card" variant="muted">
+            <div className="practice-focus-question-card__topline">
+              <span className="page-card__label">{isKorean ? "질문 상세" : "Question details"}</span>
+            </div>
+            <h2 className="page-card__title">{isKorean ? "질문을 찾는 중입니다" : "Waiting for a question"}</h2>
+            <p className="page-card__body">
+              {isKorean
+                ? "현재 필터에 맞는 질문이 보이면 이 레일에 상세 컨텍스트와 바로 진입 액션이 표시됩니다."
+                : "When a question matches the current filters, this rail will show its context and entry actions."}
+            </p>
+          </SectionPanel>
+        );
+
         const mapLaunchCard = (
           <SectionPanel className="practice-map-launch-card workspace-note-card" variant="muted">
             <div className="practice-map-launch-card__topline">
@@ -377,6 +449,7 @@ export function PracticePage() {
           return (
             <PracticeMobileLayout
               filterControls={filterControls}
+              focusQuestionCard={focusQuestionCard}
               focusSummaryCard={focusSummaryCard}
               mapLaunchCard={mapLaunchCard}
               resultsContent={resultsContent}
@@ -389,6 +462,7 @@ export function PracticePage() {
         return (
           <PracticeDesktopLayout
             filterControls={filterControls}
+            focusQuestionCard={focusQuestionCard}
             focusSummaryCard={focusSummaryCard}
             mapLaunchCard={mapLaunchCard}
             resultsContent={resultsContent}

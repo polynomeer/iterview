@@ -10,26 +10,34 @@ type QuestionListItemProps = {
 export function QuestionListItem({ item }: QuestionListItemProps) {
   return (
     <article className="list-item-card practice-list-item-card">
-      <div className="list-item-card__content">
+      <div className="practice-list-item-card__header">
         <div className="list-item-card__meta" role="list">
           <span className="list-item-card__meta-pill" role="listitem">{item.categoryLabel}</span>
           <span className="list-item-card__meta-pill" role="listitem">{item.companyLabel}</span>
           <span className="list-item-card__meta-pill" role="listitem">{item.difficultyLabel}</span>
           {item.statusLabel ? <QuestionStatusBadge status={item.statusLabel.toLowerCase()} /> : null}
         </div>
+        <div className="practice-list-item-card__summary">
+          {item.progressSummaryLabel ? (
+            <article className="practice-list-item-card__summary-item">
+              <span>진행</span>
+              <strong>{item.progressSummaryLabel}</strong>
+            </article>
+          ) : null}
+          {item.resumeRelevanceLabel ? (
+            <article className="practice-list-item-card__summary-item">
+              <span>이력서</span>
+              <strong>{item.resumeRelevanceLabel}</strong>
+            </article>
+          ) : null}
+        </div>
+      </div>
+      <div className="list-item-card__content">
         <h3 className="list-item-card__title">{item.title}</h3>
         <p className="list-item-card__body">{item.prompt}</p>
-        {item.progressSummaryLabel || item.resumeRelevanceLabel ? (
+        {item.resumeRelevanceReason ? (
           <div className="practice-list-item-card__notes">
-            {item.progressSummaryLabel ? (
-              <p className="practice-list-item__progress">{item.progressSummaryLabel}</p>
-            ) : null}
-            {item.resumeRelevanceLabel ? (
-              <p className="practice-list-item__progress">
-                이력서 연관도: {item.resumeRelevanceLabel}
-                {item.resumeRelevanceReason ? ` / ${item.resumeRelevanceReason}` : ""}
-              </p>
-            ) : null}
+            <p className="practice-list-item__progress">{item.resumeRelevanceReason}</p>
           </div>
         ) : null}
         {(item.relatedSkillLabels ?? []).length > 0 ? (

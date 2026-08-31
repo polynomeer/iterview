@@ -10,12 +10,15 @@ type QuestionListProps = {
 export function QuestionList({ items, hasMore, layout = "stack" }: QuestionListProps) {
   return (
     <section className="page-card practice-question-list">
-      <div className="section-heading">
+      <div className="section-heading practice-question-list__header">
         <div>
           <p className="section-heading__eyebrow">질문 목록</p>
           <h2 className="page-card__title">다음에 연습할 질문을 고르세요</h2>
         </div>
-        <span className="section-heading__count">{items.length}</span>
+        <div className="practice-question-list__summary">
+          <span className="section-heading__count">{items.length}</span>
+          <span className="detail-chip">{layout === "grid" ? "레이아웃 고정" : "모바일 스택"}</span>
+        </div>
       </div>
       <p className="page-card__body practice-question-list__intro">
         지금 보완하려는 약점, 목표 회사, 다시 답해볼 꼬리질문 흐름에 맞는 항목을 빠르게 찾아 연습을 이어가세요.
