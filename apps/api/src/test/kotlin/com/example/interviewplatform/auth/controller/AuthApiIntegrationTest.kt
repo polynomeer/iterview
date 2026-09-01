@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.http.HttpHeaders
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -124,5 +125,65 @@ class AuthApiIntegrationTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(102))
             .andExpect(jsonPath("$.email").value("auth-b@example.com"))
+    }
+
+    @Test
+    fun `repeated failed login attempts are rate limited per email`() {
+        val email = "rate-limit@example.com"
+        mockMvc.perform(
+            post("/api/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("email" to email, "password" to "password123"))),
+        ).andExpect(status().isOk)
+
+        repeat(5) {
+            mockMvc.perform(
+                post("/api/auth/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(mapOf("email" to email, "password" to "not-the-password"))),
+            ).andExpect(status().isUnauthorized)
+        }
+
+        mockMvc.perform(
+            post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("email" to email, "password" to "not-the-password"))),
+        )
+            .andExpect(status().isTooManyRequests)
+            .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().exists(HttpHeaders.RETRY_AFTER))
+            .andExpect(jsonPath("$.error.code").value("LOGIN_RATE_LIMITED"))
+            .andExpect(jsonPath("$.error.message").value("로그인 시도가 너무 많습니다. 잠시 후 다시 시도하세요."))
+    }
+
+    @Test
+    fun `successful login clears earlier failed login attempts`() {
+        val email = "rate-limit-reset@example.com"
+        mockMvc.perform(
+            post("/api/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("email" to email, "password" to "password123"))),
+        ).andExpect(status().isOk)
+
+        repeat(4) {
+            mockMvc.perform(
+                post("/api/auth/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(mapOf("email" to email, "password" to "not-the-password"))),
+            ).andExpect(status().isUnauthorized)
+        }
+
+        mockMvc.perform(
+            post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("email" to email, "password" to "password123"))),
+        ).andExpect(status().isOk)
+
+        repeat(5) {
+            mockMvc.perform(
+                post("/api/auth/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(mapOf("email" to email, "password" to "not-the-password"))),
+            ).andExpect(status().isUnauthorized)
+        }
     }
 }

@@ -21,6 +21,7 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val tokenService: TokenService,
     private val clockService: ClockService,
+    private val loginAttemptRateLimiter: LoginAttemptRateLimiter,
 ) {
     @Transactional
     fun signup(request: SignupRequest): AuthTokenResponse {
@@ -48,6 +49,7 @@ class AuthService(
     @Transactional(readOnly = true)
     fun login(request: LoginRequest): AuthTokenResponse {
         val email = request.email.trim().lowercase()
+        loginAttemptRateLimiter.consumeAttempt(email)
         val user = userRepository.findByEmail(email)
             ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")
 
@@ -60,6 +62,7 @@ class AuthService(
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "User is not active")
         }
 
+        loginAttemptRateLimiter.clear(email)
         return toAuthResponse(user)
     }
 

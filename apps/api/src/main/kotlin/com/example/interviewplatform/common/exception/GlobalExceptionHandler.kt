@@ -2,11 +2,13 @@ package com.example.interviewplatform.common.exception
 
 import com.example.interviewplatform.common.ApiErrorDetail
 import com.example.interviewplatform.common.ApiErrorResponse
+import com.example.interviewplatform.auth.service.LoginAttemptRateLimitExceededException
 import com.example.interviewplatform.common.service.AppLocaleService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.AuthenticationException
@@ -122,6 +124,24 @@ class GlobalExceptionHandler(
             message = ex.reason ?: defaultMessage(status, request),
             path = request.requestURI,
         )
+    }
+
+    @ExceptionHandler(LoginAttemptRateLimitExceededException::class)
+    fun handleLoginAttemptRateLimit(
+        ex: LoginAttemptRateLimitExceededException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ApiErrorResponse> {
+        log.warn("login_rate_limited path={} retry_after_seconds={}", request.requestURI, ex.retryAfterSeconds)
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+            .header(HttpHeaders.RETRY_AFTER, ex.retryAfterSeconds.toString())
+            .body(
+                errorFactory.build(
+                    status = HttpStatus.TOO_MANY_REQUESTS.value(),
+                    code = "LOGIN_RATE_LIMITED",
+                    message = appLocaleService.getMessage("error.login_rate_limited", request),
+                    path = request.requestURI,
+                ),
+            )
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException::class)

@@ -22,6 +22,12 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
 
+app:
+  rate-limits:
+    login:
+      max-attempts: ${APP_RATE_LIMIT_LOGIN_MAX_ATTEMPTS:5}
+      window-seconds: ${APP_RATE_LIMIT_LOGIN_WINDOW_SECONDS:900}
+
 auth:
   token:
     ttl-seconds: ${AUTH_TOKEN_TTL_SECONDS:86400}

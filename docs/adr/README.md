@@ -150,3 +150,5 @@ Each ADR should include:
    Defines a shared Spring and Testcontainers contract for API integration tests.
 62. [`0062-protect-interview-recording-access.md`](0062-protect-interview-recording-access.md)
    Replaces public interview-audio URLs with owner-authorized playback downloads.
+63. [`0063-rate-limit-failed-login-attempts.md`](0063-rate-limit-failed-login-attempts.md)
+   Adds an account-keyed login attempt limit without relying on untrusted proxy headers.
