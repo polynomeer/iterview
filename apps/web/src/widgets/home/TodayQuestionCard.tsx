@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
-import type { HomeQuestionCardModel } from "../../entities/home/model";
+import type { HomeModel, HomeQuestionCardModel } from "../../entities/home/model";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { QuestionStatusBadge } from "../../shared/ui/QuestionStatusBadge";
 
 type TodayQuestionCardProps = {
   question: HomeQuestionCardModel;
+  radarItems?: HomeModel["skillRadarPreview"];
+  retryQuestions?: HomeModel["retryQuestions"];
 };
 
-export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
+export function TodayQuestionCard({ question, radarItems = [], retryQuestions = [] }: TodayQuestionCardProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
   const pathItems = [
@@ -30,6 +32,11 @@ export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
       value: isKorean ? "근거와 반례 정리" : "Evidence and counter-cases",
       tone: "default",
     },
+  ];
+  const graphNodes = [
+    ...radarItems.slice(0, 3).map((item) => ({ id: `skill-${item.id}`, label: item.label, value: `${item.scoreLabel}%`, tone: "positive" })),
+    { id: "focus", label: question.title, value: isKorean ? "현재 경로" : "Current path", tone: "focus" },
+    ...retryQuestions.slice(0, 2).map((item) => ({ id: `retry-${item.id}`, label: item.title, value: isKorean ? "재도전" : "Retry", tone: "warning" })),
   ];
 
   return (
@@ -73,20 +80,14 @@ export function TodayQuestionCard({ question }: TodayQuestionCardProps) {
             <span className="detail-chip">{question.categoryLabel}</span>
             <span className="detail-chip">{question.companyLabel}</span>
           </div>
-          <div className="today-question-card__focus-map" aria-hidden="true">
-            <div className="today-question-card__focus-node today-question-card__focus-node--root">
-              <span>{question.categoryLabel}</span>
-              <strong>{isKorean ? "72%" : "72%"}</strong>
-            </div>
-            <div className="today-question-card__focus-branch" />
-            <div className="today-question-card__focus-node">
-              <span>{question.title}</span>
-              <strong>{isKorean ? "현재" : "Now"}</strong>
-            </div>
-            <div className="today-question-card__focus-node today-question-card__focus-node--muted">
-              <span>{isKorean ? "꼬리질문" : "Follow-up"}</span>
-              <strong>{isKorean ? "다음" : "Next"}</strong>
-            </div>
+          <div className="today-question-card__focus-map" aria-label={isKorean ? "지식 그래프 스냅샷" : "Knowledge graph snapshot"}>
+            <div className="today-question-card__focus-map-grid" aria-hidden="true" />
+            {graphNodes.map((node) => (
+              <div className={`today-question-card__focus-node today-question-card__focus-node--${node.tone}`} key={node.id}>
+                <span>{node.label}</span>
+                <strong>{node.value}</strong>
+              </div>
+            ))}
           </div>
           <div className="page-card__actions">
             <Link className="primary-button" to={routeConfig.answerEditor.buildPath({ questionId: question.id })}>

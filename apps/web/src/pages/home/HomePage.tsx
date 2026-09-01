@@ -179,7 +179,11 @@ export function HomePage() {
             const summaryStats = homeData.summaryStats ?? [];
             const resumeRiskPreview = homeData.resumeRiskPreview ?? [];
             const todaySection = homeData.todayQuestion ? (
-              <TodayQuestionCard question={homeData.todayQuestion} />
+              <TodayQuestionCard
+                question={homeData.todayQuestion}
+                radarItems={homeData.skillRadarPreview}
+                retryQuestions={homeData.retryQuestions}
+              />
             ) : (
                 <SectionEmptyState
                   action={{
