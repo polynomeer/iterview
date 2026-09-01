@@ -92,7 +92,23 @@ cd iterview
 ./scripts/setup_all.sh
 ```
 
-### 2. Start the backend
+### 2. Start the full local stack
+
+For the normal development workflow, run the root helper. It starts Docker if needed,
+restarts the `iterview` Compose project, waits for PostgreSQL and API readiness, and then
+streams logs:
+
+```bash
+./scripts/dev_all.sh
+```
+
+Use `Ctrl+C` to stop log streaming; the containers keep running. Set
+`STACK_START_TIMEOUT_SECONDS` when the first Gradle startup needs more than the default
+four minutes.
+
+### 3. Start applications separately
+
+Use this only when you need to debug an application outside the full Compose stack.
 
 ```bash
 cd apps/api
@@ -100,7 +116,7 @@ docker compose up -d postgres
 ./gradlew bootRun
 ```
 
-### 3. Start the frontend
+### 4. Start the frontend
 
 In a second terminal:
 

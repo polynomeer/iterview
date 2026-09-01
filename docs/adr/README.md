@@ -158,3 +158,5 @@ Each ADR should include:
    Requires every public API route to be explicitly declared in a default-deny security policy.
 66. [`0066-separate-liveness-from-readiness.md`](0066-separate-liveness-from-readiness.md)
    Separates process liveness from PostgreSQL-backed traffic readiness probes.
+67. [`0067-coordinate-compose-startup-with-api-readiness.md`](0067-coordinate-compose-startup-with-api-readiness.md)
+   Uses API readiness to sequence Compose startup and graceful shutdown.

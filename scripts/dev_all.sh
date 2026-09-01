@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMPOSE_FILE="$ROOT_DIR/compose.yml"
 DOCKER_START_TIMEOUT_SECONDS="${DOCKER_START_TIMEOUT_SECONDS:-120}"
+STACK_START_TIMEOUT_SECONDS="${STACK_START_TIMEOUT_SECONDS:-240}"
 
 usage() {
   cat <<'EOF'
@@ -13,12 +14,13 @@ Usage:
 Behavior:
   - ensures the Docker daemon is running
   - stops the existing iterview Docker Compose stack when present
-  - starts a fresh iterview Docker Compose stack
+  - starts a fresh stack and waits for its health checks to pass
   - follows logs from postgres, api, and web containers
 
 Notes:
   - the compose project name is iterview
-  - stop log streaming with Ctrl+C, containers keep running
+  - set STACK_START_TIMEOUT_SECONDS to change the startup wait limit (default: 240)
+  - stop log streaming with Ctrl+C; containers keep running
 EOF
 }
 
@@ -87,7 +89,7 @@ restart_stack() {
   docker_compose down --remove-orphans
 
   echo "[docker] starting fresh iterview stack"
-  docker_compose up -d --remove-orphans
+  docker_compose up -d --remove-orphans --wait --wait-timeout "$STACK_START_TIMEOUT_SECONDS"
 }
 
 ensure_docker_cli

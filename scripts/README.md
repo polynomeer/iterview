@@ -18,7 +18,7 @@ App-specific automation should stay inside the owning app instead of moving here
 - `dev_web.sh`
   Starts the frontend development flow from the root.
 - `dev_all.sh`
-  Convenience helper for running both app flows together when supported by your local environment.
+  Restarts the `iterview` Docker Compose stack, waits for PostgreSQL and API readiness, then follows all service logs.
 - `build_all.sh`
   Runs repository-level build verification across apps.
 - `test_all.sh`
@@ -32,6 +32,9 @@ Use root scripts when:
 - onboarding a new developer
 - checking the repository from a monorepo perspective
 - validating that backend and frontend still work together operationally
+
+`dev_all.sh` starts Docker Desktop or the local Docker service when needed. Set
+`STACK_START_TIMEOUT_SECONDS` to adjust its compose readiness wait (default: `240`).
 
 Use app-local commands when:
 - you are working deeply inside one app
