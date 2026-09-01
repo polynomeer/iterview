@@ -29,12 +29,23 @@ function groupPaletteItems(items: LocalizedCommandPaletteItem[]) {
   }, {});
 }
 
+function getFocusableElements(container: HTMLElement) {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+}
+
 export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useLocale();
   const inputId = useId();
+  const listboxId = `${inputId}-results`;
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const surfaceRef = useRef<HTMLDivElement | null>(null);
+  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const commandPaletteItems = useMemo(
@@ -70,7 +81,16 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       return;
     }
 
-    inputRef.current?.focus();
+    previouslyFocusedElementRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    const focusFrame = window.requestAnimationFrame(() => inputRef.current?.focus());
+
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      previouslyFocusedElementRef.current?.focus();
+      previouslyFocusedElementRef.current = null;
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -92,6 +112,31 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       if (event.key === "Escape") {
         event.preventDefault();
         onClose();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const surface = surfaceRef.current;
+        if (!surface) {
+          return;
+        }
+
+        const focusableElements = getFocusableElements(surface);
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (!firstElement || !lastElement) {
+          return;
+        }
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement.focus();
+        }
+
         return;
       }
 
@@ -134,13 +179,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   return (
     <div
-      aria-labelledby={inputId}
+      aria-label={t("commandPalette.results")}
       aria-modal="true"
       className="command-palette"
       onClick={onClose}
       role="dialog"
     >
       <div
+        ref={surfaceRef}
         className="command-palette__surface"
         onClick={(event) => event.stopPropagation()}
         role="document"
@@ -152,11 +198,16 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           <div className="command-palette__search-row">
             <input
               ref={inputRef}
+              aria-activedescendant={filteredItems[selectedIndex] ? `${inputId}-option-${filteredItems[selectedIndex].id}` : undefined}
               aria-label={t("commandPalette.searchLabel")}
+              aria-autocomplete="list"
+              aria-controls={listboxId}
+              aria-expanded="true"
               className="command-palette__search-input"
               id={inputId}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t("commandPalette.searchPlaceholder")}
+              role="combobox"
               type="search"
               value={query}
             />
@@ -170,9 +221,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         </div>
 
         {filteredItems.length > 0 ? (
-          <div aria-label={t("commandPalette.results")} className="command-palette__results" role="listbox">
+          <div aria-label={t("commandPalette.results")} className="command-palette__results" id={listboxId} role="listbox">
             {Object.entries(groupedItems).map(([section, items]) => (
-              <section className="command-palette__group" key={section}>
+              <section aria-label={section} className="command-palette__group" key={section} role="group">
                 <header className="command-palette__group-header">
                   <span>{section}</span>
                   <span>{items.length}</span>
@@ -186,12 +237,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       <button
                         aria-selected={isSelected}
                         className={`command-palette__item${isSelected ? " command-palette__item--selected" : ""}`}
+                        id={`${inputId}-option-${item.id}`}
                         key={item.id}
                         onClick={() => {
                           navigate(item.to);
                           onClose();
                         }}
                         onMouseEnter={() => setSelectedIndex(itemIndex)}
+                        role="option"
                         type="button"
                       >
                         <span className="command-palette__item-copy">

@@ -142,3 +142,5 @@ Each ADR should include:
    Adds a frontend dependency audit to the shared local and CI verification path.
 58. [`0058-align-kotlin-gradle-plugin-with-gradle-9.md`](0058-align-kotlin-gradle-plugin-with-gradle-9.md)
    Aligns the API Kotlin Gradle Plugin baseline with Gradle 9.
+59. [`0059-standardize-workspace-overlay-accessibility.md`](0059-standardize-workspace-overlay-accessibility.md)
+   Defines keyboard focus and reduced-motion requirements for workspace overlays.

@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "../../widgets/layout/CommandPalette";
@@ -84,9 +84,43 @@ describe("CommandPalette", () => {
     );
 
     await user.type(screen.getByLabelText("Search Iterview"), "Stripe");
-    await user.click(screen.getByRole("button", { name: /Stripe target preparation board/i }));
+    await user.click(screen.getByRole("option", { name: /Stripe target preparation board/i }));
 
     expect(screen.getByTestId("location-display")).toHaveTextContent("/target-companies?company=stripe");
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it("keeps focus inside the dialog and restores it when closed", async () => {
+    const onClose = vi.fn();
+    const { rerender } = renderWithProviders(
+      <>
+        <button type="button">Open command palette</button>
+        <CommandPalette isOpen={false} onClose={onClose} />
+      </>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open command palette" });
+    trigger.focus();
+
+    rerender(
+      <>
+        <button type="button">Open command palette</button>
+        <CommandPalette isOpen onClose={onClose} />
+      </>,
+    );
+
+    const searchInput = screen.getByRole("combobox", { name: "Search Iterview" });
+    await waitFor(() => expect(searchInput).toHaveFocus());
+
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
+    expect(document.activeElement).toHaveAttribute("role", "option");
+
+    rerender(
+      <>
+        <button type="button">Open command palette</button>
+        <CommandPalette isOpen={false} onClose={onClose} />
+      </>,
+    );
+
+    await waitFor(() => expect(trigger).toHaveFocus());
   });
 });
