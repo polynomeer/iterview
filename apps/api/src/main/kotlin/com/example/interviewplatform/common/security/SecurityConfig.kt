@@ -57,7 +57,7 @@ class SecurityConfig(
                         "/api/questions/*/reference-answers",
                         "/api/questions/*/learning-materials",
                     ).authenticated()
-                    .requestMatchers(HttpMethod.GET, "/api/health", "/uploads/profile-images/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/health/**", "/uploads/profile-images/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/login").permitAll()
                     .requestMatchers(
                         HttpMethod.GET,

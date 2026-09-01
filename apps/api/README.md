@@ -83,6 +83,8 @@ The app defaults to the `local` Spring profile, so a local run does not need ext
 Default local URLs:
 - API base URL: `http://localhost:8080`
 - health check: `http://localhost:8080/api/health`
+- liveness probe: `http://localhost:8080/api/health/live`
+- readiness probe: `http://localhost:8080/api/health/ready`
 - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 - Swagger UI: `http://localhost:8080/swagger-ui.html`
 
@@ -143,16 +145,20 @@ SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
 - `AUTH_TOKEN_TTL_SECONDS`
   Default: `86400`
 
-#### CORS and upload limits
+#### CORS, upload, and authentication limits
 
 - `APP_CORS_ALLOWED_ORIGINS`
   Explicit fixed origins.
 - `APP_CORS_ALLOWED_ORIGIN_PATTERNS`
   Default local patterns include localhost and `127.0.0.1`.
 - `APP_MULTIPART_MAX_FILE_SIZE`
-  Default: `10MB`
+  Default: `50MB`
 - `APP_MULTIPART_MAX_REQUEST_SIZE`
-  Default: `12MB`
+  Default: `55MB`
+- `APP_RATE_LIMIT_LOGIN_MAX_ATTEMPTS`
+  Default: `5` attempts per account window.
+- `APP_RATE_LIMIT_LOGIN_WINDOW_SECONDS`
+  Default: `900` seconds.
 
 #### Resume intelligence
 

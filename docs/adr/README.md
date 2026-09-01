@@ -156,3 +156,5 @@ Each ADR should include:
    Adds safe response and error correlation IDs for operational diagnosis.
 65. [`0065-default-deny-api-access-policy.md`](0065-default-deny-api-access-policy.md)
    Requires every public API route to be explicitly declared in a default-deny security policy.
+66. [`0066-separate-liveness-from-readiness.md`](0066-separate-liveness-from-readiness.md)
+   Separates process liveness from PostgreSQL-backed traffic readiness probes.

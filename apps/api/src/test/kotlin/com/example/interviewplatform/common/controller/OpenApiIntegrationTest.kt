@@ -18,6 +18,8 @@ class OpenApiIntegrationTest {
         mockMvc.perform(get("/v3/api-docs"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.openapi").exists())
+            .andExpect(jsonPath("$.paths['/api/health/live']").exists())
+            .andExpect(jsonPath("$.paths['/api/health/ready']").exists())
             .andExpect(jsonPath("$.paths['/api/auth/login']").exists())
             .andExpect(jsonPath("$.paths['/api/me']").exists())
             .andExpect(jsonPath("$.paths['/api/me/profile-image']").exists())
