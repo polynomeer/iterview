@@ -146,3 +146,5 @@ Each ADR should include:
    Defines keyboard focus and reduced-motion requirements for workspace overlays.
 60. [`0060-preserve-kotlin-annotation-targets-and-api-test-diagnostics.md`](0060-preserve-kotlin-annotation-targets-and-api-test-diagnostics.md)
    Preserves API annotation placement and exposes Testcontainers test progress.
+61. [`0061-centralize-api-integration-test-configuration.md`](0061-centralize-api-integration-test-configuration.md)
+   Defines a shared Spring and Testcontainers contract for API integration tests.

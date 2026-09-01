@@ -1,5 +1,6 @@
 package com.example.interviewplatform.question.repository
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.question.dto.QuestionSearchFilter
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -13,10 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.testcontainers.junit.jupiter.Testcontainers
 
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers(disabledWithoutDocker = true)
+@ApiIntegrationTest
 class QuestionSearchRepositoryIntegrationTest {
     @Autowired
     private lateinit var questionSearchRepository: QuestionSearchRepository

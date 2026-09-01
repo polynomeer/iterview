@@ -1,5 +1,6 @@
 package com.example.interviewplatform.interview.controller
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.auth.service.TokenService
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -25,11 +26,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers(disabledWithoutDocker = true)
+@ApiIntegrationTest
 class InterviewRecordApiIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc

@@ -1,5 +1,6 @@
 package com.example.interviewplatform.resume.controller
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.auth.service.TokenService
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import com.sun.net.httpserver.HttpServer
@@ -36,11 +37,7 @@ import java.io.ByteArrayOutputStream
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers(disabledWithoutDocker = true)
+@ApiIntegrationTest
 class ResumeApiIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc

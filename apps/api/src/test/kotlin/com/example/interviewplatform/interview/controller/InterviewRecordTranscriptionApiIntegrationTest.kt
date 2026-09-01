@@ -1,5 +1,6 @@
 package com.example.interviewplatform.interview.controller
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.auth.service.TokenService
 import com.example.interviewplatform.interview.service.ExtractedPracticalInterviewTranscript
 import com.example.interviewplatform.interview.service.PracticalInterviewTranscriptExtractionClient
@@ -26,11 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.junit.jupiter.Testcontainers
 import kotlin.test.assertEquals
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers(disabledWithoutDocker = true)
+@ApiIntegrationTest
 class InterviewRecordTranscriptionApiIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc

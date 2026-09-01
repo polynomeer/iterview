@@ -1,5 +1,6 @@
 package com.example.interviewplatform.user.repository
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -9,10 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.testcontainers.junit.jupiter.Testcontainers
 
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers(disabledWithoutDocker = true)
+@ApiIntegrationTest
 class CompanyRepositoryIntegrationTest {
     @Autowired
     private lateinit var companyRepository: CompanyRepository

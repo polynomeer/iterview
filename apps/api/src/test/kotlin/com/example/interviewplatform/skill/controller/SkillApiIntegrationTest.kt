@@ -1,5 +1,6 @@
 package com.example.interviewplatform.skill.controller
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.auth.service.TokenService
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -19,11 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.junit.jupiter.Testcontainers
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers(disabledWithoutDocker = true)
+@ApiIntegrationTest
 class SkillApiIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc

@@ -1,5 +1,6 @@
 package com.example.interviewplatform.review.repository
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -13,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Instant
 
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Testcontainers(disabledWithoutDocker = true)
+@ApiIntegrationTest
 @Transactional
 class ReviewQueueRepositoryIntegrationTest {
     @Autowired

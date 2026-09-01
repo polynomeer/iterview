@@ -1,5 +1,6 @@
 package com.example.interviewplatform.interview.controller
 
+import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.auth.service.TokenService
 import com.example.interviewplatform.interview.service.InterviewLlmMultipartPart
 import com.example.interviewplatform.interview.service.InterviewLlmApiTransport
@@ -26,10 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Duration
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ApiIntegrationTest
 @TestPropertySource(
     properties = [
         "app.interview.llm.api-key=test-key",
@@ -38,7 +36,6 @@ import java.time.Duration
     ],
 )
 @org.springframework.context.annotation.Import(AiInterviewFollowUpApiIntegrationTest.FakeInterviewLlmConfig::class)
-@Testcontainers(disabledWithoutDocker = true)
 class AiInterviewFollowUpApiIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
