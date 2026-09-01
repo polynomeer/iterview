@@ -56,7 +56,7 @@ describe("SettingsPage", () => {
     expect(screen.getByText("평가 기본값 조정")).toBeInTheDocument();
     expect(screen.getByText("로컬 알림 타이밍과 방해 수준 조정")).toBeInTheDocument();
     expect(screen.getByText("다음 복습 사이클 전에 권장되는 조정")).toBeInTheDocument();
-    expect(screen.getByText("라이트")).toBeInTheDocument();
+    expect(screen.getAllByText("라이트")).toHaveLength(2);
     expect(screen.getAllByText("로컬 전용").length).toBeGreaterThan(0);
   });
 
@@ -103,7 +103,7 @@ describe("SettingsPage", () => {
     );
 
     await user.selectOptions(screen.getByLabelText("기본 언어"), "ko");
-    await user.click(screen.getByRole("button", { name: "설정 저장" }));
+    await user.click(screen.getAllByRole("button", { name: "설정 저장" })[0]);
 
     expect(mutateAsync).toHaveBeenCalledWith({
       targetScoreThreshold: 85,
@@ -152,6 +152,6 @@ describe("SettingsPage", () => {
       { route: "/settings", locale: "ko" },
     );
 
-    expect(document.querySelector(".settings-layout--desktop")).not.toBeNull();
+    expect(document.querySelector(".settings-browser__shell")).not.toBeNull();
   });
 });
