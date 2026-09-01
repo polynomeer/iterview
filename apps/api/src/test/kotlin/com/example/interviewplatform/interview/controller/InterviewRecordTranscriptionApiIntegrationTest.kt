@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.mock.web.MockMultipartFile
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.assertEquals
 
 @ApiIntegrationTest
+@Import(InterviewRecordTranscriptionApiIntegrationTest.FakeTranscriptionConfig::class)
 class InterviewRecordTranscriptionApiIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
