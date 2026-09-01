@@ -52,6 +52,7 @@ class SecurityConfig(
                     .requestMatchers("/api/home/**", "/api/daily-cards/**").authenticated()
                     .requestMatchers("/api/review-queue/**", "/api/archive/**").authenticated()
                     .requestMatchers("/api/feed/**", "/api/auth/me").authenticated()
+                    .requestMatchers("/api/job-postings/**").authenticated()
                     .anyRequest().permitAll()
             }
             .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
