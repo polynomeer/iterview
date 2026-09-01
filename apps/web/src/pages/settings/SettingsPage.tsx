@@ -388,7 +388,7 @@ export function SettingsPage() {
                 <section className="page-card settings-browser__profile-card">
                   <div className="settings-browser__profile-top">
                     <div className="settings-browser__avatar">
-                      {currentProfile?.displayName.slice(0, 1) ?? "I"}
+                      {currentProfile?.displayName?.slice(0, 1) || "I"}
                     </div>
                     <div>
                       <strong>{currentProfile?.displayName}</strong>

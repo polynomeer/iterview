@@ -154,4 +154,34 @@ describe("SettingsPage", () => {
 
     expect(document.querySelector(".settings-browser__shell")).not.toBeNull();
   });
+
+  it("renders a safe avatar fallback when the current-user identity fields are absent", () => {
+    vi.mocked(useCurrentUserQuery).mockReturnValue({
+      data: {
+        id: "user-1",
+        settings: {
+          retryEnabled: true,
+          preferredLanguage: "ko",
+        },
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+    vi.mocked(useUpdateSettingsMutation).mockReturnValue({
+      mutateAsync: vi.fn(),
+      isPending: false,
+      error: null,
+    } as never);
+
+    renderWithProviders(
+      <Routes>
+        <Route element={<SettingsPage />} path="/settings" />
+      </Routes>,
+      { route: "/settings", locale: "ko" },
+    );
+
+    expect(document.querySelector(".settings-browser__avatar")).toHaveTextContent("I");
+  });
 });

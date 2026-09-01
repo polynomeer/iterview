@@ -22,6 +22,7 @@ export type ProfileModel = {
 
 export function mapCurrentUserDtoToProfileModel(user: CurrentUserDto): ProfileModel {
   const nickname = user.profile?.nickname ?? user.nickname ?? "";
+  const displayName = nickname.trim() || user.name?.trim() || user.email?.trim() || "I";
   const jobRole = user.profile?.jobRole ?? user.jobRole ?? "";
   const yearsOfExperience = user.profile?.yearsOfExperience ?? user.yearsOfExperience;
   const targetCompanies = (user.targetCompanies ?? [])
@@ -33,7 +34,7 @@ export function mapCurrentUserDtoToProfileModel(user: CurrentUserDto): ProfileMo
   return {
     id: String(user.id),
     email: user.email,
-    displayName: nickname.trim() || user.name || user.email,
+    displayName,
     nickname,
     jobRole,
     yearsOfExperience:
