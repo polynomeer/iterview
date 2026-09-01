@@ -97,6 +97,10 @@ class AuthApiIntegrationTest {
             .andExpect(status().isUnauthorized)
         mockMvc.perform(get("/api/job-postings"))
             .andExpect(status().isUnauthorized)
+        mockMvc.perform(post("/api/questions/1/reference-answers"))
+            .andExpect(status().isUnauthorized)
+        mockMvc.perform(post("/api/questions/1/learning-materials"))
+            .andExpect(status().isUnauthorized)
     }
 
     @Test

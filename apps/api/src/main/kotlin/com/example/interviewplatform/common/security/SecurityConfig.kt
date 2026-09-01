@@ -3,6 +3,7 @@ package com.example.interviewplatform.common.security
 import com.example.interviewplatform.auth.security.AuthTokenFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -45,6 +46,11 @@ class SecurityConfig(
                     .requestMatchers("/api/me/**").authenticated()
                     .requestMatchers("/api/resumes/**", "/api/resume-versions/**").authenticated()
                     .requestMatchers("/api/questions/resume-based").authenticated()
+                    .requestMatchers(
+                        HttpMethod.POST,
+                        "/api/questions/*/reference-answers",
+                        "/api/questions/*/learning-materials",
+                    ).authenticated()
                     .requestMatchers("/api/skills/**").authenticated()
                     .requestMatchers("/api/interview-sessions/**").authenticated()
                     .requestMatchers("/api/interview-records/**").authenticated()
