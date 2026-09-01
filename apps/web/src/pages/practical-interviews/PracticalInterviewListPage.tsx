@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getResumeVersionChoices } from "../../entities/resume/model";
 import { useCreateInterviewRecordMutation } from "../../features/practical-interview/api/useCreateInterviewRecordMutation";
@@ -19,6 +19,9 @@ export function PracticalInterviewListPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [file, setFile] = useState<File | null>(null);
+  const [hasRecordingConsent, setHasRecordingConsent] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [roleName, setRoleName] = useState("");
   const [interviewDate, setInterviewDate] = useState("");
@@ -26,6 +29,9 @@ export function PracticalInterviewListPage() {
   const [transcriptText, setTranscriptText] = useState("");
   const [selectedResumeVersionId, setSelectedResumeVersionId] = useState<string>("");
   const [uploadOpen, setUploadOpen] = useState(location.pathname.endsWith("/upload"));
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const recordingStreamRef = useRef<MediaStream | null>(null);
+  const recordingChunksRef = useRef<Blob[]>([]);
   const recordListQuery = useInterviewRecordListQuery();
   const resumeListQuery = useResumeListQuery();
   const createRecordMutation = useCreateInterviewRecordMutation();
@@ -54,6 +60,82 @@ export function PracticalInterviewListPage() {
       );
     }
   }, [resumeChoices, selectedResumeVersionId]);
+
+  useEffect(() => {
+    return () => {
+      recorderRef.current?.stop();
+      recordingStreamRef.current?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
+
+  async function startRecording() {
+    setRecordingError(null);
+
+    if (!hasRecordingConsent) {
+      setRecordingError(
+        isKorean
+          ? "녹음을 시작하기 전에 녹음 및 업로드 동의가 필요합니다."
+          : "Recording and upload consent is required before starting.",
+      );
+      return;
+    }
+
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setRecordingError(
+        isKorean
+          ? "이 브라우저는 마이크 녹음을 지원하지 않습니다. 파일 업로드를 사용하세요."
+          : "This browser does not support microphone recording. Use file upload instead.",
+      );
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeType = ["audio/webm;codecs=opus", "audio/webm"].find((candidate) =>
+        MediaRecorder.isTypeSupported(candidate),
+      );
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+      recordingStreamRef.current = stream;
+      recorderRef.current = recorder;
+      recordingChunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordingChunksRef.current.push(event.data);
+        }
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(recordingChunksRef.current, { type: recorder.mimeType || "audio/webm" });
+        recordingStreamRef.current?.getTracks().forEach((track) => track.stop());
+        recordingStreamRef.current = null;
+        recorderRef.current = null;
+        recordingChunksRef.current = [];
+
+        if (blob.size > 0) {
+          setFile(
+            new File([blob], `iterview-recording-${new Date().toISOString().replace(/[:.]/g, "-")}.webm`, {
+              type: blob.type,
+            }),
+          );
+        }
+        setIsRecording(false);
+      };
+      recorder.start();
+      setIsRecording(true);
+    } catch {
+      setRecordingError(
+        isKorean
+          ? "마이크에 접근할 수 없습니다. 브라우저 권한을 확인하거나 파일 업로드를 사용하세요."
+          : "Microphone access is unavailable. Check browser permission or use file upload instead.",
+      );
+    }
+  }
+
+  function stopRecording() {
+    if (recorderRef.current?.state === "recording") {
+      recorderRef.current.stop();
+    }
+  }
 
   async function handleCreateRecord() {
     if (!file) {
@@ -332,20 +414,69 @@ export function PracticalInterviewListPage() {
                     </article>
                   </div>
                   <div className="form-grid">
-                    <label className="form-field">
-                      <span className="form-field__label">{isKorean ? "오디오 파일" : "Audio file"}</span>
+                    <div className="form-field practical-recording-field">
+                      <span className="form-field__label">{isKorean ? "오디오 파일 또는 녹음" : "Audio file or recording"}</span>
                       <input
                         accept=".mp3,.m4a,.wav,.aac,.ogg,.webm"
                         className="form-input"
-                        onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+                        onChange={(event) => {
+                          setRecordingError(null);
+                          setFile(event.target.files?.[0] ?? null);
+                        }}
                         type="file"
                       />
                       <span className="form-field__hint">
                         {isKorean
-                          ? "면접 오디오를 업로드하세요. 아래에 전사를 붙여넣지 않으면 서버가 자동으로 전사를 추출할 수 있습니다."
-                          : "Upload the interview audio. The server can extract a transcript automatically if you do not paste one below."}
+                          ? "기존 파일을 올리거나 이 브라우저에서 바로 녹음할 수 있습니다. 전사가 없으면 서버가 자동 추출을 시도합니다."
+                          : "Upload an existing file or record in this browser. The server can extract a transcript when none is provided."}
                       </span>
-                    </label>
+                      <label className="practical-recording-field__consent">
+                        <input
+                          checked={hasRecordingConsent}
+                          onChange={(event) => setHasRecordingConsent(event.target.checked)}
+                          type="checkbox"
+                        />
+                        <span>
+                          {isKorean
+                            ? "면접 연습 녹음을 이 기기에서 만들고, 기록 생성 시 서버에 업로드하는 것에 동의합니다."
+                            : "I consent to creating this practice recording on this device and uploading it when the record is created."}
+                        </span>
+                      </label>
+                      <div className="practical-recording-field__actions">
+                        <button
+                          className="secondary-button"
+                          disabled={isRecording || !hasRecordingConsent}
+                          onClick={() => {
+                            void startRecording();
+                          }}
+                          type="button"
+                        >
+                          {isKorean ? "녹음 시작" : "Start recording"}
+                        </button>
+                        <button
+                          className="secondary-button"
+                          disabled={!isRecording}
+                          onClick={stopRecording}
+                          type="button"
+                        >
+                          {isKorean ? "녹음 중지" : "Stop recording"}
+                        </button>
+                        <span aria-live="polite" className="practical-recording-field__status">
+                          {isRecording
+                            ? isKorean
+                              ? "녹음 중입니다"
+                              : "Recording in progress"
+                            : file
+                              ? isKorean
+                                ? `선택됨: ${file.name}`
+                                : `Selected: ${file.name}`
+                              : isKorean
+                                ? "파일을 선택하거나 녹음을 시작하세요"
+                                : "Choose a file or start recording"}
+                        </span>
+                      </div>
+                      {recordingError ? <span className="form-field__error">{recordingError}</span> : null}
+                    </div>
                     <label className="form-field">
                       <span className="form-field__label">{isKorean ? "회사" : "Company"}</span>
                       <input

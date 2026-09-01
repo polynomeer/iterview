@@ -162,3 +162,5 @@ Each ADR should include:
    Uses API readiness to sequence Compose startup and graceful shutdown.
 68. [`0068-document-local-compose-configuration-boundaries.md`](0068-document-local-compose-configuration-boundaries.md)
    Makes local Compose overrides explicit without treating development secrets as deployment configuration.
+69. [`0069-add-consented-browser-recording-to-practical-imports.md`](0069-add-consented-browser-recording-to-practical-imports.md)
+   Adds browser microphone capture as an explicit-consent alternative to audio upload.

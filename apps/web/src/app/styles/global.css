@@ -4923,6 +4923,37 @@ button {
   letter-spacing: -0.03em;
 }
 
+.practical-recording-field {
+  gap: var(--space-3);
+}
+
+.practical-recording-field__consent {
+  align-items: flex-start;
+  color: var(--text-secondary);
+  display: flex;
+  font-size: 0.8125rem;
+  gap: var(--space-2);
+  line-height: 1.5;
+}
+
+.practical-recording-field__consent input {
+  accent-color: var(--accent-primary);
+  flex: 0 0 auto;
+  margin-top: 0.2rem;
+}
+
+.practical-recording-field__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.practical-recording-field__status {
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
+}
+
 .practical-list-priority-board {
   display: grid;
   gap: 16px;

@@ -13,7 +13,6 @@ pass are already shipped and are intentionally excluded.
 - answer comparison pages backed by comparison snapshots
 
 ### P2. Input And Integrations
-- in-browser answer audio recording UI, with upload fallback and explicit recording consent
 - GitHub sync settings and import-status UI after the integration contract exists
 - advanced analytics that explain preparation decisions without displacing the DFS practice loop
 

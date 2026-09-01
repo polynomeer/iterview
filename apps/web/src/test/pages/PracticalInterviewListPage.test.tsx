@@ -94,6 +94,14 @@ describe("PracticalInterviewListPage", () => {
     expect(screen.getByText("권장 사용")).toBeInTheDocument();
     expect(screen.getByLabelText("회사")).toBeInTheDocument();
     expect(screen.getByLabelText("연결할 이력서 버전")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "녹음 시작" })).toBeDisabled();
+    expect(
+      screen.getByText("면접 연습 녹음을 이 기기에서 만들고, 기록 생성 시 서버에 업로드하는 것에 동의합니다."),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("checkbox"));
+
+    expect(screen.getByRole("button", { name: "녹음 시작" })).toBeEnabled();
     expect(
       screen.getByText(
         "선택 사항입니다. 비워두면 서버가 오디오에서 전사를 추출하고 이후 처리를 계속합니다.",
