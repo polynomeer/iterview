@@ -293,8 +293,8 @@ class AnswerService(
         val latestScore = score.totalScore.toBigDecimal()
         val previousBest = previousProgress?.bestScore
         val isBest = previousBest == null || latestScore > previousBest
-        val bestAttemptId = if (isBest) attempt.id else previousProgress!!.bestAnswerAttemptId
-        val bestScore = if (isBest) latestScore else previousBest!!
+        val bestAttemptId = if (isBest) attempt.id else previousProgress.bestAnswerAttemptId
+        val bestScore = if (isBest) latestScore else previousBest
         val unansweredCount = (previousProgress?.unansweredCount ?: 0) + unansweredIncrementFor(attempt.answerMode)
 
         return UserQuestionProgressEntity(

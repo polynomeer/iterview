@@ -56,6 +56,7 @@ Verified locally on 2026-09-01:
 - frontend production build: passed with Vite `6.4.3`
 - frontend dependency audit: 0 known vulnerabilities
 - API Kotlin Gradle Plugin: upgraded to `2.3.10`, which is compatible with Gradle `9.0.0`
+- API Kotlin compilation: completed without project warnings after preserving existing annotation target behavior
 - representative backend Testcontainers integration test: Flyway migration test passed against PostgreSQL 16
 
 ## Observed Operational Risks

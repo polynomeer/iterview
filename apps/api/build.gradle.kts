@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     kotlin("jvm") version "2.3.10"
     kotlin("plugin.spring") version "2.3.10"
@@ -47,10 +50,19 @@ springBoot {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+        freeCompilerArgs.addAll(
+            "-Xjsr305=strict",
+            // Keep existing Spring constructor-injection annotation placement explicit across Kotlin upgrades.
+            "-Xannotation-default-target=first-only",
+        )
     }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+
+    testLogging {
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+        exceptionFormat = TestExceptionFormat.FULL
+    }
 }

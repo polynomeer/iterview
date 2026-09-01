@@ -144,3 +144,5 @@ Each ADR should include:
    Aligns the API Kotlin Gradle Plugin baseline with Gradle 9.
 59. [`0059-standardize-workspace-overlay-accessibility.md`](0059-standardize-workspace-overlay-accessibility.md)
    Defines keyboard focus and reduced-motion requirements for workspace overlays.
+60. [`0060-preserve-kotlin-annotation-targets-and-api-test-diagnostics.md`](0060-preserve-kotlin-annotation-targets-and-api-test-diagnostics.md)
+   Preserves API annotation placement and exposes Testcontainers test progress.
