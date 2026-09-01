@@ -88,10 +88,10 @@ describe("PracticePage", () => {
       { route: "/practice", locale: "ko" },
     );
 
-    await user.type(screen.getByRole("searchbox", { name: "질문 검색" }), "cache");
+    await user.type(screen.getAllByRole("searchbox", { name: "질문 검색" })[0], "cache");
     expect(screen.getByTestId("location-display")).toHaveTextContent("/practice?search=cache");
 
-    await user.selectOptions(screen.getByRole("combobox", { name: "카테고리" }), "system-design");
+    await user.click(screen.getByRole("button", { name: "System Design" }));
     expect(screen.getByTestId("location-display")).toHaveTextContent(
       "/practice?category=system-design&search=cache",
     );
@@ -135,9 +135,9 @@ describe("PracticePage", () => {
       { route: "/practice", locale: "ko" },
     );
 
-    expect(screen.getByText("Explain caching")).toBeInTheDocument();
+    expect(screen.getAllByText("Explain caching")).toHaveLength(2);
     expect(screen.getByText("다음 면접 분기를 고르세요")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /이력서 분석/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "선택 질문 트리 열기" })).toBeInTheDocument();
     expect(document.querySelector(".practice-layout--desktop")).not.toBeNull();
   });
 
@@ -189,7 +189,7 @@ describe("PracticePage", () => {
       { route: "/practice", locale: "ko" },
     );
 
-    await user.click(screen.getByRole("link", { name: "첫 번째 보이는 지도 열기" }));
+    await user.click(screen.getByRole("link", { name: "선택 질문 트리 열기" }));
 
     expect(screen.getByTestId("location-display")).toHaveTextContent("/questions/question-21/tree");
   });

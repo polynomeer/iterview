@@ -49,9 +49,9 @@ export function HomePage() {
   const isEmpty =
     homeData !== undefined &&
     homeData.todayQuestion === null &&
-    homeData.retryQuestions.length === 0 &&
-    homeData.learningMaterials.length === 0 &&
-    homeData.summaryStats.length === 0 &&
+    (homeData.retryQuestions ?? []).length === 0 &&
+    (homeData.learningMaterials ?? []).length === 0 &&
+    (homeData.summaryStats ?? []).length === 0 &&
     (homeData.skillRadarPreview ?? []).length === 0 &&
     (homeData.skillGapPreview ?? []).length === 0 &&
     (homeData.resumeRiskPreview ?? []).length === 0;
@@ -174,6 +174,10 @@ export function HomePage() {
 
       {!homeQuery.isLoading && !homeQuery.isError && homeData
         ? (() => {
+            const retryQuestions = homeData.retryQuestions ?? [];
+            const learningMaterials = homeData.learningMaterials ?? [];
+            const summaryStats = homeData.summaryStats ?? [];
+            const resumeRiskPreview = homeData.resumeRiskPreview ?? [];
             const todaySection = homeData.todayQuestion ? (
               <TodayQuestionCard question={homeData.todayQuestion} />
             ) : (
@@ -190,8 +194,8 @@ export function HomePage() {
             );
 
             const retrySection =
-              homeData.retryQuestions.length > 0 ? (
-                <RetryQuestionList questions={homeData.retryQuestions} />
+              retryQuestions.length > 0 ? (
+                <RetryQuestionList questions={retryQuestions} />
               ) : (
                 <SectionEmptyState
                   body={isKorean ? "현재는 재도전 큐를 모두 비웠습니다." : "You have cleared your retry queue for now."}
@@ -201,8 +205,8 @@ export function HomePage() {
               );
 
             const materialsSection =
-              homeData.learningMaterials.length > 0 ? (
-                <LearningMaterialList materials={homeData.learningMaterials} />
+              learningMaterials.length > 0 ? (
+                <LearningMaterialList materials={learningMaterials} />
               ) : (
                 <SectionEmptyState
                   body={isKorean ? "오늘의 세트에 연결된 보조 학습 자료가 없습니다." : "There are no supporting learning materials attached to today&apos;s set."}
@@ -220,8 +224,8 @@ export function HomePage() {
             );
 
             const resumeRiskSection =
-              (homeData.resumeRiskPreview ?? []).length > 0 ? (
-                <ResumeRiskPreviewList items={homeData.resumeRiskPreview ?? []} />
+              resumeRiskPreview.length > 0 ? (
+                <ResumeRiskPreviewList items={resumeRiskPreview} />
               ) : (
                 <SectionEmptyState
                   body={
@@ -265,11 +269,11 @@ export function HomePage() {
                   </article>
                   <article>
                     <span>{isKorean ? "재도전" : "Retries"}</span>
-                    <strong>{homeData.retryQuestions.length}</strong>
+                    <strong>{retryQuestions.length}</strong>
                   </article>
                   <article>
                     <span>{isKorean ? "리스크" : "Risks"}</span>
-                    <strong>{homeData.resumeRiskPreview.length}</strong>
+                    <strong>{resumeRiskPreview.length}</strong>
                   </article>
                 </div>
                 <div className="home-today-context-card__reasons">
@@ -304,7 +308,7 @@ export function HomePage() {
                   retrySection={retrySection}
                   resumeRiskSection={resumeRiskSection}
                   summarySection={
-                    homeData.summaryStats.length > 0 ? <SummaryStatsCard stats={homeData.summaryStats} /> : null
+                    summaryStats.length > 0 ? <SummaryStatsCard stats={summaryStats} /> : null
                   }
                   todayContextSection={todayContextSection}
                   todaySection={todaySection}
@@ -321,7 +325,7 @@ export function HomePage() {
                 retrySection={retrySection}
                 resumeRiskSection={resumeRiskSection}
                 summarySection={
-                  homeData.summaryStats.length > 0 ? <SummaryStatsCard stats={homeData.summaryStats} /> : null
+                  summaryStats.length > 0 ? <SummaryStatsCard stats={summaryStats} /> : null
                 }
                 todayContextSection={todayContextSection}
                 todaySection={todaySection}

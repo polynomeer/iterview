@@ -49,6 +49,9 @@ describe("HomePage", () => {
             helperText: "Up 6 points",
           },
         ],
+        skillRadarPreview: [],
+        skillGapPreview: [],
+        resumeRiskPreview: [],
       },
       isLoading: false,
       isError: false,
@@ -63,7 +66,7 @@ describe("HomePage", () => {
       { locale: "ko" },
     );
 
-    expect(screen.getByText("Tell me about a scaling issue you fixed")).toBeInTheDocument();
+    expect(screen.getAllByText("Tell me about a scaling issue you fixed")).toHaveLength(3);
     expect(screen.getByText("Design a rate limiter")).toBeInTheDocument();
     expect(screen.getByText("Scaling playbook")).toBeInTheDocument();
     expect(screen.getByText("Weekly score")).toBeInTheDocument();
@@ -116,6 +119,9 @@ describe("HomePage", () => {
             helperText: "Up 6 points",
           },
         ],
+        skillRadarPreview: [],
+        skillGapPreview: [],
+        resumeRiskPreview: [],
       },
       isLoading: false,
       isError: false,
@@ -130,7 +136,7 @@ describe("HomePage", () => {
       { locale: "ko" },
     );
 
-    expect(screen.getByText("Tell me about a scaling issue you fixed")).toBeInTheDocument();
+    expect(screen.getAllByText("Tell me about a scaling issue you fixed")).toHaveLength(3);
     expect(screen.getByText("Weekly score")).toBeInTheDocument();
     expect(document.querySelector(".home-layout--desktop")).not.toBeNull();
   });

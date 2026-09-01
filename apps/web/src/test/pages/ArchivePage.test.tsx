@@ -79,10 +79,10 @@ describe("ArchivePage", () => {
     );
 
     expect(screen.getByText("정리된 질문")).toBeInTheDocument();
-    expect(screen.getByText("Design a search index")).toBeInTheDocument();
+    expect(screen.getAllByText("Design a search index")).toHaveLength(3);
     expect(screen.getAllByText("Best score 95")).toHaveLength(2);
     expect(screen.getByText("Interview")).toBeInTheDocument();
-    expect(screen.getByText("후속 질문")).toBeInTheDocument();
+    expect(screen.getAllByText("후속 질문")).toHaveLength(2);
     expect(screen.getByRole("link", { name: "세션 보기" })).toHaveAttribute(
       "href",
       "/interviews/session-4",
@@ -131,7 +131,7 @@ describe("ArchivePage", () => {
       { route: "/archive", locale: "ko" },
     );
 
-    expect(screen.getByText("Design a search index")).toBeInTheDocument();
+    expect(screen.getAllByText("Design a search index")).toHaveLength(3);
     expect(document.querySelector(".archive-layout--desktop")).not.toBeNull();
   });
 });
