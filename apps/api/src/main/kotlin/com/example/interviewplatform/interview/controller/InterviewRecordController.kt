@@ -17,7 +17,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.core.io.FileSystemResource
+import org.springframework.http.CacheControl
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -29,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
+import java.nio.charset.StandardCharsets
 
 @Validated
 @Tag(name = "Interview Record")
@@ -71,6 +77,24 @@ class InterviewRecordController(
     @Operation(summary = "Get interview record detail")
     fun getRecord(@PathVariable recordId: Long): InterviewRecordDetailDto =
         interviewRecordService.getRecord(currentUserProvider.currentUserId(), recordId)
+
+    @GetMapping("/{recordId}/audio")
+    @Operation(summary = "Download a protected interview recording")
+    fun downloadAudio(@PathVariable recordId: Long): ResponseEntity<FileSystemResource> {
+        val audio = interviewRecordService.downloadAudio(currentUserProvider.currentUserId(), recordId)
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.noStore().mustRevalidate())
+            .contentLength(audio.contentLength)
+            .contentType(
+                runCatching { MediaType.parseMediaType(audio.contentType) }
+                    .getOrDefault(MediaType.APPLICATION_OCTET_STREAM),
+            )
+            .header(
+                HttpHeaders.CONTENT_DISPOSITION,
+                ContentDisposition.inline().filename(audio.fileName, StandardCharsets.UTF_8).build().toString(),
+            )
+            .body(audio.resource)
+    }
 
     @GetMapping("/{recordId}/transcript")
     @Operation(summary = "Get interview transcript detail")

@@ -34,8 +34,12 @@ class InterviewAudioStorageService(
         )
     }
 
-    fun resolveStoredPath(storageKey: String): Path =
-        Paths.get(interviewAudioDir, storageKey).toAbsolutePath().normalize()
+    fun resolveStoredPath(storageKey: String): Path {
+        val storageDirectory = Paths.get(interviewAudioDir).toAbsolutePath().normalize()
+        val candidate = storageDirectory.resolve(storageKey).normalize()
+        require(candidate.startsWith(storageDirectory)) { "Interview audio storage key escapes its configured directory" }
+        return candidate
+    }
 
     private fun sanitizeFileName(originalFilename: String?): String {
         val cleaned = StringUtils.cleanPath(originalFilename ?: "interview-audio.bin")

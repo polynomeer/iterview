@@ -41,7 +41,6 @@ class SecurityConfig(
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/uploads/profile-images/**",
-                        "/uploads/interview-audio/**",
                     ).permitAll()
                     .requestMatchers("/api/me/**").authenticated()
                     .requestMatchers("/api/resumes/**", "/api/resume-versions/**").authenticated()

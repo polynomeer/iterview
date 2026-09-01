@@ -51,7 +51,7 @@ object InterviewRecordMapper {
         roleName = entity.roleName,
         interviewDate = entity.interviewDate,
         interviewType = entity.interviewType,
-        sourceAudioFileUrl = entity.sourceAudioFileUrl,
+        sourceAudioFileUrl = entity.sourceAudioFileUrl?.let { protectedAudioUrl(entity.id) },
         sourceAudioFileName = entity.sourceAudioFileName,
         sourceAudioDurationMs = entity.sourceAudioDurationMs,
         transcriptStatus = entity.transcriptStatus,
@@ -148,7 +148,7 @@ object InterviewRecordMapper {
         }
         return InterviewRecordPlaybackDto(
             playbackAvailable = entity.sourceAudioFileUrl != null && sessionRange != null,
-            sourceAudioFileUrl = entity.sourceAudioFileUrl,
+            sourceAudioFileUrl = entity.sourceAudioFileUrl?.let { protectedAudioUrl(entity.id) },
             sourceAudioFileName = entity.sourceAudioFileName,
             audioDurationMs = audioDurationMs,
             sessionRange = sessionRange,
@@ -162,6 +162,8 @@ object InterviewRecordMapper {
             relationType = entity.relationType,
             triggerType = entity.triggerType,
         )
+
+    private fun protectedAudioUrl(recordId: Long): String = "/api/interview-records/$recordId/audio"
 
     fun toAnalysisDto(
         record: InterviewRecordEntity,

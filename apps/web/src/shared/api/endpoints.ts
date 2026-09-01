@@ -130,6 +130,7 @@ export const apiEndpoints = {
   interviewRecords: {
     root: "/api/interview-records",
     detail: (recordId: string) => `/api/interview-records/${recordId}`,
+    audio: (recordId: string) => `/api/interview-records/${recordId}/audio`,
     transcript: (recordId: string) => `/api/interview-records/${recordId}/transcript`,
     retryTranscription: (recordId: string) =>
       `/api/interview-records/${recordId}/retry-transcription`,

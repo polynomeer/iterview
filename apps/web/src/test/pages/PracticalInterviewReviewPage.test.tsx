@@ -313,7 +313,7 @@ describe("PracticalInterviewReviewPage", () => {
       data: {
         playback: {
           playbackAvailable: true,
-          sourceAudioFileUrl: "https://cdn.example.com/interview.wav",
+          sourceAudioFileUrl: "/api/interview-records/record-1/audio",
           sourceAudioFileName: "interview.wav",
           audioDurationMs: 180000,
         },

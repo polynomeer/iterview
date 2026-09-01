@@ -53,12 +53,14 @@ import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.core.io.FileSystemResource
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigDecimal
+import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Instant
 import java.time.LocalDate
@@ -97,6 +99,21 @@ class InterviewRecordService(
             record.id to interviewRecordQuestionRepository.findByInterviewRecordIdOrderByOrderIndexAsc(record.id).size
         }
         return records.map { InterviewRecordMapper.toListItemDto(it, questionCountsByRecordId[it.id] ?: 0) }
+    }
+
+    @Transactional(readOnly = true)
+    fun downloadAudio(userId: Long, recordId: Long): InterviewRecordAudioDownload {
+        val record = requireOwnedRecord(userId, recordId)
+        val path = resolveStoredAudioPath(record)
+        if (!Files.isRegularFile(path)) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Interview audio file not found: $recordId")
+        }
+        return InterviewRecordAudioDownload(
+            resource = FileSystemResource(path),
+            fileName = record.sourceAudioFileName ?: "interview-recording-$recordId",
+            contentType = record.sourceAudioContentType ?: "application/octet-stream",
+            contentLength = Files.size(path),
+        )
     }
 
     @Transactional
@@ -3381,6 +3398,13 @@ class InterviewRecordService(
         private const val REVIEW_ORIGIN_GENERAL = "general"
     }
 }
+
+data class InterviewRecordAudioDownload(
+    val resource: FileSystemResource,
+    val fileName: String,
+    val contentType: String,
+    val contentLength: Long,
+)
 
 data class ParsedInterviewTranscript(
     val segments: List<ParsedSegment>,

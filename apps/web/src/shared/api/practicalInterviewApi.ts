@@ -32,6 +32,10 @@ export function getInterviewRecordDetailRequest(recordId: string, signal?: Abort
   });
 }
 
+export function getInterviewRecordAudioRequest(recordId: string, signal?: AbortSignal) {
+  return httpClient.getBlob(apiEndpoints.interviewRecords.audio(recordId), { signal });
+}
+
 export function getInterviewRecordTranscriptRequest(recordId: string, signal?: AbortSignal) {
   return httpClient.get<InterviewRecordTranscriptDto>(
     apiEndpoints.interviewRecords.transcript(recordId),

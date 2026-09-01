@@ -148,3 +148,5 @@ Each ADR should include:
    Preserves API annotation placement and exposes Testcontainers test progress.
 61. [`0061-centralize-api-integration-test-configuration.md`](0061-centralize-api-integration-test-configuration.md)
    Defines a shared Spring and Testcontainers contract for API integration tests.
+62. [`0062-protect-interview-recording-access.md`](0062-protect-interview-recording-access.md)
+   Replaces public interview-audio URLs with owner-authorized playback downloads.

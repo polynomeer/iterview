@@ -12,6 +12,7 @@ import { useInterviewerProfileQuery } from "../../features/practical-interview/a
 import { useUpdateInterviewReviewMutation } from "../../features/practical-interview/api/useUpdateInterviewReviewMutation";
 import { useUpdateInterviewTranscriptSegmentMutation } from "../../features/practical-interview/api/useUpdateInterviewTranscriptSegmentMutation";
 import { getErrorDetails } from "../../shared/api/errors";
+import { getInterviewRecordAudioRequest } from "../../shared/api/practicalInterviewApi";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -163,6 +164,7 @@ function ReplayPlayer(props: {
   currentTimeMs: number;
   isPlaying: boolean;
   playbackRate: number;
+  audioSourceUrl: string | null;
   activeRangeLabel: string | null;
   transcriptTimeline: Array<{
     id: string;
@@ -221,7 +223,7 @@ function ReplayPlayer(props: {
           </span>
         </div>
       </div>
-      <audio preload="metadata" ref={props.audioRef} src={props.playback.sourceAudioFileUrl} />
+      <audio preload="metadata" ref={props.audioRef} src={props.audioSourceUrl ?? undefined} />
       <div className="practical-audio-player__progress">
         <input
           aria-label={isKorean ? "리플레이 위치" : "Replay position"}
@@ -406,6 +408,7 @@ export function PracticalInterviewReviewPage() {
   const [currentTimeMs, setCurrentTimeMs] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [audioSourceUrl, setAudioSourceUrl] = useState<string | null>(null);
   const [activeReplayLabel, setActiveReplayLabel] = useState<string | null>(null);
   const detailQuery = useInterviewRecordDetailQuery(recordId);
   const isRecordReadyForReview = detailQuery.data?.isTranscriptConfirmed ?? false;
@@ -490,7 +493,7 @@ export function PracticalInterviewReviewPage() {
       audio.removeEventListener("play", handlePlay);
       audio.removeEventListener("pause", handlePause);
     };
-  }, [playbackRate]);
+  }, [audioSourceUrl, playbackRate]);
 
   useEffect(() => {
     const timelineNavigation = reviewQuery.data?.timelineNavigation ?? [];
@@ -874,6 +877,40 @@ export function PracticalInterviewReviewPage() {
           ? "활성 레인 안정화"
           : "Stabilize active lane";
   const playback = review.playback ?? transcript.playback ?? questions.playback ?? null;
+
+  useEffect(() => {
+    if (!recordId || !playback?.sourceAudioFileUrl || typeof URL.createObjectURL !== "function") {
+      setAudioSourceUrl(null);
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    let active = true;
+    let objectUrl: string | null = null;
+
+    setAudioSourceUrl(null);
+    void getInterviewRecordAudioRequest(recordId, controller.signal)
+      .then((audioBlob) => {
+        if (!active) {
+          return;
+        }
+        objectUrl = URL.createObjectURL(audioBlob);
+        setAudioSourceUrl(objectUrl);
+      })
+      .catch((error: unknown) => {
+        if (active && !(error instanceof DOMException && error.name === "AbortError")) {
+          setAudioSourceUrl(null);
+        }
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [playback?.sourceAudioFileUrl, recordId]);
   const activePlaybackSegmentSequence = useMemo(
     () =>
       transcript.segments.find(
@@ -1405,6 +1442,7 @@ export function PracticalInterviewReviewPage() {
             <ReplayPlayer
               activeRangeLabel={activeReplayLabel}
               audioRef={audioRef}
+              audioSourceUrl={audioSourceUrl}
               chapters={chapterItems}
               currentTimeMs={currentTimeMs}
               isPlaying={isPlayingAudio}

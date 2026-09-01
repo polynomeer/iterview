@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -106,6 +107,27 @@ class InterviewRecordApiIntegrationTest {
             .let(objectMapper::readTree)
 
         val recordId = created.get("id").asLong()
+        assertEquals("/api/interview-records/$recordId/audio", created["sourceAudioFileUrl"].asText())
+
+        mockMvc.perform(get("/api/interview-records/$recordId/audio").header("Authorization", authHeader))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsByteArray
+            .let { assertContentEquals("fake-audio".toByteArray(), it) }
+
+        mockMvc.perform(get("/api/interview-records/$recordId/audio"))
+            .andExpect(status().isUnauthorized)
+
+        jdbcTemplate.update(
+            """
+            INSERT INTO users (id, email, password_hash, provider, provider_user_id, status, created_at, updated_at)
+            VALUES (2, 'other-record-user@example.com', NULL, 'local', NULL, 'ACTIVE', now(), now())
+            """.trimIndent(),
+        )
+        val otherAuthHeader = "Bearer ${tokenService.issueToken(2, "other-record-user@example.com")}"
+        mockMvc.perform(get("/api/interview-records/$recordId/audio").header("Authorization", otherAuthHeader))
+            .andExpect(status().isNotFound)
 
         mockMvc.perform(get("/api/interview-records").header("Authorization", authHeader))
             .andExpect(status().isOk)
