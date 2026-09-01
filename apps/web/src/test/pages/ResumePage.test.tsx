@@ -214,7 +214,7 @@ describe("ResumePage", () => {
       { route: "/profile/resumes", locale: "ko" },
     );
 
-    expect(screen.getAllByText("Backend Resume")).toHaveLength(2);
+    expect(screen.getAllByText("Backend Resume")).toHaveLength(3);
     expect(screen.getByText("후보자 개요")).toBeInTheDocument();
     expect(screen.getByText("Interview analytics platform")).toBeInTheDocument();
     expect(screen.getByText("Backend Platform")).toBeInTheDocument();
