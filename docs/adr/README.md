@@ -166,3 +166,5 @@ Each ADR should include:
    Adds browser microphone capture as an explicit-consent alternative to audio upload.
 70. [`0070-simplify-authentication-surfaces.md`](0070-simplify-authentication-surfaces.md)
    Keeps login and signup focused on one form and one clear route transition.
+71. [`0071-tighten-workspace-shell-to-reference-density.md`](0071-tighten-workspace-shell-to-reference-density.md)
+   Establishes a compact, framed desktop shell for graph and inspector workspaces.
