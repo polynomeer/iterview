@@ -87,7 +87,7 @@ export function ReviewQueuePage() {
       ]
     : [];
   const selectedRelatedTopics =
-    selectedItem?.relatedSkillLabels.length
+    selectedItem?.relatedSkillLabels?.length
       ? selectedItem.relatedSkillLabels
       : [
           isKorean ? "핵심 개념" : "Core concepts",

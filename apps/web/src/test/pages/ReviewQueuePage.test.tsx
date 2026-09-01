@@ -28,6 +28,7 @@ describe("ReviewQueuePage", () => {
             reasonTypeLabel: "Scheduled review",
             priorityLabel: "High priority",
             scheduledLabel: "Today",
+            relatedSkillLabels: [],
           },
         ],
       },
@@ -49,9 +50,23 @@ describe("ReviewQueuePage", () => {
       { route: "/review-queue" },
     );
 
-    expect(screen.getByText("Explain how you debugged a latency spike")).toBeInTheDocument();
-    expect(screen.getByText("Move items forward intentionally")).toBeInTheDocument();
-    expect(screen.getByText("One connected preparation loop")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Explain how you debugged a latency spike",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Resolve queued retry branches" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Clear the smallest high-signal retry first",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "One connected preparation loop" }),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /Weak nodes/i }).length).toBeGreaterThanOrEqual(1);
     expect(document.querySelector(".review-queue-layout--desktop")).not.toBeNull();
   });
@@ -67,6 +82,7 @@ describe("ReviewQueuePage", () => {
             reasonTypeLabel: "Scheduled review",
             priorityLabel: "High priority",
             scheduledLabel: "Today",
+            relatedSkillLabels: [],
           },
         ],
       },

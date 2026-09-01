@@ -53,10 +53,13 @@ describe("ProfilePage", () => {
     );
 
     expect(screen.getByText("Learner")).toBeInTheDocument();
-    expect(screen.getByText("인터뷰 프로필 편집")).toBeInTheDocument();
-    expect(screen.getByText("현재 계정")).toBeInTheDocument();
-    expect(screen.getByText("설정 열기")).toBeInTheDocument();
-    expect(document.querySelector(".profile-layout--desktop")).not.toBeNull();
+    expect(
+      screen.getByRole("heading", {
+        name: "면접 전에 방어할 경력 맥락과 프로젝트 근거를 한 번에 보세요",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "설정 열기" })).toBeInTheDocument();
+    expect(document.querySelector(".career-context-workspace__shell")).not.toBeNull();
   });
 
   it("renders links to separated operations workspaces", () => {
@@ -95,6 +98,6 @@ describe("ProfilePage", () => {
     );
 
     expect(screen.getByRole("link", { name: "설정 열기" })).toHaveAttribute("href", "/settings");
-    expect(screen.getByRole("link", { name: "목표 회사 열기" })).toHaveAttribute("href", "/target-companies");
+    expect(screen.getByRole("link", { name: /목표 회사/ })).toHaveAttribute("href", "/target-companies");
   });
 });
