@@ -784,6 +784,52 @@ button {
   }
 }
 
+/* Reference workspace proportions: wide canvas with a compact inspector rail. */
+@media (min-width: 1100px) {
+  :root[data-theme="workspace"] .home-layout__stage {
+    grid-template-columns: minmax(0, 1fr) 292px;
+    gap: 0;
+    border: 1px solid rgba(137, 161, 203, 0.14);
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(7, 13, 24, 0.72);
+  }
+
+  :root[data-theme="workspace"] .home-layout__stage-main {
+    grid-template-columns: minmax(0, 1.64fr) minmax(280px, 0.7fr);
+    gap: 14px;
+    padding: 16px;
+  }
+
+  :root[data-theme="workspace"] .home-layout__stage-rail {
+    border: 0;
+    border-left: 1px solid rgba(137, 161, 203, 0.14);
+    border-radius: 0;
+    padding: 16px;
+    background: rgba(8, 14, 24, 0.92);
+  }
+
+  :root[data-theme="workspace"] .skills-landscape__workspace {
+    grid-template-columns: minmax(0, 1fr) 348px;
+    gap: 0;
+    border: 1px solid rgba(100, 119, 152, 0.16);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  :root[data-theme="workspace"] .skills-landscape__canvas {
+    min-height: 680px;
+    border: 0;
+    border-radius: 0;
+  }
+
+  :root[data-theme="workspace"] .skills-landscape__detail-panel {
+    padding: 16px;
+    border-left: 1px solid rgba(100, 119, 152, 0.16);
+    background: rgba(8, 14, 24, 0.92);
+  }
+}
+
 /* Keep authentication focused across every workspace theme. */
 :root .auth-access-layout {
   display: block;
