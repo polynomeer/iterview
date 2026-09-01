@@ -1,17 +1,35 @@
-# backlog
+# Frontend Backlog
 
-## Post-MVP Frontend
-- lounge pages
-- mock interview pages
-- public answer comparison pages
-- GitHub sync settings page
-- answer audio recording UI
-- advanced analytics and charts
+This backlog contains work that is not already delivered in the current workspace.
+The interview flow, practical-interview upload and replay, resume-tailoring flow,
+Korean-default/English-switchable i18n, workspace themes, and the initial accessibility
+pass are already shipped and are intentionally excluded.
 
-## Technical Backlog
-- design system hardening
-- dark mode
-- i18n
-- optimistic UI where appropriate
-- form abstraction cleanup
-- accessibility review
+## Product Expansion
+
+### P1. Public Learning And Community
+- lounge pages for community content once the lounge API exists
+- public answer publishing and discovery pages
+- answer comparison pages backed by comparison snapshots
+
+### P2. Input And Integrations
+- in-browser answer audio recording UI, with upload fallback and explicit recording consent
+- GitHub sync settings and import-status UI after the integration contract exists
+- advanced analytics that explain preparation decisions without displacing the DFS practice loop
+
+## Experience Hardening
+
+### P1. Accessibility And Interaction
+- complete keyboard and screen-reader review of high-frequency write flows
+- add focus-visible and error-announcement regression coverage where page-specific tests do not reach it
+- apply optimistic updates only where conflict recovery is explicit and safe
+
+### P2. Architecture And System Quality
+- continue design-system consolidation only when repeated patterns are proven across new work
+- reduce remaining one-off form state as feature work touches it; do not introduce a global form abstraction prematurely
+- add visual regression coverage for the highest-risk workspace routes when a stable browser-test harness is selected
+
+## Delivery Rule
+
+Every new page must preserve the workspace-first hierarchy, be localized in Korean and
+English from the start, and include route-level behavior verification.
