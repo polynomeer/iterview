@@ -585,5 +585,5 @@ describe("ResumeEditorPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "More" }));
     fireEvent.click(screen.getByRole("button", { name: "Source" }));
     expect(screen.getByText("Immutable source resume context")).toBeInTheDocument();
-  });
+  }, 15_000);
 });

@@ -191,6 +191,8 @@ Mark each line only when the changed scope is:
   Current status: on August 26, 2026, the desktop sticky/overflow sweep passed on the accessible high-risk routes and no broken top offsets or horizontal overflow were detected.
 - [x] Check text duplication against test expectations
   Current status: stale page expectations were aligned to the redesigned copy across the verified workspace families.
+- [x] Re-run the complete web regression suite after final test alignment
+  Current status: on September 1, 2026, `npm run test:run` passed 37 test files and 71 tests, and `npm run build` completed successfully.
 
 ### H2. Final Acceptance Pass
 - [x] Verify daily practice journey
