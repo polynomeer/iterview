@@ -45,6 +45,7 @@ Repository CI currently runs a single GitHub Actions workflow:
 
 That means CI currently verifies:
 - frontend dependency installation with `npm ci`
+- frontend dependency security with `npm audit`
 - backend tests and build
 - frontend tests and build
 

@@ -66,3 +66,5 @@ Each ADR should include:
    Extends the shared desktop analysis shell to remediation, planning, session, and result workspaces.
 20. [`0020-tighten-workspace-density-and-card-rhythm.md`](0020-tighten-workspace-density-and-card-rhythm.md)
    Tightens shared card padding, text widths, chip sizing, and internal spacing to better match the desktop references.
+21. [`0057-enforce-frontend-dependency-audits-in-shared-verification.md`](0057-enforce-frontend-dependency-audits-in-shared-verification.md)
+   Adds a frontend dependency audit to the shared local and CI verification path.
