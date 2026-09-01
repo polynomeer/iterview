@@ -13,6 +13,7 @@ data class ApiError(
     val message: String,
     val path: String,
     val timestamp: Instant,
+    val requestId: String? = null,
     val details: List<ApiErrorDetail> = emptyList(),
 )
 

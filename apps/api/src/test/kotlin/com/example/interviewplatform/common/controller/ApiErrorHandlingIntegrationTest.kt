@@ -79,12 +79,18 @@ class ApiErrorHandlingIntegrationTest {
 
     @Test
     fun `unauthorized response has predictable shape`() {
-        mockMvc.perform(get("/api/me").header("X-App-Locale", "ko"))
+        mockMvc.perform(
+            get("/api/me")
+                .header("X-App-Locale", "ko")
+                .header("X-Request-Id", "support-trace-20260901"),
+        )
             .andExpect(status().isUnauthorized)
             .andExpect(jsonPath("$.success").value(false))
             .andExpect(jsonPath("$.error.code").value("UNAUTHORIZED"))
             .andExpect(jsonPath("$.error.status").value(401))
             .andExpect(jsonPath("$.error.path").value("/api/me"))
+            .andExpect(jsonPath("$.error.requestId").value("support-trace-20260901"))
+            .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("X-Request-Id", "support-trace-20260901"))
             .andExpect(jsonPath("$.error.message").value("인증이 필요합니다"))
     }
 

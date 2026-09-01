@@ -3,6 +3,8 @@ package com.example.interviewplatform.common.exception
 import com.example.interviewplatform.common.ApiError
 import com.example.interviewplatform.common.ApiErrorDetail
 import com.example.interviewplatform.common.ApiErrorResponse
+import com.example.interviewplatform.common.logging.RequestIdFilter
+import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import java.time.Instant
 
@@ -21,6 +23,7 @@ class ApiErrorResponseFactory {
             message = message,
             path = path,
             timestamp = Instant.now(),
+            requestId = MDC.get(RequestIdFilter.MDC_KEY),
             details = details,
         ),
     )

@@ -152,3 +152,5 @@ Each ADR should include:
    Replaces public interview-audio URLs with owner-authorized playback downloads.
 63. [`0063-rate-limit-failed-login-attempts.md`](0063-rate-limit-failed-login-attempts.md)
    Adds an account-keyed login attempt limit without relying on untrusted proxy headers.
+64. [`0064-establish-request-correlation-ids.md`](0064-establish-request-correlation-ids.md)
+   Adds safe response and error correlation IDs for operational diagnosis.

@@ -24,7 +24,7 @@ class LocalHttpRequestLoggingFilter : OncePerRequestFilter() {
         } finally {
             val durationMs = Duration.between(startedAt, Instant.now()).toMillis()
             log.info(
-                "http_request method={} path={} query={} status={} durationMs={} origin={} remoteAddr={}",
+                "http_request method={} path={} query={} status={} durationMs={} origin={} remoteAddr={} requestId={}",
                 request.method,
                 request.requestURI,
                 request.queryString ?: "",
@@ -32,6 +32,7 @@ class LocalHttpRequestLoggingFilter : OncePerRequestFilter() {
                 durationMs,
                 request.getHeader("Origin") ?: "",
                 request.remoteAddr ?: "",
+                request.getAttribute(RequestIdFilter.REQUEST_ID_ATTRIBUTE) ?: "",
             )
         }
     }
