@@ -35,31 +35,41 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it
                     .requestMatchers(
-                        "/api/health",
-                        "/api/auth/signup",
-                        "/api/auth/login",
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/uploads/profile-images/**",
-                    ).permitAll()
-                    .requestMatchers("/api/me/**").authenticated()
-                    .requestMatchers("/api/resumes/**", "/api/resume-versions/**").authenticated()
+                        "/api/me/**",
+                        "/api/resumes/**",
+                        "/api/resume-versions/**",
+                        "/api/skills/**",
+                        "/api/interview-sessions/**",
+                        "/api/interview-records/**",
+                        "/api/questions/*/answers/**",
+                        "/api/answer-attempts/**",
+                        "/api/home/**",
+                        "/api/daily-cards/**",
+                        "/api/review-queue/**",
+                        "/api/archive/**",
+                        "/api/feed/**",
+                        "/api/auth/me",
+                        "/api/job-postings/**",
+                    ).authenticated()
                     .requestMatchers("/api/questions/resume-based").authenticated()
                     .requestMatchers(
                         HttpMethod.POST,
                         "/api/questions/*/reference-answers",
                         "/api/questions/*/learning-materials",
                     ).authenticated()
-                    .requestMatchers("/api/skills/**").authenticated()
-                    .requestMatchers("/api/interview-sessions/**").authenticated()
-                    .requestMatchers("/api/interview-records/**").authenticated()
-                    .requestMatchers("/api/questions/*/answers/**", "/api/answer-attempts/**").authenticated()
-                    .requestMatchers("/api/home/**", "/api/daily-cards/**").authenticated()
-                    .requestMatchers("/api/review-queue/**", "/api/archive/**").authenticated()
-                    .requestMatchers("/api/feed/**", "/api/auth/me").authenticated()
-                    .requestMatchers("/api/job-postings/**").authenticated()
-                    .anyRequest().permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/health", "/uploads/profile-images/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/login").permitAll()
+                    .requestMatchers(
+                        HttpMethod.GET,
+                        "/api/questions",
+                        "/api/questions/*",
+                        "/api/questions/*/reference-answers",
+                        "/api/questions/*/learning-materials",
+                        "/api/questions/*/tree",
+                        "/api/questions/*/recommended-followups",
+                    ).permitAll()
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                    .anyRequest().denyAll()
             }
             .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
 

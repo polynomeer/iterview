@@ -107,6 +107,14 @@ class AuthApiIntegrationTest {
     fun `public question endpoints are accessible without auth`() {
         mockMvc.perform(get("/api/questions"))
             .andExpect(status().isOk)
+        mockMvc.perform(get("/api/questions/999999/reference-answers"))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `unmapped api routes are denied by default`() {
+        mockMvc.perform(get("/api/not-a-real-endpoint"))
+            .andExpect(status().isUnauthorized)
     }
 
     @Test

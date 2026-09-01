@@ -154,3 +154,5 @@ Each ADR should include:
    Adds an account-keyed login attempt limit without relying on untrusted proxy headers.
 64. [`0064-establish-request-correlation-ids.md`](0064-establish-request-correlation-ids.md)
    Adds safe response and error correlation IDs for operational diagnosis.
+65. [`0065-default-deny-api-access-policy.md`](0065-default-deny-api-access-policy.md)
+   Requires every public API route to be explicitly declared in a default-deny security policy.
