@@ -407,8 +407,8 @@ class ResumeEditorDocumentModelService(
             val nextOffset = offset + run.text.length
             val currentKeys = run.marks.map { it to if (it == "link") run.href else null }.toSet()
             val expiredKeys = activeMarkRanges.keys - currentKeys
-            expiredKeys.forEach { key ->
-                val removedRange = activeMarkRanges.remove(key) ?: return@forEach
+            expiredKeys.forEach expiredKeyLoop@{ key ->
+                val removedRange = activeMarkRanges.remove(key) ?: return@expiredKeyLoop
                 val (startOffset, text) = removedRange
                 marks += ResumeEditorInlineMarkDto(key.first, startOffset, offset, text, key.second)
             }

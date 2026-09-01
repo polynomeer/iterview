@@ -270,7 +270,6 @@ class ResumeAnalysisService(
             recommendedFocusAreas = decodeStringList(entity.recommendedFocusAreasJson),
             analysisNotes = decodeStringList(entity.analysisNotesJson),
             tailoredDocument = entity.toTailoredDocument(
-                suggestions = suggestions,
                 targetCompany = entity.jobPostingId?.let { jobPostingRepository.findById(it).orElse(null)?.companyName },
                 targetRole = entity.jobPostingId?.let { jobPostingRepository.findById(it).orElse(null)?.roleName },
             ),
@@ -617,15 +616,12 @@ class ResumeAnalysisService(
 
     private fun requireTailoredDocument(analysis: ResumeAnalysisEntity): TailoredResumeDocument =
         analysis.toTailoredDocument(
-            suggestions = resumeAnalysisSuggestionRepository.findByResumeAnalysisIdOrderByDisplayOrderAscIdAsc(analysis.id)
-                .map(ResumeAnalysisMapper::toSuggestionDto),
             targetCompany = analysis.jobPostingId?.let { jobPostingRepository.findById(it).orElse(null)?.companyName },
             targetRole = analysis.jobPostingId?.let { jobPostingRepository.findById(it).orElse(null)?.roleName },
         )?.let(::toServiceDocument)
             ?: throw ResponseStatusException(HttpStatus.CONFLICT, "Resume analysis does not have a tailored document")
 
     private fun ResumeAnalysisEntity.toTailoredDocument(
-        suggestions: List<com.example.interviewplatform.resume.dto.ResumeAnalysisSuggestionDto>,
         targetCompany: String?,
         targetRole: String?,
     ): ResumeTailoredDocumentDto? {
