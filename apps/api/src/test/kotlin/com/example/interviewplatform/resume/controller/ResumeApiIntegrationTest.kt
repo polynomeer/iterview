@@ -422,7 +422,7 @@ class ResumeApiIntegrationTest {
             "SELECT id FROM resume_project_snapshots WHERE resume_version_id = ? ORDER BY display_order ASC, id ASC LIMIT 1",
             Long::class.java,
             versionId,
-        )!!
+        )
 
         val blockCount = jdbcTemplate.queryForObject(
             """
@@ -768,12 +768,12 @@ class ResumeApiIntegrationTest {
             "SELECT id FROM resume_project_snapshots WHERE resume_version_id = ? ORDER BY display_order ASC, id ASC LIMIT 1",
             Long::class.java,
             versionId,
-        )!!
+        )
         val experienceId = jdbcTemplate.queryForObject(
             "SELECT id FROM resume_experience_snapshots WHERE resume_version_id = ? ORDER BY display_order ASC, id ASC LIMIT 1",
             Long::class.java,
             versionId,
-        )!!
+        )
         val recordId = insertInterviewRecord(versionId)
         val mainQuestionId = insertInterviewRecordQuestion(
             interviewRecordId = recordId,
@@ -958,7 +958,7 @@ class ResumeApiIntegrationTest {
             "SELECT id FROM resume_project_snapshots WHERE resume_version_id = ? ORDER BY display_order ASC, id ASC LIMIT 1",
             Long::class.java,
             versionId,
-        )!!
+        )
         val recordId = insertInterviewRecord(versionId)
         val broadQuestionId = insertInterviewRecordQuestion(
             interviewRecordId = recordId,
@@ -1113,7 +1113,7 @@ class ResumeApiIntegrationTest {
             "SELECT id FROM resume_project_snapshots WHERE resume_version_id = ? ORDER BY display_order ASC, id ASC LIMIT 1",
             Long::class.java,
             versionId,
-        )!!
+        )
         val recordId = insertInterviewRecord(versionId, companyName = "Filter Corp", interviewDate = "2026-03-12")
         val mainQuestionId = insertInterviewRecordQuestion(
             interviewRecordId = recordId,
@@ -1891,7 +1891,7 @@ class ResumeApiIntegrationTest {
             companyName,
             java.sql.Date.valueOf(interviewDate),
             linkedResumeVersionId,
-        )!!
+        )
 
     private fun insertInterviewRecordQuestion(
         interviewRecordId: Long,
@@ -1926,7 +1926,7 @@ class ResumeApiIntegrationTest {
             derivedFromResumeRecordId,
             parentQuestionId,
             orderIndex,
-        )!!
+        )
 
     private fun insertInterviewRecordAnswer(
         interviewRecordQuestionId: Long,
@@ -1953,7 +1953,7 @@ class ResumeApiIntegrationTest {
             weaknessTagsJson,
             strengthTagsJson,
             orderIndex,
-        )!!
+        )
 
     private fun insertInterviewRecordFollowUpEdge(
         interviewRecordId: Long,
@@ -1972,7 +1972,7 @@ class ResumeApiIntegrationTest {
             interviewRecordId,
             fromQuestionId,
             toQuestionId,
-        )!!
+        )
 
     private fun createPdf(lines: List<String>): ByteArray {
         val document = PDDocument()

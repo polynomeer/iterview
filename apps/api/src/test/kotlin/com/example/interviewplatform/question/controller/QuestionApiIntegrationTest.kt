@@ -475,7 +475,7 @@ class QuestionApiIntegrationTest {
             """.trimIndent(),
             Long::class.java,
             categoryId,
-        )!!
+        )
         val recordId = jdbcTemplate.queryForObject(
             """
             INSERT INTO interview_records (
@@ -520,7 +520,7 @@ class QuestionApiIntegrationTest {
             Long::class.java,
             recordId,
             linkedQuestionId,
-        )!!
+        )
         jdbcTemplate.update(
             """
             INSERT INTO interview_record_answers (

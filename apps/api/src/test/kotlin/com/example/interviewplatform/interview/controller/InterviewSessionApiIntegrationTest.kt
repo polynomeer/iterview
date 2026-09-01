@@ -1054,7 +1054,7 @@ class InterviewSessionApiIntegrationTest {
             """.trimIndent(),
             Long::class.java,
             sourceInterviewRecordId,
-        ) ?: error("Failed to insert interviewer_profile")
+        )
     }
 
     private fun insertInterviewRecordQuestion(
@@ -1084,7 +1084,7 @@ class InterviewSessionApiIntegrationTest {
             topicTagsJson,
             intentTagsJson,
             orderIndex,
-        ) ?: error("Failed to insert interview_record_question")
+        )
     }
 
     private fun insertInterviewRecordAnswer(
@@ -1113,7 +1113,7 @@ class InterviewSessionApiIntegrationTest {
             summary.lowercase(),
             summary,
             interviewRecordQuestionOrderIndex,
-        ) ?: error("Failed to insert interview_record_answer")
+        )
     }
 
     private fun insertSkillCategory(code: String, name: String): Long {

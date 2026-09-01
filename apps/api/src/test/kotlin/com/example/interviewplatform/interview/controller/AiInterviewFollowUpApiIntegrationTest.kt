@@ -318,7 +318,7 @@ class AiInterviewFollowUpApiIntegrationTest {
             """.trimIndent(),
             Long::class.java,
             sourceInterviewRecordId,
-        )!!
+        )
 
     private fun insertInterviewRecordQuestion(
         sourceInterviewRecordId: Long,
@@ -344,7 +344,7 @@ class AiInterviewFollowUpApiIntegrationTest {
             text.lowercase(),
             questionType,
             orderIndex,
-        )!!
+        )
 
     private fun insertInterviewRecordAnswer(
         sourceInterviewRecordId: Long,
@@ -369,7 +369,7 @@ class AiInterviewFollowUpApiIntegrationTest {
             summary.lowercase(),
             summary,
             interviewRecordQuestionOrderIndex,
-        )!!
+        )
 
     @TestConfiguration
     class FakeInterviewLlmConfig {
