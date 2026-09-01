@@ -74,6 +74,8 @@ class OpenApiIntegrationTest {
             .andExpect(jsonPath("$.paths['/api/interview-sessions/{sessionId}/skip-question']").exists())
             .andExpect(jsonPath("$.paths['/api/interview-records']").exists())
             .andExpect(jsonPath("$.paths['/api/interview-records/{recordId}']").exists())
+            .andExpect(jsonPath("$.paths['/api/interview-records/{recordId}/audio']").exists())
+            .andExpect(jsonPath("$.paths['/api/interview-records/{recordId}/audio'].get").exists())
             .andExpect(jsonPath("$.paths['/api/interview-records/{recordId}/transcript']").exists())
             .andExpect(jsonPath("$.paths['/api/interview-records/{recordId}/transcription-status']").exists())
             .andExpect(jsonPath("$.paths['/api/interview-records/{recordId}/transcript/segments/{segmentId}']").exists())
