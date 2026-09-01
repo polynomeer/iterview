@@ -6,7 +6,7 @@ import { useCreateInterviewSessionMutation } from "../../features/interview/api/
 import { useInterviewSessionsQuery } from "../../features/interview/api/useInterviewSessionsQuery";
 import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
-import { renderWithProviders } from "../utils";
+import { LocationDisplay, renderWithProviders } from "../utils";
 
 vi.mock("../../features/interview/api/useCreateInterviewSessionMutation", () => ({
   useCreateInterviewSessionMutation: vi.fn(),
@@ -99,6 +99,7 @@ describe("InterviewPage", () => {
     renderWithProviders(
       <Routes>
         <Route element={<InterviewPage />} path="/interviews" />
+        <Route element={<LocationDisplay />} path="/interviews/:sessionId" />
       </Routes>,
       { route: "/interviews" },
     );
@@ -134,5 +135,7 @@ describe("InterviewPage", () => {
         resumeVersionId: "version-2",
       });
     });
+
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/interviews/session-2");
   });
 });
