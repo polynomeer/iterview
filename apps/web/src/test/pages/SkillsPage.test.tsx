@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { useSkillGapQuery } from "../../features/skills/api/useSkillGapQuery";
@@ -120,5 +120,12 @@ describe("SkillsPage", () => {
     expect(screen.getAllByText("System Design").length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "권장 시퀀스로 연습" })).toHaveAttribute("href", "/practice");
     expect(screen.getByText("스킬 랜드스케이프")).toBeInTheDocument();
+
+    const databaseNode = screen.getByRole("button", { name: /Database/ });
+    fireEvent.click(databaseNode);
+
+    expect(databaseNode).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("heading", { name: "Database" })).toBeInTheDocument();
+    expect(screen.getByText("12")).toBeInTheDocument();
   });
 });
