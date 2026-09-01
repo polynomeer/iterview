@@ -5,7 +5,7 @@ import { WeakNodesPage } from "../../pages/weak-nodes/WeakNodesPage";
 import { mockMatchMedia, renderWithProviders } from "../utils";
 
 describe("WeakNodesPage", () => {
-  it("renders the weak node remediation workspace with graph and evidence rail", () => {
+  it("renders the diagnostic graph and connected-question inspector", () => {
     renderWithProviders(
       <Routes>
         <Route element={<WeakNodesPage />} path="/weak-nodes" />
@@ -13,10 +13,10 @@ describe("WeakNodesPage", () => {
       { route: "/weak-nodes" },
     );
 
-    expect(screen.getByText("Weak node remediation workspace")).toBeInTheDocument();
-    expect(screen.getByText("Repair weak branches as connected nodes, not as a flat backlog of retries")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /reopen the question branches this node lives under/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /How did you ensure idempotency in transaction processing/i })).toHaveAttribute(
+    expect(screen.getByRole("heading", { name: "Weak Nodes" })).toBeInTheDocument();
+    expect(screen.getByText("Weakness graph")).toBeInTheDocument();
+    expect(screen.getByText("Weak Node Details")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /idempotency/i })).toHaveAttribute(
       "href",
       "/questions/distributed-lock/tree",
     );
@@ -30,10 +30,9 @@ describe("WeakNodesPage", () => {
       { route: "/weak-nodes" },
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /Kafka rebalance operational story/i }));
+    fireEvent.click(screen.getAllByRole("button", { name: /Kafka 리밸런스 운영 스토리/i })[1]);
 
-    expect(screen.getByText(/The answer names rebalancing correctly/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Reopen the Kafka rebalance branch/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Kafka 리밸런스 가지 다시 열기/i })).toHaveAttribute(
       "href",
       "/questions/kafka-rebalance/tree",
     );
@@ -49,6 +48,6 @@ describe("WeakNodesPage", () => {
       { route: "/weak-nodes" },
     );
 
-    expect(document.querySelector(".weak-nodes-layout--desktop")).not.toBeNull();
+    expect(document.querySelector(".weak-node-explorer--desktop")).not.toBeNull();
   });
 });
