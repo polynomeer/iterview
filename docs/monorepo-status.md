@@ -55,12 +55,12 @@ Verified locally on 2026-09-01:
 - frontend regression suite: 38 test files and 73 tests passed
 - frontend production build: passed with Vite `6.4.3`
 - frontend dependency audit: 0 known vulnerabilities
+- API Kotlin Gradle Plugin: upgraded to `2.3.10`, which is compatible with Gradle `9.0.0`
 - representative backend Testcontainers integration test: Flyway migration test passed against PostgreSQL 16
 
 ## Observed Operational Risks
 
 - frontend dependencies passed `npm audit` with no known vulnerabilities
-- Gradle deprecation warnings should be cleaned up before a future Gradle major upgrade
 - repository-wide verification still depends on local environment support for backend test prerequisites such as Docker when integration tests require it
 
 ## Practical Implications For Contributors
@@ -74,6 +74,6 @@ Verified locally on 2026-09-01:
 
 - keep the frontend dependency audit clean as dependencies are upgraded
 - measure real-user startup cost before deciding whether additional frontend bundle splitting is necessary
-- identify and remove Gradle deprecation warnings before the next major upgrade
+- reassess Kotlin Gradle Plugin compatibility when preparing a future Gradle major upgrade
 - keep root docs in sync with newly added product areas such as replay, tailoring, and editor workflows
 - add release or deployment automation only when a real operational need appears

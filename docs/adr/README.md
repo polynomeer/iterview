@@ -140,3 +140,5 @@ Each ADR should include:
    Reframes result analysis as a scoreboard workspace.
 57. [`0057-enforce-frontend-dependency-audits-in-shared-verification.md`](0057-enforce-frontend-dependency-audits-in-shared-verification.md)
    Adds a frontend dependency audit to the shared local and CI verification path.
+58. [`0058-align-kotlin-gradle-plugin-with-gradle-9.md`](0058-align-kotlin-gradle-plugin-with-gradle-9.md)
+   Aligns the API Kotlin Gradle Plugin baseline with Gradle 9.
