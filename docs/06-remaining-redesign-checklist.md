@@ -192,7 +192,7 @@ Mark each line only when the changed scope is:
 - [x] Check text duplication against test expectations
   Current status: stale page expectations were aligned to the redesigned copy across the verified workspace families.
 - [x] Re-run the complete web regression suite after final test alignment
-  Current status: on September 1, 2026, `npm run test:run` passed 37 test files and 71 tests, and `npm run build` completed successfully.
+  Current status: on September 1, 2026, `npm run test:run` passed 38 test files and 73 tests, and `npm run build` completed successfully.
 
 ### H2. Final Acceptance Pass
 - [x] Verify daily practice journey

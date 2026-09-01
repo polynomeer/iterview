@@ -49,10 +49,17 @@ That means CI currently verifies:
 - backend tests and build
 - frontend tests and build
 
+## Latest Verification Baseline
+
+Verified locally on 2026-09-01:
+- frontend regression suite: 38 test files and 73 tests passed
+- frontend production build: passed with Vite `6.4.3`
+- frontend dependency audit: 0 known vulnerabilities
+- representative backend Testcontainers integration test: Flyway migration test passed against PostgreSQL 16
+
 ## Observed Operational Risks
 
 - frontend dependencies passed `npm audit` with no known vulnerabilities
-- the frontend production build still emits a large chunk warning
 - Gradle deprecation warnings should be cleaned up before a future Gradle major upgrade
 - repository-wide verification still depends on local environment support for backend test prerequisites such as Docker when integration tests require it
 
@@ -65,7 +72,8 @@ That means CI currently verifies:
 
 ## Healthy Next Improvements
 
-- address frontend dependency vulnerabilities in a scoped maintenance pass
-- reduce large frontend bundles if startup cost becomes material
+- keep the frontend dependency audit clean as dependencies are upgraded
+- measure real-user startup cost before deciding whether additional frontend bundle splitting is necessary
+- identify and remove Gradle deprecation warnings before the next major upgrade
 - keep root docs in sync with newly added product areas such as replay, tailoring, and editor workflows
 - add release or deployment automation only when a real operational need appears
