@@ -277,8 +277,8 @@ describe("InterviewResultPage", () => {
     expect(screen.getAllByText("Caching rollout").length).toBeGreaterThan(0);
     expect(screen.getByText("좁은 복구 패스를 실행")).toBeInTheDocument();
     expect(screen.getByText("약한 가지 1개 우선")).toBeInTheDocument();
-    expect(screen.getByText("좁은 복구 패스 시작")).toBeInTheDocument();
-    expect(screen.getByText("약한 세부 항목과 건너뛴 세부 항목으로 다음 패스 범위를 정하세요.")).toBeInTheDocument();
+    expect(screen.getAllByText("좁은 복구 패스 시작")).toHaveLength(2);
+    expect(screen.getByRole("heading", { name: "결과를 읽고 다음 복구 패스를 고르세요" })).toBeInTheDocument();
 
     await userEvent.click(screen.getAllByRole("button", { name: /Caching rollout/i })[0]);
 

@@ -78,9 +78,10 @@ describe("QuestionTreePage", () => {
       { route: "/questions/question-42/tree", locale: "ko" },
     );
 
-    expect(screen.getByText("질문 트리 작업공간")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "루트에서 가장 약한 가지까지 바로 읽으세요" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "질문 트리를 깊이우선으로 읽는 맵 작업공간" })).toBeInTheDocument();
     expect(screen.getAllByText("Explain your migration rollback strategy").length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByText("How did you decide when to trigger rollback?")).toBeInTheDocument();
+    expect(screen.getAllByText("How did you decide when to trigger rollback?").length).toBeGreaterThan(0);
     expect(screen.getByText("DFS 준비됨")).toBeInTheDocument();
   });
 });

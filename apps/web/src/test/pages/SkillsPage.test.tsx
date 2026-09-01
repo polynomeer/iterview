@@ -114,16 +114,11 @@ describe("SkillsPage", () => {
       { route: "/skills", locale: "ko" },
     );
 
-    expect(screen.getByText("스킬 신호를 다음 가지 선택으로 연결하세요")).toBeInTheDocument();
-    expect(screen.getByText("이 신호 세트가 이끌어야 할 다음 행동")).toBeInTheDocument();
-    expect(screen.getByText("가장 바로 행동 가능한 신호")).toBeInTheDocument();
-    expect(screen.getByText("최대 격차: System Design")).toBeInTheDocument();
-    expect(screen.getByText("약한 질문 부하: System Design")).toBeInTheDocument();
-    expect(screen.getByText("오늘의 주 가지")).toBeInTheDocument();
-    expect(screen.getByText("연습 작업공간 열기")).toBeInTheDocument();
-    expect(screen.getByText("현재 스킬 프로필")).toBeInTheDocument();
-    expect(screen.getByText("약한 스킬과 벤치마크 격차")).toBeInTheDocument();
-    expect(screen.getByText("답변량과 약한 질문 부하")).toBeInTheDocument();
-    expect(screen.getByText("총 약한 질문 수")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "스킬 지형을 질문 트리 실행 계획으로 바꾸세요" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "이력서 근거를 방어할 스킬 지형을 한 화면에서 정리하세요" })).toBeInTheDocument();
+    expect(screen.getByText("다음 추천")).toBeInTheDocument();
+    expect(screen.getAllByText("System Design").length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: "권장 시퀀스로 연습" })).toHaveAttribute("href", "/practice");
+    expect(screen.getByText("스킬 랜드스케이프")).toBeInTheDocument();
   });
 });
