@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { mapHomeResponseDtoToModel } from "../../entities/home/model";
 import type { SkillGapModel, SkillProgressModel, SkillRadarModel } from "../../entities/skill-intelligence/model";
@@ -91,6 +92,7 @@ function buildSkillQuestionRecommendations(
 export function SkillsPage() {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
+  const [selectedSkillLabel, setSelectedSkillLabel] = useState<string | null>(null);
   const radarQuery = useSkillRadarQuery();
   const gapQuery = useSkillGapQuery();
   const progressQuery = useSkillProgressQuery();
@@ -117,7 +119,7 @@ export function SkillsPage() {
     progressQuery.data?.items.reduce((sum, item) => sum + parseNumberLabel(item.answeredQuestionCountLabel), 0) ?? 0;
   const totalWeakQuestions =
     progressQuery.data?.items.reduce((sum, item) => sum + parseNumberLabel(item.weakQuestionCountLabel), 0) ?? 0;
-  const focusSkill =
+  const defaultFocusSkill =
     weakestProgressItem
       ? {
           label: weakestProgressItem.label,
@@ -137,6 +139,21 @@ export function SkillsPage() {
             gapLabel: radarQuery.data.categories[0].helperText,
           }
         : null;
+  const focusSkill =
+    selectedSkillLabel && radarQuery.data?.categories.find((category) => category.label === selectedSkillLabel)
+      ? (() => {
+          const category = radarQuery.data.categories.find((item) => item.label === selectedSkillLabel)!;
+          const progressItem = progressQuery.data?.items.find((item) => item.label === category.label);
+          return {
+            label: category.label,
+            score: category.score,
+            benchmarkLabel: category.benchmarkLabel,
+            weakQuestionCountLabel: progressItem?.weakQuestionCountLabel ?? "0",
+            answeredQuestionCountLabel: progressItem?.answeredQuestionCountLabel ?? "0",
+            gapLabel: progressItem?.gapLabel ?? category.helperText,
+          };
+        })()
+      : defaultFocusSkill;
   const radarNodes = (radarQuery.data?.categories ?? []).slice(0, 7).map((category, index) => ({
     ...category,
     tone: SKILL_NODE_TONES[index] ?? "warning",
@@ -279,10 +296,13 @@ export function SkillsPage() {
                     <span className="skills-landscape__orbit skills-landscape__orbit--middle" />
                   </div>
                   {radarNodes.map((node, index) => (
-                    <article
+                    <button
+                      aria-pressed={focusSkill?.label === node.label}
                       className={`skills-node skills-node--${node.tone} ${focusSkill?.label === node.label ? "skills-node--focus" : ""}`}
                       key={node.id}
+                      onClick={() => setSelectedSkillLabel(node.label)}
                       style={node.position}
+                      type="button"
                     >
                       <div className="skills-node__icon" aria-hidden="true">
                         {node.label.slice(0, 1)}
@@ -293,7 +313,7 @@ export function SkillsPage() {
                       </div>
                       <div className="skills-node__score">{node.scoreLabel}</div>
                       {index === 0 ? <span className="skills-node__flag">{isKorean ? "핵심 강점" : "Core strength"}</span> : null}
-                    </article>
+                    </button>
                   ))}
                   <div className="skills-landscape__zoom">
                     <button type="button">+</button>

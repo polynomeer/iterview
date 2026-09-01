@@ -1124,6 +1124,19 @@ button {
     linear-gradient(180deg, rgba(6, 12, 24, 0.94), rgba(9, 15, 28, 0.98));
 }
 
+.skills-node {
+  appearance: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.skills-node:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 3px;
+}
+
 .skills-landscape__grid,
 .skills-landscape__orbits {
   position: absolute;
