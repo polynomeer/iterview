@@ -136,6 +136,8 @@ describe("InterviewPage", () => {
       });
     });
 
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/interviews/session-2");
+    await waitFor(() => {
+      expect(screen.getByTestId("location-display")).toHaveTextContent("/interviews/session-2");
+    });
   });
 });

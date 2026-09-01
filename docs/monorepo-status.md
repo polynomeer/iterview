@@ -1,6 +1,6 @@
 # Monorepo Status
 
-Last updated: 2026-08-20
+Last updated: 2026-09-01
 
 This document is the operational snapshot of the repository, not the product roadmap.
 
@@ -50,7 +50,7 @@ That means CI currently verifies:
 
 ## Observed Operational Risks
 
-- `apps/web` currently reports npm audit issues after install
+- production frontend dependencies passed `npm audit --omit=dev` with no known vulnerabilities
 - the frontend production build still emits a large chunk warning
 - Gradle deprecation warnings should be cleaned up before a future Gradle major upgrade
 - repository-wide verification still depends on local environment support for backend test prerequisites such as Docker when integration tests require it
