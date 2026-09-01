@@ -16,6 +16,9 @@ dist/
 build/
 out/
 
+# local runtime uploads
+apps/api/uploads/
+
 # environment files
 .env
 .env.local
