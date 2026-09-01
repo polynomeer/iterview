@@ -13,6 +13,14 @@ import { PageContainer } from "../../shared/ui/PageContainer";
 import { useLocale } from "../../shared/i18n";
 import { SectionPanel } from "../../shared/ui/layout";
 
+const MAX_AUDIO_FILE_SIZE_BYTES = 50 * 1024 * 1024;
+
+function formatRecordingDuration(seconds: number) {
+  const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const remainder = (seconds % 60).toString().padStart(2, "0");
+  return `${minutes}:${remainder}`;
+}
+
 export function PracticalInterviewListPage() {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
@@ -21,6 +29,7 @@ export function PracticalInterviewListPage() {
   const [file, setFile] = useState<File | null>(null);
   const [hasRecordingConsent, setHasRecordingConsent] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingDurationSeconds, setRecordingDurationSeconds] = useState(0);
   const [recordingError, setRecordingError] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [roleName, setRoleName] = useState("");
@@ -32,6 +41,7 @@ export function PracticalInterviewListPage() {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const recordingStreamRef = useRef<MediaStream | null>(null);
   const recordingChunksRef = useRef<Blob[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const recordListQuery = useInterviewRecordListQuery();
   const resumeListQuery = useResumeListQuery();
   const createRecordMutation = useCreateInterviewRecordMutation();
@@ -67,6 +77,34 @@ export function PracticalInterviewListPage() {
       recordingStreamRef.current?.getTracks().forEach((track) => track.stop());
     };
   }, []);
+
+  useEffect(() => {
+    if (!isRecording) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setRecordingDurationSeconds((current) => current + 1);
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [isRecording]);
+
+  function selectAudioFile(nextFile: File | null) {
+    setRecordingError(null);
+    if (nextFile && nextFile.size > MAX_AUDIO_FILE_SIZE_BYTES) {
+      setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setRecordingError(
+        isKorean
+          ? "오디오 파일은 50MB 이하여야 합니다. 더 짧게 녹음하거나 작은 파일을 선택하세요."
+          : "Audio files must be 50 MB or smaller. Record a shorter clip or choose a smaller file.",
+      );
+      return;
+    }
+    setFile(nextFile);
+  }
 
   async function startRecording() {
     setRecordingError(null);
@@ -112,7 +150,7 @@ export function PracticalInterviewListPage() {
         recordingChunksRef.current = [];
 
         if (blob.size > 0) {
-          setFile(
+          selectAudioFile(
             new File([blob], `iterview-recording-${new Date().toISOString().replace(/[:.]/g, "-")}.webm`, {
               type: blob.type,
             }),
@@ -121,6 +159,7 @@ export function PracticalInterviewListPage() {
         setIsRecording(false);
       };
       recorder.start();
+      setRecordingDurationSeconds(0);
       setIsRecording(true);
     } catch {
       setRecordingError(
@@ -134,6 +173,14 @@ export function PracticalInterviewListPage() {
   function stopRecording() {
     if (recorderRef.current?.state === "recording") {
       recorderRef.current.stop();
+    }
+  }
+
+  function discardSelectedAudio() {
+    setFile(null);
+    setRecordingError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   }
 
@@ -420,9 +467,9 @@ export function PracticalInterviewListPage() {
                         accept=".mp3,.m4a,.wav,.aac,.ogg,.webm"
                         className="form-input"
                         onChange={(event) => {
-                          setRecordingError(null);
-                          setFile(event.target.files?.[0] ?? null);
+                          selectAudioFile(event.target.files?.[0] ?? null);
                         }}
+                        ref={fileInputRef}
                         type="file"
                       />
                       <span className="form-field__hint">
@@ -459,8 +506,19 @@ export function PracticalInterviewListPage() {
                           onClick={stopRecording}
                           type="button"
                         >
-                          {isKorean ? "녹음 중지" : "Stop recording"}
+                          {isRecording
+                            ? isKorean
+                              ? `녹음 중지 (${formatRecordingDuration(recordingDurationSeconds)})`
+                              : `Stop recording (${formatRecordingDuration(recordingDurationSeconds)})`
+                            : isKorean
+                              ? "녹음 중지"
+                              : "Stop recording"}
                         </button>
+                        {file ? (
+                          <button className="text-button" onClick={discardSelectedAudio} type="button">
+                            {isKorean ? "선택한 오디오 제거" : "Remove selected audio"}
+                          </button>
+                        ) : null}
                         <span aria-live="polite" className="practical-recording-field__status">
                           {isRecording
                             ? isKorean
@@ -468,8 +526,8 @@ export function PracticalInterviewListPage() {
                               : "Recording in progress"
                             : file
                               ? isKorean
-                                ? `선택됨: ${file.name}`
-                                : `Selected: ${file.name}`
+                                ? `선택됨: ${file.name} (${Math.ceil(file.size / 1024 / 1024)}MB)`
+                                : `Selected: ${file.name} (${Math.ceil(file.size / 1024 / 1024)}MB)`
                               : isKorean
                                 ? "파일을 선택하거나 녹음을 시작하세요"
                                 : "Choose a file or start recording"}
