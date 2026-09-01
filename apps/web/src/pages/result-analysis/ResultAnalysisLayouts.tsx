@@ -57,23 +57,23 @@ export function ResultAnalysisDesktopLayout({
 }: ResultAnalysisLayoutProps) {
   return (
     <div className="result-analysis-layout result-analysis-layout--desktop">
-      <aside className="result-analysis-layout__workspace-summary">
-        <div className="page-stack">
+      <main className="result-analysis-layout__main">
+        <div className="page-stack result-analysis-layout__panel result-analysis-layout__panel--primary">
           {workspaceSummary}
           {scoreSection}
-          {nextActionSection}
-        </div>
-      </aside>
-      <div className="result-analysis-layout__main">
-        <div className="page-stack result-analysis-layout__panel">
           {dimensionSection}
-          {insightSection}
-          {detailedFeedbackSection}
-          {recommendationSection}
+          <div className="result-analysis-layout__insight-grid">
+            {detailedFeedbackSection}
+            {insightSection}
+          </div>
+          <div className="result-analysis-layout__follow-up">
+            {recommendationSection}
+          </div>
         </div>
-      </div>
+      </main>
       <aside className="result-analysis-layout__side">
         <div className="page-stack result-analysis-layout__panel">
+          {nextActionSection}
           {modelAnswerSection}
           {feedbackSection}
         </div>
