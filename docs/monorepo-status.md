@@ -50,7 +50,7 @@ That means CI currently verifies:
 
 ## Observed Operational Risks
 
-- production frontend dependencies passed `npm audit --omit=dev` with no known vulnerabilities
+- frontend dependencies passed `npm audit` with no known vulnerabilities
 - the frontend production build still emits a large chunk warning
 - Gradle deprecation warnings should be cleaned up before a future Gradle major upgrade
 - repository-wide verification still depends on local environment support for backend test prerequisites such as Docker when integration tests require it
