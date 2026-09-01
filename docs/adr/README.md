@@ -164,3 +164,5 @@ Each ADR should include:
    Makes local Compose overrides explicit without treating development secrets as deployment configuration.
 69. [`0069-add-consented-browser-recording-to-practical-imports.md`](0069-add-consented-browser-recording-to-practical-imports.md)
    Adds browser microphone capture as an explicit-consent alternative to audio upload.
+70. [`0070-simplify-authentication-surfaces.md`](0070-simplify-authentication-surfaces.md)
+   Keeps login and signup focused on one form and one clear route transition.

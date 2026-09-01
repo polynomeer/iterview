@@ -69,9 +69,8 @@ describe("SignupPage", () => {
       { route: "/signup", locale: "ko" },
     );
 
-    expect(screen.getByText("시작 규칙")).toBeInTheDocument();
-    expect(screen.getByText("열리는 작업")).toBeInTheDocument();
-    expect(screen.getByText("빠른 경로")).toBeInTheDocument();
+    expect(screen.getByText("회원가입")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "이미 계정이 있습니다" })).toBeInTheDocument();
     await user.clear(screen.getByRole("textbox", { name: "이메일" }));
     await user.type(screen.getByRole("textbox", { name: "이메일" }), "new@example.com");
     await user.clear(screen.getByLabelText("비밀번호"));

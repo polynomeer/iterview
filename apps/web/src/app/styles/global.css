@@ -784,6 +784,38 @@ button {
   }
 }
 
+/* Keep authentication focused across every workspace theme. */
+:root .auth-access-layout {
+  display: block;
+  max-width: 30rem;
+  margin: clamp(12px, 3vw, 36px) auto 0;
+}
+
+:root .auth-access-surface,
+:root .auth-access-side,
+:root .auth-access-form-card__summary {
+  display: none;
+}
+
+:root .auth-access-grid {
+  display: block;
+}
+
+:root .auth-access-form-card {
+  display: grid;
+  gap: 10px;
+  padding: clamp(22px, 5vw, 34px);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  background: var(--surface-base);
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--shadow-soft) 22%, transparent);
+}
+
+:root .auth-access-form-card .page-card__body { margin: 0; line-height: 1.55; }
+:root .auth-access-form-card .page-card__actions { display: grid; grid-template-columns: 1fr; margin-top: 8px; }
+:root .auth-access-form-card .primary-button,
+:root .auth-access-form-card .secondary-button { width: 100%; }
+
 @media (min-width: 1024px) {
   .interview-session-history__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2847,6 +2879,49 @@ button {
   flex-direction: column;
   gap: 14px;
   margin-top: 18px;
+}
+
+/* Authentication is a short transition, not a workspace dashboard. */
+.auth-access-layout {
+  display: block;
+  max-width: 30rem;
+  margin: clamp(12px, 3vw, 36px) auto 0;
+}
+
+.auth-access-surface,
+.auth-access-side,
+.auth-access-form-card__summary {
+  display: none;
+}
+
+.auth-access-grid {
+  display: block;
+}
+
+.auth-access-form-card {
+  display: grid;
+  gap: 10px;
+  padding: clamp(22px, 5vw, 34px);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  background: var(--surface-base);
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--shadow-soft) 22%, transparent);
+}
+
+.auth-access-form-card .page-card__body {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.auth-access-form-card .page-card__actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 8px;
+}
+
+.auth-access-form-card .primary-button,
+.auth-access-form-card .secondary-button {
+  width: 100%;
 }
 
 .auth-access-layout {

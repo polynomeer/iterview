@@ -69,9 +69,8 @@ describe("LoginPage", () => {
       { route: "/login", locale: "ko" },
     );
 
-    expect(screen.getByText("재진입 원칙")).toBeInTheDocument();
-    expect(screen.getByText("열리는 항목")).toBeInTheDocument();
-    expect(screen.getByText("빠른 경로")).toBeInTheDocument();
+    expect(screen.getByText("로그인")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "계정 만들기" })).toBeInTheDocument();
     await user.clear(screen.getByRole("textbox", { name: "이메일" }));
     await user.type(screen.getByRole("textbox", { name: "이메일" }), "learner@example.com");
     await user.clear(screen.getByLabelText("비밀번호"));
