@@ -862,6 +862,83 @@ button {
 :root .auth-access-form-card .primary-button,
 :root .auth-access-form-card .secondary-button { width: 100%; }
 
+/* Desktop workspace shell: reference-aligned navigation density and frame boundaries. */
+@media (min-width: 1100px) {
+  :root[data-theme="workspace"] .app-shell--desktop {
+    min-height: 100dvh;
+    background: #06111e;
+  }
+
+  :root[data-theme="workspace"] .app-shell--desktop .sidebar-navigation {
+    width: 240px;
+    padding: 20px 14px 18px;
+    border-right: 1px solid rgba(137, 161, 203, 0.14);
+    background: linear-gradient(180deg, #071626 0%, #081421 100%);
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__brand {
+    margin-bottom: 20px;
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__summary,
+  :root[data-theme="workspace"] .sidebar-navigation__link-copy span {
+    display: none;
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__section {
+    gap: 7px;
+    margin-top: 18px;
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__section-label {
+    padding: 0 10px;
+    font-size: 0.66rem;
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__nav { gap: 3px; }
+
+  :root[data-theme="workspace"] .sidebar-navigation__link {
+    min-height: 38px;
+    padding: 0 10px;
+    border-radius: 9px;
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__icon {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    font-size: 0.58rem;
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__link-copy strong {
+    font-size: 0.87rem;
+    font-weight: 500;
+  }
+
+  :root[data-theme="workspace"] .sidebar-navigation__progress-card {
+    margin-top: auto;
+    padding: 14px;
+    border-radius: 12px;
+    border-color: rgba(137, 161, 203, 0.16);
+    background: rgba(13, 26, 43, 0.74);
+  }
+
+  :root[data-theme="workspace"] .top-toolbar {
+    min-height: 58px;
+    border-bottom: 1px solid rgba(137, 161, 203, 0.14);
+    background: rgba(7, 18, 31, 0.9);
+  }
+
+  :root[data-theme="workspace"] .app-shell__content--desktop {
+    background: #071421;
+  }
+
+  :root[data-theme="workspace"] .app-shell__canvas--desktop {
+    max-width: none;
+    padding: 22px;
+  }
+}
+
 @media (min-width: 1024px) {
   .interview-session-history__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
