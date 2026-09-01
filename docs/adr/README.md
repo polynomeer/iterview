@@ -160,3 +160,5 @@ Each ADR should include:
    Separates process liveness from PostgreSQL-backed traffic readiness probes.
 67. [`0067-coordinate-compose-startup-with-api-readiness.md`](0067-coordinate-compose-startup-with-api-readiness.md)
    Uses API readiness to sequence Compose startup and graceful shutdown.
+68. [`0068-document-local-compose-configuration-boundaries.md`](0068-document-local-compose-configuration-boundaries.md)
+   Makes local Compose overrides explicit without treating development secrets as deployment configuration.

@@ -89,8 +89,13 @@ The monorepo already contains working backend and frontend applications for:
 ```bash
 git clone <your-fork-or-origin>
 cd iterview
+cp .env.example .env # optional: change local Compose defaults before starting
 ./scripts/setup_all.sh
 ```
+
+`.env` is ignored by Git. The checked-in example is only for local Compose development; deployed
+environments must provide unique database credentials and `AUTH_TOKEN_SECRET` through their own
+secret manager or runtime configuration.
 
 ### 2. Start the full local stack
 
