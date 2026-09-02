@@ -167,4 +167,6 @@ Each ADR should include:
 70. [`0070-simplify-authentication-surfaces.md`](0070-simplify-authentication-surfaces.md)
    Keeps login and signup focused on one form and one clear route transition.
 71. [`0071-tighten-workspace-shell-to-reference-density.md`](0071-tighten-workspace-shell-to-reference-density.md)
-   Establishes a compact, framed desktop shell for graph and inspector workspaces.
+   Tightens the shared workspace shell to a denser, frame-first desktop composition.
+72. [`0072-interactive-skill-landscape-as-plan-workspace.md`](0072-interactive-skill-landscape-as-plan-workspace.md)
+   Makes the skill landscape interactive through view modes, focus filters, zoom controls, and inspector tabs.

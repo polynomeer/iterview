@@ -1065,6 +1065,11 @@ button {
   align-items: center;
 }
 
+.skills-landscape__toolbar {
+  display: grid;
+  gap: 14px;
+}
+
 .skills-landscape__toolbar-chip {
   display: flex;
   align-items: center;
@@ -1072,9 +1077,19 @@ button {
   gap: 12px;
   min-height: 46px;
   padding: 0 14px;
+  border: 0;
   border-radius: 14px;
   border: 1px solid rgba(98, 119, 156, 0.18);
   background: rgba(15, 24, 38, 0.92);
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.skills-landscape__toolbar-chip[aria-pressed="true"] {
+  border-color: rgba(255, 168, 91, 0.38);
+  background: rgba(255, 168, 91, 0.09);
+  color: #ffdfc3;
 }
 
 .skills-landscape__toolbar-chip span {
@@ -1201,6 +1216,16 @@ button {
     linear-gradient(180deg, rgba(6, 12, 24, 0.94), rgba(9, 15, 28, 0.98));
 }
 
+.skills-landscape__network-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 572px;
+  transform: scale(var(--skills-landscape-zoom, 1));
+  transform-origin: center;
+  transition: transform 140ms ease;
+}
+
 .skills-node {
   appearance: none;
   color: inherit;
@@ -1218,6 +1243,22 @@ button {
 .skills-landscape__orbits {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+}
+
+.skills-landscape__network-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.95;
+}
+
+.skills-landscape__network-connections__line {
+  stroke: rgba(137, 161, 203, 0.58);
+  stroke-width: 1.2;
+  stroke-linecap: round;
 }
 
 .skills-landscape__grid {
@@ -1341,14 +1382,39 @@ button {
   gap: 10px;
 }
 
-.skills-landscape__zoom button {
+.skills-landscape__zoom-button,
+.skills-landscape__zoom-label {
   min-width: 44px;
+}
+
+.skills-landscape__zoom-button {
   min-height: 44px;
   border: 1px solid rgba(96, 116, 150, 0.18);
   border-radius: 14px;
   background: rgba(12, 19, 31, 0.92);
   color: #edf3ff;
   font: inherit;
+}
+
+.skills-landscape__zoom-button:disabled {
+  opacity: 0.34;
+  cursor: not-allowed;
+}
+
+.skills-landscape__zoom-label {
+  min-height: 32px;
+  border-radius: 10px;
+  border: 1px solid rgba(96, 116, 150, 0.22);
+  display: grid;
+  place-items: center;
+  background: rgba(17, 24, 36, 0.8);
+  color: rgba(210, 226, 248, 0.83);
+  font-size: 0.72rem;
+}
+
+.skills-landscape__detail-panel {
+  display: grid;
+  gap: 16px;
 }
 
 .skills-detail-card__header,
@@ -1358,6 +1424,35 @@ button {
 .skills-summary-card__footer {
   display: grid;
   gap: 10px;
+}
+
+.skills-detail-card__tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skills-detail-card__tab {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(96, 118, 150, 0.22);
+  border-radius: 12px;
+  background: rgba(17, 24, 36, 0.68);
+  color: rgba(203, 216, 237, 0.8);
+  font: inherit;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.skills-detail-card__tab--active {
+  border-color: rgba(91, 151, 255, 0.56);
+  background: rgba(70, 136, 255, 0.12);
+  color: #f8fbff;
+}
+
+.skills-detail-card__tab:hover,
+.skills-detail-card__tab:focus-visible {
+  border-color: rgba(112, 158, 255, 0.48);
 }
 
 .skills-detail-card__header h3 {

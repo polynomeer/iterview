@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { Link } from "react-router-dom";
 import { mapHomeResponseDtoToModel } from "../../entities/home/model";
 import type { SkillGapModel, SkillProgressModel, SkillRadarModel } from "../../entities/skill-intelligence/model";
@@ -27,6 +27,39 @@ const SKILL_NODE_POSITIONS = [
   { top: "69%", left: "29%" },
   { top: "69%", left: "54%" },
 ] as const;
+const SKILL_GRAPH_CONNECTIONS = [
+  [0, 1],
+  [0, 2],
+  [1, 3],
+  [1, 4],
+  [2, 4],
+  [2, 5],
+  [3, 6],
+  [4, 6],
+] as const;
+const GRAPH_VIEW_MODES = [
+  { key: "map", koLabel: "맵 뷰", enLabel: "Map View" },
+  { key: "dfs", koLabel: "DFS Focus", enLabel: "DFS Focus" },
+  { key: "all", koLabel: "전체 경로", enLabel: "All paths" },
+] as const;
+const DETAIL_TABS = [
+  { key: "overview", koLabel: "개요", enLabel: "Overview" },
+  { key: "resume", koLabel: "이력서 연결", enLabel: "Resume links" },
+  { key: "questions", koLabel: "관련 질문", enLabel: "Related questions" },
+] as const;
+const GRAPH_ZOOM_STEPS = {
+  min: 0.85,
+  max: 1.28,
+  step: 0.12,
+  fit: 1,
+} as const;
+type GraphViewMode = (typeof GRAPH_VIEW_MODES)[number]["key"];
+type DetailTab = (typeof DETAIL_TABS)[number]["key"];
+type GraphFilterMode = "all" | "weakOnly";
+
+function percentFromStyle(value: string) {
+  return Number.parseFloat(value) || 0;
+}
 
 function parseNumberLabel(value: string | undefined) {
   return Number.parseInt(value ?? "0", 10) || 0;
@@ -93,6 +126,10 @@ export function SkillsPage() {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
   const [selectedSkillLabel, setSelectedSkillLabel] = useState<string | null>(null);
+  const [graphViewMode, setGraphViewMode] = useState<GraphViewMode>("dfs");
+  const [detailTab, setDetailTab] = useState<DetailTab>("overview");
+  const [graphZoom, setGraphZoom] = useState<number>(GRAPH_ZOOM_STEPS.fit);
+  const [graphFilterMode, setGraphFilterMode] = useState<GraphFilterMode>("all");
   const radarQuery = useSkillRadarQuery();
   const gapQuery = useSkillGapQuery();
   const progressQuery = useSkillProgressQuery();
@@ -106,7 +143,6 @@ export function SkillsPage() {
   const fallbackGapItems = homeFallbackQuery.data?.skillGapPreview ?? [];
   const radarCategoryCount = radarQuery.data?.categories.length ?? 0;
   const trackedProgressCount = progressQuery.data?.items.length ?? 0;
-  const topGapItem = gapQuery.data?.items[0] ?? null;
   const weakestProgressItem =
     progressQuery.data?.items.reduce((weakest, item) => {
       if (!weakest) {
@@ -159,6 +195,30 @@ export function SkillsPage() {
     tone: SKILL_NODE_TONES[index] ?? "warning",
     position: SKILL_NODE_POSITIONS[index] ?? { top: "50%", left: "50%" },
   }));
+  const graphModeNodes = (graphViewMode === "all" ? radarNodes : radarNodes.filter((item) => item.score < 78)).filter((item) => {
+    if (graphFilterMode === "all") {
+      return true;
+    }
+
+    return item.score < 78 || item.label === focusSkill?.label;
+  });
+  const visibleGraphNodes = graphModeNodes.length > 0 ? graphModeNodes.slice(0, graphViewMode === "all" ? 7 : 6) : radarNodes.slice(0, 1);
+  const visibleGraphNodeLabels = new Set(visibleGraphNodes.map((node) => node.label));
+  const graphLinks = SKILL_GRAPH_CONNECTIONS.filter(([sourceIndex, targetIndex]) => {
+    const sourceNode = radarNodes[sourceIndex];
+    const targetNode = radarNodes[targetIndex];
+    return Boolean(sourceNode && targetNode && visibleGraphNodeLabels.has(sourceNode.label) && visibleGraphNodeLabels.has(targetNode.label));
+  })
+    .map(([sourceIndex, targetIndex], index) => {
+      const source = radarNodes[sourceIndex]!;
+      const target = radarNodes[targetIndex]!;
+      return {
+        key: `${source.id}-${target.id}-${index}`,
+        source,
+        target,
+      };
+    });
+  const filterLabel = graphFilterMode === "all" ? (isKorean ? "전체" : "All") : (isKorean ? "약한 영역 우선" : "Weak first");
   const strengths = [...(radarQuery.data?.categories ?? [])].sort((left, right) => right.score - left.score).slice(0, 3);
   const weakAreas = [...(radarQuery.data?.categories ?? [])].sort((left, right) => left.score - right.score).slice(0, 3);
   const recentPractice = (progressQuery.data?.items ?? []).slice(0, 4);
@@ -166,6 +226,16 @@ export function SkillsPage() {
     .sort((left, right) => parseNumberLabel(right.gapScoreLabel) - parseNumberLabel(left.gapScoreLabel))
     .slice(0, 3);
   const questionRecommendations = buildSkillQuestionRecommendations(radarQuery.data, progressQuery.data, gapQuery.data, isKorean);
+  const zoomStyle = {
+    "--skills-landscape-zoom": `${graphZoom}`,
+  } as CSSProperties;
+
+  const showZoomOut = graphZoom > GRAPH_ZOOM_STEPS.min;
+  const showZoomIn = graphZoom < GRAPH_ZOOM_STEPS.max;
+
+  const handleZoomIn = () => setGraphZoom((value) => Math.min(GRAPH_ZOOM_STEPS.max, Number((value + GRAPH_ZOOM_STEPS.step).toFixed(2))));
+  const handleZoomOut = () => setGraphZoom((value) => Math.max(GRAPH_ZOOM_STEPS.min, Number((value - GRAPH_ZOOM_STEPS.step).toFixed(2))));
+  const handleZoomFit = () => setGraphZoom(GRAPH_ZOOM_STEPS.fit);
 
   return (
     <PageContainer
@@ -243,24 +313,31 @@ export function SkillsPage() {
               </div>
               <div className="skills-landscape__toolbar">
                 <div className="skills-landscape__tabs" role="tablist" aria-label={isKorean ? "스킬 보기 방식" : "Skill views"}>
-                  <button className="skills-landscape__tab skills-landscape__tab--active" type="button">
-                    {isKorean ? "랜드스케이프" : "Landscape"}
-                  </button>
-                  <button className="skills-landscape__tab" type="button">
-                    {isKorean ? "목록 보기" : "List view"}
-                  </button>
-                  <button className="skills-landscape__tab" type="button">
-                    {isKorean ? "열지도" : "Heatmap"}
-                  </button>
-                  <button className="skills-landscape__tab" type="button">
-                    {isKorean ? "레이더" : "Radar"}
-                  </button>
+                  {GRAPH_VIEW_MODES.map((mode) => (
+                    <button
+                      aria-selected={graphViewMode === mode.key}
+                      className={`skills-landscape__tab ${graphViewMode === mode.key ? "skills-landscape__tab--active" : ""}`}
+                      key={mode.key}
+                      onClick={() => setGraphViewMode(mode.key)}
+                      role="tab"
+                      type="button"
+                    >
+                      {isKorean ? mode.koLabel : mode.enLabel}
+                    </button>
+                  ))}
                 </div>
                 <div className="skills-landscape__toolbar-actions">
-                  <div className="skills-landscape__toolbar-chip">
+                  <button
+                    aria-pressed={graphFilterMode === "weakOnly"}
+                    className="skills-landscape__toolbar-chip"
+                    onClick={() => {
+                      setGraphFilterMode((value) => (value === "all" ? "weakOnly" : "all"));
+                    }}
+                    type="button"
+                  >
                     <span>{isKorean ? "필터" : "Filter"}</span>
-                    <strong>{topGapItem?.label ?? (isKorean ? "전체" : "All")}</strong>
-                  </div>
+                    <strong>{filterLabel}</strong>
+                  </button>
                   <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
                     {isKorean ? "이력서 근거 보기" : "View resume evidence"}
                   </Link>
@@ -290,35 +367,76 @@ export function SkillsPage() {
                 </div>
 
                 <div className="skills-landscape__network">
-                  <div className="skills-landscape__grid" />
-                  <div className="skills-landscape__orbits">
-                    <span className="skills-landscape__orbit skills-landscape__orbit--outer" />
-                    <span className="skills-landscape__orbit skills-landscape__orbit--middle" />
+                  <div className="skills-landscape__network-stage" style={zoomStyle}>
+                    <div className="skills-landscape__grid" />
+                    <div className="skills-landscape__orbits">
+                      <span className="skills-landscape__orbit skills-landscape__orbit--outer" />
+                      <span className="skills-landscape__orbit skills-landscape__orbit--middle" />
+                    </div>
+                      <svg aria-hidden="true" className="skills-landscape__network-connections" preserveAspectRatio="none" viewBox="0 0 100 100">
+                      {graphLinks.map((link) => (
+                        <line
+                          className="skills-landscape__network-connections__line"
+                          key={link.key}
+                          x1={percentFromStyle(link.source.position.left)}
+                          x2={percentFromStyle(link.target.position.left)}
+                          y1={percentFromStyle(link.source.position.top)}
+                          y2={percentFromStyle(link.target.position.top)}
+                        />
+                      ))}
+                    </svg>
+                    {visibleGraphNodes.map((node, index) => (
+                      <button
+                        aria-pressed={focusSkill?.label === node.label}
+                        className={`skills-node skills-node--${node.tone} ${focusSkill?.label === node.label ? "skills-node--focus" : ""}`}
+                        key={node.id}
+                        onClick={() => {
+                          setSelectedSkillLabel(node.label);
+                          setDetailTab("overview");
+                        }}
+                        style={node.position}
+                        type="button"
+                      >
+                        <div className="skills-node__icon" aria-hidden="true">
+                          {node.label.slice(0, 1)}
+                        </div>
+                        <div className="skills-node__content">
+                          <strong>{node.label}</strong>
+                          <span>{isKorean ? `숙련도 ${node.scoreLabel}%` : `Mastery ${node.scoreLabel}%`}</span>
+                        </div>
+                        <div className="skills-node__score">{node.scoreLabel}</div>
+                        {index === 0 ? <span className="skills-node__flag">{isKorean ? "핵심 강점" : "Core strength"}</span> : null}
+                      </button>
+                    ))}
                   </div>
-                  {radarNodes.map((node, index) => (
+                  <div className="skills-landscape__zoom">
                     <button
-                      aria-pressed={focusSkill?.label === node.label}
-                      className={`skills-node skills-node--${node.tone} ${focusSkill?.label === node.label ? "skills-node--focus" : ""}`}
-                      key={node.id}
-                      onClick={() => setSelectedSkillLabel(node.label)}
-                      style={node.position}
+                      aria-label={isKorean ? "지도 확대" : "Zoom in"}
+                      className="skills-landscape__zoom-button"
+                      disabled={!showZoomIn}
+                      onClick={handleZoomIn}
                       type="button"
                     >
-                      <div className="skills-node__icon" aria-hidden="true">
-                        {node.label.slice(0, 1)}
-                      </div>
-                      <div className="skills-node__content">
-                        <strong>{node.label}</strong>
-                        <span>{isKorean ? `숙련도 ${node.scoreLabel}%` : `Mastery ${node.scoreLabel}%`}</span>
-                      </div>
-                      <div className="skills-node__score">{node.scoreLabel}</div>
-                      {index === 0 ? <span className="skills-node__flag">{isKorean ? "핵심 강점" : "Core strength"}</span> : null}
+                      +
                     </button>
-                  ))}
-                  <div className="skills-landscape__zoom">
-                    <button type="button">+</button>
-                    <button type="button">-</button>
-                    <button type="button">{isKorean ? "맞춤" : "Fit"}</button>
+                    <button
+                      aria-label={isKorean ? "지도 축소" : "Zoom out"}
+                      className="skills-landscape__zoom-button"
+                      disabled={!showZoomOut}
+                      onClick={handleZoomOut}
+                      type="button"
+                    >
+                      -
+                    </button>
+                    <button
+                      aria-label={isKorean ? "크기 맞춤" : "Fit view"}
+                      className="skills-landscape__zoom-button"
+                      onClick={handleZoomFit}
+                      type="button"
+                    >
+                      {isKorean ? "맞춤" : "Fit"}
+                    </button>
+                    <span className="skills-landscape__zoom-label">{Math.round(graphZoom * 100)}%</span>
                   </div>
                 </div>
               </section>
@@ -328,90 +446,120 @@ export function SkillsPage() {
                   <div className="skills-detail-card__header">
                     <p className="skills-landscape__panel-label">{isKorean ? "스킬 상세" : "Skill details"}</p>
                     <h3>{focusSkill?.label ?? (isKorean ? "선택된 스킬 없음" : "No selected skill")}</h3>
+                    <div
+                      aria-label={isKorean ? "상세 탭" : "Detail tabs"}
+                      className="skills-detail-card__tabs"
+                      role="tablist"
+                    >
+                      {DETAIL_TABS.map((tab) => (
+                        <button
+                          aria-selected={detailTab === tab.key}
+                          className={`skills-detail-card__tab ${detailTab === tab.key ? "skills-detail-card__tab--active" : ""}`}
+                          key={tab.key}
+                          onClick={() => {
+                            setDetailTab(tab.key);
+                          }}
+                          role="tab"
+                          type="button"
+                        >
+                          {isKorean ? tab.koLabel : tab.enLabel}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   {focusSkill ? (
                     <>
-                      <div className="skills-detail-card__badges">
-                        <span className="detail-chip detail-chip--accent">{isKorean ? "이력서 기반" : "Resume-backed"}</span>
-                        <span className="detail-chip">{focusSkill.score >= 75 ? (isKorean ? "방어 가능" : "Defendable") : isKorean ? "보강 필요" : "Needs work"}</span>
-                        {focusSkill.gapLabel ? <span className="detail-chip">{focusSkill.gapLabel}</span> : null}
-                      </div>
+                      {detailTab === "overview" ? (
+                        <>
+                          <div className="skills-detail-card__badges">
+                            <span className="detail-chip detail-chip--accent">{isKorean ? "이력서 기반" : "Resume-backed"}</span>
+                            <span className="detail-chip">{focusSkill.score >= 75 ? (isKorean ? "방어 가능" : "Defendable") : isKorean ? "보강 필요" : "Needs work"}</span>
+                            {focusSkill.gapLabel ? <span className="detail-chip">{focusSkill.gapLabel}</span> : null}
+                          </div>
 
-                      <div className="skills-detail-card__metric">
-                        <div className="skills-detail-card__metric-row">
-                          <span>{isKorean ? "숙련도" : "Mastery"}</span>
-                          <strong>{focusSkill.score}%</strong>
-                        </div>
-                        <div className="skills-detail-card__bar">
-                          <span style={{ width: `${Math.max(12, focusSkill.score)}%` }} />
-                        </div>
-                        <p>
-                          {isKorean
-                            ? `${scoreToStatus(focusSkill.score, isKorean)} 수준 방어 가능성입니다. 꼬리질문이 원자단위까지 내려가도 설명이 이어지는지 확인해야 합니다.`
-                            : `${scoreToStatus(focusSkill.score, isKorean)} readiness. Verify that the explanation still holds when follow-ups drill down to atomic detail.`}
-                        </p>
-                      </div>
+                          <div className="skills-detail-card__metric">
+                            <div className="skills-detail-card__metric-row">
+                              <span>{isKorean ? "숙련도" : "Mastery"}</span>
+                              <strong>{focusSkill.score}%</strong>
+                            </div>
+                            <div className="skills-detail-card__bar">
+                              <span style={{ width: `${Math.max(12, focusSkill.score)}%` }} />
+                            </div>
+                            <p>
+                              {isKorean
+                                ? `${scoreToStatus(focusSkill.score, isKorean)} 수준 방어 가능성입니다. 꼬리질문이 원자단위까지 내려가도 설명이 이어지는지 확인해야 합니다.`
+                                : `${scoreToStatus(focusSkill.score, isKorean)} readiness. Verify that the explanation still holds when follow-ups drill down to atomic detail.`}
+                            </p>
+                          </div>
 
-                      <div className="skills-detail-card__summary-grid">
-                        <article>
-                          <span>{isKorean ? "답변 수" : "Answered"}</span>
-                          <strong>{focusSkill.answeredQuestionCountLabel}</strong>
-                        </article>
-                        <article>
-                          <span>{isKorean ? "약한 질문" : "Weak questions"}</span>
-                          <strong>{focusSkill.weakQuestionCountLabel}</strong>
-                        </article>
-                        <article>
-                          <span>{isKorean ? "벤치마크" : "Benchmark"}</span>
-                          <strong>{focusSkill.benchmarkLabel ?? "-"}</strong>
-                        </article>
-                      </div>
+                          <div className="skills-detail-card__summary-grid">
+                            <article>
+                              <span>{isKorean ? "답변 수" : "Answered"}</span>
+                              <strong>{focusSkill.answeredQuestionCountLabel}</strong>
+                            </article>
+                            <article>
+                              <span>{isKorean ? "약한 질문" : "Weak questions"}</span>
+                              <strong>{focusSkill.weakQuestionCountLabel}</strong>
+                            </article>
+                            <article>
+                              <span>{isKorean ? "벤치마크" : "Benchmark"}</span>
+                              <strong>{focusSkill.benchmarkLabel ?? "-"}</strong>
+                            </article>
+                          </div>
+                        </>
+                      ) : null}
+                      {detailTab === "resume" ? (
+                        <div className="skills-detail-card__experience">
+                          <strong>{isKorean ? "현재 DFS 기준점" : "Current DFS anchor"}</strong>
+                          <p>
+                            {isKorean
+                              ? `${focusSkill?.label ?? "이 스킬"}은 실제 경험 문장과 연결해서 방어해야 합니다. 숫자, 선택 이유, 트레이드오프, 실패 복구까지 같은 흐름으로 준비하세요.`
+                              : `${focusSkill?.label ?? "This skill"} should be defended through concrete experience statements. Prepare numbers, choice rationale, trade-offs, and failure recovery in one flow.`}
+                          </p>
+                          <div className="skills-detail-card__summary-grid">
+                            <article>
+                              <span>{isKorean ? "연결 레벨" : "Linked evidence"}</span>
+                              <strong>{focusSkill.benchmarkLabel ?? (isKorean ? "미확정" : "TBD")}</strong>
+                            </article>
+                            <article>
+                              <span>{isKorean ? "우선순위" : "Priority"}</span>
+                              <strong>{focusSkill.gapLabel ?? (isKorean ? "보강 대상" : "Needs reinforcement")}</strong>
+                            </article>
+                            <article>
+                              <span>{isKorean ? "복구 상태" : "Remediation state"}</span>
+                              <strong>{focusSkill.score >= 75 ? (isKorean ? "안정" : "Stable") : isKorean ? "취약" : "Weak"}</strong>
+                            </article>
+                          </div>
+                          <Link className="tertiary-link" to={routeConfig.resume.buildPath()}>
+                            {isKorean ? "이력서 문장 확인하기" : "Inspect resume statements"}
+                          </Link>
+                        </div>
+                      ) : null}
+                      {detailTab === "questions" ? (
+                        <div className="skills-detail-card__questions">
+                          <div className="skills-question-list">
+                            {questionRecommendations.map((item) => (
+                              <article className="skills-question-list__item" key={item.id}>
+                                <span className="skills-question-list__order">{item.order}</span>
+                                <div className="skills-question-list__body">
+                                  <strong>{item.title}</strong>
+                                  <span>{item.helper}</span>
+                                </div>
+                                <span className={`skills-question-list__score skills-question-list__score--${item.tone}`}>{item.scoreLabel}</span>
+                              </article>
+                            ))}
+                          </div>
+                          <Link className="primary-button" to={routeConfig.practice.buildPath()}>
+                            {isKorean ? "이 스킬로 연습 시작" : "Practice this skill"}
+                          </Link>
+                        </div>
+                      ) : null}
                     </>
                   ) : (
                     <p className="page-card__body">
                       {isKorean ? "상세를 열 수 있는 스킬 데이터가 아직 없습니다." : "No skill data is available yet for the detail view."}
                     </p>
                   )}
-                </div>
-
-                <div className="skills-detail-card">
-                  <div className="skills-detail-card__header">
-                    <p className="skills-landscape__panel-label">{isKorean ? "이력서 연결" : "Resume links"}</p>
-                    <h3>{isKorean ? "이 스킬이 걸려 있는 경험" : "Experiences that depend on this skill"}</h3>
-                  </div>
-                  <div className="skills-detail-card__experience">
-                    <strong>{isKorean ? "현재 DFS 기준점" : "Current DFS anchor"}</strong>
-                    <p>
-                      {isKorean
-                        ? `${focusSkill?.label ?? "이 스킬"}은 실제 경험 문장과 연결해서 방어해야 합니다. 숫자, 선택 이유, 트레이드오프, 실패 복구까지 같은 흐름으로 준비하세요.`
-                        : `${focusSkill?.label ?? "This skill"} should be defended through concrete experience statements. Prepare numbers, choice rationale, trade-offs, and failure recovery in one flow.`}
-                    </p>
-                    <Link className="tertiary-link" to={routeConfig.resume.buildPath()}>
-                      {isKorean ? "이력서 문장 확인하기" : "Inspect resume statements"}
-                    </Link>
-                  </div>
-                </div>
-
-                <div className="skills-detail-card">
-                  <div className="skills-detail-card__header">
-                    <p className="skills-landscape__panel-label">{isKorean ? "관련 질문" : "Related questions"}</p>
-                    <h3>{isKorean ? "다음에 바로 던질 꼬리질문" : "Follow-up questions to ask next"}</h3>
-                  </div>
-                  <div className="skills-question-list">
-                    {questionRecommendations.map((item) => (
-                      <article className="skills-question-list__item" key={item.id}>
-                        <span className="skills-question-list__order">{item.order}</span>
-                        <div className="skills-question-list__body">
-                          <strong>{item.title}</strong>
-                          <span>{item.helper}</span>
-                        </div>
-                        <span className={`skills-question-list__score skills-question-list__score--${item.tone}`}>{item.scoreLabel}</span>
-                      </article>
-                    ))}
-                  </div>
-                  <Link className="primary-button" to={routeConfig.practice.buildPath()}>
-                    {isKorean ? "이 스킬로 연습 시작" : "Practice this skill"}
-                  </Link>
                 </div>
               </aside>
             </div>
