@@ -23,3 +23,6 @@ apps/api/uploads/
 .env
 .env.local
 .env.*.local
+
+# Claude Code personal settings
+.claude/settings.local.json
