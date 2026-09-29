@@ -170,3 +170,5 @@ Each ADR should include:
    Tightens the shared workspace shell to a denser, frame-first desktop composition.
 72. [`0072-interactive-skill-landscape-as-plan-workspace.md`](0072-interactive-skill-landscape-as-plan-workspace.md)
    Makes the skill landscape interactive through view modes, focus filters, zoom controls, and inspector tabs.
+73. [`0073-add-claude-code-agent-environment.md`](0073-add-claude-code-agent-environment.md)
+   Adapts `AGENTS.md` rules for Claude Code and makes agents commit each completed work unit.
