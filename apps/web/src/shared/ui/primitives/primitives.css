@@ -550,3 +550,21 @@
 }
 
 .ui-page-header__actions { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); }
+
+/* ---------- Page container ---------- */
+
+.ui-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-5);
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: var(--iv-space-6) 0 var(--iv-space-10);
+  color: var(--iv-text);
+  font-family: var(--iv-font-sans);
+}
+
+@media (max-width: 1023px) {
+  .ui-page { padding-top: var(--iv-space-4); }
+}

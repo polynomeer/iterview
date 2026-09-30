@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { difficultyLabel, scoreTone, skillCategoryLabel } from "../../shared/lib/labels";
+import { difficultyLabel, scoreTone, severityLabel, skillCategoryLabel } from "../../shared/lib/labels";
 
 describe("domain labels", () => {
   it("localizes difficulty codes and passes unknown values through", () => {
@@ -22,5 +22,11 @@ describe("domain labels", () => {
       "success",
       "neutral",
     ]);
+  });
+
+  it("pairs severity words with tones", () => {
+    expect(severityLabel("high", "ko")).toEqual({ label: "높음", tone: "danger" });
+    expect(severityLabel("medium", "en")).toEqual({ label: "Medium", tone: "warning" });
+    expect(severityLabel("unknown", "ko")).toEqual({ label: "unknown", tone: "neutral" });
   });
 });

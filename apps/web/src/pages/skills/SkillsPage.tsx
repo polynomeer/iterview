@@ -1,6 +1,7 @@
 import { type CSSProperties, useState } from "react";
 import { Link } from "react-router-dom";
 import { mapHomeResponseDtoToModel } from "../../entities/home/model";
+import { skillCategoryLabel } from "../../shared/lib/labels";
 import type { SkillGapModel, SkillProgressModel, SkillRadarModel } from "../../entities/skill-intelligence/model";
 import { useSkillGapQuery } from "../../features/skills/api/useSkillGapQuery";
 import { useSkillProgressQuery } from "../../features/skills/api/useSkillProgressQuery";
@@ -139,8 +140,17 @@ export function SkillsPage() {
   });
   const radarUnsupported = radarQuery.error instanceof ApiClientError && radarQuery.error.status === 404;
   const gapUnsupported = gapQuery.error instanceof ApiClientError && gapQuery.error.status === 404;
-  const fallbackRadarItems = homeFallbackQuery.data?.skillRadarPreview ?? [];
-  const fallbackGapItems = homeFallbackQuery.data?.skillGapPreview ?? [];
+  const fallbackRadarItems = (homeFallbackQuery.data?.skillReadiness ?? []).map((item) => ({
+    id: item.code,
+    label: skillCategoryLabel(item.code, locale) ?? item.code,
+    scoreLabel: item.score === null ? "-" : String(item.score),
+  }));
+  const fallbackGapItems = (homeFallbackQuery.data?.weakSkills ?? []).map((item, index) => ({
+    id: item.code ?? `gap-${index}`,
+    label: item.label,
+    gapScoreLabel: item.gapScore === null ? "-" : String(item.gapScore),
+    helperText: skillCategoryLabel(item.code, locale) ?? undefined,
+  }));
   const radarCategoryCount = radarQuery.data?.categories.length ?? 0;
   const trackedProgressCount = progressQuery.data?.items.length ?? 0;
   const weakestProgressItem =

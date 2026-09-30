@@ -17,6 +17,13 @@ const SKILL_CATEGORY: Record<string, Localized> = {
   TESTING: { ko: "테스트", en: "Testing" },
 };
 
+const SEVERITY: Record<string, Localized & { tone: "danger" | "warning" | "neutral" }> = {
+  HIGH: { ko: "높음", en: "High", tone: "danger" },
+  CRITICAL: { ko: "매우 높음", en: "Critical", tone: "danger" },
+  MEDIUM: { ko: "보통", en: "Medium", tone: "warning" },
+  LOW: { ko: "낮음", en: "Low", tone: "neutral" },
+};
+
 function titleCase(code: string) {
   return code
     .toLowerCase()
@@ -51,4 +58,13 @@ export function scoreTone(score: number | null | undefined): "neutral" | "danger
     return "danger";
   }
   return score < 75 ? "warning" : "success";
+}
+
+/** Maps risk severity codes to a user word plus a tone; unknown values pass through as neutral. */
+export function severityLabel(value: string | null | undefined, locale: AppLocale) {
+  if (!value) {
+    return null;
+  }
+  const entry = SEVERITY[value.toUpperCase()];
+  return entry ? { label: entry[locale], tone: entry.tone } : { label: value, tone: "neutral" as const };
 }
