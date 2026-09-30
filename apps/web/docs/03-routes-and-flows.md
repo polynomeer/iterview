@@ -22,6 +22,9 @@ The route map follows the five-area information architecture adopted in `docs/ad
 | 질문 | 스킬 맵 | `/questions/skills` | protected |
 | 복습 | 지금 복습 | `/review` | protected |
 | 복습 | 완료한 질문 | `/review/done` | protected |
+| 설정 | 설정 | `/settings` (profile, target companies, practice, language and display, account); `/settings/profile` jumps to the profile section | protected |
+| (public) | 로그인 · 회원가입 | `/login`, `/signup` (focus mode, no shell) | public |
+| (public) | 둘러보기 | `/explore` | public |
 | 이력서 | (hub entry) | `/resume` redirects to the active version's hub, or shows the first upload | protected |
 | 이력서 | 개요 tab | `/resume/:versionId` | protected |
 | 이력서 | 근거 편집 tab | `/resume/:versionId/claims` | protected |
@@ -59,6 +62,9 @@ Pages backed only by sample data are kept out of navigation until they have APIs
 | `/resume-tailor/resume-versions/:versionId/analyses[/:analysisId]` | `/resume/:versionId/tailor[/:analysisId]` |
 | `/interviews[/:sessionId[/result]]` | `/interview[/sessions/:sessionId[/result]]` |
 | `/practical-interviews/...` | `/interview/records/...` |
+| `/weak-nodes`, `/scheduled-reviews` | `/review` (sample-data pages retired, ADR 0079) |
+| `/target-companies` | `/settings` |
+| `/notes`, `/bookmarks` | `/questions` |
 
 ## Navigation Model
 

@@ -1,6 +1,6 @@
 # 08-manual-visual-qa-sweep
 
-Date: 2026-08-25 (routes updated 2026-09-30 for the five-area IA; see `apps/web/docs/03-routes-and-flows.md`)
+Date: 2026-08-25 (routes updated 2026-09-30 after redesign Phase 5; see `apps/web/docs/03-routes-and-flows.md`)
 
 This document lists the remaining manual visual QA work for the redesigned `iterview` workspace.
 
@@ -29,11 +29,11 @@ If a page has a dense side rail, also check:
 ### A. Core Daily Loop
 
 1. `/`
-2. `/questions`
-3. `/questions/question-1/tree`
-4. `/questions/question-1`
-5. `/questions/question-1/answer`
-6. `/attempts/attempt-1`
+2. `/questions` and `/questions/skills`
+3. `/questions/1/tree`
+4. `/questions/1`
+5. `/questions/1/answer` (focus mode, no shell)
+6. `/attempts/1`
 
 Check:
 - hero hierarchy reads clearly at a glance
@@ -44,15 +44,11 @@ Check:
 ### B. Recovery Loop
 
 1. `/review`
-2. `/weak-nodes`
-3. `/scheduled-reviews`
-4. `/review/done`
+2. `/review/done`
 
 Check:
-- queue/list items do not collide with side rails
-- graph/list/detail layout still reads left-to-right on desktop
-- mobile stacks keep the remediation priority clear
-- sticky detail rails do not trap content below the fold
+- the week strip and the due list read together on desktop and stack on mobile
+- each row keeps its 답하기 / 나중에 / 완료 actions on one line or wraps cleanly
 
 ### C. Source-Of-Truth Loop
 
@@ -84,18 +80,18 @@ Check:
 - action clusters do not wrap into noisy multi-line button groups
 - mobile stacking preserves the session/result narrative
 
-### E. Secondary Workspaces
+### E. Settings, Auth, And Explore
 
-1. `/notes`
-2. `/bookmarks`
-3. `/target-companies`
-4. `/settings`
+1. `/settings` (and `/settings/profile`, which jumps to the profile section)
+2. `/login` and `/signup` signed out (no shell)
+3. `/explore` signed in and signed out
 
 Check:
-- search + filter controls wrap cleanly on mobile
-- right-hand detail panels stay legible on desktop
-- empty spacing does not feel accidental or underdesigned
-- supporting chips do not create horizontal scroll
+- the settings section index is a sticky column on desktop and a scrolling row on mobile
+- auth screens keep the form above the fold on phones
+- explore cards fill the grid without clipped titles
+
+The sample-data pages (`/weak-nodes`, `/scheduled-reviews`, `/target-companies`, `/notes`, `/bookmarks`) were retired in Phase 5 (ADR 0079). Their URLs redirect and need no visual pass.
 
 ## Sticky And Overflow Watch List
 
@@ -104,9 +100,7 @@ Pages with the highest sticky/overflow risk:
 - `/resume/1/heatmap`
 - latest live session route, for example `/interview/sessions/1`
 - matching completed result route, for example `/interview/sessions/1/result`
-- `/weak-nodes`
-- `/target-companies`
-- `/notes`
+- `/interview/records/1` and its transcript and simulate routes
 
 For each page above, verify:
 - no horizontal page scroll

@@ -101,6 +101,13 @@ Primary endpoints:
 
 The review screen sorts and badges items by `scheduledFor` and `priority`, and shows `questionDifficulty`. The archive has no filter metadata, so source and title filtering happen in the browser.
 
+### Current user and settings
+
+- `GET /api/me` returns `profile` (`nickname`, `jobRoleId`, `yearsOfExperience`, image fields), `settings`, `activeResumeVersionSummary`, and `targetCompanies`. It does not return the email or user id, so the settings page hides the email row.
+- `PATCH /api/me/profile` takes `nickname`, `jobRoleId`, and `yearsOfExperience`. There is no endpoint listing job roles, so the web app edits the name and years only.
+- `PATCH /api/me/settings` saves practice goals and `preferredLanguage`. Switching the language on the settings page applies it at once and saves it.
+- `PUT /api/me/target-companies` replaces the whole list. The settings page sends the full list on every add or remove.
+
 ### Resume
 
 Primary endpoints:

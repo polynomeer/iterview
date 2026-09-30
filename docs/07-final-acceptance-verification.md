@@ -1,150 +1,127 @@
 # 07-final-acceptance-verification
 
-Date: 2026-08-25
+Date: 2026-09-30 (rewritten after redesign Phase 5; the 2026-08-25 version referred to pages that no longer exist)
 
-This document records the current automated acceptance evidence for the redesigned `iterview` workspace.
+This document records the automated evidence for the redesigned `iterview` web app: which user journeys the tests cover, and how the build is checked. Manual visual QA is in `docs/08-manual-visual-qa-sweep.md`. Routes are listed in `apps/web/docs/03-routes-and-flows.md`.
 
-It does not replace manual visual QA. It captures which user journeys are already covered by local tests and build verification.
+## How To Verify
 
-## Broad Page Regression Sweep
+From `apps/web`:
+- `npm run build` runs the TypeScript check and the production bundle.
+- `npm run test:run` runs 46 test files with 266 tests as of 2026-09-30.
 
-Status: verified by automated tests
+From `apps/api`:
+- `./gradlew test` runs the Testcontainers integration tests, so Docker must be running.
 
-Evidence:
-- `npm run test -- HomePage PracticePage QuestionTreePage QuestionDetailPage AnswerEditorPage ResultAnalysisPage ReviewQueuePage WeakNodesPage ScheduledReviewsPage ArchivePage ResumePage ResumeAnalysisPage ResumeEditorPage ResumeHeatmapPage ResumeHeatmapAnchorPage ResumeTailorLandingPage ResumeTailorJobPostingsPage ResumeTailorAnalysisDetailPage InterviewPage InterviewSessionPage InterviewResultPage NotesPage BookmarksPage TargetCompaniesPage SettingsPage CommandPalette`
+## Journey Matrix
 
-Covered scope:
-- core home, practice, review, weak-node, resume, interview, notes, bookmarks, company-target, settings, and command-palette routes
-- redesigned copy expectations remain aligned with the rendered workspace surfaces
-- route-level transitions used by the main redesign journeys remain green in one broad regression pass
+### 1. Daily Practice
 
-## Automated Journey Matrix
-
-### 1. Daily Practice Journey
-
-Status: verified by automated tests
+Covered path: 오늘 → question → answer (focus mode) → evaluation → 복습.
 
 Evidence:
 - `apps/web/src/test/pages/HomePage.test.tsx`
-- `apps/web/src/test/pages/PracticePage.test.tsx`
-- `apps/web/src/test/pages/QuestionTreePage.test.tsx`
-
-Covered path:
-- home retry context renders correctly
-- practice filtering updates the active route state
-- practice can launch the first visible DFS map
-- question tree renders the branch hierarchy for exploration
-
-### 2. Question Exploration Journey
-
-Status: verified by automated tests
-
-Evidence:
-- `apps/web/src/test/pages/QuestionTreePage.test.tsx`
-- `apps/web/src/test/pages/QuestionDetailPage.test.tsx`
+- `apps/web/src/test/pages/QuestionWorkspacePage.test.tsx`
 - `apps/web/src/test/pages/AnswerEditorPage.test.tsx`
 - `apps/web/src/test/pages/ResultAnalysisPage.test.tsx`
+- `apps/web/src/test/pages/SkillMapPage.test.tsx`
+- `apps/web/src/test/entities/practiceModel.test.ts`
 
-Covered path:
-- tree view renders DFS structure
-- question detail preserves evidence and retry context
-- answer editor keeps drafting inside the active node workflow
-- result analysis keeps retry interpretation and next action visible
+### 2. Review
 
-### 3. Review And Retry Journey
-
-Status: verified by automated tests
+Covered path: questions due now, sorting, the week strip, later/done actions, and finished questions.
 
 Evidence:
-- `apps/web/src/test/pages/ReviewQueuePage.test.tsx`
-- `apps/web/src/test/pages/WeakNodesPage.test.tsx`
-- `apps/web/src/test/pages/ScheduledReviewsPage.test.tsx`
-- `apps/web/src/test/pages/ArchivePage.test.tsx`
+- `apps/web/src/test/pages/ReviewPages.test.tsx`
 
-Covered path:
-- review queue renders retry execution state
-- queue can route directly into weak-node remediation
-- scheduled reviews render as a dedicated planning workspace
-- archive preserves branch history and recovery context
+### 3. Resume Hub
 
-### 4. Resume Source-Of-Truth Authoring Journey
-
-Status: verified by automated tests
+Covered path: `/resume` redirect or first upload, overview, version management, evidence editor, pressure map and claim detail, and job-fit analyses.
 
 Evidence:
-- `apps/web/src/test/pages/ResumePage.test.tsx`
-- `apps/web/src/test/pages/ResumeAnalysisPage.test.tsx`
+- `apps/web/src/test/pages/ResumeHub.test.tsx`
 - `apps/web/src/test/pages/ResumeEditorPage.test.tsx`
 - `apps/web/src/test/pages/ResumeHeatmapPage.test.tsx`
 - `apps/web/src/test/pages/ResumeHeatmapAnchorPage.test.tsx`
-- `apps/web/src/test/pages/ResumeTailorLandingPage.test.tsx`
-- `apps/web/src/test/pages/ResumeTailorJobPostingsPage.test.tsx`
+- `apps/web/src/test/pages/ResumeTailorAnalysisListPage.test.tsx`
 - `apps/web/src/test/pages/ResumeTailorAnalysisDetailPage.test.tsx`
 
-Covered path:
-- resume library and active version surfaces render correctly
-- analysis and authoring links remain available from the main resume workspace
-- editor and heatmap flows stay within the same source-of-truth model
-- tailor flow remains connected to analysis and repair work
+### 4. Interview
 
-### 5. Interview Session To Result Continuity
-
-Status: verified by automated tests
+Covered path: launcher → live session (focus mode, graded against the session's resume version) → result. Real interviews: list, upload with an opt-out resume link, and record review including a replay launch.
 
 Evidence:
 - `apps/web/src/test/pages/InterviewPage.test.tsx`
 - `apps/web/src/test/pages/InterviewSessionPage.test.tsx`
 - `apps/web/src/test/pages/InterviewResultPage.test.tsx`
+- `apps/web/src/test/pages/PracticalInterviewListPage.test.tsx`
+- `apps/web/src/test/pages/PracticalInterviewReviewPage.test.tsx`
+
+### 5. Settings, Auth, And Explore
 
 Covered path:
-- interview setup remains resume-grounded
-- in-progress answers keep the user inside the live session
-- completed session submission navigates to the result route
-- result page keeps recovery direction and evidence mapping visible
-
-### 6. Notes, Bookmarks, Scheduling, And Company-Target Workspaces
-
-Status: verified by automated tests
+- Settings: profile, target companies, practice goals, language, and account on one page.
+- Auth: login and signup without the app shell.
+- Explore: the public feed, with a sign-in state for guests.
 
 Evidence:
-- `apps/web/src/test/pages/NotesPage.test.tsx`
-- `apps/web/src/test/pages/BookmarksPage.test.tsx`
-- `apps/web/src/test/pages/ScheduledReviewsPage.test.tsx`
-- `apps/web/src/test/pages/TargetCompaniesPage.test.tsx`
 - `apps/web/src/test/pages/SettingsPage.test.tsx`
+- `apps/web/src/test/pages/LoginPage.test.tsx`
+- `apps/web/src/test/pages/SignupPage.test.tsx`
+- `apps/web/src/test/pages/FeedPage.test.tsx`
+- `apps/web/src/test/providers/AuthBootstrap.test.tsx`
+
+### 6. Shell, Routing, And Navigation
 
 Covered path:
-- each secondary surface renders as a dedicated workspace
-- page-level desktop and interaction states remain available where implemented
-
-### 7. Global Command Palette Navigation
-
-Status: verified by automated tests
+- Area resolution and route ranking.
+- Every legacy URL redirect.
+- Focus-mode routes.
+- Protected routes and error boundaries.
+- Sidebar, including the resume version switcher.
+- Header titles and the command palette.
 
 Evidence:
+- `apps/web/src/test/router/appRoutes.test.tsx`
+- `apps/web/src/test/router/legacyRedirects.test.tsx`
+- `apps/web/src/test/router/ProtectedRoute.test.tsx`
+- `apps/web/src/test/router/RouteErrorBoundary.test.tsx`
+- `apps/web/src/test/widgets/SidebarNavigation.test.tsx`
+- `apps/web/src/test/widgets/AreaNavigation.test.tsx`
+- `apps/web/src/test/widgets/Header.test.tsx`
+- `apps/web/src/test/widgets/headerTitles.test.ts`
 - `apps/web/src/test/pages/CommandPalette.test.tsx`
 
-Covered path:
-- palette exposes questions, skills, resume evidence, companies, notes, and commands
-- keyboard navigation works for command execution
-- filtered search can jump into another workspace family directly
+### 7. Design System And Content Guards
 
-## Build Verification
+Covered rules:
+- Primitives behave accessibly.
+- No raw colors or font sizes appear outside `tokens.css`.
+- Text roles meet AA contrast.
+- New class names never collide with legacy styles.
+- `global.css` stays under 3,000 lines.
+- Korean and English message keys match.
+- No inline Korean/English copy (`isKorean`, `copy(ko, en)`) exists outside the message catalog.
+- Error messages are mapped for users.
+- Labels are localized.
 
-Latest local verification completed on 2026-08-25:
-- `npm run build`
-- broad workspace page regression sweep listed above
+Evidence:
+- `apps/web/src/test/shared/primitives/*.test.tsx`
+- `apps/web/src/test/shared/designTokens.test.ts`
+- `apps/web/src/test/shared/i18nCatalog.test.ts`
+- `apps/web/src/test/shared/i18nGuard.test.ts`
+- `apps/web/src/test/shared/api/errors.test.ts`
+- `apps/web/src/test/shared/labels.test.ts`
+- `apps/web/src/test/shared/LocaleProvider.test.tsx`
+- `apps/web/src/test/shared/theme.test.ts`
 
-## Remaining Manual Acceptance Work
+## Visual Evidence
 
-Still manual:
-- desktop visual sweep across the full route set
-- mobile visual sweep across the full route set
-- sticky rail and overflow review across long pages
+- Phase 5 CSS pruning and co-location were checked with full-page screenshots against the local API and demo data. Fifteen routes at 1440px and 390px were compared: the editor tabs, record review, and the rebuilt screens. They were pixel-identical before and after.
+- The real-data route sweeps at the end of Phases 3–5 found no crash and no horizontal scroll at 1440px or 390px.
 
-Manual sweep reference:
-- `docs/08-manual-visual-qa-sweep.md`
+## Known Gaps
 
-Already closed by automated + implementation evidence:
-- the product now reads as one continuous interview workspace at the route and copy level
-- redesigned page copy used in the verified workspace families is aligned with current tests
+- One API integration test fails on `main`, independent of the web redesign: `InterviewSessionApiIntegrationTest > replay mock session seeds imported practical interview questions`.
+- The profile's job role can't be edited from the web app. The API takes a `jobRoleId` but has no endpoint that lists roles.
+- The evidence editor and the interview record review keep their legacy styling, now in `legacy-*.css` next to each screen.

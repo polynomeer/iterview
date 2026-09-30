@@ -461,6 +461,26 @@ Deferred:
 2. Delete unused CSS (target: `global.css` < 3,000 lines, remainder co-located). Remove the remaining `isKorean` ternaries.
 3. Update `docs/07-final-acceptance-verification.md` and `docs/08-manual-visual-qa-sweep.md` to the new route list.
 
+**Status (2026-09-30): done.**
+
+| Item | Outcome |
+| --- | --- |
+| 설정 merge | Profile, target companies (real `/api/me/target-companies`), practice goals, language and theme, and log out are on one `/settings` page with a section index. `/settings/profile` jumps to the profile section. The local-only notification controls, which changed nothing, are gone (`9785231`). |
+| Sample-data pages | `/weak-nodes`, `/scheduled-reviews`, `/target-companies`, `/notes`, and `/bookmarks` are deleted, and their URLs redirect (ADR 0079, `963f575`). 보관함 stays unshipped until notes and bookmarks have APIs. |
+| Remaining screens | Login and signup share one shell-less screen from the mockup and are no longer prefilled with demo credentials (`b481598`). `/explore` is rebuilt on primitives (`763116a`). The 404 page already used the shared state. |
+| Strings | All copy moved to per-namespace catalog files with placeholders (ADR 0080, `f44212c`, `f40b97d`, `4dcc493`, `f162f9f`, `677f1ba`, `ec4137c`). Roughly 1,600 `isKorean` uses and 560 `copy(ko, en)` calls went to zero. A guard test keeps it that way (`4fdd4ba`). 1,206 unused `messages.ts` keys and dead components and hooks were removed (`55432d1`). |
+| CSS | Every unreferenced legacy selector is pruned (`674c17f`). Rules used only by the evidence editor or the record review moved into `legacy-*.css` next to them (`619f267`). `global.css` is 2,974 lines, down from 14,175 at the start of the phase and 26,488 before the redesign. A test caps it under 3,000. Screenshots of 15 routes at 1440px and 390px are pixel-identical before and after. |
+| Docs | `docs/07` is rewritten against the current tests. `docs/08` and the web route, architecture, and API docs list the current routes. |
+
+Found and fixed along the way:
+- **Unsaved field:** the profile form sent a free-text `jobRole` that the API silently dropped, since it only accepts `jobRoleId` (`0e3495e`). Editing the role needs a job-roles endpoint.
+
+Still open after the redesign:
+- The evidence editor's per-claim form (상황 / 역할 / 측정 방법 / 결과) and a restyle of the interview record review. Both still render with their co-located legacy CSS.
+- A token-based light theme (ADR 0075). The theme choices still differ only on legacy screens.
+- 보관함, once notes and bookmarks APIs exist.
+- One API integration test (`replay mock session seeds imported practical interview questions`) fails on `main`, independent of the web work.
+
 ---
 
 ## 6. Risks and open questions
