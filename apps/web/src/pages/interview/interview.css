@@ -1,0 +1,46 @@
+/* 면접 · 모의면접 setup (docs/09 §4.4, mockup 07-interview). Token-only styles. */
+
+.interview-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); gap: var(--iv-space-5); align-items: start; }
+.interview-aside { display: flex; flex-direction: column; gap: var(--iv-space-4); min-width: 0; }
+
+.interview-setup { display: flex; flex-direction: column; gap: var(--iv-space-6); }
+
+.interview-step { display: flex; flex-direction: column; align-items: flex-start; gap: var(--iv-space-2); min-width: 0; margin: 0; padding: 0; border: 0; }
+.interview-step legend { margin-bottom: var(--iv-space-2); padding: 0; color: var(--iv-text); font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); }
+.interview-step .ui-segmented { flex-wrap: wrap; }
+
+.interview-hint { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+.interview-card-title { margin: 0 0 var(--iv-space-2); font-size: var(--iv-text-lg); font-weight: var(--iv-weight-semibold); }
+.interview-aside .ui-button--full { margin-top: var(--iv-space-4); }
+
+.interview-basis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--iv-space-3); width: 100%; }
+
+.interview-basis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--iv-space-3);
+  padding: var(--iv-space-4);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-md);
+  background: var(--iv-surface);
+  cursor: pointer;
+}
+
+.interview-basis input { margin-top: 3px; accent-color: var(--iv-accent); }
+.interview-basis:focus-within { box-shadow: var(--iv-focus-ring); }
+.interview-basis--checked { border-color: var(--iv-accent); background: var(--iv-accent-soft); }
+.interview-basis--disabled { cursor: not-allowed; opacity: 0.6; }
+.interview-basis__copy { display: flex; flex-direction: column; gap: var(--iv-space-1); min-width: 0; }
+.interview-basis__copy strong { color: var(--iv-text); }
+.interview-basis__copy span { color: var(--iv-text-muted); font-size: var(--iv-text-sm); overflow-wrap: anywhere; }
+
+.interview-row-actions { display: inline-flex; align-items: center; gap: var(--iv-space-2); }
+.interview-score { font-size: var(--iv-text-lg); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 960px) {
+  .interview-layout { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .interview-basis-grid { grid-template-columns: minmax(0, 1fr); }
+}

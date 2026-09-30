@@ -104,6 +104,7 @@ export type InterviewSessionListItemModel = {
   questionCount: number;
   answeredCount: number;
   averageScoreLabel: string | null;
+  averageScore: number | null;
 };
 
 export type InterviewCoverageModel = {
@@ -413,6 +414,7 @@ export function mapInterviewSessionListResponseDtoToModel(
           session.averageScore === null || session.averageScore === undefined
             ? null
             : `${Math.round(session.averageScore)}`,
+        averageScore: session.averageScore ?? null,
       },
     }))
     .sort((left, right) => right.sortTime - left.sortTime)
