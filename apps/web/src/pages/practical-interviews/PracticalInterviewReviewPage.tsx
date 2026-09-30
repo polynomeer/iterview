@@ -586,6 +586,51 @@ export function PracticalInterviewReviewPage() {
     [reviewQuery.data?.questionSummaries],
   );
 
+  // Hooks must run before the loading/error early returns below.
+  const playbackSourceAudioFileUrl = (
+    reviewQuery.data?.playback ?? transcriptQuery.data?.playback ?? questionsQuery.data?.playback ?? null
+  )?.sourceAudioFileUrl;
+  useEffect(() => {
+    if (!recordId || !playbackSourceAudioFileUrl || typeof URL.createObjectURL !== "function") {
+      setAudioSourceUrl(null);
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    let active = true;
+    let objectUrl: string | null = null;
+
+    setAudioSourceUrl(null);
+    void getInterviewRecordAudioRequest(recordId, controller.signal)
+      .then((audioBlob) => {
+        if (!active) {
+          return;
+        }
+        objectUrl = URL.createObjectURL(audioBlob);
+        setAudioSourceUrl(objectUrl);
+      })
+      .catch((error: unknown) => {
+        if (active && !(error instanceof DOMException && error.name === "AbortError")) {
+          setAudioSourceUrl(null);
+        }
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [playbackSourceAudioFileUrl, recordId]);
+  const activePlaybackSegmentSequence = useMemo(
+    () =>
+      (transcriptQuery.data?.segments ?? []).find(
+        (segment) => currentTimeMs >= segment.startMs && currentTimeMs <= segment.endMs,
+      )?.sequence ?? null,
+    [currentTimeMs, transcriptQuery.data?.segments],
+  );
+
   if (!recordId) {
     return (
       <PageContainer
@@ -878,46 +923,6 @@ export function PracticalInterviewReviewPage() {
           : "Stabilize active lane";
   const playback = review.playback ?? transcript.playback ?? questions.playback ?? null;
 
-  useEffect(() => {
-    if (!recordId || !playback?.sourceAudioFileUrl || typeof URL.createObjectURL !== "function") {
-      setAudioSourceUrl(null);
-      return undefined;
-    }
-
-    const controller = new AbortController();
-    let active = true;
-    let objectUrl: string | null = null;
-
-    setAudioSourceUrl(null);
-    void getInterviewRecordAudioRequest(recordId, controller.signal)
-      .then((audioBlob) => {
-        if (!active) {
-          return;
-        }
-        objectUrl = URL.createObjectURL(audioBlob);
-        setAudioSourceUrl(objectUrl);
-      })
-      .catch((error: unknown) => {
-        if (active && !(error instanceof DOMException && error.name === "AbortError")) {
-          setAudioSourceUrl(null);
-        }
-      });
-
-    return () => {
-      active = false;
-      controller.abort();
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
-    };
-  }, [playback?.sourceAudioFileUrl, recordId]);
-  const activePlaybackSegmentSequence = useMemo(
-    () =>
-      transcript.segments.find(
-        (segment) => currentTimeMs >= segment.startMs && currentTimeMs <= segment.endMs,
-      )?.sequence ?? null,
-    [currentTimeMs, transcript.segments],
-  );
 
   function changeTab(tab: ReviewTab) {
     const next = new URLSearchParams(searchParams);
