@@ -7,7 +7,6 @@ import { useCreateResumeAnalysisExportMutation } from "../../features/resume-tai
 import { useResumeAnalysisDetailQuery } from "../../features/resume-tailor/api/useResumeAnalysisDetailQuery";
 import { useResumeAnalysisExportsQuery } from "../../features/resume-tailor/api/useResumeAnalysisExportsQuery";
 import { useToggleResumeAnalysisSuggestionMutation } from "../../features/resume-tailor/api/useToggleResumeAnalysisSuggestionMutation";
-import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { renderWithProviders } from "../utils";
 
 vi.mock("../../features/resume-tailor/api/useResumeAnalysisDetailQuery", () => ({
@@ -25,12 +24,9 @@ vi.mock("../../features/resume-tailor/api/useToggleResumeAnalysisSuggestionMutat
 vi.mock("../../features/resume-tailor/api/useCreateResumeAnalysisExportMutation", () => ({
   useCreateResumeAnalysisExportMutation: vi.fn(),
 }));
-vi.mock("../../features/resume/api/useResumeVersionSnapshotsQuery", () => ({
-  useResumeVersionSnapshotsQuery: vi.fn(),
-}));
 
 describe("ResumeTailorAnalysisDetailPage", () => {
-  it("renders tailored preview, toggles suggestions, and creates exports", () => {
+  it("shows fit, applies a rewrite, and creates a PDF", () => {
     const toggleMutateAsync = vi.fn();
     const exportMutateAsync = vi.fn();
 
@@ -39,6 +35,7 @@ describe("ResumeTailorAnalysisDetailPage", () => {
         id: "analysis-1",
         matchSummary: "Strong cache and platform match.",
         statusLabel: "Completed",
+        overallScore: 82,
         overallScoreLabel: "82",
         suggestions: [
           {
@@ -101,6 +98,8 @@ describe("ResumeTailorAnalysisDetailPage", () => {
         fetchStatusLabel: "Completed",
         parsedSummary: "Backend Engineer focused on Redis and Kafka.",
         parsedKeywords: ["Redis", "Kafka"],
+        parsedRequirements: ["Redis 운영"],
+        sourceUrl: null,
       },
       isLoading: false,
       isError: false,
@@ -108,38 +107,19 @@ describe("ResumeTailorAnalysisDetailPage", () => {
       refetch: vi.fn(),
     } as never);
     vi.mocked(useToggleResumeAnalysisSuggestionMutation).mockReturnValue({
-      mutateAsync: toggleMutateAsync,
+      mutate: toggleMutateAsync,
       isPending: false,
       isError: false,
       error: null,
       reset: vi.fn(),
     } as never);
     vi.mocked(useCreateResumeAnalysisExportMutation).mockReturnValue({
-      mutateAsync: exportMutateAsync,
+      mutate: exportMutateAsync,
       isPending: false,
       isError: false,
       error: null,
       reset: vi.fn(),
     } as never);
-    vi.mocked(useResumeVersionSnapshotsQuery).mockReturnValue({
-      data: {
-        profile: {
-          fullName: "Alex Kim",
-          headline: "Backend Engineer",
-          summaryText: "Built platform APIs.",
-          locationText: null,
-          yearsOfExperienceText: null,
-        },
-        skills: [],
-        experiences: [],
-        projects: [],
-      },
-      isLoading: false,
-      isError: false,
-      error: null,
-      refetch: vi.fn(),
-    } as never);
-
     renderWithProviders(
       <Routes>
         <Route
@@ -150,17 +130,15 @@ describe("ResumeTailorAnalysisDetailPage", () => {
       { route: "/resume/version-1/tailor/analysis-1", locale: "ko" },
     );
 
-    expect(screen.getByText("저장된 맞춤 문서")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Example Corp · Backend Engineer" })).toBeInTheDocument();
+    expect(screen.getByText("82")).toBeInTheDocument();
+    expect(screen.getByText("Kafka")).toBeInTheDocument();
     expect(screen.getByText("Tailored summary line")).toBeInTheDocument();
-    expect(screen.getByText("Example Corp · Backend Engineer")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "제안 수락" }));
-    expect(toggleMutateAsync).toHaveBeenCalledWith({
-      suggestionId: "suggestion-1",
-      accepted: true,
-    });
+    fireEvent.click(screen.getByRole("button", { name: "반영" }));
+    expect(toggleMutateAsync).toHaveBeenCalledWith({ suggestionId: "suggestion-1", accepted: true });
 
-    fireEvent.click(screen.getByRole("button", { name: "PDF 내보내기 만들기" }));
+    fireEvent.click(screen.getByRole("button", { name: "PDF 만들기" }));
     expect(exportMutateAsync).toHaveBeenCalledTimes(1);
   });
 });

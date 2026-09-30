@@ -29,8 +29,7 @@ const ResumeIndexPage = lazy(() => import("../pages/resume/ResumeIndexPage").the
 const ResumeHubLayout = lazy(() => import("../pages/resume/ResumeHubLayout").then((module) => ({ default: module.ResumeHubLayout })));
 const ResumeOverviewTab = lazy(() => import("../pages/resume/ResumeOverviewTab").then((module) => ({ default: module.ResumeOverviewTab })));
 const ResumeVersionsTab = lazy(() => import("../pages/resume/ResumeVersionsTab").then((module) => ({ default: module.ResumeVersionsTab })));
-const ResumeTailorLandingPage = lazy(() => import("../pages/resume-tailor/ResumeTailorLandingPage").then((module) => ({ default: module.ResumeTailorLandingPage })));
-const ResumeTailorJobPostingsPage = lazy(() => import("../pages/resume-tailor/ResumeTailorJobPostingsPage").then((module) => ({ default: module.ResumeTailorJobPostingsPage })));
+const ResumeTailorRedirect = lazy(() => import("../pages/resume-tailor/ResumeTailorRedirect").then((module) => ({ default: module.ResumeTailorRedirect })));
 const ResumeTailorAnalysisListPage = lazy(() => import("../pages/resume-tailor/ResumeTailorAnalysisListPage").then((module) => ({ default: module.ResumeTailorAnalysisListPage })));
 const ResumeTailorAnalysisDetailPage = lazy(() => import("../pages/resume-tailor/ResumeTailorAnalysisDetailPage").then((module) => ({ default: module.ResumeTailorAnalysisDetailPage })));
 const ResumeHeatmapPage = lazy(() => import("../pages/resume-heatmap/ResumeHeatmapPage").then((module) => ({ default: module.ResumeHeatmapPage })));
@@ -160,11 +159,11 @@ export const appRoutes: RouteObject[] = [
               },
               {
                 path: routeConfig.resumeTailor.path,
-                element: withSuspense(<ResumeTailorLandingPage />),
+                element: withSuspense(<ResumeTailorRedirect />),
               },
               {
                 path: routeConfig.resumeTailorJobPostings.path,
-                element: withSuspense(<ResumeTailorJobPostingsPage />),
+                element: withSuspense(<ResumeTailorRedirect />),
               },
               {
                 path: routeConfig.interview.path,
