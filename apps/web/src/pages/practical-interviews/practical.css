@@ -1,0 +1,58 @@
+/* 면접 · 실전 면접 복기 list and upload (docs/09 §4.4). Token-only styles. */
+
+.practical-upload { max-width: 48rem; }
+.practical-form { display: flex; flex-direction: column; gap: var(--iv-space-6); }
+
+.practical-step { display: flex; flex-direction: column; align-items: flex-start; gap: var(--iv-space-3); min-width: 0; margin: 0; padding: 0; border: 0; }
+.practical-step legend { margin-bottom: var(--iv-space-2); padding: 0; color: var(--iv-text); font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); }
+.practical-step > .ui-field,
+.practical-step > details { align-self: stretch; }
+
+.practical-muted { color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.practical-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  gap: var(--iv-space-1);
+  padding: var(--iv-space-8) var(--iv-space-4);
+  border: 1px dashed var(--iv-border-strong);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface-sunken);
+  text-align: center;
+  cursor: pointer;
+}
+
+.practical-drop:hover { border-color: var(--iv-accent); }
+.practical-step:focus-within .practical-drop { box-shadow: var(--iv-focus-ring); }
+
+.practical-file {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  justify-content: space-between;
+  gap: var(--iv-space-3);
+  padding: var(--iv-space-3) var(--iv-space-4);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-md);
+  background: var(--iv-surface-sunken);
+  overflow-wrap: anywhere;
+}
+
+.practical-recorder { display: flex; flex-direction: column; align-items: flex-start; gap: var(--iv-space-3); }
+
+.practical-check { display: flex; align-items: flex-start; gap: var(--iv-space-2); color: var(--iv-text); font-size: var(--iv-text-sm); line-height: var(--iv-leading-body); cursor: pointer; }
+.practical-check input { margin-top: 3px; accent-color: var(--iv-accent); }
+
+.practical-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--iv-space-3); align-self: stretch; }
+
+.practical-transcript summary { color: var(--iv-accent-text); font-size: var(--iv-text-sm); cursor: pointer; }
+.practical-transcript[open] summary { margin-bottom: var(--iv-space-3); }
+
+.practical-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--iv-space-3); }
+.practical-row-actions { display: inline-flex; align-items: center; gap: var(--iv-space-2); }
+
+@media (max-width: 600px) {
+  .practical-grid { grid-template-columns: minmax(0, 1fr); }
+}

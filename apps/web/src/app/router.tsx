@@ -39,6 +39,7 @@ const InterviewPage = lazy(() => import("../pages/interview/InterviewPage").then
 const InterviewSessionPage = lazy(() => import("../pages/interview-session/InterviewSessionPage").then((module) => ({ default: module.InterviewSessionPage })));
 const InterviewResultPage = lazy(() => import("../pages/interview-result/InterviewResultPage").then((module) => ({ default: module.InterviewResultPage })));
 const PracticalInterviewListPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewListPage").then((module) => ({ default: module.PracticalInterviewListPage })));
+const PracticalInterviewUploadPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewUploadPage").then((module) => ({ default: module.PracticalInterviewUploadPage })));
 const PracticalInterviewReviewPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewReviewPage").then((module) => ({ default: module.PracticalInterviewReviewPage })));
 // Development-only primitives reference; Vite drops this import from production bundles.
 const UiGalleryPage = import.meta.env.DEV
@@ -175,7 +176,7 @@ export const appRoutes: RouteObject[] = [
               },
               {
                 path: routeConfig.practicalInterviewUpload.path,
-                element: withSuspense(<PracticalInterviewListPage />),
+                element: withSuspense(<PracticalInterviewUploadPage />),
               },
               {
                 path: routeConfig.practicalInterviewDetail.path,

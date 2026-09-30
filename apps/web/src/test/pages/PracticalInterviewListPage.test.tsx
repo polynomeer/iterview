@@ -1,111 +1,92 @@
-import { fireEvent, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { screen, waitFor } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
-import { PracticalInterviewListPage } from "../../pages/practical-interviews/PracticalInterviewListPage";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useCreateInterviewRecordMutation } from "../../features/practical-interview/api/useCreateInterviewRecordMutation";
 import { useInterviewRecordListQuery } from "../../features/practical-interview/api/useInterviewRecordListQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
-import { renderWithProviders } from "../utils";
+import { PracticalInterviewListPage } from "../../pages/practical-interviews/PracticalInterviewListPage";
+import { PracticalInterviewUploadPage } from "../../pages/practical-interviews/PracticalInterviewUploadPage";
+import { LocationDisplay, renderWithProviders } from "../utils";
 
-vi.mock("../../features/practical-interview/api/useInterviewRecordListQuery", () => ({
-  useInterviewRecordListQuery: vi.fn(),
-}));
+vi.mock("../../features/practical-interview/api/useInterviewRecordListQuery", () => ({ useInterviewRecordListQuery: vi.fn() }));
+vi.mock("../../features/practical-interview/api/useCreateInterviewRecordMutation", () => ({ useCreateInterviewRecordMutation: vi.fn() }));
+vi.mock("../../features/resume/api/useResumeListQuery", () => ({ useResumeListQuery: vi.fn() }));
 
-vi.mock("../../features/practical-interview/api/useCreateInterviewRecordMutation", () => ({
-  useCreateInterviewRecordMutation: vi.fn(),
-}));
+const createRecord = vi.fn();
 
-vi.mock("../../features/resume/api/useResumeListQuery", () => ({
-  useResumeListQuery: vi.fn(),
-}));
+beforeEach(() => {
+  createRecord.mockReset().mockResolvedValue({ id: "record-9" });
+  vi.mocked(useCreateInterviewRecordMutation).mockReturnValue({ mutateAsync: createRecord, isPending: false, error: null } as never);
+  vi.mocked(useResumeListQuery).mockReturnValue({
+    data: { items: [{ id: "resume-1", title: "Backend Resume", versions: [{ id: "version-1", versionNumberLabel: "Version 1", isActive: true, parsingStatus: "completed" }] }] },
+    isLoading: false,
+    isError: false,
+  } as never);
+});
 
 describe("PracticalInterviewListPage", () => {
-  it("renders uploaded record list and the expandable upload form", () => {
+  it("lists interviews with a plain status and links to each", () => {
     vi.mocked(useInterviewRecordListQuery).mockReturnValue({
       data: [
-        {
-          id: "record-1",
-          title: "Datadog · Backend Engineer",
-          interviewTypeLabel: "Onsite",
-          interviewDateLabel: "Mar 15, 2026",
-          transcriptStatus: "processing",
-          transcriptStatusLabel: "Processing",
-          transcriptStatusTone: "accent",
-          transcriptRetryCount: 1,
-          transcriptNextRetryAtLabel: "Mar 16, 2026, 9:45 AM",
-          analysisStatus: "completed",
-          analysisStatusLabel: "Completed",
-          questionCount: 6,
-        },
+        { id: "record-1", title: "Datadog · Backend Engineer", interviewType: "onsite", interviewDateLabel: "2026년 3월 15일", transcriptStatus: "processing", questionCount: 0 },
+        { id: "record-2", title: "Toss · Server", interviewType: "virtual", interviewDateLabel: "2026년 3월 1일", transcriptStatus: "confirmed", questionCount: 6 },
       ],
       isLoading: false,
       isError: false,
-      error: null,
-      refetch: vi.fn(),
     } as never);
-    vi.mocked(useResumeListQuery).mockReturnValue({
-      data: {
-        items: [
-          {
-            id: "resume-1",
-            title: "Backend Resume",
-            versions: [
-              {
-                id: "version-1",
-                versionNumberLabel: "Version 1",
-                uploadedAtLabel: "Mar 12, 2026",
-                isActive: true,
-                parsingStatus: "completed",
-                parsingStatusLabel: "Completed",
-              },
-            ],
-          },
-        ],
-      },
-      isLoading: false,
-      isError: false,
-    } as never);
-    vi.mocked(useCreateInterviewRecordMutation).mockReturnValue({
-      mutateAsync: vi.fn(),
-      isPending: false,
-      isError: false,
-      error: null,
-      reset: vi.fn(),
-    } as never);
+    renderWithProviders(<PracticalInterviewListPage />, { route: "/interview/records", locale: "ko" });
 
+    expect(screen.getByRole("heading", { level: 1, name: "실전 면접 복기" })).toBeInTheDocument();
+    expect(screen.getByText("대본 만드는 중")).toBeInTheDocument();
+    expect(screen.getByText("질문 6개")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "열기" })[1]).toHaveAttribute("href", "/interview/records/record-2");
+    expect(screen.getByRole("link", { name: "면접 기록 추가" })).toHaveAttribute("href", "/interview/records/upload");
+  });
+});
+
+describe("PracticalInterviewUploadPage", () => {
+  function renderUpload() {
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewListPage />} path="/interview/records" />
+        <Route element={<PracticalInterviewUploadPage />} path="/interview/records/upload" />
+        <Route element={<LocationDisplay />} path="/interview/records/:recordId" />
       </Routes>,
-      { route: "/interview/records", locale: "ko" },
+      { route: "/interview/records/upload", locale: "ko" },
     );
+  }
 
-    expect(screen.getByText("복구 리뷰를 열기 전에 실제 면접 근거를 가져오세요")).toBeInTheDocument();
-    expect(screen.getByText("Datadog · Backend Engineer")).toBeInTheDocument();
-    expect(screen.getByText("전사 Processing")).toBeInTheDocument();
-    expect(screen.getByText("재시도 1")).toBeInTheDocument();
-    expect(screen.getByText("다음 재시도 Mar 16, 2026, 9:45 AM")).toBeInTheDocument();
-    expect(screen.getByText("가져오기 원칙")).toBeInTheDocument();
-    expect(screen.getByText("큐 운영 원칙")).toBeInTheDocument();
+  it("uploads the audio linked to the active resume by default", async () => {
+    renderUpload();
+    await userEvent.click(screen.getByRole("button", { name: "올리고 분석 시작" }));
+    expect(screen.getByText("면접 녹음 파일이 필요해요.")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "면접 업로드" }));
+    const audio = new File(["x"], "interview.m4a", { type: "audio/mp4" });
+    await userEvent.upload(screen.getByLabelText(/오디오 파일 선택/), audio);
+    await userEvent.type(screen.getByLabelText("회사"), "Datadog");
+    expect(screen.getByRole("checkbox", { name: /이력서\(Backend Resume · Version 1\)/ })).toBeChecked();
+    await userEvent.click(screen.getByRole("button", { name: "올리고 분석 시작" }));
 
-    expect(screen.getByText("면접 기록 만들기")).toBeInTheDocument();
-    expect(screen.getByText("권장 사용")).toBeInTheDocument();
-    expect(screen.getByLabelText("회사")).toBeInTheDocument();
-    expect(screen.getByLabelText("연결할 이력서 버전")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByTestId("location-display")).toHaveTextContent("/interview/records/record-9"));
+    const payload = createRecord.mock.calls[0][0] as FormData;
+    expect(payload.get("companyName")).toBe("Datadog");
+    expect(payload.get("linkedResumeVersionId")).toBe("version-1");
+    expect(payload.get("file")).toBeInstanceOf(File);
+  });
+
+  it("lets the user opt out of linking the resume and requires consent before recording", async () => {
+    renderUpload();
+    await userEvent.click(screen.getByRole("radio", { name: "지금 녹음하기" }));
     expect(screen.getByRole("button", { name: "녹음 시작" })).toBeDisabled();
-    expect(
-      screen.getByText("면접 연습 녹음을 이 기기에서 만들고, 기록 생성 시 서버에 업로드하는 것에 동의합니다."),
-    ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("checkbox"));
-
+    await userEvent.click(screen.getByRole("checkbox", { name: /동의해요/ }));
     expect(screen.getByRole("button", { name: "녹음 시작" })).toBeEnabled();
-    expect(
-      screen.getByText(
-        "선택 사항입니다. 비워두면 서버가 오디오에서 전사를 추출하고 이후 처리를 계속합니다.",
-      ),
-    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("radio", { name: "파일 올리기" }));
+    await userEvent.upload(screen.getByLabelText(/오디오 파일 선택/), new File(["x"], "a.mp3", { type: "audio/mpeg" }));
+    await userEvent.click(screen.getByRole("checkbox", { name: /이력서/ }));
+    await userEvent.click(screen.getByRole("button", { name: "올리고 분석 시작" }));
+
+    await waitFor(() => expect(createRecord).toHaveBeenCalled());
+    expect((createRecord.mock.calls[0][0] as FormData).get("linkedResumeVersionId")).toBeNull();
   });
 });
