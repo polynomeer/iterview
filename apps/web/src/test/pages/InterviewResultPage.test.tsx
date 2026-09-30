@@ -265,9 +265,9 @@ describe("InterviewResultPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<InterviewResultPage />} path="/interviews/:sessionId/result" />
+        <Route element={<InterviewResultPage />} path="/interview/sessions/:sessionId/result" />
       </Routes>,
-      { route: "/interviews/session-14/result", locale: "ko" },
+      { route: "/interview/sessions/session-14/result", locale: "ko" },
     );
 
     expect(screen.getByText("구조화된 이력서 범위")).toBeInTheDocument();

@@ -81,9 +81,9 @@ describe("ResumeTailorLandingPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumeTailorLandingPage />} path="/resume-tailor" />
+        <Route element={<ResumeTailorLandingPage />} path="/resume/tailor" />
       </Routes>,
-      { route: "/resume-tailor", locale: "ko" },
+      { route: "/resume/tailor", locale: "ko" },
     );
 
     expect(

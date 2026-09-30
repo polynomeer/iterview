@@ -1,11 +1,12 @@
 import { Suspense, lazy, type ReactNode } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, type RouteObject } from "react-router-dom";
 import { routeConfig } from "../shared/config/routes";
 import { useLocale } from "../shared/i18n";
 import { PageSkeleton } from "../shared/ui/primitives";
 import { AppLayout } from "../widgets/layout/AppLayout";
 import { NotFoundPage } from "../pages/not-found/NotFoundPage";
 import { ProtectedRoute } from "./router/ProtectedRoute";
+import { legacyRedirectRoutes } from "./router/legacyRedirects";
 import { RouteErrorBoundary } from "./router/RouteErrorBoundary";
 
 const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({ default: module.HomePage })));
@@ -56,7 +57,7 @@ function withSuspense(node: ReactNode) {
   return <Suspense fallback={<RouteLoadingFallback />}>{node}</Suspense>;
 }
 
-const router = createBrowserRouter([
+export const appRoutes: RouteObject[] = [
   {
     element: <AppLayout />,
     errorElement: <RouteErrorBoundary />,
@@ -201,23 +202,11 @@ const router = createBrowserRouter([
                 element: withSuspense(<PracticalInterviewReviewPage />),
               },
               {
-                path: "/interview",
-                element: withSuspense(<InterviewPage />),
-              },
-              {
                 path: routeConfig.interviewSession.path,
                 element: withSuspense(<InterviewSessionPage />),
               },
               {
-                path: "/interview/sessions/:sessionId",
-                element: withSuspense(<InterviewSessionPage />),
-              },
-              {
                 path: routeConfig.interviewSessionResult.path,
-                element: withSuspense(<InterviewResultPage />),
-              },
-              {
-                path: "/interview/sessions/:sessionId/result",
                 element: withSuspense(<InterviewResultPage />),
               },
             ],
@@ -230,6 +219,7 @@ const router = createBrowserRouter([
             path: routeConfig.signup.path,
             element: withSuspense(<SignupPage />),
           },
+          ...legacyRedirectRoutes,
           ...(UiGalleryPage ? [{ path: "/__ui", element: withSuspense(<UiGalleryPage />) }] : []),
           {
             path: "*",
@@ -239,7 +229,9 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+const router = createBrowserRouter(appRoutes);
 
 export function AppRouter() {
   return <RouterProvider router={router} />;

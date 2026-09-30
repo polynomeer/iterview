@@ -1,52 +1,31 @@
-import { NavLink } from "react-router-dom";
-import { tabRoutes } from "../../shared/config/routes";
+import { Link, useLocation } from "react-router-dom";
+import { PRIMARY_AREAS, resolveNavLocation } from "../../shared/config/navigation";
 import { useLocale } from "../../shared/i18n";
-import { Icon, type IconName } from "../../shared/ui/primitives";
-
-const TAB_ICONS: Record<string, IconName> = {
-  "/": "today",
-  "/practice": "questions",
-  "/archive": "archive",
-  "/feed": "feed",
-  "/profile": "profile",
-};
+import { Icon } from "../../shared/ui/primitives";
 
 export function BottomTabBar() {
   const { t } = useLocale();
-
-  function getRouteLabel(path: string) {
-    switch (path) {
-      case "/":
-        return t("navigation.home");
-      case "/practice":
-        return t("navigation.practice");
-      case "/archive":
-        return t("navigation.archive");
-      case "/feed":
-        return t("navigation.feed");
-      case "/profile":
-        return t("navigation.profile");
-      default:
-        return path;
-    }
-  }
+  const { pathname } = useLocation();
+  const activeArea = resolveNavLocation(pathname).area;
 
   return (
-    <nav aria-label={t("sidebar.workspace")} className="bottom-tab-bar">
-      {tabRoutes.map((route) => (
-        <NavLink
-          key={route.path}
-          className={({ isActive }) =>
-            `bottom-tab-bar__link${isActive ? " bottom-tab-bar__link--active" : ""}`
-          }
-          to={route.buildPath()}
-        >
-          <span aria-hidden="true" className="bottom-tab-bar__icon">
-            <Icon name={TAB_ICONS[route.path] ?? "today"} size={20} />
-          </span>
-          <span>{getRouteLabel(route.path)}</span>
-        </NavLink>
-      ))}
+    <nav aria-label={t("nav.primaryNavigation")} className="bottom-tab-bar">
+      {PRIMARY_AREAS.map((area) => {
+        const isActive = activeArea?.id === area.id;
+        return (
+          <Link
+            aria-current={isActive ? "page" : undefined}
+            className={`bottom-tab-bar__link${isActive ? " bottom-tab-bar__link--active" : ""}`}
+            key={area.id}
+            to={area.to}
+          >
+            <span aria-hidden="true" className="bottom-tab-bar__icon">
+              <Icon name={area.icon} size={20} />
+            </span>
+            <span>{t(area.labelKey)}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }

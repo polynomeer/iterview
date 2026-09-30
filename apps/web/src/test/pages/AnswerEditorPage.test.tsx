@@ -110,7 +110,7 @@ describe("AnswerEditorPage", () => {
       contentText: "I led a staged refactor across three services.",
     });
     expect(clearDraftMock).toHaveBeenCalled();
-    expect(navigateMock).toHaveBeenCalledWith("/answer-attempts/attempt-9/result");
+    expect(navigateMock).toHaveBeenCalledWith("/attempts/attempt-9");
   });
 
   it("renders the desktop answer workspace when the layout mode is desktop", () => {

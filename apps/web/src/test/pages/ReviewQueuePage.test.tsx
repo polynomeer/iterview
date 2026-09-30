@@ -45,9 +45,9 @@ describe("ReviewQueuePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ReviewQueuePage />} path="/review-queue" />
+        <Route element={<ReviewQueuePage />} path="/review" />
       </Routes>,
-      { route: "/review-queue" },
+      { route: "/review" },
     );
 
     expect(
@@ -108,15 +108,15 @@ describe("ReviewQueuePage", () => {
               <LocationDisplay />
             </>
           }
-          path="/review-queue"
+          path="/review"
         />
-        <Route element={<LocationDisplay />} path="/archive" />
+        <Route element={<LocationDisplay />} path="/review/done" />
       </Routes>,
-      { route: "/review-queue" },
+      { route: "/review" },
     );
 
     await user.click(screen.getByRole("link", { name: /Archive/ }));
 
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/archive");
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/review/done");
   });
 });

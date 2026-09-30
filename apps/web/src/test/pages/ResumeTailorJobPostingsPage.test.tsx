@@ -49,9 +49,9 @@ describe("ResumeTailorJobPostingsPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumeTailorJobPostingsPage />} path="/resume-tailor/job-postings" />
+        <Route element={<ResumeTailorJobPostingsPage />} path="/resume/tailor/job-postings" />
       </Routes>,
-      { route: "/resume-tailor/job-postings", locale: "ko" },
+      { route: "/resume/tailor/job-postings", locale: "ko" },
     );
 
     expect(
@@ -115,9 +115,9 @@ describe("ResumeTailorJobPostingsPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumeTailorJobPostingsPage />} path="/resume-tailor/job-postings" />
+        <Route element={<ResumeTailorJobPostingsPage />} path="/resume/tailor/job-postings" />
       </Routes>,
-      { route: "/resume-tailor/job-postings", locale: "ko" },
+      { route: "/resume/tailor/job-postings", locale: "ko" },
     );
 
     expect(document.querySelector(".target-companies-layout--desktop")).not.toBeNull();

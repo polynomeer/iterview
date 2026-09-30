@@ -62,9 +62,9 @@ describe("ResultAnalysisPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResultAnalysisPage />} path="/answer-attempts/:answerAttemptId/result" />
+        <Route element={<ResultAnalysisPage />} path="/attempts/:answerAttemptId" />
       </Routes>,
-      { route: "/answer-attempts/attempt-1/result" },
+      { route: "/attempts/attempt-1" },
     );
 
     expect(screen.getByText("91")).toBeInTheDocument();
@@ -116,9 +116,9 @@ describe("ResultAnalysisPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResultAnalysisPage />} path="/answer-attempts/:answerAttemptId/result" />
+        <Route element={<ResultAnalysisPage />} path="/attempts/:answerAttemptId" />
       </Routes>,
-      { route: "/answer-attempts/attempt-1/result" },
+      { route: "/attempts/attempt-1" },
     );
 
     expect(screen.getByText("Strong pass")).toBeInTheDocument();
@@ -136,14 +136,14 @@ describe("ResultAnalysisPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResultAnalysisPage />} path="/answer-attempts/:answerAttemptId/result" />
+        <Route element={<ResultAnalysisPage />} path="/attempts/:answerAttemptId" />
       </Routes>,
-      { route: "/answer-attempts/1/result", locale: "ko" },
+      { route: "/attempts/1", locale: "ko" },
     );
 
     expect(screen.getByRole("alert")).toHaveTextContent("평가 결과를 찾을 수 없어요");
     expect(screen.queryByText(/Answer attempt not found/)).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "연습으로 돌아가기" })).toHaveAttribute("href", "/practice");
+    expect(screen.getByRole("link", { name: "연습으로 돌아가기" })).toHaveAttribute("href", "/questions");
   });
 
   it("offers a retry for server failures", async () => {
@@ -158,9 +158,9 @@ describe("ResultAnalysisPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResultAnalysisPage />} path="/answer-attempts/:answerAttemptId/result" />
+        <Route element={<ResultAnalysisPage />} path="/attempts/:answerAttemptId" />
       </Routes>,
-      { route: "/answer-attempts/1/result", locale: "ko" },
+      { route: "/attempts/1", locale: "ko" },
     );
 
     expect(screen.getByRole("alert")).toHaveTextContent("답변 결과를 불러오지 못했습니다.");

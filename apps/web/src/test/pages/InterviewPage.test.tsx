@@ -98,10 +98,10 @@ describe("InterviewPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<InterviewPage />} path="/interviews" />
-        <Route element={<LocationDisplay />} path="/interviews/:sessionId" />
+        <Route element={<InterviewPage />} path="/interview" />
+        <Route element={<LocationDisplay />} path="/interview/sessions/:sessionId" />
       </Routes>,
-      { route: "/interviews" },
+      { route: "/interview" },
     );
 
     expect(screen.getByText("Re-open recent branches")).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe("InterviewPage", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId("location-display")).toHaveTextContent("/interviews/session-2");
+      expect(screen.getByTestId("location-display")).toHaveTextContent("/interview/sessions/session-2");
     });
   });
 });

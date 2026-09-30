@@ -75,9 +75,9 @@ describe("PracticalInterviewListPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewListPage />} path="/practical-interviews" />
+        <Route element={<PracticalInterviewListPage />} path="/interview/records" />
       </Routes>,
-      { route: "/practical-interviews", locale: "ko" },
+      { route: "/interview/records", locale: "ko" },
     );
 
     expect(screen.getByText("복구 리뷰를 열기 전에 실제 면접 근거를 가져오세요")).toBeInTheDocument();

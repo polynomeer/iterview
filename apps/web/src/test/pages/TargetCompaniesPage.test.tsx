@@ -19,7 +19,7 @@ describe("TargetCompaniesPage", () => {
     expect(screen.getByRole("button", { name: "내 회사 (4)" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /가져온 채용공고 검토/i })).toHaveAttribute(
       "href",
-      "/resume-tailor/job-postings",
+      "/resume/tailor/job-postings",
     );
   });
 

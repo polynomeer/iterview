@@ -78,17 +78,17 @@ describe("ResumeTailorAnalysisListPage", () => {
       <Routes>
         <Route
           element={<ResumeTailorAnalysisListPage />}
-          path="/resume-tailor/resume-versions/:versionId/analyses"
+          path="/resume/:versionId/tailor"
         />
       </Routes>,
-      { route: "/resume-tailor/resume-versions/version-1/analyses", locale: "ko" },
+      { route: "/resume/version-1/tailor", locale: "ko" },
     );
 
     expect(screen.getByText("분석 큐")).toBeInTheDocument();
     expect(screen.getByText("Backend Engineer 맞춤 이력서")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "작업공간 열기" })).toHaveAttribute(
       "href",
-      "/resume-tailor/resume-versions/version-1/analyses/analysis-1",
+      "/resume/version-1/tailor/analysis-1",
     );
   });
 
@@ -108,11 +108,11 @@ describe("ResumeTailorAnalysisListPage", () => {
       <Routes>
         <Route
           element={<ResumeTailorAnalysisListPage />}
-          path="/resume-tailor/resume-versions/:versionId/analyses"
+          path="/resume/:versionId/tailor"
         />
-        <Route element={<LocationDisplay />} path="/resume-tailor/resume-versions/:versionId/analyses/:analysisId" />
+        <Route element={<LocationDisplay />} path="/resume/:versionId/tailor/:analysisId" />
       </Routes>,
-      { route: "/resume-tailor/resume-versions/version-1/analyses", locale: "ko" },
+      { route: "/resume/version-1/tailor", locale: "ko" },
     );
 
     await user.selectOptions(screen.getByLabelText("저장된 채용 공고"), "job-1");
@@ -124,7 +124,7 @@ describe("ResumeTailorAnalysisListPage", () => {
       preferredFormatType: "technical_focused",
     });
     expect(await screen.findByTestId("location-display")).toHaveTextContent(
-      "/resume-tailor/resume-versions/version-1/analyses/analysis-2",
+      "/resume/version-1/tailor/analysis-2",
     );
   });
 });

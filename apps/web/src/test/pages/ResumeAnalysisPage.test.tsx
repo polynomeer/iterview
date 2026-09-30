@@ -113,9 +113,9 @@ describe("ResumeAnalysisPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumeAnalysisPage />} path="/profile/resumes/analysis" />
+        <Route element={<ResumeAnalysisPage />} path="/resume/analysis" />
       </Routes>,
-      { route: "/profile/resumes/analysis", locale: "ko" },
+      { route: "/resume/analysis", locale: "ko" },
     );
 
     expect(screen.getByRole("heading", { name: "경력 기반 면접 방어 워크스페이스" })).toBeInTheDocument();
@@ -125,7 +125,7 @@ describe("ResumeAnalysisPage", () => {
     expect(screen.getAllByText("Spring Boot").length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: /이력서 편집기/ })).toHaveAttribute(
       "href",
-      "/resume-versions/version-1/editor",
+      "/resume/version-1/claims",
     );
   });
 
@@ -196,9 +196,9 @@ describe("ResumeAnalysisPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumeAnalysisPage />} path="/profile/resumes/analysis" />
+        <Route element={<ResumeAnalysisPage />} path="/resume/analysis" />
       </Routes>,
-      { route: "/profile/resumes/analysis", locale: "ko" },
+      { route: "/resume/analysis", locale: "ko" },
     );
 
     expect(screen.getByText("경력 기반 면접 방어 워크스페이스")).toBeInTheDocument();

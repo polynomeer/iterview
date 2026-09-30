@@ -395,9 +395,9 @@ describe("ResumeEditorPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumeEditorPage />} path="/resume-versions/:versionId/editor" />
+        <Route element={<ResumeEditorPage />} path="/resume/:versionId/claims" />
       </Routes>,
-      { route: "/resume-versions/version-1/editor" },
+      { route: "/resume/version-1/claims" },
     );
 
     expect(

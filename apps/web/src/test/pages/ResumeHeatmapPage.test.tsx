@@ -306,9 +306,9 @@ describe("ResumeHeatmapPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumeHeatmapPage />} path="/resume-versions/:versionId/heatmap" />
+        <Route element={<ResumeHeatmapPage />} path="/resume/:versionId/heatmap" />
       </Routes>,
-      { route: "/resume-versions/version-1/heatmap" },
+      { route: "/resume/version-1/heatmap" },
     );
 
     expect(

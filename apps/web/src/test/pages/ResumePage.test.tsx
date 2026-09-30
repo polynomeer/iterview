@@ -209,9 +209,9 @@ describe("ResumePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumePage />} path="/profile/resumes" />
+        <Route element={<ResumePage />} path="/resume" />
       </Routes>,
-      { route: "/profile/resumes", locale: "ko" },
+      { route: "/resume", locale: "ko" },
     );
 
     expect(screen.getAllByText("Backend Resume")).toHaveLength(3);
@@ -222,7 +222,7 @@ describe("ResumePage", () => {
     expect(screen.getByRole("button", { name: "+ 이력서 만들기" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "이력서 에디터 열기" })).toHaveAttribute(
       "href",
-      "/resume-versions/version-1/editor",
+      "/resume/version-1/claims",
     );
     expect(document.querySelector(".resume-layout--desktop")).not.toBeNull();
   });
@@ -283,9 +283,9 @@ describe("ResumePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ResumePage />} path="/profile/resumes" />
+        <Route element={<ResumePage />} path="/resume" />
       </Routes>,
-      { route: "/profile/resumes", locale: "ko" },
+      { route: "/resume", locale: "ko" },
     );
 
     await user.click(screen.getByRole("button", { name: "+ 이력서 만들기" }));

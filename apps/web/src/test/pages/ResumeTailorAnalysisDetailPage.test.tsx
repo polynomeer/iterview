@@ -144,10 +144,10 @@ describe("ResumeTailorAnalysisDetailPage", () => {
       <Routes>
         <Route
           element={<ResumeTailorAnalysisDetailPage />}
-          path="/resume-tailor/resume-versions/:versionId/analyses/:analysisId"
+          path="/resume/:versionId/tailor/:analysisId"
         />
       </Routes>,
-      { route: "/resume-tailor/resume-versions/version-1/analyses/analysis-1", locale: "ko" },
+      { route: "/resume/version-1/tailor/analysis-1", locale: "ko" },
     );
 
     expect(screen.getByText("저장된 맞춤 문서")).toBeInTheDocument();

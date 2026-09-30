@@ -109,16 +109,16 @@ describe("SkillsPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<SkillsPage />} path="/skills" />
+        <Route element={<SkillsPage />} path="/questions/skills" />
       </Routes>,
-      { route: "/skills", locale: "ko" },
+      { route: "/questions/skills", locale: "ko" },
     );
 
     expect(screen.getByRole("heading", { name: "스킬 지형을 질문 트리 실행 계획으로 바꾸세요" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "이력서 근거를 방어할 스킬 지형을 한 화면에서 정리하세요" })).toBeInTheDocument();
     expect(screen.getByText("다음 추천")).toBeInTheDocument();
     expect(screen.getAllByText("System Design").length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: "권장 시퀀스로 연습" })).toHaveAttribute("href", "/practice");
+    expect(screen.getByRole("link", { name: "권장 시퀀스로 연습" })).toHaveAttribute("href", "/questions");
     expect(screen.getByText("스킬 랜드스케이프")).toBeInTheDocument();
 
     const databaseNode = screen.getByRole("button", { name: /Database/ });

@@ -29,9 +29,6 @@ const HEADER_TITLES: Array<[path: string, titleKey: MessageKey]> = [
   [routeConfig.interviewSessionResult.path, "header.interviewSessionResult"],
   [routeConfig.interviewSession.path, "header.interviewSession"],
   [routeConfig.interview.path, "navigation.interview"],
-  ["/interview/sessions/:sessionId/result", "header.interviewSessionResult"],
-  ["/interview/sessions/:sessionId", "header.interviewSession"],
-  ["/interview", "navigation.interview"],
   [`${routeConfig.practicalInterviews.path}/*`, "navigation.practicalInterviews"],
 ];
 

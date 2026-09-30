@@ -274,10 +274,10 @@ describe("ResumeHeatmapAnchorPage", () => {
       <Routes>
         <Route
           element={<ResumeHeatmapAnchorPage />}
-          path="/resume-versions/:versionId/heatmap/anchors/:anchorType/:anchorId"
+          path="/resume/:versionId/heatmap/anchors/:anchorType/:anchorId"
         />
       </Routes>,
-      { route: "/resume-versions/version-1/heatmap/anchors/project/31" },
+      { route: "/resume/version-1/heatmap/anchors/project/31" },
     );
 
     expect(screen.getByText("Detailed anchor review")).toBeInTheDocument();

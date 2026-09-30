@@ -47,9 +47,9 @@ describe("ProfilePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ProfilePage />} path="/profile" />
+        <Route element={<ProfilePage />} path="/settings/profile" />
       </Routes>,
-      { route: "/profile", locale: "ko" },
+      { route: "/settings/profile", locale: "ko" },
     );
 
     expect(screen.getByText("Learner")).toBeInTheDocument();
@@ -92,13 +92,13 @@ describe("ProfilePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ProfilePage />} path="/profile" />
+        <Route element={<ProfilePage />} path="/settings/profile" />
       </Routes>,
-      { route: "/profile", locale: "ko" },
+      { route: "/settings/profile", locale: "ko" },
     );
 
     expect(screen.getByRole("link", { name: "설정 열기" })).toHaveAttribute("href", "/settings");
-    expect(screen.getByRole("link", { name: /이력서 분석/ })).toHaveAttribute("href", "/profile/resumes/analysis");
+    expect(screen.getByRole("link", { name: /이력서 분석/ })).toHaveAttribute("href", "/resume/analysis");
     expect(screen.queryByRole("link", { name: /목표 회사/ })).not.toBeInTheDocument();
   });
 });

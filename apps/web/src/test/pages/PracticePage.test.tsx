@@ -82,18 +82,18 @@ describe("PracticePage", () => {
               <LocationDisplay />
             </>
           }
-          path="/practice"
+          path="/questions"
         />
       </Routes>,
-      { route: "/practice", locale: "ko" },
+      { route: "/questions", locale: "ko" },
     );
 
     await user.type(screen.getAllByRole("searchbox", { name: "질문 검색" })[0], "cache");
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/practice?search=cache");
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/questions?search=cache");
 
     await user.click(screen.getByRole("button", { name: "System Design" }));
     expect(screen.getByTestId("location-display")).toHaveTextContent(
-      "/practice?category=system-design&search=cache",
+      "/questions?category=system-design&search=cache",
     );
   });
 
@@ -130,9 +130,9 @@ describe("PracticePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticePage />} path="/practice" />
+        <Route element={<PracticePage />} path="/questions" />
       </Routes>,
-      { route: "/practice", locale: "ko" },
+      { route: "/questions", locale: "ko" },
     );
 
     expect(screen.getAllByText("Explain caching")).toHaveLength(2);
@@ -182,11 +182,11 @@ describe("PracticePage", () => {
               <LocationDisplay />
             </>
           }
-          path="/practice"
+          path="/questions"
         />
         <Route element={<LocationDisplay />} path="/questions/:questionId/tree" />
       </Routes>,
-      { route: "/practice", locale: "ko" },
+      { route: "/questions", locale: "ko" },
     );
 
     await user.click(screen.getByRole("link", { name: "선택 질문 트리 열기" }));

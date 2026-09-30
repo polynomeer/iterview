@@ -443,9 +443,9 @@ describe("PracticalInterviewReviewPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
+        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
       </Routes>,
-      { route: "/practical-interviews/record-2?processing=1", locale: "ko" },
+      { route: "/interview/records/record-2?processing=1", locale: "ko" },
     );
 
     expect(screen.getByText("전사 추출 진행 중")).toBeInTheDocument();
@@ -560,9 +560,9 @@ describe("PracticalInterviewReviewPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
+        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
       </Routes>,
-      { route: "/practical-interviews/record-3", locale: "ko" },
+      { route: "/interview/records/record-3", locale: "ko" },
     );
 
     expect(screen.getByText("전사 추출에 확인이 필요합니다")).toBeInTheDocument();
@@ -579,9 +579,9 @@ describe("PracticalInterviewReviewPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
+        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
       </Routes>,
-      { route: "/practical-interviews/record-1", locale: "ko" },
+      { route: "/interview/records/record-1", locale: "ko" },
     );
 
     expect(screen.getByText("리뷰 원칙")).toBeInTheDocument();
@@ -613,7 +613,7 @@ describe("PracticalInterviewReviewPage", () => {
     expect(screen.getByRole("button", { name: "문답 재생" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "히트맵 앵커 열기" })).toHaveAttribute(
       "href",
-      "/resume-versions/resume-version-1/heatmap?selectedAnchor=project%3A31&scope=follow_up&weakOnly=true",
+      "/resume/resume-version-1/heatmap?selectedAnchor=project%3A31&scope=follow_up&weakOnly=true",
     );
   });
 
@@ -629,9 +629,9 @@ describe("PracticalInterviewReviewPage", () => {
 
     const view = renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
+        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
       </Routes>,
-      { route: "/practical-interviews/record-1", locale: "ko" },
+      { route: "/interview/records/record-1", locale: "ko" },
     );
 
     vi.mocked(useInterviewRecordDetailQuery).mockImplementation(loadedDetail);
@@ -639,7 +639,7 @@ describe("PracticalInterviewReviewPage", () => {
     expect(() =>
       view.rerender(
         <Routes>
-          <Route element={<PracticalInterviewReviewPage />} path="/practical-interviews/:recordId" />
+          <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
         </Routes>,
       ),
     ).not.toThrow();

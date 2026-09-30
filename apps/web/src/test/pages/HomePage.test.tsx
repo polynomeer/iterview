@@ -97,7 +97,7 @@ describe("HomePage", () => {
     expect(screen.getByRole("link", { name: "로그인" })).toHaveAttribute("href", "/login");
     expect(screen.getByRole("link", { name: "연습 질문 둘러보기" })).toHaveAttribute(
       "href",
-      "/practice",
+      "/questions",
     );
   });
 

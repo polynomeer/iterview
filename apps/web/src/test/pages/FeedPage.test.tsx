@@ -55,9 +55,9 @@ describe("FeedPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<FeedPage />} path="/feed" />
+        <Route element={<FeedPage />} path="/explore" />
       </Routes>,
-      { route: "/feed", locale: "ko" },
+      { route: "/explore", locale: "ko" },
     );
 
     expect(screen.getByText("Popular")).toBeInTheDocument();
@@ -78,16 +78,16 @@ describe("FeedPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<FeedPage />} path="/feed" />
+        <Route element={<FeedPage />} path="/explore" />
       </Routes>,
-      { route: "/feed", locale: "ko" },
+      { route: "/explore", locale: "ko" },
     );
 
     expect(screen.getByText("로그인하면 가지 피드를 사용할 수 있습니다")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "로그인" })).toHaveAttribute("href", "/login");
     expect(screen.getByRole("link", { name: "연습 질문 둘러보기" })).toHaveAttribute(
       "href",
-      "/practice",
+      "/questions",
     );
   });
 
@@ -108,9 +108,9 @@ describe("FeedPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<FeedPage />} path="/feed" />
+        <Route element={<FeedPage />} path="/explore" />
       </Routes>,
-      { route: "/feed", locale: "ko" },
+      { route: "/explore", locale: "ko" },
     );
 
     expect(

@@ -327,9 +327,9 @@ describe("InterviewSessionPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<InterviewSessionPage />} path="/interviews/:sessionId" />
+        <Route element={<InterviewSessionPage />} path="/interview/sessions/:sessionId" />
       </Routes>,
-      { route: "/interviews/session-1" },
+      { route: "/interview/sessions/session-1" },
     );
 
     expect(screen.getByText("Session question flow")).toBeInTheDocument();
@@ -479,9 +479,9 @@ describe("InterviewSessionPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<InterviewSessionPage />} path="/interviews/:sessionId" />
+        <Route element={<InterviewSessionPage />} path="/interview/sessions/:sessionId" />
       </Routes>,
-      { route: "/interviews/session-1" },
+      { route: "/interview/sessions/session-1" },
     );
 
     await user.type(
@@ -609,9 +609,9 @@ describe("InterviewSessionPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<InterviewSessionPage />} path="/interviews/:sessionId" />
+        <Route element={<InterviewSessionPage />} path="/interview/sessions/:sessionId" />
       </Routes>,
-      { route: "/interviews/session-1" },
+      { route: "/interview/sessions/session-1" },
     );
 
     await user.type(screen.getByRole("textbox"), "Final answer for the session.");
@@ -619,7 +619,7 @@ describe("InterviewSessionPage", () => {
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith(
-        "/interviews/session-1/result",
+        "/interview/sessions/session-1/result",
       );
     });
   });

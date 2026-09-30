@@ -1,7 +1,7 @@
 # 0074. Consolidate Information Architecture and Adopt a Token Design System
 
 ## Status
-Proposed
+Accepted (2026-09-30). Phases 0–1 are implemented, and Phase 2 introduces the five-area route table.
 
 ## Date
 2026-09-30
@@ -39,5 +39,7 @@ Proposed for acceptance before redesign implementation starts:
 - The navigation model becomes small and stable; new features must fit an existing area or justify a new one through an ADR.
 - The redesign proceeds in phases (P0 fixes → foundations → shell/IA → core loop → resume/interview → cleanup), each as independently committable work units.
 - `workspace` and `dracula` themes and most of `global.css` will be removed as screens migrate.
-- This proposal changes ADR 0072's standalone skills surface into a view of the question workspace. It also changes the feed to guest-only discovery. These two points need explicit confirmation when accepting.
+- This proposal changes ADR 0072's standalone skills surface into a view of the question workspace. It also changes the feed to guest-only discovery. Resolution at acceptance:
+  - Skills stay a separate screen for now, reachable as the "스킬 맵" section of 질문 (`/questions/skills`). The merge into the question workspace happens with the Phase 3 rebuild.
+  - The feed moves to `/explore`. Only guests see it in navigation, but the URL stays reachable after sign-in.
 - Backend contracts for review scheduling, weak areas, and home recommendation reasons may need extension, and `apps/api/docs/04-api-contracts.md` must be updated alongside.

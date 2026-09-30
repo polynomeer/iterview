@@ -28,13 +28,13 @@ describe("ArchivePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ArchivePage />} path="/archive" />
+        <Route element={<ArchivePage />} path="/review/done" />
       </Routes>,
-      { route: "/archive", locale: "ko" },
+      { route: "/review/done", locale: "ko" },
     );
 
     expect(screen.getByText("아카이브가 비어 있습니다")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "연습으로 돌아가기" })).toHaveAttribute("href", "/practice");
+    expect(screen.getByRole("link", { name: "연습으로 돌아가기" })).toHaveAttribute("href", "/questions");
   });
 
   it("renders archived questions when data exists", () => {
@@ -73,9 +73,9 @@ describe("ArchivePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ArchivePage />} path="/archive" />
+        <Route element={<ArchivePage />} path="/review/done" />
       </Routes>,
-      { route: "/archive", locale: "ko" },
+      { route: "/review/done", locale: "ko" },
     );
 
     expect(screen.getByText("정리된 질문")).toBeInTheDocument();
@@ -85,7 +85,7 @@ describe("ArchivePage", () => {
     expect(screen.getAllByText("후속 질문")).toHaveLength(2);
     expect(screen.getByRole("link", { name: "세션 보기" })).toHaveAttribute(
       "href",
-      "/interviews/session-4",
+      "/interview/sessions/session-4",
     );
   });
 
@@ -126,9 +126,9 @@ describe("ArchivePage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<ArchivePage />} path="/archive" />
+        <Route element={<ArchivePage />} path="/review/done" />
       </Routes>,
-      { route: "/archive", locale: "ko" },
+      { route: "/review/done", locale: "ko" },
     );
 
     expect(screen.getAllByText("Design a search index")).toHaveLength(3);

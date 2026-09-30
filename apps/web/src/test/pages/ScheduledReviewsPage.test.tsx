@@ -16,7 +16,7 @@ describe("ScheduledReviewsPage", () => {
     expect(screen.getByText("Scheduled review board")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /shape this week's review pressure/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /a second pass over the sessions/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Start review session" })).toHaveAttribute("href", "/review-queue");
+    expect(screen.getByRole("link", { name: "Start review session" })).toHaveAttribute("href", "/review");
     expect(screen.getByRole("link", { name: "Start review session" })).toBeInTheDocument();
   });
 

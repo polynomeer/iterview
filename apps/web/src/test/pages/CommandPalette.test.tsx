@@ -19,10 +19,10 @@ describe("CommandPalette", () => {
               <LocationDisplay />
             </>
           }
-          path="/review-queue"
+          path="/review"
         />
       </Routes>,
-      { route: "/review-queue" },
+      { route: "/review" },
     );
 
     expect(screen.getAllByText("Questions").length).toBeGreaterThan(0);
@@ -54,14 +54,14 @@ describe("CommandPalette", () => {
           }
           path="/"
         />
-        <Route element={<LocationDisplay />} path="/review-queue" />
+        <Route element={<LocationDisplay />} path="/review" />
       </Routes>,
     );
 
     await user.type(screen.getByLabelText("Search Iterview"), "review queue");
     await user.keyboard("{Enter}");
 
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/review-queue");
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/review");
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -80,14 +80,14 @@ describe("CommandPalette", () => {
           }
           path="/"
         />
-        <Route element={<LocationDisplay />} path="/profile/resumes" />
+        <Route element={<LocationDisplay />} path="/resume" />
       </Routes>,
     );
 
     await user.type(screen.getByLabelText("Search Iterview"), "Open resume");
     await user.click(screen.getByRole("option", { name: /Open resume source of truth/i }));
 
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/profile/resumes");
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/resume");
     expect(onClose).toHaveBeenCalled();
   });
 
