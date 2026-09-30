@@ -7,12 +7,13 @@ import {
   type PropsWithChildren,
 } from "react";
 import { appLocaleStorageKey, getStoredAppLocale, normalizeAppLocale, type AppLocale } from "./locale";
-import { messages, type MessageKey } from "./messages";
+import { formatMessage, type MessageParams } from "./format";
+import type { MessageKey } from "./messages";
 
 type LocaleContextValue = {
   locale: AppLocale;
   setLocale: (locale: AppLocale) => void;
-  t: (key: MessageKey) => string;
+  t: (key: MessageKey, params?: MessageParams) => string;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -49,12 +50,7 @@ export function LocaleProvider({ children }: PropsWithChildren) {
     () => ({
       locale,
       setLocale: setLocaleState,
-      t: (key) => {
-        const [namespace, messageKey] = key.split(".");
-        const dictionary = messages[locale] as Record<string, Record<string, string>>;
-
-        return dictionary[namespace]?.[messageKey] ?? key;
-      },
+      t: (key, params) => formatMessage(locale, key, params),
     }),
     [locale],
   );

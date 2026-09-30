@@ -1,7 +1,16 @@
+import { catalog } from "./catalog";
 import type { AppLocale } from "./locale";
+
+type Catalog = typeof catalog;
+type CatalogLocale<L extends AppLocale> = { [Namespace in keyof Catalog]: Catalog[Namespace] extends Record<L, infer Messages> ? Messages : never };
+
+function catalogFor<L extends AppLocale>(locale: L) {
+  return Object.fromEntries(Object.entries(catalog).map(([namespace, entry]) => [namespace, (entry as Record<AppLocale, unknown>)[locale]])) as CatalogLocale<L>;
+}
 
 export const messages = {
   en: {
+    ...catalogFor("en"),
     common: {
       save: "Save",
       saving: "Saving...",
@@ -807,6 +816,7 @@ export const messages = {
     },
   },
   ko: {
+    ...catalogFor("ko"),
     common: {
       save: "저장",
       saving: "저장 중...",
