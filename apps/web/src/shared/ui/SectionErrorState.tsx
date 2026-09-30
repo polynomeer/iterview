@@ -16,18 +16,17 @@ export function SectionErrorState({
   actionLabel,
   onAction,
 }: SectionErrorStateProps) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <StateCard
       action={
         onAction
-          ? { label: actionLabel ?? (isKorean ? "다시 시도" : "Try again"), onAction }
+          ? { label: actionLabel ?? t("common.tryAgain"), onAction }
           : undefined
       }
       body={body}
-      label={label ?? (isKorean ? "오류" : "Error")}
+      label={label ?? t("common.errorState")}
       size="section"
       title={title}
       tone="error"

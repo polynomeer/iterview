@@ -12,8 +12,8 @@ export function FilterPanel({
   title,
   description,
 }: FilterPanelProps) {
-  const { locale } = useLocale();
-  const resolvedTitle = title ?? (locale === "ko" ? "필터" : "Filters");
+  const { t } = useLocale();
+  const resolvedTitle = title ?? t("appShell.filters");
 
   return (
     <SectionPanel as="aside" className="filter-panel" variant="muted">

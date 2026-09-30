@@ -39,9 +39,7 @@ export function AuthLoadingScreen({
   const resolvedNextEyebrow = nextEyebrow ?? t("auth.whatOpensNext");
   const resolvedNextBody =
     nextBody ??
-    (t("common.languageKorean") === "한국어"
-      ? "세션이 확인되는 즉시 프로필, 이력서 인텔리전스, 스킬 레이더, 복습 큐, 인터뷰 세션 도구를 사용할 수 있습니다."
-      : "Profile, resume intelligence, skill radar, review queue, and interview session tools become available as soon as the session is confirmed.");
+t("appShell.authLoadingNextBody");
 
   return (
     <section className="auth-loading-screen">

@@ -6,7 +6,7 @@ import type {
   PracticeQuestionItemDto,
 } from "../../shared/types/practice";
 import { toArray } from "../../shared/lib/collection";
-import { getCurrentAppLocale } from "../../shared/i18n/locale";
+import { translate } from "../../shared/i18n";
 
 export type PracticeQuestionItemModel = {
   id: string;
@@ -64,17 +64,14 @@ function mapProgressSummaryLabel(summary: PracticeQuestionItemDto["userProgressS
     return null;
   }
 
-  const isKorean = getCurrentAppLocale() === "ko";
   const attemptsCount = summary.attemptsCount ?? 0;
-  const attempts = isKorean ? `시도 ${attemptsCount}회` : `${attemptsCount} attempt${attemptsCount === 1 ? "" : "s"}`;
+  const attempts = translate(attemptsCount === 1 ? "modelCommon.attemptCountOne" : "modelCommon.attemptCountMany", {
+    count: attemptsCount,
+  });
   const score =
     summary.bestScore !== undefined && summary.bestScore !== null
-      ? isKorean
-        ? `최고 ${summary.bestScore}`
-        : `Best ${summary.bestScore}`
-      : isKorean
-        ? "아직 점수 없음"
-        : "No score yet";
+      ? translate("modelCommon.bestScoreShort", { score: summary.bestScore })
+      : translate("modelCommon.noScoreYet");
   const status = summary.progressStatus ? ` · ${summary.progressStatus}` : "";
 
   return `${attempts} · ${score}${status}`;
@@ -83,7 +80,6 @@ function mapProgressSummaryLabel(summary: PracticeQuestionItemDto["userProgressS
 export function mapPracticeListResponseDtoToModel(
   response: PracticeListResponse,
 ): PracticeListModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   const normalizedResponse: PracticeListResponseDto = Array.isArray(response)
     ? { items: response }
     : response;
@@ -101,16 +97,14 @@ export function mapPracticeListResponseDtoToModel(
       prompt: item.prompt ?? "",
       categoryId: item.categoryId === null || item.categoryId === undefined ? null : String(item.categoryId),
       difficulty: item.difficulty ?? null,
-      categoryLabel: category ?? (isKorean ? "일반" : "General"),
-      companyLabel: company ?? (isKorean ? "일반" : "General"),
-      difficultyLabel: item.difficulty ?? (isKorean ? "일반" : "General"),
+      categoryLabel: category ?? translate("modelCommon.general"),
+      companyLabel: company ?? translate("modelCommon.general"),
+      difficultyLabel: item.difficulty ?? translate("modelCommon.general"),
       statusLabel: item.status ?? null,
       progressSummaryLabel: mapProgressSummaryLabel(item.userProgressSummary),
       resumeRelevanceLabel:
         item.resumeRelevance?.score !== undefined && item.resumeRelevance.score !== null
-          ? isKorean
-            ? `${item.resumeRelevance.score}% 일치`
-            : `${item.resumeRelevance.score}% match`
+          ? translate("modelCommon.resumeMatch", { score: item.resumeRelevance.score })
           : null,
       resumeRelevanceReason: item.resumeRelevance?.reason ?? null,
       relatedSkillLabels: toArray(item.relatedSkillCodes),

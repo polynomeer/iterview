@@ -8,7 +8,7 @@ import type {
 } from "../../shared/types/question";
 import { toArray } from "../../shared/lib/collection";
 import { formatApiDateTime } from "../../shared/lib/date";
-import { getCurrentAppLocale } from "../../shared/i18n/locale";
+import { translate } from "../../shared/i18n";
 
 export type QuestionDetailModel = {
   id: string;
@@ -69,17 +69,16 @@ export type QuestionDetailModel = {
 };
 
 export function mapLearningMaterial(material: LearningMaterialDto, index = 0) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id:
       material.id === null || material.id === undefined
         ? `learning-material-${index}`
         : String(material.id),
-    title: material.title ?? (isKorean ? "제목 없는 자료" : "Untitled material"),
+    title: material.title ?? translate("questionModel.untitledMaterial"),
     description: material.description ?? "",
-    resourceTypeLabel: material.materialType ?? (isKorean ? "참고 자료" : "Reference"),
-    sourceLabel: material.sourceLabel ?? material.sourceType ?? (isKorean ? "참고 자료" : "Reference"),
-    sourceType: material.sourceType ?? (isKorean ? "참고" : "reference"),
+    resourceTypeLabel: material.materialType ?? translate("questionModel.referenceMaterial"),
+    sourceLabel: material.sourceLabel ?? material.sourceType ?? translate("questionModel.referenceMaterial"),
+    sourceType: material.sourceType ?? translate("questionModel.referenceSourceType"),
     sourceName: material.sourceName ?? null,
     contentText: material.contentText ?? null,
     url: material.contentUrl ?? undefined,
@@ -96,15 +95,14 @@ export function mapLearningMaterial(material: LearningMaterialDto, index = 0) {
 }
 
 export function mapReferenceAnswer(answer: QuestionReferenceAnswerDto, index: number) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id:
       answer.id === null || answer.id === undefined ? `reference-answer-${index}` : String(answer.id),
-    title: answer.title ?? (isKorean ? "큐레이션 답변" : "Curated answer"),
-    answerText: answer.answerText ?? (isKorean ? "아직 답변 본문이 없습니다." : "No answer text is available yet."),
-    answerFormat: answer.answerFormat ?? (isKorean ? "일반" : "General"),
-    sourceLabel: answer.sourceLabel ?? answer.sourceType ?? (isKorean ? "큐레이션" : "Curated"),
-    sourceType: answer.sourceType ?? (isKorean ? "큐레이션" : "curated"),
+    title: answer.title ?? translate("questionModel.curatedAnswer"),
+    answerText: answer.answerText ?? translate("questionModel.noAnswerText"),
+    answerFormat: answer.answerFormat ?? translate("modelCommon.general"),
+    sourceLabel: answer.sourceLabel ?? answer.sourceType ?? translate("questionModel.curatedLabel"),
+    sourceType: answer.sourceType ?? translate("questionModel.curatedSourceType"),
     contentLocale: answer.contentLocale ?? null,
     isUserGenerated: answer.isUserGenerated ?? false,
     isOfficial: answer.isOfficial ?? false,
@@ -135,13 +133,12 @@ function mapProgressSummary(
     return null;
   }
 
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
-    status: progress.currentStatus ?? (isKorean ? "신규" : "new"),
+    status: progress.currentStatus ?? translate("questionModel.newStatus"),
     attemptsCount: progress.totalAttemptCount ?? progress.attemptsCount ?? 0,
     bestScoreLabel:
-      progress.bestScore !== undefined && progress.bestScore !== null ? `${progress.bestScore}` : isKorean ? "아직 점수 없음" : "Not scored yet",
-    lastReviewedLabel: formatApiDateTime(progress.lastAnsweredAt) ?? (isKorean ? "아직 복습 없음" : "No review yet"),
+      progress.bestScore !== undefined && progress.bestScore !== null ? `${progress.bestScore}` : translate("questionModel.notScoredYet"),
+    lastReviewedLabel: formatApiDateTime(progress.lastAnsweredAt) ?? translate("questionModel.noReviewYet"),
     nextReviewLabel: formatApiDateTime(progress.nextReviewAt),
     masteryLevelLabel: progress.masteryLevel ?? null,
   };
@@ -151,17 +148,16 @@ export function mapRecommendedQuestionsToModel(
   followups: RecommendedFollowUpDto[] | null | undefined,
   resumeBased: ResumeBasedQuestionDto[] | null | undefined,
 ): QuestionDetailModel["recommendedQuestions"] {
-  const isKorean = getCurrentAppLocale() === "ko";
   const followupItems = toArray(followups).map((question) => ({
     id:
       question.questionId === null || question.questionId === undefined
         ? ""
         : String(question.questionId),
-    title: question.title ?? (isKorean ? "권장 꼬리질문" : "Recommended follow-up"),
-    reason: question.relationshipType ?? (isKorean ? "꼬리질문 경로" : "Follow-up path"),
+    title: question.title ?? translate("questionModel.recommendedFollowUp"),
+    reason: question.relationshipType ?? translate("questionModel.followUpPath"),
     metadataLabel: [
       question.difficulty ?? null,
-      question.depth !== null && question.depth !== undefined ? isKorean ? `깊이 ${question.depth}` : `Depth ${question.depth}` : null,
+      question.depth !== null && question.depth !== undefined ? translate("questionModel.depthValue", { depth: question.depth }) : null,
       question.nodeStatus ?? null,
     ]
       .filter(Boolean)
@@ -173,15 +169,11 @@ export function mapRecommendedQuestionsToModel(
       question.questionId === null || question.questionId === undefined
         ? ""
         : String(question.questionId),
-    title: question.title ?? (isKorean ? "이력서 기반 질문" : "Resume-based question"),
+    title: question.title ?? translate("questionModel.resumeBasedQuestion"),
     reason:
       question.matchScore === null || question.matchScore === undefined
-        ? isKorean
-          ? "이력서 기반 추천"
-          : "Resume-based recommendation"
-        : isKorean
-          ? `${Math.round(question.matchScore)}% 이력서 일치`
-          : `${Math.round(question.matchScore)}% resume match`,
+        ? translate("questionModel.resumeBasedRecommendation")
+        : translate("questionModel.resumeMatchPercent", { score: Math.round(question.matchScore) }),
     metadataLabel: [question.difficulty ?? null, ...(question.matchedSkills ?? [])]
       .filter(Boolean)
       .join(" · "),
@@ -197,13 +189,12 @@ export function mapQuestionDetailResponseDtoToModel(
     return null;
   }
 
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id: String(response.question.id),
     title: response.question.title,
     body: response.question.body,
-    category: response.question.categoryName ?? (isKorean ? "일반" : "General"),
-    difficulty: response.question.difficulty ?? response.question.difficultyLevel ?? (isKorean ? "일반" : "General"),
+    category: response.question.categoryName ?? translate("modelCommon.general"),
+    difficulty: response.question.difficulty ?? response.question.difficultyLevel ?? translate("modelCommon.general"),
     tags: toArray(response.tags).map((tag) => tag.name),
     companies: toArray(response.companies).map((company) => company.name),
     roles: toArray(response.roles).map((role) => role.name),

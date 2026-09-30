@@ -1,27 +1,33 @@
 import type { AppLocale } from "../i18n";
+import type { sharedLabels } from "../i18n/catalog/sharedLabels";
+import { formatMessage } from "../i18n/format";
 
-type Localized = Record<AppLocale, string>;
+type LabelKey = keyof (typeof sharedLabels)["en"];
 
-const DIFFICULTY: Record<string, Localized> = {
-  EASY: { ko: "쉬움", en: "Easy" },
-  MEDIUM: { ko: "보통", en: "Medium" },
-  HARD: { ko: "어려움", en: "Hard" },
+function label(locale: AppLocale, key: LabelKey) {
+  return formatMessage(locale, `sharedLabels.${key}`);
+}
+
+const DIFFICULTY: Record<string, LabelKey> = {
+  EASY: "difficultyEasy",
+  MEDIUM: "difficultyMedium",
+  HARD: "difficultyHard",
 };
 
-const SKILL_CATEGORY: Record<string, Localized> = {
-  CS: { ko: "CS 기초", en: "CS fundamentals" },
-  BACKEND: { ko: "백엔드", en: "Backend" },
-  DATABASE: { ko: "데이터베이스", en: "Database" },
-  SYSTEM_DESIGN: { ko: "시스템 설계", en: "System design" },
-  ARCHITECTURE: { ko: "아키텍처", en: "Architecture" },
-  TESTING: { ko: "테스트", en: "Testing" },
+const SKILL_CATEGORY: Record<string, LabelKey> = {
+  CS: "skillCs",
+  BACKEND: "skillBackend",
+  DATABASE: "skillDatabase",
+  SYSTEM_DESIGN: "skillSystemDesign",
+  ARCHITECTURE: "skillArchitecture",
+  TESTING: "skillTesting",
 };
 
-const SEVERITY: Record<string, Localized & { tone: "danger" | "warning" | "neutral" }> = {
-  HIGH: { ko: "높음", en: "High", tone: "danger" },
-  CRITICAL: { ko: "매우 높음", en: "Critical", tone: "danger" },
-  MEDIUM: { ko: "보통", en: "Medium", tone: "warning" },
-  LOW: { ko: "낮음", en: "Low", tone: "neutral" },
+const SEVERITY: Record<string, { key: LabelKey; tone: "danger" | "warning" | "neutral" }> = {
+  HIGH: { key: "severityHigh", tone: "danger" },
+  CRITICAL: { key: "severityCritical", tone: "danger" },
+  MEDIUM: { key: "severityMedium", tone: "warning" },
+  LOW: { key: "severityLow", tone: "neutral" },
 };
 
 function titleCase(code: string) {
@@ -38,7 +44,8 @@ export function difficultyLabel(value: string | null | undefined, locale: AppLoc
   if (!value) {
     return null;
   }
-  return DIFFICULTY[value.toUpperCase()]?.[locale] ?? value;
+  const key = DIFFICULTY[value.toUpperCase()];
+  return key ? label(locale, key) : value;
 }
 
 /** Maps skill category codes (SYSTEM_DESIGN, …) to user words; unknown codes are title-cased. */
@@ -46,7 +53,8 @@ export function skillCategoryLabel(code: string | null | undefined, locale: AppL
   if (!code) {
     return null;
   }
-  return SKILL_CATEGORY[code.toUpperCase()]?.[locale] ?? titleCase(code);
+  const key = SKILL_CATEGORY[code.toUpperCase()];
+  return key ? label(locale, key) : titleCase(code);
 }
 
 /** Tone for a 0–100 score: below 50 needs work, below 75 is improving, otherwise solid. */
@@ -66,7 +74,7 @@ export function severityLabel(value: string | null | undefined, locale: AppLocal
     return null;
   }
   const entry = SEVERITY[value.toUpperCase()];
-  return entry ? { label: entry[locale], tone: entry.tone } : { label: value, tone: "neutral" as const };
+  return entry ? { label: label(locale, entry.key), tone: entry.tone } : { label: value, tone: "neutral" as const };
 }
 
 /** Appends the Korean subject particle: 이 after a final consonant (구체성이), 가 otherwise (구조가). */
@@ -79,15 +87,17 @@ export function withSubjectParticle(word: string) {
   return `${word}${code % 28 === 0 ? "가" : "이"}`;
 }
 
-const PARSING: Record<string, Localized & { tone: "success" | "warning" | "danger" | "neutral" | "accent" }> = {
-  COMPLETED: { ko: "분석 완료", en: "Analyzed", tone: "success" },
-  PROCESSING: { ko: "분석 중", en: "Analyzing", tone: "accent" },
-  PENDING: { ko: "분석 대기", en: "Queued", tone: "neutral" },
-  FAILED: { ko: "분석 실패", en: "Analysis failed", tone: "danger" },
+const PARSING: Record<string, { key: LabelKey; tone: "success" | "warning" | "danger" | "neutral" | "accent" }> = {
+  COMPLETED: { key: "parsingCompleted", tone: "success" },
+  PROCESSING: { key: "parsingProcessing", tone: "accent" },
+  PENDING: { key: "parsingPending", tone: "neutral" },
+  FAILED: { key: "parsingFailed", tone: "danger" },
 };
 
 /** Resume version parsing status (completed/processing/pending/failed) as a user word plus a tone. */
 export function parsingStatusLabel(status: string | null | undefined, locale: AppLocale) {
   const entry = PARSING[(status ?? "").toUpperCase()];
-  return entry ? { label: entry[locale], tone: entry.tone } : { label: locale === "ko" ? "상태 확인 필요" : "Unknown", tone: "neutral" as const };
+  return entry
+    ? { label: label(locale, entry.key), tone: entry.tone }
+    : { label: label(locale, "parsingUnknown"), tone: "neutral" as const };
 }

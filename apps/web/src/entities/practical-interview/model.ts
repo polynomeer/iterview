@@ -1,6 +1,6 @@
 import { toArray } from "../../shared/lib/collection";
 import { formatApiDate, formatApiDateTime } from "../../shared/lib/date";
-import { getCurrentAppLocale } from "../../shared/i18n";
+import { translate, type MessageKey } from "../../shared/i18n";
 import type {
   InterviewRecordAnalysisDto,
   InterviewRecordDetailDto,
@@ -28,9 +28,8 @@ function toId(value: string | number | null | undefined, fallback: string) {
 }
 
 function formatLabel(value?: string | null) {
-  const isKorean = getCurrentAppLocale() === "ko";
   if (!value) {
-    return isKorean ? "알 수 없음" : "Unknown";
+    return translate("modelCommon.unknown");
   }
 
   return value
@@ -48,49 +47,36 @@ function mapTargetPayload(payload?: Record<string, string> | null) {
   return payload ?? {};
 }
 
+// Fixed English labels the API sends; the catalog holds each one's translation.
+const SERVER_TEXT_KEYS: Record<string, MessageKey> = {
+  "Start replay": "practicalModel.startReplay",
+  "Replay this interview": "practicalModel.replayThisInterview",
+  "Original replay": "practicalModel.originalReplay",
+  "Pressure variant": "practicalModel.pressureVariant",
+  "Replay ready": "practicalModel.replayReady",
+  "Replay unavailable": "practicalModel.replayUnavailable",
+  "Review transcript lane": "practicalModel.reviewTranscriptLane",
+  "Transcript lane": "practicalModel.transcriptLane",
+  "Question lane": "practicalModel.questionLane",
+  "Thread lane": "practicalModel.threadLane",
+  "Review structured questions": "practicalModel.reviewStructuredQuestions",
+  "Transcript needs final review": "practicalModel.transcriptNeedsFinalReview",
+  "Check follow-up chains": "practicalModel.checkFollowUpChains",
+  "Review segment 1": "practicalModel.reviewSegmentOne",
+};
+
 function localizePracticalInterviewText(value?: string | null) {
-  if (getCurrentAppLocale() !== "ko" || !value) {
+  if (!value) {
     return value ?? null;
   }
 
-  switch (value) {
-    case "Start replay":
-      return "리플레이 시작";
-    case "Replay this interview":
-      return "이 면접 다시 연습하기";
-    case "Original replay":
-      return "원본 리플레이";
-    case "Pressure variant":
-      return "압박 변형";
-    case "Replay ready":
-      return "리플레이 준비 완료";
-    case "Replay unavailable":
-      return "리플레이 불가";
-    case "Review transcript lane":
-      return "전사 레인 검토";
-    case "Transcript lane":
-      return "전사 레인";
-    case "Question lane":
-      return "질문 레인";
-    case "Thread lane":
-      return "스레드 레인";
-    case "Review structured questions":
-      return "구조화 질문 검토";
-    case "Transcript needs final review":
-      return "전사 최종 검토 필요";
-    case "Check follow-up chains":
-      return "꼬리질문 체인 점검";
-    case "Review segment 1":
-      return "1번 세그먼트 검토";
-    default:
-      return value;
-  }
+  const key = SERVER_TEXT_KEYS[value];
+  return key ? translate(key) : value;
 }
 
 function mapReplayLaunchPreset(
   preset?: InterviewRecordReplayLaunchPresetDto | null,
 ) {
-  const isKorean = getCurrentAppLocale() === "ko";
   if (!preset) {
     return null;
   }
@@ -115,11 +101,11 @@ function mapReplayLaunchPreset(
       ]),
     ),
     presetTitle: localizePracticalInterviewText(
-      preset.presetTitle ?? (isKorean ? "면접 리플레이" : "Replay interview"),
+      preset.presetTitle ?? translate("practicalModel.replayInterview"),
     ),
     presetDescription: localizePracticalInterviewText(preset.presetDescription ?? ""),
     launchButtonLabel: localizePracticalInterviewText(
-      preset.launchButtonLabel ?? (isKorean ? "리플레이 시작" : "Start replay"),
+      preset.launchButtonLabel ?? translate("practicalModel.startReplay"),
     ),
   };
 }
@@ -171,12 +157,11 @@ function mapBlockerDetail(
     | undefined,
   index: number,
 ) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id: detail?.code ?? `blocker-${index}`,
     code: detail?.code ?? "unknown",
     label: localizePracticalInterviewText(
-      detail?.label ?? (isKorean ? "검토 차단 요인" : "Review blocker"),
+      detail?.label ?? translate("practicalModel.reviewBlocker"),
     ),
     description: localizePracticalInterviewText(detail?.description ?? ""),
     severity: detail?.severity ?? "info",
@@ -194,7 +179,6 @@ function mapLaneItem(
   key: "transcript" | "question" | "thread",
   item?: InterviewRecordReviewLaneItemDto | null,
 ) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     key,
     sortOrder: item?.sortOrder ?? 999,
@@ -271,7 +255,6 @@ function mapTranscriptAction(
   action: InterviewRecordTranscriptSegmentActionDto,
   index: number,
 ) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id: `segment-action-${action.sequence ?? index}`,
     sequence: action.sequence ?? index + 1,
@@ -279,7 +262,7 @@ function mapTranscriptAction(
     recommendedAction: localizePracticalInterviewText(action.recommendedAction ?? "") ?? "",
     triageReason: localizePracticalInterviewText(action.triageReason ?? "") ?? "",
     ctaLabel: localizePracticalInterviewText(
-      action.ctaLabel ?? (isKorean ? "검토" : "Review"),
+      action.ctaLabel ?? translate("practicalModel.review"),
     ),
     severity: action.severity ?? "info",
     priority: action.priority ?? "normal",
@@ -320,7 +303,6 @@ function mapTranscriptAction(
 }
 
 function mapQuestionSummary(question: InterviewRecordReviewQuestionSummaryDto, index: number) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id: toId(question.questionId, `review-question-${index}`),
     linkedQuestionId:
@@ -328,7 +310,7 @@ function mapQuestionSummary(question: InterviewRecordReviewQuestionSummaryDto, i
         ? null
         : String(question.linkedQuestionId),
     orderIndex: question.orderIndex ?? index,
-    text: question.text ?? (isKorean ? "면접 질문" : "Interview question"),
+    text: question.text ?? translate("practicalModel.interviewQuestion"),
     questionType: question.questionType ?? "general",
     questionTypeLabel: formatLabel(question.questionType),
     topicTags: toArray(question.topicTags),
@@ -377,7 +359,6 @@ function mapQuestionSummary(question: InterviewRecordReviewQuestionSummaryDto, i
 }
 
 function mapFollowUpThread(thread: InterviewRecordReviewFollowUpThreadDto, index: number) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id: toId(thread.rootQuestionId, `thread-${index}`),
     rootLinkedQuestionId:
@@ -385,7 +366,7 @@ function mapFollowUpThread(thread: InterviewRecordReviewFollowUpThreadDto, index
         ? null
         : String(thread.rootLinkedQuestionId),
     rootOrderIndex: thread.rootOrderIndex ?? index,
-    rootText: thread.rootText ?? (isKorean ? "질문 스레드" : "Question thread"),
+    rootText: thread.rootText ?? translate("practicalModel.questionThread"),
     questionIds: toArray(thread.questionIds).map((id) => String(id)),
     linkedQuestionIds: toArray(thread.linkedQuestionIds).map((id) => String(id)),
     followUpQuestionIds: toArray(thread.followUpQuestionIds).map((id) => String(id)),
@@ -483,16 +464,15 @@ function mapActionRecommendations(
 }
 
 function formatTranscriptErrorCode(value?: string | null) {
-  const isKorean = getCurrentAppLocale() === "ko";
   switch (value) {
     case "transcription_not_configured":
-      return isKorean ? "자동 전사가 설정되지 않았습니다" : "Automatic transcription is not configured";
+      return translate("practicalModel.transcriptionNotConfigured");
     case "transcription_failed":
-      return isKorean ? "자동 전사에 실패했습니다" : "Automatic transcription failed";
+      return translate("practicalModel.transcriptionFailed");
     case "empty_transcript":
-      return isKorean ? "추출된 전사가 없습니다" : "No transcript could be extracted";
+      return translate("practicalModel.emptyTranscript");
     case "processing_timeout":
-      return isKorean ? "전사 시간이 초과되었습니다" : "Transcription timed out";
+      return translate("practicalModel.transcriptionTimedOut");
     default:
       return value ? formatLabel(value) : null;
   }
@@ -514,7 +494,6 @@ function getTranscriptStatusTone(status?: string | null) {
 }
 
 export function mapInterviewRecordListDtoToModel(response: InterviewRecordListItemDto[]) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return sortBySortOrder(
     toArray(response).map((record, index) => ({
       id: toId(record.id, `record-${index}`),
@@ -522,7 +501,7 @@ export function mapInterviewRecordListDtoToModel(response: InterviewRecordListIt
       roleName: record.roleName ?? null,
       title:
         [record.companyName, record.roleName].filter(Boolean).join(" · ") ||
-        (isKorean ? "가져온 면접" : "Imported interview"),
+        translate("practicalModel.importedInterview"),
       interviewDate: record.interviewDate ?? null,
       interviewDateLabel: formatApiDate(record.interviewDate),
       interviewType: record.interviewType ?? "general",
@@ -557,7 +536,6 @@ export function mapInterviewRecordListDtoToModel(response: InterviewRecordListIt
 }
 
 export function mapInterviewRecordDetailDtoToModel(dto: InterviewRecordDetailDto) {
-  const isKorean = getCurrentAppLocale() === "ko";
   const transcriptStatus = dto.transcriptStatus ?? "unknown";
   const analysisStatus = dto.analysisStatus ?? "unknown";
   const transcriptErrorCode = dto.transcriptErrorCode ?? null;
@@ -568,7 +546,7 @@ export function mapInterviewRecordDetailDtoToModel(dto: InterviewRecordDetailDto
     roleName: dto.roleName ?? null,
     title:
       [dto.companyName, dto.roleName].filter(Boolean).join(" · ") ||
-      (isKorean ? "가져온 면접" : "Imported interview"),
+      translate("practicalModel.importedInterview"),
     interviewDate: dto.interviewDate ?? null,
     interviewDateLabel: formatApiDate(dto.interviewDate),
     interviewType: dto.interviewType ?? "general",
@@ -651,7 +629,6 @@ export function mapInterviewRecordTranscriptDtoToModel(dto: InterviewRecordTrans
 }
 
 export function mapInterviewRecordQuestionsDtoToModel(dto: InterviewRecordQuestionsResponseDto) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     interviewRecordId: toId(dto.interviewRecordId, "record"),
     playback: mapPlayback(dto.playback),
@@ -662,7 +639,7 @@ export function mapInterviewRecordQuestionsDtoToModel(dto: InterviewRecordQuesti
           item.linkedQuestionId === null || item.linkedQuestionId === undefined
             ? null
             : String(item.linkedQuestionId),
-        text: item.text ?? (isKorean ? "면접 질문" : "Interview question"),
+        text: item.text ?? translate("practicalModel.interviewQuestion"),
         normalizedText: item.normalizedText ?? null,
         questionType: item.questionType ?? "general",
         questionTypeLabel: formatLabel(item.questionType),
@@ -735,7 +712,6 @@ export function mapInterviewerProfileDtoToModel(dto: InterviewerProfileDto) {
 }
 
 export function mapInterviewRecordReviewDtoToModel(dto: InterviewRecordReviewDto) {
-  const isKorean = getCurrentAppLocale() === "ko";
   const laneSummary = dto.reviewLaneSummary ?? {};
   const laneItems = sortBySortOrder([
     mapLaneItem("transcript", laneSummary.transcript),
@@ -795,16 +771,16 @@ export function mapInterviewRecordReviewDtoToModel(dto: InterviewRecordReviewDto
         dto.replayReadiness?.recommendedReplayModeLabel ?? null,
       ),
       statusBadgeText: localizePracticalInterviewText(
-        dto.replayReadiness?.statusBadgeText ?? (isKorean ? "알 수 없음" : "Unknown"),
+        dto.replayReadiness?.statusBadgeText ?? translate("modelCommon.unknown"),
       ),
       statusVariant: dto.replayReadiness?.statusVariant ?? "neutral",
       statusSummary: localizePracticalInterviewText(dto.replayReadiness?.statusSummary ?? "") ?? "",
       primaryCtaLabel:
         localizePracticalInterviewText(dto.replayReadiness?.primaryCtaLabel) ??
-        (isKorean ? "리플레이 시작" : "Start replay"),
+        translate("practicalModel.startReplay"),
       blockedCtaLabel:
         localizePracticalInterviewText(dto.replayReadiness?.blockedCtaLabel) ??
-        (isKorean ? "리플레이 불가" : "Replay unavailable"),
+        translate("practicalModel.replayUnavailable"),
       blockers: toArray(dto.replayReadiness?.blockers),
       blockerDetails: sortBySortOrder(
         toArray(dto.replayReadiness?.blockerDetails).map(mapBlockerDetail),

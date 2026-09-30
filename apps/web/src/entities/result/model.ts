@@ -1,7 +1,7 @@
 import type { AnswerAnalysisDto, AnswerAttemptDetailResponseDto } from "../../shared/types/result";
 import { toArray } from "../../shared/lib/collection";
 import { formatApiDateTime } from "../../shared/lib/date";
-import { getCurrentAppLocale } from "../../shared/i18n/locale";
+import { translate } from "../../shared/i18n";
 
 export type ResultDimensionModel = {
   id:
@@ -80,7 +80,6 @@ export function mapAnswerAttemptDetailAndAnalysisToModel(
   questionTitle?: string,
   followUpRecommendations?: Array<{ id: string; title: string }> | null,
 ): ResultAnalysisModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   const score = response.score ?? {};
   const answerAttempt = response.answerAttempt;
   const resolvedAnalysis = response.analysis ?? analysis ?? null;
@@ -91,28 +90,28 @@ export function mapAnswerAttemptDetailAndAnalysisToModel(
       answerAttempt?.questionId === undefined || answerAttempt.questionId === null
         ? ""
         : String(answerAttempt.questionId),
-    questionTitle: questionTitle ?? (isKorean ? "면접 질문" : "Interview question"),
+    questionTitle: questionTitle ?? translate("resultModel.interviewQuestion"),
     totalScore: `${score.totalScore ?? "-"}`,
     totalScoreValue: score.totalScore ?? null,
     answerText: answerAttempt?.contentText ?? null,
     attemptNumber: answerAttempt?.attemptNo ?? null,
-    evaluationResult: score.evaluationResult ?? (isKorean ? "대기 중" : "Pending"),
+    evaluationResult: score.evaluationResult ?? translate("resultModel.pending"),
     dimensions: [
-      { id: "structure", label: isKorean ? "구조" : "Structure", value: `${score.structureScore ?? "-"}`, score: score.structureScore ?? null },
-      { id: "specificity", label: isKorean ? "구체성" : "Specificity", value: `${score.specificityScore ?? "-"}`, score: score.specificityScore ?? null },
+      { id: "structure", label: translate("resultModel.structure"), value: `${score.structureScore ?? "-"}`, score: score.structureScore ?? null },
+      { id: "specificity", label: translate("resultModel.specificity"), value: `${score.specificityScore ?? "-"}`, score: score.specificityScore ?? null },
       {
         id: "technicalAccuracy",
-        label: isKorean ? "기술 정확도" : "Technical accuracy",
+        label: translate("resultModel.technicalAccuracy"),
         value: `${score.technicalAccuracyScore ?? "-"}`,
         score: score.technicalAccuracyScore ?? null,
       },
-      { id: "roleFit", label: isKorean ? "직무 적합도" : "Role fit", value: `${score.roleFitScore ?? "-"}`, score: score.roleFitScore ?? null },
-      { id: "companyFit", label: isKorean ? "회사 적합도" : "Company fit", value: `${score.companyFitScore ?? "-"}`, score: score.companyFitScore ?? null },
-      { id: "communication", label: isKorean ? "커뮤니케이션" : "Communication", value: `${score.communicationScore ?? "-"}`, score: score.communicationScore ?? null },
+      { id: "roleFit", label: translate("resultModel.roleFit"), value: `${score.roleFitScore ?? "-"}`, score: score.roleFitScore ?? null },
+      { id: "companyFit", label: translate("resultModel.companyFit"), value: `${score.companyFitScore ?? "-"}`, score: score.companyFitScore ?? null },
+      { id: "communication", label: translate("resultModel.communication"), value: `${score.communicationScore ?? "-"}`, score: score.communicationScore ?? null },
     ],
     feedbackItems: toArray(response.feedback).map((item) => ({
       id: String(item.id),
-      title: item.title ?? (isKorean ? "피드백" : "Feedback"),
+      title: item.title ?? translate("resultModel.feedback"),
       description: item.body ?? "",
       tone:
         item.severity === "high" ? "improving" : item.feedbackType === "strength" ? "positive" : "neutral",
@@ -129,7 +128,7 @@ export function mapAnswerAttemptDetailAndAnalysisToModel(
     modelAnswer: resolvedAnalysis?.modelAnswer?.text
       ? {
           text: resolvedAnalysis.modelAnswer.text,
-          sourceType: resolvedAnalysis.modelAnswer.sourceType ?? (isKorean ? "생성됨" : "generated"),
+          sourceType: resolvedAnalysis.modelAnswer.sourceType ?? translate("resultModel.generated"),
           contentLocale: resolvedAnalysis.modelAnswer.contentLocale ?? null,
           llmModel: resolvedAnalysis.modelAnswer.llmModel ?? null,
         }
@@ -137,33 +136,29 @@ export function mapAnswerAttemptDetailAndAnalysisToModel(
     progressStatusLabel: response.progressSummary?.currentStatus ?? null,
     archiveDecisionLabel:
       response.progressSummary?.masteryLevel
-        ? isKorean
-          ? `숙련도 ${response.progressSummary.masteryLevel}`
-          : `Mastery ${response.progressSummary.masteryLevel}`
+        ? translate("resultModel.mastery", { level: response.progressSummary.masteryLevel })
         : null,
     nextReviewLabel: formatApiDateTime(response.progressSummary?.nextReviewAt),
     skillImpact: [
       {
         id: "depth",
-        label: isKorean ? "깊이" : "Depth",
+        label: translate("resultModel.depth"),
         deltaLabel: `${resolvedAnalysis?.depthScore ?? "-"}`,
         scoreLabel: resolvedAnalysis?.strengthSummary ?? undefined,
       },
       {
         id: "clarity",
-        label: isKorean ? "명확성" : "Clarity",
+        label: translate("resultModel.clarity"),
         deltaLabel: `${resolvedAnalysis?.clarityScore ?? "-"}`,
         scoreLabel: resolvedAnalysis?.recommendedNextStep ?? undefined,
       },
       {
         id: "accuracy",
-        label: isKorean ? "정확성" : "Accuracy",
+        label: translate("resultModel.accuracy"),
         deltaLabel: `${resolvedAnalysis?.accuracyScore ?? "-"}`,
         scoreLabel:
           resolvedAnalysis?.createdAt
-            ? isKorean
-              ? `분석 시각 ${formatApiDateTime(resolvedAnalysis.createdAt)}`
-              : `Analyzed ${formatApiDateTime(resolvedAnalysis.createdAt)}`
+            ? translate("resultModel.analyzedAt", { time: String(formatApiDateTime(resolvedAnalysis.createdAt)) })
             : undefined,
       },
     ],
@@ -171,16 +166,16 @@ export function mapAnswerAttemptDetailAndAnalysisToModel(
       resolvedAnalysis?.weaknessSummary
         ? {
             id: "weakness-summary",
-            title: isKorean ? "핵심 약점" : "Primary weakness",
-            severityLabel: isKorean ? "보완 필요" : "Needs work",
+            title: translate("resultModel.primaryWeakness"),
+            severityLabel: translate("resultModel.needsWork"),
             description: resolvedAnalysis.weaknessSummary,
           }
         : null,
       resolvedAnalysis?.recommendedNextStep
         ? {
             id: "next-step",
-            title: isKorean ? "권장 다음 단계" : "Recommended next step",
-            severityLabel: isKorean ? "다음 액션" : "Next action",
+            title: translate("resultModel.recommendedNextStep"),
+            severityLabel: translate("resultModel.nextAction"),
             description: resolvedAnalysis.recommendedNextStep,
           }
         : null,

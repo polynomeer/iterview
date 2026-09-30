@@ -18,14 +18,13 @@ export function SectionEmptyState({
   body,
   action,
 }: SectionEmptyStateProps) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <StateCard
       action={action}
       body={body}
-      label={label ?? (isKorean ? "비어 있음" : "Empty")}
+      label={label ?? t("common.emptyState")}
       size="section"
       title={title}
       tone="empty"

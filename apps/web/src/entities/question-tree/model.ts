@@ -1,5 +1,5 @@
 import type { QuestionTreeResponseDto } from "../../shared/types/question-tree";
-import { getCurrentAppLocale } from "../../shared/i18n/locale";
+import { translate } from "../../shared/i18n";
 
 export type QuestionTreeNodeModel = {
   id: string;
@@ -25,16 +25,15 @@ function flattenTree(
     return [];
   }
 
-  const isKorean = getCurrentAppLocale() === "ko";
   const id = String(node.questionId);
   const currentNode: QuestionTreeNodeModel = {
     id,
-    title: node.title ?? (isKorean ? "꼬리질문" : "Follow-up question"),
+    title: node.title ?? translate("questionModel.followUpQuestion"),
     depth: node.depth ?? 0,
-    difficulty: node.difficulty ?? (isKorean ? "일반" : "General"),
+    difficulty: node.difficulty ?? translate("modelCommon.general"),
     relationshipType: node.relationshipType ?? null,
     parentQuestionId,
-    status: node.nodeStatus ?? (isKorean ? "미응답" : "unanswered"),
+    status: node.nodeStatus ?? translate("questionModel.unansweredStatus"),
     isRoot: parentQuestionId === null,
   };
 

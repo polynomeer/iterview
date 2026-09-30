@@ -17,7 +17,7 @@ import type {
 } from "../../shared/types/resume";
 import { toArray } from "../../shared/lib/collection";
 import { formatApiDate, formatApiDateTime } from "../../shared/lib/date";
-import { getCurrentAppLocale } from "../../shared/i18n";
+import { translate } from "../../shared/i18n";
 
 export type ResumeVersionModel = {
   id: string;
@@ -233,10 +233,8 @@ function formatFileSize(bytes?: number | null) {
 }
 
 function formatStatusLabel(status?: string | null) {
-  const isKorean = getCurrentAppLocale() === "ko";
-
   if (!status) {
-    return isKorean ? "상태 정보 없음" : "Status unavailable";
+    return translate("resumeModel.statusUnavailable");
   }
 
   return status
@@ -247,9 +245,8 @@ function formatStatusLabel(status?: string | null) {
 }
 
 function formatDateRange(start?: string | null, end?: string | null, current?: boolean | null) {
-  const isKorean = getCurrentAppLocale() === "ko";
   const startLabel = formatApiDate(start);
-  const endLabel = current ? (isKorean ? "현재" : "Present") : formatApiDate(end);
+  const endLabel = current ? translate("resumeModel.present") : formatApiDate(end);
 
   if (startLabel && endLabel) {
     return `${startLabel} - ${endLabel}`;
@@ -263,7 +260,7 @@ function formatDateRange(start?: string | null, end?: string | null, current?: b
     return endLabel;
   }
 
-  return isKorean ? "기간 정보 없음" : "Dates unavailable";
+  return translate("resumeModel.datesUnavailable");
 }
 
 function getParsingTone(status?: string | null): ResumeVersionModel["parsingTone"] {
@@ -298,7 +295,6 @@ function getExtractionTone(status?: string | null): ResumeVersionModel["extracti
 }
 
 function mapResumeVersionDtoToModel(version: ResumeVersionDto): ResumeVersionModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   const parsingStatus = (version.parsingStatus ?? "unknown").toLowerCase();
   const extractionStatus = (version.llmExtractionStatus ?? "unknown").toLowerCase();
   const confidence =
@@ -308,10 +304,10 @@ function mapResumeVersionDtoToModel(version: ResumeVersionDto): ResumeVersionMod
 
   return {
     id: String(version.id),
-    versionNumberLabel: isKorean ? `${version.versionNo ?? 1}번 버전` : `Version ${version.versionNo ?? 1}`,
+    versionNumberLabel: translate("resumeModel.versionNumber", { number: version.versionNo ?? 1 }),
     isActive: version.isActive ?? false,
     uploadedAtLabel: formatApiDate(version.uploadedAt),
-    fileNameLabel: version.fileName ?? (isKorean ? "업로드된 이력서 버전" : "Uploaded resume version"),
+    fileNameLabel: version.fileName ?? translate("resumeModel.uploadedVersion"),
     parsingStatusLabel: formatStatusLabel(version.parsingStatus),
     parsingStatus,
     parsingTone: getParsingTone(version.parsingStatus),
@@ -322,9 +318,7 @@ function mapResumeVersionDtoToModel(version: ResumeVersionDto): ResumeVersionMod
     parseErrorMessage: version.parseErrorMessage ?? null,
     extractionStatusLabel:
       version.llmExtractionStatus === null || version.llmExtractionStatus === undefined
-        ? isKorean
-          ? "시작 전"
-          : "Not started"
+        ? translate("resumeModel.notStarted")
         : formatStatusLabel(version.llmExtractionStatus),
     extractionStatus,
     extractionTone: getExtractionTone(version.llmExtractionStatus),
@@ -419,7 +413,6 @@ export function mapResumeVersionDtoToDetailModel(response: ResumeVersionDto): Re
 export function mapResumeVersionExtractionDtoToModel(
   response: ResumeVersionExtractionDto,
 ): ResumeExtractionModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   const extractionStatus = (response.llmExtractionStatus ?? "unknown").toLowerCase();
 
   return {
@@ -432,9 +425,7 @@ export function mapResumeVersionExtractionDtoToModel(
     extractionStatus,
     extractionStatusLabel:
       response.llmExtractionStatus === null || response.llmExtractionStatus === undefined
-        ? isKorean
-          ? "시작 전"
-          : "Not started"
+        ? translate("resumeModel.notStarted")
         : formatStatusLabel(response.llmExtractionStatus),
     extractionTone: getExtractionTone(response.llmExtractionStatus),
     startedAtLabel: formatApiDateTime(response.startedAt),
@@ -455,7 +446,6 @@ export function mapResumeAnalysisResponsesToModel(
   experiencesResponse: ResumeExperienceSnapshotResponseDto,
   risksResponse: ResumeRiskItemResponseDto,
 ): ResumeAnalysisModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   const resumeVersionId =
     skillsResponse.resumeVersionId ??
     experiencesResponse.resumeVersionId ??
@@ -474,13 +464,11 @@ export function mapResumeAnalysisResponsesToModel(
           : String(skill.skillId),
       sourceRecordId:
         skill.skillId === null || skill.skillId === undefined ? null : String(skill.skillId),
-      label: skill.skillName ?? (isKorean ? "이력서 스킬" : "Resume skill"),
+      label: skill.skillName ?? translate("resumeModel.resumeSkill"),
       value:
         skill.confidenceScore === null || skill.confidenceScore === undefined
-          ? skill.skillCategory ?? (isKorean ? "매핑됨" : "Mapped")
-          : isKorean
-            ? `신뢰도 ${Math.round(skill.confidenceScore * 100)}%`
-            : `${Math.round(skill.confidenceScore * 100)}% confidence`,
+          ? skill.skillCategory ?? translate("resumeModel.mapped")
+          : translate("resumeModel.confidencePercent", { percent: Math.round(skill.confidenceScore * 100) }),
       category: skill.skillCategory ?? undefined,
       confidenceScore:
         skill.confidenceScore === null || skill.confidenceScore === undefined
@@ -489,9 +477,7 @@ export function mapResumeAnalysisResponsesToModel(
       confidenceLabel:
         skill.confidenceScore === null || skill.confidenceScore === undefined
           ? undefined
-          : isKorean
-            ? `신뢰도 ${Math.round(skill.confidenceScore * 100)}%`
-            : `${Math.round(skill.confidenceScore * 100)}% confidence`,
+          : translate("resumeModel.confidencePercent", { percent: Math.round(skill.confidenceScore * 100) }),
       helperText: skill.sourceText ?? undefined,
       tone:
         skill.confidenceScore === null || skill.confidenceScore === undefined
@@ -512,19 +498,19 @@ export function mapResumeAnalysisResponsesToModel(
       title:
         [experience.companyName, experience.roleName].filter(Boolean).join(" · ") ||
         experience.projectName ||
-        (isKorean ? "이력서 경력" : "Resume experience"),
+        translate("resumeModel.resumeExperience"),
       summary:
         experience.summaryText ??
-        (isKorean ? "아직 경력 요약이 없습니다." : "No experience summary is available yet."),
+        translate("resumeModel.noExperienceSummary"),
       impactText: experience.impactText ?? undefined,
     })),
     risks: toArray(risksResponse.items).map((risk, index) => ({
       id: risk.id === null || risk.id === undefined ? `risk-${index}` : String(risk.id),
-      title: risk.title ?? risk.riskType ?? (isKorean ? "이력서 리스크" : "Resume risk"),
+      title: risk.title ?? risk.riskType ?? translate("resumeModel.resumeRisk"),
       severityLabel: formatStatusLabel(risk.severity ?? "needs_review"),
       severity: risk.severity ?? null,
       description:
-        risk.description ?? (isKorean ? "아직 리스크 설명이 없습니다." : "No risk description is available yet."),
+        risk.description ?? translate("resumeModel.noRiskDescription"),
       linkedQuestionId:
         risk.linkedQuestionId === null || risk.linkedQuestionId === undefined
           ? undefined
@@ -546,7 +532,6 @@ export function mapResumeSnapshotsToModel(params: {
   awardsResponse: ResumeAwardItemResponseDto;
   risksResponse: ResumeRiskItemResponseDto;
 }): ResumeSnapshotModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   const {
     profileResponse,
     contactsResponse,
@@ -577,7 +562,7 @@ export function mapResumeSnapshotsToModel(params: {
       .map((contact, index) => ({
         id: contact.id === null || contact.id === undefined ? `contact-${index}` : String(contact.id),
         title: contact.label ?? formatStatusLabel(contact.contactType ?? "contact"),
-        value: contact.valueText ?? contact.url ?? (isKorean ? "정보 없음" : "Unavailable"),
+        value: contact.valueText ?? contact.url ?? translate("resumeModel.unavailable"),
         url: contact.url ?? undefined,
         helperText: contact.contactType ? formatStatusLabel(contact.contactType) : undefined,
         isPrimary: contact.primary ?? false,
@@ -588,9 +573,9 @@ export function mapResumeSnapshotsToModel(params: {
         id: item.id === null || item.id === undefined ? `competency-${index}` : String(item.id),
         sourceRecordId:
           item.id === null || item.id === undefined ? null : String(item.id),
-        title: item.title ?? (isKorean ? "역량" : "Competency"),
+        title: item.title ?? translate("resumeModel.competency"),
         description:
-          item.description ?? (isKorean ? "아직 역량 설명이 없습니다." : "No competency statement is available yet."),
+          item.description ?? translate("resumeModel.noCompetencyStatement"),
         sourceText: item.sourceText ?? undefined,
       })),
     skills: mapResumeAnalysisResponsesToModel(skillsResponse, experiencesResponse, risksResponse).skills,
@@ -600,14 +585,14 @@ export function mapResumeSnapshotsToModel(params: {
         id: experience.id === null || experience.id === undefined ? `experience-${index}` : String(experience.id),
         sourceRecordId:
           experience.id === null || experience.id === undefined ? null : String(experience.id),
-        companyName: experience.companyName ?? (isKorean ? "회사 정보 없음" : "Unknown company"),
-        roleName: experience.roleName ?? (isKorean ? "직무 정보 없음" : "Unknown role"),
+        companyName: experience.companyName ?? translate("resumeModel.unknownCompany"),
+        roleName: experience.roleName ?? translate("resumeModel.unknownRole"),
         employmentType: experience.employmentType ?? undefined,
         dateLabel: formatDateRange(experience.startedOn, experience.endedOn, experience.current),
         current: experience.current ?? false,
         summary:
           experience.summaryText ??
-          (isKorean ? "아직 경력 요약이 없습니다." : "No experience summary is available yet."),
+          translate("resumeModel.noExperienceSummary"),
         impactText: experience.impactText ?? undefined,
         projectName: experience.projectName ?? undefined,
       })),
@@ -617,7 +602,7 @@ export function mapResumeSnapshotsToModel(params: {
         id: project.id === null || project.id === undefined ? `project-${index}` : String(project.id),
         sourceRecordId:
           project.id === null || project.id === undefined ? null : String(project.id),
-        title: project.title ?? (isKorean ? "프로젝트" : "Project"),
+        title: project.title ?? translate("resumeModel.project"),
         categoryCode: project.projectCategoryCode ?? undefined,
         categoryName: project.projectCategoryName ?? undefined,
         organizationName: project.organizationName ?? undefined,
@@ -626,13 +611,13 @@ export function mapResumeSnapshotsToModel(params: {
         dateLabel: formatDateRange(project.startedOn, project.endedOn, false),
         summary:
           project.summaryText ??
-          (isKorean ? "아직 프로젝트 요약이 없습니다." : "No project summary is available yet."),
+          translate("resumeModel.noProjectSummary"),
         contentText: project.contentText ?? undefined,
         tags: toArray(project.tags)
           .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0))
           .map((tag, tagIndex) => ({
             id: tag.id === null || tag.id === undefined ? `project-tag-${index}-${tagIndex}` : String(tag.id),
-            label: tag.tagName ?? (isKorean ? "태그" : "Tag"),
+            label: tag.tagName ?? translate("resumeModel.tag"),
             type: tag.tagType ?? undefined,
           })),
         relatedExperienceId:
@@ -647,18 +632,18 @@ export function mapResumeSnapshotsToModel(params: {
           achievement.id === null || achievement.id === undefined
             ? `achievement-${index}`
             : String(achievement.id),
-        title: achievement.title ?? (isKorean ? "성과" : "Achievement"),
+        title: achievement.title ?? translate("resumeModel.achievement"),
         metricText: achievement.metricText ?? undefined,
         impactSummary:
           achievement.impactSummary ??
-          (isKorean ? "아직 성과 요약이 없습니다." : "No impact summary is available yet."),
+          translate("resumeModel.noImpactSummary"),
         severityHint: achievement.severityHint ?? undefined,
       })),
     education: toArray(educationResponse.items)
       .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0))
       .map((education, index) => ({
         id: education.id === null || education.id === undefined ? `education-${index}` : String(education.id),
-        institutionName: education.institutionName ?? (isKorean ? "교육 기관" : "Institution"),
+        institutionName: education.institutionName ?? translate("resumeModel.institution"),
         degreeName: education.degreeName ?? undefined,
         fieldOfStudy: education.fieldOfStudy ?? undefined,
         dateLabel: formatDateRange(education.startedOn, education.endedOn, false),
@@ -671,7 +656,7 @@ export function mapResumeSnapshotsToModel(params: {
           certification.id === null || certification.id === undefined
             ? `certification-${index}`
             : String(certification.id),
-        name: certification.name ?? (isKorean ? "자격증" : "Certification"),
+        name: certification.name ?? translate("resumeModel.certification"),
         issuerName: certification.issuerName ?? undefined,
         credentialCode: certification.credentialCode ?? undefined,
         dateLabel: formatDateRange(certification.issuedOn, certification.expiresOn, false),
@@ -681,7 +666,7 @@ export function mapResumeSnapshotsToModel(params: {
       .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0))
       .map((award, index) => ({
         id: award.id === null || award.id === undefined ? `award-${index}` : String(award.id),
-        title: award.title ?? (isKorean ? "수상" : "Award"),
+        title: award.title ?? translate("resumeModel.award"),
         issuerName: award.issuerName ?? undefined,
         awardedOnLabel: formatApiDate(award.awardedOn) ?? undefined,
         description: award.description ?? undefined,
@@ -693,7 +678,6 @@ export function mapResumeSnapshotsToModel(params: {
 export function mapResumeExperiencesResponseToModel(
   experiencesResponse: ResumeExperienceSnapshotResponseDto,
 ): ResumeMappedExperienceModel[] {
-  const isKorean = getCurrentAppLocale() === "ko";
   return toArray(experiencesResponse.items)
     .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0))
     .map((experience, index) => {
@@ -706,14 +690,14 @@ export function mapResumeExperiencesResponseToModel(
         id,
         sourceRecordId: id.startsWith("experience-") ? null : id,
         sourceJoinKey: `experience:${id}`,
-        companyName: experience.companyName ?? (isKorean ? "회사 정보 없음" : "Unknown company"),
-        roleName: experience.roleName ?? (isKorean ? "직무 정보 없음" : "Unknown role"),
+        companyName: experience.companyName ?? translate("resumeModel.unknownCompany"),
+        roleName: experience.roleName ?? translate("resumeModel.unknownRole"),
         employmentType: experience.employmentType ?? undefined,
         dateLabel: formatDateRange(experience.startedOn, experience.endedOn, experience.current),
         current: experience.current ?? false,
         summary:
           experience.summaryText ??
-          (isKorean ? "아직 경력 요약이 없습니다." : "No experience summary is available yet."),
+          translate("resumeModel.noExperienceSummary"),
         impactText: experience.impactText ?? undefined,
         projectName: experience.projectName ?? undefined,
       };
@@ -723,7 +707,6 @@ export function mapResumeExperiencesResponseToModel(
 export function mapResumeProjectsResponseToModel(
   projectsResponse: ResumeProjectSnapshotResponseDto,
 ): ResumeMappedProjectModel[] {
-  const isKorean = getCurrentAppLocale() === "ko";
   return toArray(projectsResponse.items)
     .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0))
     .map((project, index) => {
@@ -734,7 +717,7 @@ export function mapResumeProjectsResponseToModel(
         id,
         sourceRecordId: id.startsWith("project-") ? null : id,
         sourceJoinKey: `project:${id}`,
-        title: project.title ?? (isKorean ? "프로젝트" : "Project"),
+        title: project.title ?? translate("resumeModel.project"),
         categoryCode: project.projectCategoryCode ?? undefined,
         categoryName: project.projectCategoryName ?? undefined,
         organizationName: project.organizationName ?? undefined,
@@ -743,13 +726,13 @@ export function mapResumeProjectsResponseToModel(
         dateLabel: formatDateRange(project.startedOn, project.endedOn, false),
         summary:
           project.summaryText ??
-          (isKorean ? "아직 프로젝트 요약이 없습니다." : "No project summary is available yet."),
+          translate("resumeModel.noProjectSummary"),
         contentText: project.contentText ?? undefined,
         tags: toArray(project.tags)
           .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0))
           .map((tag, tagIndex) => ({
             id: tag.id === null || tag.id === undefined ? `project-tag-${index}-${tagIndex}` : String(tag.id),
-            label: tag.tagName ?? (isKorean ? "태그" : "Tag"),
+            label: tag.tagName ?? translate("resumeModel.tag"),
             type: tag.tagType ?? undefined,
           })),
         relatedExperienceId:

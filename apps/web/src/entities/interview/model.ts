@@ -7,7 +7,7 @@ import type {
   InterviewSessionQuestionDto,
   InterviewSessionResumeMapResponseDto,
 } from "../../shared/types/interview";
-import { getCurrentAppLocale, normalizeAppLocale, type AppLocale } from "../../shared/i18n";
+import { normalizeAppLocale, translate, type AppLocale } from "../../shared/i18n";
 import { toArray } from "../../shared/lib/collection";
 import { formatApiDateTime } from "../../shared/lib/date";
 
@@ -167,9 +167,8 @@ export type InterviewResumeMapModel = {
 };
 
 function formatLabel(value?: string | null) {
-  const isKorean = getCurrentAppLocale() === "ko";
   if (!value) {
-    return isKorean ? "알 수 없음" : "Unknown";
+    return translate("modelCommon.unknown");
   }
 
   return value
@@ -180,14 +179,13 @@ function formatLabel(value?: string | null) {
 }
 
 function formatInterviewEvidenceSection(value?: string | null) {
-  const isKorean = getCurrentAppLocale() === "ko";
   switch ((value ?? "").toLowerCase()) {
     case "project":
-      return isKorean ? "프로젝트" : "Project";
+      return translate("interviewModel.sectionProject");
     case "experience":
-      return isKorean ? "경험" : "Experience";
+      return translate("interviewModel.sectionExperience");
     default:
-      return value ? formatLabel(value) : isKorean ? "이력서" : "Resume";
+      return value ? formatLabel(value) : translate("interviewModel.sectionResume");
   }
 }
 
@@ -227,7 +225,6 @@ function mapInterviewResumeEvidenceDto(
   evidence: InterviewResumeEvidenceDto,
   index: number,
 ) {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     id:
       evidence.sourceRecordId === null || evidence.sourceRecordId === undefined
@@ -237,13 +234,11 @@ function mapInterviewResumeEvidenceDto(
     section: evidence.section ?? null,
     sectionLabel: evidence.section ? formatInterviewEvidenceSection(evidence.section) : null,
     label: evidence.label ?? null,
-    snippet: evidence.snippet ?? (isKorean ? "이력서 근거" : "Resume evidence"),
+    snippet: evidence.snippet ?? translate("interviewModel.resumeEvidence"),
     confidenceLabel:
       evidence.confidence === null || evidence.confidence === undefined
         ? null
-        : isKorean
-          ? `${Math.round(evidence.confidence * 100)}% 일치`
-          : `${Math.round(evidence.confidence * 100)}% match`,
+        : translate("modelCommon.resumeMatch", { score: Math.round(evidence.confidence * 100) }),
   };
 }
 
@@ -251,7 +246,6 @@ function mapInterviewSessionQuestionDto(
   question: InterviewSessionQuestionDto,
   index: number,
 ): InterviewSessionQuestionModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   const sourceType = question.sourceType ?? "seeded";
   const isAiFollowUp = sourceType === "ai_follow_up";
   const generationStatus = question.generationStatus ?? "not_requested";
@@ -259,16 +253,10 @@ function mapInterviewSessionQuestionDto(
   const revisitLabel =
     generationStatus === "coverage_extended"
       ? normalizedRationale.includes("skip")
-        ? isKorean
-          ? "건너뜀 복구"
-          : "Skipped recovery"
+        ? translate("interviewModel.revisitSkipped")
         : normalizedRationale.includes("weak")
-          ? isKorean
-            ? "방어가 약했던 지점 재확인"
-            : "Revisiting a weakly defended point"
-          : isKorean
-            ? "깊이 커버리지 재확인"
-            : "Deep-dive coverage revisit"
+          ? translate("interviewModel.revisitWeak")
+          : translate("interviewModel.revisitDeepDive")
       : null;
 
   return {
@@ -277,15 +265,15 @@ function mapInterviewSessionQuestionDto(
       question.questionId === null || question.questionId === undefined
         ? null
         : String(question.questionId),
-    title: question.title ?? (isKorean ? "면접 질문" : "Interview question"),
+    title: question.title ?? translate("interviewModel.interviewQuestion"),
     promptText: question.promptText ?? null,
     bodyText: question.bodyText ?? null,
     contentLocale: normalizeAppLocale(question.contentLocale),
-    difficultyLabel: question.difficulty ?? (isKorean ? "일반" : "General"),
+    difficultyLabel: question.difficulty ?? translate("modelCommon.general"),
     orderIndex: question.orderIndex ?? index,
-    status: question.status ?? (isKorean ? "대기" : "pending"),
+    status: question.status ?? translate("interviewModel.pendingStatus"),
     sourceType,
-    sourceLabel: isAiFollowUp ? (isKorean ? "AI 꼬리질문" : "AI follow-up") : formatLabel(sourceType),
+    sourceLabel: isAiFollowUp ? translate("interviewModel.aiFollowUp") : formatLabel(sourceType),
     parentSessionQuestionId:
       question.parentSessionQuestionId === null || question.parentSessionQuestionId === undefined
         ? null
@@ -310,12 +298,8 @@ function mapInterviewSessionQuestionDto(
         ? null
         : String(question.answerAttemptId),
     threadLabel: question.isFollowUp
-      ? isKorean
-        ? `꼬리질문 · 깊이 ${question.depth ?? 0}`
-        : `Follow-up · Depth ${question.depth ?? 0}`
-      : isKorean
-        ? "시드 질문"
-        : "Seeded question",
+      ? translate("interviewModel.followUpThread", { depth: question.depth ?? 0 })
+      : translate("interviewModel.seededQuestion"),
   };
 }
 
@@ -424,7 +408,6 @@ export function mapInterviewSessionListResponseDtoToModel(
 export function mapInterviewSessionCoverageResponseDtoToModel(
   response: InterviewSessionCoverageResponseDto,
 ): InterviewCoverageModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     sessionId:
       response.sessionId === null || response.sessionId === undefined ? "" : String(response.sessionId),
@@ -437,9 +420,9 @@ export function mapInterviewSessionCoverageResponseDtoToModel(
     facetSummaries: toArray(response.facetSummaries).map(mapInterviewFacetSummaryDto),
     evidenceItems: toArray(response.evidenceItems).map((item, index) => ({
       id: item.id === null || item.id === undefined ? `coverage-${index}` : String(item.id),
-      section: item.section ?? (isKorean ? "이력서" : "Resume"),
+      section: item.section ?? translate("interviewModel.sectionResume"),
       label: item.label ?? null,
-      snippet: item.snippet ?? (isKorean ? "커버리지 근거" : "Coverage evidence"),
+      snippet: item.snippet ?? translate("interviewModel.coverageEvidence"),
       facet: item.facet ?? null,
       sourceRecordType: item.sourceRecordType ?? null,
       sourceRecordId:
@@ -448,7 +431,7 @@ export function mapInterviewSessionCoverageResponseDtoToModel(
           : String(item.sourceRecordId),
       sourceJoinKey: toResumeSourceJoinKey(item.sourceRecordType, item.sourceRecordId),
       displayOrder: item.displayOrder ?? index,
-      coverageStatus: item.coverageStatus ?? (isKorean ? "미질문" : "unasked"),
+      coverageStatus: item.coverageStatus ?? translate("interviewModel.unaskedStatus"),
       coverageStatusLabel: formatLabel(item.coverageStatus ?? "unasked"),
       coverageTone: getCoverageTone(item.coverageStatus),
       sectionLabel: formatInterviewEvidenceSection(item.section),
@@ -460,7 +443,6 @@ export function mapInterviewSessionCoverageResponseDtoToModel(
 export function mapInterviewSessionResumeMapResponseDtoToModel(
   response: InterviewSessionResumeMapResponseDto,
 ): InterviewResumeMapModel {
-  const isKorean = getCurrentAppLocale() === "ko";
   return {
     sessionId:
       response.sessionId === null || response.sessionId === undefined ? "" : String(response.sessionId),
@@ -476,9 +458,9 @@ export function mapInterviewSessionResumeMapResponseDtoToModel(
         item.sourceRecordId === null || item.sourceRecordId === undefined
           ? `resume-map-${index}`
           : `${item.sourceRecordType ?? "resume-record"}-${String(item.sourceRecordId)}`,
-      section: item.section ?? (isKorean ? "이력서" : "Resume"),
+      section: item.section ?? translate("interviewModel.sectionResume"),
       label: item.label ?? null,
-      snippet: item.snippet ?? (isKorean ? "이력서 근거" : "Resume evidence"),
+      snippet: item.snippet ?? translate("interviewModel.resumeEvidence"),
       facet: item.facet ?? null,
       sourceRecordType: item.sourceRecordType ?? null,
       sourceRecordId:
@@ -487,7 +469,7 @@ export function mapInterviewSessionResumeMapResponseDtoToModel(
           : String(item.sourceRecordId),
       sourceJoinKey: toResumeSourceJoinKey(item.sourceRecordType, item.sourceRecordId),
       displayOrder: item.displayOrder ?? index,
-      coverageStatus: item.coverageStatus ?? (isKorean ? "미질문" : "unasked"),
+      coverageStatus: item.coverageStatus ?? translate("interviewModel.unaskedStatus"),
       coverageStatusLabel: formatLabel(item.coverageStatus ?? "unasked"),
       coverageTone: getCoverageTone(item.coverageStatus),
       sectionLabel: formatInterviewEvidenceSection(item.section),
@@ -496,11 +478,11 @@ export function mapInterviewSessionResumeMapResponseDtoToModel(
           question.sessionQuestionId === null || question.sessionQuestionId === undefined
             ? `session-question-${relatedIndex}`
             : String(question.sessionQuestionId),
-        title: question.title ?? (isKorean ? "면접 질문" : "Interview question"),
-        sourceType: question.sourceType ?? (isKorean ? "시드" : "seeded"),
+        title: question.title ?? translate("interviewModel.interviewQuestion"),
+        sourceType: question.sourceType ?? translate("interviewModel.seededSourceType"),
         sourceLabel: formatLabel(question.sourceType ?? "seeded"),
         orderIndex: question.orderIndex ?? relatedIndex,
-        status: question.status ?? (isKorean ? "알 수 없음" : "unknown"),
+        status: question.status ?? translate("modelCommon.unknownLower"),
         isFollowUp: question.isFollowUp ?? false,
       })),
     })),

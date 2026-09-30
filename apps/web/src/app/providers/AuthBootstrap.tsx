@@ -16,8 +16,7 @@ export function AuthBootstrap({ children }: PropsWithChildren) {
   const { accessToken } = useAuth();
   const currentUserQuery = useCurrentUserQuery();
   const logout = useLogout();
-  const { locale, setLocale } = useLocale();
-  const isKorean = locale === "ko";
+  const { locale, setLocale, t } = useLocale();
   const retryTimeoutRef = useRef<number | null>(null);
   const retryLoopActiveRef = useRef(false);
   const initialLoadingStartedAtRef = useRef(Date.now());
@@ -158,58 +157,33 @@ export function AuthBootstrap({ children }: PropsWithChildren) {
   }
 
   if (phase === "initial-loading" || phase === "retrying") {
+    const retrying = phase === "retrying";
     return (
       <AuthLoadingScreen
         checks={
           autoRestoreAttempts > 0
-            ? [
-                isKorean ? "다음 재시도에 대비해 저장된 토큰 유지" : "Keep the saved token ready for the next retry",
-                isKorean ? "현재 사용자 엔드포인트 다시 확인" : "Re-check the current user endpoint",
-                isKorean ? "API가 응답하면 앱 자동 재개" : "Resume the app automatically after the API responds",
-              ]
+            ? [t("appShell.authRetryCheckKeepToken"), t("appShell.authRetryCheckCurrentUser"), t("appShell.authRetryCheckResume")]
             : undefined
         }
-        description={
-          phase === "retrying"
-            ? isKorean
-              ? "세션 복구에 일시적인 문제가 있어 자동으로 다시 시도합니다."
-              : "We hit a temporary session restore issue and will retry automatically."
-            : isKorean
-              ? "보호된 화면을 열기 전에 세션을 복구하고 있습니다."
-              : "Restoring your session before the app opens protected areas."
-        }
-        nextBody={
-          isKorean
-            ? "세션이 확인되는 즉시 프로필, 이력서 인텔리전스, 피드 등 보호된 화면이 다시 열립니다."
-            : "Profile, resume intelligence, feed, and other protected screens will reopen as soon as the session is confirmed."
-        }
-        statusBody={
-          phase === "retrying"
-            ? isKorean
-              ? "백그라운드에서 저장된 세션을 다시 시도하는 동안 앱은 로딩 화면을 유지합니다."
-              : "The app is holding on the loading screen while it retries your saved session in the background."
-            : isKorean
-              ? "저장된 세션을 확인하고 현재 사용자를 불러오고 있습니다."
-              : "Checking the saved session and loading your current user."
-        }
-        statusEyebrow={phase === "retrying" ? (isKorean ? "재시도 중" : "Retrying") : isKorean ? "불러오는 중" : "Loading"}
+        description={retrying ? t("appShell.authRetryingDescription") : t("appShell.authRestoringDescription")}
+        nextBody={t("appShell.authRestoreNextBody")}
+        statusBody={retrying ? t("appShell.authRetryingStatusBody") : t("appShell.authRestoringStatusBody")}
+        statusEyebrow={retrying ? t("appShell.authRetryingEyebrow") : t("common.loadingState")}
         statusMeta={
-          phase === "retrying"
-            ? isKorean
-              ? `${autoRestoreAttempts + 1}/${MAX_AUTO_RESTORE_ATTEMPTS}번째 재시도가 약 ${Math.floor(
-                  AUTO_RESTORE_DELAY_MS / 1000,
-                )}초 후 시작됩니다.`
-              : `Retry ${autoRestoreAttempts + 1} of ${MAX_AUTO_RESTORE_ATTEMPTS} starts in about ${Math.floor(
-                  AUTO_RESTORE_DELAY_MS / 1000,
-                )} seconds.`
+          retrying
+            ? t("appShell.authRetryScheduled", {
+                attempt: autoRestoreAttempts + 1,
+                max: MAX_AUTO_RESTORE_ATTEMPTS,
+                seconds: Math.floor(AUTO_RESTORE_DELAY_MS / 1000),
+              })
             : autoRestoreAttempts > 0
-              ? isKorean
-                ? `API가 응답하면 ${autoRestoreAttempts}번의 재시도 후 복구됩니다.`
-                : `Recovered after ${autoRestoreAttempts} retry attempt${autoRestoreAttempts === 1 ? "" : "s"} if the API responds now.`
+              ? t(autoRestoreAttempts === 1 ? "appShell.authRecoveredAfterOneRetry" : "appShell.authRecoveredAfterRetries", {
+                  count: autoRestoreAttempts,
+                })
               : undefined
         }
-        statusTitle={phase === "retrying" ? (isKorean ? "세션 복구 재시도 중" : "Retrying session restore") : isKorean ? "다시 로그인하는 중" : "Signing you back in"}
-        title={phase === "retrying" ? (isKorean ? "계정을 다시 연결하는 중" : "Reconnecting your account") : isKorean ? "계정을 불러오는 중" : "Loading your account"}
+        statusTitle={retrying ? t("appShell.authRetryingStatusTitle") : t("appShell.authRestoringStatusTitle")}
+        title={retrying ? t("appShell.authRetryingTitle") : t("appShell.authRestoringTitle")}
       />
     );
   }
@@ -217,29 +191,17 @@ export function AuthBootstrap({ children }: PropsWithChildren) {
   if (phase === "paused" && currentUserQuery.isError) {
     return (
       <AuthRecoveryScreen
-        description={
-          isKorean
-            ? "저장된 세션을 아직 복구하지 못해, 추가 API 기반 화면을 열기 전에 앱을 잠시 멈췄습니다."
-            : "The saved session could not be restored yet, so the app is paused before opening additional API-driven screens."
-        }
-        errorBody={
-          userFacingErrorMessage(currentUserQuery.error, isKorean
-              ? "현재 세션을 복구하지 못했습니다."
-              : "The current session could not be restored.")
-        }
-        errorTitle={isKorean ? "저장된 세션을 확인할 수 없습니다" : "We could not verify your saved session"}
+        description={t("appShell.authPausedDescription")}
+        errorBody={userFacingErrorMessage(currentUserQuery.error, t("appShell.authPausedErrorFallback"))}
+        errorTitle={t("appShell.authPausedErrorTitle")}
         onClearSession={logout}
         onRetry={() => {
           clearRetryLoop();
           setAutoRestoreAttempts(0);
           startRetryLoop();
         }}
-        retrySummary={
-          isKorean
-            ? `자동 재시도는 ${MAX_AUTO_RESTORE_ATTEMPTS}회 후 중단되었습니다. 새로고침 없이 다시 시도할 수 있습니다.`
-            : `Automatic retry stopped after ${MAX_AUTO_RESTORE_ATTEMPTS} attempts. You can retry again without refreshing the app.`
-        }
-        title={isKorean ? "세션 복구 일시 중지" : "Session restore paused"}
+        retrySummary={t("appShell.authPausedRetrySummary", { max: MAX_AUTO_RESTORE_ATTEMPTS })}
+        title={t("appShell.authPausedTitle")}
       />
     );
   }
