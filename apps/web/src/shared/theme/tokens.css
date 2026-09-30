@@ -16,6 +16,7 @@
   --iv-text-xl: 1.25rem; /* 20 */
   --iv-text-2xl: 1.5rem; /* 24 */
   --iv-text-3xl: 1.875rem; /* 30 */
+  --iv-text-display: 3.5rem; /* 56, single hero numbers only */
   --iv-leading-tight: 1.3;
   --iv-leading-body: 1.6;
   --iv-leading-reading: 1.75;

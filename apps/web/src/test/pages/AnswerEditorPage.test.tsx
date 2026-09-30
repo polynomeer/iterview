@@ -98,7 +98,7 @@ describe("AnswerEditorPage", () => {
     await user.click(screen.getByRole("button", { name: "제출하고 평가받기" }));
 
     expect(mutateAsync).toHaveBeenCalledWith({ questionId: "11", resumeVersionId: "3", contentText: "프록시를 거치지 않기 때문입니다." });
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/attempts/81");
+    expect(await screen.findByTestId("location-display")).toHaveTextContent("/attempts/81");
     expect(window.sessionStorage.getItem("iterview.answer-draft.11")).toBeNull();
   });
 

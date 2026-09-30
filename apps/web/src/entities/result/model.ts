@@ -13,6 +13,8 @@ export type ResultDimensionModel = {
     | "communication";
   label: string;
   value: string;
+  /** Raw 0-100 score, or null when the evaluator did not score this dimension. */
+  score: number | null;
 };
 
 export type ResultFeedbackItemModel = {
@@ -27,6 +29,10 @@ export type ResultAnalysisModel = {
   questionId: string;
   questionTitle: string;
   totalScore: string;
+  /** Raw total, for tones and deltas; totalScore stays a display string. */
+  totalScoreValue: number | null;
+  answerText: string | null;
+  attemptNumber: number | null;
   evaluationResult: string;
   dimensions: ResultDimensionModel[];
   feedbackItems: ResultFeedbackItemModel[];
@@ -87,18 +93,22 @@ export function mapAnswerAttemptDetailAndAnalysisToModel(
         : String(answerAttempt.questionId),
     questionTitle: questionTitle ?? (isKorean ? "면접 질문" : "Interview question"),
     totalScore: `${score.totalScore ?? "-"}`,
+    totalScoreValue: score.totalScore ?? null,
+    answerText: answerAttempt?.contentText ?? null,
+    attemptNumber: answerAttempt?.attemptNo ?? null,
     evaluationResult: score.evaluationResult ?? (isKorean ? "대기 중" : "Pending"),
     dimensions: [
-      { id: "structure", label: isKorean ? "구조" : "Structure", value: `${score.structureScore ?? "-"}` },
-      { id: "specificity", label: isKorean ? "구체성" : "Specificity", value: `${score.specificityScore ?? "-"}` },
+      { id: "structure", label: isKorean ? "구조" : "Structure", value: `${score.structureScore ?? "-"}`, score: score.structureScore ?? null },
+      { id: "specificity", label: isKorean ? "구체성" : "Specificity", value: `${score.specificityScore ?? "-"}`, score: score.specificityScore ?? null },
       {
         id: "technicalAccuracy",
         label: isKorean ? "기술 정확도" : "Technical accuracy",
         value: `${score.technicalAccuracyScore ?? "-"}`,
+        score: score.technicalAccuracyScore ?? null,
       },
-      { id: "roleFit", label: isKorean ? "직무 적합도" : "Role fit", value: `${score.roleFitScore ?? "-"}` },
-      { id: "companyFit", label: isKorean ? "회사 적합도" : "Company fit", value: `${score.companyFitScore ?? "-"}` },
-      { id: "communication", label: isKorean ? "커뮤니케이션" : "Communication", value: `${score.communicationScore ?? "-"}` },
+      { id: "roleFit", label: isKorean ? "직무 적합도" : "Role fit", value: `${score.roleFitScore ?? "-"}`, score: score.roleFitScore ?? null },
+      { id: "companyFit", label: isKorean ? "회사 적합도" : "Company fit", value: `${score.companyFitScore ?? "-"}`, score: score.companyFitScore ?? null },
+      { id: "communication", label: isKorean ? "커뮤니케이션" : "Communication", value: `${score.communicationScore ?? "-"}`, score: score.communicationScore ?? null },
     ],
     feedbackItems: toArray(response.feedback).map((item) => ({
       id: String(item.id),

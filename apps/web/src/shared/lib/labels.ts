@@ -68,3 +68,13 @@ export function severityLabel(value: string | null | undefined, locale: AppLocal
   const entry = SEVERITY[value.toUpperCase()];
   return entry ? { label: entry[locale], tone: entry.tone } : { label: value, tone: "neutral" as const };
 }
+
+/** Appends the Korean subject particle: 이 after a final consonant (구체성이), 가 otherwise (구조가). */
+export function withSubjectParticle(word: string) {
+  const last = word.trim().replace(/["”’')\]]+$/, "").slice(-1);
+  const code = last.charCodeAt(0) - 0xac00;
+  if (code < 0 || code > 11171) {
+    return `${word}이(가)`;
+  }
+  return `${word}${code % 28 === 0 ? "가" : "이"}`;
+}

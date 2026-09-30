@@ -1,0 +1,78 @@
+/* 결과 (docs/09 §4.4, mockup 04-result). Token-only styles. */
+
+.result-hero {
+  display: grid;
+  grid-template-columns: minmax(10rem, 13rem) minmax(0, 1fr) minmax(15rem, 19rem);
+  overflow: hidden;
+}
+
+.result-hero > div { display: flex; flex-direction: column; gap: var(--iv-space-3); padding: var(--iv-space-6); }
+.result-hero > div + div { border-left: 1px solid var(--iv-border); }
+.result-hero__total { align-items: flex-start; }
+.result-hero__next { background: var(--iv-surface-sunken); }
+.result-hero__next p { margin: 0; font-size: var(--iv-text-md); line-height: var(--iv-leading-body); }
+.result-hero__next > .ui-button { align-self: flex-start; }
+
+.result-label { color: var(--iv-text-muted); font-size: var(--iv-text-xs); font-weight: var(--iv-weight-semibold); }
+
+.result-hero__score {
+  font-size: var(--iv-text-display);
+  font-weight: var(--iv-weight-bold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-hero__delta { font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); }
+.result-hero__verdict { color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.result-dimension {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) 2.5rem;
+  gap: var(--iv-space-3);
+  align-items: center;
+  font-size: var(--iv-text-sm);
+}
+
+.result-dimension strong { text-align: right; font-variant-numeric: tabular-nums; }
+.result-muted { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.result-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  gap: var(--iv-space-5);
+  align-items: start;
+}
+
+.result-layout__main,
+.result-layout__aside { display: flex; flex-direction: column; gap: var(--iv-space-5); min-width: 0; }
+
+.result-answer {
+  margin: 0;
+  font-size: var(--iv-text-lg);
+  line-height: var(--iv-leading-reading);
+  white-space: pre-wrap;
+}
+
+.result-reference-answer {
+  padding: var(--iv-space-4) var(--iv-space-5);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface);
+}
+
+.result-reference-answer summary { color: var(--iv-text-muted); font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); cursor: pointer; }
+.result-reference-answer[open] summary { margin-bottom: var(--iv-space-3); }
+
+.result-feedback { display: flex; flex-direction: column; gap: var(--iv-space-3); margin: 0; padding: 0; list-style: none; }
+.result-feedback li { display: flex; gap: var(--iv-space-2); font-size: var(--iv-text-sm); line-height: var(--iv-leading-body); }
+.result-feedback .ui-icon { margin-top: 3px; }
+
+@media (max-width: 1023px) {
+  .result-hero,
+  .result-layout { grid-template-columns: minmax(0, 1fr); }
+
+  .result-hero > div + div { border-top: 1px solid var(--iv-border); border-left: 0; }
+  .result-hero > div { padding: var(--iv-space-5); }
+  .result-dimension { grid-template-columns: 6rem minmax(0, 1fr) 2.25rem; }
+}
