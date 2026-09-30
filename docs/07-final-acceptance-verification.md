@@ -11,7 +11,7 @@ From `apps/web`:
 - `npm run test:run` runs 46 test files with 266 tests as of 2026-09-30.
 
 From `apps/api`:
-- `./gradlew test` runs the Testcontainers integration tests, so Docker must be running.
+- `./gradlew test` runs the Testcontainers integration tests, so Docker must be running. As of 2026-10-01 the full suite passes (160 tests), and the two job-role tests added afterwards pass in `ProfileApiIntegrationTest`.
 
 ## Journey Matrix
 
@@ -122,6 +122,4 @@ Evidence:
 
 ## Known Gaps
 
-- One API integration test fails on `main`, independent of the web redesign: `InterviewSessionApiIntegrationTest > replay mock session seeds imported practical interview questions`.
-- The profile's job role can't be edited from the web app. The API takes a `jobRoleId` but has no endpoint that lists roles.
 - The evidence editor and the interview record review keep their legacy styling, now in `legacy-*.css` next to each screen.

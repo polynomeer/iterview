@@ -473,13 +473,12 @@ Deferred:
 | Docs | `docs/07` is rewritten against the current tests. `docs/08` and the web route, architecture, and API docs list the current routes. |
 
 Found and fixed along the way:
-- **Unsaved field:** the profile form sent a free-text `jobRole` that the API silently dropped, since it only accepts `jobRoleId` (`0e3495e`). Editing the role needs a job-roles endpoint.
+- **Unsaved field:** the profile form sent a free-text `jobRole` that the API silently dropped, since it only accepts `jobRoleId` (`0e3495e`). `GET /api/job-roles` now lists the roles, and settings offers them as a select (`2a0e160`).
 
 Still open after the redesign:
 - The evidence editor's per-claim form (상황 / 역할 / 측정 방법 / 결과) and a restyle of the interview record review. Both still render with their co-located legacy CSS.
 - A token-based light theme (ADR 0075). The theme choices still differ only on legacy screens.
 - 보관함, once notes and bookmarks APIs exist.
-- One API integration test (`replay mock session seeds imported practical interview questions`) fails on `main`, independent of the web work.
 
 ---
 
