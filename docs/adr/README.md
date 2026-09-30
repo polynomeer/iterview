@@ -172,3 +172,5 @@ Each ADR should include:
    Makes the skill landscape interactive through view modes, focus filters, zoom controls, and inspector tabs.
 73. [`0073-add-claude-code-agent-environment.md`](0073-add-claude-code-agent-environment.md)
    Adapts `AGENTS.md` rules for Claude Code and makes agents commit each completed work unit.
+74. [`0074-consolidate-ia-and-token-design-system.md`](0074-consolidate-ia-and-token-design-system.md)
+   Proposes five navigation areas, merged workspaces, and a single token design system based on the 2026-09 UX audit.

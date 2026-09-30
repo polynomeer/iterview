@@ -16,17 +16,21 @@ Use these files when you want to understand product intent, monorepo policy, or 
    Shared UX and visual-system reset strategy for the product redesign.
 5. [`05-workspace-redesign-workplan.md`](05-workspace-redesign-workplan.md)
    Shared execution plan for moving from page polish to a graph-based interview workspace.
-6. [`adr/README.md`](adr/README.md)
+6. [`09-ux-audit-and-redesign-proposal.md`](09-ux-audit-and-redesign-proposal.md)
+   2026-09 audit of the shipped web UX with a consolidated IA, token design system, mockups, and phased roadmap.
+7. [`adr/README.md`](adr/README.md)
    Shared architecture decision records for durable product, design, and repository decisions.
-7. [`monorepo-conventions.md`](monorepo-conventions.md)
+8. [`monorepo-conventions.md`](monorepo-conventions.md)
    What belongs at the root versus inside each app.
-8. [`monorepo-status.md`](monorepo-status.md)
+9. [`monorepo-status.md`](monorepo-status.md)
    Current operational status, known risks, and verification path.
 
 ## Reference Assets
 
 Design image references that support the shared redesign documents live under:
 - [`references/design/`](references/design/)
+- [`references/redesign-proposal/`](references/redesign-proposal/README.md) — mockups for the 2026-09 redesign proposal
+- [`references/ux-audit-2026-09/`](references/ux-audit-2026-09/) — current-state screenshots used as audit evidence
 
 ## What Belongs Here
 
