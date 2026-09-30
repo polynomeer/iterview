@@ -56,27 +56,31 @@ Check:
 
 ### C. Source-Of-Truth Loop
 
-1. `/resume`
-2. `/resume/analysis`
+1. `/resume` (redirects to the active version's hub)
+2. `/resume/1` (개요)
 3. `/resume/1/claims`
 4. `/resume/1/heatmap`
 5. `/resume/1/heatmap/anchors/project/1`
+6. `/resume/1/tailor` and one analysis, for example `/resume/1/tailor/1`
+7. `/resume/1/versions`
 
 Check:
+- the version bar and route tabs stay on one line on desktop and scroll horizontally, not wrap, on phones
 - editor side panels do not overflow their container
-- heatmap overlays and popovers stay inside the viewport
+- heatmap highlights and their inline question lists stay inside the viewport
 - sticky source/detail rails remain readable on narrow desktop
 - long chips, labels, and annotations do not break the grid
 
 ### D. Interview Loop
 
 1. `/interview`
-2. latest live session route created from the interview workspace, for example `/interview/sessions/1`
+2. latest live session route created from the interview workspace, for example `/interview/sessions/1` (focus mode, no shell)
 3. the matching completed result route, for example `/interview/sessions/1/result`
+4. `/interview/records` and `/interview/records/upload`
 
 Check:
-- workspace continuity rail does not visually overpower the main surface
-- active branch panels and result summaries keep one obvious next move
+- the live session shows one question and one answer box, with progress and the timer in the top bar
+- result summaries keep one obvious next move
 - action clusters do not wrap into noisy multi-line button groups
 - mobile stacking preserves the session/result narrative
 

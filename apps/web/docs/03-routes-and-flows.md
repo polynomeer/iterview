@@ -22,10 +22,13 @@ The route map follows the five-area information architecture adopted in `docs/ad
 | 질문 | 스킬 맵 | `/questions/skills` | protected |
 | 복습 | 지금 복습 | `/review` | protected |
 | 복습 | 완료한 질문 | `/review/done` | protected |
-| 이력서 | 버전 관리 | `/resume`, `/resume/:versionId/claims`, `/resume/:versionId/heatmap`, `/resume/:versionId/heatmap/anchors/:anchorType/:anchorId` | protected |
-| 이력서 | 이력서 분석 | `/resume/analysis` | protected |
-| 이력서 | 공고 맞춤 | `/resume/tailor`, `/resume/tailor/job-postings`, `/resume/:versionId/tailor`, `/resume/:versionId/tailor/:analysisId` | protected |
-| 면접 | 모의면접 | `/interview`, `/interview/sessions/:sessionId`, `/interview/sessions/:sessionId/result` | protected |
+| 이력서 | (hub entry) | `/resume` redirects to the active version's hub, or shows the first upload | protected |
+| 이력서 | 개요 tab | `/resume/:versionId` | protected |
+| 이력서 | 근거 편집 tab | `/resume/:versionId/claims` | protected |
+| 이력서 | 면접 압박 지도 tab | `/resume/:versionId/heatmap`, `/resume/:versionId/heatmap/anchors/:anchorType/:anchorId` | protected |
+| 이력서 | 공고 맞춤 tab | `/resume/:versionId/tailor`, `/resume/:versionId/tailor/:analysisId` | protected |
+| 이력서 | 버전 관리 tab | `/resume/:versionId/versions` | protected |
+| 면접 | 모의면접 | `/interview`, `/interview/sessions/:sessionId` (focus mode), `/interview/sessions/:sessionId/result` | protected |
 | 면접 | 실전 면접 복기 | `/interview/records`, `/interview/records/upload`, `/interview/records/:recordId`, `.../transcript`, `.../questions/:questionId`, `.../simulate` | protected |
 | 설정 | 학습 설정 | `/settings` | protected |
 | 설정 | 프로필 | `/settings/profile` | protected |
@@ -49,10 +52,10 @@ Pages backed only by sample data are kept out of navigation until they have APIs
 | `/review-queue`, `/archive` | `/review`, `/review/done` |
 | `/feed` | `/explore` |
 | `/profile` | `/settings/profile` |
-| `/profile/resumes`, `/profile/resumes/analysis` | `/resume`, `/resume/analysis` |
+| `/profile/resumes`, `/profile/resumes/analysis`, `/resume/analysis` | `/resume` |
 | `/resume-versions/:versionId/editor` | `/resume/:versionId/claims` |
 | `/resume-versions/:versionId/heatmap[/anchors/...]` | `/resume/:versionId/heatmap[/anchors/...]` |
-| `/resume-tailor[/job-postings]` | `/resume/tailor[/job-postings]` |
+| `/resume-tailor[/job-postings]` | `/resume/tailor[/job-postings]`, which redirect to the active version's `/resume/:versionId/tailor` |
 | `/resume-tailor/resume-versions/:versionId/analyses[/:analysisId]` | `/resume/:versionId/tailor[/:analysisId]` |
 | `/interviews[/:sessionId[/result]]` | `/interview[/sessions/:sessionId[/result]]` |
 | `/practical-interviews/...` | `/interview/records/...` |
@@ -62,7 +65,7 @@ Pages backed only by sample data are kept out of navigation until they have APIs
 `src/shared/config/navigation.ts` defines the areas, their sections, and which routes belong to each section. Everything below reads from it:
 - the desktop sidebar: the five areas with a live review count, the active resume version, and settings
 - the mobile tab bar: the same five areas
-- the section links under the top bar, shown for areas with more than one screen
+- the section links under the top bar, shown for areas with more than one screen (이력서 has one section; its hub renders its own route tabs)
 - the top bar breadcrumb (area › page)
 - the command palette's "이동" results
 
@@ -83,8 +86,12 @@ Active state is resolved with the router's own ranking (`matchRoutes`), so stati
 ### 2. Resume evidence
 
 ```text
-이력서 (/resume) → choose or upload a version → 근거 편집 (/resume/:versionId/claims) or 압박 지도 (/resume/:versionId/heatmap) → back to 질문 or 면접
+이력서 (/resume) → active version's hub (/resume/:versionId) → 근거 편집 · 면접 압박 지도 · 공고 맞춤 · 버전 관리 tabs → back to 질문 or 면접
 ```
+
+- The resume version is chosen once, in the sidebar switcher, which activates it app-wide. No screen has its own version picker (ADR 0078).
+- `ResumeHubLayout` renders the version bar (the page `h1`) and the route tabs, and passes the version, its resume, and its polled parsing/extraction status to the tabs through the outlet context. A non-active version is labelled, with an action to activate it.
+- Switching versions from inside a tab keeps the tab (`/resume/3/heatmap` → `/resume/7/heatmap`); anchor and analysis detail routes fall back to their tab.
 
 ### 3. Mock interview
 
@@ -92,17 +99,24 @@ Active state is resolved with the router's own ranking (`matchRoutes`), so stati
 면접 (/interview) → session (/interview/sessions/:id) → result (/interview/sessions/:id/result) → 복습
 ```
 
+- Setup asks three things: the basis (the active resume, or the questions due for review via `review_mock`), the interview mode, and the number of opening questions.
+- The session runs in focus mode, one question at a time. Answers are graded against the session's own `resumeVersionId`.
+
 ### 4. Real interview review
 
 ```text
 실전 면접 복기 (/interview/records) → upload (/interview/records/upload) or open a record → transcript, questions, replay
 ```
 
+- The list and the upload are separate pages. The upload links the record to the active resume version by default, with a checkbox to opt out.
+
 ### 5. Job fit
 
 ```text
-공고 맞춤 (/resume/tailor) → job postings → analyses for a version (/resume/:versionId/tailor) → analysis detail
+공고 맞춤 tab (/resume/:versionId/tailor) → save a posting or pick a saved one → 분석하기 → analysis detail (/resume/:versionId/tailor/:analysisId)
 ```
+
+- Postings and this version's analyses share the one tab. The first visit asks for a posting and analyzes it on save.
 
 ## Route Design Constraints
 

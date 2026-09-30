@@ -106,6 +106,7 @@ The review screen sorts and badges items by `scheduledFor` and `priority`, and s
 Primary endpoints:
 - `GET /api/resumes`
 - `GET /api/resumes/latest`
+- `POST /api/resumes` (returns the created `ResumeDto`; the first-run upload uses its `id` to upload the first version)
 - `POST /api/resumes/{resumeId}/versions/upload`
 - `GET /api/resume-versions/{versionId}`
 - extraction subresources such as:
@@ -121,6 +122,10 @@ Primary endpoints:
   - `/awards`
   - `/risks`
 - `POST /api/resume-versions/{versionId}/activate`
+- `POST /api/resume-versions/{versionId}/re-extract`
+- `GET /api/resume-versions/{versionId}/file`
+
+The resume hub reads the version from the URL and polls `GET /api/resume-versions/{versionId}` and `/extraction` while parsing or extraction runs (`useResumeVersionStatus`). When either settles, it refreshes the resume list, the latest resume, the current user, and the version's snapshots. The 개요 tab reads the snapshot subresources. Risks sort by the raw `severity` code, and the tab shows no scores the API does not send.
 
 ### Resume tailor, heatmap, and editor
 
@@ -129,6 +134,8 @@ The frontend should treat these as dedicated feature areas, not one overloaded r
 - analyses and exports
 - heatmap links and overlay targets
 - editor workspace and revisions
+
+The 공고 맞춤 tab creates a posting with `POST /api/job-postings` (`inputType` `text` or `link`) and then an analysis for the hub's version with `POST /api/resume-versions/{versionId}/analyses` (`{ jobPostingId }`). The analysis detail toggles suggestions and creates PDF exports. The 면접 압박 지도 tab ranks heatmap items by weak answers, follow-ups, pressure questions, and question count. It shows only overlay targets that have at least one linked question.
 
 ### Interview and replay
 
@@ -146,6 +153,12 @@ Primary endpoints:
 - `GET /api/interview-records/{recordId}`
 - `GET /api/interview-records/{recordId}/review`
 - `PATCH /api/interview-records/{recordId}/review`
+
+Notes:
+- The launcher creates `resume_mock` sessions with the active version's `resumeVersionId`, or `review_mock` sessions (pending review questions, no resume) when there is no active version.
+- Answer submission sends the session's own `resumeVersionId`, not the currently active version.
+- The session and result pages no longer call `/resume-map`; full-coverage sessions read `/coverage` only.
+- `POST /api/interview-records` sends `linkedResumeVersionId` (the active version) unless the user opts out.
 
 ## Locale And Content Rules
 

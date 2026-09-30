@@ -180,3 +180,5 @@ Each ADR should include:
    Adds `--iv-` tokens and `ui-` primitives that coexist with `global.css` while screens migrate one at a time.
 77. [`0077-replace-skill-landscape-with-skill-map.md`](0077-replace-skill-landscape-with-skill-map.md)
    Replaces the interactive skills landscape (0072) with a weakest-first skill map under 질문.
+78. [`0078-version-scoped-resume-hub-and-single-version-choice.md`](0078-version-scoped-resume-hub-and-single-version-choice.md)
+   Puts resume views under `/resume/:versionId` as route tabs and makes the sidebar switcher the only place a resume version is chosen.

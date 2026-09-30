@@ -52,16 +52,15 @@ Current page areas include:
 - review queue
 - feed
 - profile
-- resume
-- resume analysis
-- resume heatmap
-- resume editor
-- resume tailor
+- resume hub (`pages/resume`: `ResumeHubLayout` with 개요 and 버전 관리 tabs, `ResumeIndexPage` for the entry redirect and first upload)
+- resume heatmap (the 면접 압박 지도 tab and its claim detail)
+- resume editor (the 근거 편집 tab; `ResumeEditorPage` composes tab components and hooks under `pages/resume-editor/components` and `pages/resume-editor/hooks`, each under ~600 lines)
+- resume tailor (the 공고 맞춤 tab and analysis detail)
 - skills
-- interview
-- interview session
+- interview (the mock-interview launcher)
+- interview session (focus mode)
 - interview result
-- practical interviews
+- practical interviews (list, upload, and record review)
 - login
 - signup
 
@@ -101,10 +100,10 @@ Owns:
 - layout-adjacent sections that should not live in `shared/ui`
 
 Examples:
+- layout navigation blocks, including the resume version switcher (`widgets/layout/ResumeVersionSwitcher`)
 - home cards
-- interview panels
-- resume panels
-- layout navigation blocks
+
+Rebuilt screens keep their composition in the page folder. The old interview, answer, resume, and resume-editor widget folders were removed when their screens were rebuilt.
 
 ### `shared`
 
@@ -190,7 +189,7 @@ Handled through route params, query params, and route-specific navigation.
 Examples:
 - selected question
 - selected interview record
-- selected resume version
+- the resume version being viewed (`/resume/:versionId/*`); the app-wide active version is server state, changed only through the sidebar switcher (ADR 0078)
 - analysis detail routes
 
 ### Local UI state
