@@ -23,13 +23,12 @@ export function ThreadReviewPanel({
   playRange: PlayRange;
   openReplayLauncher: (preset: ReplayPresetModel) => void;
 }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <div className="page-stack">
-      <span className="page-card__label">{isKorean ? "스레드" : "Threads"}</span>
-      <h2 className="page-card__title">{isKorean ? "꼬리질문 체인과 리플레이 프리셋" : "Follow-up chains and replay presets"}</h2>
+      <span className="page-card__label">{t("practicalReviewPanels.threads")}</span>
+      <h2 className="page-card__title">{t("practicalReviewPanels.followUpChainsReplay")}</h2>
       <div className="stack-list">
         {review.followUpThreads.map((thread) => (
           <article
@@ -40,52 +39,50 @@ export function ThreadReviewPanel({
             <div className="section-heading">
               <div>
                 <p className="section-heading__eyebrow">
-                  {isKorean ? `루트 #${thread.rootOrderIndex + 1}` : `Root #${thread.rootOrderIndex + 1}`}
+                  {t("practicalReviewPanels.rootLabel", { number: thread.rootOrderIndex + 1 })}
                 </p>
                 <h3 className="page-card__title">{thread.rootText}</h3>
               </div>
               <div className="chip-list">
                 {thread.weakQuestionCount > 0 ? (
-                  <span className="detail-chip detail-chip--accent">{isKorean ? "약한 체인" : "Weak chain"}</span>
+                  <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.weakChain")}</span>
                 ) : null}
                 {thread.quantifiedQuestionCount > 0 ? (
-                  <span className="detail-chip">{isKorean ? "수치화됨" : "Quantified"}</span>
+                  <span className="detail-chip">{t("practicalReviewPanels.quantified")}</span>
                 ) : null}
                 {thread.structuredQuestionCount > 0 ? (
-                  <span className="detail-chip">{isKorean ? "구조화됨" : "Structured"}</span>
+                  <span className="detail-chip">{t("practicalReviewPanels.structured")}</span>
                 ) : null}
                 {thread.tradeoffAwareQuestionCount > 0 ? (
-                  <span className="detail-chip">{isKorean ? "트레이드오프 인식" : "Tradeoff-aware"}</span>
+                  <span className="detail-chip">{t("practicalReviewPanels.tradeoffAware")}</span>
                 ) : null}
                 {thread.uncertainQuestionCount > 0 ? (
-                  <span className="detail-chip detail-chip--accent">{isKorean ? "불확실" : "Uncertain"}</span>
+                  <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.uncertain")}</span>
                 ) : null}
               </div>
             </div>
             <div className="practical-review-meta">
               <div className="practical-review-meta__row">
-                <span className="practical-review-meta__label">{isKorean ? "권장 동작" : "Recommended action"}</span>
+                <span className="practical-review-meta__label">{t("practicalReviewPanels.recommendedAction")}</span>
                 <span className="practical-review-meta__value">
                   {thread.recommendedAction
-                    ? localizeReviewPayloadText(thread.recommendedAction, isKorean)
-                    : isKorean
-                      ? "리뷰 계속"
-                      : "Continue review"}
+                    ? localizeReviewPayloadText(thread.recommendedAction, t)
+                    : t("practicalReviewPanels.continueReview")}
                 </span>
               </div>
               {thread.structuringSources.length > 0 ? (
                 <div className="practical-review-meta__row">
-                  <span className="practical-review-meta__label">{isKorean ? "구조화 출처" : "Structuring sources"}</span>
+                  <span className="practical-review-meta__label">{t("practicalReviewPanels.structuringSources")}</span>
                   <span className="practical-review-meta__value">
-                    {thread.structuringSources.map((item) => localizeReviewPayloadText(item, isKorean)).join(" · ")}
+                    {thread.structuringSources.map((item) => localizeReviewPayloadText(item, t)).join(" · ")}
                   </span>
                 </div>
               ) : null}
             </div>
             <div className="stats-grid">
-              <MetricCard label={isKorean ? "질문" : "Questions"} value={String(thread.questionIds.length)} />
-              <MetricCard label={isKorean ? "꼬리질문" : "Follow-ups"} tone="muted" value={String(thread.followUpCount)} />
-              <MetricCard label={isKorean ? "답변 완료" : "Answered"} tone="accent" value={String(thread.answeredQuestionCount)} />
+              <MetricCard label={t("practicalReviewPanels.questions")} value={String(thread.questionIds.length)} />
+              <MetricCard label={t("practicalReviewPanels.followUps")} tone="muted" value={String(thread.followUpCount)} />
+              <MetricCard label={t("practicalReviewPanels.answered")} tone="accent" value={String(thread.answeredQuestionCount)} />
             </div>
             <div className="page-card__actions">
               <button
@@ -96,18 +93,18 @@ export function ThreadReviewPanel({
                 }}
                 type="button"
               >
-                {isKorean ? "루트 질문 집중" : "Focus root question"}
+                {t("practicalReviewPanels.focusRootQuestion")}
               </button>
               {thread.threadRange ? (
                 <button
                   className="secondary-button"
                   onClick={() => {
                     setSelectedThreadRootQuestionId(thread.id);
-                    void playRange(thread.threadRange, isKorean ? `${thread.rootOrderIndex + 1}번 스레드` : `Thread ${thread.rootOrderIndex + 1}`);
+                    void playRange(thread.threadRange, t("practicalReviewPanels.threadLabel", { number: thread.rootOrderIndex + 1 }));
                   }}
                   type="button"
                 >
-                  {isKorean ? "스레드 재생" : "Play thread"}
+                  {t("practicalReviewPanels.playThread")}
                 </button>
               ) : null}
               {thread.replayLaunchPreset ? (
@@ -116,7 +113,7 @@ export function ThreadReviewPanel({
                   onClick={() => openReplayLauncher(thread.replayLaunchPreset)}
                   type="button"
                 >
-                  {localizeReviewPayloadText(thread.replayLaunchPreset.launchButtonLabel, isKorean)}
+                  {localizeReviewPayloadText(thread.replayLaunchPreset.launchButtonLabel, t)}
                 </button>
               ) : null}
             </div>

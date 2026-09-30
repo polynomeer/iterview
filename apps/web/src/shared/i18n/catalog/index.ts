@@ -6,6 +6,8 @@ import { home } from "./home";
 import { interviewModel } from "./interviewModel";
 import { modelCommon } from "./modelCommon";
 import { practicalModel } from "./practicalModel";
+import { practicalReview } from "./practicalReview";
+import { practicalReviewPanels } from "./practicalReviewPanels";
 import { questionModel } from "./questionModel";
 import { questionWorkspace } from "./questionWorkspace";
 import { resultAnalysis } from "./resultAnalysis";
@@ -38,4 +40,6 @@ export const catalog = {
   resultModel,
   interviewModel,
   practicalModel,
+  practicalReview,
+  practicalReviewPanels,
 } as const;

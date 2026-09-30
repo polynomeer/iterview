@@ -5,6 +5,7 @@ import type { useInterviewRecordReviewQuery } from "../../../features/practical-
 import type { useInterviewRecordTranscriptQuery } from "../../../features/practical-interview/api/useInterviewRecordTranscriptQuery";
 import type { useInterviewerProfileQuery } from "../../../features/practical-interview/api/useInterviewerProfileQuery";
 import { routeConfig } from "../../../shared/config/routes";
+import type { MessageKey, MessageParams } from "../../../shared/i18n";
 
 export const REVIEW_TABS = ["transcript", "question", "thread"] as const;
 export type ReviewTab = (typeof REVIEW_TABS)[number];
@@ -108,60 +109,65 @@ export function truncateText(value: string, maxLength = 120) {
   return `${value.slice(0, maxLength - 1)}…`;
 }
 
-export function localizeReviewPayloadText(value: string | null | undefined, isKorean: boolean) {
-  if (!value || !isKorean) {
+export type ReviewTranslate = (key: MessageKey, params?: MessageParams) => string;
+
+/** Fixed server payload labels that have a catalog translation, keyed by the raw payload value. */
+const reviewPayloadMessageKeys: Record<string, MessageKey> = {
+  Reviewed: "practicalReview.payloadReviewed",
+  Pending: "practicalReview.payloadPending",
+  Confirmed: "practicalReview.payloadConfirmed",
+  Completed: "practicalReview.payloadCompleted",
+  Failed: "practicalReview.payloadFailed",
+  warning: "practicalReview.payloadWarning",
+  high: "practicalReview.payloadHigh",
+  needs_review: "practicalReview.payloadNeedsReview",
+  ready: "practicalReview.payloadReady",
+  Question: "practicalReview.payloadQuestion",
+  Answer: "practicalReview.payloadAnswer",
+  Behavioral: "practicalReview.payloadBehavioral",
+  "Resume Linked": "practicalReview.payloadResumeLinked",
+  "Question lane": "practicalReview.payloadQuestionLane",
+  "Transcript lane": "practicalReview.payloadTranscriptLane",
+  "Thread lane": "practicalReview.payloadThreadLane",
+  "Review transcript lane": "practicalReview.payloadReviewTranscriptLane",
+  "Review structured questions": "practicalReview.payloadReviewStructuredQuestions",
+  "Transcript needs final review": "practicalReview.payloadTranscriptNeedsFinalReview",
+  "Check follow-up chains": "practicalReview.payloadCheckFollowUpChains",
+  "Question structure is the replay backbone.": "practicalReview.payloadQuestionStructureBackbone",
+  "Transcript issues affect all downstream structuring.": "practicalReview.payloadTranscriptIssuesDownstream",
+  "Thread quality affects realistic replay.": "practicalReview.payloadThreadQualityReplay",
+  "Original replay": "practicalReview.payloadOriginalReplay",
+  "Pressure variant": "practicalReview.payloadPressureVariant",
+  "Replay this interview": "practicalReview.payloadReplayThisInterview",
+  "Use the reviewed practical interview as a replay seed.": "practicalReview.payloadReplaySeedDescription",
+  "Start replay": "practicalReview.payloadStartReplay",
+  "Low confidence words detected.": "practicalReview.payloadLowConfidenceWords",
+  "Review segment 1": "practicalReview.payloadReviewSegmentOne",
+  ai_enriched: "practicalReview.payloadAiEnriched",
+  confirmed: "practicalReview.payloadConfirmedSource",
+  deep_dive: "practicalReview.payloadDeepDive",
+  Skeptical: "practicalReview.payloadSkeptical",
+  candidate: "practicalReview.payloadCandidateLower",
+  Candidate: "practicalReview.payloadCandidate",
+};
+
+/** Translates a known server payload label; unknown values pass through unchanged. */
+export function localizeReviewPayloadText(value: string | null | undefined, t: ReviewTranslate) {
+  if (!value) {
     return value ?? "";
   }
 
-  const normalized = value.trim();
-  const dictionary: Record<string, string> = {
-    Reviewed: "검토 완료",
-    Pending: "대기 중",
-    Confirmed: "확정됨",
-    Completed: "완료",
-    Failed: "실패",
-    warning: "주의",
-    high: "높음",
-    needs_review: "검토 필요",
-    ready: "준비됨",
-    Question: "질문",
-    Answer: "답변",
-    Behavioral: "행동",
-    "Resume Linked": "이력서 연결",
-    "Question lane": "질문 레인",
-    "Transcript lane": "전사 레인",
-    "Thread lane": "스레드 레인",
-    "Review transcript lane": "전사 레인 검토",
-    "Review structured questions": "구조화 질문 검토",
-    "Transcript needs final review": "전사 최종 검토 필요",
-    "Check follow-up chains": "꼬리질문 체인 점검",
-    "Question structure is the replay backbone.": "질문 구조는 리플레이의 뼈대입니다.",
-    "Transcript issues affect all downstream structuring.": "전사 이슈는 이후의 모든 구조화에 영향을 줍니다.",
-    "Thread quality affects realistic replay.": "스레드 품질은 현실적인 리플레이에 영향을 줍니다.",
-    "Original replay": "원본 리플레이",
-    "Pressure variant": "압박 변형",
-    "Replay this interview": "이 면접 리플레이",
-    "Use the reviewed practical interview as a replay seed.": "검토한 실전 면접을 리플레이 시드로 사용합니다.",
-    "Start replay": "리플레이 시작",
-    "Low confidence words detected.": "신뢰도가 낮은 단어가 감지되었습니다.",
-    "Review segment 1": "1번 세그먼트 검토",
-    ai_enriched: "AI 보강",
-    confirmed: "확정본",
-    deep_dive: "딥 다이브",
-    Skeptical: "회의적",
-    candidate: "지원자",
-    Candidate: "지원자",
-  };
+  const messageKey = reviewPayloadMessageKeys[value.trim()];
 
-  return dictionary[normalized] ?? value;
+  return messageKey ? t(messageKey) : value;
 }
 
-export function localizeReplayModeLabel(value: string | null | undefined, isKorean: boolean) {
-  return localizeReviewPayloadText(value, isKorean);
+export function localizeReplayModeLabel(value: string | null | undefined, t: ReviewTranslate) {
+  return localizeReviewPayloadText(value, t);
 }
 
 /** Lane and replay-blocker signals shared by the overview and the brief. */
-export function deriveReviewSignals(review: ReviewModel, isKorean: boolean) {
+export function deriveReviewSignals(review: ReviewModel, t: ReviewTranslate) {
   const laneNeedsReviewTotal = review.laneItems.reduce(
     (count, lane) => count + lane.needsReviewCount,
     0,
@@ -171,16 +177,12 @@ export function deriveReviewSignals(review: ReviewModel, isKorean: boolean) {
   const replayBlockerCount = review.replayReadiness.blockerDetails.length;
   const reviewSignal =
     replayBlockerCount > 0
-      ? isKorean
-        ? "리플레이 차단 요인 정리"
-        : "Clear replay blockers"
+      ? t("practicalReview.clearReplayBlockers")
       : primaryReviewLane
-        ? isKorean
-          ? `${localizeReviewPayloadText(primaryReviewLane.badgeText, true)} 열기`
-          : `Open ${primaryReviewLane.badgeText}`
-        : isKorean
-          ? "활성 레인 안정화"
-          : "Stabilize active lane";
+        ? t("practicalReview.openLane", {
+            lane: localizeReviewPayloadText(primaryReviewLane.badgeText, t),
+          })
+        : t("practicalReview.stabilizeActiveLane");
 
   return { laneNeedsReviewTotal, primaryReviewLane, replayBlockerCount, reviewSignal };
 }

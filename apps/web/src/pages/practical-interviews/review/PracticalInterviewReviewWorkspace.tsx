@@ -34,8 +34,7 @@ import {
  * replay launcher opens automatically (simulate).
  */
 export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRoute }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
   const navigate = useNavigate();
   const { recordId, questionId } = useParams<{ recordId: string; questionId?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -388,12 +387,8 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
 
   return (
     <PageContainer
-      description={
-        isKorean
-          ? "가져온 면접 하나로 전사 실패, 질문 구조, 꼬리질문 스레드, 리플레이 차단 요인을 점검한 뒤 다음 재시도로 넘어가세요."
-          : "Use one imported interview to inspect transcript failures, question structure, follow-up threads, and replay blockers before the next retry."
-      }
-      eyebrow={isKorean ? "복구 루프" : "Recovery loop"}
+      description={t("practicalReview.pageDescription")}
+      eyebrow={t("practicalReview.pageEyebrow")}
       title={detail.title}
     >
       <div className="page-stack practical-review-layout">
@@ -412,10 +407,10 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
 
           <div className="practical-review-layout__hero-side">
             <SectionPanel className="workspace-note-card workspace-note-card--accent practical-review-layout__hero-note" variant="muted">
-              <span className="page-card__label">{isKorean ? "분석 흐름" : "Analysis flow"}</span>
-              <h2 className="page-card__title">{isKorean ? "상세 수정 위에 리플레이 컨텍스트와 레인 우선순위를 유지하세요" : "Keep replay context and lane priorities above the detailed edits"}</h2>
+              <span className="page-card__label">{t("practicalReview.analysisFlowLabel")}</span>
+              <h2 className="page-card__title">{t("practicalReview.analysisFlowTitle")}</h2>
               <p className="page-card__body">
-                {isKorean ? "전사 수정은 전술적 작업입니다. 준비 상태, 차단 요인, 출처, 실행 결정은 그 위의 안정적인 브리핑 레이어에 있어야 합니다." : "Transcript edits stay tactical. Readiness, blockers, provenance, and launch decisions belong in a stable briefing layer above them."}
+                {t("practicalReview.analysisFlowBody")}
               </p>
             </SectionPanel>
 
@@ -450,11 +445,10 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
 
         {dirtyEditCount > 0 ? (
           <FeedbackNotice
-            message={
-              isKorean
-                ? `저장하지 않은 전사 수정이 ${dirtyEditCount}개 있습니다. 리뷰를 확정하기 전에 적용하거나 정리하세요.`
-                : `You have ${dirtyEditCount} unsaved transcript edit${dirtyEditCount > 1 ? "s" : ""}. Apply or clear them before confirming review.`
-            }
+            message={t(
+              dirtyEditCount > 1 ? "practicalReview.unsavedEditsOther" : "practicalReview.unsavedEditsOne",
+              { count: dirtyEditCount },
+            )}
             tone="info"
           />
         ) : null}

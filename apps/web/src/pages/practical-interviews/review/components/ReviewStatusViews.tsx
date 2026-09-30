@@ -7,69 +7,60 @@ import { LoadingStateCard } from "../../../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../../../shared/ui/PageContainer";
 
 export function MissingRecordView() {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <PageContainer
       description={
-        isKorean
-          ? "리뷰 작업공간을 열기 전에 가져온 면접 기록을 먼저 선택하세요."
-          : "Choose an imported interview record before opening the review workspace."
+        t("practicalReview.chooseImportedInterviewRecord")
       }
-      eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
-      title={isKorean ? "리뷰를 열 수 없습니다" : "Review unavailable"}
+      eyebrow={t("practicalReview.practicalInterviewEyebrow")}
+      title={t("practicalReview.reviewUnavailable")}
     >
       <EmptyStateCard
-        action={{ label: isKorean ? "실전 면접 목록 열기" : "Open practical interviews", to: routeConfig.practicalInterviews.buildPath() }}
-        body={isKorean ? "실전 면접 리뷰 경로에는 기록 식별자가 필요합니다." : "The practical interview review route needs a record id."}
-        title={isKorean ? "면접 기록이 없습니다" : "Missing interview record"}
+        action={{ label: t("practicalReview.openPracticalInterviews"), to: routeConfig.practicalInterviews.buildPath() }}
+        body={t("practicalReview.missingRecordBody")}
+        title={t("practicalReview.missingInterviewRecord")}
       />
     </PageContainer>
   );
 }
 
 export function ReviewLoadingView() {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <PageContainer
       description={
-        isKorean
-          ? "리뷰 셸, 전사, 질문 구조화, 리플레이 가이드를 불러오는 중입니다."
-          : "Loading the review shell, transcript, question structuring, and replay guidance."
+        t("practicalReview.loadingReviewShellTranscript")
       }
-      eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
-      title={isKorean ? "리뷰 작업공간 준비 중" : "Preparing review workspace"}
+      eyebrow={t("practicalReview.practicalInterviewEyebrow")}
+      title={t("practicalReview.preparingReviewWorkspace")}
     >
       <LoadingStateCard
         body={
-          isKorean
-            ? "백엔드 리뷰 데이터 묶음과 연결된 실전 면접 데이터를 불러오는 중입니다."
-            : "Loading the backend review payload and linked practical interview data."
+          t("practicalReview.loadingBackendReviewPayload")
         }
-        title={isKorean ? "실전 면접 리뷰 준비 중" : "Preparing practical interview review"}
+        title={t("practicalReview.preparingPracticalInterviewReview")}
       />
     </PageContainer>
   );
 }
 
 export function ReviewLoadErrorView({ error, onRetry }: { error: unknown; onRetry: () => void }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <PageContainer
-      description={isKorean ? "실전 면접 리뷰를 불러오지 못했습니다." : "The practical interview review could not be loaded."}
-      eyebrow={isKorean ? "실전 면접" : "Practical Interview"}
-      title={isKorean ? "리뷰를 열 수 없습니다" : "Review unavailable"}
+      description={t("practicalReview.loadErrorBody")}
+      eyebrow={t("practicalReview.practicalInterviewEyebrow")}
+      title={t("practicalReview.reviewUnavailable")}
     >
       <ErrorStateCard
-        body={userFacingErrorMessage(error, isKorean ? "실전 면접 리뷰를 불러오지 못했습니다." : "The practical interview review could not be loaded.")}
+        body={userFacingErrorMessage(error, t("practicalReview.loadErrorBody"))}
         details={getErrorDetails(error)}
         onAction={onRetry}
-        title={isKorean ? "실전 면접 리뷰를 불러올 수 없습니다" : "Unable to load practical interview review"}
+        title={t("practicalReview.unableLoadPracticalInterview")}
       />
     </PageContainer>
   );

@@ -47,18 +47,17 @@ export function TranscriptReviewPanel({
   handleApplyBulkEdits: (confirmAfterApply?: boolean) => Promise<void>;
   handleSaveSegment: (segmentId: string) => Promise<void>;
 }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <div className="page-stack">
-      <span className="page-card__label">{isKorean ? "전사" : "Transcript"}</span>
-      <h2 className="page-card__title">{isKorean ? "전사 이슈와 세그먼트 수정" : "Transcript issues and segment edits"}</h2>
+      <span className="page-card__label">{t("practicalReviewPanels.transcript")}</span>
+      <h2 className="page-card__title">{t("practicalReviewPanels.transcriptIssuesSegmentEdits")}</h2>
       <div className="stats-grid">
-        <MetricCard label={isKorean ? "낮은 신뢰도" : "Low confidence"} value={String(review.transcriptIssueSummary.lowConfidenceSegmentCount)} />
-        <MetricCard label={isKorean ? "화자 수정" : "Speaker overrides"} tone="muted" value={String(review.transcriptIssueSummary.speakerOverrideSegmentCount)} />
-        <MetricCard label={isKorean ? "확정본 수정" : "Confirmed overrides"} tone="accent" value={String(review.transcriptIssueSummary.confirmedTextOverrideCount)} />
-        <MetricCard label={isKorean ? "미해결" : "Unresolved"} tone="muted" value={String(review.transcriptIssueSummary.unresolvedIssueCount)} />
+        <MetricCard label={t("practicalReviewPanels.lowConfidence")} value={String(review.transcriptIssueSummary.lowConfidenceSegmentCount)} />
+        <MetricCard label={t("practicalReviewPanels.speakerOverrides")} tone="muted" value={String(review.transcriptIssueSummary.speakerOverrideSegmentCount)} />
+        <MetricCard label={t("practicalReviewPanels.confirmedOverrides")} tone="accent" value={String(review.transcriptIssueSummary.confirmedTextOverrideCount)} />
+        <MetricCard label={t("practicalReviewPanels.unresolved")} tone="muted" value={String(review.transcriptIssueSummary.unresolvedIssueCount)} />
       </div>
       <div className="stack-list">
         {review.transcriptIssueSummary.topPrioritySegmentActions.map((action) => (
@@ -67,7 +66,7 @@ export function TranscriptReviewPanel({
             key={action.id}
             onClick={() => {
               jumpToSegment(action.sequence);
-              void playRange(action.seekRange, isKorean ? `${action.sequence}번 세그먼트` : `Segment ${action.sequence}`);
+              void playRange(action.seekRange, t("practicalReviewPanels.segmentLabel", { sequence: action.sequence }));
               if (action.linkedQuestionId) {
                 setSelectedQuestionId(action.linkedQuestionId);
               }
@@ -79,12 +78,12 @@ export function TranscriptReviewPanel({
           >
             <div className="list-item-card__content">
               <div className="list-item-card__meta">
-                <span>{isKorean ? `${action.sequence}번 세그먼트` : `Segment ${action.sequence}`}</span>
-                <span>{localizeReviewPayloadText(action.severity, isKorean)}</span>
-                <span>{localizeReviewPayloadText(action.priority, isKorean)}</span>
+                <span>{t("practicalReviewPanels.segmentLabel", { sequence: action.sequence })}</span>
+                <span>{localizeReviewPayloadText(action.severity, t)}</span>
+                <span>{localizeReviewPayloadText(action.priority, t)}</span>
               </div>
-              <h3 className="list-item-card__title">{localizeReviewPayloadText(action.ctaLabel, isKorean)}</h3>
-              <p className="list-item-card__body">{localizeReviewPayloadText(action.triageReason, isKorean)}</p>
+              <h3 className="list-item-card__title">{localizeReviewPayloadText(action.ctaLabel, t)}</h3>
+              <p className="list-item-card__body">{localizeReviewPayloadText(action.triageReason, t)}</p>
             </div>
           </button>
         ))}
@@ -98,7 +97,7 @@ export function TranscriptReviewPanel({
           }}
           type="button"
         >
-          {updateReviewMutation.isPending ? (isKorean ? "적용 중..." : "Applying...") : isKorean ? "검토한 수정 적용" : "Apply reviewed edits"}
+          {updateReviewMutation.isPending ? t("practicalReviewPanels.applying") : t("practicalReviewPanels.applyReviewedEdits")}
         </button>
       </div>
       <div className="stack-list">
@@ -120,29 +119,29 @@ export function TranscriptReviewPanel({
               <div className="section-heading">
                 <div>
                   <p className="section-heading__eyebrow">
-                    {isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`}
+                    {t("practicalReviewPanels.segmentLabel", { sequence: segment.sequence })}
                   </p>
                   <h3 className="page-card__title">
-                    {localizeReviewPayloadText(segment.speakerLabel, isKorean)}
+                    {localizeReviewPayloadText(segment.speakerLabel, t)}
                     {segment.timestampLabel ? ` · ${segment.timestampLabel}` : ""}
                   </h3>
                 </div>
                 <div className="chip-list">
                   {isPlaybackActive ? (
-                    <span className="detail-chip detail-chip--accent">{isKorean ? "현재 재생 중" : "Playing now"}</span>
+                    <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.playingNow")}</span>
                   ) : null}
                   {segment.confidenceLabel ? (
                     <span className="detail-chip">{segment.confidenceLabel}</span>
                   ) : null}
                   {segment.hasTextOverride ? (
-                    <span className="detail-chip detail-chip--accent">{isKorean ? "수정됨" : "Edited"}</span>
+                    <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.edited")}</span>
                   ) : null}
                 </div>
               </div>
               {segment.rawText ? (
                 <div className="practical-transcript-segment__source">
                   <p className="practical-transcript-segment__source-label">
-                    {isKorean ? "원본 전사" : "Original transcript"}
+                    {t("practicalReviewPanels.originalTranscript")}
                   </p>
                   <p className="page-card__body practical-transcript-segment__source-body">
                     {segment.rawText}
@@ -151,7 +150,7 @@ export function TranscriptReviewPanel({
               ) : null}
               <div className="form-grid">
                 <label className="form-field">
-                  <span className="form-field__label">{isKorean ? "화자" : "Speaker"}</span>
+                  <span className="form-field__label">{t("practicalReviewPanels.speaker")}</span>
                   <input
                     className="form-input"
                     onChange={(event) =>
@@ -169,9 +168,9 @@ export function TranscriptReviewPanel({
                   />
                 </label>
                 <label className="form-field practical-editor-field">
-                  <span className="form-field__label">{isKorean ? "정리된 텍스트" : "Cleaned text"}</span>
+                  <span className="form-field__label">{t("practicalReviewPanels.cleanedText")}</span>
                   <span className="practical-editor-field__helper">
-                    {isKorean ? "명백한 음성 인식 잡음을 제거하되 화자의 의미는 유지하세요." : "Preserve the speaker meaning while removing obvious ASR noise."}
+                    {t("practicalReviewPanels.preserveSpeakerMeaningWhile")}
                   </span>
                   <textarea
                     className="form-input form-input--textarea"
@@ -190,9 +189,9 @@ export function TranscriptReviewPanel({
                   />
                 </label>
                 <label className="form-field practical-editor-field">
-                  <span className="form-field__label">{isKorean ? "확정 텍스트" : "Confirmed text"}</span>
+                  <span className="form-field__label">{t("practicalReviewPanels.confirmedText")}</span>
                   <span className="practical-editor-field__helper">
-                    {isKorean ? "최종 검토 문구를 정리된 텍스트와 다르게 확정할 때만 사용하세요." : "Use only when you want the final reviewed wording to differ from cleaned text."}
+                    {t("practicalReviewPanels.useOnlyWhenYou")}
                   </span>
                   <textarea
                     className="form-input form-input--textarea"
@@ -220,7 +219,7 @@ export function TranscriptReviewPanel({
                   }}
                   type="button"
                 >
-                  {isKorean ? "세그먼트 저장" : "Save segment"}
+                  {t("practicalReviewPanels.saveSegment")}
                 </button>
                 {review.timelineNavigation?.find(
                   (item) => item.questionSegmentStartSequence === segment.sequence,
@@ -237,7 +236,7 @@ export function TranscriptReviewPanel({
                       }
                       type="button"
                     >
-                      {isKorean ? "질문으로 이동" : "Jump to question"}
+                      {t("practicalReviewPanels.jumpQuestion")}
                     </button>
                   ) : null}
                 <button
@@ -251,12 +250,12 @@ export function TranscriptReviewPanel({
                         startTimestampLabel: segment.timestampLabel,
                         endTimestampLabel: null,
                       },
-                      isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`,
+                      t("practicalReviewPanels.segmentLabel", { sequence: segment.sequence }),
                     );
                   }}
                   type="button"
                 >
-                  {isKorean ? "세그먼트 재생" : "Play segment"}
+                  {t("practicalReviewPanels.playSegment")}
                 </button>
               </div>
             </article>

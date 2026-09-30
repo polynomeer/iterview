@@ -30,28 +30,27 @@ export function ReplayLaunchPanel({
   handleStartReplay: () => Promise<void>;
   setReplayPreset: (preset: ReplayPresetModel) => void;
 }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <section className="page-card practical-replay-launch">
       <div className="practical-replay-launch__hero">
         <div>
-          <span className="page-card__label">{isKorean ? "리플레이 시작" : "Replay launch"}</span>
-          <h2 className="page-card__title">{localizeReviewPayloadText(replayPreset.presetTitle, isKorean)}</h2>
-          <p className="page-card__body">{localizeReviewPayloadText(replayPreset.presetDescription, isKorean)}</p>
+          <span className="page-card__label">{t("practicalReview.replayLaunch")}</span>
+          <h2 className="page-card__title">{localizeReviewPayloadText(replayPreset.presetTitle, t)}</h2>
+          <p className="page-card__body">{localizeReviewPayloadText(replayPreset.presetDescription, t)}</p>
         </div>
         <div className="chip-list">
           <span className="question-status-badge question-status-badge--accent">
-            {localizeReviewPayloadText(review.replayReadiness.statusBadgeText, isKorean)}
+            {localizeReviewPayloadText(review.replayReadiness.statusBadgeText, t)}
           </span>
           {review.replayReadiness.ready ? (
             <span className="question-status-badge question-status-badge--positive">
-              {isKorean ? "리플레이 준비 완료" : "Replay ready"}
+              {t("practicalReview.replayReady")}
             </span>
           ) : (
             <span className="question-status-badge question-status-badge--warning">
-              {isKorean ? "리뷰 차단 요인" : "Review blockers"}
+              {t("practicalReview.reviewBlockers")}
             </span>
           )}
         </div>
@@ -59,15 +58,15 @@ export function ReplayLaunchPanel({
       <div className="interview-session-layout">
         <div className="interview-session-layout__main">
           <section className="page-card page-card--inset">
-            <span className="page-card__label">{isKorean ? "프리셋" : "Preset"}</span>
+            <span className="page-card__label">{t("practicalReview.preset")}</span>
             <div className="stats-grid">
-              <MetricCard label={isKorean ? "권장 모드" : "Recommended mode"} value={localizeReplayModeLabel(replayPreset.recommendedReplayModeLabel ?? (isKorean ? "리플레이" : "Replay"), isKorean)} />
-              <MetricCard label={isKorean ? "시드 질문" : "Seed questions"} tone="accent" value={String(replayPreset.seedQuestionIds.length)} />
-              <MetricCard label={isKorean ? "리플레이 가능" : "Replayable"} tone="muted" value={String(review.replayReadiness.replayableQuestionCount)} />
+              <MetricCard label={t("practicalReview.recommendedMode")} value={localizeReplayModeLabel(replayPreset.recommendedReplayModeLabel ?? t("practicalReview.replay"), t)} />
+              <MetricCard label={t("practicalReview.seedQuestions")} tone="accent" value={String(replayPreset.seedQuestionIds.length)} />
+              <MetricCard label={t("practicalReview.replayable")} tone="muted" value={String(review.replayReadiness.replayableQuestionCount)} />
             </div>
             <div className="form-grid">
               <label className="form-field">
-                <span className="form-field__label">{isKorean ? "리플레이 모드" : "Replay mode"}</span>
+                <span className="form-field__label">{t("practicalReview.replayMode")}</span>
                 <select
                   className="form-input"
                   onChange={(event) => setSelectedReplayMode(event.target.value)}
@@ -75,13 +74,13 @@ export function ReplayLaunchPanel({
                 >
                   {replayPreset.availableReplayModes.map((mode) => (
                     <option key={mode} value={mode}>
-                      {localizeReplayModeLabel(replayPreset.availableReplayModeLabels[mode] ?? mode, isKorean)}
+                      {localizeReplayModeLabel(replayPreset.availableReplayModeLabels[mode] ?? mode, t)}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="form-field">
-                <span className="form-field__label">{isKorean ? "질문 수" : "Question count"}</span>
+                <span className="form-field__label">{t("practicalReview.questionCount")}</span>
                 <input
                   className="form-input"
                   max={10}
@@ -96,17 +95,17 @@ export function ReplayLaunchPanel({
         </div>
         <div className="interview-facet-panels">
           <section className="page-card page-card--inset">
-            <span className="page-card__label">{isKorean ? "준비 상태" : "Readiness"}</span>
-            <h3 className="page-card__title">{isKorean ? "서버 준비 상태 요약" : "Server readiness summary"}</h3>
-            <p className="page-card__body">{localizeReviewPayloadText(review.replayReadiness.statusSummary, isKorean)}</p>
+            <span className="page-card__label">{t("practicalReview.readiness")}</span>
+            <h3 className="page-card__title">{t("practicalReview.serverReadinessSummary")}</h3>
+            <p className="page-card__body">{localizeReviewPayloadText(review.replayReadiness.statusSummary, t)}</p>
             {review.replayReadiness.blockerDetails.length > 0 && !review.replayReadiness.ready ? (
               <div className="stack-list">
                 {review.replayReadiness.blockerDetails.map((detail) => (
                   <article className="list-item-card practical-blocker-card" key={detail.id}>
                     <div className="list-item-card__content">
                       <div className="list-item-card__meta">
-                        <span>{localizeReviewPayloadText(detail.label, isKorean)}</span>
-                        <span>{localizeReviewPayloadText(detail.severity, isKorean)}</span>
+                        <span>{localizeReviewPayloadText(detail.label, t)}</span>
+                        <span>{localizeReviewPayloadText(detail.severity, t)}</span>
                       </div>
                       <p className="list-item-card__body">{detail.description}</p>
                     </div>
@@ -127,17 +126,15 @@ export function ReplayLaunchPanel({
           type="button"
         >
           {createReplayMutation.isPending
-            ? isKorean
-              ? "리플레이 시작 중..."
-              : "Starting replay..."
-            : localizeReviewPayloadText(replayPreset.launchButtonLabel, isKorean)}
+            ? t("practicalReview.startingReplay")
+            : localizeReviewPayloadText(replayPreset.launchButtonLabel, t)}
         </button>
         <button
           className="secondary-button"
           onClick={() => setReplayPreset(null)}
           type="button"
         >
-          {isKorean ? "닫기" : "Close"}
+          {t("practicalReview.close")}
         </button>
       </div>
     </section>

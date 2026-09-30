@@ -38,8 +38,7 @@ export function ReplayPlayer(props: {
   onPlayRange: (range: { startMs: number; endMs: number; durationMs: number; startTimestampLabel: string | null; endTimestampLabel: string | null; }, label: string) => void;
   onPlaybackRateChange: (rate: number) => void;
 }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
   const [navigatorMode, setNavigatorMode] = useState<"timeline" | "chapters">("timeline");
 
   if (!props.playback?.playbackAvailable || !props.playback.sourceAudioFileUrl) {
@@ -52,17 +51,15 @@ export function ReplayPlayer(props: {
 
   return (
     <section className="page-card practical-audio-player">
-      <span className="page-card__label">{isKorean ? "오디오 리플레이" : "Audio replay"}</span>
+      <span className="page-card__label">{t("practicalReview.audioReplay")}</span>
       <div className="section-heading">
         <div>
           <h2 className="page-card__title">
-            {props.playback.sourceAudioFileName ?? (isKorean ? "면접 녹음 파일" : "Interview recording")}
+            {props.playback.sourceAudioFileName ?? t("practicalReview.interviewRecording")}
           </h2>
           <p className="page-card__body">
             {props.activeRangeLabel ??
-              (isKorean
-                ? "전사, 질문, 스레드 리플레이 동작으로 원하는 구간으로 바로 이동할 수 있습니다."
-                : "Use transcript, question, or thread replay actions to jump to one clip.")}
+              t("practicalReview.useTranscriptQuestionThread")}
           </p>
         </div>
         <div className="chip-list">
@@ -74,7 +71,7 @@ export function ReplayPlayer(props: {
       <audio preload="metadata" ref={props.audioRef} src={props.audioSourceUrl ?? undefined} />
       <div className="practical-audio-player__progress">
         <input
-          aria-label={isKorean ? "리플레이 위치" : "Replay position"}
+          aria-label={t("practicalReview.replayPosition")}
           className="practical-audio-player__scrubber"
           max={durationMs || 0}
           min={0}
@@ -93,7 +90,7 @@ export function ReplayPlayer(props: {
       </div>
       <div className="page-card__actions practical-audio-player__actions">
         <button className="primary-button practical-audio-player__button" onClick={props.onTogglePlay} type="button">
-          {props.isPlaying ? (isKorean ? "일시정지" : "Pause") : isKorean ? "재생" : "Play"}
+          {props.isPlaying ? t("practicalReview.pause") : t("practicalReview.play")}
         </button>
         <button
           className="secondary-button practical-audio-player__button"
@@ -110,7 +107,7 @@ export function ReplayPlayer(props: {
           +5s
         </button>
         <select
-          aria-label={isKorean ? "재생 속도" : "Playback rate"}
+          aria-label={t("practicalReview.playbackRate")}
           className="form-input practical-audio-player__rate-input"
           onChange={(event) => props.onPlaybackRateChange(Number(event.target.value))}
           value={props.playbackRate}
@@ -129,26 +126,22 @@ export function ReplayPlayer(props: {
             onClick={() => setNavigatorMode("timeline")}
             type="button"
           >
-            {isKorean ? "타임라인" : "Timeline"}
+            {t("practicalReview.timeline")}
           </button>
           <button
             className={navigatorMode === "chapters" ? "primary-button" : "secondary-button"}
             onClick={() => setNavigatorMode("chapters")}
             type="button"
           >
-            {isKorean ? "챕터" : "Chapters"}
+            {t("practicalReview.chapters")}
           </button>
         </div>
         <div className="stack-list practical-audio-player__navigator-list">
           {playerItems.length === 0 ? (
             <p className="page-card__body">
               {navigatorMode === "timeline"
-                ? isKorean
-                  ? "세그먼트 리플레이 데이터가 준비되면 전사 시점이 여기에 표시됩니다."
-                  : "Transcript timestamps will appear here when segment replay data is available."
-                : isKorean
-                  ? "질문 리플레이 구간이 준비되면 질문 챕터가 여기에 표시됩니다."
-                  : "Question chapters will appear here when question replay ranges are available."}
+                ? t("practicalReview.transcriptTimestampsWillAppear")
+                : t("practicalReview.questionChaptersWillAppear")}
             </p>
           ) : null}
           {navigatorMode === "timeline"
@@ -171,7 +164,7 @@ export function ReplayPlayer(props: {
                           startTimestampLabel: segment.timestampLabel,
                           endTimestampLabel: null,
                         },
-                        isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`,
+                        t("practicalReview.segmentLabel", { sequence: segment.sequence }),
                       )
                     }
                     type="button"
@@ -182,7 +175,7 @@ export function ReplayPlayer(props: {
                         <span>{segment.speakerLabel}</span>
                       </div>
                       <h3 className="list-item-card__title">
-                        {isKorean ? `${segment.sequence}번 세그먼트` : `Segment ${segment.sequence}`}
+                        {t("practicalReview.segmentLabel", { sequence: segment.sequence })}
                       </h3>
                       <p className="list-item-card__body">{truncateText(segment.text)}</p>
                     </div>
@@ -216,7 +209,7 @@ export function ReplayPlayer(props: {
                     <div className="list-item-card__content">
                       <div className="list-item-card__meta">
                         <span>{chapter.timestampLabel ?? formatDurationLabel(chapter.startMs)}</span>
-                        <span>{chapter.isFollowUp ? (isKorean ? "꼬리질문" : "Follow-up") : isKorean ? "메인" : "Main"}</span>
+                        <span>{chapter.isFollowUp ? t("practicalReview.followUp") : t("practicalReview.main")}</span>
                       </div>
                       <h3 className="list-item-card__title">{chapter.label}</h3>
                       {chapter.supportingText ? (

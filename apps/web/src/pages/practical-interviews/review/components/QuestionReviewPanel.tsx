@@ -38,14 +38,13 @@ export function QuestionReviewPanel({
   ) => void;
   openReplayLauncher: (preset: ReplayPresetModel) => void;
 }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   const questionFilterOptions = [
-    { id: "all", label: isKorean ? "전체" : "All", count: review.questionFilterSummary.allQuestions },
-    { id: "primary", label: isKorean ? "메인" : "Primary", count: review.questionFilterSummary.primaryQuestions },
-    { id: "follow-up", label: isKorean ? "꼬리질문" : "Follow-up", count: review.questionFilterSummary.followUpQuestions },
-    { id: "weak", label: isKorean ? "약한 답변" : "Weak answers", count: review.questionFilterSummary.weakAnswerQuestions },
+    { id: "all", label: t("practicalReviewPanels.all"), count: review.questionFilterSummary.allQuestions },
+    { id: "primary", label: t("practicalReviewPanels.primary"), count: review.questionFilterSummary.primaryQuestions },
+    { id: "follow-up", label: t("practicalReviewPanels.followUp"), count: review.questionFilterSummary.followUpQuestions },
+    { id: "weak", label: t("practicalReviewPanels.weakAnswers"), count: review.questionFilterSummary.weakAnswerQuestions },
   ];
 
   const filteredQuestionSummaries = review.questionSummaries.filter((question) => {
@@ -63,13 +62,13 @@ export function QuestionReviewPanel({
 
   return (
     <div className="page-stack">
-      <span className="page-card__label">{isKorean ? "질문" : "Questions"}</span>
-      <h2 className="page-card__title">{isKorean ? "질문 요약과 딥링크" : "Question summaries and deep links"}</h2>
+      <span className="page-card__label">{t("practicalReviewPanels.questions")}</span>
+      <h2 className="page-card__title">{t("practicalReviewPanels.questionSummariesDeepLinks")}</h2>
       <div className="stats-grid">
-        <MetricCard label={isKorean ? "이력서 연결" : "Resume-linked"} value={String(review.questionOriginSummary.resumeLinkedQuestions)} />
-        <MetricCard label={isKorean ? "공고 연결" : "Job-posting linked"} tone="muted" value={String(review.questionOriginSummary.jobPostingLinkedQuestions)} />
-        <MetricCard label={isKorean ? "혼합" : "Hybrid"} tone="accent" value={String(review.questionOriginSummary.hybridLinkedQuestions)} />
-        <MetricCard label={isKorean ? "일반" : "General"} tone="muted" value={String(review.questionOriginSummary.generalQuestions)} />
+        <MetricCard label={t("practicalReviewPanels.resumeLinked")} value={String(review.questionOriginSummary.resumeLinkedQuestions)} />
+        <MetricCard label={t("practicalReviewPanels.jobPostingLinked")} tone="muted" value={String(review.questionOriginSummary.jobPostingLinkedQuestions)} />
+        <MetricCard label={t("practicalReviewPanels.hybrid")} tone="accent" value={String(review.questionOriginSummary.hybridLinkedQuestions)} />
+        <MetricCard label={t("practicalReviewPanels.general")} tone="muted" value={String(review.questionOriginSummary.generalQuestions)} />
       </div>
       <div className="page-card__actions">
         {questionFilterOptions.map((filter) => (
@@ -103,40 +102,40 @@ export function QuestionReviewPanel({
             <div className="section-heading">
               <div>
                 <p className="section-heading__eyebrow">
-                  #{question.orderIndex + 1} · {localizeReviewPayloadText(question.questionTypeLabel, isKorean)}
+                  #{question.orderIndex + 1} · {localizeReviewPayloadText(question.questionTypeLabel, t)}
                 </p>
                 <h3 className="page-card__title">{question.text}</h3>
               </div>
               <div className="chip-list">
-                <span className="detail-chip">{localizeReviewPayloadText(question.originLabel, isKorean)}</span>
+                <span className="detail-chip">{localizeReviewPayloadText(question.originLabel, t)}</span>
                 {question.isFollowUp ? (
-                  <span className="detail-chip detail-chip--accent">{isKorean ? "꼬리질문" : "Follow-up"}</span>
+                  <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.followUp")}</span>
                 ) : null}
                 {question.hasWeakAnswer ? (
-                  <span className="detail-chip detail-chip--accent">{isKorean ? "약한 답변" : "Weak answer"}</span>
+                  <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.weakAnswer")}</span>
                 ) : null}
               </div>
             </div>
             <div className="practical-review-meta">
               {question.questionStructuringSource ? (
                 <div className="practical-review-meta__row">
-                  <span className="practical-review-meta__label">{isKorean ? "질문 출처" : "Question source"}</span>
+                  <span className="practical-review-meta__label">{t("practicalReviewPanels.questionSource")}</span>
                   <span className="practical-review-meta__value">
-                    {localizeReviewPayloadText(question.questionStructuringSource, isKorean)}
+                    {localizeReviewPayloadText(question.questionStructuringSource, t)}
                   </span>
                 </div>
               ) : null}
               {question.answerStructuringSource ? (
                 <div className="practical-review-meta__row">
-                  <span className="practical-review-meta__label">{isKorean ? "답변 출처" : "Answer source"}</span>
+                  <span className="practical-review-meta__label">{t("practicalReviewPanels.answerSource")}</span>
                   <span className="practical-review-meta__value">
-                    {localizeReviewPayloadText(question.answerStructuringSource, isKorean)}
+                    {localizeReviewPayloadText(question.answerStructuringSource, t)}
                   </span>
                 </div>
               ) : null}
               {question.derivedFromResumeSection ? (
                 <div className="practical-review-meta__row">
-                  <span className="practical-review-meta__label">{isKorean ? "이력서 섹션" : "Resume section"}</span>
+                  <span className="practical-review-meta__label">{t("practicalReviewPanels.resumeSection")}</span>
                   <span className="practical-review-meta__value">
                     {question.derivedFromResumeSection}
                   </span>
@@ -144,7 +143,7 @@ export function QuestionReviewPanel({
               ) : null}
               {question.derivedFromJobPostingSection ? (
                 <div className="practical-review-meta__row">
-                  <span className="practical-review-meta__label">{isKorean ? "채용 공고 섹션" : "Job posting section"}</span>
+                  <span className="practical-review-meta__label">{t("practicalReviewPanels.jobPostingSection")}</span>
                   <span className="practical-review-meta__value">
                     {question.derivedFromJobPostingSection}
                   </span>
@@ -169,33 +168,33 @@ export function QuestionReviewPanel({
                 <button
                   className="secondary-button"
                   onClick={() =>
-                    focusQuestionWithPlayback(question.id, question.questionRange, isKorean ? `${question.orderIndex + 1}번 질문` : `Question ${question.orderIndex + 1}`)
+                    focusQuestionWithPlayback(question.id, question.questionRange, t("practicalReviewPanels.questionLabel", { number: question.orderIndex + 1 }))
                   }
                   type="button"
                 >
-                  {isKorean ? "질문 재생" : "Play question"}
+                  {t("practicalReviewPanels.playQuestion")}
                 </button>
               ) : null}
               {question.answerRange ? (
                 <button
                   className="secondary-button"
                   onClick={() =>
-                    focusQuestionWithPlayback(question.id, question.answerRange, isKorean ? `${question.orderIndex + 1}번 답변` : `Answer ${question.orderIndex + 1}`)
+                    focusQuestionWithPlayback(question.id, question.answerRange, t("practicalReviewPanels.answerLabel", { number: question.orderIndex + 1 }))
                   }
                   type="button"
                 >
-                  {isKorean ? "답변 재생" : "Play answer"}
+                  {t("practicalReviewPanels.playAnswer")}
                 </button>
               ) : null}
               {question.questionAnswerRange ? (
                 <button
                   className="secondary-button"
                   onClick={() =>
-                    focusQuestionWithPlayback(question.id, question.questionAnswerRange, isKorean ? `${question.orderIndex + 1}번 문답` : `Q&A ${question.orderIndex + 1}`)
+                    focusQuestionWithPlayback(question.id, question.questionAnswerRange, t("practicalReviewPanels.questionAnswerLabel", { number: question.orderIndex + 1 }))
                   }
                   type="button"
                 >
-                  {isKorean ? "문답 재생" : "Play Q&A"}
+                  {t("practicalReviewPanels.playQuestionAnswer")}
                 </button>
               ) : null}
               {question.linkedQuestionId ? (
@@ -205,12 +204,12 @@ export function QuestionReviewPanel({
                     questionId: question.linkedQuestionId,
                   })}
                 >
-                  {isKorean ? "질문 상세 열기" : "Open question detail"}
+                  {t("practicalReviewPanels.openQuestionDetail")}
                 </Link>
               ) : null}
               {heatmapAnchorPath ? (
                 <Link className="secondary-button" to={heatmapAnchorPath}>
-                  {isKorean ? "히트맵 앵커 열기" : "Open heatmap anchor"}
+                  {t("practicalReviewPanels.openHeatmapAnchor")}
                 </Link>
               ) : null}
               {question.deepLink?.sourceInterviewQuestionId ? (
@@ -218,7 +217,7 @@ export function QuestionReviewPanel({
                   className="secondary-button"
                   to={`${routeConfig.archive.buildPath()}?sourceInterviewRecordId=${recordId}&sourceInterviewQuestionId=${question.deepLink.sourceInterviewQuestionId}`}
                 >
-                  {isKorean ? "아카이브 원본 열기" : "Open archive source"}
+                  {t("practicalReviewPanels.openArchiveSource")}
                 </Link>
               ) : null}
               {question.deepLink?.canStartReplayMock ? (
@@ -236,7 +235,7 @@ export function QuestionReviewPanel({
                   }
                   type="button"
                 >
-                  {isKorean ? "리플레이 모의면접 시작" : "Start replay mock"}
+                  {t("practicalReviewPanels.startReplayMock")}
                 </button>
               ) : null}
             </div>

@@ -12,18 +12,17 @@ export function ReviewLaneSwitcher({
   changeTab: (tab: ReviewTab) => void;
   children: ReactNode;
 }) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
 
   return (
     <section className="page-card practical-review-tabs-card">
       <div className="section-heading">
         <div>
-          <span className="page-card__label">{isKorean ? "레인 전환" : "Lane switcher"}</span>
-          <h2 className="page-card__title">{isKorean ? "전사, 질문, 스레드 리뷰를 이동하며 점검하세요" : "Move through transcript, question, and thread review"}</h2>
+          <span className="page-card__label">{t("practicalReview.laneSwitcher")}</span>
+          <h2 className="page-card__title">{t("practicalReview.moveThroughTranscriptQuestion")}</h2>
         </div>
         <p className="page-card__body practical-review-tabs-card__summary">
-          {isKorean ? "리플레이 컨텍스트와 선택된 근거를 유지한 채 현재 레인에만 집중하세요." : "Keep the active lane focused while preserving replay context and selected evidence."}
+          {t("practicalReview.keepActiveLaneFocused")}
         </p>
       </div>
       <div className="page-card__actions practical-review-tabs-card__actions">
@@ -35,16 +34,10 @@ export function ReviewLaneSwitcher({
             type="button"
           >
             {tab === "transcript"
-              ? isKorean
-                ? "전사 리뷰"
-                : "Transcript review"
+              ? t("practicalReview.transcriptReview")
               : tab === "question"
-                ? isKorean
-                  ? "질문 리뷰"
-                  : "Question review"
-                : isKorean
-                  ? "스레드 리뷰"
-                  : "Thread review"}
+                ? t("practicalReview.questionReview")
+                : t("practicalReview.threadReview")}
           </button>
         ))}
       </div>
