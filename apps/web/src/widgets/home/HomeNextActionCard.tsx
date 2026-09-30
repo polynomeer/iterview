@@ -83,7 +83,6 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
   const { locale } = useLocale();
   const isKorean = locale === "ko";
   const nextAction = getNextAction(home, isKorean);
-  const progressLabel = home.todayQuestion ? "72%" : home.retryQuestions.length > 0 ? "64%" : "58%";
   const weakAreaCount = home.retryQuestions.length > 0 ? home.retryQuestions.length : home.resumeRiskPreview.length;
 
   return (
@@ -96,16 +95,6 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
           </div>
           <h2 className="page-card__title">{nextAction.title}</h2>
           <p className="page-card__body">{nextAction.body}</p>
-        </div>
-        <div className="home-next-action-card__highlights">
-          <article className="home-next-action-card__highlight">
-            <span>{isKorean ? "진행률" : "Progress"}</span>
-            <strong>{progressLabel}</strong>
-          </article>
-          <article className="home-next-action-card__highlight">
-            <span>{isKorean ? "목표 점수" : "Score target"}</span>
-            <strong>{isKorean ? "70% 이상" : "70%+"}</strong>
-          </article>
         </div>
       </div>
       <div className="home-next-action-card__path-preview" aria-hidden="true">

@@ -71,6 +71,10 @@ describe("HomePage", () => {
     expect(screen.getByText("Scaling playbook")).toBeInTheDocument();
     expect(screen.getByText("Weekly score")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "답변 시작" }).length).toBeGreaterThan(0);
+    // Values the API does not provide must not be invented on the home card.
+    expect(screen.queryByText("진행률")).not.toBeInTheDocument();
+    expect(screen.queryByText("3개")).not.toBeInTheDocument();
+    expect(screen.queryByText("~25분")).not.toBeInTheDocument();
   });
 
   it("shows a sign-in state instead of a generic error for 401 responses", () => {
