@@ -336,6 +336,22 @@ immediately. Phase 2 onward depends on the ADR being accepted.
 
 **Acceptance:** every route in §2 renders without a crash in both viewports. There is no horizontal scroll at 390px. Every page `h1` passes 4.5:1 in the default theme.
 
+**Status (2026-09-30): done.** An automated sweep of 33 routes × 2 viewports found no crash, no page error, and no horizontal scroll. Page `h1` contrast is 15.9:1 (desktop) and 16.9:1 (mobile).
+
+| Item | Outcome |
+| --- | --- |
+| 1. Conditional hook | Fixed by hoisting the hooks above the early returns, with a regression test (`15acb06`). Splitting the 2,287-line page per route moves to Phase 4. |
+| 2. Error boundary and 404 | Done (`6833290`). |
+| 3. Default theme contrast | `workspace` is now the default and `light` is retired until Phase 1 ([ADR 0075](adr/0075-retire-light-theme-until-token-rebuild.md), `36c23be`). |
+| 4. Mobile overflow | No code change was needed. The 1,025px width came from the crash screen's stack trace and went away with item 1. |
+| 5. Copy and data bugs | `&apos;`, fabricated card values, the misnamed difficulty field, and header titles are fixed (`71fbe6b`, `1e8d3ea`, `800f22c`). The home title overlap is also fixed (`fb17e84`). |
+| 6. Sample-data pages | Removed from the sidebar, the command palette, and in-page links. The URLs still resolve (`9a4c6d1`). |
+| 7. Header buttons | The dead "알/활" buttons are removed. Logout is now a labeled icon button (`219fef1`). |
+
+Still open and deferred by design:
+- The sidebar and bottom-tab letter glyphs (Phase 1 icon set).
+- The vertical text in narrow metadata rails (Phase 3 screen rebuilds).
+
 ### Phase 1 — Foundations
 
 1. Add `tokens.css` (from `proposal.css`) and the `shared/ui` primitives listed in §4.3, with unit tests.
