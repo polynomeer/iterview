@@ -66,10 +66,9 @@ describe("SettingsPage", () => {
     renderWithProviders(<SettingsPage />, { route: "/settings", locale: "ko" });
 
     const profile = screen.getByRole("region", { name: "프로필" });
-    await userEvent.clear(within(profile).getByLabelText("직무"));
-    await userEvent.type(within(profile).getByLabelText("직무"), "Platform");
+    await userEvent.selectOptions(within(profile).getByLabelText("경력 연차"), "7");
     await userEvent.click(within(profile).getByRole("button", { name: "저장" }));
-    expect(updateProfile).toHaveBeenCalledWith({ nickname: "Learner", jobRole: "Platform", yearsOfExperience: 5 });
+    expect(updateProfile).toHaveBeenCalledWith({ nickname: "Learner", yearsOfExperience: 7 });
     expect(await within(profile).findByText("저장했어요.")).toBeInTheDocument();
 
     const practice = screen.getByRole("region", { name: "연습" });

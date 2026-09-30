@@ -43,7 +43,6 @@ export function ProfileSection({ profile }: { profile: ProfileModel }) {
   const uploadMutation = useUploadProfileImageMutation();
   const fileRef = useRef<HTMLInputElement>(null);
   const [nickname, setNickname] = useState(profile.nickname);
-  const [jobRole, setJobRole] = useState(profile.jobRole);
   const [years, setYears] = useState(profile.yearsOfExperience || "0");
   const [saved, setSaved] = useState(false);
   const error = optionalErrorMessage(updateMutation.error, t("settingsPage.saveFailed"));
@@ -54,7 +53,7 @@ export function ProfileSection({ profile }: { profile: ProfileModel }) {
     event.preventDefault();
     setSaved(false);
     try {
-      await updateMutation.mutateAsync({ nickname: nickname.trim() || undefined, jobRole: jobRole.trim() || undefined, yearsOfExperience: Number(years) });
+      await updateMutation.mutateAsync({ nickname: nickname.trim() || undefined, yearsOfExperience: Number(years) });
       setSaved(true);
     } catch {
       // Rendered through `error`.
@@ -93,17 +92,14 @@ export function ProfileSection({ profile }: { profile: ProfileModel }) {
         <Row htmlFor="settings-nickname" label={t("settingsPage.nickname")}>
           <Input id="settings-nickname" onChange={(event) => setNickname(event.target.value)} value={nickname} />
         </Row>
-        <Row hint={t("settingsPage.roleHint")} label={t("settingsPage.roleAndYears")}>
-          <div className="settings-pair">
-            <Input aria-label={t("settingsPage.role")} onChange={(event) => setJobRole(event.target.value)} placeholder={t("settingsPage.rolePlaceholder")} value={jobRole} />
-            <Select aria-label={t("settingsPage.years")} onChange={(event) => setYears(event.target.value)} value={years}>
-              {Array.from({ length: 21 }, (_, count) => (
-                <option key={count} value={String(count)}>
-                  {count === 0 ? t("settingsPage.yearsNew") : t("settingsPage.yearsOption", { count })}
-                </option>
-              ))}
-            </Select>
-          </div>
+        <Row hint={t("settingsPage.roleHint")} htmlFor="settings-years" label={t("settingsPage.years")}>
+          <Select id="settings-years" onChange={(event) => setYears(event.target.value)} value={years}>
+            {Array.from({ length: 21 }, (_, count) => (
+              <option key={count} value={String(count)}>
+                {count === 0 ? t("settingsPage.yearsNew") : t("settingsPage.yearsOption", { count })}
+              </option>
+            ))}
+          </Select>
         </Row>
         <SaveBar error={error} pending={updateMutation.isPending} saved={saved} />
       </form>
@@ -257,9 +253,11 @@ export function AccountSection({ email }: { email: string }) {
   return (
     <Card aria-labelledby="settings-account" id="account">
       <CardHeader title={<span id="settings-account">{t("settingsPage.accountTitle")}</span>} titleAs="h2" />
-      <Row label={t("settingsPage.email")}>
-        <span>{email}</span>
-      </Row>
+      {email ? (
+        <Row label={t("settingsPage.email")}>
+          <span>{email}</span>
+        </Row>
+      ) : null}
       <div className="settings-save">
         <Button icon="logout" onClick={logout} variant="danger">
           {t("settingsPage.logout")}
