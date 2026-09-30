@@ -90,7 +90,7 @@ const INITIAL_REVIEW_BLOCKS: ReviewBlock[] = [
     rowSpan: 2,
     status: "upcoming",
     queueSize: 5,
-    nextActionTo: routeConfig.resumeAnalysis.buildPath(),
+    nextActionTo: routeConfig.resume.buildPath(),
     topics: ["성과 수치", "기준 문서 링크", "가정 검증"],
   },
   {

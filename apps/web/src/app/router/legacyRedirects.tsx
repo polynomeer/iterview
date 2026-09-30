@@ -24,7 +24,9 @@ export const LEGACY_REDIRECTS: LegacyRedirect[] = [
   { from: "/feed", to: () => routeConfig.feed.buildPath() },
   { from: "/profile", to: () => routeConfig.profile.buildPath() },
   { from: "/profile/resumes", to: () => routeConfig.resume.buildPath() },
-  { from: "/profile/resumes/analysis", to: () => routeConfig.resumeAnalysis.buildPath() },
+  { from: "/profile/resumes/analysis", to: () => routeConfig.resume.buildPath() },
+  // The analysis page folded into the hub's 개요 tab (Phase 4).
+  { from: "/resume/analysis", to: () => routeConfig.resume.buildPath() },
   {
     from: "/resume-versions/:versionId/editor",
     to: (params) => routeConfig.resumeEditor.buildPath({ versionId: param(params, "versionId") }),

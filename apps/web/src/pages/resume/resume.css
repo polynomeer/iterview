@@ -1,0 +1,169 @@
+/* 이력서 hub (docs/09 §4.5, mockup 06-resume). Token-only styles. */
+
+.resume-hub { gap: var(--iv-space-4); }
+
+.resume-hub__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--iv-space-3) var(--iv-space-4);
+}
+
+.resume-hub__identity { flex: 1; min-width: 14rem; }
+
+.resume-hub__title {
+  margin: 0;
+  font-size: var(--iv-text-2xl);
+  font-weight: var(--iv-weight-bold);
+  line-height: var(--iv-leading-tight);
+}
+
+.resume-hub__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--iv-space-1) var(--iv-space-3);
+  margin: var(--iv-space-1) 0 0;
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+}
+
+.resume-hub__badges { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); }
+.resume-hub__panel { min-width: 0; }
+
+/* Shared text roles */
+.resume-muted { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+.resume-body { margin: var(--iv-space-2) 0 0; color: var(--iv-text); font-size: var(--iv-text-md); line-height: var(--iv-leading-body); }
+.resume-impact { margin: var(--iv-space-1) 0 0; color: var(--iv-success); font-size: var(--iv-text-sm); }
+.resume-card-title { margin: 0; font-size: var(--iv-text-lg); font-weight: var(--iv-weight-semibold); }
+.resume-subtitle { margin: var(--iv-space-5) 0 var(--iv-space-2); color: var(--iv-text-muted); font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); }
+.resume-card-pad { padding: var(--iv-space-4) var(--iv-space-5); }
+.resume-row-actions { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--iv-space-2); }
+
+/* 개요 */
+.resume-overview { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+
+.resume-overview__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  gap: var(--iv-space-5);
+  align-items: start;
+}
+
+.resume-overview__main,
+.resume-overview__aside { display: flex; flex-direction: column; gap: var(--iv-space-4); min-width: 0; }
+
+.resume-profile__headline { margin: var(--iv-space-1) 0; color: var(--iv-text); font-weight: var(--iv-weight-medium); }
+
+.resume-contacts {
+  display: grid;
+  gap: var(--iv-space-1);
+  margin: var(--iv-space-4) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--iv-text-sm);
+}
+
+.resume-contacts li { display: flex; gap: var(--iv-space-2); min-width: 0; }
+.resume-contacts a { color: var(--iv-accent-text); overflow-wrap: anywhere; }
+
+.resume-chips { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); margin: 0; padding: 0; list-style: none; }
+
+.resume-timeline { display: flex; flex-direction: column; gap: var(--iv-space-5); margin: 0; padding: 0; list-style: none; }
+
+.resume-timeline > li {
+  padding-left: var(--iv-space-4);
+  border-left: 2px solid var(--iv-border);
+}
+
+.resume-timeline__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--iv-space-1) var(--iv-space-3); }
+
+.resume-projects { display: flex; flex-direction: column; gap: var(--iv-space-3); margin: var(--iv-space-3) 0 0; padding: 0; list-style: none; }
+.resume-projects:first-child { margin-top: 0; }
+
+.resume-projects > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-1);
+  padding: var(--iv-space-3);
+  border-radius: var(--iv-radius-md);
+  background: var(--iv-surface-sunken);
+}
+
+/* 버전 관리 */
+.resume-versions { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+.resume-versions__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--iv-space-3); }
+
+.resume-version-list { margin: 0; padding: 0; list-style: none; }
+.resume-version-list__item[aria-current="true"] { background: var(--iv-accent-soft); }
+.resume-version-list__title { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--iv-space-2); }
+
+.resume-extraction-meta {
+  padding: var(--iv-space-3) var(--iv-space-4);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-md);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+}
+
+.resume-extraction-meta summary { color: var(--iv-text); cursor: pointer; }
+
+.resume-extraction-meta dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--iv-space-1) var(--iv-space-4);
+  margin: var(--iv-space-3) 0 0;
+}
+
+.resume-extraction-meta dd { margin: 0; color: var(--iv-text); }
+
+/* First run */
+.resume-onboarding { max-width: 40rem; }
+
+.resume-onboarding__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-3);
+  margin: 0 0 var(--iv-space-6);
+  padding: 0;
+  list-style: none;
+  color: var(--iv-text);
+}
+
+.resume-onboarding__steps li { display: flex; align-items: center; gap: var(--iv-space-3); }
+
+.resume-onboarding__number {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-accent-soft);
+  color: var(--iv-accent-text);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-semibold);
+}
+
+.resume-onboarding__form { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+.resume-onboarding__file { display: flex; flex-direction: column; gap: var(--iv-space-2); }
+
+.resume-onboarding__drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--iv-space-1);
+  padding: var(--iv-space-8) var(--iv-space-4);
+  border: 1px dashed var(--iv-border-strong);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface-sunken);
+  text-align: center;
+  cursor: pointer;
+}
+
+.resume-onboarding__drop:hover { border-color: var(--iv-accent); }
+.resume-onboarding__file:focus-within .resume-onboarding__drop { box-shadow: var(--iv-focus-ring); }
+
+@media (max-width: 960px) {
+  .resume-overview__grid { grid-template-columns: minmax(0, 1fr); }
+  .resume-overview__aside { order: -1; }
+}

@@ -100,7 +100,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
       primaryActionLabel: isKorean ? "회사 보드 열기" : "Open company board",
       primaryActionTo: routeConfig.targetCompanies.buildPath(),
       secondaryActionLabel: isKorean ? "이력서 열기" : "Open resume",
-      secondaryActionTo: routeConfig.resumeAnalysis.buildPath(),
+      secondaryActionTo: routeConfig.resume.buildPath(),
     },
     {
       id: "kafka-rebalance-question",
@@ -132,7 +132,7 @@ function getBookmarkRecords(isKorean: boolean): BookmarkRecord[] {
       context: isKorean ? "파생 과정과 주변 맥락을 다시 복구할 수 있게 두어 모호한 지표 주장을 막아주는 북마크입니다." : "This bookmark helps prevent vague metric claims by keeping the derivation and surrounding context recoverable.",
       related: isKorean ? ["정산 안정성 노트", "이력서 히트맵", "지표 꼬리질문"] : ["Settlement reliability note", "Resume heatmap", "Metrics follow-up"],
       primaryActionLabel: isKorean ? "이력서 열기" : "Open resume",
-      primaryActionTo: routeConfig.resumeAnalysis.buildPath(),
+      primaryActionTo: routeConfig.resume.buildPath(),
       secondaryActionLabel: isKorean ? "히트맵 열기" : "Open heatmap",
       secondaryActionTo: routeConfig.resumeHeatmap.buildPath({ versionId: "v4" }),
     },

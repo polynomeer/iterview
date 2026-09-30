@@ -157,7 +157,7 @@ export function ResumeTailorJobPostingsPage() {
           <Link className="secondary-button" to={routeConfig.resumeTailor.buildPath()}>
             {isKorean ? "이력서 맞춤 허브" : "Resume tailor hub"}
           </Link>
-          <Link className="secondary-button" to={routeConfig.resumeAnalysis.buildPath()}>
+          <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
             {isKorean ? "이력서 분석 열기" : "Open resume analysis"}
           </Link>
         </>

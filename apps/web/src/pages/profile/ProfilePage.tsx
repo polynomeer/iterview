@@ -575,7 +575,7 @@ export function ProfilePage() {
                 </p>
               </div>
               <div className="career-operations-card__grid">
-                <Link className="career-operations-card__link" to={routeConfig.resumeAnalysis.buildPath()}>
+                <Link className="career-operations-card__link" to={routeConfig.resume.buildPath()}>
                   <strong>{isKorean ? "이력서 분석" : "Resume Analysis"}</strong>
                   <span>{isKorean ? "source of truth를 다시 검토하고 방어 가능한 주장만 남깁니다." : "Recheck source-of-truth and keep only defensible claims."}</span>
                 </Link>

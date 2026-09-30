@@ -61,19 +61,8 @@ export const PRIMARY_AREAS: NavArea[] = [
     labelKey: "nav.resume",
     icon: "resume",
     to: routeConfig.resume.buildPath(),
-    sections: [
-      {
-        labelKey: "nav.resumeVersions",
-        to: routeConfig.resume.buildPath(),
-        match: [routeConfig.resume.path, routeConfig.resumeEditor.path, prefix(routeConfig.resumeHeatmap.path)],
-      },
-      { labelKey: "nav.resumeAnalysis", to: routeConfig.resumeAnalysis.buildPath(), match: [routeConfig.resumeAnalysis.path] },
-      {
-        labelKey: "nav.resumeTailor",
-        to: routeConfig.resumeTailor.buildPath(),
-        match: [prefix(routeConfig.resumeTailor.path), routeConfig.resumeTailorAnalysisList.path, routeConfig.resumeTailorAnalysisDetail.path],
-      },
-    ],
+    // One section: the hub's own route tabs (개요 · 근거 편집 · 압박 지도 · 공고 맞춤 · 버전 관리) navigate inside it.
+    sections: [{ labelKey: "nav.resume", to: routeConfig.resume.buildPath(), match: [routeConfig.resume.path, prefix(routeConfig.resume.path)] }],
   },
   {
     id: "interview",

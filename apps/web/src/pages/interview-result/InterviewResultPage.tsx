@@ -197,7 +197,7 @@ export function InterviewResultPage() {
             {
               title: isKorean ? "이력서 분석" : "Resume analysis",
               description: isKorean ? "약한 가지가 빈약한 주장으로 되돌아가면 기준 문서 검토로 돌아가세요." : "Return to source-of-truth review when the weak branch points back to a thin claim.",
-              to: routeConfig.resumeAnalysis.buildPath(),
+              to: routeConfig.resume.buildPath(),
             },
           ]}
           upstream={[

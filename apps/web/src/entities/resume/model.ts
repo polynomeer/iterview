@@ -96,6 +96,8 @@ export type ResumeAnalysisModel = {
     id: string;
     title: string;
     severityLabel: string;
+    /** Raw severity code (e.g. HIGH), for shared label/tone helpers. */
+    severity: string | null;
     description: string;
     linkedQuestionId?: string;
   }>;
@@ -520,6 +522,7 @@ export function mapResumeAnalysisResponsesToModel(
       id: risk.id === null || risk.id === undefined ? `risk-${index}` : String(risk.id),
       title: risk.title ?? risk.riskType ?? (isKorean ? "이력서 리스크" : "Resume risk"),
       severityLabel: formatStatusLabel(risk.severity ?? "needs_review"),
+      severity: risk.severity ?? null,
       description:
         risk.description ?? (isKorean ? "아직 리스크 설명이 없습니다." : "No risk description is available yet."),
       linkedQuestionId:

@@ -25,8 +25,10 @@ const BookmarksPage = lazy(() => import("../pages/bookmarks/BookmarksPage").then
 const TargetCompaniesPage = lazy(() => import("../pages/target-companies/TargetCompaniesPage").then((module) => ({ default: module.TargetCompaniesPage })));
 const SettingsPage = lazy(() => import("../pages/settings/SettingsPage").then((module) => ({ default: module.SettingsPage })));
 const ProfilePage = lazy(() => import("../pages/profile/ProfilePage").then((module) => ({ default: module.ProfilePage })));
-const ResumePage = lazy(() => import("../pages/resume/ResumePage").then((module) => ({ default: module.ResumePage })));
-const ResumeAnalysisPage = lazy(() => import("../pages/resume-analysis/ResumeAnalysisPage").then((module) => ({ default: module.ResumeAnalysisPage })));
+const ResumeIndexPage = lazy(() => import("../pages/resume/ResumeIndexPage").then((module) => ({ default: module.ResumeIndexPage })));
+const ResumeHubLayout = lazy(() => import("../pages/resume/ResumeHubLayout").then((module) => ({ default: module.ResumeHubLayout })));
+const ResumeOverviewTab = lazy(() => import("../pages/resume/ResumeOverviewTab").then((module) => ({ default: module.ResumeOverviewTab })));
+const ResumeVersionsTab = lazy(() => import("../pages/resume/ResumeVersionsTab").then((module) => ({ default: module.ResumeVersionsTab })));
 const ResumeTailorLandingPage = lazy(() => import("../pages/resume-tailor/ResumeTailorLandingPage").then((module) => ({ default: module.ResumeTailorLandingPage })));
 const ResumeTailorJobPostingsPage = lazy(() => import("../pages/resume-tailor/ResumeTailorJobPostingsPage").then((module) => ({ default: module.ResumeTailorJobPostingsPage })));
 const ResumeTailorAnalysisListPage = lazy(() => import("../pages/resume-tailor/ResumeTailorAnalysisListPage").then((module) => ({ default: module.ResumeTailorAnalysisListPage })));
@@ -140,23 +142,21 @@ export const appRoutes: RouteObject[] = [
               },
               {
                 path: routeConfig.resume.path,
-                element: withSuspense(<ResumePage />),
+                element: withSuspense(<ResumeIndexPage />),
               },
               {
-                path: routeConfig.resumeAnalysis.path,
-                element: withSuspense(<ResumeAnalysisPage />),
-              },
-              {
-                path: routeConfig.resumeHeatmap.path,
-                element: withSuspense(<ResumeHeatmapPage />),
-              },
-              {
-                path: routeConfig.resumeEditor.path,
-                element: withSuspense(<ResumeEditorPage />),
-              },
-              {
-                path: routeConfig.resumeHeatmapAnchor.path,
-                element: withSuspense(<ResumeHeatmapAnchorPage />),
+                // The 이력서 hub: one version bar with route tabs; every tab is scoped to :versionId.
+                path: routeConfig.resumeOverview.path,
+                element: withSuspense(<ResumeHubLayout />),
+                children: [
+                  { index: true, element: withSuspense(<ResumeOverviewTab />) },
+                  { path: routeConfig.resumeEditor.path, element: withSuspense(<ResumeEditorPage />) },
+                  { path: routeConfig.resumeHeatmap.path, element: withSuspense(<ResumeHeatmapPage />) },
+                  { path: routeConfig.resumeHeatmapAnchor.path, element: withSuspense(<ResumeHeatmapAnchorPage />) },
+                  { path: routeConfig.resumeTailorAnalysisList.path, element: withSuspense(<ResumeTailorAnalysisListPage />) },
+                  { path: routeConfig.resumeTailorAnalysisDetail.path, element: withSuspense(<ResumeTailorAnalysisDetailPage />) },
+                  { path: routeConfig.resumeVersions.path, element: withSuspense(<ResumeVersionsTab />) },
+                ],
               },
               {
                 path: routeConfig.resumeTailor.path,
@@ -165,14 +165,6 @@ export const appRoutes: RouteObject[] = [
               {
                 path: routeConfig.resumeTailorJobPostings.path,
                 element: withSuspense(<ResumeTailorJobPostingsPage />),
-              },
-              {
-                path: routeConfig.resumeTailorAnalysisList.path,
-                element: withSuspense(<ResumeTailorAnalysisListPage />),
-              },
-              {
-                path: routeConfig.resumeTailorAnalysisDetail.path,
-                element: withSuspense(<ResumeTailorAnalysisDetailPage />),
               },
               {
                 path: routeConfig.interview.path,

@@ -3528,19 +3528,6 @@ button {
   box-shadow: var(--shadow-soft);
 }
 
-.resume-version-activation-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid var(--border-soft);
-}
-
-.resume-version-toolbar {
-  margin-top: 16px;
-}
-
 .resume-profile-card__identity {
   display: flex;
   flex-direction: column;
@@ -3563,15 +3550,6 @@ button {
   font-size: 0.9rem;
 }
 
-.resume-version-feedback {
-  margin-block: 8px 12px;
-}
-
-.resume-version-feedback .feedback-notice {
-  min-height: 48px;
-  padding: 10px 14px;
-}
-
 .resume-layout__workspace,
 .resume-layout__workspace-main,
 .resume-layout__workspace-side,
@@ -3585,84 +3563,14 @@ button {
   gap: 16px;
 }
 
-.resume-outline-list {
-  display: grid;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.resume-outline-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 38px;
-  padding: 8px 12px;
-  border-radius: 14px;
-  border: 1px solid var(--border-soft);
-  background: var(--surface-soft);
-  color: var(--text-main);
-  font-weight: 600;
-}
-
 .resume-section-card__header-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.resume-floating-outline {
-  position: fixed;
-  right: 28px;
-  top: 148px;
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-.resume-floating-outline__toggle {
-  min-height: 42px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--border-overlay) 90%, transparent);
-  background: color-mix(in srgb, var(--surface-card) 72%, transparent);
-  backdrop-filter: blur(14px);
-  color: var(--text-main);
-  font-weight: 700;
-  box-shadow: var(--shadow-soft);
-}
-
-.resume-floating-outline__panel {
-  width: min(280px, calc(100vw - 32px));
-  max-height: calc(100vh - 210px);
-  overflow: auto;
-  background: color-mix(in srgb, var(--surface-card) 78%, transparent);
-  backdrop-filter: blur(18px);
-  border-color: color-mix(in srgb, var(--border-overlay) 88%, transparent);
-}
-
 .resume-library__actions {
   margin-top: 0;
-}
-
-.resume-create-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: color-mix(in srgb, var(--surface-app) 48%, rgba(8, 10, 20, 0.72));
-  backdrop-filter: blur(10px);
-}
-
-.resume-create-modal__surface {
-  width: min(100%, 520px);
-}
-
-.resume-create-modal__card {
-  box-shadow: var(--shadow-soft);
 }
 
 .resume-section__body--preserve {
@@ -3794,13 +3702,6 @@ button {
 
 .stat-tile--wide {
   grid-column: 1 / -1;
-}
-
-.detail-chip-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 18px;
 }
 
 .chip-list {
@@ -4993,21 +4894,6 @@ button {
   .profile-workspace-groups .page-card__actions {
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .resume-create-modal {
-    align-items: flex-end;
-    padding: 16px;
-  }
-
-  .resume-floating-outline {
-    right: 16px;
-    top: auto;
-    bottom: 18px;
-  }
-
-  .resume-floating-outline__panel {
-    max-height: min(58vh, 420px);
   }
 }
 
@@ -7215,8 +7101,7 @@ button {
 }
 
 .feed-workspace-surface,
-.profile-workspace-surface,
-.resume-workspace-surface {
+.profile-workspace-surface {
   position: relative;
   overflow: hidden;
   padding: 24px;
@@ -7229,8 +7114,7 @@ button {
 }
 
 .feed-workspace-surface::after,
-.profile-workspace-surface::after,
-.resume-workspace-surface::after {
+.profile-workspace-surface::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -7239,22 +7123,19 @@ button {
 }
 
 .feed-workspace-surface > *,
-.profile-workspace-surface > *,
-.resume-workspace-surface > * {
+.profile-workspace-surface > * {
   position: relative;
   z-index: 1;
 }
 
 .feed-workspace-surface__header,
-.profile-workspace-surface__header,
-.resume-workspace-surface__header {
+.profile-workspace-surface__header {
   display: grid;
   gap: 24px;
 }
 
 .feed-workspace-surface__eyebrow-row,
-.profile-workspace-surface__eyebrow-row,
-.resume-workspace-surface__eyebrow-row {
+.profile-workspace-surface__eyebrow-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -7262,8 +7143,7 @@ button {
 }
 
 .feed-workspace-surface__breadcrumbs,
-.profile-workspace-surface__breadcrumbs,
-.resume-workspace-surface__breadcrumbs {
+.profile-workspace-surface__breadcrumbs {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -7275,8 +7155,7 @@ button {
 }
 
 .feed-workspace-surface__title,
-.profile-workspace-surface__title,
-.resume-workspace-surface__title {
+.profile-workspace-surface__title {
   margin: 0;
   font-size: clamp(1.9rem, 3vw, 2.8rem);
   line-height: 1.02;
@@ -7285,24 +7164,21 @@ button {
 }
 
 .feed-workspace-surface__body,
-.profile-workspace-surface__body,
-.resume-workspace-surface__body {
+.profile-workspace-surface__body {
   max-width: 62ch;
   margin: 0;
   color: rgba(226, 232, 240, 0.78);
 }
 
 .feed-workspace-surface__stats,
-.profile-workspace-surface__stats,
-.resume-workspace-surface__stats {
+.profile-workspace-surface__stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
 .feed-workspace-surface__stat,
-.profile-workspace-surface__stat,
-.resume-workspace-surface__stat {
+.profile-workspace-surface__stat {
   display: grid;
   gap: 6px;
   padding: 16px 18px;
@@ -7313,8 +7189,7 @@ button {
 }
 
 .feed-workspace-surface__stat span,
-.profile-workspace-surface__stat span,
-.resume-workspace-surface__stat span {
+.profile-workspace-surface__stat span {
   color: rgba(148, 163, 184, 0.84);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
@@ -7322,16 +7197,14 @@ button {
 }
 
 .feed-workspace-surface__stat strong,
-.profile-workspace-surface__stat strong,
-.resume-workspace-surface__stat strong {
+.profile-workspace-surface__stat strong {
   color: #f8fafc;
   font-size: 1.3rem;
   letter-spacing: -0.04em;
 }
 
 .feed-workspace-surface__chips,
-.profile-workspace-surface__chips,
-.resume-workspace-surface__chips {
+.profile-workspace-surface__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -7368,49 +7241,13 @@ button {
   line-height: 1.45;
 }
 
-.resume-workspace-surface__guidance,
-.resume-library__summary,
-.resume-version-activation-panel__summary {
+.resume-library__summary {
   display: grid;
   gap: 10px;
 }
 
-.resume-workspace-surface__guidance,
 .resume-library__summary {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.resume-workspace-surface__guidance {
-  margin-top: 24px;
-}
-
-.resume-workspace-surface__guidance-card,
-.resume-library__summary-item,
-.resume-version-activation-panel__summary-item {
-  display: grid;
-  gap: 4px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(148, 163, 184, 0.06);
-}
-
-.resume-workspace-surface__guidance-card span,
-.resume-library__summary-item span,
-.resume-version-activation-panel__summary-item span {
-  color: rgba(148, 163, 184, 0.84);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.resume-workspace-surface__guidance-card strong,
-.resume-library__summary-item strong,
-.resume-version-activation-panel__summary-item strong {
-  color: #f8fafc;
-  font-size: 1rem;
-  line-height: 1.45;
-  letter-spacing: -0.03em;
 }
 
 .feed-layout__hero {
@@ -9232,8 +9069,7 @@ button {
   }
 
   .feed-workspace-surface__header,
-  .profile-workspace-surface__header,
-  .resume-workspace-surface__header {
+  .profile-workspace-surface__header {
     grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
     align-items: end;
   }
@@ -13379,7 +13215,6 @@ button {
 
 .feed-workspace-surface,
 .profile-workspace-surface,
-.resume-workspace-surface,
 .auth-access-surface,
 .practical-list-workspace-surface,
 .practical-review-workspace-surface,
@@ -13396,7 +13231,6 @@ button {
 
 .feed-workspace-surface::after,
 .profile-workspace-surface::after,
-.resume-workspace-surface::after,
 .interview-session-workspace-surface::after,
 .interview-result-workspace-surface::after {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 22%);
@@ -13404,7 +13238,6 @@ button {
 
 .feed-workspace-surface__breadcrumbs,
 .profile-workspace-surface__breadcrumbs,
-.resume-workspace-surface__breadcrumbs,
 .auth-access-surface__breadcrumbs,
 .practical-list-workspace-surface__breadcrumbs,
 .practical-review-workspace-surface__breadcrumbs,
@@ -13418,7 +13251,6 @@ button {
 
 .feed-workspace-surface__title,
 .profile-workspace-surface__title,
-.resume-workspace-surface__title,
 .auth-access-surface__title,
 .practical-list-workspace-surface__title,
 .practical-review-workspace-surface__title,
@@ -13434,7 +13266,6 @@ button {
 
 .feed-workspace-surface__body,
 .profile-workspace-surface__body,
-.resume-workspace-surface__body,
 .auth-access-surface__body,
 .practical-list-workspace-surface__body,
 .practical-review-workspace-surface__body,
@@ -13448,7 +13279,6 @@ button {
 
 .feed-workspace-surface__stat,
 .profile-workspace-surface__stat,
-.resume-workspace-surface__stat,
 .auth-access-surface__stat,
 .practical-list-workspace-surface__stat,
 .practical-review-workspace-surface__stat,
@@ -13472,7 +13302,6 @@ button {
 
 .feed-workspace-surface__stat span,
 .profile-workspace-surface__stat span,
-.resume-workspace-surface__stat span,
 .auth-access-surface__stat span,
 .practical-list-workspace-surface__stat span,
 .practical-review-workspace-surface__stat span,
@@ -13492,7 +13321,6 @@ button {
 
 .feed-workspace-surface__stat strong,
 .profile-workspace-surface__stat strong,
-.resume-workspace-surface__stat strong,
 .auth-access-surface__stat strong,
 .practical-list-workspace-surface__stat strong,
 .practical-review-workspace-surface__stat strong,
@@ -13765,9 +13593,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface,
 :root[data-theme="dracula"] .profile-workspace-surface,
 :root[data-theme="workspace"] .profile-workspace-surface,
-:root[data-theme="dark"] .resume-workspace-surface,
-:root[data-theme="dracula"] .resume-workspace-surface,
-:root[data-theme="workspace"] .resume-workspace-surface,
 :root[data-theme="dark"] .auth-access-surface,
 :root[data-theme="dracula"] .auth-access-surface,
 :root[data-theme="workspace"] .auth-access-surface,
@@ -13804,9 +13629,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface::after,
 :root[data-theme="dracula"] .profile-workspace-surface::after,
 :root[data-theme="workspace"] .profile-workspace-surface::after,
-:root[data-theme="dark"] .resume-workspace-surface::after,
-:root[data-theme="dracula"] .resume-workspace-surface::after,
-:root[data-theme="workspace"] .resume-workspace-surface::after,
 :root[data-theme="dark"] .interview-session-workspace-surface::after,
 :root[data-theme="dracula"] .interview-session-workspace-surface::after,
 :root[data-theme="workspace"] .interview-session-workspace-surface::after,
@@ -13822,9 +13644,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface__breadcrumbs,
 :root[data-theme="dracula"] .profile-workspace-surface__breadcrumbs,
 :root[data-theme="workspace"] .profile-workspace-surface__breadcrumbs,
-:root[data-theme="dark"] .resume-workspace-surface__breadcrumbs,
-:root[data-theme="dracula"] .resume-workspace-surface__breadcrumbs,
-:root[data-theme="workspace"] .resume-workspace-surface__breadcrumbs,
 :root[data-theme="dark"] .auth-access-surface__breadcrumbs,
 :root[data-theme="dracula"] .auth-access-surface__breadcrumbs,
 :root[data-theme="workspace"] .auth-access-surface__breadcrumbs,
@@ -13849,9 +13668,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface__body,
 :root[data-theme="dracula"] .profile-workspace-surface__body,
 :root[data-theme="workspace"] .profile-workspace-surface__body,
-:root[data-theme="dark"] .resume-workspace-surface__body,
-:root[data-theme="dracula"] .resume-workspace-surface__body,
-:root[data-theme="workspace"] .resume-workspace-surface__body,
 :root[data-theme="dark"] .auth-access-surface__body,
 :root[data-theme="dracula"] .auth-access-surface__body,
 :root[data-theme="workspace"] .auth-access-surface__body,
@@ -13879,9 +13695,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface__title,
 :root[data-theme="dracula"] .profile-workspace-surface__title,
 :root[data-theme="workspace"] .profile-workspace-surface__title,
-:root[data-theme="dark"] .resume-workspace-surface__title,
-:root[data-theme="dracula"] .resume-workspace-surface__title,
-:root[data-theme="workspace"] .resume-workspace-surface__title,
 :root[data-theme="dark"] .auth-access-surface__title,
 :root[data-theme="dracula"] .auth-access-surface__title,
 :root[data-theme="workspace"] .auth-access-surface__title,
@@ -13906,9 +13719,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface__stat strong,
 :root[data-theme="dracula"] .profile-workspace-surface__stat strong,
 :root[data-theme="workspace"] .profile-workspace-surface__stat strong,
-:root[data-theme="dark"] .resume-workspace-surface__stat strong,
-:root[data-theme="dracula"] .resume-workspace-surface__stat strong,
-:root[data-theme="workspace"] .resume-workspace-surface__stat strong,
 :root[data-theme="dark"] .auth-access-surface__stat strong,
 :root[data-theme="dracula"] .auth-access-surface__stat strong,
 :root[data-theme="workspace"] .auth-access-surface__stat strong,
@@ -13960,9 +13770,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface__stat,
 :root[data-theme="dracula"] .profile-workspace-surface__stat,
 :root[data-theme="workspace"] .profile-workspace-surface__stat,
-:root[data-theme="dark"] .resume-workspace-surface__stat,
-:root[data-theme="dracula"] .resume-workspace-surface__stat,
-:root[data-theme="workspace"] .resume-workspace-surface__stat,
 :root[data-theme="dark"] .auth-access-surface__stat,
 :root[data-theme="dracula"] .auth-access-surface__stat,
 :root[data-theme="workspace"] .auth-access-surface__stat,
@@ -14018,9 +13825,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface__stat span,
 :root[data-theme="dracula"] .profile-workspace-surface__stat span,
 :root[data-theme="workspace"] .profile-workspace-surface__stat span,
-:root[data-theme="dark"] .resume-workspace-surface__stat span,
-:root[data-theme="dracula"] .resume-workspace-surface__stat span,
-:root[data-theme="workspace"] .resume-workspace-surface__stat span,
 :root[data-theme="dark"] .auth-access-surface__stat span,
 :root[data-theme="dracula"] .auth-access-surface__stat span,
 :root[data-theme="workspace"] .auth-access-surface__stat span,
@@ -14104,8 +13908,7 @@ button {
   }
 
   .feed-workspace-surface__title,
-  .profile-workspace-surface__title,
-  .resume-workspace-surface__title {
+  .profile-workspace-surface__title {
     font-size: 1.55rem;
   }
 }
@@ -14554,7 +14357,6 @@ body {
   color: var(--text-main);
 }
 
-.resume-workspace-surface,
 .interview-workspace-surface {
   border-radius: 28px;
   background:
@@ -16041,24 +15843,6 @@ textarea::placeholder {
 
 .resume-create-form {
   gap: 18px;
-}
-
-.resume-create-form__intro {
-  max-width: 54ch;
-}
-
-.resume-create-form__body {
-  display: grid;
-  gap: 14px;
-}
-
-.resume-create-form__feedback {
-  display: grid;
-  gap: 10px;
-}
-
-.resume-create-form__actions {
-  padding-top: 4px;
 }
 
 .resume-competency-card,

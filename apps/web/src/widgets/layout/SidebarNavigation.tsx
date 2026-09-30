@@ -34,12 +34,12 @@ function NavItem({ to, icon, label, isActive, badge }: NavItemProps) {
 
 /** Version-scoped resume pages follow the switch: /resume/3/heatmap → /resume/7/heatmap. */
 export function followVersion(pathname: string, versionId: string) {
-  const match = pathname.match(/^\/resume\/[^/]+(\/(claims|heatmap|tailor|versions)(\/.*)?)$/);
-  if (!match || /^\/resume\/(analysis|tailor)(\/|$)/.test(pathname)) {
+  const match = pathname.match(/^\/resume\/([^/]+)(?:\/(claims|heatmap|tailor|versions)(?:\/.*)?)?\/?$/);
+  if (!match || match[1] === "analysis" || match[1] === "tailor") {
     return null;
   }
   // Anchors and analyses belong to the old version, so land on the tab itself.
-  return `/resume/${versionId}/${match[2]}`;
+  return match[2] ? `/resume/${versionId}/${match[2]}` : `/resume/${versionId}`;
 }
 
 function ActiveResumeCard() {

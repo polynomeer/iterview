@@ -21,7 +21,7 @@ const WEAK_NODES: WeakNode[] = [
     weakness: "메커니즘은 설명하지만, 첫 번째 방어선을 뚫고 중복 정산 경쟁이 살아날 때의 실패 범위를 아직 설명하지 못합니다.",
     remediation: ["중복 정산 사고와 첫 번째 방어선이 실패한 지점을 한 문장으로 고정하세요.", "idempotency key, lock ownership, retry backoff의 순서를 실제 경쟁 상황으로 설명하세요.", "수정 이후에도 남은 한계를 밝혀 답변이 절대적으로 들리지 않게 하세요."],
     relatedQuestions: [{ id: "distributed-lock", title: "transaction 처리에서 idempotency를 어떻게 보장했나요?", label: "질문 트리", to: routeConfig.questionTree.buildPath({ questionId: "distributed-lock" }) }, { id: "distributed-lock-answer", title: "결제 정확성 답변 초안 다듬기", label: "답변 편집기", to: routeConfig.answerEditor.buildPath({ questionId: "distributed-lock" }) }],
-    resumeEvidence: [{ title: "정산 안정성 개선", detail: "중복 감소 근거 사슬을 이력서 주장과 함께 다시 검증하세요.", to: routeConfig.resumeAnalysis.buildPath() }],
+    resumeEvidence: [{ title: "정산 안정성 개선", detail: "중복 감소 근거 사슬을 이력서 주장과 함께 다시 검증하세요.", to: routeConfig.resume.buildPath() }],
     connectedNodes: ["재시도 의미론", "Redis lock ownership", "정산 롤백"],
   },
   {
@@ -37,7 +37,7 @@ const WEAK_NODES: WeakNode[] = [
     weakness: "강한 수치를 쓰지만 면접관이 지표 산출 방식을 물으면 도출 경로가 너무 압축되어 있습니다.",
     remediation: ["지표를 원천 데이터, 집계 규칙, 비즈니스 해석으로 분해하세요.", "직접 측정한 것과 운영 시그널로 추정한 것을 구분하세요.", "같은 근거가 공격받기 쉬운 꼬리질문 가지 하나와 지표를 연결하세요."],
     relatedQuestions: [{ id: "metrics-proof", title: "지표 꼬리질문 클러스터 보기", label: "질문 상세", to: routeConfig.questionDetail.buildPath({ questionId: "metrics-proof" }) }],
-    resumeEvidence: [{ title: "이력서 분석 리스크 보드", detail: "낮은 방어 점수를 보이는 지표 bullet을 확인하세요.", to: routeConfig.resumeAnalysis.buildPath() }, { title: "근거 노트", detail: "주장 자체를 다시 쓰기 전에 보조 노트를 먼저 여세요.", to: routeConfig.notes.buildPath() }],
+    resumeEvidence: [{ title: "이력서 분석 리스크 보드", detail: "낮은 방어 점수를 보이는 지표 bullet을 확인하세요.", to: routeConfig.resume.buildPath() }, { title: "근거 노트", detail: "주장 자체를 다시 쓰기 전에 보조 노트를 먼저 여세요.", to: routeConfig.notes.buildPath() }],
     connectedNodes: ["정량 임팩트", "근거 노트", "행동 책임감"],
   },
 ];

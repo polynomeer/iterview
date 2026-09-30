@@ -70,7 +70,18 @@ export const routeConfig = {
   settings: createStaticRoute("/settings", "Settings", true),
   profile: createStaticRoute("/settings/profile", "Profile", true),
   resume: createStaticRoute("/resume", "Resume", true),
-  resumeAnalysis: createStaticRoute("/resume/analysis", "Resume Analysis", true),
+  resumeOverview: createDynamicRoute(
+    "/resume/:versionId",
+    "Resume Overview",
+    true,
+    ({ versionId }) => `/resume/${versionId}`,
+  ),
+  resumeVersions: createDynamicRoute(
+    "/resume/:versionId/versions",
+    "Resume Versions",
+    true,
+    ({ versionId }) => `/resume/${versionId}/versions`,
+  ),
   resumeHeatmap: createDynamicRoute(
     "/resume/:versionId/heatmap",
     "Resume Interview Heatmap",

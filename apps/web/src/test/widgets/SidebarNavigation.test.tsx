@@ -111,7 +111,10 @@ describe("followVersion", () => {
     expect(followVersion("/resume/3/claims", "7")).toBe("/resume/7/claims");
     expect(followVersion("/resume/3/heatmap/anchors/project/1", "7")).toBe("/resume/7/heatmap");
     expect(followVersion("/resume/3/tailor/9", "7")).toBe("/resume/7/tailor");
+    expect(followVersion("/resume/3", "7")).toBe("/resume/7");
+    expect(followVersion("/resume/3/versions", "7")).toBe("/resume/7/versions");
     expect(followVersion("/resume/analysis", "7")).toBeNull();
+    expect(followVersion("/resume/tailor/job-postings", "7")).toBeNull();
     expect(followVersion("/questions", "7")).toBeNull();
   });
 });

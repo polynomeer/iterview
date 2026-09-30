@@ -5,4 +5,4 @@ export { Field, Input, Select, Textarea } from "./Field";
 export { Icon, type IconName } from "./Icon";
 export { PageHeader } from "./PageHeader";
 export { EmptyState, ErrorState } from "./States";
-export { Segmented, Tabs, type TabItem } from "./Tabs";
+export { Segmented, TabLinks, Tabs, type TabItem, type TabLinkItem } from "./Tabs";

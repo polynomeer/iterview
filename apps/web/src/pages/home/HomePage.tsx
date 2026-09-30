@@ -142,8 +142,8 @@ function ResumeRiskCard({ home, locale }: { home: HomeModel; locale: AppLocale }
     <Card aria-labelledby="today-risk-title">
       <CardHeader
         actions={
-          <ButtonLink size="sm" to={routeConfig.resumeAnalysis.buildPath()} variant="ghost">
-            {copy("이력서 분석", "Resume analysis")}
+          <ButtonLink size="sm" to={routeConfig.resume.buildPath()} variant="ghost">
+            {copy("이력서 개요", "Resume overview")}
           </ButtonLink>
         }
         title={<span id="today-risk-title">{copy("근거를 보강할 이력서 항목", "Resume claims that need evidence")}</span>}

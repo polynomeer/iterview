@@ -45,7 +45,7 @@ export function ResumeVersionSwitcher({ open, onClose, onActivated }: ResumeVers
       closeLabel={isKorean ? "닫기" : "Close"}
       description={isKorean ? "질문 추천, 면접, 답변 평가가 이 버전을 기준으로 해요." : "Questions, interviews, and answer grading use this version."}
       footer={
-        <ButtonLink icon="plus" onClick={onClose} to={routeConfig.resume.buildPath()}>
+        <ButtonLink icon="plus" onClick={onClose} to={active ? routeConfig.resumeVersions.buildPath({ versionId: active.id }) : routeConfig.resume.buildPath()}>
           {isKorean ? "새 버전 올리기" : "Upload a new version"}
         </ButtonLink>
       }

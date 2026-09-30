@@ -329,7 +329,10 @@
 
 .ui-tabs__tab:hover { color: var(--iv-text); }
 
-.ui-tabs__tab[aria-selected="true"] {
+a.ui-tabs__tab { text-decoration: none; }
+
+.ui-tabs__tab[aria-selected="true"],
+.ui-tabs__tab[aria-current="page"] {
   border-bottom-color: var(--iv-accent);
   color: var(--iv-text);
   font-weight: var(--iv-weight-semibold);

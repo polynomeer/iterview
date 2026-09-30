@@ -5,11 +5,16 @@ import { renderWithProviders } from "../utils";
 
 describe("AreaNavigation", () => {
   it("lists the sections of the current area and marks the active one", () => {
-    renderWithProviders(<AreaNavigation />, { route: "/resume/3/heatmap/anchors/project/31", locale: "ko" });
+    renderWithProviders(<AreaNavigation />, { route: "/review/done", locale: "ko" });
 
-    const nav = screen.getByRole("navigation", { name: "이력서 하위 메뉴" });
-    expect(nav).toHaveTextContent("버전 관리이력서 분석공고 맞춤");
-    expect(screen.getByRole("link", { name: "버전 관리" })).toHaveAttribute("aria-current", "page");
+    const nav = screen.getByRole("navigation", { name: "복습 하위 메뉴" });
+    expect(nav).toHaveTextContent("지금 복습완료한 질문");
+    expect(screen.getByRole("link", { name: "완료한 질문" })).toHaveAttribute("aria-current", "page");
+  });
+
+  it("leaves the resume hub to its own route tabs", () => {
+    const { container } = renderWithProviders(<AreaNavigation />, { route: "/resume/3/heatmap/anchors/project/31", locale: "ko" });
+    expect(container).toBeEmptyDOMElement();
   });
 
   it("maps nested interview routes to their section", () => {

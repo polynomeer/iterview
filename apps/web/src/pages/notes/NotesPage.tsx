@@ -680,7 +680,7 @@ export function NotesPage() {
                   <p>{selectedNote.resumeContext.description}</p>
                   <div className="notes-detail-rail__context-footer">
                     <span>{selectedNote.resumeContext.period}</span>
-                    <Link className="secondary-button" to={routeConfig.resumeAnalysis.buildPath()}>
+                    <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
                       {isKorean ? "이력서 열기" : "Open resume"}
                     </Link>
                   </div>

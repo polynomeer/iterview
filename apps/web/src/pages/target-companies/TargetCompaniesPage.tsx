@@ -65,7 +65,7 @@ const TARGET_COMPANIES: TargetCompanyRecord[] = [
       {
         title: "Tighten source-of-truth metrics",
         body: "Re-validate the numbers and proof chain behind settlement bullet claims.",
-        to: routeConfig.resumeAnalysis.buildPath(),
+        to: routeConfig.resume.buildPath(),
       },
       {
         title: "Review imported job postings",
@@ -562,7 +562,7 @@ export function TargetCompaniesPage() {
           <Link className="secondary-button" to={routeConfig.resumeTailorJobPostings.buildPath()}>
             {isKorean ? "채용공고 열기" : "Open job postings"}
           </Link>
-          <Link className="secondary-button" to={routeConfig.resumeAnalysis.buildPath()}>
+          <Link className="secondary-button" to={routeConfig.resume.buildPath()}>
             {isKorean ? "이력서 분석 열기" : "Open resume analysis"}
           </Link>
         </>

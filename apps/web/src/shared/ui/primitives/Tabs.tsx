@@ -1,4 +1,5 @@
 import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
+import { NavLink } from "react-router-dom";
 
 export type TabItem<T extends string> = {
   id: T;
@@ -130,5 +131,25 @@ export function Segmented<T extends string>({ label, items, value, onChange }: S
         );
       })}
     </div>
+  );
+}
+
+export type TabLinkItem = {
+  to: string;
+  label: ReactNode;
+  /** Match the path exactly instead of as a prefix (for an index tab). */
+  end?: boolean;
+};
+
+/** Route-backed tabs: a nav of links styled as tabs, the current one marked with aria-current. */
+export function TabLinks({ label, items }: { label: string; items: TabLinkItem[] }) {
+  return (
+    <nav aria-label={label} className="ui-tabs__list">
+      {items.map((item) => (
+        <NavLink className="ui-tabs__tab" end={item.end} key={item.to} to={item.to}>
+          {item.label}
+        </NavLink>
+      ))}
+    </nav>
   );
 }

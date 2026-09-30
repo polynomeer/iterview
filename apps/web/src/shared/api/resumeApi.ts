@@ -30,7 +30,7 @@ export function getLatestResumeRequest(signal?: AbortSignal) {
 }
 
 export function createResumeRequest(payload: CreateResumeRequestDto) {
-  return httpClient.post<void, CreateResumeRequestDto>(apiEndpoints.resumes.root, {
+  return httpClient.post<ResumeDto, CreateResumeRequestDto>(apiEndpoints.resumes.root, {
     body: payload,
   });
 }

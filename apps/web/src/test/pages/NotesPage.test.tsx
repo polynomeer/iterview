@@ -20,7 +20,7 @@ describe("NotesPage", () => {
     expect(screen.getAllByText("연결 질문").length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "이력서 열기" })).toHaveAttribute(
       "href",
-      "/resume/analysis",
+      "/resume",
     );
   });
 

@@ -622,7 +622,7 @@ export function InterviewPage() {
             {
               title: isKorean ? "이력서 분석" : "Resume analysis",
               description: isKorean ? "활성 기준 문서 검토를 기준으로 다음 가지를 결정하세요." : "Use the active source-of-truth review to decide the next branch.",
-              to: routeConfig.resumeAnalysis.buildPath(),
+              to: routeConfig.resume.buildPath(),
             },
           ]}
         />
