@@ -3,7 +3,7 @@ import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 import { NotFoundPage } from "../../pages/not-found/NotFoundPage";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
-import { StateCard } from "../../shared/ui/StateCard";
+import { Button, ButtonLink, ErrorState } from "../../shared/ui/primitives";
 
 export function RouteErrorBoundary() {
   const error = useRouteError();
@@ -21,13 +21,18 @@ export function RouteErrorBoundary() {
   }
 
   return (
-    <StateCard
-      action={{ label: t("common.reloadPage"), onAction: () => window.location.reload() }}
+    <ErrorState
+      actions={
+        <>
+          <Button onClick={() => window.location.reload()} variant="primary">
+            {t("common.reloadPage")}
+          </Button>
+          <ButtonLink to={routeConfig.home.buildPath()}>{t("common.goToToday")}</ButtonLink>
+        </>
+      }
       body={t("common.unexpectedErrorBody")}
-      label={t("common.errorState")}
+      size="page"
       title={t("common.unexpectedErrorTitle")}
-      tone="error"
-      secondaryAction={{ label: t("common.goToToday"), to: routeConfig.home.buildPath() }}
     />
   );
 }

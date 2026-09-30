@@ -1,8 +1,10 @@
 import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { ResultAnalysisPage } from "../../pages/result-analysis/ResultAnalysisPage";
 import { useResultAnalysisQuery } from "../../features/result/api/useResultAnalysisQuery";
+import { ApiClientError } from "../../shared/api/errors";
 import { mockMatchMedia, renderWithProviders } from "../utils";
 
 vi.mock("../../features/result/api/useResultAnalysisQuery", () => ({
@@ -121,5 +123,49 @@ describe("ResultAnalysisPage", () => {
 
     expect(screen.getByText("Strong pass")).toBeInTheDocument();
     expect(document.querySelector(".result-analysis-layout--desktop")).not.toBeNull();
+  });
+
+  it("explains a missing evaluation instead of showing the raw backend message", () => {
+    vi.mocked(useResultAnalysisQuery).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+      error: new ApiClientError(404, "Answer attempt not found: 1"),
+      refetch: vi.fn(),
+    } as never);
+
+    renderWithProviders(
+      <Routes>
+        <Route element={<ResultAnalysisPage />} path="/answer-attempts/:answerAttemptId/result" />
+      </Routes>,
+      { route: "/answer-attempts/1/result", locale: "ko" },
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent("평가 결과를 찾을 수 없어요");
+    expect(screen.queryByText(/Answer attempt not found/)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "연습으로 돌아가기" })).toHaveAttribute("href", "/practice");
+  });
+
+  it("offers a retry for server failures", async () => {
+    const refetch = vi.fn();
+    vi.mocked(useResultAnalysisQuery).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+      error: new ApiClientError(500, "NullPointerException at ResultService"),
+      refetch,
+    } as never);
+
+    renderWithProviders(
+      <Routes>
+        <Route element={<ResultAnalysisPage />} path="/answer-attempts/:answerAttemptId/result" />
+      </Routes>,
+      { route: "/answer-attempts/1/result", locale: "ko" },
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent("답변 결과를 불러오지 못했습니다.");
+    expect(screen.queryByText(/NullPointerException/)).not.toBeInTheDocument();
+    await userEvent.setup().click(screen.getByRole("button", { name: "다시 시도" }));
+    expect(refetch).toHaveBeenCalled();
   });
 });

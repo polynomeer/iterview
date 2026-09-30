@@ -1,12 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useResultAnalysisQuery } from "../../features/result/api/useResultAnalysisQuery";
 import { routeConfig } from "../../shared/config/routes";
-import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { useLocale } from "../../shared/i18n";
 import { useLayoutMode } from "../../shared/ui/layout";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { PageContainer } from "../../shared/ui/PageContainer";
+import { Button, ButtonLink, ErrorState } from "../../shared/ui/primitives";
 import { ResultAnalysisDesktopLayout, ResultAnalysisMobileLayout } from "./ResultAnalysisLayouts";
 import {
   AnalysisInsightSection,
@@ -23,7 +24,7 @@ export function ResultAnalysisPage() {
   const navigate = useNavigate();
   const { answerAttemptId } = useParams<{ answerAttemptId: string }>();
   const { isDesktop } = useLayoutMode();
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const isKorean = locale === "ko";
   const resultQuery = useResultAnalysisQuery(answerAttemptId);
 
@@ -62,16 +63,39 @@ export function ResultAnalysisPage() {
       ) : null}
 
       {resultQuery.isError ? (
-        <ErrorStateCard
-          body={
-            userFacingErrorMessage(resultQuery.error, isKorean ? "답변 결과를 불러오지 못했습니다." : "The answer result could not be loaded.")
-          }
-          details={getErrorDetails(resultQuery.error)}
-          onAction={() => {
-            void resultQuery.refetch();
-          }}
-          title={isKorean ? "결과 분석을 불러올 수 없습니다" : "Unable to load result analysis"}
-        />
+        resultQuery.error instanceof ApiClientError && resultQuery.error.status === 404 ? (
+          <ErrorState
+            actions={
+              <ButtonLink to={routeConfig.practice.buildPath()} variant="primary">
+                {t("common.backToPractice")}
+              </ButtonLink>
+            }
+            body={isKorean ? "삭제되었거나 다른 계정의 답변 기록일 수 있어요." : "It may have been deleted or belong to another account."}
+            icon="search"
+            size="page"
+            title={isKorean ? "평가 결과를 찾을 수 없어요" : "We couldn't find this evaluation"}
+          />
+        ) : (
+          <ErrorState
+            actions={
+              <Button
+                onClick={() => {
+                  void resultQuery.refetch();
+                }}
+                variant="primary"
+              >
+                {t("common.tryAgain")}
+              </Button>
+            }
+            body={userFacingErrorMessage(
+              resultQuery.error,
+              isKorean ? "답변 결과를 불러오지 못했습니다." : "The answer result could not be loaded.",
+            )}
+            details={getErrorDetails(resultQuery.error)}
+            size="page"
+            title={isKorean ? "결과 분석을 불러올 수 없습니다" : "Unable to load result analysis"}
+          />
+        )
       ) : null}
 
       {!resultQuery.isLoading && !resultQuery.isError && resultQuery.data

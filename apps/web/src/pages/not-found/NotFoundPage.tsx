@@ -1,17 +1,21 @@
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
-import { StateCard } from "../../shared/ui/StateCard";
+import { ButtonLink, EmptyState } from "../../shared/ui/primitives";
 
 export function NotFoundPage() {
   const { t } = useLocale();
 
   return (
-    <StateCard
-      action={{ label: t("common.goToToday"), to: routeConfig.home.buildPath() }}
+    <EmptyState
+      actions={
+        <ButtonLink to={routeConfig.home.buildPath()} variant="primary">
+          {t("common.goToToday")}
+        </ButtonLink>
+      }
       body={t("common.pageNotFoundBody")}
-      label={t("common.pageNotFoundLabel")}
+      icon="search"
+      size="page"
       title={t("common.pageNotFoundTitle")}
-      tone="empty"
     />
   );
 }
