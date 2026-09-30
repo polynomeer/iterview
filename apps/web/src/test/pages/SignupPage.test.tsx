@@ -69,13 +69,13 @@ describe("SignupPage", () => {
       { route: "/signup", locale: "ko" },
     );
 
-    expect(screen.getByText("회원가입")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "이미 계정이 있습니다" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "회원가입" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "로그인" })).toBeInTheDocument();
     await user.clear(screen.getByRole("textbox", { name: "이메일" }));
     await user.type(screen.getByRole("textbox", { name: "이메일" }), "new@example.com");
     await user.clear(screen.getByLabelText("비밀번호"));
     await user.type(screen.getByLabelText("비밀번호"), "secret123");
-    await user.click(screen.getByRole("button", { name: "회원가입" }));
+    await user.click(screen.getByRole("button", { name: "계정 만들기" }));
 
     expect(mutateAsyncMock).toHaveBeenCalledWith({
       email: "new@example.com",

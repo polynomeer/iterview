@@ -1,0 +1,63 @@
+/* 로그인 · 회원가입 without the app shell (docs/09 §4.4, mockup 09-auth). Token-only styles. */
+
+.auth-screen { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100vh; background: var(--iv-bg); color: var(--iv-text); font-family: var(--iv-font-sans); }
+
+.auth-screen__pitch {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--iv-space-6);
+  padding: var(--iv-space-10) clamp(var(--iv-space-6), 6vw, var(--iv-space-10));
+  border-right: 1px solid var(--iv-border);
+  background: var(--iv-surface);
+}
+
+.auth-screen__brand { display: flex; align-items: center; gap: var(--iv-space-2); margin: 0; font-weight: var(--iv-weight-bold); }
+
+.auth-screen__brand span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--iv-radius-sm);
+  background: var(--iv-accent);
+  color: var(--iv-on-accent);
+  font-size: var(--iv-text-sm);
+}
+
+.auth-screen__headline { max-width: 24rem; margin: 0; font-size: var(--iv-text-2xl); font-weight: var(--iv-weight-bold); line-height: var(--iv-leading-tight); }
+.auth-screen__steps { display: flex; flex-direction: column; gap: var(--iv-space-4); margin: 0; padding: 0; list-style: none; }
+.auth-screen__steps li { display: flex; gap: var(--iv-space-3); }
+
+.auth-screen__steps li > span {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-accent-soft);
+  color: var(--iv-accent-text);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-semibold);
+}
+
+.auth-screen__steps p { margin: var(--iv-space-1) 0 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.auth-screen__main { display: grid; place-items: center; padding: var(--iv-space-8) var(--iv-space-4); }
+.auth-screen__panel { display: flex; flex-direction: column; gap: var(--iv-space-4); width: 100%; max-width: 24rem; }
+.auth-screen__title { margin: 0; font-size: var(--iv-text-2xl); font-weight: var(--iv-weight-bold); }
+.auth-screen__switch { margin: calc(-1 * var(--iv-space-2)) 0 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+.auth-screen__switch a { color: var(--iv-accent-text); }
+.auth-screen__form { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+
+.auth-screen__divider { display: flex; align-items: center; gap: var(--iv-space-3); color: var(--iv-text-subtle); font-size: var(--iv-text-xs); }
+.auth-screen__divider::before,
+.auth-screen__divider::after { content: ""; flex: 1; height: 1px; background: var(--iv-border); }
+
+@media (max-width: 860px) {
+  .auth-screen { grid-template-columns: minmax(0, 1fr); }
+  .auth-screen__pitch { gap: var(--iv-space-4); padding: var(--iv-space-6) var(--iv-space-4); border-right: 0; border-bottom: 1px solid var(--iv-border); }
+  .auth-screen__steps { display: none; }
+  .auth-screen__headline { font-size: var(--iv-text-xl); }
+}

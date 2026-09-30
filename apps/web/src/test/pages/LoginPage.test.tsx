@@ -69,7 +69,9 @@ describe("LoginPage", () => {
       { route: "/login", locale: "ko" },
     );
 
-    expect(screen.getByText("로그인")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "로그인" })).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "이메일" })).toHaveValue("");
+    expect(screen.getByRole("link", { name: "둘러보기 (로그인 없이 질문 보기)" })).toHaveAttribute("href", "/questions");
     expect(screen.getByRole("link", { name: "계정 만들기" })).toBeInTheDocument();
     await user.clear(screen.getByRole("textbox", { name: "이메일" }));
     await user.type(screen.getByRole("textbox", { name: "이메일" }), "learner@example.com");

@@ -186,10 +186,14 @@ export const appRoutes: RouteObject[] = [
           },
           {
             path: routeConfig.login.path,
+            // No app shell on the auth screens (docs/09 §4.4).
+            handle: { focus: true },
             element: withSuspense(<LoginPage />),
           },
           {
             path: routeConfig.signup.path,
+            // No app shell on the auth screens (docs/09 §4.4).
+            handle: { focus: true },
             element: withSuspense(<SignupPage />),
           },
           ...legacyRedirectRoutes,
