@@ -92,6 +92,8 @@
   font-size: var(--iv-text-sm);
 }
 
+.today-aside__empty { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
 .today-risk__icon { color: var(--iv-warning); }
 
 .today-link {

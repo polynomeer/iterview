@@ -69,6 +69,13 @@ describe("HomePage", () => {
     expect(screen.queryByText("~25분")).not.toBeInTheDocument();
   });
 
+  it("does not chart skills that are not measured yet", () => {
+    renderHome({ data: { ...HOME, skillReadiness: [{ code: "CS", score: 0 }, { code: "BACKEND", score: null }] } });
+
+    expect(screen.getByText("질문에 답하면 영역별 준비도가 보여요.")).toBeInTheDocument();
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  });
+
   it("shows empty states instead of blank sections", () => {
     renderHome({ data: { ...HOME, todayQuestion: null, retryQuestions: [], resumeRisks: [], learningMaterials: [] } });
 

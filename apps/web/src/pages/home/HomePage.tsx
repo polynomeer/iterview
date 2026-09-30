@@ -195,18 +195,24 @@ function ProgressCard({ home, locale }: { home: HomeModel; locale: AppLocale }) 
       ) : null}
       {home.skillReadiness.length > 0 ? (
         <div className="today-aside__skills">
-          {home.skillReadiness.slice(0, 5).map((skill) => {
-            const label = skillCategoryLabel(skill.code, locale) ?? skill.code;
-            return (
-              <div className="today-aside__skill" key={skill.code}>
-                <div className="today-aside__skill-row">
-                  <span>{label}</span>
-                  <strong>{skill.score === null ? "-" : Math.round(skill.score)}</strong>
+          {/* The home preview has no answer counts; a score of 0 means the area is not measured yet. */}
+          {home.skillReadiness.every((skill) => !skill.score) ? (
+            <p className="today-aside__empty">{copy("질문에 답하면 영역별 준비도가 보여요.", "Answer a few questions to see readiness by area.")}</p>
+          ) : (
+            home.skillReadiness.slice(0, 5).map((skill) => {
+              const label = skillCategoryLabel(skill.code, locale) ?? skill.code;
+              const measured = Boolean(skill.score);
+              return (
+                <div className="today-aside__skill" key={skill.code}>
+                  <div className="today-aside__skill-row">
+                    <span>{label}</span>
+                    <strong>{measured ? Math.round(skill.score ?? 0) : copy("미측정", "Not measured")}</strong>
+                  </div>
+                  <Progress label={copy(`${label} 준비도`, `${label} readiness`)} tone={measured ? scoreTone(skill.score) : "neutral"} value={skill.score ?? 0} />
                 </div>
-                <Progress label={copy(`${label} 준비도`, `${label} readiness`)} tone={scoreTone(skill.score)} value={skill.score ?? 0} />
-              </div>
-            );
-          })}
+              );
+            })
+          )}
           <ButtonLink size="sm" to={routeConfig.skills.buildPath()} variant="ghost">
             {copy("스킬 맵에서 보기", "Open skill map")}
           </ButtonLink>
