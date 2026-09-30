@@ -56,7 +56,8 @@ describe("SettingsPage", () => {
     expect(screen.getByText("평가 기본값 조정")).toBeInTheDocument();
     expect(screen.getByText("로컬 알림 타이밍과 방해 수준 조정")).toBeInTheDocument();
     expect(screen.getByText("다음 복습 사이클 전에 권장되는 조정")).toBeInTheDocument();
-    expect(screen.getAllByText("라이트")).toHaveLength(2);
+    expect(screen.getAllByText("워크스페이스")).toHaveLength(2);
+    expect(screen.queryByText("라이트")).not.toBeInTheDocument();
     expect(screen.getAllByText("로컬 전용").length).toBeGreaterThan(0);
   });
 

@@ -14,15 +14,15 @@
     <script>
       (() => {
         const themeStorageKey = "iterview-theme";
-        const defaultTheme = "light";
+        const defaultTheme = "workspace";
         const storedTheme = window.localStorage.getItem(themeStorageKey);
         const nextTheme =
-          storedTheme === "light" || storedTheme === "dark" || storedTheme === "workspace" || storedTheme === "dracula"
+          storedTheme === "dark" || storedTheme === "workspace" || storedTheme === "dracula"
             ? storedTheme
             : defaultTheme;
 
         document.documentElement.dataset.theme = nextTheme;
-        document.documentElement.style.colorScheme = nextTheme === "light" ? "light" : "dark";
+        document.documentElement.style.colorScheme = "dark";
       })();
     </script>
   </head>

@@ -31,35 +31,27 @@ export function ThemeSettingsCard({ className, value, onChange }: ThemeSettingsC
         {themeOptions.map((option) => {
           const isSelected = option.id === value;
           const label =
-            option.id === "light"
+            option.id === "dark"
               ? isKorean
-                ? "라이트"
-                : "Light"
-              : option.id === "dark"
+                ? "다크"
+                : "Dark"
+              : option.id === "workspace"
                 ? isKorean
-                  ? "다크"
-                  : "Dark"
-                : option.id === "workspace"
-                  ? isKorean
-                    ? "워크스페이스"
-                    : "Workspace"
-                : "Dracula";
+                  ? "워크스페이스"
+                  : "Workspace"
+              : "Dracula";
           const description =
-            option.id === "light"
+            option.id === "dark"
               ? isKorean
-                ? "현재 기본 스타일을 유지하는 밝은 화면입니다."
-                : "Bright surfaces with the current default look."
-              : option.id === "dark"
+                ? "눈부심을 줄인 차분한 어두운 화면입니다."
+                : "Muted dark surfaces for lower-glare browsing."
+              : option.id === "workspace"
                 ? isKorean
-                  ? "눈부심을 줄인 차분한 어두운 화면입니다."
-                  : "Muted dark surfaces for lower-glare browsing."
-                : option.id === "workspace"
-                  ? isKorean
-                    ? "레퍼런스 이미지에 맞춘 네이비 작업공간과 코발트 포커스 색상입니다."
-                    : "Reference-driven navy workspace surfaces with cobalt focus accents."
-                : isKorean
-                  ? "강한 대비를 주는 채도 높은 드라큘라 팔레트입니다."
-                  : "A saturated violet-night palette with strong contrast.";
+                  ? "레퍼런스 이미지에 맞춘 네이비 작업공간과 코발트 포커스 색상입니다."
+                  : "Reference-driven navy workspace surfaces with cobalt focus accents."
+              : isKorean
+                ? "강한 대비를 주는 채도 높은 드라큘라 팔레트입니다."
+                : "A saturated violet-night palette with strong contrast.";
 
           return (
             <button

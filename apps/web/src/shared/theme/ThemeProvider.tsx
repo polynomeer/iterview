@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
-import { defaultTheme, getStoredTheme, type AppTheme, themeStorageKey } from "./theme";
+import { defaultTheme, getStoredTheme, isAppTheme, type AppTheme, themeStorageKey } from "./theme";
 
 type ThemeContextValue = {
   theme: AppTheme;
@@ -14,14 +14,14 @@ function applyTheme(theme: AppTheme) {
   }
 
   document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark";
+  document.documentElement.style.colorScheme = "dark";
 }
 
 function readInitialTheme() {
   if (typeof document !== "undefined") {
     const domTheme = document.documentElement.dataset.theme;
 
-    if (domTheme === "light" || domTheme === "dark" || domTheme === "workspace" || domTheme === "dracula") {
+    if (isAppTheme(domTheme)) {
       return domTheme;
     }
   }

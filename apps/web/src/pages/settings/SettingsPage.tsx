@@ -365,7 +365,7 @@ export function SettingsPage() {
                     <div className="settings-browser__display-list">
                       <article>
                         <span>{isKorean ? "테마" : "Theme"}</span>
-                        <strong>{theme === "workspace" ? (isKorean ? "워크스페이스" : "Workspace") : theme === "dark" ? (isKorean ? "다크" : "Dark") : theme === "light" ? (isKorean ? "라이트" : "Light") : "Dracula"}</strong>
+                        <strong>{theme === "workspace" ? (isKorean ? "워크스페이스" : "Workspace") : theme === "dark" ? (isKorean ? "다크" : "Dark") : "Dracula"}</strong>
                       </article>
                       <article>
                         <span>{t("settings.language")}</span>

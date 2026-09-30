@@ -174,3 +174,5 @@ Each ADR should include:
    Adapts `AGENTS.md` rules for Claude Code and makes agents commit each completed work unit.
 74. [`0074-consolidate-ia-and-token-design-system.md`](0074-consolidate-ia-and-token-design-system.md)
    Proposes five navigation areas, merged workspaces, and a single token design system based on the 2026-09 UX audit.
+75. [`0075-retire-light-theme-until-token-rebuild.md`](0075-retire-light-theme-until-token-rebuild.md)
+   Makes `workspace` the default and retires the unreadable light theme until the token rebuild.
