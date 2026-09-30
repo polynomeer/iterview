@@ -39,6 +39,10 @@ const InterviewSessionPage = lazy(() => import("../pages/interview-session/Inter
 const InterviewResultPage = lazy(() => import("../pages/interview-result/InterviewResultPage").then((module) => ({ default: module.InterviewResultPage })));
 const PracticalInterviewListPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewListPage").then((module) => ({ default: module.PracticalInterviewListPage })));
 const PracticalInterviewReviewPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewReviewPage").then((module) => ({ default: module.PracticalInterviewReviewPage })));
+// Development-only primitives reference; Vite drops this import from production bundles.
+const UiGalleryPage = import.meta.env.DEV
+  ? lazy(() => import("../pages/dev-ui-gallery/UiGalleryPage").then((module) => ({ default: module.UiGalleryPage })))
+  : null;
 const LoginPage = lazy(() => import("../pages/login/LoginPage").then((module) => ({ default: module.LoginPage })));
 const SignupPage = lazy(() => import("../pages/signup/SignupPage").then((module) => ({ default: module.SignupPage })));
 
@@ -226,6 +230,7 @@ const router = createBrowserRouter([
             path: routeConfig.signup.path,
             element: withSuspense(<SignupPage />),
           },
+          ...(UiGalleryPage ? [{ path: "/__ui", element: withSuspense(<UiGalleryPage />) }] : []),
           {
             path: "*",
             element: <NotFoundPage />,
