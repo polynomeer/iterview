@@ -520,3 +520,33 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* ---------- Page header ---------- */
+
+.ui-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--iv-space-4);
+}
+
+.ui-page-header__copy { flex: 1; min-width: 16rem; }
+
+.ui-page-header__title {
+  margin: 0;
+  color: var(--iv-text);
+  font-family: var(--iv-font-sans);
+  font-size: var(--iv-text-2xl);
+  font-weight: var(--iv-weight-bold);
+  line-height: var(--iv-leading-tight);
+  letter-spacing: -0.01em;
+}
+
+.ui-page-header__description {
+  margin: var(--iv-space-1) 0 0;
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-md);
+  line-height: var(--iv-leading-body);
+}
+
+.ui-page-header__actions { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); }
