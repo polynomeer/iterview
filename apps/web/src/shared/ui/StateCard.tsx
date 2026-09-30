@@ -22,6 +22,7 @@ type StateCardProps = {
   tone: "loading" | "empty" | "error";
   size?: "page" | "section";
   action?: StateCardAction;
+  secondaryAction?: StateCardAction;
 };
 
 export function StateCard({
@@ -32,8 +33,8 @@ export function StateCard({
   tone,
   size = "page",
   action,
+  secondaryAction,
 }: StateCardProps) {
-  const actionClassName = action?.variant === "secondary" ? "secondary-button" : "primary-button";
   const semanticRole = tone === "error" ? "alert" : "status";
   const liveMode = tone === "error" ? "assertive" : "polite";
 
@@ -53,19 +54,32 @@ export function StateCard({
           ))}
         </ul>
       ) : null}
-      {action ? (
+      {action || secondaryAction ? (
         <div className="page-card__actions">
-          {"to" in action && action.to !== undefined ? (
-            <Link className={actionClassName} to={action.to}>
-              {action.label}
-            </Link>
-          ) : (
-            <button className={actionClassName} onClick={action.onAction} type="button">
-              {action.label}
-            </button>
-          )}
+          {action ? <StateCardActionControl action={action} /> : null}
+          {secondaryAction ? (
+            <StateCardActionControl action={{ variant: "secondary", ...secondaryAction }} />
+          ) : null}
         </div>
       ) : null}
     </section>
+  );
+}
+
+function StateCardActionControl({ action }: { action: StateCardAction }) {
+  const className = action.variant === "secondary" ? "secondary-button" : "primary-button";
+
+  if ("to" in action && action.to !== undefined) {
+    return (
+      <Link className={className} to={action.to}>
+        {action.label}
+      </Link>
+    );
+  }
+
+  return (
+    <button className={className} onClick={action.onAction} type="button">
+      {action.label}
+    </button>
   );
 }

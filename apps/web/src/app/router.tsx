@@ -4,7 +4,9 @@ import { routeConfig } from "../shared/config/routes";
 import { LoadingStateCard } from "../shared/ui/LoadingStateCard";
 import { PageContainer } from "../shared/ui/PageContainer";
 import { AppLayout } from "../widgets/layout/AppLayout";
+import { NotFoundPage } from "../pages/not-found/NotFoundPage";
 import { ProtectedRoute } from "./router/ProtectedRoute";
+import { RouteErrorBoundary } from "./router/RouteErrorBoundary";
 
 const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({ default: module.HomePage })));
 const PracticePage = lazy(() => import("../pages/practice/PracticePage").then((module) => ({ default: module.PracticePage })));
@@ -62,171 +64,182 @@ function withSuspense(node: ReactNode) {
 const router = createBrowserRouter([
   {
     element: <AppLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
-        path: routeConfig.home.path,
-        element: withSuspense(<HomePage />),
-      },
-      {
-        path: routeConfig.practice.path,
-        element: withSuspense(<PracticePage />),
-      },
-      {
-        path: routeConfig.questionDetail.path,
-        element: withSuspense(<QuestionDetailPage />),
-      },
-      {
-        path: routeConfig.questionTree.path,
-        element: withSuspense(<QuestionTreePage />),
-      },
-      {
-        path: routeConfig.feed.path,
-        element: withSuspense(<FeedPage />),
-      },
-      {
-        element: <ProtectedRoute />,
+        // Page-level errors render inside the shell so navigation stays available.
+        errorElement: <RouteErrorBoundary />,
         children: [
           {
-            path: routeConfig.skills.path,
-            element: withSuspense(<SkillsPage />),
+            path: routeConfig.home.path,
+            element: withSuspense(<HomePage />),
           },
           {
-            path: routeConfig.reviewQueue.path,
-            element: withSuspense(<ReviewQueuePage />),
+            path: routeConfig.practice.path,
+            element: withSuspense(<PracticePage />),
           },
           {
-            path: routeConfig.scheduledReviews.path,
-            element: withSuspense(<ScheduledReviewsPage />),
+            path: routeConfig.questionDetail.path,
+            element: withSuspense(<QuestionDetailPage />),
           },
           {
-            path: routeConfig.weakNodes.path,
-            element: withSuspense(<WeakNodesPage />),
+            path: routeConfig.questionTree.path,
+            element: withSuspense(<QuestionTreePage />),
           },
           {
-            path: routeConfig.answerEditor.path,
-            element: withSuspense(<AnswerEditorPage />),
+            path: routeConfig.feed.path,
+            element: withSuspense(<FeedPage />),
           },
           {
-            path: routeConfig.resultAnalysis.path,
-            element: withSuspense(<ResultAnalysisPage />),
+            element: <ProtectedRoute />,
+            children: [
+              {
+                path: routeConfig.skills.path,
+                element: withSuspense(<SkillsPage />),
+              },
+              {
+                path: routeConfig.reviewQueue.path,
+                element: withSuspense(<ReviewQueuePage />),
+              },
+              {
+                path: routeConfig.scheduledReviews.path,
+                element: withSuspense(<ScheduledReviewsPage />),
+              },
+              {
+                path: routeConfig.weakNodes.path,
+                element: withSuspense(<WeakNodesPage />),
+              },
+              {
+                path: routeConfig.answerEditor.path,
+                element: withSuspense(<AnswerEditorPage />),
+              },
+              {
+                path: routeConfig.resultAnalysis.path,
+                element: withSuspense(<ResultAnalysisPage />),
+              },
+              {
+                path: routeConfig.archive.path,
+                element: withSuspense(<ArchivePage />),
+              },
+              {
+                path: routeConfig.notes.path,
+                element: withSuspense(<NotesPage />),
+              },
+              {
+                path: routeConfig.bookmarks.path,
+                element: withSuspense(<BookmarksPage />),
+              },
+              {
+                path: routeConfig.targetCompanies.path,
+                element: withSuspense(<TargetCompaniesPage />),
+              },
+              {
+                path: routeConfig.settings.path,
+                element: withSuspense(<SettingsPage />),
+              },
+              {
+                path: routeConfig.profile.path,
+                element: withSuspense(<ProfilePage />),
+              },
+              {
+                path: routeConfig.resume.path,
+                element: withSuspense(<ResumePage />),
+              },
+              {
+                path: routeConfig.resumeAnalysis.path,
+                element: withSuspense(<ResumeAnalysisPage />),
+              },
+              {
+                path: routeConfig.resumeHeatmap.path,
+                element: withSuspense(<ResumeHeatmapPage />),
+              },
+              {
+                path: routeConfig.resumeEditor.path,
+                element: withSuspense(<ResumeEditorPage />),
+              },
+              {
+                path: routeConfig.resumeHeatmapAnchor.path,
+                element: withSuspense(<ResumeHeatmapAnchorPage />),
+              },
+              {
+                path: routeConfig.resumeTailor.path,
+                element: withSuspense(<ResumeTailorLandingPage />),
+              },
+              {
+                path: routeConfig.resumeTailorJobPostings.path,
+                element: withSuspense(<ResumeTailorJobPostingsPage />),
+              },
+              {
+                path: routeConfig.resumeTailorAnalysisList.path,
+                element: withSuspense(<ResumeTailorAnalysisListPage />),
+              },
+              {
+                path: routeConfig.resumeTailorAnalysisDetail.path,
+                element: withSuspense(<ResumeTailorAnalysisDetailPage />),
+              },
+              {
+                path: routeConfig.interview.path,
+                element: withSuspense(<InterviewPage />),
+              },
+              {
+                path: routeConfig.practicalInterviews.path,
+                element: withSuspense(<PracticalInterviewListPage />),
+              },
+              {
+                path: routeConfig.practicalInterviewUpload.path,
+                element: withSuspense(<PracticalInterviewListPage />),
+              },
+              {
+                path: routeConfig.practicalInterviewDetail.path,
+                element: withSuspense(<PracticalInterviewReviewPage />),
+              },
+              {
+                path: routeConfig.practicalInterviewTranscript.path,
+                element: withSuspense(<PracticalInterviewReviewPage />),
+              },
+              {
+                path: routeConfig.practicalInterviewQuestion.path,
+                element: withSuspense(<PracticalInterviewReviewPage />),
+              },
+              {
+                path: routeConfig.practicalInterviewSimulate.path,
+                element: withSuspense(<PracticalInterviewReviewPage />),
+              },
+              {
+                path: "/interview",
+                element: withSuspense(<InterviewPage />),
+              },
+              {
+                path: routeConfig.interviewSession.path,
+                element: withSuspense(<InterviewSessionPage />),
+              },
+              {
+                path: "/interview/sessions/:sessionId",
+                element: withSuspense(<InterviewSessionPage />),
+              },
+              {
+                path: routeConfig.interviewSessionResult.path,
+                element: withSuspense(<InterviewResultPage />),
+              },
+              {
+                path: "/interview/sessions/:sessionId/result",
+                element: withSuspense(<InterviewResultPage />),
+              },
+            ],
           },
           {
-            path: routeConfig.archive.path,
-            element: withSuspense(<ArchivePage />),
+            path: routeConfig.login.path,
+            element: withSuspense(<LoginPage />),
           },
           {
-            path: routeConfig.notes.path,
-            element: withSuspense(<NotesPage />),
+            path: routeConfig.signup.path,
+            element: withSuspense(<SignupPage />),
           },
           {
-            path: routeConfig.bookmarks.path,
-            element: withSuspense(<BookmarksPage />),
-          },
-          {
-            path: routeConfig.targetCompanies.path,
-            element: withSuspense(<TargetCompaniesPage />),
-          },
-          {
-            path: routeConfig.settings.path,
-            element: withSuspense(<SettingsPage />),
-          },
-          {
-            path: routeConfig.profile.path,
-            element: withSuspense(<ProfilePage />),
-          },
-          {
-            path: routeConfig.resume.path,
-            element: withSuspense(<ResumePage />),
-          },
-          {
-            path: routeConfig.resumeAnalysis.path,
-            element: withSuspense(<ResumeAnalysisPage />),
-          },
-          {
-            path: routeConfig.resumeHeatmap.path,
-            element: withSuspense(<ResumeHeatmapPage />),
-          },
-          {
-            path: routeConfig.resumeEditor.path,
-            element: withSuspense(<ResumeEditorPage />),
-          },
-          {
-            path: routeConfig.resumeHeatmapAnchor.path,
-            element: withSuspense(<ResumeHeatmapAnchorPage />),
-          },
-          {
-            path: routeConfig.resumeTailor.path,
-            element: withSuspense(<ResumeTailorLandingPage />),
-          },
-          {
-            path: routeConfig.resumeTailorJobPostings.path,
-            element: withSuspense(<ResumeTailorJobPostingsPage />),
-          },
-          {
-            path: routeConfig.resumeTailorAnalysisList.path,
-            element: withSuspense(<ResumeTailorAnalysisListPage />),
-          },
-          {
-            path: routeConfig.resumeTailorAnalysisDetail.path,
-            element: withSuspense(<ResumeTailorAnalysisDetailPage />),
-          },
-          {
-            path: routeConfig.interview.path,
-            element: withSuspense(<InterviewPage />),
-          },
-          {
-            path: routeConfig.practicalInterviews.path,
-            element: withSuspense(<PracticalInterviewListPage />),
-          },
-          {
-            path: routeConfig.practicalInterviewUpload.path,
-            element: withSuspense(<PracticalInterviewListPage />),
-          },
-          {
-            path: routeConfig.practicalInterviewDetail.path,
-            element: withSuspense(<PracticalInterviewReviewPage />),
-          },
-          {
-            path: routeConfig.practicalInterviewTranscript.path,
-            element: withSuspense(<PracticalInterviewReviewPage />),
-          },
-          {
-            path: routeConfig.practicalInterviewQuestion.path,
-            element: withSuspense(<PracticalInterviewReviewPage />),
-          },
-          {
-            path: routeConfig.practicalInterviewSimulate.path,
-            element: withSuspense(<PracticalInterviewReviewPage />),
-          },
-          {
-            path: "/interview",
-            element: withSuspense(<InterviewPage />),
-          },
-          {
-            path: routeConfig.interviewSession.path,
-            element: withSuspense(<InterviewSessionPage />),
-          },
-          {
-            path: "/interview/sessions/:sessionId",
-            element: withSuspense(<InterviewSessionPage />),
-          },
-          {
-            path: routeConfig.interviewSessionResult.path,
-            element: withSuspense(<InterviewResultPage />),
-          },
-          {
-            path: "/interview/sessions/:sessionId/result",
-            element: withSuspense(<InterviewResultPage />),
+            path: "*",
+            element: <NotFoundPage />,
           },
         ],
-      },
-      {
-        path: routeConfig.login.path,
-        element: withSuspense(<LoginPage />),
-      },
-      {
-        path: routeConfig.signup.path,
-        element: withSuspense(<SignupPage />),
       },
     ],
   },
