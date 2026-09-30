@@ -401,6 +401,27 @@ These are built in order and ship one per work unit: 오늘 → 질문 (merged w
 
 **Acceptance per screen:** matches the mockup's structure. One primary CTA per viewport. Loading, empty, and error states covered. Mobile layout verified. Copy uses the glossary.
 
+**Status (2026-09-30): done.**
+
+| Screen | Outcome |
+| --- | --- |
+| 오늘 | One next question with a single primary action. Due reviews, resume claims that need evidence, progress with real counts, and reading. No invented metrics (`77e5ee5`). |
+| 질문 | List, detail, and tree merged into one workspace: navigator, question with follow-ups and full tree, and an inspector with tabs for record, materials, and answers. Authoring forms move to Dialogs (`50be6b7`). |
+| 답변 | Focus mode without the shell. Last feedback above a plain editor, a single submit (also ⌘/Ctrl+Enter), and a sticky submit bar on phones (`e3e6011`). |
+| 결과 | Total with the change since the last attempt and a status word, bars for scored dimensions, the weakest dimension with a single retry, the answer text, feedback, and a collapsed model answer (`1de4089`). |
+| 복습 | A due-now list sortable by due date or priority, a week strip from real due dates, inline 답하기 / 나중에 / 완료, and a finished-questions list filtered by source and title (`4460393`). |
+| 스킬 맵 | A weakest-first readiness list under 질문, replacing the interactive landscape (ADR 0077, `0fb3697`). |
+
+Found and fixed along the way:
+- **Contract drift:** the question list and detail mappers read fields the API never sends. Every category and difficulty showed "일반" (`1180c8c`, `50be6b7`).
+- **Fabricated numbers:** the old review queue invented mastery scores, attempt counts, and weak dimensions.
+- **Headings:** page-level states had no h1 (`b96b140`).
+- **CSS cleanup:** legacy `global.css` is 18,679 lines, down from 26,488. Rules were pruned only when unreferenced; before/after screenshots of unmigrated screens are pixel-identical (`fa9829f`).
+
+**Acceptance.** A mocked-API sweep of 31 routes at 1440px and 390px found no crash, page error, or horizontal scroll. Rebuilt screens show at most one primary action in the first viewport. Each rebuilt screen has tests for its loading, empty, error, and not-found states (web tests: 227).
+
+Deferred to Phase 4, as planned: the resume and interview areas, including the `widgets/answer` editor still used by the interview session.
+
 ### Phase 4 — Resume and interview
 
 These are built in order: 이력서 hub (claims → heatmap → tailor → versions, as tabs) → 면접 (mock + practical tabs, live session).

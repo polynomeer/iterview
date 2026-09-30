@@ -76,6 +76,10 @@ Active state is resolved with the router's own ranking (`matchRoutes`), so stati
 오늘 → 질문 (/questions/:id) → 답변 (/questions/:id/answer) → 결과 (/attempts/:id) → 복습 (/review) or 완료 (/review/done)
 ```
 
+- `/questions` and `/questions/:id` share one workspace: a navigator (filters in the URL), the question with its follow-ups, and an inspector. `/questions/:id/tree` opens the same workspace with the full follow-up tree expanded.
+- The answer route runs in focus mode. Its route `handle: { focus: true }` makes `AppLayout` drop the sidebar, top bar, and tab bar.
+- `/questions/skills` is the skill map: readiness per area against its benchmark (ADR 0077).
+
 ### 2. Resume evidence
 
 ```text

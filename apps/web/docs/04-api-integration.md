@@ -63,6 +63,8 @@ Expectations:
 - retry-focused sections when present
 - additive summary sections without breaking the baseline page
 
+The 오늘 screen shows only values the payload provides: `todayQuestion`, `retryQuestions`, `summaryStats`, `skillRadarPreview`, `resumeRiskPreview`, and `learningMaterials`. Codes such as `difficulty`, `severity`, and `categoryCode` are localized in the UI (`src/shared/lib/labels.ts`). A reason for "why this question today" would need a new field. The screen does not invent one.
+
 ### Practice and question detail
 
 Primary endpoints:
@@ -74,6 +76,11 @@ Primary endpoints:
 - `GET /api/questions/{questionId}/recommended-followups`
 - `GET /api/questions/resume-based`
 
+Field notes (aligned with `apps/api` DTOs on 2026-09-30):
+- `GET /api/questions` returns a bare list of `QuestionListItemDto`: `id`, `title`, `difficulty`, `categoryId`, `categoryName`, `companies[]`, `questionType`, …. It has no filter metadata and no per-user progress. The web derives category and difficulty filter options from the items, and filters with `categoryId`, `difficulty`, and `search`.
+- `GET /api/questions/{questionId}` returns the difficulty as `question.difficulty`. `difficultyLevel` is only a legacy alias.
+- Tree and follow-up `nodeStatus` values are `unanswered`, `weak`, `answered`, and `strong`. They drive the mastery badges.
+
 ### Answer and result analysis
 
 Primary endpoints:
@@ -82,6 +89,8 @@ Primary endpoints:
 - `GET /api/answer-attempts/{answerAttemptId}`
 - `GET /api/answer-attempts/{answerAttemptId}/analysis`
 
+The result screen reads the submitted text from `answerAttempt.contentText` and the raw dimension scores from `score.*Score`. It computes the change since the previous attempt from `GET /api/questions/{questionId}/answers`.
+
 ### Review queue and archive
 
 Primary endpoints:
@@ -89,6 +98,8 @@ Primary endpoints:
 - `POST /api/review-queue/{queueId}/skip`
 - `POST /api/review-queue/{queueId}/done`
 - `GET /api/archive`
+
+The review screen sorts and badges items by `scheduledFor` and `priority`, and shows `questionDifficulty`. The archive has no filter metadata, so source and title filtering happen in the browser.
 
 ### Resume
 
