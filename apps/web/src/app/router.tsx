@@ -2,7 +2,7 @@ import { Suspense, lazy, type ReactNode } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routeConfig } from "../shared/config/routes";
 import { LoadingStateCard } from "../shared/ui/LoadingStateCard";
-import { PageContainer } from "../shared/ui/PageContainer";
+import { useLocale } from "../shared/i18n";
 import { AppLayout } from "../widgets/layout/AppLayout";
 import { NotFoundPage } from "../pages/not-found/NotFoundPage";
 import { ProtectedRoute } from "./router/ProtectedRoute";
@@ -43,17 +43,14 @@ const LoginPage = lazy(() => import("../pages/login/LoginPage").then((module) =>
 const SignupPage = lazy(() => import("../pages/signup/SignupPage").then((module) => ({ default: module.SignupPage })));
 
 function RouteLoadingFallback() {
+  const { t } = useLocale();
+
   return (
-    <PageContainer
-      description="Loading the next workspace and preparing the route-level bundle for this screen."
-      eyebrow="Navigation"
-      title="Opening page"
-    >
-      <LoadingStateCard
-        body="The requested page is being loaded."
-        title="Preparing screen"
-      />
-    </PageContainer>
+    <LoadingStateCard
+      body={t("common.openingPageBody")}
+      label={t("common.openingPageLabel")}
+      title={t("common.openingPageTitle")}
+    />
   );
 }
 

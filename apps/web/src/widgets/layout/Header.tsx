@@ -5,6 +5,7 @@ import { useAuth } from "../../shared/auth/useAuth";
 import { useLogout } from "../../features/auth/useLogout";
 import { useLocale, type AppLocale } from "../../shared/i18n";
 import { useUpdateSettingsMutation } from "../../features/profile/api/useUpdateSettingsMutation";
+import { resolveHeaderTitleKey } from "./headerTitles";
 
 type HeaderProps = {
   onOpenCommandPalette?: () => void;
@@ -38,65 +39,9 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
     currentUser?.jobRole?.trim() ||
     t("navigation.profile");
   const profileImageUrl = currentUser?.profile?.profileImageUrl?.trim() ?? "";
-  const pageTitle = location.pathname.startsWith(routeConfig.reviewQueue.path)
-    ? isKorean
-      ? "리뷰 큐"
-      : "Review queue"
-    : location.pathname.startsWith(routeConfig.archive.path)
-      ? isKorean
-        ? "아카이브"
-        : "Archive"
-      : location.pathname.startsWith(routeConfig.scheduledReviews.path)
-        ? isKorean
-          ? "예정된 복습"
-          : "Scheduled reviews"
-        : location.pathname.startsWith(routeConfig.weakNodes.path)
-          ? isKorean
-            ? "약한 노드"
-            : "Weak nodes"
-          : null;
-
-  const pageHeader = (() => {
-    if (!isAuthenticated) {
-      return {
-        eyebrow: t("header.guestEyebrow"),
-        title: t("header.guestTitle"),
-      };
-    }
-
-    if (location.pathname.startsWith(routeConfig.practice.path)) {
-      return {
-        eyebrow: t("sidebar.questionMap"),
-        title: isKorean ? "연습 질문" : "Practice",
-      };
-    }
-
-    if (location.pathname.startsWith(routeConfig.resume.path)) {
-      return {
-        eyebrow: t("navigation.resume"),
-        title: isKorean ? "이력서" : "Resume",
-      };
-    }
-
-    if (location.pathname.startsWith(routeConfig.interview.path)) {
-      return {
-        eyebrow: t("sidebar.workspace"),
-        title: t("header.workspaceTitle"),
-      };
-    }
-
-    if (pageTitle) {
-      return {
-        eyebrow: t("sidebar.workspace"),
-        title: pageTitle,
-      };
-    }
-
-    return {
-      eyebrow: t("header.workspaceEyebrow"),
-      title: t("sidebar.today"),
-    };
-  })();
+  const pageHeader = isAuthenticated
+    ? { eyebrow: t("header.workspaceEyebrow"), title: t(resolveHeaderTitleKey(location.pathname)) }
+    : { eyebrow: t("header.guestEyebrow"), title: t("header.guestTitle") };
 
   async function handleLocaleChange(nextLocale: AppLocale) {
     if (nextLocale === locale) {
