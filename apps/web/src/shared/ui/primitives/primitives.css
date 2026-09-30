@@ -1,0 +1,10 @@
+/*
+ * Shared UI primitives (ADR 0076). Only `--iv-*` tokens may be referenced here;
+ * raw colors and font sizes are rejected by src/test/shared/designTokens.test.ts.
+ */
+
+.ui-icon {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+}

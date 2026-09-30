@@ -2,26 +2,7 @@ import { NavLink } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import { useAuth } from "../../shared/auth/useAuth";
 import { useLocale } from "../../shared/i18n";
-
-function getNavigationGlyph(label: string) {
-  const normalized = label.toLowerCase();
-
-  if (normalized.includes("today") || normalized.includes("오늘")) return "TD";
-  if (normalized.includes("workspace") || normalized.includes("인터뷰")) return "WS";
-  if (normalized.includes("question") || normalized.includes("질문")) return "QM";
-  if (normalized.includes("review") || normalized.includes("복습") || normalized.includes("리뷰")) return "RV";
-  if (normalized.includes("schedule") || normalized.includes("예정")) return "SC";
-  if (normalized.includes("weak") || normalized.includes("약한")) return "WN";
-  if (normalized.includes("archive") || normalized.includes("아카이브")) return "AR";
-  if (normalized.includes("resume") || normalized.includes("이력서")) return "CV";
-  if (normalized.includes("skill") || normalized.includes("스킬")) return "SK";
-  if (normalized.includes("note") || normalized.includes("노트")) return "NT";
-  if (normalized.includes("book") || normalized.includes("북마크")) return "BM";
-  if (normalized.includes("company") || normalized.includes("기업")) return "TC";
-  if (normalized.includes("setting") || normalized.includes("설정")) return "ST";
-
-  return "IT";
-}
+import { Icon, type IconName } from "../../shared/ui/primitives";
 
 export function SidebarNavigation() {
   const { isAuthenticated } = useAuth();
@@ -32,11 +13,11 @@ export function SidebarNavigation() {
         {
           caption: t("sidebar.workspace"),
           items: [
-            { label: t("header.workspaceTitle"), meta: t("sidebar.brandSummary"), to: routeConfig.interview.buildPath() },
-            { label: t("sidebar.today"), meta: t("header.workspaceEyebrow"), to: routeConfig.home.buildPath() },
-            { label: t("sidebar.questionMap"), meta: t("practice.searchQuestions"), to: routeConfig.practice.buildPath() },
-            { label: t("navigation.reviewQueue"), meta: isAuthenticated ? t("sidebar.workflow") : "Review", to: routeConfig.reviewQueue.buildPath() },
-            { label: t("navigation.archive"), meta: isAuthenticated ? (isKorean ? "답변 선반" : "Answer shelf") : "Records", to: routeConfig.archive.buildPath() },
+            { label: t("header.workspaceTitle"), meta: t("sidebar.brandSummary"), to: routeConfig.interview.buildPath(), icon: "interview" as IconName },
+            { label: t("sidebar.today"), meta: t("header.workspaceEyebrow"), to: routeConfig.home.buildPath(), icon: "today" as IconName },
+            { label: t("sidebar.questionMap"), meta: t("practice.searchQuestions"), to: routeConfig.practice.buildPath(), icon: "questions" as IconName },
+            { label: t("navigation.reviewQueue"), meta: isAuthenticated ? t("sidebar.workflow") : "Review", to: routeConfig.reviewQueue.buildPath(), icon: "review" as IconName },
+            { label: t("navigation.archive"), meta: isAuthenticated ? (isKorean ? "답변 선반" : "Answer shelf") : "Records", to: routeConfig.archive.buildPath(), icon: "archive" as IconName },
           ],
         },
       ]
@@ -44,25 +25,25 @@ export function SidebarNavigation() {
         {
           caption: t("sidebar.workspace"),
           items: [
-            { label: t("navigation.home"), meta: t("header.guestEyebrow"), to: routeConfig.home.buildPath() },
-            { label: t("sidebar.questionMap"), meta: t("practice.searchQuestions"), to: routeConfig.practice.buildPath() },
-            { label: t("navigation.feed"), meta: isAuthenticated ? "Signals" : "Shared signals", to: routeConfig.feed.buildPath() },
+            { label: t("navigation.home"), meta: t("header.guestEyebrow"), to: routeConfig.home.buildPath(), icon: "today" as IconName },
+            { label: t("sidebar.questionMap"), meta: t("practice.searchQuestions"), to: routeConfig.practice.buildPath(), icon: "questions" as IconName },
+            { label: t("navigation.feed"), meta: isAuthenticated ? "Signals" : "Shared signals", to: routeConfig.feed.buildPath(), icon: "feed" as IconName },
           ],
         },
       ];
   const careerLinks = isAuthenticated
     ? [
-        { label: t("navigation.resume"), meta: isAuthenticated ? (isKorean ? "기준 문서" : "Source library") : "Resume", to: routeConfig.resume.buildPath() },
-        { label: t("navigation.resumeAnalysis"), meta: t("sidebar.coreLoop"), to: routeConfig.resumeAnalysis.buildPath() },
-        { label: t("navigation.skills"), meta: isAuthenticated ? (isKorean ? "역량 맵" : "Capability map") : "Skills", to: routeConfig.skills.buildPath() },
+        { label: t("navigation.resume"), meta: isAuthenticated ? (isKorean ? "기준 문서" : "Source library") : "Resume", to: routeConfig.resume.buildPath(), icon: "resume" as IconName },
+        { label: t("navigation.resumeAnalysis"), meta: t("sidebar.coreLoop"), to: routeConfig.resumeAnalysis.buildPath(), icon: "analysis" as IconName },
+        { label: t("navigation.skills"), meta: isAuthenticated ? (isKorean ? "역량 맵" : "Capability map") : "Skills", to: routeConfig.skills.buildPath(), icon: "skills" as IconName },
       ]
     : [
-        { label: t("common.login"), meta: t("sidebar.account"), to: routeConfig.login.buildPath() },
-        { label: t("common.signUp"), meta: t("common.signUp"), to: routeConfig.signup.buildPath() },
+        { label: t("common.login"), meta: t("sidebar.account"), to: routeConfig.login.buildPath(), icon: "login" as IconName },
+        { label: t("common.signUp"), meta: t("common.signUp"), to: routeConfig.signup.buildPath(), icon: "signup" as IconName },
       ];
   const manageLinks = isAuthenticated
     ? [
-        { label: t("settings.eyebrow"), meta: t("settings.helper"), to: routeConfig.settings.buildPath() },
+        { label: t("settings.eyebrow"), meta: t("settings.helper"), to: routeConfig.settings.buildPath(), icon: "settings" as IconName },
       ]
     : [];
 
@@ -89,7 +70,7 @@ export function SidebarNavigation() {
                 to={link.to}
               >
                 <span aria-hidden="true" className="sidebar-navigation__icon">
-                  {getNavigationGlyph(link.label)}
+                  <Icon name={link.icon} />
                 </span>
                 <span className="sidebar-navigation__link-copy">
                   <strong>{link.label}</strong>
@@ -113,7 +94,7 @@ export function SidebarNavigation() {
               to={link.to}
             >
               <span aria-hidden="true" className="sidebar-navigation__icon sidebar-navigation__icon--secondary">
-                {getNavigationGlyph(link.label)}
+                <Icon name={link.icon} />
               </span>
               <span className="sidebar-navigation__link-copy">
                 <strong>{link.label}</strong>
@@ -137,7 +118,7 @@ export function SidebarNavigation() {
                 to={link.to}
               >
                 <span aria-hidden="true" className="sidebar-navigation__icon sidebar-navigation__icon--secondary">
-                  {getNavigationGlyph(link.label)}
+                  <Icon name={link.icon} />
                 </span>
                 <span className="sidebar-navigation__link-copy">
                   <strong>{link.label}</strong>

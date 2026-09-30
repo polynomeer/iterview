@@ -5,6 +5,7 @@ import { useAuth } from "../../shared/auth/useAuth";
 import { useLogout } from "../../features/auth/useLogout";
 import { useLocale, type AppLocale } from "../../shared/i18n";
 import { useUpdateSettingsMutation } from "../../features/profile/api/useUpdateSettingsMutation";
+import { Icon } from "../../shared/ui/primitives";
 import { resolveHeaderTitleKey } from "./headerTitles";
 
 type HeaderProps = {
@@ -130,10 +131,7 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
               title={t("common.logout")}
               type="button"
             >
-              <svg aria-hidden="true" fill="none" height="18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" viewBox="0 0 24 24" width="18">
-                <path d="M15 4h4v16h-4" />
-                <path d="M10 8l-4 4 4 4M6 12h10" />
-              </svg>
+              <Icon name="logout" />
             </button>
           </>
         ) : (

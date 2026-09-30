@@ -1,6 +1,15 @@
 import { NavLink } from "react-router-dom";
 import { tabRoutes } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
+import { Icon, type IconName } from "../../shared/ui/primitives";
+
+const TAB_ICONS: Record<string, IconName> = {
+  "/": "today",
+  "/practice": "questions",
+  "/archive": "archive",
+  "/feed": "feed",
+  "/profile": "profile",
+};
 
 export function BottomTabBar() {
   const { t } = useLocale();
@@ -24,7 +33,7 @@ export function BottomTabBar() {
 
   return (
     <nav aria-label={t("sidebar.workspace")} className="bottom-tab-bar">
-      {tabRoutes.map((route, index) => (
+      {tabRoutes.map((route) => (
         <NavLink
           key={route.path}
           className={({ isActive }) =>
@@ -33,7 +42,7 @@ export function BottomTabBar() {
           to={route.buildPath()}
         >
           <span aria-hidden="true" className="bottom-tab-bar__icon">
-            {(index + 1).toString().padStart(2, "0")}
+            <Icon name={TAB_ICONS[route.path] ?? "today"} size={20} />
           </span>
           <span>{getRouteLabel(route.path)}</span>
         </NavLink>
