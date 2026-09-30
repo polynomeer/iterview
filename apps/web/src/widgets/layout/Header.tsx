@@ -27,7 +27,6 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
   const updateSettingsMutation = useUpdateSettingsMutation();
   const logout = useLogout();
   const { locale, setLocale, t } = useLocale();
-  const isKorean = locale === "ko";
   const currentUser = currentUserQuery.data;
   const displayName =
     currentUser?.profile?.nickname?.trim() ||
@@ -105,12 +104,6 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
         </div>
         {isAuthenticated && currentUser ? (
           <>
-            <button className="app-header__icon-action" type="button">
-              {isKorean ? "알" : "A"}
-            </button>
-            <button className="app-header__icon-action" type="button">
-              {isKorean ? "활" : "L"}
-            </button>
             <Link className="app-header__action" to={routeConfig.profile.buildPath()}>
               <span className="app-header__avatar" aria-hidden="true">
                 {profileImageUrl ? (
@@ -130,8 +123,17 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
                 <span className="app-header__action-meta">{profileMeta}</span>
               </span>
             </Link>
-            <button aria-label={t("common.logout")} className="app-header__icon-action" onClick={logout} type="button">
-              {isKorean ? "종" : "O"}
+            <button
+              aria-label={t("common.logout")}
+              className="app-header__icon-action"
+              onClick={logout}
+              title={t("common.logout")}
+              type="button"
+            >
+              <svg aria-hidden="true" fill="none" height="18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" viewBox="0 0 24 24" width="18">
+                <path d="M15 4h4v16h-4" />
+                <path d="M10 8l-4 4 4 4M6 12h10" />
+              </svg>
             </button>
           </>
         ) : (
