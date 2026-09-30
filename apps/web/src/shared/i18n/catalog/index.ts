@@ -1,6 +1,7 @@
 // Namespaces split out of messages.ts so screens can own their strings (docs/09 §4.6).
 // Each entry is { en, ko } with identical keys; the catalog test checks the parity.
 import { authScreen } from "./authScreen";
+import { explore } from "./explore";
 import { answerEditor } from "./answerEditor";
 import { appShell } from "./appShell";
 import { home } from "./home";
@@ -30,6 +31,7 @@ import { shell } from "./shell";
 import { skillMap } from "./skillMap";
 
 export const catalog = {
+  explore,
   authScreen,
   settingsPage: settings,
   resumeEditor,
