@@ -612,9 +612,6 @@ export function QuestionDetailPage() {
                   <Link className="secondary-button" to={routeConfig.reviewQueue.buildPath()}>
                     {isKorean ? "리뷰에 추가" : "Add to review"}
                   </Link>
-                  <Link className="secondary-button" to={routeConfig.notes.buildPath()}>
-                    {isKorean ? "노트로 이동" : "Add to notes"}
-                  </Link>
                 </div>
               </section>
             );

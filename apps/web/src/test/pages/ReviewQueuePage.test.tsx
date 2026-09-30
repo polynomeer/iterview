@@ -67,11 +67,11 @@ describe("ReviewQueuePage", () => {
     expect(
       screen.getByRole("heading", { name: "One connected preparation loop" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Weak nodes/i }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByRole("link", { name: /Weak nodes/i })).not.toBeInTheDocument();
     expect(document.querySelector(".review-queue-layout--desktop")).not.toBeNull();
   });
 
-  it("routes remediation work from the queue into the weak nodes workspace", async () => {
+  it("routes finished work from the queue into the archive", async () => {
     vi.mocked(useReviewQueueQuery).mockReturnValue({
       data: {
         items: [
@@ -110,13 +110,13 @@ describe("ReviewQueuePage", () => {
           }
           path="/review-queue"
         />
-        <Route element={<LocationDisplay />} path="/weak-nodes" />
+        <Route element={<LocationDisplay />} path="/archive" />
       </Routes>,
       { route: "/review-queue" },
     );
 
-    await user.click(screen.getByRole("link", { name: "Open weak nodes" }));
+    await user.click(screen.getByRole("link", { name: /Archive/ }));
 
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/weak-nodes");
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/archive");
   });
 });

@@ -28,14 +28,15 @@ describe("CommandPalette", () => {
     expect(screen.getAllByText("Questions").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Skills").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Resume Evidence").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Companies").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Notes").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Commands").length).toBeGreaterThan(0);
+    // Companies and notes point at sample-data pages and stay out of the palette until they are backed by APIs.
+    expect(screen.queryByText("Companies")).not.toBeInTheDocument();
+    expect(screen.queryByText("Notes")).not.toBeInTheDocument();
 
-    await user.type(screen.getByLabelText("Search Iterview"), "Stripe");
+    await user.type(screen.getByLabelText("Search Iterview"), "Settlement");
 
-    expect(screen.getByText("Stripe target preparation board")).toBeInTheDocument();
-    expect(screen.queryByText("Kafka incident notebook")).not.toBeInTheDocument();
+    expect(screen.getByText("Settlement platform source of truth")).toBeInTheDocument();
+    expect(screen.queryByText("Kafka rebalance answer draft")).not.toBeInTheDocument();
   });
 
   it("navigates to the selected result with keyboard input", async () => {
@@ -79,14 +80,14 @@ describe("CommandPalette", () => {
           }
           path="/"
         />
-        <Route element={<LocationDisplay />} path="/target-companies" />
+        <Route element={<LocationDisplay />} path="/profile/resumes" />
       </Routes>,
     );
 
-    await user.type(screen.getByLabelText("Search Iterview"), "Stripe");
-    await user.click(screen.getByRole("option", { name: /Stripe target preparation board/i }));
+    await user.type(screen.getByLabelText("Search Iterview"), "Open resume");
+    await user.click(screen.getByRole("option", { name: /Open resume source of truth/i }));
 
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/target-companies?company=stripe");
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/profile/resumes");
     expect(onClose).toHaveBeenCalled();
   });
 

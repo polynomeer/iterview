@@ -150,16 +150,6 @@ export function SettingsPage() {
       body: t("settings.workspaceBody"),
       to: routeConfig.profile.buildPath(),
     },
-    {
-      title: t("settings.openScheduledReviews"),
-      body: t("settings.reviewBehaviorBody"),
-      to: routeConfig.scheduledReviews.buildPath(),
-    },
-    {
-      title: t("settings.targetCompaniesRoute"),
-      body: t("settings.workspaceLinkageBody"),
-      to: routeConfig.targetCompanies.buildPath(),
-    },
   ];
 
   return (
@@ -168,9 +158,6 @@ export function SettingsPage() {
         <>
           <Link className="secondary-button" to={routeConfig.profile.buildPath()}>
             {t("settings.openProfile")}
-          </Link>
-          <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>
-            {t("settings.openScheduledReviews")}
           </Link>
         </>
       }
@@ -448,20 +435,6 @@ export function SettingsPage() {
                         <span>{isKorean ? `현재 ${dailyLoad}문제 기준입니다. ${suggestedGoal}까지 올리면 루프 밀도가 더 안정됩니다.` : `You are at ${dailyLoad} questions now. Raising toward ${suggestedGoal} improves loop density.`}</span>
                       </div>
                       <button className="secondary-button" type="button">{isKorean ? "조정" : "Adjust"}</button>
-                    </article>
-                    <article className="settings-browser__tweak-item">
-                      <div>
-                        <strong>{isKorean ? "약한 주제 집중 추가" : "Add Weak Topic Focus"}</strong>
-                        <span>{isKorean ? "분산 시스템과 복구 루프를 목표 회사 준비와 연결하세요." : "Link distributed systems and recovery loops to target company preparation."}</span>
-                      </div>
-                      <Link className="secondary-button" to={routeConfig.targetCompanies.buildPath()}>{isKorean ? "추가" : "Add"}</Link>
-                    </article>
-                    <article className="settings-browser__tweak-item">
-                      <div>
-                        <strong>{isKorean ? "복습 알림 활성화" : "Enable Review Alerts"}</strong>
-                        <span>{isKorean ? "장기 유지력을 위해 예약 복습 흐름과 알림 간격을 연결하세요." : "Connect scheduled review flow with reminder timing for long-term retention."}</span>
-                      </div>
-                      <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>{isKorean ? "열기" : "Open"}</Link>
                     </article>
                   </div>
                 </section>

@@ -414,13 +414,6 @@ export function InterviewSessionPage() {
                 : "Use the result surface to decide whether this branch needs recovery or expansion next.",
               to: routeConfig.interviewSessionResult.buildPath({ sessionId }),
             },
-            {
-              title: isKorean ? "노트" : "Notes",
-              description: isKorean
-                ? "다음 재도전 패스 전에 보강된 설명을 정확히 기록하세요."
-                : "Capture the exact repaired explanation before the next retry pass.",
-              to: routeConfig.notes.buildPath(),
-            },
           ]}
           upstream={[
             {

@@ -410,16 +410,6 @@ export function ReviewQueuePage() {
 
   return (
     <PageContainer
-      actions={
-        <>
-          <Link className="secondary-button" to={routeConfig.weakNodes.buildPath()}>
-            {isKorean ? "약한 노드 열기" : "Open weak nodes"}
-          </Link>
-          <Link className="secondary-button" to={routeConfig.scheduledReviews.buildPath()}>
-            {isKorean ? "예정된 복습 열기" : "Open scheduled reviews"}
-          </Link>
-        </>
-      }
       description={
         isKorean
           ? "가장 신호가 강한 재시도부터 해결하고, 열린 약한 브랜치를 줄인 뒤 새로운 연습으로 돌아가세요."
@@ -436,14 +426,9 @@ export function ReviewQueuePage() {
         }}
         downstream={[
           {
-            title: isKorean ? "약한 노드" : "Weak nodes",
-            description: isKorean ? "큐가 약하다고는 말하지만 이유가 보이지 않을 때 보강 그래프를 여세요." : "Open the remediation graph when the queue says something is weak but not why.",
-            to: routeConfig.weakNodes.buildPath(),
-          },
-          {
-            title: isKorean ? "예정된 복습" : "Scheduled reviews",
-            description: isKorean ? "즉시 처리할 큐가 정리되면 다가오는 재시도 블록의 균형을 다시 맞추세요." : "Rebalance upcoming retry blocks once the immediate queue is under control.",
-            to: routeConfig.scheduledReviews.buildPath(),
+            title: isKorean ? "아카이브" : "Archive",
+            description: isKorean ? "충분히 방어한 질문은 아카이브에서 다시 확인하세요." : "Revisit questions you have already mastered in the archive.",
+            to: routeConfig.archive.buildPath(),
           },
         ]}
         upstream={[

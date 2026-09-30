@@ -313,9 +313,9 @@ export function ResumeAnalysisPage() {
         ]}
         upstream={[
           {
-            title: isKorean ? "약한 노드" : "Weak nodes",
-            description: isKorean ? "실패한 분기가 어떤 경력 설명에서 시작됐는지 다시 확인하세요." : "Trace failing branches back to the originating experience claim.",
-            to: routeConfig.weakNodes.buildPath(),
+            title: isKorean ? "복습 큐" : "Review queue",
+            description: isKorean ? "약했던 답변이 어떤 경력 설명에서 시작됐는지 다시 확인하세요." : "Trace weak answers back to the originating experience claim.",
+            to: routeConfig.reviewQueue.buildPath(),
           },
         ]}
       />

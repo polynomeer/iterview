@@ -98,6 +98,7 @@ describe("ProfilePage", () => {
     );
 
     expect(screen.getByRole("link", { name: "설정 열기" })).toHaveAttribute("href", "/settings");
-    expect(screen.getByRole("link", { name: /목표 회사/ })).toHaveAttribute("href", "/target-companies");
+    expect(screen.getByRole("link", { name: /이력서 분석/ })).toHaveAttribute("href", "/profile/resumes/analysis");
+    expect(screen.queryByRole("link", { name: /목표 회사/ })).not.toBeInTheDocument();
   });
 });

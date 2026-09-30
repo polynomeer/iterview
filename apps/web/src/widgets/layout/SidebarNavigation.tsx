@@ -36,8 +36,6 @@ export function SidebarNavigation() {
             { label: t("sidebar.today"), meta: t("header.workspaceEyebrow"), to: routeConfig.home.buildPath() },
             { label: t("sidebar.questionMap"), meta: t("practice.searchQuestions"), to: routeConfig.practice.buildPath() },
             { label: t("navigation.reviewQueue"), meta: isAuthenticated ? t("sidebar.workflow") : "Review", to: routeConfig.reviewQueue.buildPath() },
-            { label: t("sidebar.scheduledReviews"), meta: isAuthenticated ? t("sidebar.workflowRange") : "Schedule", to: routeConfig.scheduledReviews.buildPath() },
-            { label: t("sidebar.weakNodes"), meta: isAuthenticated ? t("sidebar.workflowFocusBody") : "Weak nodes", to: routeConfig.weakNodes.buildPath() },
             { label: t("navigation.archive"), meta: isAuthenticated ? (isKorean ? "답변 선반" : "Answer shelf") : "Records", to: routeConfig.archive.buildPath() },
           ],
         },
@@ -65,9 +63,6 @@ export function SidebarNavigation() {
   const manageLinks = isAuthenticated
     ? [
         { label: t("settings.eyebrow"), meta: t("settings.helper"), to: routeConfig.settings.buildPath() },
-        { label: t("sidebar.targetCompanies"), meta: t("sidebar.manage"), to: routeConfig.targetCompanies.buildPath() },
-        { label: t("sidebar.notes"), meta: t("sidebar.manage"), to: routeConfig.notes.buildPath() },
-        { label: t("sidebar.bookmarks"), meta: t("sidebar.manage"), to: routeConfig.bookmarks.buildPath() },
       ]
     : [];
 
