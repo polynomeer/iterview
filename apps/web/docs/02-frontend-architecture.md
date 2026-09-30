@@ -158,6 +158,8 @@ Avoid placing product-specific concepts in `shared` just because they are reused
 - design tokens live in `src/shared/theme/tokens.css` (`--iv-*`); raw colors and font sizes are not allowed anywhere else (enforced by `src/test/shared/designTokens.test.ts`)
 - reusable controls come from `src/shared/ui/primitives` (`ui-*` classes); do not add new page-specific button, input, tab, or dialog styles
 - `src/app/styles/global.css` is legacy: migrated screens remove their selectors from it instead of adding new ones
+- run the dev server and open `/__ui` for a live reference of every primitive, icon, and state (development builds only)
+- use `EmptyState`, `ErrorState`, and `PageSkeleton` for new loading, empty, and error states instead of page-specific cards
 - see `docs/adr/0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md` and `docs/09-ux-audit-and-redesign-proposal.md`
 
 ## Current Route Inventory

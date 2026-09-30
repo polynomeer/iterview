@@ -163,6 +163,15 @@ This is especially important for:
 - interview transcription
 - replay review flows
 
+### User-facing error messages
+
+Screens never render `error.message` directly. They call `userFacingErrorMessage(error, fallback)` or `optionalErrorMessage(error, fallback)` from `src/shared/api/errors.ts`:
+- `400`, `409`, and `422` responses keep the server message, because it tells the user how to fix their input. The backend should localize these through `X-App-Locale`.
+- Every other status, plus network and timeout failures, shows the screen's own localized fallback. Raw text such as "Answer attempt not found: 1" never reaches the UI.
+- Screens may branch on specific statuses when the next step differs. For example, the result page shows "not found" with a way back to practice for `404`, and a retry for server errors.
+- Login additionally keeps `401` (invalid credentials) and `429` (rate limit) messages.
+- Unexpected render errors are caught by the route error boundary. Unknown paths render the not-found page.
+
 ## Integration Risk Areas
 
 - leaking raw DTO shapes into many page components

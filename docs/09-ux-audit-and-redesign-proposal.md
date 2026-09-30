@@ -361,6 +361,20 @@ Still open and deferred by design:
 
 **Acceptance:** new primitives are used in at least one screen. Lint rule or review check: no new hex colors or `font-size` literals outside `tokens.css`.
 
+**Status (2026-09-30): done. One item is deferred by design.**
+
+| Item | Outcome |
+| --- | --- |
+| 1. Tokens and primitives | `--iv-*` tokens are in `apps/web/src/shared/theme/tokens.css` (`510a3b2`). Primitives are in `apps/web/src/shared/ui/primitives`: Button/ButtonLink/IconButton and Field/Input/Textarea/Select (`eb0b948`), Badge/Card/ListRow/Stat/Progress/Callout/Skeleton (`0e7d5af`), Tabs/Segmented (`e6feeda`), and Dialog (`e6cefb6`). Each has unit tests. Names are prefixed to coexist with `global.css` ([ADR 0076](adr/0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md)). |
+| 2. Theme reduction | Tokens resolve for `light`, `dark`, and `system` (`prefers-color-scheme`). The user-facing picker is unchanged, because unmigrated screens only render correctly on dark surfaces. `workspace`, `dark`, and `dracula` share the dark roles, and `light` stays retired (ADR 0075). The picker becomes system/light/dark once the screens a user can reach have migrated (Phases 3–4). |
+| 3. Icon set | One inline line-icon set now replaces the sidebar letter glyphs, the mobile "01–05" tabs, and the header logout glyph (`37bbe37`). |
+| 4. States and error mapping | EmptyState, ErrorState, and PageSkeleton are added (`34cfc22`, `431101f`). `userFacingErrorMessage` / `optionalErrorMessage` replaced 69 raw `error.message` renders (`952b8ba`). |
+
+**Acceptance.**
+- Primitives are used by the not-found page, the route error boundary, the result page error states, the route loading skeleton, and the navigation icons.
+- `src/test/shared/designTokens.test.ts` fails on any raw color or literal font size outside `tokens.css` (legacy `global.css` excepted). It also enforces AA contrast for text roles. That check caught white-on-`#3f82ff` (3.6:1), so the dark accent is now `#2f6fe8`.
+- A dev-only `/__ui` gallery shows every primitive (`efc41aa`).
+
 ### Phase 2 — Shell and IA
 
 1. Implement the new sidebar, top bar, mobile tab bar, and resume version switcher.
