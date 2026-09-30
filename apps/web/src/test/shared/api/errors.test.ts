@@ -1,7 +1,29 @@
 import { describe, expect, it } from "vitest";
-import { ApiClientError, optionalErrorMessage, userFacingErrorMessage } from "../../../shared/api/errors";
+import { ApiClientError, mapApiError, optionalErrorMessage, userFacingErrorMessage } from "../../../shared/api/errors";
 
 const FALLBACK = "답변 결과를 불러오지 못했습니다.";
+
+describe("mapApiError", () => {
+  it("extracts nested message content from object-shaped payload fields", () => {
+    const error = mapApiError(400, {
+      message: {
+        message: "Email is required.",
+      },
+    });
+
+    expect(error.message).toBe("Email is required.");
+  });
+
+  it("falls back to nested object values instead of stringifying the object", () => {
+    const error = mapApiError(400, {
+      error: {
+        reason: "Password is too short.",
+      },
+    });
+
+    expect(error.message).toBe("Password is too short.");
+  });
+});
 
 describe("userFacingErrorMessage", () => {
   it.each([400, 409, 422])("keeps the server message for actionable %s responses", (status) => {
