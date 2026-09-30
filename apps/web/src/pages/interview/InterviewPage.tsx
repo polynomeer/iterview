@@ -8,9 +8,7 @@ import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQu
 import { getErrorDetails, optionalErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
-import type { MessageKey } from "../../shared/i18n/messages";
 import { scoreTone } from "../../shared/lib/labels";
-import type { CreateInterviewSessionRequestDto } from "../../shared/types/interview";
 import {
   Badge,
   Button,
@@ -25,17 +23,9 @@ import {
   Skeleton,
 } from "../../shared/ui/primitives";
 import "./interview.css";
+import { INTERVIEW_MODES as MODES, interviewModeLabel, type InterviewMode as Mode } from "./modes";
 
-type Mode = NonNullable<CreateInterviewSessionRequestDto["interviewMode"]>;
 type Basis = "resume_mock" | "review_mock";
-
-const MODES: Array<{ id: Mode; label: MessageKey; description: MessageKey }> = [
-  { id: "quick_screen", label: "interview.modeQuickScreen", description: "interview.modeQuickScreenDescription" },
-  { id: "mock_30", label: "interview.modeMock30", description: "interview.modeMock30Description" },
-  { id: "mock_60", label: "interview.modeMock60", description: "interview.modeMock60Description" },
-  { id: "free_interview", label: "interview.modeFreeInterview", description: "interview.modeFreeInterviewDescription" },
-  { id: "full_coverage", label: "interview.modeFullCoverage", description: "interview.modeFullCoverageDescription" },
-];
 
 function useCopy() {
   const { locale } = useLocale();
@@ -57,13 +47,12 @@ function BasisOption({ checked, disabled, title, meta, onSelect }: { checked: bo
 function SessionRow({ session }: { session: InterviewSessionListItemModel }) {
   const { t } = useLocale();
   const copy = useCopy();
-  const mode = MODES.find((candidate) => candidate.id === session.interviewMode);
   const basis = session.sessionType === "review_mock" ? copy("복습 질문", "Review questions") : copy("이력서 기반", "Resume-based");
   const done = session.status === "completed";
   return (
     <ListRow
       meta={[session.startedAtLabel, copy(`${session.questionCount}문항 중 ${session.answeredCount}개 답변`, `${session.answeredCount} of ${session.questionCount} answered`)].filter(Boolean).join(" · ")}
-      title={`${basis} · ${mode ? t(mode.label) : session.interviewModeLabel}`}
+      title={`${basis} · ${interviewModeLabel(session.interviewMode, session.interviewModeLabel, t)}`}
       trailing={
         <span className="interview-row-actions">
           {done && session.averageScore !== null ? (

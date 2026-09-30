@@ -1,0 +1,37 @@
+/* 면접 결과 (docs/09 §4.4). Token-only styles. */
+
+.interview-result-hero {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(6rem, auto)) minmax(16rem, 1fr);
+  gap: var(--iv-space-4) var(--iv-space-8);
+  align-items: start;
+}
+
+.interview-result-hero__next { display: flex; flex-direction: column; gap: var(--iv-space-2); }
+.interview-result-hero__next p { margin: 0; color: var(--iv-text); line-height: var(--iv-leading-body); }
+.interview-result-hero__actions { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); }
+
+.interview-outcome-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--iv-space-5); align-items: start; }
+.interview-outcome-layout:has(> .interview-result-aside) { grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); }
+.interview-result-aside { display: flex; flex-direction: column; gap: var(--iv-space-4); min-width: 0; }
+
+.interview-result-row--follow-up { padding-left: var(--iv-space-8); }
+.interview-result-row__meta { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--iv-space-1) var(--iv-space-2); }
+.interview-result-row__actions { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--iv-space-2); }
+
+.interview-result-card-title { margin: 0 0 var(--iv-space-3); font-size: var(--iv-text-lg); font-weight: var(--iv-weight-semibold); }
+.interview-result-subtitle { margin: var(--iv-space-4) 0 var(--iv-space-2); color: var(--iv-text-muted); font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); }
+.interview-result-muted { margin: var(--iv-space-2) 0 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.interview-result-facets { display: flex; flex-direction: column; gap: var(--iv-space-2); margin: 0; padding: 0; list-style: none; font-size: var(--iv-text-sm); }
+.interview-result-facets li { display: flex; align-items: flex-start; gap: var(--iv-space-2); color: var(--iv-text); }
+
+@media (max-width: 960px) {
+  .interview-result-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .interview-result-hero__next { grid-column: 1 / -1; }
+  .interview-outcome-layout:has(> .interview-result-aside) { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .interview-result-row--follow-up { padding-left: var(--iv-space-5); }
+}
