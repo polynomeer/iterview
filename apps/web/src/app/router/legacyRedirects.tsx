@@ -27,6 +27,12 @@ export const LEGACY_REDIRECTS: LegacyRedirect[] = [
   { from: "/profile/resumes/analysis", to: () => routeConfig.resume.buildPath() },
   // The analysis page folded into the hub's 개요 tab (Phase 4).
   { from: "/resume/analysis", to: () => routeConfig.resume.buildPath() },
+  // Sample-data pages retired in Phase 5 (ADR 0079): their real counterparts live here.
+  { from: "/weak-nodes", to: () => routeConfig.reviewQueue.buildPath() },
+  { from: "/scheduled-reviews", to: () => routeConfig.reviewQueue.buildPath() },
+  { from: "/target-companies", to: () => routeConfig.settings.buildPath() },
+  { from: "/notes", to: () => routeConfig.practice.buildPath() },
+  { from: "/bookmarks", to: () => routeConfig.practice.buildPath() },
   {
     from: "/resume-versions/:versionId/editor",
     to: (params) => routeConfig.resumeEditor.buildPath({ versionId: param(params, "versionId") }),

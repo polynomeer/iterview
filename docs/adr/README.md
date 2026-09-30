@@ -182,3 +182,5 @@ Each ADR should include:
    Replaces the interactive skills landscape (0072) with a weakest-first skill map under 질문.
 78. [`0078-version-scoped-resume-hub-and-single-version-choice.md`](0078-version-scoped-resume-hub-and-single-version-choice.md)
    Puts resume views under `/resume/:versionId` as route tabs and makes the sidebar switcher the only place a resume version is chosen.
+79. [`0079-retire-sample-data-pages.md`](0079-retire-sample-data-pages.md)
+   Deletes the five hard-coded sample-data pages and redirects their URLs to 복습, 설정, and 질문.

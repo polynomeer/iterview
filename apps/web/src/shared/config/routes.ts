@@ -36,8 +36,6 @@ export const routeConfig = {
   practice: createStaticRoute("/questions", "Questions"),
   skills: createStaticRoute("/questions/skills", "Skill Map", true),
   reviewQueue: createStaticRoute("/review", "Review", true),
-  scheduledReviews: createStaticRoute("/scheduled-reviews", "Scheduled Reviews", true),
-  weakNodes: createStaticRoute("/weak-nodes", "Weak Nodes", true),
   questionDetail: createDynamicRoute(
     "/questions/:questionId",
     "Question Detail",
@@ -64,9 +62,6 @@ export const routeConfig = {
   ),
   archive: createStaticRoute("/review/done", "Done", true),
   feed: createStaticRoute("/explore", "Explore"),
-  notes: createStaticRoute("/notes", "Notes", true),
-  bookmarks: createStaticRoute("/bookmarks", "Bookmarks", true),
-  targetCompanies: createStaticRoute("/target-companies", "Target Companies", true),
   settings: createStaticRoute("/settings", "Settings", true),
   profile: createStaticRoute("/settings/profile", "Profile", true),
   resume: createStaticRoute("/resume", "Resume", true),

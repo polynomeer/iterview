@@ -14,15 +14,10 @@ const QuestionsIndexPage = lazy(() => import("../pages/questions/QuestionWorkspa
 const QuestionWorkspacePage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionWorkspacePage })));
 const SkillMapPage = lazy(() => import("../pages/skills/SkillMapPage").then((module) => ({ default: module.SkillMapPage })));
 const ReviewQueuePage = lazy(() => import("../pages/review/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
-const ScheduledReviewsPage = lazy(() => import("../pages/scheduled-reviews/ScheduledReviewsPage").then((module) => ({ default: module.ScheduledReviewsPage })));
-const WeakNodesPage = lazy(() => import("../pages/weak-nodes/WeakNodesPage").then((module) => ({ default: module.WeakNodesPage })));
 const AnswerEditorPage = lazy(() => import("../pages/answer-editor/AnswerEditorPage").then((module) => ({ default: module.AnswerEditorPage })));
 const ResultAnalysisPage = lazy(() => import("../pages/result-analysis/ResultAnalysisPage").then((module) => ({ default: module.ResultAnalysisPage })));
 const ArchivePage = lazy(() => import("../pages/review/ArchivePage").then((module) => ({ default: module.ArchivePage })));
 const FeedPage = lazy(() => import("../pages/feed/FeedPage").then((module) => ({ default: module.FeedPage })));
-const NotesPage = lazy(() => import("../pages/notes/NotesPage").then((module) => ({ default: module.NotesPage })));
-const BookmarksPage = lazy(() => import("../pages/bookmarks/BookmarksPage").then((module) => ({ default: module.BookmarksPage })));
-const TargetCompaniesPage = lazy(() => import("../pages/target-companies/TargetCompaniesPage").then((module) => ({ default: module.TargetCompaniesPage })));
 const SettingsPage = lazy(() => import("../pages/settings/SettingsPage").then((module) => ({ default: module.SettingsPage })));
 const ProfilePage = lazy(() => import("../pages/profile/ProfilePage").then((module) => ({ default: module.ProfilePage })));
 const ResumeIndexPage = lazy(() => import("../pages/resume/ResumeIndexPage").then((module) => ({ default: module.ResumeIndexPage })));
@@ -102,14 +97,6 @@ export const appRoutes: RouteObject[] = [
                 element: withSuspense(<ReviewQueuePage />),
               },
               {
-                path: routeConfig.scheduledReviews.path,
-                element: withSuspense(<ScheduledReviewsPage />),
-              },
-              {
-                path: routeConfig.weakNodes.path,
-                element: withSuspense(<WeakNodesPage />),
-              },
-              {
                 path: routeConfig.answerEditor.path,
                 // Focus mode: AppLayout drops the sidebar, top bar, and tab bar while answering.
                 handle: { focus: true },
@@ -122,18 +109,6 @@ export const appRoutes: RouteObject[] = [
               {
                 path: routeConfig.archive.path,
                 element: withSuspense(<ArchivePage />),
-              },
-              {
-                path: routeConfig.notes.path,
-                element: withSuspense(<NotesPage />),
-              },
-              {
-                path: routeConfig.bookmarks.path,
-                element: withSuspense(<BookmarksPage />),
-              },
-              {
-                path: routeConfig.targetCompanies.path,
-                element: withSuspense(<TargetCompaniesPage />),
               },
               {
                 path: routeConfig.settings.path,

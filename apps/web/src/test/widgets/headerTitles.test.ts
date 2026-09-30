@@ -9,7 +9,6 @@ describe("resolveHeaderTitleKey", () => {
     ["/questions/1/answer", "header.answerEditor"],
     ["/attempts/7", "header.resultAnalysis"],
     ["/review", "nav.reviewToday"],
-    ["/scheduled-reviews", "sidebar.scheduledReviews"],
     ["/resume", "nav.resume"],
     ["/resume/3", "nav.resume"],
     ["/resume/3/versions", "nav.resumeVersions"],
