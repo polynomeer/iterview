@@ -1,5 +1,6 @@
 import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { Button, ErrorState, PageSkeleton } from "../../shared/ui/primitives";
+import "./legacy-editor.css";
 import "./editor.css";
 import { EditorHeader } from "./components/EditorHeader";
 import { ImportMarkdownDialog } from "./components/ImportMarkdownDialog";

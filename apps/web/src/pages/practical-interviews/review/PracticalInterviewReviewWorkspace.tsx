@@ -27,6 +27,7 @@ import {
   type ReviewTab,
   type SegmentDraftEdits,
 } from "./reviewModel";
+import "./legacy-review.css";
 
 /**
  * Shared review workspace for one interview record. Every record route renders the same
