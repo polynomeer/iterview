@@ -10,6 +10,9 @@ export type SkillRadarModel = {
   updatedAtLabel: string | null;
   categories: Array<{
     id: string;
+    code: string | null;
+    benchmarkScore: number | null;
+    gapScore: number | null;
     label: string;
     score: number;
     scoreLabel: string;
@@ -32,6 +35,12 @@ export type SkillGapModel = {
 export type SkillProgressModel = {
   items: Array<{
     id: string;
+    code: string | null;
+    score: number | null;
+    benchmarkScore: number | null;
+    gapScore: number | null;
+    answeredQuestionCount: number;
+    weakQuestionCount: number;
     label: string;
     scoreLabel: string;
     benchmarkLabel?: string;
@@ -47,6 +56,9 @@ export function mapSkillRadarResponseDtoToModel(response: SkillRadarResponseDto)
     updatedAtLabel: formatApiDateTime(response.updatedAt) ?? null,
     categories: toArray(response.categories).map((category, index) => ({
       id: category.categoryCode ?? category.label ?? `skill-${index}`,
+      code: category.categoryCode ?? null,
+      benchmarkScore: category.benchmarkScore ?? null,
+      gapScore: category.gapScore ?? null,
       label: category.label ?? "Skill",
       score: category.score ?? 0,
       scoreLabel:
@@ -90,6 +102,12 @@ export function mapSkillProgressResponseDtoToModel(response: SkillProgressRespon
   return {
     items: toArray(response).map((item, index) => ({
       id: item.categoryCode ?? item.label ?? `progress-${index}`,
+      code: item.categoryCode ?? null,
+      score: item.score ?? null,
+      benchmarkScore: item.benchmarkScore ?? null,
+      gapScore: item.gapScore ?? null,
+      answeredQuestionCount: item.answeredQuestionCount ?? 0,
+      weakQuestionCount: item.weakQuestionCount ?? 0,
       label: item.label ?? "Skill",
       scoreLabel: item.score === null || item.score === undefined ? "-" : String(item.score),
       benchmarkLabel:

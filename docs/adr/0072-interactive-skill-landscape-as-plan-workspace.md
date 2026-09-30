@@ -1,7 +1,7 @@
 # 0072. Make Skills Landscape an Interactive Planning Surface
 
 ## Status
-Accepted
+Superseded by [0077](0077-replace-skill-landscape-with-skill-map.md)
 
 ## Date
 2026-09-02

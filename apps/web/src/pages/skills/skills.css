@@ -1,0 +1,46 @@
+/* 스킬 맵 (docs/09 §4.2: skills live under 질문). Token-only styles. */
+
+.skill-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--iv-space-5);
+}
+
+.skill-list { margin: 0; padding: 0; list-style: none; }
+
+.skill-list__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-2);
+  padding: var(--iv-space-4) var(--iv-space-5);
+  border-top: 1px solid var(--iv-border);
+}
+
+.skill-list__row:first-child { border-top: 0; }
+.skill-list__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--iv-space-3); }
+.skill-list__score { font-size: var(--iv-text-xl); font-weight: var(--iv-weight-bold); font-variant-numeric: tabular-nums; }
+.skill-list__bar { position: relative; }
+
+.skill-list__target {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 12px;
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-text-muted);
+}
+
+.skill-list__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--iv-space-3);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+}
+
+.skill-list__meta .ui-button { margin-left: auto; }
+
+@media (max-width: 767px) {
+  .skill-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

@@ -12,7 +12,7 @@ import { RouteErrorBoundary } from "./router/RouteErrorBoundary";
 const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({ default: module.HomePage })));
 const QuestionsIndexPage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionsIndexPage })));
 const QuestionWorkspacePage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionWorkspacePage })));
-const SkillsPage = lazy(() => import("../pages/skills/SkillsPage").then((module) => ({ default: module.SkillsPage })));
+const SkillMapPage = lazy(() => import("../pages/skills/SkillMapPage").then((module) => ({ default: module.SkillMapPage })));
 const ReviewQueuePage = lazy(() => import("../pages/review/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
 const ScheduledReviewsPage = lazy(() => import("../pages/scheduled-reviews/ScheduledReviewsPage").then((module) => ({ default: module.ScheduledReviewsPage })));
 const WeakNodesPage = lazy(() => import("../pages/weak-nodes/WeakNodesPage").then((module) => ({ default: module.WeakNodesPage })));
@@ -90,7 +90,7 @@ export const appRoutes: RouteObject[] = [
             children: [
               {
                 path: routeConfig.skills.path,
-                element: withSuspense(<SkillsPage />),
+                element: withSuspense(<SkillMapPage />),
               },
               {
                 path: routeConfig.reviewQueue.path,

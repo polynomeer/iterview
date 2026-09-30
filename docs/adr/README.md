@@ -178,3 +178,5 @@ Each ADR should include:
    Makes `workspace` the default and retires the unreadable light theme until the token rebuild.
 76. [`0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md`](0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md)
    Adds `--iv-` tokens and `ui-` primitives that coexist with `global.css` while screens migrate one at a time.
+77. [`0077-replace-skill-landscape-with-skill-map.md`](0077-replace-skill-landscape-with-skill-map.md)
+   Replaces the interactive skills landscape (0072) with a weakest-first skill map under 질문.
