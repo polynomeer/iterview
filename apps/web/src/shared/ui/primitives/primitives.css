@@ -495,3 +495,28 @@
   gap: var(--iv-space-2);
   margin-top: var(--iv-space-3);
 }
+
+/* ---------- Page skeleton ---------- */
+
+.ui-page-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-3);
+  padding: var(--iv-space-6) 0;
+}
+
+.ui-page-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--iv-space-4);
+  margin-top: var(--iv-space-3);
+}
+
+.ui-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

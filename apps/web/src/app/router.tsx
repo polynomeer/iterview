@@ -1,8 +1,8 @@
 import { Suspense, lazy, type ReactNode } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routeConfig } from "../shared/config/routes";
-import { LoadingStateCard } from "../shared/ui/LoadingStateCard";
 import { useLocale } from "../shared/i18n";
+import { PageSkeleton } from "../shared/ui/primitives";
 import { AppLayout } from "../widgets/layout/AppLayout";
 import { NotFoundPage } from "../pages/not-found/NotFoundPage";
 import { ProtectedRoute } from "./router/ProtectedRoute";
@@ -45,13 +45,7 @@ const SignupPage = lazy(() => import("../pages/signup/SignupPage").then((module)
 function RouteLoadingFallback() {
   const { t } = useLocale();
 
-  return (
-    <LoadingStateCard
-      body={t("common.openingPageBody")}
-      label={t("common.openingPageLabel")}
-      title={t("common.openingPageTitle")}
-    />
-  );
+  return <PageSkeleton label={t("common.openingPageTitle")} />;
 }
 
 function withSuspense(node: ReactNode) {

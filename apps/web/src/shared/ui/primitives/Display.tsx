@@ -148,3 +148,24 @@ type SkeletonProps = {
 export function Skeleton({ width = "100%", height = "1rem", className }: SkeletonProps) {
   return <span aria-hidden="true" className={cx("ui-skeleton", className)} style={{ width, height }} />;
 }
+
+type PageSkeletonProps = {
+  /** Announced to screen readers while the skeleton is visible. */
+  label: string;
+};
+
+/** Layout-stable placeholder for a page that is still loading its code or data. */
+export function PageSkeleton({ label }: PageSkeletonProps) {
+  return (
+    <div aria-busy="true" aria-live="polite" className="ui-page-skeleton" role="status">
+      <span className="ui-visually-hidden">{label}</span>
+      <Skeleton height="0.75rem" width="18%" />
+      <Skeleton height="1.75rem" width="46%" />
+      <Skeleton height="0.875rem" width="64%" />
+      <div className="ui-page-skeleton__grid">
+        <Skeleton height="10rem" />
+        <Skeleton height="10rem" />
+      </div>
+    </div>
+  );
+}

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Badge, Callout, Card, CardBody, CardHeader, ListRow, Progress, Skeleton, Stat } from "../../../shared/ui/primitives";
+import { Badge, Callout, Card, CardBody, CardHeader, ListRow, PageSkeleton, Progress, Skeleton, Stat } from "../../../shared/ui/primitives";
 
 describe("display primitives", () => {
   it("pairs badge color with visible text", () => {
@@ -55,5 +55,13 @@ describe("display primitives", () => {
     const { container } = render(<Skeleton height="22px" width="60%" />);
 
     expect(container.firstChild).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("announces a page skeleton as a busy status without exposing placeholder shapes", () => {
+    render(<PageSkeleton label="화면을 여는 중" />);
+
+    const status = screen.getByRole("status", { name: "" });
+    expect(status).toHaveAttribute("aria-busy", "true");
+    expect(status).toHaveTextContent("화면을 여는 중");
   });
 });
