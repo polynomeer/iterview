@@ -400,10 +400,8 @@ describe("ResumeEditorPage", () => {
       { route: "/resume/version-1/claims" },
     );
 
-    expect(
-      screen.getByText("Write the resume until every line can survive DFS follow-up pressure"),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/Treat this as source-of-truth authoring, not document polishing\./)).toBeInTheDocument();
+    expect(screen.queryByText("Write the resume until every line can survive DFS follow-up pressure")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { level: 1 })).not.toBeInTheDocument();
     expect(screen.queryByText("Immutable source resume context")).not.toBeInTheDocument();
     expect(screen.queryByText("Workspace presence")).not.toBeInTheDocument();
     expect(screen.getByText("Annotated preview")).toBeInTheDocument();

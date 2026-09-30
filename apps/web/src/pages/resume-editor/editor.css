@@ -1,0 +1,12 @@
+/* 근거 편집 tab chrome inside the resume hub. Token-only styles; the editor body still uses legacy classes. */
+
+.resume-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--iv-space-3);
+  margin-bottom: var(--iv-space-4);
+}
+
+.resume-editor-toolbar__file { min-width: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); overflow-wrap: anywhere; }
