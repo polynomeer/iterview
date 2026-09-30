@@ -4,7 +4,7 @@ import { mapCurrentUserDtoToProfileModel } from "../../entities/profile/model";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { useUpdateProfileMutation } from "../../features/profile/api/useUpdateProfileMutation";
 import { useUploadProfileImageMutation } from "../../features/profile/api/useUploadProfileImageMutation";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -250,7 +250,7 @@ export function ProfilePage() {
 
       {currentUserQuery.isError ? (
         <ErrorStateCard
-          body={currentUserQuery.error instanceof Error ? currentUserQuery.error.message : t("profile.loadErrorBody")}
+          body={userFacingErrorMessage(currentUserQuery.error, t("profile.loadErrorBody"))}
           details={getErrorDetails(currentUserQuery.error)}
           onAction={() => {
             void currentUserQuery.refetch();
@@ -539,7 +539,7 @@ export function ProfilePage() {
           <section className="career-operations-deck">
             <ProfileSummaryCard
               imageErrorDetails={getErrorDetails(uploadProfileImageMutation.error)}
-              imageErrorMessage={uploadProfileImageMutation.error instanceof Error ? uploadProfileImageMutation.error.message : null}
+              imageErrorMessage={optionalErrorMessage(uploadProfileImageMutation.error, t("common.requestFailedBody"))}
               imageStatusMessage={profileImageStatus}
               isUploadingImage={uploadProfileImageMutation.isPending}
               onImageSelect={(file) => {
@@ -551,7 +551,7 @@ export function ProfilePage() {
             <ProfileEditForm
               className="page-card--embedded"
               errorDetails={getErrorDetails(updateProfileMutation.error)}
-              errorMessage={updateProfileMutation.error instanceof Error ? updateProfileMutation.error.message : null}
+              errorMessage={optionalErrorMessage(updateProfileMutation.error, t("common.requestFailedBody"))}
               isPending={updateProfileMutation.isPending}
               jobRole={jobRole}
               nickname={nickname}

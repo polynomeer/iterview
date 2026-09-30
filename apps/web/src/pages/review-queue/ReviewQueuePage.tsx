@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useReviewQueueActionMutation } from "../../features/review-queue/api/useReviewQueueActionMutation";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { routeConfig } from "../../shared/config/routes";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
@@ -121,12 +121,10 @@ export function ReviewQueuePage() {
     }
   }
 
-  const actionError =
-    skipMutation.error instanceof Error
-      ? skipMutation.error.message
-      : doneMutation.error instanceof Error
-        ? doneMutation.error.message
-        : null;
+  const actionError = optionalErrorMessage(
+    skipMutation.error ?? doneMutation.error,
+    isKorean ? "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요." : "We couldn't complete that request. Please try again in a moment.",
+  );
   const actionErrorContent = actionError ? (
     <ErrorStateCard
       body={actionError}
@@ -512,11 +510,9 @@ export function ReviewQueuePage() {
       {reviewQueueQuery.isError ? (
         <ErrorStateCard
           body={
-            reviewQueueQuery.error instanceof Error
-              ? reviewQueueQuery.error.message
-              : isKorean
+            userFacingErrorMessage(reviewQueueQuery.error, isKorean
                 ? "복습 큐를 불러오지 못했습니다."
-                : "The review queue could not be loaded."
+                : "The review queue could not be loaded.")
           }
           details={getErrorDetails(reviewQueueQuery.error)}
           onAction={() => {

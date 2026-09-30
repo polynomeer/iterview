@@ -4,7 +4,7 @@ import { mapCurrentUserDtoToProfileModel } from "../../entities/profile/model";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { useUpdateSettingsMutation } from "../../features/profile/api/useUpdateSettingsMutation";
 import { routeConfig } from "../../shared/config/routes";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
 import { useLocale, type AppLocale } from "../../shared/i18n";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
@@ -172,9 +172,7 @@ export function SettingsPage() {
       {currentUserQuery.isError ? (
         <ErrorStateCard
           body={
-            currentUserQuery.error instanceof Error
-              ? currentUserQuery.error.message
-              : t("settings.loadErrorBody")
+            userFacingErrorMessage(currentUserQuery.error, t("settings.loadErrorBody"))
           }
           details={getErrorDetails(currentUserQuery.error)}
           onAction={() => {
@@ -254,7 +252,7 @@ export function SettingsPage() {
                   <SettingsForm
                     dailyQuestionCount={dailyQuestionCount}
                     errorDetails={getErrorDetails(updateSettingsMutation.error)}
-                    errorMessage={updateSettingsMutation.error instanceof Error ? updateSettingsMutation.error.message : null}
+                    errorMessage={optionalErrorMessage(updateSettingsMutation.error, t("common.requestFailedBody"))}
                     isPending={updateSettingsMutation.isPending}
                     onDailyQuestionCountChange={setDailyQuestionCount}
                     onPassScoreThresholdChange={setPassScoreThreshold}

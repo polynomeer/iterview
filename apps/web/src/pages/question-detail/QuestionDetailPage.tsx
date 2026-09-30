@@ -15,7 +15,7 @@ import {
   mapRecommendedQuestionsToModel,
   mapReferenceAnswersToModel,
 } from "../../entities/question/model";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { AuthRequiredStateCard } from "../../shared/ui/AuthRequiredStateCard";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -146,7 +146,7 @@ export function QuestionDetailPage() {
       setIsReferenceComposerOpen(false);
     } catch (error) {
       setReferenceSubmitError(
-        error instanceof Error ? error.message : t("question.referenceAnswerSaveError"),
+        userFacingErrorMessage(error, t("question.referenceAnswerSaveError")),
       );
     }
   }
@@ -208,7 +208,7 @@ export function QuestionDetailPage() {
       setIsLearningComposerOpen(false);
     } catch (error) {
       setLearningSubmitError(
-        error instanceof Error ? error.message : t("question.learningMaterialSaveError"),
+        userFacingErrorMessage(error, t("question.learningMaterialSaveError")),
       );
     }
   }
@@ -248,9 +248,7 @@ export function QuestionDetailPage() {
       {questionDetailQuery.isError ? (
         <ErrorStateCard
           body={
-            questionDetailQuery.error instanceof Error
-              ? questionDetailQuery.error.message
-              : isKorean ? "질문 상세 화면을 불러올 수 없습니다." : "The question detail screen could not be loaded."
+            userFacingErrorMessage(questionDetailQuery.error, isKorean ? "질문 상세 화면을 불러올 수 없습니다." : "The question detail screen could not be loaded.")
           }
           details={getErrorDetails(questionDetailQuery.error)}
           onAction={() => {
@@ -303,9 +301,7 @@ export function QuestionDetailPage() {
             ) : answerHistoryQuery.isError ? (
               <ErrorStateCard
                 body={
-                  answerHistoryQuery.error instanceof Error
-                    ? answerHistoryQuery.error.message
-                    : "The answer history could not be loaded."
+                  userFacingErrorMessage(answerHistoryQuery.error, "The answer history could not be loaded.")
                 }
                 details={getErrorDetails(answerHistoryQuery.error)}
                 onAction={() => {
@@ -343,9 +339,7 @@ export function QuestionDetailPage() {
               questionDetailQuery.data.referenceAnswers.length === 0 ? (
               <ErrorStateCard
                 body={
-                  referenceAnswersQuery.error instanceof Error
-                    ? referenceAnswersQuery.error.message
-                    : "Reference answers could not be loaded."
+                  userFacingErrorMessage(referenceAnswersQuery.error, "Reference answers could not be loaded.")
                 }
                 details={getErrorDetails(referenceAnswersQuery.error)}
                 onAction={() => {
@@ -387,9 +381,7 @@ export function QuestionDetailPage() {
               ) : learningMaterialsQuery.isError && questionDetailQuery.data.learningMaterials.length === 0 ? (
                 <ErrorStateCard
                   body={
-                    learningMaterialsQuery.error instanceof Error
-                      ? learningMaterialsQuery.error.message
-                      : "Learning materials could not be loaded."
+                    userFacingErrorMessage(learningMaterialsQuery.error, "Learning materials could not be loaded.")
                   }
                   details={getErrorDetails(learningMaterialsQuery.error)}
                   onAction={() => {

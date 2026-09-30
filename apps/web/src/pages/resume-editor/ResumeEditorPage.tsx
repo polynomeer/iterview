@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -2695,11 +2695,9 @@ export function ResumeEditorPage() {
       >
         <ErrorStateCard
           body={
-            workspaceQuery.error instanceof Error
-              ? workspaceQuery.error.message
-              : isKorean
+            userFacingErrorMessage(workspaceQuery.error, isKorean
                 ? "이력서 에디터 작업공간을 불러오지 못했습니다."
-                : "The resume editor workspace could not be loaded."
+                : "The resume editor workspace could not be loaded.")
           }
           details={getErrorDetails(workspaceQuery.error)}
           onAction={() => {
@@ -4192,7 +4190,7 @@ export function ResumeEditorPage() {
               />
             ) : printPreviewQuery.isError ? (
               <ErrorStateCard
-                body={printPreviewQuery.error instanceof Error ? printPreviewQuery.error.message : isKorean ? "출력 미리보기를 불러올 수 없습니다." : "Unable to load print preview."}
+                body={userFacingErrorMessage(printPreviewQuery.error, isKorean ? "출력 미리보기를 불러올 수 없습니다." : "Unable to load print preview.")}
                 details={getErrorDetails(printPreviewQuery.error)}
                 onAction={() => {
                   void printPreviewQuery.refetch();
@@ -4245,7 +4243,7 @@ export function ResumeEditorPage() {
                   />
                 ) : revisionsQuery.isError ? (
                   <ErrorStateCard
-                    body={revisionsQuery.error instanceof Error ? revisionsQuery.error.message : isKorean ? "리비전을 불러올 수 없습니다." : "Unable to load revisions."}
+                    body={userFacingErrorMessage(revisionsQuery.error, isKorean ? "리비전을 불러올 수 없습니다." : "Unable to load revisions.")}
                     details={getErrorDetails(revisionsQuery.error)}
                     onAction={() => {
                       void revisionsQuery.refetch();

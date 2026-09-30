@@ -1,5 +1,5 @@
 import { useFeedQuery } from "../../features/feed/api/useFeedQuery";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { AuthRequiredStateCard } from "../../shared/ui/AuthRequiredStateCard";
 import { useLocale } from "../../shared/i18n";
@@ -108,9 +108,7 @@ export function FeedPage() {
       {feedQuery.isError && !isUnauthorized ? (
         <ErrorStateCard
           body={
-            feedQuery.error instanceof Error
-              ? feedQuery.error.message
-              : t("feed.loadErrorBody")
+            userFacingErrorMessage(feedQuery.error, t("feed.loadErrorBody"))
           }
           details={getErrorDetails(feedQuery.error)}
           onAction={() => {

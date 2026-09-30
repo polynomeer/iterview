@@ -7,7 +7,7 @@ import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery
 import { getActiveResumeVersionId } from "../../entities/resume/model";
 import { useQuestionTreeQuery } from "../../features/question/api/useQuestionTreeQuery";
 import { routeConfig } from "../../shared/config/routes";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { SectionPanel, useLayoutMode } from "../../shared/ui/layout";
@@ -54,12 +54,10 @@ export function AnswerEditorPage() {
     navigate(routeConfig.resultAnalysis.buildPath({ answerAttemptId: String(response.answerAttemptId) }));
   }
 
-  const submitErrorMessage =
-    submitAnswerMutation.error instanceof Error
-      ? submitAnswerMutation.error.message
-      : resumeListQuery.error instanceof Error
-        ? resumeListQuery.error.message
-        : null;
+  const submitErrorMessage = optionalErrorMessage(
+    submitAnswerMutation.error ?? resumeListQuery.error,
+    t("common.requestFailedBody"),
+  );
   const submitErrorDetails =
     submitAnswerMutation.error instanceof Error
       ? getErrorDetails(submitAnswerMutation.error)
@@ -109,9 +107,7 @@ export function AnswerEditorPage() {
       {questionDetailQuery.isError ? (
         <ErrorStateCard
           body={
-            questionDetailQuery.error instanceof Error
-              ? questionDetailQuery.error.message
-              : t("answer.loadErrorBody")
+            userFacingErrorMessage(questionDetailQuery.error, t("answer.loadErrorBody"))
           }
           details={getErrorDetails(questionDetailQuery.error)}
           onAction={() => {

@@ -5,7 +5,7 @@ import { useActiveResumeAnalysisQuery } from "../../features/resume/api/useActiv
 import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
@@ -329,11 +329,9 @@ export function ResumeAnalysisPage() {
       {resumeListQuery.isError && latestResumeQuery.isError ? (
         <ErrorStateCard
           body={
-            resumeListQuery.error instanceof Error
-              ? resumeListQuery.error.message
-              : isKorean
+            userFacingErrorMessage(resumeListQuery.error, isKorean
                 ? "이력서 목록을 불러오지 못했습니다."
-                : "The resume list could not be loaded."
+                : "The resume list could not be loaded.")
           }
           details={getErrorDetails(resumeListQuery.error)}
           onAction={() => {
@@ -373,11 +371,9 @@ export function ResumeAnalysisPage() {
           ) : analysisQuery.isError ? (
             <ErrorStateCard
               body={
-                analysisQuery.error instanceof Error
-                  ? analysisQuery.error.message
-                  : isKorean
+                userFacingErrorMessage(analysisQuery.error, isKorean
                     ? "이력서 분석 결과를 불러오지 못했습니다."
-                    : "Resume analysis could not be loaded."
+                    : "Resume analysis could not be loaded.")
               }
               details={getErrorDetails(analysisQuery.error)}
               onAction={() => {

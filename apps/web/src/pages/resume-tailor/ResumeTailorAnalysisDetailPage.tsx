@@ -7,7 +7,7 @@ import { useResumeAnalysisExportsQuery } from "../../features/resume-tailor/api/
 import { useToggleResumeAnalysisSuggestionMutation } from "../../features/resume-tailor/api/useToggleResumeAnalysisSuggestionMutation";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { downloadResumeAnalysisExportFileRequest } from "../../shared/api/resumeTailorApi";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -72,9 +72,7 @@ export function ResumeTailorAnalysisDetailPage() {
       ) : analysisQuery.isError ? (
         <ErrorStateCard
           body={
-            analysisQuery.error instanceof Error
-              ? analysisQuery.error.message
-              : isKorean ? "이력서 분석을 불러오지 못했습니다." : "The resume analysis could not be loaded."
+            userFacingErrorMessage(analysisQuery.error, isKorean ? "이력서 분석을 불러오지 못했습니다." : "The resume analysis could not be loaded.")
           }
           details={getErrorDetails(analysisQuery.error)}
           onAction={() => {
@@ -191,11 +189,9 @@ export function ResumeTailorAnalysisDetailPage() {
                 {toggleSuggestionMutation.isError ? (
                   <ErrorStateCard
                     body={
-                      toggleSuggestionMutation.error instanceof Error
-                        ? toggleSuggestionMutation.error.message
-                        : isKorean
+                      userFacingErrorMessage(toggleSuggestionMutation.error, isKorean
                           ? "제안 수락 상태를 갱신하지 못했습니다."
-                          : "The suggestion acceptance state could not be updated."
+                          : "The suggestion acceptance state could not be updated.")
                     }
                     details={getErrorDetails(toggleSuggestionMutation.error)}
                     onAction={() => toggleSuggestionMutation.reset()}
@@ -390,11 +386,9 @@ export function ResumeTailorAnalysisDetailPage() {
                 ) : jobPostingDetailQuery.isError ? (
                   <ErrorStateCard
                     body={
-                      jobPostingDetailQuery.error instanceof Error
-                        ? jobPostingDetailQuery.error.message
-                        : isKorean
+                      userFacingErrorMessage(jobPostingDetailQuery.error, isKorean
                           ? "연결된 채용 공고를 불러오지 못했습니다."
-                          : "The linked job posting could not be loaded."
+                          : "The linked job posting could not be loaded.")
                     }
                     details={getErrorDetails(jobPostingDetailQuery.error)}
                     onAction={() => {
@@ -447,11 +441,9 @@ export function ResumeTailorAnalysisDetailPage() {
                 {createExportMutation.isError ? (
                   <ErrorStateCard
                     body={
-                      createExportMutation.error instanceof Error
-                        ? createExportMutation.error.message
-                        : isKorean
+                      userFacingErrorMessage(createExportMutation.error, isKorean
                           ? "PDF 내보내기를 만들지 못했습니다."
-                          : "The PDF export could not be created."
+                          : "The PDF export could not be created.")
                     }
                     details={getErrorDetails(createExportMutation.error)}
                     onAction={() => createExportMutation.reset()}
@@ -484,11 +476,9 @@ export function ResumeTailorAnalysisDetailPage() {
                 ) : exportsQuery.isError && analysisQuery.data.exports.length === 0 ? (
                   <ErrorStateCard
                     body={
-                      exportsQuery.error instanceof Error
-                        ? exportsQuery.error.message
-                        : isKorean
+                      userFacingErrorMessage(exportsQuery.error, isKorean
                           ? "내보내기 기록을 불러오지 못했습니다."
-                          : "Export history could not be loaded."
+                          : "Export history could not be loaded.")
                     }
                     details={getErrorDetails(exportsQuery.error)}
                     onAction={() => {
@@ -559,11 +549,9 @@ export function ResumeTailorAnalysisDetailPage() {
                 ) : snapshotsQuery.isError ? (
                   <ErrorStateCard
                     body={
-                      snapshotsQuery.error instanceof Error
-                        ? snapshotsQuery.error.message
-                        : isKorean
+                      userFacingErrorMessage(snapshotsQuery.error, isKorean
                           ? "이력서 원본 컨텍스트를 불러오지 못했습니다."
-                          : "Resume source context could not be loaded."
+                          : "Resume source context could not be loaded.")
                     }
                     details={getErrorDetails(snapshotsQuery.error)}
                     onAction={() => {

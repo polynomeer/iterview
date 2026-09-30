@@ -22,6 +22,24 @@ export class ApiClientError extends Error {
   }
 }
 
+// Statuses whose server message tells the user how to fix their input. Everything else (missing
+// records, server faults, timeouts) is replaced by the screen's own localized fallback so raw
+// backend text such as "Answer attempt not found: 1" never reaches the UI.
+const ACTIONABLE_STATUSES = new Set([400, 409, 422]);
+
+export function userFacingErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof ApiClientError && ACTIONABLE_STATUSES.has(error.status) && error.message.trim()) {
+    return error.message;
+  }
+
+  return fallback;
+}
+
+/** Like userFacingErrorMessage, but returns null when there is no error to show. */
+export function optionalErrorMessage(error: unknown, fallback: string) {
+  return error ? userFacingErrorMessage(error, fallback) : null;
+}
+
 export function getErrorDetails(error: unknown) {
   if (!(error instanceof ApiClientError) || !error.details) {
     return [];

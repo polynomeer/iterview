@@ -4,7 +4,7 @@ import { useCreateResumeAnalysisMutation } from "../../features/resume-tailor/ap
 import { useJobPostingsQuery } from "../../features/resume-tailor/api/useJobPostingsQuery";
 import { useResumeAnalysesQuery } from "../../features/resume-tailor/api/useResumeAnalysesQuery";
 import { useResumeVersionDetailQuery } from "../../features/resume/api/useResumeVersionDetailQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -58,11 +58,9 @@ export function ResumeTailorAnalysisListPage() {
       ) : versionQuery.isError ? (
         <ErrorStateCard
           body={
-            versionQuery.error instanceof Error
-              ? versionQuery.error.message
-              : isKorean
+            userFacingErrorMessage(versionQuery.error, isKorean
                 ? "이력서 버전을 불러오지 못했습니다."
-                : "The resume version could not be loaded."
+                : "The resume version could not be loaded.")
           }
           details={getErrorDetails(versionQuery.error)}
           onAction={() => {
@@ -165,11 +163,9 @@ export function ResumeTailorAnalysisListPage() {
             {createMutation.isError ? (
               <ErrorStateCard
                 body={
-                  createMutation.error instanceof Error
-                    ? createMutation.error.message
-                    : isKorean
+                  userFacingErrorMessage(createMutation.error, isKorean
                       ? "분석을 만들지 못했습니다."
-                      : "The analysis could not be created."
+                      : "The analysis could not be created.")
                 }
                 details={getErrorDetails(createMutation.error)}
                 onAction={() => createMutation.reset()}
@@ -209,11 +205,9 @@ export function ResumeTailorAnalysisListPage() {
             ) : analysesQuery.isError ? (
               <ErrorStateCard
                 body={
-                  analysesQuery.error instanceof Error
-                    ? analysesQuery.error.message
-                    : isKorean
+                  userFacingErrorMessage(analysesQuery.error, isKorean
                       ? "분석을 불러오지 못했습니다."
-                      : "Analyses could not be loaded."
+                      : "Analyses could not be loaded.")
                 }
                 details={getErrorDetails(analysesQuery.error)}
                 onAction={() => {

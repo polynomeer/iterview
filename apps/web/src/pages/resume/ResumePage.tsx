@@ -11,7 +11,7 @@ import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useRes
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
 import { useUploadResumeVersionMutation } from "../../features/resume/api/useUploadResumeVersionMutation";
 import { routeConfig } from "../../shared/config/routes";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
 import { queryKeys } from "../../shared/api/queryKeys";
 import { downloadResumeVersionFileRequest } from "../../shared/api/resumeApi";
 import { useLocale } from "../../shared/i18n";
@@ -370,7 +370,7 @@ export function ResumePage() {
           >
             <ResumeCreateForm
               className="resume-create-modal__card"
-              errorMessage={createResumeMutation.error instanceof Error ? createResumeMutation.error.message : null}
+              errorMessage={optionalErrorMessage(createResumeMutation.error, isKorean ? "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요." : "We couldn't complete that request. Please try again in a moment.")}
               errorDetails={getErrorDetails(createResumeMutation.error)}
               isPending={createResumeMutation.isPending}
               onCancel={() => {
@@ -394,13 +394,13 @@ export function ResumePage() {
             {versionStatus ? <FeedbackNotice message={versionStatus} tone="success" /> : null}
             {activationStatus ? <FeedbackNotice message={activationStatus} tone="success" /> : null}
             {uploadResumeVersionMutation.error instanceof Error ? (
-              <FeedbackNotice details={getErrorDetails(uploadResumeVersionMutation.error)} message={uploadResumeVersionMutation.error.message} tone="error" />
+              <FeedbackNotice details={getErrorDetails(uploadResumeVersionMutation.error)} message={userFacingErrorMessage(uploadResumeVersionMutation.error, isKorean ? "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요." : "We couldn't complete that request. Please try again in a moment.")} tone="error" />
             ) : null}
             {activateResumeVersionMutation.error instanceof Error ? (
-              <FeedbackNotice details={getErrorDetails(activateResumeVersionMutation.error)} message={activateResumeVersionMutation.error.message} tone="error" />
+              <FeedbackNotice details={getErrorDetails(activateResumeVersionMutation.error)} message={userFacingErrorMessage(activateResumeVersionMutation.error, isKorean ? "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요." : "We couldn't complete that request. Please try again in a moment.")} tone="error" />
             ) : null}
             {reExtractResumeVersionMutation.error instanceof Error ? (
-              <FeedbackNotice details={getErrorDetails(reExtractResumeVersionMutation.error)} message={reExtractResumeVersionMutation.error.message} tone="error" />
+              <FeedbackNotice details={getErrorDetails(reExtractResumeVersionMutation.error)} message={userFacingErrorMessage(reExtractResumeVersionMutation.error, isKorean ? "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요." : "We couldn't complete that request. Please try again in a moment.")} tone="error" />
             ) : null}
           </>
         );
@@ -479,11 +479,9 @@ export function ResumePage() {
             {resumeListQuery.isError ? (
               <ErrorStateCard
                 body={
-                  resumeListQuery.error instanceof Error
-                    ? resumeListQuery.error.message
-                    : isKorean
+                  userFacingErrorMessage(resumeListQuery.error, isKorean
                       ? "이력서 목록을 불러오지 못했습니다."
-                      : "The resume list could not be loaded."
+                      : "The resume list could not be loaded.")
                 }
                 details={getErrorDetails(resumeListQuery.error)}
                 onAction={() => {
@@ -563,11 +561,9 @@ export function ResumePage() {
                   ) : selectedVersionQuery.isError ? (
                     <ErrorStateCard
                       body={
-                        selectedVersionQuery.error instanceof Error
-                          ? selectedVersionQuery.error.message
-                          : isKorean
+                        userFacingErrorMessage(selectedVersionQuery.error, isKorean
                             ? "선택한 이력서 버전을 불러오지 못했습니다."
-                            : "The selected resume version could not be loaded."
+                            : "The selected resume version could not be loaded.")
                       }
                       details={getErrorDetails(selectedVersionQuery.error)}
                       onAction={() => {
@@ -739,11 +735,9 @@ export function ResumePage() {
                       {selectedExtractionQuery.isError ? (
                         <FeedbackNotice
                           message={
-                            selectedExtractionQuery.error instanceof Error
-                              ? selectedExtractionQuery.error.message
-                              : isKorean
+                            userFacingErrorMessage(selectedExtractionQuery.error, isKorean
                                 ? "구조화 추출 상태를 불러오지 못했습니다."
-                                : "Structured extraction status could not be loaded."
+                                : "Structured extraction status could not be loaded.")
                           }
                           details={getErrorDetails(selectedExtractionQuery.error)}
                           tone="error"
@@ -946,22 +940,18 @@ export function ResumePage() {
                       <FeedbackNotice
                         details={getErrorDetails(snapshotsQuery.error)}
                         message={
-                          snapshotsQuery.error instanceof Error
-                            ? snapshotsQuery.error.message
-                            : isKorean
+                          userFacingErrorMessage(snapshotsQuery.error, isKorean
                               ? "구조화 추출에 실패했고 사용할 수 있는 스냅샷 섹션이 없습니다."
-                              : "Structured extraction failed and no snapshot sections were available."
+                              : "Structured extraction failed and no snapshot sections were available.")
                         }
                         tone="info"
                       />
                     ) : (
                       <ErrorStateCard
                         body={
-                          snapshotsQuery.error instanceof Error
-                            ? snapshotsQuery.error.message
-                            : isKorean
+                          userFacingErrorMessage(snapshotsQuery.error, isKorean
                               ? "파싱된 이력서 상세를 불러오지 못했습니다."
-                              : "The parsed resume details could not be loaded."
+                              : "The parsed resume details could not be loaded.")
                         }
                         details={getErrorDetails(snapshotsQuery.error)}
                         onAction={() => {

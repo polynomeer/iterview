@@ -5,7 +5,7 @@ import { useCreateInterviewSessionMutation } from "../../features/interview/api/
 import { useInterviewSessionsQuery } from "../../features/interview/api/useInterviewSessionsQuery";
 import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
@@ -567,7 +567,7 @@ export function InterviewPage() {
 
       {resumeListQuery.isError && latestResumeQuery.isError ? (
         <ErrorStateCard
-          body={resumeListQuery.error instanceof Error ? resumeListQuery.error.message : t("interview.loadResumeError")}
+          body={userFacingErrorMessage(resumeListQuery.error, t("interview.loadResumeError"))}
           details={getErrorDetails(resumeListQuery.error)}
           onAction={() => {
             void Promise.all([resumeListQuery.refetch(), latestResumeQuery.refetch()]);
@@ -578,7 +578,7 @@ export function InterviewPage() {
 
       {createSessionMutation.isError ? (
         <ErrorStateCard
-          body={createSessionMutation.error instanceof Error ? createSessionMutation.error.message : t("interview.startSessionError")}
+          body={userFacingErrorMessage(createSessionMutation.error, t("interview.startSessionError"))}
           details={getErrorDetails(createSessionMutation.error)}
           onAction={() => {
             createSessionMutation.reset();
@@ -589,7 +589,7 @@ export function InterviewPage() {
 
       {sessionListQuery.isError ? (
         <ErrorStateCard
-          body={sessionListQuery.error instanceof Error ? sessionListQuery.error.message : t("interview.loadSessionError")}
+          body={userFacingErrorMessage(sessionListQuery.error, t("interview.loadSessionError"))}
           details={getErrorDetails(sessionListQuery.error)}
           onAction={() => {
             void sessionListQuery.refetch();

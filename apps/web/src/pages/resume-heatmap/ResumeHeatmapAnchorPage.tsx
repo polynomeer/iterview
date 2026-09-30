@@ -6,7 +6,7 @@ import { useResumeQuestionHeatmapQuery } from "../../features/resume-heatmap/api
 import { useUpdateResumeQuestionHeatmapLinkMutation } from "../../features/resume-heatmap/api/useUpdateResumeQuestionHeatmapLinkMutation";
 import { useResumeVersionDetailQuery } from "../../features/resume/api/useResumeVersionDetailQuery";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -245,11 +245,9 @@ export function ResumeHeatmapAnchorPage() {
       >
         <ErrorStateCard
           body={
-            error instanceof Error
-              ? error.message
-              : isKorean
+            userFacingErrorMessage(error, isKorean
                 ? "선택한 이력서 앵커를 불러오지 못했습니다."
-                : "The selected resume anchor could not be loaded."
+                : "The selected resume anchor could not be loaded.")
           }
           details={getErrorDetails(error)}
           onAction={() => {
@@ -289,14 +287,14 @@ export function ResumeHeatmapAnchorPage() {
         {createLinkMutation.error instanceof Error ? (
           <FeedbackNotice
             details={getErrorDetails(createLinkMutation.error)}
-            message={createLinkMutation.error.message}
+            message={userFacingErrorMessage(createLinkMutation.error, isKorean ? "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요." : "We couldn't complete that request. Please try again in a moment.")}
             tone="error"
           />
         ) : null}
         {updateLinkMutation.error instanceof Error ? (
           <FeedbackNotice
             details={getErrorDetails(updateLinkMutation.error)}
-            message={updateLinkMutation.error.message}
+            message={userFacingErrorMessage(updateLinkMutation.error, isKorean ? "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요." : "We couldn't complete that request. Please try again in a moment.")}
             tone="error"
           />
         ) : null}

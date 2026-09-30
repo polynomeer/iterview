@@ -4,7 +4,7 @@ import { useResumeQuestionHeatmapOverlayTargetsQuery } from "../../features/resu
 import { useResumeQuestionHeatmapQuery } from "../../features/resume-heatmap/api/useResumeQuestionHeatmapQuery";
 import { useResumeVersionDetailQuery } from "../../features/resume/api/useResumeVersionDetailQuery";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -492,11 +492,9 @@ export function ResumeHeatmapPage() {
       >
         <ErrorStateCard
           body={
-            error instanceof Error
-              ? error.message
-              : isKorean
+            userFacingErrorMessage(error, isKorean
                 ? "면접 히트맵을 불러오지 못했습니다."
-                : "The interview heatmap could not be loaded."
+                : "The interview heatmap could not be loaded.")
           }
           details={getErrorDetails(error)}
           onAction={() => {

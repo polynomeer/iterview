@@ -5,7 +5,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { useLoginMutation } from "../../features/auth/api/useLoginMutation";
 import { useAuth } from "../../shared/auth/useAuth";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, optionalErrorMessage } from "../../shared/api/errors";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { useLogout } from "../../features/auth/useLogout";
@@ -49,12 +49,14 @@ export function LoginPage() {
     });
   }
 
+  // Credential and rate-limit responses explain what to do; other failures use the generic copy.
   const errorMessage =
-    loginMutation.error instanceof ApiClientError
+    loginMutation.error instanceof ApiClientError && [401, 429].includes(loginMutation.error.status)
       ? loginMutation.error.message
-      : loginMutation.error instanceof Error
-        ? loginMutation.error.message
-        : null;
+      : optionalErrorMessage(
+          loginMutation.error,
+          t(loginMutation.error instanceof ApiClientError ? "common.requestFailedBody" : "common.networkErrorBody"),
+        );
   const errorDetails = getErrorDetails(loginMutation.error);
 
   if (accessToken && currentUserQuery.isLoading) {

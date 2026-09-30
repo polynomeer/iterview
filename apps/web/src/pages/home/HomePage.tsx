@@ -1,6 +1,6 @@
 import { useHomeQuery } from "../../features/home/api/useHomeQuery";
 import { routeConfig } from "../../shared/config/routes";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { useLocale } from "../../shared/i18n";
@@ -143,11 +143,9 @@ export function HomePage() {
       {homeQuery.isError && !isUnauthorized ? (
         <ErrorStateCard
           body={
-            homeQuery.error instanceof Error
-              ? homeQuery.error.message
-              : isKorean
+            userFacingErrorMessage(homeQuery.error, isKorean
                 ? "홈 화면을 불러오지 못했습니다."
-                : "The home screen could not be loaded."
+                : "The home screen could not be loaded.")
           }
           details={getErrorDetails(homeQuery.error)}
           onAction={() => {

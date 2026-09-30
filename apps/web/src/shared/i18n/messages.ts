@@ -40,6 +40,8 @@ export const messages = {
       openingPageLabel: "Loading",
       openingPageTitle: "Opening page",
       openingPageBody: "Getting the screen ready.",
+      networkErrorBody: "We couldn't reach the server. Check your connection and try again.",
+      requestFailedBody: "We couldn't complete that request. Please try again in a moment.",
     },
     navigation: {
       home: "Home",
@@ -840,6 +842,8 @@ export const messages = {
       openingPageLabel: "불러오는 중",
       openingPageTitle: "화면을 여는 중",
       openingPageBody: "화면을 준비하고 있어요.",
+      networkErrorBody: "서버에 연결하지 못했어요. 네트워크 상태를 확인한 뒤 다시 시도하세요.",
+      requestFailedBody: "요청을 처리하지 못했어요. 잠시 후 다시 시도하세요.",
     },
     navigation: {
       home: "홈",

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
-import { ApiClientError } from "../../shared/api/errors";
+import { ApiClientError, userFacingErrorMessage } from "../../shared/api/errors";
 import { useAuth } from "../../shared/auth/useAuth";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { useLogout } from "../../features/auth/useLogout";
@@ -65,11 +65,9 @@ export function ProtectedRoute() {
           <span className="page-card__label">{isKorean ? "접근 차단" : "Access blocked"}</span>
           <h2 className="page-card__title">{isKorean ? "다시 로그인해주세요" : "Please sign in again"}</h2>
           <p className="page-card__body">
-            {currentUserQuery.error instanceof Error
-              ? currentUserQuery.error.message
-              : isKorean
+            {userFacingErrorMessage(currentUserQuery.error, isKorean
                 ? "현재 세션을 검증할 수 없습니다."
-                : "The current session could not be verified."}
+                : "The current session could not be verified.")}
           </p>
         </section>
       </PageContainer>

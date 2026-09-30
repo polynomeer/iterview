@@ -6,7 +6,7 @@ import {
   getCurrentInterviewQuestion,
   getSkippedQuestionCount,
 } from "../../entities/interview/model";
-import { ApiClientError } from "../../shared/api/errors";
+import { ApiClientError, userFacingErrorMessage } from "../../shared/api/errors";
 import { useAdvanceInterviewSessionMutation } from "../../features/interview/api/useAdvanceInterviewSessionMutation";
 import { useInterviewSessionCoverageQuery } from "../../features/interview/api/useInterviewSessionCoverageQuery";
 import { useInterviewSessionDetailQuery } from "../../features/interview/api/useInterviewSessionDetailQuery";
@@ -139,7 +139,7 @@ export function InterviewSessionPage() {
             },
           ]}
           badge={isKorean ? "복구 필요" : "Recovery needed"}
-          body={sessionQuery.error instanceof Error ? sessionQuery.error.message : t("interview.sessionUnavailableBody")}
+          body={userFacingErrorMessage(sessionQuery.error, t("interview.sessionUnavailableBody"))}
           details={getErrorDetails(sessionQuery.error)}
           eyebrow={isKorean ? "인터뷰 세션" : "Interview session"}
           signals={[
@@ -737,7 +737,7 @@ export function InterviewSessionPage() {
               {submitMutation.isError ? (
                 <FeedbackNotice
                   details={getErrorDetails(submitMutation.error)}
-                  message={submitMutation.error instanceof Error ? submitMutation.error.message : t("interview.answerSubmissionFailed")}
+                  message={userFacingErrorMessage(submitMutation.error, t("interview.answerSubmissionFailed"))}
                   tone="error"
                 />
               ) : null}
@@ -749,9 +749,7 @@ export function InterviewSessionPage() {
                       ? isKorean
                         ? "이동하기 전에 현재 질문에 답변하거나 건너뛰세요."
                         : "Answer or skip the current question before moving on."
-                      : advanceMutation.error instanceof Error
-                        ? advanceMutation.error.message
-                        : t("interview.advanceFailed")
+                      : userFacingErrorMessage(advanceMutation.error, t("interview.advanceFailed"))
                   }
                   tone="error"
                 />
@@ -759,7 +757,7 @@ export function InterviewSessionPage() {
               {skipMutation.isError ? (
                 <FeedbackNotice
                   details={getErrorDetails(skipMutation.error)}
-                  message={skipMutation.error instanceof Error ? skipMutation.error.message : (isKorean ? "현재 질문 건너뛰기에 실패했습니다." : "Skipping the current question failed.")}
+                  message={userFacingErrorMessage(skipMutation.error, (isKorean ? "현재 질문 건너뛰기에 실패했습니다." : "Skipping the current question failed."))}
                   tone="error"
                 />
               ) : null}

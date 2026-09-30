@@ -4,7 +4,7 @@ import { getResumeVersionChoices } from "../../entities/resume/model";
 import { useCreateInterviewRecordMutation } from "../../features/practical-interview/api/useCreateInterviewRecordMutation";
 import { useInterviewRecordListQuery } from "../../features/practical-interview/api/useInterviewRecordListQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -244,11 +244,9 @@ export function PracticalInterviewListPage() {
       {recordListQuery.isError ? (
         <ErrorStateCard
           body={
-            recordListQuery.error instanceof Error
-              ? recordListQuery.error.message
-              : isKorean
+            userFacingErrorMessage(recordListQuery.error, isKorean
                 ? "실전 면접 기록을 불러오지 못했습니다."
-                : "The practical interview records could not be loaded."
+                : "The practical interview records could not be loaded.")
           }
           details={getErrorDetails(recordListQuery.error)}
           onAction={() => {
@@ -614,11 +612,9 @@ export function PracticalInterviewListPage() {
                   {createRecordMutation.isError ? (
                     <ErrorStateCard
                       body={
-                        createRecordMutation.error instanceof Error
-                          ? createRecordMutation.error.message
-                          : isKorean
+                        userFacingErrorMessage(createRecordMutation.error, isKorean
                             ? "면접 기록을 만들지 못했습니다."
-                            : "The interview record could not be created."
+                            : "The interview record could not be created.")
                       }
                       details={getErrorDetails(createRecordMutation.error)}
                       onAction={() => createRecordMutation.reset()}

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCreateJobPostingMutation } from "../../features/resume-tailor/api/useCreateJobPostingMutation";
 import { useJobPostingsQuery } from "../../features/resume-tailor/api/useJobPostingsQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { useLocale } from "../../shared/i18n";
@@ -299,11 +299,9 @@ export function ResumeTailorJobPostingsPage() {
             {createMutation.isError ? (
               <ErrorStateCard
                 body={
-                  createMutation.error instanceof Error
-                    ? createMutation.error.message
-                    : isKorean
+                  userFacingErrorMessage(createMutation.error, isKorean
                       ? "채용 공고를 만들지 못했습니다."
-                      : "The job posting could not be created."
+                      : "The job posting could not be created.")
                 }
                 details={getErrorDetails(createMutation.error)}
                 onAction={() => createMutation.reset()}
@@ -375,11 +373,9 @@ export function ResumeTailorJobPostingsPage() {
             ) : jobPostingsQuery.isError ? (
               <ErrorStateCard
                 body={
-                  jobPostingsQuery.error instanceof Error
-                    ? jobPostingsQuery.error.message
-                    : isKorean
+                  userFacingErrorMessage(jobPostingsQuery.error, isKorean
                       ? "채용 공고를 불러오지 못했습니다."
-                      : "Job postings could not be loaded."
+                      : "Job postings could not be loaded.")
                 }
                 details={getErrorDetails(jobPostingsQuery.error)}
                 onAction={() => {

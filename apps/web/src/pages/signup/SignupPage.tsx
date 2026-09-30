@@ -5,7 +5,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { useSignupMutation } from "../../features/auth/api/useSignupMutation";
 import { useAuth } from "../../shared/auth/useAuth";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, optionalErrorMessage } from "../../shared/api/errors";
 import { FeedbackNotice } from "../../shared/ui/FeedbackNotice";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
 import { useLogout } from "../../features/auth/useLogout";
@@ -50,12 +50,10 @@ export function SignupPage() {
     });
   }
 
-  const errorMessage =
-    signupMutation.error instanceof ApiClientError
-      ? signupMutation.error.message
-      : signupMutation.error instanceof Error
-        ? signupMutation.error.message
-        : null;
+  const errorMessage = optionalErrorMessage(
+          signupMutation.error,
+          t(signupMutation.error instanceof ApiClientError ? "common.requestFailedBody" : "common.networkErrorBody"),
+        );
   const errorDetails = getErrorDetails(signupMutation.error);
 
   if (accessToken && currentUserQuery.isLoading) {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type PropsWithChildren } from "react";
-import { ApiClientError } from "../../shared/api/errors";
+import { ApiClientError, userFacingErrorMessage } from "../../shared/api/errors";
 import { AuthLoadingScreen } from "../../shared/ui/AuthLoadingScreen";
 import { AuthRecoveryScreen } from "../../shared/ui/AuthRecoveryScreen";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
@@ -223,11 +223,9 @@ export function AuthBootstrap({ children }: PropsWithChildren) {
             : "The saved session could not be restored yet, so the app is paused before opening additional API-driven screens."
         }
         errorBody={
-          currentUserQuery.error instanceof Error
-            ? currentUserQuery.error.message
-            : isKorean
+          userFacingErrorMessage(currentUserQuery.error, isKorean
               ? "현재 세션을 복구하지 못했습니다."
-              : "The current session could not be restored."
+              : "The current session could not be restored.")
         }
         errorTitle={isKorean ? "저장된 세션을 확인할 수 없습니다" : "We could not verify your saved session"}
         onClearSession={logout}

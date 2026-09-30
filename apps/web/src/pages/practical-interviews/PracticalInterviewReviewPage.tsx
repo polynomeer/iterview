@@ -11,7 +11,7 @@ import { useInterviewRecordTranscriptQuery } from "../../features/practical-inte
 import { useInterviewerProfileQuery } from "../../features/practical-interview/api/useInterviewerProfileQuery";
 import { useUpdateInterviewReviewMutation } from "../../features/practical-interview/api/useUpdateInterviewReviewMutation";
 import { useUpdateInterviewTranscriptSegmentMutation } from "../../features/practical-interview/api/useUpdateInterviewTranscriptSegmentMutation";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { getInterviewRecordAudioRequest } from "../../shared/api/practicalInterviewApi";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
@@ -690,7 +690,7 @@ export function PracticalInterviewReviewPage() {
         title={isKorean ? "리뷰를 열 수 없습니다" : "Review unavailable"}
       >
         <ErrorStateCard
-          body={error instanceof Error ? error.message : isKorean ? "실전 면접 리뷰를 불러오지 못했습니다." : "The practical interview review could not be loaded."}
+          body={userFacingErrorMessage(error, isKorean ? "실전 면접 리뷰를 불러오지 못했습니다." : "The practical interview review could not be loaded.")}
           details={getErrorDetails(error)}
           onAction={() => {
             void Promise.all([
@@ -813,11 +813,9 @@ export function PracticalInterviewReviewPage() {
           {retryTranscriptionMutation.isError ? (
             <ErrorStateCard
               body={
-                retryTranscriptionMutation.error instanceof Error
-                  ? retryTranscriptionMutation.error.message
-                  : isKorean
+                userFacingErrorMessage(retryTranscriptionMutation.error, isKorean
                     ? "전사 재시도 요청에 실패했습니다."
-                    : "The transcript retry request failed."
+                    : "The transcript retry request failed.")
               }
               details={getErrorDetails(retryTranscriptionMutation.error)}
               onAction={() => retryTranscriptionMutation.reset()}
@@ -1307,15 +1305,10 @@ export function PracticalInterviewReviewPage() {
             {(updateReviewMutation.isError || confirmMutation.isError || createReplayMutation.isError) && (
               <ErrorStateCard
                 body={
-                  updateReviewMutation.error instanceof Error
-                    ? updateReviewMutation.error.message
-                    : confirmMutation.error instanceof Error
-                      ? confirmMutation.error.message
-                      : createReplayMutation.error instanceof Error
-                        ? createReplayMutation.error.message
-                        : isKorean
-                          ? "요청한 리뷰 동작에 실패했습니다."
-                          : "The requested review action failed."
+                  userFacingErrorMessage(
+                    updateReviewMutation.error ?? confirmMutation.error ?? createReplayMutation.error,
+                    isKorean ? "요청한 리뷰 동작에 실패했습니다." : "The requested review action failed.",
+                  )
                 }
                 details={getErrorDetails(
                   updateReviewMutation.error ?? confirmMutation.error ?? createReplayMutation.error,

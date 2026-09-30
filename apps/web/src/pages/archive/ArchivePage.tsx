@@ -6,7 +6,7 @@ import {
 } from "../../entities/archive/model";
 import { useArchiveQuery } from "../../features/archive/api/useArchiveQuery";
 import { routeConfig } from "../../shared/config/routes";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { useLocale } from "../../shared/i18n";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -258,11 +258,9 @@ export function ArchivePage() {
             {archiveQuery.isError ? (
               <ErrorStateCard
                 body={
-                  archiveQuery.error instanceof Error
-                    ? archiveQuery.error.message
-                    : isKorean
+                  userFacingErrorMessage(archiveQuery.error, isKorean
                       ? "아카이브를 불러오지 못했습니다."
-                      : "The archive could not be loaded."
+                      : "The archive could not be loaded.")
                 }
                 details={getErrorDetails(archiveQuery.error)}
                 onAction={() => {

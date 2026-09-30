@@ -5,7 +5,7 @@ import type { SkillGapModel, SkillProgressModel, SkillRadarModel } from "../../e
 import { useSkillGapQuery } from "../../features/skills/api/useSkillGapQuery";
 import { useSkillProgressQuery } from "../../features/skills/api/useSkillProgressQuery";
 import { useSkillRadarQuery } from "../../features/skills/api/useSkillRadarQuery";
-import { ApiClientError, getErrorDetails } from "../../shared/api/errors";
+import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { getHomeRequest } from "../../shared/api/homeApi";
 import { queryKeys } from "../../shared/api/queryKeys";
 import { routeConfig } from "../../shared/config/routes";
@@ -260,7 +260,7 @@ export function SkillsPage() {
 
       {radarQuery.isError && !radarUnsupported ? (
         <ErrorStateCard
-          body={radarQuery.error instanceof Error ? radarQuery.error.message : isKorean ? "스킬 레이더를 불러오지 못했습니다." : "The skill radar could not be loaded."}
+          body={userFacingErrorMessage(radarQuery.error, isKorean ? "스킬 레이더를 불러오지 못했습니다." : "The skill radar could not be loaded.")}
           details={getErrorDetails(radarQuery.error)}
           onAction={() => {
             void radarQuery.refetch();
@@ -271,7 +271,7 @@ export function SkillsPage() {
 
       {gapQuery.isError && !gapUnsupported ? (
         <ErrorStateCard
-          body={gapQuery.error instanceof Error ? gapQuery.error.message : isKorean ? "격차 분석을 불러오지 못했습니다." : "The gap analysis could not be loaded."}
+          body={userFacingErrorMessage(gapQuery.error, isKorean ? "격차 분석을 불러오지 못했습니다." : "The gap analysis could not be loaded.")}
           details={getErrorDetails(gapQuery.error)}
           onAction={() => {
             void gapQuery.refetch();
@@ -282,7 +282,7 @@ export function SkillsPage() {
 
       {progressQuery.isError ? (
         <ErrorStateCard
-          body={progressQuery.error instanceof Error ? progressQuery.error.message : isKorean ? "스킬 진행 스냅샷을 불러오지 못했습니다." : "The skill progress snapshot could not be loaded."}
+          body={userFacingErrorMessage(progressQuery.error, isKorean ? "스킬 진행 스냅샷을 불러오지 못했습니다." : "The skill progress snapshot could not be loaded.")}
           details={getErrorDetails(progressQuery.error)}
           onAction={() => {
             void progressQuery.refetch();

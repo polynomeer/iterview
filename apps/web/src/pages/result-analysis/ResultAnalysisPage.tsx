@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useResultAnalysisQuery } from "../../features/result/api/useResultAnalysisQuery";
 import { routeConfig } from "../../shared/config/routes";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { useLocale } from "../../shared/i18n";
 import { useLayoutMode } from "../../shared/ui/layout";
@@ -64,9 +64,7 @@ export function ResultAnalysisPage() {
       {resultQuery.isError ? (
         <ErrorStateCard
           body={
-            resultQuery.error instanceof Error
-              ? resultQuery.error.message
-              : isKorean ? "답변 결과를 불러오지 못했습니다." : "The answer result could not be loaded."
+            userFacingErrorMessage(resultQuery.error, isKorean ? "답변 결과를 불러오지 못했습니다." : "The answer result could not be loaded.")
           }
           details={getErrorDetails(resultQuery.error)}
           onAction={() => {

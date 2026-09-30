@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuestionDetailQuery } from "../../features/question/api/useQuestionDetailQuery";
 import { useQuestionTreeQuery } from "../../features/question/api/useQuestionTreeQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -58,9 +58,7 @@ export function QuestionTreePage() {
       {questionDetailQuery.isError ? (
         <ErrorStateCard
           body={
-            questionDetailQuery.error instanceof Error
-              ? questionDetailQuery.error.message
-              : t("questionTree.rootLoadErrorBody")
+            userFacingErrorMessage(questionDetailQuery.error, t("questionTree.rootLoadErrorBody"))
           }
           details={getErrorDetails(questionDetailQuery.error)}
           onAction={() => {
@@ -73,9 +71,7 @@ export function QuestionTreePage() {
       {questionTreeQuery.isError ? (
         <ErrorStateCard
           body={
-            questionTreeQuery.error instanceof Error
-              ? questionTreeQuery.error.message
-              : t("questionTree.treeLoadErrorBody")
+            userFacingErrorMessage(questionTreeQuery.error, t("questionTree.treeLoadErrorBody"))
           }
           details={getErrorDetails(questionTreeQuery.error)}
           onAction={() => {

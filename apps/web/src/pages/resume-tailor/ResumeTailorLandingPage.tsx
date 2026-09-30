@@ -4,7 +4,7 @@ import { getResumeVersionChoices } from "../../entities/resume/model";
 import { useResumeAnalysesQuery } from "../../features/resume-tailor/api/useResumeAnalysesQuery";
 import { useJobPostingsQuery } from "../../features/resume-tailor/api/useJobPostingsQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
@@ -50,9 +50,7 @@ export function ResumeTailorLandingPage() {
       {resumeListQuery.isError ? (
         <ErrorStateCard
           body={
-            resumeListQuery.error instanceof Error
-              ? resumeListQuery.error.message
-              : isKorean ? "이력서 버전을 불러오지 못했습니다." : "Resume versions could not be loaded."
+            userFacingErrorMessage(resumeListQuery.error, isKorean ? "이력서 버전을 불러오지 못했습니다." : "Resume versions could not be loaded.")
           }
           details={getErrorDetails(resumeListQuery.error)}
           onAction={() => {
@@ -184,11 +182,9 @@ export function ResumeTailorLandingPage() {
                 ) : analysesQuery.isError ? (
                   <ErrorStateCard
                     body={
-                      analysesQuery.error instanceof Error
-                        ? analysesQuery.error.message
-                        : isKorean
+                      userFacingErrorMessage(analysesQuery.error, isKorean
                           ? "이력서 분석을 불러오지 못했습니다."
-                          : "Resume analyses could not be loaded."
+                          : "Resume analyses could not be loaded.")
                     }
                     details={getErrorDetails(analysesQuery.error)}
                     onAction={() => {
@@ -266,11 +262,9 @@ export function ResumeTailorLandingPage() {
                 ) : jobPostingsQuery.isError ? (
                   <ErrorStateCard
                     body={
-                      jobPostingsQuery.error instanceof Error
-                        ? jobPostingsQuery.error.message
-                        : isKorean
+                      userFacingErrorMessage(jobPostingsQuery.error, isKorean
                           ? "채용 공고를 불러오지 못했습니다."
-                          : "Job postings could not be loaded."
+                          : "Job postings could not be loaded.")
                     }
                     details={getErrorDetails(jobPostingsQuery.error)}
                     onAction={() => {

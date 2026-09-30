@@ -7,7 +7,7 @@ import {
 import { usePracticeQuestionsQuery } from "../../features/practice/api/usePracticeQuestionsQuery";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { EmptyStateCard } from "../../shared/ui/EmptyStateCard";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { SectionPanel, useLayoutMode } from "../../shared/ui/layout";
@@ -387,11 +387,9 @@ export function PracticePage() {
             {practiceQuery.isError ? (
               <ErrorStateCard
                 body={
-                  practiceQuery.error instanceof Error
-                    ? practiceQuery.error.message
-                    : isKorean
+                  userFacingErrorMessage(practiceQuery.error, isKorean
                       ? "연습 목록을 불러오지 못했습니다."
-                      : "The practice list could not be loaded."
+                      : "The practice list could not be loaded.")
                 }
                 details={getErrorDetails(practiceQuery.error)}
                 onAction={() => {

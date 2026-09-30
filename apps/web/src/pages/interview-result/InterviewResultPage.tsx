@@ -4,7 +4,7 @@ import { useInterviewSessionCoverageQuery } from "../../features/interview/api/u
 import { useInterviewSessionDetailQuery } from "../../features/interview/api/useInterviewSessionDetailQuery";
 import { useInterviewSessionResumeMapQuery } from "../../features/interview/api/useInterviewSessionResumeMapQuery";
 import { useResumeVersionResultSectionsQuery } from "../../features/resume/api/useResumeVersionResultSectionsQuery";
-import { getErrorDetails } from "../../shared/api/errors";
+import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { ErrorStateCard } from "../../shared/ui/ErrorStateCard";
 import { LoadingStateCard } from "../../shared/ui/LoadingStateCard";
@@ -95,7 +95,7 @@ export function InterviewResultPage() {
             },
           ]}
           badge={isKorean ? "복구 필요" : "Recovery needed"}
-          body={sessionQuery.error instanceof Error ? sessionQuery.error.message : t("result.loadErrorBody")}
+          body={userFacingErrorMessage(sessionQuery.error, t("result.loadErrorBody"))}
           details={getErrorDetails(sessionQuery.error)}
           eyebrow={isKorean ? "인터뷰 결과" : "Interview result"}
           signals={[
