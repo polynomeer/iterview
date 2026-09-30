@@ -1518,6 +1518,17 @@ class ResumeApiIntegrationTest {
             .andExpect(jsonPath("$[0].sessionKey").value("browser-main"))
             .andExpect(jsonPath("$[0].isCurrentUser").value(true))
 
+        // A repeated heartbeat for the same browser session updates the row instead of adding one.
+        mockMvc.perform(
+            post("/api/resume-versions/$versionId/editor/presence")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"sessionKey":"browser-main","viewMode":"review"}"""),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].viewMode").value("review"))
+
         val updatedWorkspace = mockMvc.perform(
             put("/api/resume-versions/$versionId/editor/document")
                 .header("Authorization", authHeader)

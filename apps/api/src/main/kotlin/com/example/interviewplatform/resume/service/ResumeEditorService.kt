@@ -6,7 +6,6 @@ import com.example.interviewplatform.resume.dto.*
 import com.example.interviewplatform.resume.entity.ResumeContactPointEntity
 import com.example.interviewplatform.resume.entity.ResumeEditorCommentReplyEntity
 import com.example.interviewplatform.resume.entity.ResumeEditorCommentThreadEntity
-import com.example.interviewplatform.resume.entity.ResumeEditorPresenceSessionEntity
 import com.example.interviewplatform.resume.entity.ResumeEditorQuestionCardEntity
 import com.example.interviewplatform.resume.entity.ResumeEditorWorkspaceEntity
 import com.example.interviewplatform.resume.entity.ResumeEditorWorkspaceRevisionEntity
@@ -160,19 +159,13 @@ class ResumeEditorService(
         request: CreateResumeEditorPresenceRequest,
     ): List<ResumeEditorPresenceDto> {
         val workspace = getOrCreateWorkspace(userId, requireOwnedVersion(userId, versionId))
-        val now = clockService.now()
-        val existing = resumeEditorPresenceSessionRepository.findByResumeEditorWorkspaceIdAndSessionKey(workspace.id, request.sessionKey.trim())
-        resumeEditorPresenceSessionRepository.save(
-            ResumeEditorPresenceSessionEntity(
-                id = existing?.id ?: 0,
-                resumeEditorWorkspaceId = workspace.id,
-                userId = userId,
-                sessionKey = request.sessionKey.trim(),
-                viewMode = request.viewMode?.trim()?.takeIf { it.isNotEmpty() },
-                selectedBlockId = request.selectedBlockId?.trim()?.takeIf { it.isNotEmpty() },
-                createdAt = existing?.createdAt ?: now,
-                updatedAt = now,
-            ),
+        resumeEditorPresenceSessionRepository.upsert(
+            workspaceId = workspace.id,
+            userId = userId,
+            sessionKey = request.sessionKey.trim(),
+            viewMode = request.viewMode?.trim()?.takeIf { it.isNotEmpty() },
+            selectedBlockId = request.selectedBlockId?.trim()?.takeIf { it.isNotEmpty() },
+            now = clockService.now(),
         )
         return activePresence(workspace.id, userId)
     }
