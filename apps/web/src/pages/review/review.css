@@ -1,0 +1,58 @@
+/* 복습 (docs/09 §4.4, mockup 05-review). Token-only styles. */
+
+.review-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--iv-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-week__day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-1);
+  padding: var(--iv-space-3);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-md);
+  background: var(--iv-surface);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-xs);
+}
+
+.review-week__day strong { color: var(--iv-text); font-size: var(--iv-text-lg); font-variant-numeric: tabular-nums; }
+.review-week__day--today { border-color: var(--iv-accent); background: var(--iv-accent-soft); color: var(--iv-accent-text); }
+
+.review-week__bar {
+  display: block;
+  height: 4px;
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-accent);
+}
+
+.review-status:empty { display: none; }
+.review-status { display: flex; flex-direction: column; gap: var(--iv-space-2); }
+
+.review-archive__search { padding: var(--iv-space-4) var(--iv-space-5) 0; max-width: 24rem; }
+
+.review-inline-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--iv-accent-text);
+  font: inherit;
+  font-weight: var(--iv-weight-semibold);
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .review-week { grid-template-columns: repeat(7, minmax(2.75rem, 1fr)); overflow-x: auto; }
+  .review-week__day { padding: var(--iv-space-2); }
+
+  /* Row actions wrap under the title on phones. */
+  .review-page .ui-list-row { flex-wrap: wrap; }
+  .review-page .ui-list-row__main { flex-basis: 100%; }
+  .review-page .ui-list-row__title { white-space: normal; }
+  .review-page .ui-list-row__trailing { flex-wrap: wrap; }
+}

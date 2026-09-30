@@ -13,12 +13,12 @@ const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({
 const QuestionsIndexPage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionsIndexPage })));
 const QuestionWorkspacePage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionWorkspacePage })));
 const SkillsPage = lazy(() => import("../pages/skills/SkillsPage").then((module) => ({ default: module.SkillsPage })));
-const ReviewQueuePage = lazy(() => import("../pages/review-queue/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
+const ReviewQueuePage = lazy(() => import("../pages/review/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
 const ScheduledReviewsPage = lazy(() => import("../pages/scheduled-reviews/ScheduledReviewsPage").then((module) => ({ default: module.ScheduledReviewsPage })));
 const WeakNodesPage = lazy(() => import("../pages/weak-nodes/WeakNodesPage").then((module) => ({ default: module.WeakNodesPage })));
 const AnswerEditorPage = lazy(() => import("../pages/answer-editor/AnswerEditorPage").then((module) => ({ default: module.AnswerEditorPage })));
 const ResultAnalysisPage = lazy(() => import("../pages/result-analysis/ResultAnalysisPage").then((module) => ({ default: module.ResultAnalysisPage })));
-const ArchivePage = lazy(() => import("../pages/archive/ArchivePage").then((module) => ({ default: module.ArchivePage })));
+const ArchivePage = lazy(() => import("../pages/review/ArchivePage").then((module) => ({ default: module.ArchivePage })));
 const FeedPage = lazy(() => import("../pages/feed/FeedPage").then((module) => ({ default: module.FeedPage })));
 const NotesPage = lazy(() => import("../pages/notes/NotesPage").then((module) => ({ default: module.NotesPage })));
 const BookmarksPage = lazy(() => import("../pages/bookmarks/BookmarksPage").then((module) => ({ default: module.BookmarksPage })));

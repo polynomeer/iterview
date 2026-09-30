@@ -15,6 +15,9 @@ export type ArchiveItemModel = {
   archivedAtLabel: string | null;
   totalAttemptCountLabel: string;
   bestScoreLabel: string | null;
+  bestScore: number | null;
+  totalAttemptCount: number;
+  difficulty: string | null;
   archivedStatusLabel: string;
   sourceType: string | null;
   sourceLabel: string | null;
@@ -91,6 +94,9 @@ export function mapArchiveResponseDtoToModel(response: ArchiveResponseDto): Arch
           ? `최고 점수 ${Math.round(item.bestScore)}`
           : `Best score ${Math.round(item.bestScore)}`,
     archivedStatusLabel: isKorean ? "보관됨" : "Archived",
+    bestScore: item.bestScore === null || item.bestScore === undefined ? null : Math.round(item.bestScore),
+    totalAttemptCount: item.totalAttemptCount ?? 0,
+    difficulty: item.difficulty ?? null,
     sourceType: item.sourceType ?? null,
     sourceLabel: item.sourceLabel ?? null,
     sourceBadgeLabel: mapArchiveSourceBadge(item.sourceType),

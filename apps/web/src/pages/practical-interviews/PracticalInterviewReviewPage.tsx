@@ -2022,7 +2022,7 @@ export function PracticalInterviewReviewPage() {
                       {question.deepLink?.sourceInterviewQuestionId ? (
                         <Link
                           className="secondary-button"
-                          to={`/archive?sourceInterviewRecordId=${recordId}&sourceInterviewQuestionId=${question.deepLink.sourceInterviewQuestionId}`}
+                          to={`${routeConfig.archive.buildPath()}?sourceInterviewRecordId=${recordId}&sourceInterviewQuestionId=${question.deepLink.sourceInterviewQuestionId}`}
                         >
                           {isKorean ? "아카이브 원본 열기" : "Open archive source"}
                         </Link>
