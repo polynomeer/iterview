@@ -18,11 +18,12 @@ describe("resolveHeaderTitleKey", () => {
     ["/interview/sessions/1", "header.interviewSession"],
     ["/interview/records/2/transcript", "nav.practicalInterview"],
     ["/settings", "nav.preferences"],
+    ["/questions/skills", "nav.skillMap"],
   ])("maps %s to %s", (pathname, key) => {
     expect(resolveHeaderTitleKey(pathname)).toBe(key);
   });
 
-  it("falls back to the default title for unknown paths", () => {
-    expect(resolveHeaderTitleKey("/does-not-exist")).toBe("header.defaultTitle");
+  it("titles unknown paths as not found", () => {
+    expect(resolveHeaderTitleKey("/does-not-exist")).toBe("common.pageNotFoundTitle");
   });
 });

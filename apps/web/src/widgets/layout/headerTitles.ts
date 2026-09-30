@@ -1,8 +1,7 @@
-import { matchPath } from "react-router-dom";
+import { matchRoutes } from "react-router-dom";
 import { routeConfig } from "../../shared/config/routes";
 import type { MessageKey } from "../../shared/i18n/messages";
 
-// Ordered from most to least specific so nested routes win over their parents.
 const HEADER_TITLES: Array<[path: string, titleKey: MessageKey]> = [
   [routeConfig.home.path, "nav.today"],
   [routeConfig.practice.path, "nav.questionList"],
@@ -34,8 +33,11 @@ const HEADER_TITLES: Array<[path: string, titleKey: MessageKey]> = [
   [`${routeConfig.practicalInterviews.path}/*`, "nav.practicalInterview"],
 ];
 
-export function resolveHeaderTitleKey(pathname: string): MessageKey {
-  const match = HEADER_TITLES.find(([path]) => matchPath({ path, end: true }, pathname));
+// Ranked by the router's own specificity rules, so static segments win over params.
+const TITLE_ROUTES = HEADER_TITLES.map(([path, titleKey]) => ({ path, titleKey }));
 
-  return match ? match[1] : "header.defaultTitle";
+export function resolveHeaderTitleKey(pathname: string): MessageKey {
+  const [best] = matchRoutes(TITLE_ROUTES, pathname) ?? [];
+
+  return best ? best.route.titleKey : "common.pageNotFoundTitle";
 }

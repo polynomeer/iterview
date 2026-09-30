@@ -1,4 +1,4 @@
-import { matchPath } from "react-router-dom";
+import { matchRoutes } from "react-router-dom";
 import type { IconName } from "../ui/primitives";
 import type { MessageKey } from "../i18n/messages";
 import { routeConfig } from "./routes";
@@ -104,17 +104,17 @@ export const SETTINGS_AREA: NavArea = {
 
 const ALL_AREAS = [...PRIMARY_AREAS, SETTINGS_AREA];
 
-function matches(patterns: string[], pathname: string) {
-  return patterns.some((path) => matchPath({ path, end: true }, pathname));
-}
+// Rank candidates the way the router does, so /questions/skills beats /questions/:questionId.
+const SECTION_ROUTES = ALL_AREAS.flatMap((area) =>
+  area.sections.flatMap((section) => section.match.map((path) => ({ path, area, section }))),
+);
 
 export function resolveNavLocation(pathname: string) {
-  for (const area of ALL_AREAS) {
-    const section = area.sections.find((candidate) => matches(candidate.match, pathname));
-    if (section || (area.id === "today" && pathname === area.to)) {
-      return { area, section: section ?? null };
-    }
+  const [best] = matchRoutes(SECTION_ROUTES, pathname) ?? [];
+  if (best) {
+    return { area: best.route.area, section: best.route.section };
   }
 
-  return { area: null, section: null };
+  const today = PRIMARY_AREAS[0];
+  return pathname === today.to ? { area: today, section: null } : { area: null, section: null };
 }

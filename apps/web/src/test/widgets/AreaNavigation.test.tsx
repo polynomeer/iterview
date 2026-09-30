@@ -19,6 +19,13 @@ describe("AreaNavigation", () => {
     expect(screen.getByRole("link", { name: "모의면접" })).not.toHaveAttribute("aria-current");
   });
 
+  it("prefers a static section over a parameterised one", () => {
+    renderWithProviders(<AreaNavigation />, { route: "/questions/skills", locale: "ko" });
+
+    expect(screen.getByRole("link", { name: "스킬 맵" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "질문 목록" })).not.toHaveAttribute("aria-current");
+  });
+
   it("renders nothing for areas with a single screen", () => {
     const { container } = renderWithProviders(<AreaNavigation />, { route: "/", locale: "ko" });
 
