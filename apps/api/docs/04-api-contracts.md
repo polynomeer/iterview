@@ -187,6 +187,11 @@ Endpoints:
 - `POST /api/interview-sessions/{sessionId}/skip-question`
 - `POST /api/interview-sessions/{sessionId}/next-question`
 
+Replay sessions (`sessionType: replay_mock`):
+- require `sourceInterviewRecordId`; `replayMode` is optional and defaults to `original_replay`
+- seed session questions from the imported practical-interview questions with `sourceType: replay_seed` and `generationStatus: replay_imported`
+- each seeded question carries a non-null `questionId`: imported questions are promoted to private catalog questions (`sourceType: real_interview_import`) and linked before seeding, the same assets `GET /api/interview-records/{recordId}/questions` exposes
+
 ## Practical Interview Records
 
 Base path:

@@ -5,6 +5,7 @@ import com.example.interviewplatform.auth.service.TokenService
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.hamcrest.Matchers.greaterThan
@@ -689,7 +690,7 @@ class InterviewSessionApiIntegrationTest {
             intentTagsJson = """["design_probe"]""",
         )
 
-        mockMvc.perform(
+        val sessionResponse = mockMvc.perform(
             post("/api/interview-sessions")
                 .header("Authorization", authHeader)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -708,13 +709,32 @@ class InterviewSessionApiIntegrationTest {
             .andExpect(jsonPath("$.sessionType").value("replay_mock"))
             .andExpect(jsonPath("$.sourceInterviewRecordId").value(sourceInterviewRecordId))
             .andExpect(jsonPath("$.replayMode").value("pressure_variant"))
-            .andExpect(jsonPath("$.currentQuestion.questionId").value(nullValue()))
+            .andExpect(jsonPath("$.currentQuestion.questionId").isNumber)
             .andExpect(jsonPath("$.currentQuestion.sourceType").value("replay_seed"))
             .andExpect(jsonPath("$.currentQuestion.generationStatus").value("replay_imported"))
             .andExpect(jsonPath("$.currentQuestion.title").value("실제 장애 대응에서 어떤 지표를 먼저 봤나요?"))
             .andExpect(jsonPath("$.currentQuestion.bodyText").value(org.hamcrest.Matchers.containsString("Original answer summary")))
             .andExpect(jsonPath("$.questions.length()").value(2))
+            .andExpect(jsonPath("$.questions[1].questionId").isNumber)
             .andExpect(jsonPath("$.questions[1].title").value("롤백과 완화 조치 중 어떤 기준으로 결정했나요?"))
+            .andReturn()
+            .response
+            .contentAsString
+
+        // Replay seeding promotes each imported question to a private catalog question and links it.
+        val sessionJson = objectMapper.readTree(sessionResponse)
+        val seededQuestionIds = sessionJson.get("questions").map { it.get("questionId").asLong() }
+        val linkedQuestionIds = jdbcTemplate.queryForList(
+            "SELECT linked_question_id FROM interview_record_questions WHERE interview_record_id = ? ORDER BY order_index",
+            Long::class.java,
+            sourceInterviewRecordId,
+        )
+        assertEquals(linkedQuestionIds, seededQuestionIds)
+        val linkedSourceTypes = jdbcTemplate.queryForList(
+            "SELECT source_type FROM questions WHERE id IN (${seededQuestionIds.joinToString(",")})",
+            String::class.java,
+        )
+        assertEquals(listOf("real_interview_import", "real_interview_import"), linkedSourceTypes)
     }
 
     @Test
