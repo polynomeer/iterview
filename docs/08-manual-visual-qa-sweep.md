@@ -1,6 +1,6 @@
 # 08-manual-visual-qa-sweep
 
-Date: 2026-08-25
+Date: 2026-08-25 (routes updated 2026-09-30 for the five-area IA; see `apps/web/docs/03-routes-and-flows.md`)
 
 This document lists the remaining manual visual QA work for the redesigned `iterview` workspace.
 
@@ -29,11 +29,11 @@ If a page has a dense side rail, also check:
 ### A. Core Daily Loop
 
 1. `/`
-2. `/practice`
+2. `/questions`
 3. `/questions/question-1/tree`
 4. `/questions/question-1`
 5. `/questions/question-1/answer`
-6. `/answer-attempts/attempt-1/result`
+6. `/attempts/attempt-1`
 
 Check:
 - hero hierarchy reads clearly at a glance
@@ -43,10 +43,10 @@ Check:
 
 ### B. Recovery Loop
 
-1. `/review-queue`
+1. `/review`
 2. `/weak-nodes`
 3. `/scheduled-reviews`
-4. `/archive`
+4. `/review/done`
 
 Check:
 - queue/list items do not collide with side rails
@@ -56,11 +56,11 @@ Check:
 
 ### C. Source-Of-Truth Loop
 
-1. `/profile/resumes`
-2. `/profile/resumes/analysis`
-3. `/resume-versions/1/editor`
-4. `/resume-versions/1/heatmap`
-5. `/resume-versions/1/heatmap/anchors/project/1`
+1. `/resume`
+2. `/resume/analysis`
+3. `/resume/1/claims`
+4. `/resume/1/heatmap`
+5. `/resume/1/heatmap/anchors/project/1`
 
 Check:
 - editor side panels do not overflow their container
@@ -70,9 +70,9 @@ Check:
 
 ### D. Interview Loop
 
-1. `/interviews`
-2. latest live session route created from the interview workspace, for example `/interviews/1`
-3. the matching completed result route, for example `/interviews/1/result`
+1. `/interview`
+2. latest live session route created from the interview workspace, for example `/interview/sessions/1`
+3. the matching completed result route, for example `/interview/sessions/1/result`
 
 Check:
 - workspace continuity rail does not visually overpower the main surface
@@ -96,10 +96,10 @@ Check:
 ## Sticky And Overflow Watch List
 
 Pages with the highest sticky/overflow risk:
-- `/resume-versions/1/editor`
-- `/resume-versions/1/heatmap`
-- latest live session route, for example `/interviews/1`
-- matching completed result route, for example `/interviews/1/result`
+- `/resume/1/claims`
+- `/resume/1/heatmap`
+- latest live session route, for example `/interview/sessions/1`
+- matching completed result route, for example `/interview/sessions/1/result`
 - `/weak-nodes`
 - `/target-companies`
 - `/notes`
@@ -134,17 +134,17 @@ Status on August 26, 2026:
 
 Verified desktop routes in the August 26 pass:
 - `/`
-- `/practice`
-- `/review-queue`
+- `/questions`
+- `/review`
 - `/weak-nodes`
-- `/profile/resumes`
-- `/profile/resumes/analysis`
-- `/resume-versions/1/editor`
-- `/resume-versions/1/heatmap`
-- `/resume-versions/1/heatmap/anchors/project/1`
-- `/interviews`
-- `/interviews/1`
-- `/interviews/1/result`
+- `/resume`
+- `/resume/analysis`
+- `/resume/1/claims`
+- `/resume/1/heatmap`
+- `/resume/1/heatmap/anchors/project/1`
+- `/interview`
+- `/interview/sessions/1`
+- `/interview/sessions/1/result`
 - `/notes`
 - `/target-companies`
 
@@ -156,10 +156,10 @@ Desktop findings from that pass:
 
 Mobile and tablet findings from the August 26 follow-up pass:
 - verified routes passed at `390 x 844` and `820 x 1180` with no page-level horizontal overflow
-- `/profile/resumes` required metric-card wrapping cleanup on tablet and now passes without overflow
-- `/interviews` required tighter mobile graph stacking and now passes without page-level overflow
-- a live session was created from the interview workspace and verified at `/interviews/1`
-- that same session was advanced to a completed result and verified at `/interviews/1/result`
+- `/resume` required metric-card wrapping cleanup on tablet and now passes without overflow
+- `/interview` required tighter mobile graph stacking and now passes without page-level overflow
+- a live session was created from the interview workspace and verified at `/interview/sessions/1`
+- that same session was advanced to a completed result and verified at `/interview/sessions/1/result`
 - the earlier fallback-only check was superseded by the live session/result verification on August 26, 2026
 
 Remaining gap:

@@ -164,30 +164,9 @@ Avoid placing product-specific concepts in `shared` just because they are reused
 
 ## Current Route Inventory
 
-The router currently exposes these primary route groups:
-- `/`
-- `/practice`
-- `/questions/:questionId`
-- `/questions/:questionId/tree`
-- `/questions/:questionId/answer`
-- `/answer-attempts/:answerAttemptId/result`
-- `/feed`
-- `/skills`
-- `/review-queue`
-- `/archive`
-- `/profile`
-- `/profile/resumes`
-- `/profile/resumes/analysis`
-- `/resume-versions/:versionId/heatmap`
-- `/resume-versions/:versionId/heatmap/anchors/:anchorType/:anchorId`
-- `/resume-versions/:versionId/editor`
-- `/resume-tailor/*`
-- `/interviews`
-- `/interviews/:sessionId`
-- `/interviews/:sessionId/result`
-- `/practical-interviews/*`
-- `/login`
-- `/signup`
+Routes follow the five-area information architecture: 오늘 `/`, 질문 `/questions/*` and `/attempts/:id`, 복습 `/review/*`, 이력서 `/resume/*`, 면접 `/interview/*`, and 설정 `/settings/*`. There are also `/explore`, `/login`, `/signup`, and a not-found route.
+
+The full table, the legacy redirects, and the navigation model are in `03-routes-and-flows.md`.
 
 ## State Management Strategy
 

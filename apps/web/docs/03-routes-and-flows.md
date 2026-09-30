@@ -2,191 +2,107 @@
 
 This document explains how the product is expressed as routes and user flows in the web application.
 
+The route map follows the five-area information architecture adopted in `docs/adr/0074-consolidate-ia-and-token-design-system.md` (root docs) and described in `docs/09-ux-audit-and-redesign-proposal.md` §4.2.
+
 ## Route Principles
 
-- routes should map to meaningful user journeys
-- public and protected routes should be obvious
-- new capabilities should prefer additive route growth over route replacement
-- route names should stay understandable to someone reading the repository for the first time
+- every screen belongs to exactly one area: 오늘, 질문, 복습, 이력서, 면접, or 설정
+- a URL's first segment names its area, so the location is readable from the address bar
+- old URLs are never broken: they redirect to their new home with the query string and hash preserved
+- `src/shared/config/routes.ts` is the only place that builds paths; `src/shared/config/navigation.ts` is the only place that defines menus
 
-## Public Routes
+## Areas And Routes
 
-- `/`
-  Home page
-- `/practice`
-  Practice list
-- `/questions/:questionId`
-  Question detail
-- `/questions/:questionId/tree`
-  Question tree
-- `/feed`
-  Feed
-- `/login`
-  Login
-- `/signup`
-  Sign up
+| Area | Section | Route | Auth |
+| --- | --- | --- | --- |
+| 오늘 | — | `/` | public |
+| 질문 | 질문 목록 | `/questions` | public |
+| 질문 | 질문 목록 | `/questions/:questionId`, `/questions/:questionId/tree` | public |
+| 질문 | 질문 목록 | `/questions/:questionId/answer`, `/attempts/:answerAttemptId` | protected |
+| 질문 | 스킬 맵 | `/questions/skills` | protected |
+| 복습 | 지금 복습 | `/review` | protected |
+| 복습 | 완료한 질문 | `/review/done` | protected |
+| 이력서 | 버전 관리 | `/resume`, `/resume/:versionId/claims`, `/resume/:versionId/heatmap`, `/resume/:versionId/heatmap/anchors/:anchorType/:anchorId` | protected |
+| 이력서 | 이력서 분석 | `/resume/analysis` | protected |
+| 이력서 | 공고 맞춤 | `/resume/tailor`, `/resume/tailor/job-postings`, `/resume/:versionId/tailor`, `/resume/:versionId/tailor/:analysisId` | protected |
+| 면접 | 모의면접 | `/interview`, `/interview/sessions/:sessionId`, `/interview/sessions/:sessionId/result` | protected |
+| 면접 | 실전 면접 복기 | `/interview/records`, `/interview/records/upload`, `/interview/records/:recordId`, `.../transcript`, `.../questions/:questionId`, `.../simulate` | protected |
+| 설정 | 학습 설정 | `/settings` | protected |
+| 설정 | 프로필 | `/settings/profile` | protected |
+| — | 둘러보기 (guest navigation only) | `/explore` | public |
+| — | auth | `/login`, `/signup` | public |
+| — | not found | `*` | public |
 
-These routes are valuable even to a reviewer because they describe the public-facing reading order of the product.
+Development builds also serve `/__ui`, the primitives gallery.
 
-## Protected Routes
+Pages backed only by sample data are kept out of navigation until they have APIs. They keep their old URLs: `/weak-nodes`, `/scheduled-reviews`, `/target-companies`, `/notes`, `/bookmarks`.
 
-- `/skills`
-- `/review-queue`
-- `/questions/:questionId/answer`
-- `/answer-attempts/:answerAttemptId/result`
-- `/archive`
-- `/profile`
-- `/profile/resumes`
-- `/profile/resumes/analysis`
-- `/resume-versions/:versionId/heatmap`
-- `/resume-versions/:versionId/heatmap/anchors/:anchorType/:anchorId`
-- `/resume-versions/:versionId/editor`
-- `/resume-tailor`
-- `/resume-tailor/job-postings`
-- `/resume-tailor/resume-versions/:versionId/analyses`
-- `/resume-tailor/resume-versions/:versionId/analyses/:analysisId`
-- `/interviews`
-- `/interviews/:sessionId`
-- `/interviews/:sessionId/result`
-- `/practical-interviews`
-- `/practical-interviews/upload`
-- `/practical-interviews/:recordId`
-- `/practical-interviews/:recordId/transcript`
-- `/practical-interviews/:recordId/questions/:questionId`
-- `/practical-interviews/:recordId/simulate`
+## Legacy Redirects
 
-## Primary User Flows
+`src/app/router/legacyRedirects.tsx` maps every pre-2026-10 URL to its new route. `src/test/router/legacyRedirects.test.tsx` asserts each mapping.
 
-### 1. Daily practice flow
-
-```text
-Home
--> Practice list or daily prompt
--> Question detail
--> Answer editor
--> Result analysis
--> Review queue or archive
-```
-
-Relevant routes:
-- `/`
-- `/practice`
-- `/questions/:questionId`
-- `/questions/:questionId/answer`
-- `/answer-attempts/:answerAttemptId/result`
-- `/review-queue`
-- `/archive`
-
-### 2. Resume-centered learning flow
-
-```text
-Profile / resumes
--> choose or upload version
--> inspect extraction and analysis
--> open heatmap or editor
--> return to practice or interview
-```
-
-Relevant routes:
-- `/profile`
-- `/profile/resumes`
-- `/profile/resumes/analysis`
-- `/resume-versions/:versionId/heatmap`
-- `/resume-versions/:versionId/editor`
-
-### 3. Mock interview flow
-
-```text
-Interview landing
--> choose resume version and mode
--> interview session
--> interview result
--> archive and resume-map follow-up
-```
-
-Relevant routes:
-- `/interviews`
-- `/interviews/:sessionId`
-- `/interviews/:sessionId/result`
-
-### 4. Practical interview replay flow
-
-```text
-Practical interview list
--> upload or open record
--> inspect transcript and structured review
--> launch replay-oriented simulation
-```
-
-Relevant routes:
-- `/practical-interviews`
-- `/practical-interviews/upload`
-- `/practical-interviews/:recordId`
-- `/practical-interviews/:recordId/transcript`
-- `/practical-interviews/:recordId/questions/:questionId`
-- `/practical-interviews/:recordId/simulate`
-
-### 5. Resume tailoring flow
-
-```text
-Resume tailor landing
--> manage job postings
--> choose resume version
--> inspect analyses
--> inspect detail and export artifacts
-```
-
-Relevant routes:
-- `/resume-tailor`
-- `/resume-tailor/job-postings`
-- `/resume-tailor/resume-versions/:versionId/analyses`
-- `/resume-tailor/resume-versions/:versionId/analyses/:analysisId`
+| Legacy | Current |
+| --- | --- |
+| `/practice` | `/questions` |
+| `/skills` | `/questions/skills` |
+| `/answer-attempts/:id/result` | `/attempts/:id` |
+| `/review-queue`, `/archive` | `/review`, `/review/done` |
+| `/feed` | `/explore` |
+| `/profile` | `/settings/profile` |
+| `/profile/resumes`, `/profile/resumes/analysis` | `/resume`, `/resume/analysis` |
+| `/resume-versions/:versionId/editor` | `/resume/:versionId/claims` |
+| `/resume-versions/:versionId/heatmap[/anchors/...]` | `/resume/:versionId/heatmap[/anchors/...]` |
+| `/resume-tailor[/job-postings]` | `/resume/tailor[/job-postings]` |
+| `/resume-tailor/resume-versions/:versionId/analyses[/:analysisId]` | `/resume/:versionId/tailor[/:analysisId]` |
+| `/interviews[/:sessionId[/result]]` | `/interview[/sessions/:sessionId[/result]]` |
+| `/practical-interviews/...` | `/interview/records/...` |
 
 ## Navigation Model
 
-The app currently has:
-- a primary home-centric experience
-- tab-like and secondary navigation surfaces
-- protected route handling at the router level
+`src/shared/config/navigation.ts` defines the areas, their sections, and which routes belong to each section. Everything below reads from it:
+- the desktop sidebar: the five areas with a live review count, the active resume version, and settings
+- the mobile tab bar: the same five areas
+- the section links under the top bar, shown for areas with more than one screen
+- the top bar breadcrumb (area › page)
+- the command palette's "이동" results
 
-The `routeConfig` source of truth is:
-- `src/shared/config/routes.ts`
+Active state is resolved with the router's own ranking (`matchRoutes`), so static segments win over parameters (for example `/questions/skills` over `/questions/:questionId`).
 
-This file should remain the canonical location for path construction and labels.
+## Primary User Flows
 
-## Route Ownership Guidance
+### 1. Daily practice
 
-### Routes that should remain stable
+```text
+오늘 → 질문 (/questions/:id) → 답변 (/questions/:id/answer) → 결과 (/attempts/:id) → 복습 (/review) or 완료 (/review/done)
+```
 
-- home
-- practice
-- question detail
-- answer editor
-- result analysis
-- review queue
-- archive
-- profile
-- resume
+### 2. Resume evidence
 
-These routes define the baseline learning loop and should not be casually redesigned.
+```text
+이력서 (/resume) → choose or upload a version → 근거 편집 (/resume/:versionId/claims) or 압박 지도 (/resume/:versionId/heatmap) → back to 질문 or 면접
+```
 
-### Routes that can expand additively
+### 3. Mock interview
 
-- question tree
-- skills
-- resume analysis
-- heatmap
-- resume editor
-- resume tailor
-- interviews
-- practical interviews
+```text
+면접 (/interview) → session (/interview/sessions/:id) → result (/interview/sessions/:id/result) → 복습
+```
 
-These routes already represent deeper product layers and can evolve without undermining the baseline route map.
+### 4. Real interview review
+
+```text
+실전 면접 복기 (/interview/records) → upload (/interview/records/upload) or open a record → transcript, questions, replay
+```
+
+### 5. Job fit
+
+```text
+공고 맞춤 (/resume/tailor) → job postings → analyses for a version (/resume/:versionId/tailor) → analysis detail
+```
 
 ## Route Design Constraints
 
-- route names should stay human-readable
-- dynamic params should identify stable domain records
-- result pages should remain inspectable after the originating action completes
-- additive interview or replay routes should reuse existing mental models where possible
-
+- route names stay human-readable and area-first
+- dynamic params identify stable domain records
+- result pages stay inspectable after the originating action completes
+- a route move must add a legacy redirect and a redirect test in the same change

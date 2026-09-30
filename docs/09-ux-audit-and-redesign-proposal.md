@@ -383,6 +383,18 @@ Still open and deferred by design:
 
 **Acceptance:** 5 primary nav items. Every legacy URL redirects. Route tests cover the redirects.
 
+**Status (2026-09-30): done.**
+
+| Item | Outcome |
+| --- | --- |
+| 1. Shell | The sidebar shows five areas with a live review count, the active resume version card, and settings (`e3ee9a3`). The top bar has an area › page breadcrumb, a ⌘K trigger, KO/EN, avatar, and logout. Section links sit under it (`89ca675`). The mobile tab bar uses the same five areas (`8bfc3b0`). The version card links to 버전 관리; in-place version switching arrives with the Phase 4 resume hub. |
+| 2. Routes and redirects | All screens moved to area-first URLs, and all 25 legacy URLs redirect with the query and hash preserved (`8bfc3b0`). Route-resolution tests guard against collisions such as `/questions/skills` vs `/questions/:questionId`, and navigation ranks matches the same way the router does (`1fc7d74`). ADR 0074 is accepted: skills sits under 질문 as "스킬 맵", and the feed is at `/explore` for guests. |
+| 3. Command palette | Shows due reviews, the active resume, and every menu destination. Typing runs a debounced server question search (`65e3c33`). |
+
+**Acceptance.** The authenticated sidebar and mobile tab bar each have five primary items. `legacyRedirects.test.tsx` covers every legacy URL. A browser sweep with a mocked API covered 31 routes (23 current URLs, 8 legacy) at 1440px and 390px. Every current URL rendered without a crash, page error, or horizontal scroll. Every legacy URL landed on its new route with the right area and section highlighted.
+
+Sample-data pages (`/weak-nodes`, `/scheduled-reviews`, `/target-companies`, `/notes`, `/bookmarks`) keep their old URLs outside the IA until they have APIs. The 보관함 area stays unshipped for the same reason.
+
 ### Phase 3 — Core loop screens
 
 These are built in order and ship one per work unit: 오늘 → 질문 (merged workspace) → 답변 (focus mode) → 결과 → 복습 (merged tabs).
