@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
-import { PracticalInterviewReviewPage } from "../../pages/practical-interviews/PracticalInterviewReviewPage";
+import { PracticalInterviewOverviewPage } from "../../pages/practical-interviews/PracticalInterviewOverviewPage";
 import { useCreateInterviewSessionMutation } from "../../features/interview/api/useCreateInterviewSessionMutation";
 import { useConfirmInterviewRecordMutation } from "../../features/practical-interview/api/useConfirmInterviewRecordMutation";
 import { useInterviewRecordAnalysisQuery } from "../../features/practical-interview/api/useInterviewRecordAnalysisQuery";
@@ -443,7 +443,7 @@ describe("PracticalInterviewReviewPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
+        <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
       </Routes>,
       { route: "/interview/records/record-2?processing=1", locale: "ko" },
     );
@@ -560,7 +560,7 @@ describe("PracticalInterviewReviewPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
+        <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
       </Routes>,
       { route: "/interview/records/record-3", locale: "ko" },
     );
@@ -579,7 +579,7 @@ describe("PracticalInterviewReviewPage", () => {
 
     renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
+        <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
       </Routes>,
       { route: "/interview/records/record-1", locale: "ko" },
     );
@@ -629,7 +629,7 @@ describe("PracticalInterviewReviewPage", () => {
 
     const view = renderWithProviders(
       <Routes>
-        <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
+        <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
       </Routes>,
       { route: "/interview/records/record-1", locale: "ko" },
     );
@@ -639,7 +639,7 @@ describe("PracticalInterviewReviewPage", () => {
     expect(() =>
       view.rerender(
         <Routes>
-          <Route element={<PracticalInterviewReviewPage />} path="/interview/records/:recordId" />
+          <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
         </Routes>,
       ),
     ).not.toThrow();

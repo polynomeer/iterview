@@ -40,7 +40,10 @@ const InterviewSessionPage = lazy(() => import("../pages/interview-session/Inter
 const InterviewResultPage = lazy(() => import("../pages/interview-result/InterviewResultPage").then((module) => ({ default: module.InterviewResultPage })));
 const PracticalInterviewListPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewListPage").then((module) => ({ default: module.PracticalInterviewListPage })));
 const PracticalInterviewUploadPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewUploadPage").then((module) => ({ default: module.PracticalInterviewUploadPage })));
-const PracticalInterviewReviewPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewReviewPage").then((module) => ({ default: module.PracticalInterviewReviewPage })));
+const PracticalInterviewOverviewPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewOverviewPage").then((module) => ({ default: module.PracticalInterviewOverviewPage })));
+const PracticalInterviewTranscriptPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewTranscriptPage").then((module) => ({ default: module.PracticalInterviewTranscriptPage })));
+const PracticalInterviewQuestionPage = lazy(() => import("../pages/practical-interviews/PracticalInterviewQuestionPage").then((module) => ({ default: module.PracticalInterviewQuestionPage })));
+const PracticalInterviewSimulatePage = lazy(() => import("../pages/practical-interviews/PracticalInterviewSimulatePage").then((module) => ({ default: module.PracticalInterviewSimulatePage })));
 // Development-only primitives reference; Vite drops this import from production bundles.
 const UiGalleryPage = import.meta.env.DEV
   ? lazy(() => import("../pages/dev-ui-gallery/UiGalleryPage").then((module) => ({ default: module.UiGalleryPage })))
@@ -180,19 +183,19 @@ export const appRoutes: RouteObject[] = [
               },
               {
                 path: routeConfig.practicalInterviewDetail.path,
-                element: withSuspense(<PracticalInterviewReviewPage />),
+                element: withSuspense(<PracticalInterviewOverviewPage />),
               },
               {
                 path: routeConfig.practicalInterviewTranscript.path,
-                element: withSuspense(<PracticalInterviewReviewPage />),
+                element: withSuspense(<PracticalInterviewTranscriptPage />),
               },
               {
                 path: routeConfig.practicalInterviewQuestion.path,
-                element: withSuspense(<PracticalInterviewReviewPage />),
+                element: withSuspense(<PracticalInterviewQuestionPage />),
               },
               {
                 path: routeConfig.practicalInterviewSimulate.path,
-                element: withSuspense(<PracticalInterviewReviewPage />),
+                element: withSuspense(<PracticalInterviewSimulatePage />),
               },
               {
                 path: routeConfig.interviewSession.path,
