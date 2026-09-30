@@ -10,7 +10,7 @@ export type HomeQuestionCardModel = {
   prompt: string;
   status: QuestionCardStatus;
   categoryLabel: string;
-  companyLabel: string;
+  difficultyLabel: string;
 };
 
 export type LearningMaterialModel = {
@@ -75,7 +75,7 @@ function mapQuestionCard(question: HomeResponseDto["todayQuestion"]): HomeQuesti
     prompt: question.cardDate ? `Scheduled for ${formatApiDate(question.cardDate) ?? question.cardDate}` : "Daily interview prompt",
     status,
     categoryLabel: question.cardType ?? "daily",
-    companyLabel: question.difficulty ?? "General",
+    difficultyLabel: question.difficulty ?? "General",
   };
 }
 
@@ -153,7 +153,7 @@ export function mapHomeResponseDtoToModel(response: HomeResponseDto): HomeModel 
         question.priority === null || question.priority === undefined
           ? "Priority -"
           : `Priority ${question.priority}`,
-      companyLabel: question.difficulty ?? "General",
+      difficultyLabel: question.difficulty ?? "General",
     })),
     learningMaterials: toArray(response.learningMaterials).map(mapLearningMaterial),
     summaryStats: mapSummaryStats(response.summaryStats),

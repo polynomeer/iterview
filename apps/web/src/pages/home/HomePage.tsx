@@ -120,7 +120,7 @@ export function HomePage() {
             </article>
             <article className="home-workspace-surface__guidance-card">
               <span>{isKorean ? "탐색" : "Traversal"}</span>
-              <strong>{isKorean ? "오늘의 질문에서 꼬리질문 트리를 깊이우선으로 내려가세요." : "Start from today&apos;s prompt and traverse the follow-up tree depth-first."}</strong>
+              <strong>{isKorean ? "오늘의 질문에서 꼬리질문 트리를 깊이우선으로 내려가세요." : "Start from today's prompt and traverse the follow-up tree depth-first."}</strong>
             </article>
           </div>
         </section>
@@ -130,7 +130,7 @@ export function HomePage() {
           body={
             isKorean
               ? "오늘의 질문, 재도전 큐, 학습 자료, 진행 요약을 불러오는 중입니다."
-              : "Fetching today&apos;s question, retry queue, learning materials, and progress summary."
+              : "Fetching today's question, retry queue, learning materials, and progress summary."
           }
           title={isKorean ? "홈 화면을 준비하는 중입니다" : "Preparing your home screen"}
         />
@@ -191,7 +191,7 @@ export function HomePage() {
                   to: routeConfig.practice.buildPath(),
                   variant: "secondary",
                 }}
-                body={isKorean ? "아직 오늘의 메인 질문이 배정되지 않았습니다." : "Today&apos;s main question is not available yet."}
+                body={isKorean ? "아직 오늘의 메인 질문이 배정되지 않았습니다." : "Today's main question is not available yet."}
                 label={isKorean ? "오늘" : "Today"}
                 title={isKorean ? "오늘의 질문이 없습니다" : "No daily question assigned"}
               />
@@ -213,7 +213,7 @@ export function HomePage() {
                 <LearningMaterialList materials={learningMaterials} />
               ) : (
                 <SectionEmptyState
-                  body={isKorean ? "오늘의 세트에 연결된 보조 학습 자료가 없습니다." : "There are no supporting learning materials attached to today&apos;s set."}
+                  body={isKorean ? "오늘의 세트에 연결된 보조 학습 자료가 없습니다." : "There are no supporting learning materials attached to today's set."}
                   label={isKorean ? "학습 자료" : "Learning materials"}
                   title={isKorean ? "사용 가능한 자료가 없습니다" : "No materials available"}
                 />
@@ -268,8 +268,8 @@ export function HomePage() {
                     <strong>{homeData.todayQuestion ? homeData.todayQuestion.categoryLabel : (isKorean ? "미배정" : "Unassigned")}</strong>
                   </article>
                   <article>
-                    <span>{isKorean ? "회사" : "Company"}</span>
-                    <strong>{homeData.todayQuestion ? homeData.todayQuestion.companyLabel : (isKorean ? "준비 중" : "Pending")}</strong>
+                    <span>{isKorean ? "난이도" : "Difficulty"}</span>
+                    <strong>{homeData.todayQuestion ? homeData.todayQuestion.difficultyLabel : (isKorean ? "준비 중" : "Pending")}</strong>
                   </article>
                   <article>
                     <span>{isKorean ? "재도전" : "Retries"}</span>

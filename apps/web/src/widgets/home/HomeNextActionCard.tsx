@@ -11,7 +11,7 @@ function getNextAction(home: HomeModel, isKorean: boolean) {
   if (home.todayQuestion) {
     return {
       label: isKorean ? "오늘" : "Today",
-      title: isKorean ? "오늘의 메인 면접 질문부터 시작하세요" : "Start today&apos;s main interview question",
+      title: isKorean ? "오늘의 메인 면접 질문부터 시작하세요" : "Start today's main interview question",
       body: isKorean
         ? "오늘 배정된 핵심 질문 하나에 먼저 답하세요."
         : "The clearest next action is to answer the primary question scheduled for you today.",
@@ -91,7 +91,7 @@ export function HomeNextActionCard({ home }: HomeNextActionCardProps) {
       <div className="home-next-action-card__header">
         <div className="home-next-action-card__intro">
           <div className="home-next-action-card__eyebrow-row">
-            <span className="page-card__label">{isKorean ? "오늘의 액션" : "Today&apos;s action"}</span>
+            <span className="page-card__label">{isKorean ? "오늘의 액션" : "Today's action"}</span>
             <span className="detail-chip detail-chip--accent">{nextAction.label}</span>
           </div>
           <h2 className="page-card__title">{nextAction.title}</h2>

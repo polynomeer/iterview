@@ -20,7 +20,7 @@ describe("HomePage", () => {
           prompt: "Describe the issue, the investigation, and the outcome.",
           status: "retry",
           categoryLabel: "System Design",
-          companyLabel: "Stripe",
+          difficultyLabel: "MEDIUM",
         },
         retryQuestions: [
           {
@@ -29,7 +29,7 @@ describe("HomePage", () => {
             prompt: "Explain the tradeoffs.",
             status: "improving",
             categoryLabel: "Backend",
-            companyLabel: "Meta",
+            difficultyLabel: "HARD",
           },
         ],
         learningMaterials: [
@@ -66,7 +66,7 @@ describe("HomePage", () => {
       { locale: "ko" },
     );
 
-    expect(screen.getAllByText("Tell me about a scaling issue you fixed")).toHaveLength(3);
+    expect(screen.getAllByText("Tell me about a scaling issue you fixed")).toHaveLength(2);
     expect(screen.getByText("Design a rate limiter")).toBeInTheDocument();
     expect(screen.getByText("Scaling playbook")).toBeInTheDocument();
     expect(screen.getByText("Weekly score")).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("HomePage", () => {
           prompt: "Describe the issue, the investigation, and the outcome.",
           status: "retry",
           categoryLabel: "System Design",
-          companyLabel: "Stripe",
+          difficultyLabel: "MEDIUM",
         },
         retryQuestions: [],
         learningMaterials: [],
@@ -136,7 +136,7 @@ describe("HomePage", () => {
       { locale: "ko" },
     );
 
-    expect(screen.getAllByText("Tell me about a scaling issue you fixed")).toHaveLength(3);
+    expect(screen.getAllByText("Tell me about a scaling issue you fixed")).toHaveLength(2);
     expect(screen.getByText("Weekly score")).toBeInTheDocument();
     expect(document.querySelector(".home-layout--desktop")).not.toBeNull();
   });

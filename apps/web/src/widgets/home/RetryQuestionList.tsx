@@ -28,7 +28,7 @@ export function RetryQuestionList({ questions }: RetryQuestionListProps) {
               <div className="list-item-card__meta">
                 <QuestionStatusBadge status={question.status} />
                 <span>{question.categoryLabel}</span>
-                <span>{question.companyLabel}</span>
+                <span>{question.difficultyLabel}</span>
               </div>
               <h3 className="list-item-card__title">{question.title}</h3>
               <p className="list-item-card__body home-collection-card__item-body">{question.prompt}</p>
