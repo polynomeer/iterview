@@ -50,6 +50,7 @@ class SecurityConfig(
                         "/api/feed/**",
                         "/api/auth/me",
                         "/api/job-postings/**",
+                        "/api/job-roles",
                     ).authenticated()
                     .requestMatchers("/api/questions/resume-based").authenticated()
                     .requestMatchers(

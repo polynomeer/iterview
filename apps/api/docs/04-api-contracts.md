@@ -37,6 +37,7 @@ Endpoints:
 - `POST /api/me/profile-image`
 - `PATCH /api/me/settings`
 - `PUT /api/me/target-companies`
+- `GET /api/job-roles` (authenticated): `[{ id, name, parentRoleId }]` sorted by name; `PATCH /api/me/profile` accepts one of these ids as `jobRoleId`
 
 ## Home, Daily Card, And Feed
 

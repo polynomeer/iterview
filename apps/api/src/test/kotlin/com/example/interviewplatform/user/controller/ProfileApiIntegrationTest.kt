@@ -108,6 +108,20 @@ class ProfileApiIntegrationTest {
     }
 
     @Test
+    fun `job roles list the seeded roles by name`() {
+        mockMvc.perform(get("/api/job-roles").header("Authorization", authHeader))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].name").value("Backend Engineer"))
+            .andExpect(jsonPath("$[?(@.name == 'Frontend Engineer')].id").isNotEmpty)
+    }
+
+    @Test
+    fun `job roles require authentication`() {
+        mockMvc.perform(get("/api/job-roles"))
+            .andExpect(status().isUnauthorized)
+    }
+
+    @Test
     fun `patch settings rejects unsupported preferred language`() {
         val settingsBody = objectMapper.writeValueAsString(
             mapOf(
