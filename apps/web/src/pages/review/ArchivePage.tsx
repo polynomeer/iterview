@@ -23,16 +23,10 @@ import {
 } from "../../shared/ui/primitives";
 import "./review.css";
 
-function useCopy() {
-  const { locale } = useLocale();
-  return (ko: string, en: string) => (locale === "ko" ? ko : en);
-}
-
 type SourceFilter = "all" | "practice" | "interview" | "real_interview";
 
 export function ArchivePage() {
-  const { locale } = useLocale();
-  const copy = useCopy();
+  const { locale, t } = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
   const recordId = searchParams.get("sourceInterviewRecordId");
   const recordQuestionId = searchParams.get("sourceInterviewQuestionId");
@@ -51,7 +45,7 @@ export function ArchivePage() {
   }, [archiveQuery.data, recordId, recordQuestionId, search, source]);
 
   if (archiveQuery.isLoading) {
-    return <PageSkeleton label={copy("완료한 질문을 불러오는 중", "Loading finished questions")} />;
+    return <PageSkeleton label={t("reviewQueue.archiveLoading")} />;
   }
 
   if (archiveQuery.isError) {
@@ -59,13 +53,13 @@ export function ArchivePage() {
       <ErrorState
         actions={
           <Button onClick={() => void archiveQuery.refetch()} variant="primary">
-            {copy("다시 시도", "Try again")}
+            {t("reviewQueue.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(archiveQuery.error, copy("완료한 질문을 불러오지 못했어요.", "We couldn't load finished questions."))}
+        body={userFacingErrorMessage(archiveQuery.error, t("reviewQueue.archiveLoadErrorBody"))}
         details={getErrorDetails(archiveQuery.error)}
         size="page"
-        title={copy("완료한 질문을 열 수 없어요", "Finished questions are unavailable")}
+        title={t("reviewQueue.archiveLoadErrorTitle")}
       />
     );
   }
@@ -75,15 +69,15 @@ export function ArchivePage() {
   return (
     <div className="ui-page review-page">
       <PageHeader
-        description={copy("충분히 방어한 질문이에요. 면접 전에 다시 훑어보세요.", "Questions you've mastered. Skim them again before the interview.")}
-        title={copy("완료한 질문", "Finished questions")}
+        description={t("reviewQueue.archiveDescription")}
+        title={t("reviewQueue.archiveTitle")}
       />
 
       {recordId ? (
         <Callout>
-          {copy("실전 면접 기록에서 온 질문만 보고 있어요.", "Showing only questions from one real interview record.")}{" "}
+          {t("reviewQueue.archiveRecordFilter")}{" "}
           <button className="review-inline-link" onClick={() => setSearchParams(new URLSearchParams(), { replace: true })} type="button">
-            {copy("전체 보기", "Show all")}
+            {t("reviewQueue.showAll")}
           </button>
         </Callout>
       ) : null}
@@ -93,21 +87,21 @@ export function ArchivePage() {
           actions={
             <Segmented
               items={[
-                { id: "all", label: copy("전체", "All") },
-                { id: "practice", label: copy("연습", "Practice") },
-                { id: "interview", label: copy("모의면접", "Mock") },
-                { id: "real_interview", label: copy("실전", "Real") },
+                { id: "all", label: t("reviewQueue.sourceAll") },
+                { id: "practice", label: t("reviewQueue.sourcePractice") },
+                { id: "interview", label: t("reviewQueue.sourceInterview") },
+                { id: "real_interview", label: t("reviewQueue.sourceRealInterview") },
               ]}
-              label={copy("출처", "Source")}
+              label={t("reviewQueue.source")}
               onChange={setSource}
               value={source}
             />
           }
           meta={<Badge>{total}</Badge>}
-          title={<span id="archive-list-title">{copy("완료 목록", "Finished")}</span>}
+          title={<span id="archive-list-title">{t("reviewQueue.archiveListTitle")}</span>}
         />
         <div className="review-archive__search">
-          <Field label={copy("제목 검색", "Search titles")}>
+          <Field label={t("reviewQueue.searchTitles")}>
             {(control) => <Input {...control} onChange={(event) => setSearch(event.target.value)} type="search" value={search} />}
           </Field>
         </div>
@@ -115,11 +109,11 @@ export function ArchivePage() {
           <EmptyState
             body={
               total === 0
-                ? copy("질문을 충분히 잘 답하면 여기에 모여요.", "Questions you answer well collect here.")
-                : copy("조건을 바꿔 보세요.", "Try different filters.")
+                ? t("reviewQueue.archiveEmptyBody")
+                : t("reviewQueue.archiveNoMatchBody")
             }
             icon="archive"
-            title={total === 0 ? copy("아직 완료한 질문이 없어요", "Nothing finished yet") : copy("조건에 맞는 질문이 없어요", "No matches")}
+            title={total === 0 ? t("reviewQueue.archiveEmptyTitle") : t("reviewQueue.archiveNoMatchTitle")}
           />
         ) : (
           items.map((item) => (
@@ -128,7 +122,7 @@ export function ArchivePage() {
               meta={[
                 item.sourceBadgeLabel,
                 difficultyLabel(item.difficulty, locale),
-                copy(`시도 ${item.totalAttemptCount}회`, `${item.totalAttemptCount} attempts`),
+                t("reviewQueue.attemptCount", { count: item.totalAttemptCount }),
                 item.archivedAtLabel,
               ]
                 .filter(Boolean)
@@ -137,15 +131,15 @@ export function ArchivePage() {
               trailing={
                 <>
                   {item.bestScore !== null ? (
-                    <Badge tone={scoreTone(item.bestScore)}>{copy(`최고 ${item.bestScore}점`, `Best ${item.bestScore}`)}</Badge>
+                    <Badge tone={scoreTone(item.bestScore)}>{t("reviewQueue.bestScore", { score: item.bestScore })}</Badge>
                   ) : null}
                   {item.sourceSessionId ? (
                     <ButtonLink size="sm" to={routeConfig.interviewSessionResult.buildPath({ sessionId: item.sourceSessionId })} variant="ghost">
-                      {copy("면접 결과", "Session")}
+                      {t("reviewQueue.session")}
                     </ButtonLink>
                   ) : null}
                   <ButtonLink size="sm" to={routeConfig.questionDetail.buildPath({ questionId: item.questionId })}>
-                    {copy("다시 보기", "Review")}
+                    {t("reviewQueue.review")}
                   </ButtonLink>
                 </>
               }

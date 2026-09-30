@@ -42,25 +42,19 @@ import "./questions.css";
 
 type InspectorTab = "record" | "materials" | "answers";
 
-function useCopy() {
-  const { locale } = useLocale();
-  return (ko: string, en: string) => (locale === "ko" ? ko : en);
-}
-
 function MasteryBadge({ status }: { status: string | null | undefined }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const mastery = toMastery(status);
-  const [ko, en] = MASTERY_LABEL[mastery];
   return (
     <Badge dot tone={MASTERY_TONE[mastery]}>
-      {copy(ko, en)}
+      {t(MASTERY_LABEL[mastery])}
     </Badge>
   );
 }
 
 /** /questions — pick a question from the navigator; desktop suggests where to start. */
 export function QuestionsIndexPage() {
-  const copy = useCopy();
+  const { t } = useLocale();
   const { search } = useLocation();
   const [first, setFirst] = useState<PracticeQuestionItemModel | null>(null);
   const handleItems = useCallback((items: PracticeQuestionItemModel[]) => setFirst(items[0] ?? null), []);
@@ -68,8 +62,8 @@ export function QuestionsIndexPage() {
   return (
     <div className="ui-page question-page">
       <PageHeader
-        description={copy("질문을 골라 설명과 꼬리질문, 내 기록을 한 화면에서 보세요.", "Pick a question to see its prompt, follow-ups, and your record in one place.")}
-        title={copy("질문", "Questions")}
+        description={t("questionWorkspace.indexDescription")}
+        title={t("questionWorkspace.indexTitle")}
       />
       <div className="question-index">
         <QuestionNavigator onItems={handleItems} />
@@ -78,13 +72,13 @@ export function QuestionsIndexPage() {
             actions={
               first ? (
                 <ButtonLink to={`${routeConfig.questionDetail.buildPath({ questionId: first.id })}${search}`} variant="primary">
-                  {copy("첫 질문 열기", "Open the first question")}
+                  {t("questionWorkspace.openFirstQuestion")}
                 </ButtonLink>
               ) : null
             }
             body={first ? first.title : undefined}
             icon="questions"
-            title={copy("왼쪽에서 질문을 고르세요", "Choose a question on the left")}
+            title={t("questionWorkspace.chooseQuestion")}
           />
         </Card>
       </div>
@@ -122,7 +116,7 @@ function FollowUpTree({ nodes, parentId, currentId }: { nodes: QuestionTreeNodeM
 }
 
 function FollowUps({ questionId, defaultTreeOpen }: { questionId: string; defaultTreeOpen: boolean }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const treeQuery = useQuestionTreeQuery(questionId);
   const followupsQuery = useRecommendedFollowupsQuery(questionId);
   const nodes = treeQuery.data?.nodes ?? [];
@@ -139,8 +133,8 @@ function FollowUps({ questionId, defaultTreeOpen }: { questionId: string; defaul
   return (
     <section aria-labelledby="question-followups-title" className="question-followups">
       <div className="question-section-head">
-        <h2 id="question-followups-title">{copy("다음 꼬리질문", "Next follow-ups")}</h2>
-        <span>{copy("답변 뒤에 이어질 수 있는 질문", "Where the interviewer may go next")}</span>
+        <h2 id="question-followups-title">{t("questionWorkspace.nextFollowUps")}</h2>
+        <span>{t("questionWorkspace.nextFollowUpsHint")}</span>
       </div>
       {treeQuery.isLoading || followupsQuery.isLoading ? (
         <div className="question-followups__loading">
@@ -149,7 +143,7 @@ function FollowUps({ questionId, defaultTreeOpen }: { questionId: string; defaul
         </div>
       ) : nextItems.length === 0 ? (
         <Card>
-          <EmptyState body={copy("답변을 제출하면 꼬리질문이 추천될 수 있어요.", "Follow-ups may appear after you answer.")} title={copy("아직 연결된 꼬리질문이 없어요", "No follow-ups yet")} />
+          <EmptyState body={t("questionWorkspace.noFollowUpsBody")} title={t("questionWorkspace.noFollowUpsTitle")} />
         </Card>
       ) : (
         <ul className="question-followups__list">
@@ -166,7 +160,7 @@ function FollowUps({ questionId, defaultTreeOpen }: { questionId: string; defaul
       )}
       {descendantCount > 1 ? (
         <details className="question-tree-panel" open={defaultTreeOpen}>
-          <summary>{copy(`전체 꼬리질문 트리 (${descendantCount})`, `Full follow-up tree (${descendantCount})`)}</summary>
+          <summary>{t("questionWorkspace.fullTree", { count: descendantCount })}</summary>
           <FollowUpTree currentId={questionId} nodes={nodes} parentId={questionId} />
         </details>
       ) : null}
@@ -175,7 +169,7 @@ function FollowUps({ questionId, defaultTreeOpen }: { questionId: string; defaul
 }
 
 function RecordTab({ question, questionId }: { question: QuestionDetailModel; questionId: string }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const { isAuthenticated } = useAuth();
   const location = useLocation();
   const historyQuery = useQuestionAnswerHistoryQuery(questionId);
@@ -187,12 +181,12 @@ function RecordTab({ question, questionId }: { question: QuestionDetailModel; qu
       <EmptyState
         actions={
           <ButtonLink size="sm" state={{ redirectTo: `${location.pathname}${location.search}` }} to={routeConfig.login.buildPath()} variant="primary">
-            {copy("로그인", "Log in")}
+            {t("questionWorkspace.logIn")}
           </ButtonLink>
         }
-        body={copy("로그인하면 이 질문에 대한 내 답변과 점수를 볼 수 있어요.", "Log in to see your answers and scores for this question.")}
+        body={t("questionWorkspace.recordLoginBody")}
         icon="profile"
-        title={copy("내 기록은 로그인 후에 보여요", "Sign in to see your record")}
+        title={t("questionWorkspace.recordLoginTitle")}
       />
     );
   }
@@ -201,26 +195,26 @@ function RecordTab({ question, questionId }: { question: QuestionDetailModel; qu
     <div className="question-inspector__stack">
       {progress ? (
         <div className="question-inspector__stats">
-          <Stat label={copy("최고 점수", "Best score")} tone={scoreTone(Number.parseFloat(progress.bestScoreLabel))} value={progress.bestScoreLabel} />
-          <Stat label={copy("시도", "Attempts")} value={progress.attemptsCount} />
+          <Stat label={t("questionWorkspace.bestScore")} tone={scoreTone(Number.parseFloat(progress.bestScoreLabel))} value={progress.bestScoreLabel} />
+          <Stat label={t("questionWorkspace.attempts")} value={progress.attemptsCount} />
         </div>
       ) : null}
       {progress?.nextReviewLabel ? (
         <p className="question-inspector__note">
           <Icon name="review" size={16} />
-          {copy(`다음 복습 ${progress.nextReviewLabel}`, `Next review ${progress.nextReviewLabel}`)}
+          {t("questionWorkspace.nextReview", { date: progress.nextReviewLabel })}
         </p>
       ) : null}
       {historyQuery.isLoading ? (
         <Skeleton height="6rem" />
       ) : historyQuery.isError ? (
         <ErrorState
-          actions={<Button onClick={() => void historyQuery.refetch()} size="sm">{copy("다시 시도", "Try again")}</Button>}
-          body={userFacingErrorMessage(historyQuery.error, copy("답변 기록을 불러오지 못했어요.", "We couldn't load your answers."))}
-          title={copy("기록을 불러올 수 없어요", "Record unavailable")}
+          actions={<Button onClick={() => void historyQuery.refetch()} size="sm">{t("questionWorkspace.tryAgain")}</Button>}
+          body={userFacingErrorMessage(historyQuery.error, t("questionWorkspace.historyErrorBody"))}
+          title={t("questionWorkspace.historyErrorTitle")}
         />
       ) : (historyQuery.data?.items.length ?? 0) === 0 ? (
-        <EmptyState body={copy("첫 답변을 제출하면 점수와 피드백이 여기에 쌓여요.", "Scores and feedback collect here after your first answer.")} title={copy("아직 답변하지 않았어요", "No answers yet")} />
+        <EmptyState body={t("questionWorkspace.noAnswersBody")} title={t("questionWorkspace.noAnswersTitle")} />
       ) : (
         <div className="question-inspector__history">
           {historyQuery.data?.items.map((item) => (
@@ -230,7 +224,7 @@ function RecordTab({ question, questionId }: { question: QuestionDetailModel; qu
                 title={item.submittedAtLabel}
                 trailing={
                   item.totalScore !== null ? (
-                    <Badge tone={scoreTone(item.totalScore)}>{copy(`${item.totalScore}점`, `${item.totalScore} pts`)}</Badge>
+                    <Badge tone={scoreTone(item.totalScore)}>{t("questionWorkspace.scorePoints", { score: item.totalScore })}</Badge>
                   ) : null
                 }
               />
@@ -243,34 +237,34 @@ function RecordTab({ question, questionId }: { question: QuestionDetailModel; qu
 }
 
 function MaterialsTab({ materials, onAdd, canAdd }: { materials: QuestionDetailModel["learningMaterials"]; onAdd: () => void; canAdd: boolean }) {
-  const copy = useCopy();
+  const { t } = useLocale();
 
   return (
     <div className="question-inspector__stack">
       {materials.length === 0 ? (
-        <EmptyState title={copy("연결된 학습 자료가 없어요", "No learning materials yet")} />
+        <EmptyState title={t("questionWorkspace.noMaterials")} />
       ) : (
         materials.map((material) => (
           <article className="question-material" key={material.id}>
             <div className="question-material__head">
               <strong>{material.labelOverride || material.title}</strong>
-              {material.isOfficial ? <Badge tone="accent">{copy("공식", "Official")}</Badge> : null}
+              {material.isOfficial ? <Badge tone="accent">{t("questionWorkspace.official")}</Badge> : null}
             </div>
             <p className="question-material__meta">
-              {[material.resourceTypeLabel, material.sourceName, material.estimatedMinutes ? copy(`${material.estimatedMinutes}분`, `${material.estimatedMinutes} min`) : null]
+              {[material.resourceTypeLabel, material.sourceName, material.estimatedMinutes ? t("questionWorkspace.minutes", { minutes: material.estimatedMinutes }) : null]
                 .filter(Boolean)
                 .join(" · ")}
             </p>
             {material.description ? <p className="question-material__body">{material.description}</p> : null}
             {material.contentText ? (
               <details className="question-material__content">
-                <summary>{copy("내용 보기", "Show content")}</summary>
+                <summary>{t("questionWorkspace.showContent")}</summary>
                 <p>{material.contentText}</p>
               </details>
             ) : null}
             {material.url ? (
               <a className="question-link" href={material.url} rel="noreferrer" target="_blank">
-                {copy("링크 열기", "Open link")}
+                {t("questionWorkspace.openLink")}
               </a>
             ) : null}
           </article>
@@ -278,7 +272,7 @@ function MaterialsTab({ materials, onAdd, canAdd }: { materials: QuestionDetailM
       )}
       {canAdd ? (
         <Button icon="plus" onClick={onAdd} size="sm">
-          {copy("자료 추가", "Add material")}
+          {t("questionWorkspace.addMaterial")}
         </Button>
       ) : null}
     </div>
@@ -286,19 +280,19 @@ function MaterialsTab({ materials, onAdd, canAdd }: { materials: QuestionDetailM
 }
 
 function AnswersTab({ answers, onAdd, canAdd }: { answers: QuestionDetailModel["referenceAnswers"]; onAdd: () => void; canAdd: boolean }) {
-  const copy = useCopy();
+  const { t } = useLocale();
 
   return (
     <div className="question-inspector__stack">
       {answers.length === 0 ? (
-        <EmptyState title={copy("아직 모범 답안이 없어요", "No reference answers yet")} />
+        <EmptyState title={t("questionWorkspace.noReferenceAnswers")} />
       ) : (
         answers.map((answer, index) => (
           <details className="question-answer" key={answer.id} open={index === 0}>
             <summary>
               <strong>{answer.title}</strong>
-              {answer.isOfficial ? <Badge tone="accent">{copy("공식", "Official")}</Badge> : null}
-              {answer.isUserGenerated ? <Badge>{copy("내 답안", "Mine")}</Badge> : null}
+              {answer.isOfficial ? <Badge tone="accent">{t("questionWorkspace.official")}</Badge> : null}
+              {answer.isUserGenerated ? <Badge>{t("questionWorkspace.mine")}</Badge> : null}
             </summary>
             <p className="question-answer__text">{answer.answerText}</p>
           </details>
@@ -306,7 +300,7 @@ function AnswersTab({ answers, onAdd, canAdd }: { answers: QuestionDetailModel["
       )}
       {canAdd ? (
         <Button icon="plus" onClick={onAdd} size="sm">
-          {copy("모범 답안 추가", "Add reference answer")}
+          {t("questionWorkspace.addReferenceAnswer")}
         </Button>
       ) : null}
     </div>
@@ -320,8 +314,7 @@ function mergeById<T extends { id: string }>(primary: T[], fallback: T[]) {
 /** /questions/:id (and /questions/:id/tree) — the question, its follow-ups, and an inspector. */
 export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTreeOpen?: boolean }) {
   const { questionId = "" } = useParams<{ questionId: string }>();
-  const { locale } = useLocale();
-  const copy = useCopy();
+  const { locale, t } = useLocale();
   const { isAuthenticated } = useAuth();
   const detailQuery = useQuestionDetailQuery(questionId);
   const treeQuery = useQuestionTreeQuery(questionId);
@@ -349,7 +342,7 @@ export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTree
 
   let center;
   if (detailQuery.isLoading) {
-    center = <PageSkeleton label={copy("질문을 불러오는 중", "Loading the question")} />;
+    center = <PageSkeleton label={t("questionWorkspace.loadingQuestion")} />;
   } else if (detailQuery.isError || !question) {
     const notFound = !detailQuery.isError || (detailQuery.error instanceof ApiClientError && detailQuery.error.status === 404);
     center = (
@@ -357,19 +350,19 @@ export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTree
         actions={
           notFound ? (
             <ButtonLink to={routeConfig.practice.buildPath()} variant="primary">
-              {copy("질문 목록으로", "Back to questions")}
+              {t("questionWorkspace.backToQuestions")}
             </ButtonLink>
           ) : (
             <Button onClick={() => void detailQuery.refetch()} variant="primary">
-              {copy("다시 시도", "Try again")}
+              {t("questionWorkspace.tryAgain")}
             </Button>
           )
         }
-        body={notFound ? copy("삭제되었거나 주소가 잘못되었을 수 있어요.", "It may have been removed, or the link is wrong.") : userFacingErrorMessage(detailQuery.error, copy("질문을 불러오지 못했어요.", "We couldn't load this question."))}
+        body={notFound ? t("questionWorkspace.notFoundBody") : userFacingErrorMessage(detailQuery.error, t("questionWorkspace.loadErrorBody"))}
         details={getErrorDetails(detailQuery.error)}
         icon={notFound ? "search" : undefined}
         size="page"
-        title={notFound ? copy("질문을 찾을 수 없어요", "Question not found") : copy("질문을 열 수 없어요", "Question unavailable")}
+        title={notFound ? t("questionWorkspace.notFoundTitle") : t("questionWorkspace.unavailableTitle")}
       />
     );
   } else {
@@ -388,16 +381,16 @@ export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTree
           actions={
             <>
               <ButtonLink icon="arrowRight" to={routeConfig.answerEditor.buildPath({ questionId })} variant="primary">
-                {copy("답변하기", "Answer")}
+                {t("questionWorkspace.answer")}
               </ButtonLink>
-              <Button onClick={openReferenceAnswers}>{copy("모범 답안 보기", "See reference answers")}</Button>
+              <Button onClick={openReferenceAnswers}>{t("questionWorkspace.seeReferenceAnswers")}</Button>
             </>
           }
           title={question.title}
         />
         {question.body && question.body !== question.title ? (
           <Card padded>
-            <h2 className="question-section-label">{copy("질문 설명", "About this question")}</h2>
+            <h2 className="question-section-label">{t("questionWorkspace.aboutQuestion")}</h2>
             <p className="question-main__body">{question.body}</p>
             {question.tags.length > 0 ? (
               <div className="question-main__tags">
@@ -421,17 +414,17 @@ export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTree
         </div>
         <div className="question-workspace__main">{center}</div>
         {question ? (
-          <aside aria-label={copy("질문 정보", "Question details")} className="question-workspace__inspector" ref={inspectorRef}>
+          <aside aria-label={t("questionWorkspace.questionDetails")} className="question-workspace__inspector" ref={inspectorRef}>
             <Card>
-              <CardHeader title={copy("내 준비 상태", "Your preparation")} titleAs="h2" />
+              <CardHeader title={t("questionWorkspace.yourPreparation")} titleAs="h2" />
               <CardBody>
                 <Tabs
                   items={[
-                    { id: "record", label: copy("내 기록", "Record") },
-                    { id: "materials", label: copy("자료", "Materials"), count: learningMaterials.length },
-                    { id: "answers", label: copy("모범 답안", "Answers"), count: referenceAnswers.length },
+                    { id: "record", label: t("questionWorkspace.tabRecord") },
+                    { id: "materials", label: t("questionWorkspace.tabMaterials"), count: learningMaterials.length },
+                    { id: "answers", label: t("questionWorkspace.tabAnswers"), count: referenceAnswers.length },
                   ]}
-                  label={copy("질문 정보 보기", "Question details view")}
+                  label={t("questionWorkspace.detailsView")}
                   onChange={setTab}
                   value={tab}
                 >

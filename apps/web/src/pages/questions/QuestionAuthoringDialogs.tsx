@@ -14,11 +14,10 @@ type DialogProps = {
 const EMPTY_ANSWER = { title: "", answerText: "", answerFormat: "outline" };
 
 export function ReferenceAnswerDialog({ questionId, open, onClose }: DialogProps) {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const mutation = useCreateQuestionReferenceAnswerMutation();
   const [form, setForm] = useState(EMPTY_ANSWER);
   const [error, setError] = useState<string | null>(null);
-  const isKorean = locale === "ko";
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -42,11 +41,11 @@ export function ReferenceAnswerDialog({ questionId, open, onClose }: DialogProps
 
   return (
     <Dialog
-      closeLabel={isKorean ? "닫기" : "Close"}
+      closeLabel={t("questionWorkspace.close")}
       description={t("question.referenceAnswerComposerTitle")}
       footer={
         <>
-          <Button onClick={onClose}>{isKorean ? "취소" : "Cancel"}</Button>
+          <Button onClick={onClose}>{t("questionWorkspace.cancel")}</Button>
           <Button form="reference-answer-form" loading={mutation.isPending} type="submit" variant="primary">
             {t("common.save")}
           </Button>
@@ -55,7 +54,7 @@ export function ReferenceAnswerDialog({ questionId, open, onClose }: DialogProps
       onClose={onClose}
       open={open}
       size="lg"
-      title={isKorean ? "모범 답안 추가" : "Add a reference answer"}
+      title={t("questionWorkspace.addReferenceAnswerTitle")}
     >
       <form className="question-dialog-form" id="reference-answer-form" noValidate onSubmit={submit}>
         {error ? <Callout tone="danger">{error}</Callout> : null}
@@ -72,10 +71,10 @@ export function ReferenceAnswerDialog({ questionId, open, onClose }: DialogProps
         <Field label={t("question.referenceAnswerFormatLabel")}>
           {(control) => (
             <Select {...control} onChange={(event) => setForm({ ...form, answerFormat: event.target.value })} value={form.answerFormat}>
-              <option value="outline">{isKorean ? "개요" : "Outline"}</option>
-              <option value="full_answer">{isKorean ? "전체 답변" : "Full answer"}</option>
-              <option value="summary">{isKorean ? "요약" : "Summary"}</option>
-              <option value="transcript_excerpt">{isKorean ? "대화 발췌" : "Transcript excerpt"}</option>
+              <option value="outline">{t("questionWorkspace.formatOutline")}</option>
+              <option value="full_answer">{t("questionWorkspace.formatFullAnswer")}</option>
+              <option value="summary">{t("questionWorkspace.formatSummary")}</option>
+              <option value="transcript_excerpt">{t("questionWorkspace.formatTranscriptExcerpt")}</option>
             </Select>
           )}
         </Field>
@@ -111,11 +110,10 @@ const EMPTY_MATERIAL = {
 type MaterialField = keyof typeof EMPTY_MATERIAL;
 
 export function LearningMaterialDialog({ questionId, open, onClose }: DialogProps) {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const mutation = useCreateQuestionLearningMaterialMutation();
   const [form, setForm] = useState(EMPTY_MATERIAL);
   const [error, setError] = useState<string | null>(null);
-  const isKorean = locale === "ko";
   const bind = (field: MaterialField) => ({
     value: form[field],
     onChange: (event: { target: { value: string } }) => setForm({ ...form, [field]: event.target.value }),
@@ -164,11 +162,11 @@ export function LearningMaterialDialog({ questionId, open, onClose }: DialogProp
 
   return (
     <Dialog
-      closeLabel={isKorean ? "닫기" : "Close"}
+      closeLabel={t("questionWorkspace.close")}
       description={t("question.learningMaterialComposerTitle")}
       footer={
         <>
-          <Button onClick={onClose}>{isKorean ? "취소" : "Cancel"}</Button>
+          <Button onClick={onClose}>{t("questionWorkspace.cancel")}</Button>
           <Button form="learning-material-form" loading={mutation.isPending} type="submit" variant="primary">
             {t("common.save")}
           </Button>
@@ -177,7 +175,7 @@ export function LearningMaterialDialog({ questionId, open, onClose }: DialogProp
       onClose={onClose}
       open={open}
       size="lg"
-      title={isKorean ? "학습 자료 추가" : "Add learning material"}
+      title={t("questionWorkspace.addLearningMaterialTitle")}
     >
       <form className="question-dialog-form" id="learning-material-form" noValidate onSubmit={submit}>
         {error ? <Callout tone="danger">{error}</Callout> : null}
@@ -199,7 +197,7 @@ export function LearningMaterialDialog({ questionId, open, onClose }: DialogProp
           {(control) => <Input {...control} {...bind("description")} placeholder={t("question.learningMaterialDescriptionPlaceholder")} />}
         </Field>
         <details className="question-dialog-form__advanced">
-          <summary>{isKorean ? "추가 정보" : "More details"}</summary>
+          <summary>{t("questionWorkspace.moreDetails")}</summary>
           <div className="question-dialog-form__row">
             <Field label={t("question.learningMaterialSourceNameLabel")}>
               {(control) => <Input {...control} {...bind("sourceName")} placeholder={t("question.learningMaterialSourceNamePlaceholder")} />}

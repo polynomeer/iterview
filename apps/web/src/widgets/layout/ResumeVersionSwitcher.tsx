@@ -16,12 +16,11 @@ type ResumeVersionSwitcherProps = {
 
 /** Pick the active resume version for the whole app. */
 export function ResumeVersionSwitcher({ open, onClose, onActivated }: ResumeVersionSwitcherProps) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { locale, t } = useLocale();
   const { active, resumes } = useActiveResumeVersion();
   const activateMutation = useActivateResumeVersionMutation();
   const [pendingId, setPendingId] = useState<string | null>(null);
-  const error = optionalErrorMessage(activateMutation.error, isKorean ? "버전을 바꾸지 못했어요. 다시 시도하세요." : "We couldn't switch versions. Try again.");
+  const error = optionalErrorMessage(activateMutation.error, t("shell.versionSwitchError"));
 
   async function choose(versionId: string) {
     if (versionId === active?.id) {
@@ -42,20 +41,20 @@ export function ResumeVersionSwitcher({ open, onClose, onActivated }: ResumeVers
 
   return (
     <Dialog
-      closeLabel={isKorean ? "닫기" : "Close"}
-      description={isKorean ? "질문 추천, 면접, 답변 평가가 이 버전을 기준으로 해요." : "Questions, interviews, and answer grading use this version."}
+      closeLabel={t("shell.close")}
+      description={t("shell.versionSwitcherDescription")}
       footer={
         <ButtonLink icon="plus" onClick={onClose} to={active ? routeConfig.resumeVersions.buildPath({ versionId: active.id }) : routeConfig.resume.buildPath()}>
-          {isKorean ? "새 버전 올리기" : "Upload a new version"}
+          {t("shell.uploadNewVersion")}
         </ButtonLink>
       }
       onClose={onClose}
       open={open}
-      title={isKorean ? "활성 이력서 버전" : "Active resume version"}
+      title={t("shell.versionSwitcherTitle")}
     >
       {error ? <Callout tone="danger">{error}</Callout> : null}
       {resumes.every((resume) => resume.versions.length === 0) ? (
-        <p className="version-switcher__empty">{isKorean ? "아직 올린 이력서가 없어요." : "No resume uploaded yet."}</p>
+        <p className="version-switcher__empty">{t("shell.noResumeYet")}</p>
       ) : (
         resumes.map((resume) => (
           <section aria-label={resume.title} className="version-switcher__resume" key={resume.id}>
@@ -79,7 +78,7 @@ export function ResumeVersionSwitcher({ open, onClose, onActivated }: ResumeVers
                         <span>{[version.fileNameLabel, version.uploadedAtLabel].filter(Boolean).join(" · ")}</span>
                       </span>
                       <Badge tone={status.tone}>{status.label}</Badge>
-                      {isActive ? <Badge tone="accent">{isKorean ? "사용 중" : "Active"}</Badge> : null}
+                      {isActive ? <Badge tone="accent">{t("shell.activeVersion")}</Badge> : null}
                     </button>
                   </li>
                 );

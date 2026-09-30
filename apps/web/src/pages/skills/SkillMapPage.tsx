@@ -22,11 +22,6 @@ import {
 } from "../../shared/ui/primitives";
 import "./skills.css";
 
-function useCopy() {
-  const { locale } = useLocale();
-  return (ko: string, en: string) => (locale === "ko" ? ko : en);
-}
-
 export type SkillRow = {
   key: string;
   code: string | null;
@@ -77,8 +72,7 @@ export const isUnmeasured = (row: SkillRow) => row.score === null || (row.score 
 const gapOf = (row: SkillRow) => (isUnmeasured(row) ? Number.POSITIVE_INFINITY : (row.score ?? 0) - (row.benchmark ?? row.score ?? 0));
 
 export function SkillMapPage() {
-  const { locale } = useLocale();
-  const copy = useCopy();
+  const { locale, t } = useLocale();
   const progressQuery = useSkillProgressQuery();
   const radarQuery = useSkillRadarQuery();
   const questionsQuery = usePracticeQuestionsQuery({});
@@ -99,7 +93,7 @@ export function SkillMapPage() {
   const failed = progressQuery.isError && radarQuery.isError && !(unsupported(progressQuery) && unsupported(radarQuery));
 
   if (isLoading) {
-    return <PageSkeleton label={copy("스킬 맵을 불러오는 중", "Loading the skill map")} />;
+    return <PageSkeleton label={t("skillMap.loading")} />;
   }
 
   if (failed) {
@@ -113,13 +107,13 @@ export function SkillMapPage() {
             }}
             variant="primary"
           >
-            {copy("다시 시도", "Try again")}
+            {t("skillMap.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(progressQuery.error, copy("스킬 준비도를 불러오지 못했어요.", "We couldn't load your skill readiness."))}
+        body={userFacingErrorMessage(progressQuery.error, t("skillMap.loadErrorBody"))}
         details={getErrorDetails(progressQuery.error)}
         size="page"
-        title={copy("스킬 맵을 열 수 없어요", "The skill map is unavailable")}
+        title={t("skillMap.loadErrorTitle")}
       />
     );
   }
@@ -131,8 +125,8 @@ export function SkillMapPage() {
   return (
     <div className="ui-page skill-page">
       <PageHeader
-        description={copy("영역별 준비도를 목표와 비교해 약한 곳부터 연습하세요.", "Compare each area with its target and practice the weakest first.")}
-        title={copy("스킬 맵", "Skill map")}
+        description={t("skillMap.description")}
+        title={t("skillMap.title")}
       />
 
       {rows.length === 0 ? (
@@ -140,21 +134,21 @@ export function SkillMapPage() {
           <EmptyState
             actions={
               <ButtonLink to={routeConfig.practice.buildPath()} variant="primary">
-                {copy("질문 목록으로", "Go to questions")}
+                {t("skillMap.goToQuestions")}
               </ButtonLink>
             }
-            body={copy("질문에 답하면 영역별 준비도가 계산돼요.", "Answer a few questions and readiness appears here.")}
+            body={t("skillMap.emptyBody")}
             icon="skills"
-            title={copy("아직 계산된 스킬이 없어요", "No skills measured yet")}
+            title={t("skillMap.emptyTitle")}
           />
         </Card>
       ) : (
         <>
-          <Card aria-label={copy("스킬 요약", "Skill summary")} className="skill-summary" padded>
-            <Stat label={copy("추적 중인 영역", "Areas tracked")} value={rows.length} />
-            <Stat label={copy("답변한 질문", "Questions answered")} value={answered} />
-            <Stat label={copy("약한 답변", "Weak answers")} tone={weak > 0 ? "danger" : "neutral"} value={weak} />
-            <Stat label={copy("가장 약한 영역", "Weakest area")} tone="warning" value={weakest?.label ?? "-"} />
+          <Card aria-label={t("skillMap.summaryLabel")} className="skill-summary" padded>
+            <Stat label={t("skillMap.areasTracked")} value={rows.length} />
+            <Stat label={t("skillMap.questionsAnswered")} value={answered} />
+            <Stat label={t("skillMap.weakAnswers")} tone={weak > 0 ? "danger" : "neutral"} value={weak} />
+            <Stat label={t("skillMap.weakestArea")} tone="warning" value={weakest?.label ?? "-"} />
           </Card>
 
           <Card aria-labelledby="skill-list-title">
@@ -162,15 +156,15 @@ export function SkillMapPage() {
               actions={
                 <Segmented
                   items={[
-                    { id: "weakest", label: copy("약한 순", "Weakest first") },
-                    { id: "name", label: copy("이름 순", "By name") },
+                    { id: "weakest", label: t("skillMap.sortWeakest") },
+                    { id: "name", label: t("skillMap.sortName") },
                   ]}
-                  label={copy("정렬", "Sort")}
+                  label={t("skillMap.sort")}
                   onChange={setOrder}
                   value={order}
                 />
               }
-              title={<span id="skill-list-title">{copy("영역별 준비도", "Readiness by area")}</span>}
+              title={<span id="skill-list-title">{t("skillMap.listTitle")}</span>}
             />
             <ul className="skill-list">
               {rows.map((row) => {
@@ -183,26 +177,26 @@ export function SkillMapPage() {
                     <div className="skill-list__head">
                       <strong>{row.label}</strong>
                       <span className={`skill-list__score ui-tone-text--${tone}`}>
-                        {unmeasured ? copy("미측정", "Not measured") : Math.round(row.score ?? 0)}
+                        {unmeasured ? t("skillMap.notMeasured") : Math.round(row.score ?? 0)}
                       </span>
                     </div>
                     <div className="skill-list__bar">
-                      <Progress label={copy(`${row.label} 준비도`, `${row.label} readiness`)} tone={tone} value={row.score ?? 0} />
+                      <Progress label={t("skillMap.rowReadiness", { skill: row.label })} tone={tone} value={row.score ?? 0} />
                       {row.benchmark !== null ? (
                         <span aria-hidden="true" className="skill-list__target" style={{ left: `${Math.min(100, Math.max(0, row.benchmark))}%` }} />
                       ) : null}
                     </div>
                     <div className="skill-list__meta">
-                      {row.benchmark !== null ? <span>{copy(`목표 ${row.benchmark}`, `Target ${row.benchmark}`)}</span> : null}
+                      {row.benchmark !== null ? <span>{t("skillMap.target", { score: row.benchmark })}</span> : null}
                       {gap !== null ? (
                         <Badge tone={gap >= 0 ? "success" : "warning"}>
-                          {gap >= 0 ? copy("목표 달성", "On target") : copy(`목표까지 ${Math.abs(Math.round(gap))}`, `${Math.abs(Math.round(gap))} to target`)}
+                          {gap >= 0 ? t("skillMap.onTarget") : t("skillMap.toTarget", { gap: Math.abs(Math.round(gap)) })}
                         </Badge>
                       ) : null}
-                      <span>{copy(`답변 ${row.answered} · 약한 답변 ${row.weak}`, `${row.answered} answered · ${row.weak} weak`)}</span>
+                      <span>{t("skillMap.rowCounts", { answered: row.answered, weak: row.weak })}</span>
                       {categoryId ? (
                         <ButtonLink size="sm" to={`${routeConfig.practice.buildPath()}?category=${categoryId}`} variant="ghost">
-                          {copy("관련 질문", "Questions")}
+                          {t("skillMap.relatedQuestions")}
                         </ButtonLink>
                       ) : null}
                     </div>

@@ -18,8 +18,7 @@ type QuestionNavigatorProps = {
 
 /** Search, filter, and pick questions. Filters live in the URL so they survive navigation. */
 export function QuestionNavigator({ selectedQuestionId, onItems }: QuestionNavigatorProps) {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { locale, t } = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get("search") ?? "";
   const category = searchParams.get("category") ?? "";
@@ -73,24 +72,24 @@ export function QuestionNavigator({ selectedQuestionId, onItems }: QuestionNavig
   const hasFilters = Boolean(search || category || difficulty);
 
   return (
-    <nav aria-label={isKorean ? "질문 목록" : "Question list"} className="question-nav">
+    <nav aria-label={t("questionWorkspace.navLabel")} className="question-nav">
       <div className="question-nav__controls">
-        <Field label={isKorean ? "질문 검색" : "Search questions"}>
+        <Field label={t("questionWorkspace.searchLabel")}>
           {(control) => (
             <Input
               {...control}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder={isKorean ? "예: 트랜잭션, Kafka" : "e.g. transaction, Kafka"}
+              placeholder={t("questionWorkspace.searchPlaceholder")}
               type="search"
               value={draft}
             />
           )}
         </Field>
         <div className="question-nav__filters">
-          <Field label={isKorean ? "분류" : "Category"}>
+          <Field label={t("questionWorkspace.category")}>
             {(control) => (
               <Select {...control} onChange={(event) => updateParam("category", event.target.value)} value={category}>
-                <option value="">{isKorean ? "전체" : "All"}</option>
+                <option value="">{t("questionWorkspace.all")}</option>
                 {(query.data?.filters.categories ?? []).map((option) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -99,10 +98,10 @@ export function QuestionNavigator({ selectedQuestionId, onItems }: QuestionNavig
               </Select>
             )}
           </Field>
-          <Field label={isKorean ? "난이도" : "Difficulty"}>
+          <Field label={t("questionWorkspace.difficulty")}>
             {(control) => (
               <Select {...control} onChange={(event) => updateParam("difficulty", event.target.value)} value={difficulty}>
-                <option value="">{isKorean ? "전체" : "All"}</option>
+                <option value="">{t("questionWorkspace.all")}</option>
                 {["EASY", "MEDIUM", "HARD"].map((code) => (
                   <option key={code} value={code}>
                     {difficultyLabel(code, locale)}
@@ -122,26 +121,26 @@ export function QuestionNavigator({ selectedQuestionId, onItems }: QuestionNavig
         </div>
       ) : query.isError ? (
         <ErrorState
-          actions={<Button onClick={() => void query.refetch()}>{isKorean ? "다시 시도" : "Try again"}</Button>}
-          body={userFacingErrorMessage(query.error, isKorean ? "질문 목록을 불러오지 못했어요." : "We couldn't load questions.")}
-          title={isKorean ? "질문을 불러올 수 없어요" : "Questions are unavailable"}
+          actions={<Button onClick={() => void query.refetch()}>{t("questionWorkspace.tryAgain")}</Button>}
+          body={userFacingErrorMessage(query.error, t("questionWorkspace.listErrorBody"))}
+          title={t("questionWorkspace.listErrorTitle")}
         />
       ) : items.length === 0 ? (
         <EmptyState
           actions={
             hasFilters ? (
               <Button onClick={() => setSearchParams(new URLSearchParams(), { replace: true })}>
-                {isKorean ? "조건 초기화" : "Clear filters"}
+                {t("questionWorkspace.clearFilters")}
               </Button>
             ) : null
           }
           icon="search"
-          title={isKorean ? "조건에 맞는 질문이 없어요" : "No questions match"}
+          title={t("questionWorkspace.noMatches")}
         />
       ) : (
         <div className="question-nav__groups">
           <p aria-live="polite" className="question-nav__count">
-            {isKorean ? `질문 ${items.length}개` : `${items.length} questions`}
+            {t("questionWorkspace.questionCount", { count: items.length })}
           </p>
           {groups.map(([groupLabel, groupItems]) => (
             <section aria-label={groupLabel} className="question-nav__group" key={groupLabel}>

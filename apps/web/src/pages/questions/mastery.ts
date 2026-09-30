@@ -1,3 +1,4 @@
+import type { MessageKey } from "../../shared/i18n";
 import type { Tone } from "../../shared/ui/primitives";
 
 export type Mastery = "unanswered" | "weak" | "answered" | "strong";
@@ -23,9 +24,9 @@ export const MASTERY_TONE: Record<Mastery, Tone> = {
   strong: "success",
 };
 
-export const MASTERY_LABEL: Record<Mastery, [ko: string, en: string]> = {
-  unanswered: ["미답변", "Not answered"],
-  weak: ["약점", "Weak"],
-  answered: ["답변함", "Answered"],
-  strong: ["숙달", "Strong"],
+export const MASTERY_LABEL: Record<Mastery, MessageKey> = {
+  unanswered: "questionWorkspace.masteryUnanswered",
+  weak: "questionWorkspace.masteryWeak",
+  answered: "questionWorkspace.masteryAnswered",
+  strong: "questionWorkspace.masteryStrong",
 };
