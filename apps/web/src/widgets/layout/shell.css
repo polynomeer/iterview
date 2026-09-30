@@ -292,3 +292,10 @@
   .shell-topbar__separator { display: none; }
   .shell-area-nav { padding: 0 var(--iv-space-4); }
 }
+
+/* ---------- Focus mode ---------- */
+
+.shell-focus {
+  min-height: 100vh;
+  background: var(--iv-bg);
+}

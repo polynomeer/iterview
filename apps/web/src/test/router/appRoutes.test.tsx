@@ -1,6 +1,7 @@
 import { matchRoutes } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { appRoutes } from "../../app/router";
+import { isFocusRoute } from "../../widgets/layout/AppLayout";
 import { routeConfig } from "../../shared/config/routes";
 
 function deepestPath(pathname: string) {
@@ -35,5 +36,13 @@ describe("app routes", () => {
 
   it("sends unknown paths to the not-found route", () => {
     expect(deepestPath("/nope/deeper")).toBe("*");
+  });
+
+  it("answers in focus mode, without the navigation shell", () => {
+    const answer = matchRoutes(appRoutes, "/questions/12/answer") ?? [];
+    const detail = matchRoutes(appRoutes, "/questions/12") ?? [];
+
+    expect(isFocusRoute(answer.map((match) => ({ handle: match.route.handle })))).toBe(true);
+    expect(isFocusRoute(detail.map((match) => ({ handle: match.route.handle })))).toBe(false);
   });
 });

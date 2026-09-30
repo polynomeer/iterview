@@ -106,6 +106,8 @@ export const appRoutes: RouteObject[] = [
               },
               {
                 path: routeConfig.answerEditor.path,
+                // Focus mode: AppLayout drops the sidebar, top bar, and tab bar while answering.
+                handle: { focus: true },
                 element: withSuspense(<AnswerEditorPage />),
               },
               {
