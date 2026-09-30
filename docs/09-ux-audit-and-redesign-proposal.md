@@ -428,6 +428,33 @@ These are built in order: 이력서 hub (claims → heatmap → tailor → versi
 
 **Acceptance:** the resume version is chosen once, globally. There are no per-page version pickers. `ResumeEditorPage` is split into tab components under ~600 lines each.
 
+**Status (2026-09-30): done.**
+
+| Screen | Outcome |
+| --- | --- |
+| Version choice | The sidebar card opens a switcher that activates a version app-wide and keeps the current resume tab (`8b45fa2`). It is the only version picker (ADR 0078). |
+| 이력서 hub | `/resume/:versionId` with route tabs 개요 · 근거 편집 · 면접 압박 지도 · 공고 맞춤 · 버전 관리. `/resume` opens the active version, or a one-step first upload. The overview shows extracted risks worst-first, experience with its projects, and profile and skills. The management page becomes the 버전 관리 tab. The fabricated analysis page is removed (`86ba1ba`). |
+| 면접 압박 지도 | Claims ranked by interview pressure. Only highlights that drew questions are shown, and their questions open in place. Link correction moves into a dialog (`31f466f`). |
+| 공고 맞춤 | Postings and this version's analyses share one tab. The landing page, its version select, and the invented posting fit metrics are gone. The analysis detail leads with fit, rewrites to apply, keyword gaps, and PDF exports (`05ed753`). |
+| 근거 편집 | `ResumeEditorPage` is split into 37 modules, the largest 482 lines, with no behavior change (`54a89c8`). The tab uses the hub's heading and a slim toolbar (`34845ee`). |
+| 모의면접 | Setup is three questions: basis (active resume, or due reviews via `review_mock`), mode, and opening question count. No version picker and no invented focus graph (`27c4c3a`). |
+| 면접 진행 | Focus mode with one question at a time, progress, a timer, and the question flow (`aa1f121`). |
+| 면접 결과 | Average, answered and skipped counts, one next step, and every question with its feedback and a retry. Coverage is shown for full-coverage sessions (`35b6573`). |
+| 실전 면접 복기 | The list and the upload are separate pages. The upload links to the active version by default, with an opt-out (`526411e`). The review page is split into per-route pages under 600 lines each (`cb2a0bd`). |
+
+Found and fixed along the way:
+- **Graded against the wrong resume:** mock-interview answers were graded against the currently active version instead of the session's own. Replays sent no version at all (`aa1f121`, `12f2b00`).
+- **Presence race:** two concurrent editor heartbeats could violate the presence unique constraint and surface a server error. The API now upserts in one statement (`3a03e09`).
+- **Contract:** `POST /api/resumes` is typed as returning the created resume. The first-run upload depends on its `id`.
+- **CSS cleanup:** legacy `global.css` is 15,673 lines, down from 18,679. Unused resume, interview, answer, and editor-panel widgets are deleted.
+
+**Acceptance.** No resume or interview screen has its own version picker. `ResumeEditorPage` and `PracticalInterviewReviewPage` are split into files under 600 lines. A real-data sweep of 17 resume and interview routes at 1440px and 390px found no crash and no horizontal scroll. Web tests: 242.
+
+Deferred:
+- The 근거 편집 tab still uses the legacy editor styling. The proposal's per-claim form (상황 / 역할 / 측정 방법 / 결과) needs its own design pass.
+- The real-interview review page was split but not restyled.
+- One API integration test (`replay mock session seeds imported practical interview questions`) fails on `main`, independent of this phase.
+
 ### Phase 5 — Secondary and cleanup
 
 1. 설정 merge. 보관함, only after bookmarks and notes APIs exist.

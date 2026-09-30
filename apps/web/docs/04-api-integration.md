@@ -159,6 +159,7 @@ Notes:
 - Answer submission sends the session's own `resumeVersionId`, not the currently active version.
 - The session and result pages no longer call `/resume-map`; full-coverage sessions read `/coverage` only.
 - `POST /api/interview-records` sends `linkedResumeVersionId` (the active version) unless the user opts out.
+- A replay (`replay_mock`) started from a record sends that record's `linkedResumeVersionId` as `resumeVersionId`.
 
 ## Locale And Content Rules
 
