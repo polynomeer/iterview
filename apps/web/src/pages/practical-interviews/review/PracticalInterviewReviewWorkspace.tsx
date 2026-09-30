@@ -372,9 +372,10 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
     }
 
     const session = await createReplayMutation.mutateAsync({
-      sessionType:
-        replayPreset.sessionType === "replay_mock" ? "replay_mock" : "replay_mock",
+      sessionType: "replay_mock",
       sourceInterviewRecordId: replayPreset.sourceInterviewRecordId,
+      // Grade replay answers against the resume this interview was linked to, when there is one.
+      resumeVersionId: detail.linkedResumeVersionId,
       replayMode: selectedReplayMode,
       questionCount: selectedQuestionCount,
       seedQuestionIds: replayPreset.seedQuestionIds,

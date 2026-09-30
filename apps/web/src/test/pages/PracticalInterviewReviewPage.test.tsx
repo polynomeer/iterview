@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { PracticalInterviewOverviewPage } from "../../pages/practical-interviews/PracticalInterviewOverviewPage";
@@ -615,6 +615,32 @@ describe("PracticalInterviewReviewPage", () => {
       "href",
       "/resume/resume-version-1/heatmap?selectedAnchor=project%3A31&scope=follow_up&weakOnly=true",
     );
+  });
+
+  it("starts a replay graded against the resume version the interview is linked to", async () => {
+    mockConfirmedReviewPayload();
+    const createReplay = vi.fn().mockResolvedValue({ id: null });
+    vi.mocked(useCreateInterviewSessionMutation).mockReturnValue({ mutateAsync: createReplay, isPending: false, isError: false, error: null } as never);
+
+    renderWithProviders(
+      <Routes>
+        <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
+      </Routes>,
+      { route: "/interview/records/record-1", locale: "ko" },
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "리플레이 시작" }));
+    const launcher = screen.getByText("이 면접 리플레이").closest("section");
+    expect(launcher).not.toBeNull();
+    const launchButtons = within(launcher!).getAllByRole("button").filter((button) => button.className.includes("primary-button"));
+    fireEvent.click(launchButtons[0]);
+
+    await waitFor(() => expect(createReplay).toHaveBeenCalled());
+    expect(createReplay.mock.calls[0][0]).toMatchObject({
+      sessionType: "replay_mock",
+      sourceInterviewRecordId: "record-1",
+      resumeVersionId: "resume-version-1",
+    });
   });
 
   it("keeps hook order stable when data arrives after the loading state", () => {
