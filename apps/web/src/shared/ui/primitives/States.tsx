@@ -21,7 +21,8 @@ function StatePanel({ tone, title, body, icon, actions, details = [], size = "se
       role={tone === "error" ? "alert" : "status"}
     >
       <Icon className="ui-state__icon" name={icon ?? (tone === "error" ? "alert" : "info")} size={28} />
-      <h2 className="ui-state__title">{title}</h2>
+      {/* A page-sized state is the whole page, so its title is the page's h1. */}
+      {size === "page" ? <h1 className="ui-state__title">{title}</h1> : <h2 className="ui-state__title">{title}</h2>}
       {body ? <p className="ui-state__body">{body}</p> : null}
       {details.length > 0 ? (
         <ul className="ui-state__details">

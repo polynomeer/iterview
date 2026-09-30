@@ -19,4 +19,10 @@ describe("state primitives", () => {
     expect(alert).toHaveAttribute("aria-live", "assertive");
     expect(alert).toHaveTextContent("email: 이메일 형식이 올바르지 않습니다.");
   });
+
+  it("uses the page's h1 when the state is the whole page", () => {
+    render(<ErrorState size="page" title="페이지를 찾을 수 없어요" />);
+
+    expect(screen.getByRole("heading", { level: 1, name: "페이지를 찾을 수 없어요" })).toBeInTheDocument();
+  });
 });
