@@ -86,8 +86,7 @@ export const SETTINGS_AREA: NavArea = {
   icon: "settings",
   to: routeConfig.settings.buildPath(),
   sections: [
-    { labelKey: "nav.preferences", to: routeConfig.settings.buildPath(), match: [routeConfig.settings.path] },
-    { labelKey: "nav.profile", to: routeConfig.profile.buildPath(), match: [routeConfig.profile.path] },
+    { labelKey: "nav.settings", to: routeConfig.settings.buildPath(), match: [routeConfig.settings.path, routeConfig.profile.path] },
   ],
 };
 

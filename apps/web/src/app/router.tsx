@@ -1,5 +1,5 @@
 import { Suspense, lazy, type ReactNode } from "react";
-import { createBrowserRouter, RouterProvider, type RouteObject } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider, type RouteObject } from "react-router-dom";
 import { routeConfig } from "../shared/config/routes";
 import { useLocale } from "../shared/i18n";
 import { PageSkeleton } from "../shared/ui/primitives";
@@ -19,7 +19,6 @@ const ResultAnalysisPage = lazy(() => import("../pages/result-analysis/ResultAna
 const ArchivePage = lazy(() => import("../pages/review/ArchivePage").then((module) => ({ default: module.ArchivePage })));
 const FeedPage = lazy(() => import("../pages/feed/FeedPage").then((module) => ({ default: module.FeedPage })));
 const SettingsPage = lazy(() => import("../pages/settings/SettingsPage").then((module) => ({ default: module.SettingsPage })));
-const ProfilePage = lazy(() => import("../pages/profile/ProfilePage").then((module) => ({ default: module.ProfilePage })));
 const ResumeIndexPage = lazy(() => import("../pages/resume/ResumeIndexPage").then((module) => ({ default: module.ResumeIndexPage })));
 const ResumeHubLayout = lazy(() => import("../pages/resume/ResumeHubLayout").then((module) => ({ default: module.ResumeHubLayout })));
 const ResumeOverviewTab = lazy(() => import("../pages/resume/ResumeOverviewTab").then((module) => ({ default: module.ResumeOverviewTab })));
@@ -115,8 +114,9 @@ export const appRoutes: RouteObject[] = [
                 element: withSuspense(<SettingsPage />),
               },
               {
+                // 프로필 merged into 설정 (Phase 5); keep the URL for links and bookmarks.
                 path: routeConfig.profile.path,
-                element: withSuspense(<ProfilePage />),
+                element: <Navigate replace to={`${routeConfig.settings.buildPath()}#profile`} />,
               },
               {
                 path: routeConfig.resume.path,

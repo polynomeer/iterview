@@ -28,7 +28,7 @@ export function SignupPage() {
     "redirectTo" in location.state &&
     typeof location.state.redirectTo === "string"
       ? location.state.redirectTo
-      : routeConfig.profile.buildPath();
+      : routeConfig.home.buildPath();
 
   useEffect(() => {
     if (isAuthenticated && currentUserQuery.data) {

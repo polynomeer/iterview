@@ -17,7 +17,7 @@ describe("resolveHeaderTitleKey", () => {
     ["/interview/sessions/1/result", "header.interviewSessionResult"],
     ["/interview/sessions/1", "header.interviewSession"],
     ["/interview/records/2/transcript", "nav.practicalInterview"],
-    ["/settings", "nav.preferences"],
+    ["/settings", "nav.settings"],
     ["/questions/skills", "nav.skillMap"],
   ])("maps %s to %s", (pathname, key) => {
     expect(resolveHeaderTitleKey(pathname)).toBe(key);
