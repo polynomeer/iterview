@@ -195,6 +195,8 @@ export const appRoutes: RouteObject[] = [
               },
               {
                 path: routeConfig.interviewSession.path,
+                // Focus mode, like the answer editor: one question at a time with no shell chrome.
+                handle: { focus: true },
                 element: withSuspense(<InterviewSessionPage />),
               },
               {

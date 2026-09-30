@@ -100,14 +100,8 @@
 }
 
 @media (max-width: 1023px) {
-  .interview-session-workspace-surface__branches,
-  .interview-session-workspace-surface__stats,
   .feed-workspace-surface__stats {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .interview-session-answer-surface__header {
-    flex-direction: column;
   }
 }
 
@@ -2888,31 +2882,6 @@ button {
   margin-top: 14px;
 }
 
-.interview-coverage-summary__principles {
-  display: grid;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.interview-coverage-summary__principles span {
-  position: relative;
-  padding-left: 18px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-.interview-coverage-summary__principles span::before {
-  content: "";
-  position: absolute;
-  top: 0.72em;
-  left: 0;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 76%, white 10%);
-  transform: translateY(-50%);
-}
-
 .interview-result-related-question {
   text-align: left;
   color: inherit;
@@ -3011,21 +2980,6 @@ button {
   gap: 16px;
 }
 
-.interview-facet-panels-shell {
-  display: grid;
-  gap: 18px;
-  padding: 24px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background:
-    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 32%),
-    linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
-}
-
-.interview-facet-panels-shell__header {
-  display: grid;
-  gap: 12px;
-}
-
 .interview-facet-card--warning {
   background: var(--surface-warning-soft);
   border-color: var(--border-danger);
@@ -3045,83 +2999,6 @@ button {
 .interview-session-layout__main {
   display: grid;
   gap: 16px;
-}
-
-.interview-session-layout__answer-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.interview-session-current .chip-list {
-  gap: 10px;
-  margin-top: 6px;
-  margin-bottom: 4px;
-}
-
-.interview-session-current .detail-chip {
-  min-height: 36px;
-  padding: 6px 14px;
-  line-height: 1.25;
-  font-size: 0.88rem;
-}
-
-.interview-session-current__rail {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--border-soft) 88%, transparent);
-  border-radius: 18px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface-soft) 86%, transparent), color-mix(in srgb, var(--surface-base) 94%, transparent)),
-    var(--surface-soft);
-}
-
-.interview-session-current__rail-items {
-  display: flex;
-  flex: 1 1 580px;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-width: 0;
-}
-
-.interview-session-current__rail-item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  min-height: 30px;
-  padding: 6px 10px;
-  border: 1px solid color-mix(in srgb, var(--border-soft) 82%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--surface-muted) 82%, transparent);
-}
-
-.interview-session-current__rail-item--accent {
-  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
-  background: color-mix(in srgb, var(--surface-accent-soft) 88%, transparent);
-}
-
-.interview-session-current__rail-label {
-  color: var(--text-muted);
-  font-size: 0.72rem;
-  line-height: 1.1;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.interview-session-current__rail-value {
-  font-size: 0.9rem;
-  line-height: 1.15;
-}
-
-.interview-session-current__rail-link {
-  min-height: 34px;
-  padding: 0 12px;
-  border-radius: 12px;
-  font-size: 0.88rem;
 }
 
 .interview-timeline-card .chip-list {
@@ -3307,16 +3184,14 @@ button {
   gap: 8px;
 }
 
-.interview-facet-summary-panel__summary-row,
-.interview-coverage-panel__section-summary-row {
+.interview-facet-summary-panel__summary-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.interview-facet-summary-panel__summary-item,
-.interview-coverage-panel__section-summary-item {
+.interview-facet-summary-panel__summary-item {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
@@ -3329,8 +3204,7 @@ button {
   letter-spacing: -0.01em;
 }
 
-.interview-facet-summary-panel__summary-item--accent,
-.interview-coverage-panel__section-summary-item--accent {
+.interview-facet-summary-panel__summary-item--accent {
   border-color: rgba(45, 212, 191, 0.24);
   background: rgba(10, 25, 35, 0.78);
   color: #f8fafc;
@@ -6303,51 +6177,6 @@ button {
   color: rgb(6, 95, 70);
 }
 
-.interview-session-side-summary,
-.interview-session-side-panel {
-  display: grid;
-  gap: 14px;
-}
-
-.interview-session-side-summary__topline,
-.interview-session-side-panel__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.interview-session-side-summary__stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.interview-session-side-summary__stat {
-  display: grid;
-  gap: 4px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(148, 163, 184, 0.06);
-}
-
-.interview-session-side-summary__stat span,
-.interview-session-side-panel__eyebrow-note {
-  margin: 0;
-  color: var(--text-subtle);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-session-side-summary__stat strong {
-  color: var(--text-main);
-  font-size: 1rem;
-  letter-spacing: -0.03em;
-}
-
 .feed-workspace-note {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
@@ -6748,14 +6577,11 @@ button {
   gap: 18px;
 }
 
-.interview-result-layout__hero,
-.interview-session-current {
+.interview-result-layout__hero {
   background: var(--surface-base);
   box-shadow: var(--shadow-soft);
 }
 
-.interview-session-current,
-.interview-session-side-summary,
 .interview-result-layout__hero,
 .interview-result-layout__actions,
 .interview-result-layout__recap {
@@ -6769,8 +6595,6 @@ button {
   box-shadow: var(--shadow-soft);
 }
 
-.interview-session-current::before,
-.interview-session-side-summary::before,
 .interview-result-layout__hero::before,
 .interview-result-layout__actions::before,
 .interview-result-layout__recap::before {
@@ -6781,8 +6605,6 @@ button {
   pointer-events: none;
 }
 
-.interview-session-current > *,
-.interview-session-side-summary > *,
 .interview-result-layout__hero > *,
 .interview-result-layout__actions > *,
 .interview-result-layout__recap > * {
@@ -7020,21 +6842,11 @@ button {
   gap: 18px;
 }
 
-.interview-session-layout__hero,
-.interview-session-layout__main,
-.interview-session-layout__answer-stack {
+.interview-session-layout__main {
   display: grid;
   gap: 18px;
 }
 
-.interview-session-layout__hero-side {
-  display: grid;
-  gap: 18px;
-  min-width: 0;
-  align-content: start;
-}
-
-.interview-session-workspace-surface,
 .interview-result-workspace-surface {
   position: relative;
   overflow: hidden;
@@ -7047,7 +6859,6 @@ button {
   box-shadow: 0 28px 64px rgba(2, 6, 23, 0.38);
 }
 
-.interview-session-workspace-surface::after,
 .interview-result-workspace-surface::after {
   content: "";
   position: absolute;
@@ -7056,19 +6867,16 @@ button {
   pointer-events: none;
 }
 
-.interview-session-workspace-surface > *,
 .interview-result-workspace-surface > * {
   position: relative;
   z-index: 1;
 }
 
-.interview-session-workspace-surface__header,
 .interview-result-workspace-surface__header {
   display: grid;
   gap: 24px;
 }
 
-.interview-session-workspace-surface__eyebrow-row,
 .interview-result-workspace-surface__eyebrow-row {
   display: flex;
   flex-wrap: wrap;
@@ -7076,7 +6884,6 @@ button {
   gap: 10px;
 }
 
-.interview-session-workspace-surface__breadcrumbs,
 .interview-result-workspace-surface__breadcrumbs {
   display: flex;
   flex-wrap: wrap;
@@ -7088,7 +6895,6 @@ button {
   text-transform: uppercase;
 }
 
-.interview-session-workspace-surface__title,
 .interview-result-workspace-surface__title {
   margin: 0;
   font-size: clamp(1.9rem, 3vw, 2.8rem);
@@ -7097,21 +6903,18 @@ button {
   color: #f8fafc;
 }
 
-.interview-session-workspace-surface__body,
 .interview-result-workspace-surface__body {
   max-width: 62ch;
   margin: 0;
   color: rgba(226, 232, 240, 0.78);
 }
 
-.interview-session-workspace-surface__stats,
 .interview-result-workspace-surface__stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
-.interview-session-workspace-surface__stat,
 .interview-result-workspace-surface__stat {
   display: grid;
   gap: 6px;
@@ -7122,7 +6925,6 @@ button {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
-.interview-session-workspace-surface__stat-label,
 .interview-result-workspace-surface__stat span {
   color: rgba(148, 163, 184, 0.84);
   font-size: 0.78rem;
@@ -7130,23 +6932,18 @@ button {
   text-transform: uppercase;
 }
 
-.interview-session-workspace-surface__stat-value,
 .interview-result-workspace-surface__stat strong {
   color: #f8fafc;
   font-size: 1.3rem;
   letter-spacing: -0.04em;
 }
 
-.interview-session-workspace-surface__summary-row,
-.interview-session-side-summary__summary-row,
 .interview-result-workspace-surface__summary-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.interview-session-workspace-surface__summary-item,
-.interview-session-side-summary__summary-item,
 .interview-result-workspace-surface__summary-item {
   display: inline-flex;
   align-items: center;
@@ -7160,49 +6957,10 @@ button {
   letter-spacing: -0.01em;
 }
 
-.interview-session-workspace-surface__summary-item--accent,
-.interview-session-side-summary__summary-item--accent,
 .interview-result-workspace-surface__summary-item--accent {
   border-color: rgba(45, 212, 191, 0.24);
   background: rgba(10, 25, 35, 0.78);
   color: #f8fafc;
-}
-
-.interview-session-workspace-surface__branches {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.interview-session-workspace-surface__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.interview-session-workspace-surface__principles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 18px;
-  color: rgba(188, 199, 218, 0.78);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.interview-session-workspace-surface__principles span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.interview-session-workspace-surface__principles span::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  background: rgba(45, 212, 191, 0.88);
-  box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.12);
 }
 
 .interview-result-workspace-surface__principles {
@@ -7235,109 +6993,6 @@ button {
   box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.12);
 }
 
-.interview-session-workspace-surface__guidance,
-.interview-session-current__summary,
-.interview-session-side-summary__signals,
-.interview-session-answer-surface__playbook {
-  display: grid;
-  gap: 10px;
-}
-
-.interview-session-workspace-surface__guidance,
-.interview-session-current__summary,
-.interview-session-side-summary__signals,
-.interview-session-answer-surface__playbook {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.interview-session-workspace-surface__guidance {
-  margin-top: 24px;
-}
-
-.interview-session-answer-surface__summary-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.interview-session-answer-surface__summary-item {
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 0 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background: rgba(15, 23, 42, 0.58);
-  color: #e2e8f0;
-  font-size: 0.82rem;
-  letter-spacing: -0.01em;
-}
-
-.interview-session-answer-surface__summary-item--accent {
-  border-color: rgba(45, 212, 191, 0.24);
-  background: rgba(10, 25, 35, 0.78);
-  color: #f8fafc;
-}
-
-.interview-session-workspace-surface__guidance-card,
-.interview-session-current__summary-item,
-.interview-session-side-summary__signal,
-.interview-session-answer-surface__playbook-step {
-  display: grid;
-  gap: 4px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(148, 163, 184, 0.06);
-}
-
-.interview-session-workspace-surface__guidance-card span,
-.interview-session-current__summary-item span,
-.interview-session-side-summary__signal span,
-.interview-session-answer-surface__playbook-step span {
-  color: rgba(148, 163, 184, 0.84);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interview-session-workspace-surface__guidance-card strong,
-.interview-session-current__summary-item strong,
-.interview-session-side-summary__signal strong,
-.interview-session-answer-surface__playbook-step strong {
-  color: #f8fafc;
-  font-size: 1rem;
-  letter-spacing: -0.03em;
-  line-height: 1.45;
-}
-
-.interview-session-side-summary__principles,
-.interview-session-answer-surface__principles {
-  display: grid;
-  gap: 8px;
-}
-
-.interview-session-side-summary__principles span,
-.interview-session-answer-surface__principles span {
-  position: relative;
-  padding-left: 18px;
-  color: rgba(203, 213, 225, 0.78);
-  line-height: 1.55;
-}
-
-.interview-session-side-summary__principles span::before,
-.interview-session-answer-surface__principles span::before {
-  content: "";
-  position: absolute;
-  top: 0.72em;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(45, 212, 191, 0.88);
-  transform: translateY(-50%);
-}
-
 .interview-result-workspace-surface__chips {
   display: flex;
   flex-wrap: wrap;
@@ -7346,189 +7001,6 @@ button {
 
 .interview-result-workspace-surface__guidance {
   margin-top: 24px;
-}
-
-.interview-session-workspace-surface__branch {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(10, 18, 34, 0.9), rgba(8, 14, 27, 0.86));
-  color: #dbe4ee;
-  text-align: left;
-  transition:
-    border-color 180ms ease,
-    background-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
-  cursor: pointer;
-}
-
-.interview-session-workspace-surface__branch:hover,
-.interview-session-workspace-surface__branch:focus-visible {
-  border-color: rgba(45, 212, 191, 0.44);
-  background: rgba(13, 24, 44, 0.92);
-  box-shadow: 0 16px 32px rgba(8, 15, 29, 0.28);
-  transform: translateY(-1px);
-}
-
-.interview-session-workspace-surface__branch--active {
-  border-color: rgba(45, 212, 191, 0.56);
-  background:
-    radial-gradient(circle at top left, rgba(45, 212, 191, 0.18), transparent 44%),
-    linear-gradient(180deg, rgba(12, 27, 46, 0.96), rgba(8, 19, 35, 0.94));
-  box-shadow:
-    inset 0 0 0 1px rgba(94, 234, 212, 0.14),
-    0 18px 36px rgba(8, 15, 29, 0.34);
-}
-
-.interview-session-workspace-surface__branch--answered {
-  border-color: rgba(74, 222, 128, 0.28);
-  background:
-    radial-gradient(circle at top left, rgba(74, 222, 128, 0.12), transparent 40%),
-    linear-gradient(180deg, rgba(10, 24, 22, 0.9), rgba(8, 18, 21, 0.86));
-}
-
-.interview-session-workspace-surface__branch--queued {
-  border-style: dashed;
-  border-color: rgba(100, 116, 139, 0.28);
-  background: linear-gradient(180deg, rgba(10, 16, 28, 0.84), rgba(7, 13, 24, 0.82));
-}
-
-.interview-session-workspace-surface__branch-step {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  background: rgba(34, 197, 94, 0.16);
-  color: #bbf7d0;
-  font-weight: 700;
-  flex: 0 0 auto;
-}
-
-.interview-session-workspace-surface__branch-copy {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-
-.interview-session-workspace-surface__branch-copy strong {
-  color: #f8fafc;
-  font-size: 0.95rem;
-  line-height: 1.35;
-}
-
-.interview-session-workspace-surface__branch-copy span {
-  color: rgba(148, 163, 184, 0.74);
-  font-size: 0.82rem;
-}
-
-.interview-session-current {
-  border-radius: 18px;
-  border-color: rgba(45, 212, 191, 0.18);
-  background:
-    radial-gradient(circle at top left, rgba(45, 212, 191, 0.08), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-    color-mix(in srgb, var(--surface-base) 96%, var(--surface-soft));
-}
-
-.interview-session-current .page-card__label {
-  background: transparent;
-}
-
-.interview-session-current__rail {
-  gap: 14px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border-soft);
-}
-
-.interview-session-current__rail-items {
-  gap: 10px;
-}
-
-.interview-session-current__rail-item {
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: var(--surface-soft);
-  border: 1px solid var(--border-soft);
-}
-
-.interview-session-current__rail-item--accent {
-  background: var(--surface-accent-soft);
-  border-color: var(--border-soft);
-}
-
-.interview-session-current__rail-value {
-  color: var(--text-main);
-}
-
-.interview-session-current__rail-link {
-  align-self: start;
-}
-
-.interview-session-answer-surface {
-  display: grid;
-  gap: 16px;
-  padding: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 32%),
-    radial-gradient(circle at top left, rgba(45, 212, 191, 0.08), transparent 26%),
-    linear-gradient(180deg, rgba(8, 15, 29, 0.96) 0%, rgba(8, 15, 29, 0.88) 100%);
-  scroll-margin-top: 120px;
-  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28);
-}
-
-.interview-session-answer-surface__header {
-  display: grid;
-  gap: 14px;
-}
-
-.interview-session-answer-surface__topline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.interview-session-answer-surface__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-content: flex-start;
-}
-
-.interview-session-answer-surface__meta span {
-  padding: 7px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background: rgba(15, 23, 42, 0.64);
-  color: #cbd5e1;
-  font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.interview-session-answer-surface__helper {
-  margin: 0;
-}
-
-.interview-session-answer-surface__actions,
-.interview-session-answer-surface__primary-actions,
-.interview-session-answer-surface__secondary-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.interview-session-answer-surface__actions {
-  justify-content: space-between;
-  align-items: center;
 }
 
 @media (max-width: 900px) {
@@ -7540,37 +7012,6 @@ button {
     grid-template-columns: 36px minmax(0, 1fr);
     gap: 12px;
   }
-
-  .interview-session-answer-surface__draft-status {
-    grid-template-columns: 1fr;
-  }
-
-.interview-session-workspace-surface__branches {
-  grid-template-columns: 1fr;
-}
-}
-
-.interview-session-side-panel__item {
-  display: grid;
-  gap: 4px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  background: rgba(148, 163, 184, 0.05);
-}
-
-.interview-session-side-panel__item strong {
-  color: #f8fafc;
-}
-
-.interview-session-side-panel__item span {
-  color: rgba(203, 213, 225, 0.78);
-  font-size: 0.92rem;
-}
-
-.interview-session-side-panel__item--coverage {
-  border-color: rgba(96, 165, 250, 0.18);
-  background: rgba(37, 99, 235, 0.08);
 }
 
 .interview-result-layout__content > * {
@@ -8432,29 +7873,8 @@ button {
     gap: 22px;
   }
 
-  .interview-session-layout__hero {
-    grid-template-columns: minmax(0, 1.14fr) minmax(300px, 0.86fr);
-    align-items: start;
-    gap: 22px;
-  }
-
   .interview-session-layout__main {
     gap: 22px;
-  }
-
-  .interview-session-layout__answer-stack {
-    position: sticky;
-    top: 108px;
-  }
-
-  .interview-session-layout__hero-side {
-    position: sticky;
-    top: 108px;
-  }
-
-  .interview-session-workspace-surface__header {
-    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-    align-items: end;
   }
 
   .interview-result-workspace-surface__header {
@@ -9530,32 +8950,11 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .interview-session-workspace-surface__guidance,
   .interview-result-workspace-surface__guidance,
-  .interview-session-current__summary,
-  .interview-session-side-summary__signals,
-  .interview-session-answer-surface__draft-status,
-  .interview-session-answer-surface__guidance,
-  .interview-session-answer-surface__playbook,
   .workspace-continuity-rail__columns,
   .interview-result-layout__hero-decision,
   .interview-result-layout__next-pass-signals,
   .interview-result-layout__actions-summary {
-    grid-template-columns: 1fr;
-  }
-
-  .interview-session-workspace-surface__guidance,
-  .interview-session-current__summary,
-  .interview-session-side-summary__signals,
-  .interview-session-answer-surface__playbook {
-    grid-template-columns: 1fr;
-  }
-
-  .interview-session-answer-surface__guidance {
-    grid-template-columns: 1fr;
-  }
-
-  .interview-session-side-summary__stats {
     grid-template-columns: 1fr;
   }
 
@@ -11865,7 +11264,6 @@ button {
 .auth-access-surface,
 .practical-list-workspace-surface,
 .practical-review-workspace-surface,
-.interview-session-workspace-surface,
 .interview-result-workspace-surface {
   border: 1px solid rgba(15, 23, 42, 0.08);
   background:
@@ -11877,7 +11275,6 @@ button {
 
 .feed-workspace-surface::after,
 .profile-workspace-surface::after,
-.interview-session-workspace-surface::after,
 .interview-result-workspace-surface::after {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 22%);
 }
@@ -11887,7 +11284,6 @@ button {
 .auth-access-surface__breadcrumbs,
 .practical-list-workspace-surface__breadcrumbs,
 .practical-review-workspace-surface__breadcrumbs,
-.interview-session-workspace-surface__breadcrumbs,
 .interview-result-workspace-surface__breadcrumbs {
   color: rgba(100, 116, 139, 0.88);
   font-size: 0.77rem;
@@ -11899,7 +11295,6 @@ button {
 .auth-access-surface__title,
 .practical-list-workspace-surface__title,
 .practical-review-workspace-surface__title,
-.interview-session-workspace-surface__title,
 .interview-result-workspace-surface__title {
   font-size: clamp(1.64rem, 2.18vw, 2.18rem);
   line-height: 1.08;
@@ -11913,7 +11308,6 @@ button {
 .auth-access-surface__body,
 .practical-list-workspace-surface__body,
 .practical-review-workspace-surface__body,
-.interview-session-workspace-surface__body,
 .interview-result-workspace-surface__body {
   color: rgba(71, 85, 105, 0.92);
   max-width: 63ch;
@@ -11925,13 +11319,11 @@ button {
 .auth-access-surface__stat,
 .practical-list-workspace-surface__stat,
 .practical-review-workspace-surface__stat,
-.interview-session-workspace-surface__stat,
 .interview-result-workspace-surface__stat,
 .auth-access-surface__guidance-card,
 .auth-access-form-card__summary-item,
 .practical-list-workspace-surface__guidance-card,
 .practical-review-workspace-surface__guidance-card,
-.interview-session-workspace-surface__guidance-card,
 .interview-result-workspace-surface__guidance-card {
   border-color: rgba(15, 23, 42, 0.08);
   background:
@@ -11945,13 +11337,11 @@ button {
 .auth-access-surface__stat span,
 .practical-list-workspace-surface__stat span,
 .practical-review-workspace-surface__stat span,
-.interview-session-workspace-surface__stat-label,
 .interview-result-workspace-surface__stat span,
 .auth-access-surface__guidance-card span,
 .auth-access-form-card__summary-item span,
 .practical-list-workspace-surface__guidance-card span,
 .practical-review-workspace-surface__guidance-card span,
-.interview-session-workspace-surface__guidance-card span,
 .interview-result-workspace-surface__guidance-card span {
   color: rgba(100, 116, 139, 0.9);
 }
@@ -11961,13 +11351,11 @@ button {
 .auth-access-surface__stat strong,
 .practical-list-workspace-surface__stat strong,
 .practical-review-workspace-surface__stat strong,
-.interview-session-workspace-surface__stat-value,
 .interview-result-workspace-surface__stat strong,
 .auth-access-surface__guidance-card strong,
 .auth-access-form-card__summary-item strong,
 .practical-list-workspace-surface__guidance-card strong,
 .practical-review-workspace-surface__guidance-card strong,
-.interview-session-workspace-surface__guidance-card strong,
 .interview-result-workspace-surface__guidance-card strong {
   color: #101828;
 }
@@ -11975,7 +11363,6 @@ button {
 .auth-access-surface__title,
 .practical-list-workspace-surface__title,
 .practical-review-workspace-surface__title,
-.interview-session-workspace-surface__title,
 .interview-result-workspace-surface__title {
   max-width: 16ch;
 }
@@ -11983,7 +11370,6 @@ button {
 .auth-access-surface__guidance,
 .practical-list-workspace-surface__guidance,
 .practical-review-workspace-surface__guidance,
-.interview-session-workspace-surface__guidance,
 .interview-result-workspace-surface__guidance {
   gap: 10px;
 }
@@ -11991,7 +11377,6 @@ button {
 .auth-access-surface__stat,
 .practical-list-workspace-surface__stat,
 .practical-review-workspace-surface__stat,
-.interview-session-workspace-surface__stat,
 .interview-result-workspace-surface__stat {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
@@ -12229,9 +11614,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface,
 :root[data-theme="dracula"] .practical-review-workspace-surface,
 :root[data-theme="workspace"] .practical-review-workspace-surface,
-:root[data-theme="dark"] .interview-session-workspace-surface,
-:root[data-theme="dracula"] .interview-session-workspace-surface,
-:root[data-theme="workspace"] .interview-session-workspace-surface,
 :root[data-theme="dark"] .interview-result-workspace-surface,
 :root[data-theme="dracula"] .interview-result-workspace-surface,
 :root[data-theme="workspace"] .interview-result-workspace-surface {
@@ -12253,9 +11635,6 @@ button {
 :root[data-theme="dark"] .profile-workspace-surface::after,
 :root[data-theme="dracula"] .profile-workspace-surface::after,
 :root[data-theme="workspace"] .profile-workspace-surface::after,
-:root[data-theme="dark"] .interview-session-workspace-surface::after,
-:root[data-theme="dracula"] .interview-session-workspace-surface::after,
-:root[data-theme="workspace"] .interview-session-workspace-surface::after,
 :root[data-theme="dark"] .interview-result-workspace-surface::after,
 :root[data-theme="dracula"] .interview-result-workspace-surface::after,
 :root[data-theme="workspace"] .interview-result-workspace-surface::after {
@@ -12277,9 +11656,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__breadcrumbs,
 :root[data-theme="dracula"] .practical-review-workspace-surface__breadcrumbs,
 :root[data-theme="workspace"] .practical-review-workspace-surface__breadcrumbs,
-:root[data-theme="dark"] .interview-session-workspace-surface__breadcrumbs,
-:root[data-theme="dracula"] .interview-session-workspace-surface__breadcrumbs,
-:root[data-theme="workspace"] .interview-session-workspace-surface__breadcrumbs,
 :root[data-theme="dark"] .interview-result-workspace-surface__breadcrumbs,
 :root[data-theme="dracula"] .interview-result-workspace-surface__breadcrumbs,
 :root[data-theme="workspace"] .interview-result-workspace-surface__breadcrumbs,
@@ -12298,9 +11674,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__body,
 :root[data-theme="dracula"] .practical-review-workspace-surface__body,
 :root[data-theme="workspace"] .practical-review-workspace-surface__body,
-:root[data-theme="dark"] .interview-session-workspace-surface__body,
-:root[data-theme="dracula"] .interview-session-workspace-surface__body,
-:root[data-theme="workspace"] .interview-session-workspace-surface__body,
 :root[data-theme="dark"] .interview-result-workspace-surface__body,
 :root[data-theme="dracula"] .interview-result-workspace-surface__body,
 :root[data-theme="workspace"] .interview-result-workspace-surface__body {
@@ -12322,9 +11695,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__title,
 :root[data-theme="dracula"] .practical-review-workspace-surface__title,
 :root[data-theme="workspace"] .practical-review-workspace-surface__title,
-:root[data-theme="dark"] .interview-session-workspace-surface__title,
-:root[data-theme="dracula"] .interview-session-workspace-surface__title,
-:root[data-theme="workspace"] .interview-session-workspace-surface__title,
 :root[data-theme="dark"] .interview-result-workspace-surface__title,
 :root[data-theme="dracula"] .interview-result-workspace-surface__title,
 :root[data-theme="workspace"] .interview-result-workspace-surface__title,
@@ -12343,9 +11713,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__stat strong,
 :root[data-theme="dracula"] .practical-review-workspace-surface__stat strong,
 :root[data-theme="workspace"] .practical-review-workspace-surface__stat strong,
-:root[data-theme="dark"] .interview-session-workspace-surface__stat-value,
-:root[data-theme="dracula"] .interview-session-workspace-surface__stat-value,
-:root[data-theme="workspace"] .interview-session-workspace-surface__stat-value,
 :root[data-theme="dark"] .interview-result-workspace-surface__stat strong,
 :root[data-theme="dracula"] .interview-result-workspace-surface__stat strong,
 :root[data-theme="workspace"] .interview-result-workspace-surface__stat strong,
@@ -12361,9 +11728,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__guidance-card strong,
 :root[data-theme="dracula"] .practical-review-workspace-surface__guidance-card strong,
 :root[data-theme="workspace"] .practical-review-workspace-surface__guidance-card strong,
-:root[data-theme="dark"] .interview-session-workspace-surface__guidance-card strong,
-:root[data-theme="dracula"] .interview-session-workspace-surface__guidance-card strong,
-:root[data-theme="workspace"] .interview-session-workspace-surface__guidance-card strong,
 :root[data-theme="dark"] .interview-result-workspace-surface__guidance-card strong,
 :root[data-theme="dracula"] .interview-result-workspace-surface__guidance-card strong,
 :root[data-theme="workspace"] .interview-result-workspace-surface__guidance-card strong {
@@ -12385,9 +11749,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__stat,
 :root[data-theme="dracula"] .practical-review-workspace-surface__stat,
 :root[data-theme="workspace"] .practical-review-workspace-surface__stat,
-:root[data-theme="dark"] .interview-session-workspace-surface__stat,
-:root[data-theme="dracula"] .interview-session-workspace-surface__stat,
-:root[data-theme="workspace"] .interview-session-workspace-surface__stat,
 :root[data-theme="dark"] .interview-result-workspace-surface__stat,
 :root[data-theme="dracula"] .interview-result-workspace-surface__stat,
 :root[data-theme="workspace"] .interview-result-workspace-surface__stat,
@@ -12403,9 +11764,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__guidance-card,
 :root[data-theme="dracula"] .practical-review-workspace-surface__guidance-card,
 :root[data-theme="workspace"] .practical-review-workspace-surface__guidance-card,
-:root[data-theme="dark"] .interview-session-workspace-surface__guidance-card,
-:root[data-theme="dracula"] .interview-session-workspace-surface__guidance-card,
-:root[data-theme="workspace"] .interview-session-workspace-surface__guidance-card,
 :root[data-theme="dark"] .interview-result-workspace-surface__guidance-card,
 :root[data-theme="dracula"] .interview-result-workspace-surface__guidance-card,
 :root[data-theme="workspace"] .interview-result-workspace-surface__guidance-card {
@@ -12431,9 +11789,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__stat span,
 :root[data-theme="dracula"] .practical-review-workspace-surface__stat span,
 :root[data-theme="workspace"] .practical-review-workspace-surface__stat span,
-:root[data-theme="dark"] .interview-session-workspace-surface__stat-label,
-:root[data-theme="dracula"] .interview-session-workspace-surface__stat-label,
-:root[data-theme="workspace"] .interview-session-workspace-surface__stat-label,
 :root[data-theme="dark"] .interview-result-workspace-surface__stat span,
 :root[data-theme="dracula"] .interview-result-workspace-surface__stat span,
 :root[data-theme="workspace"] .interview-result-workspace-surface__stat span,
@@ -12449,9 +11804,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__guidance-card span,
 :root[data-theme="dracula"] .practical-review-workspace-surface__guidance-card span,
 :root[data-theme="workspace"] .practical-review-workspace-surface__guidance-card span,
-:root[data-theme="dark"] .interview-session-workspace-surface__guidance-card span,
-:root[data-theme="dracula"] .interview-session-workspace-surface__guidance-card span,
-:root[data-theme="workspace"] .interview-session-workspace-surface__guidance-card span,
 :root[data-theme="dark"] .interview-result-workspace-surface__guidance-card span,
 :root[data-theme="dracula"] .interview-result-workspace-surface__guidance-card span,
 :root[data-theme="workspace"] .interview-result-workspace-surface__guidance-card span {
@@ -12467,9 +11819,6 @@ button {
 :root[data-theme="dark"] .practical-review-workspace-surface__stat,
 :root[data-theme="dracula"] .practical-review-workspace-surface__stat,
 :root[data-theme="workspace"] .practical-review-workspace-surface__stat,
-:root[data-theme="dark"] .interview-session-workspace-surface__stat,
-:root[data-theme="dracula"] .interview-session-workspace-surface__stat,
-:root[data-theme="workspace"] .interview-session-workspace-surface__stat,
 :root[data-theme="dark"] .interview-result-workspace-surface__stat,
 :root[data-theme="dracula"] .interview-result-workspace-surface__stat,
 :root[data-theme="workspace"] .interview-result-workspace-surface__stat {
@@ -13153,41 +12502,8 @@ textarea::placeholder {
   min-width: 0;
 }
 
-.interview-session-layout__hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 18px;
-  margin-bottom: 18px;
-}
-
-.interview-session-layout__hero-side,
-.interview-session-layout > .interview-session-workspace-surface + .interview-session-layout__hero .interview-session-side-summary,
 .interview-session-layout + .interview-question-timeline {
   min-width: 0;
-}
-
-.interview-session-side-summary,
-.interview-session-answer-surface,
-.interview-facet-panels-shell {
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 28%),
-    linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
-}
-
-.interview-session-side-summary {
-  position: sticky;
-  top: 94px;
-}
-
-.interview-session-current__summary-item,
-.interview-session-side-summary__summary-item,
-.interview-session-side-summary__signal,
-.interview-session-answer-surface__summary-item,
-.interview-session-answer-surface__playbook-step {
-  border: 1px solid rgba(125, 145, 176, 0.1);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.02);
 }
 
 .interview-result-layout {
@@ -13351,7 +12667,6 @@ textarea::placeholder {
   .scheduled-reviews-layout--desktop,
   .resume-analysis-layout--desktop,
   .interview-session-layout,
-  .interview-session-layout__hero,
   .interview-result-layout__content {
     grid-template-columns: 1fr;
   }
@@ -13366,7 +12681,6 @@ textarea::placeholder {
   .scheduled-reviews-detail-rail,
   .resume-analysis-layout__workspace-summary,
   .resume-analysis-layout__rail,
-  .interview-session-side-summary,
   .interview-result-layout__side {
     position: static;
   }
@@ -13387,9 +12701,6 @@ textarea::placeholder {
 .workspace-continuity-rail,
 .detail-sidebar,
 .filter-panel,
-.interview-session-current,
-.interview-session-side-summary,
-.interview-session-answer-surface,
 .interview-result-layout__hero,
 .interview-result-layout__actions,
 .interview-result-layout__recap {
@@ -13466,11 +12777,7 @@ textarea::placeholder {
 .resume-analysis-guide__signal,
 .interview-result-layout__next-item,
 .interview-result-layout__hero-summary-item,
-.interview-result-layout__actions-summary-chip,
-.interview-session-current__summary-item,
-.interview-session-side-summary__signal,
-.interview-session-answer-surface__summary-item,
-.interview-session-answer-surface__playbook-step {
+.interview-result-layout__actions-summary-chip {
   backdrop-filter: blur(10px);
 }
 
@@ -13483,7 +12790,6 @@ textarea::placeholder {
 .workspace-continuity-rail__columns,
 .resume-analysis-workspace-surface__header,
 .scheduled-reviews-workspace-surface__header,
-.interview-session-workspace-surface__header,
 .interview-result-workspace-surface__header {
   gap: 16px;
 }
@@ -13499,7 +12805,6 @@ textarea::placeholder {
 
 .resume-analysis-workspace-surface__title,
 .scheduled-reviews-workspace-surface__title,
-.interview-session-workspace-surface__title,
 .interview-result-workspace-surface__title {
   max-width: 15ch;
   line-height: 1.03;
@@ -13508,13 +12813,11 @@ textarea::placeholder {
 
 .resume-analysis-workspace-surface__body,
 .scheduled-reviews-workspace-surface__body,
-.interview-session-workspace-surface__body,
 .interview-result-workspace-surface__body {
   max-width: var(--workspace-reading-width);
 }
 
 .resume-analysis-workspace-surface__stat,
-.interview-session-workspace-surface__stat,
 .interview-result-workspace-surface__stat,
 .scheduled-reviews-workspace-surface__stats article,
 .weak-nodes-workspace-surface__stats article {
@@ -13524,7 +12827,6 @@ textarea::placeholder {
 }
 
 .resume-analysis-workspace-surface__stat span,
-.interview-session-workspace-surface__stat-label,
 .interview-result-workspace-surface__stat span,
 .scheduled-reviews-workspace-surface__stats span,
 .weak-nodes-workspace-surface__stats span {
@@ -13534,7 +12836,6 @@ textarea::placeholder {
 }
 
 .resume-analysis-workspace-surface__stat strong,
-.interview-session-workspace-surface__stat-value,
 .interview-result-workspace-surface__stat strong,
 .scheduled-reviews-workspace-surface__stats strong,
 .weak-nodes-workspace-surface__stats strong {
@@ -13548,7 +12849,6 @@ textarea::placeholder {
 .scheduled-review-timeline-card,
 .weak-node-card,
 .weak-nodes-detail-card,
-.interview-session-workspace-surface__branch,
 .interview-result-layout__recap-card {
   padding: 14px;
   border-radius: var(--workspace-inner-radius);
@@ -13602,8 +12902,7 @@ textarea::placeholder {
 
 .weak-node-card--active,
 .scheduled-review-timeline-card--active,
-.sidebar-navigation__link--active,
-.interview-session-workspace-surface__branch--active {
+.sidebar-navigation__link--active {
   box-shadow: inset 0 0 0 1px rgba(91, 140, 255, 0.18);
 }
 
@@ -13626,7 +12925,6 @@ textarea::placeholder {
 .resume-analysis-layout__rail,
 .weak-nodes-layout__rail,
 .scheduled-reviews-layout__plan-rail,
-.interview-session-side-summary,
 .interview-result-layout__side {
   align-self: start;
 }
@@ -13635,15 +12933,12 @@ textarea::placeholder {
 .weak-nodes-detail-rail,
 .resume-analysis-priority-card,
 .resume-analysis-guide,
-.interview-session-side-summary,
-.interview-session-answer-surface,
 .interview-result-layout__hero,
 .interview-result-layout__actions,
 .interview-result-layout__recap {
   padding: 18px;
 }
 
-.interview-session-answer-surface__header,
 .interview-result-layout__hero,
 .interview-result-layout__actions,
 .scheduled-reviews-detail-rail__panel,
@@ -13652,19 +12947,8 @@ textarea::placeholder {
   gap: 14px;
 }
 
-.interview-session-answer-surface__actions {
-  padding-top: 10px;
-  border-top: 1px solid rgba(125, 145, 176, 0.12);
-}
-
-.interview-session-answer-surface__primary-actions,
-.interview-session-answer-surface__secondary-actions,
 .page-card__actions {
   gap: 10px;
-}
-
-.interview-session-answer-surface textarea {
-  min-height: 220px;
 }
 
 .scheduled-review-day-card span,
@@ -13693,7 +12977,6 @@ textarea::placeholder {
   .section-heading__title,
   .resume-analysis-workspace-surface__title,
   .scheduled-reviews-workspace-surface__title,
-  .interview-session-workspace-surface__title,
   .interview-result-workspace-surface__title {
     max-width: none;
     font-size: 1.28rem;
@@ -14410,14 +13693,7 @@ textarea::placeholder {
 
 /* Execution workspace alignment for question detail, answer editor, interview session */
 
-.interview-session-layout__hero-side {
-  position: sticky;
-  top: 24px;
-  align-self: start;
-}
-
 .answer-submit-card,
-.interview-session-side-summary,
 .question-hero--answer-workspace {
   border: 1px solid rgba(137, 161, 203, 0.14);
   background:
@@ -14441,9 +13717,7 @@ textarea::placeholder {
   grid-template-columns: repeat(3, minmax(104px, 1fr));
 }
 
-.question-hero__summary-item,
-.interview-session-current__summary-item,
-.interview-session-answer-surface__summary-item {
+.question-hero__summary-item {
   display: grid;
   gap: 4px;
   padding: 11px 13px;
@@ -14452,18 +13726,14 @@ textarea::placeholder {
   background: rgba(255, 255, 255, 0.025);
 }
 
-.question-hero__summary-item span,
-.interview-session-current__summary-item span,
-.interview-session-answer-surface__summary-item span {
+.question-hero__summary-item span {
   color: var(--text-dim);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.question-hero__summary-item strong,
-.interview-session-current__summary-item strong,
-.interview-session-answer-surface__summary-item strong {
+.question-hero__summary-item strong {
   color: var(--text-strong);
   font-size: 0.9rem;
   line-height: 1.4;
@@ -14471,14 +13741,6 @@ textarea::placeholder {
 
 .question-hero__supporting {
   display: none;
-}
-
-.interview-session-workspace-surface__title {
-  max-width: 14ch;
-}
-
-.interview-session-workspace-surface__guidance {
-  gap: 10px;
 }
 
 .answer-submit-card__lane {
@@ -14509,57 +13771,11 @@ textarea::placeholder {
   gap: 18px;
 }
 
-.interview-session-layout__hero {
-  grid-template-columns: minmax(0, 1.46fr) minmax(320px, 0.84fr);
-  align-items: start;
-}
-
-.interview-session-layout__hero-side {
-  display: grid;
-  gap: 14px;
-}
-
-.interview-session-side-summary {
-  display: grid;
-  gap: 14px;
-}
-
-.interview-session-current,
-.interview-session-answer-surface,
-.interview-timeline-workspace,
-.interview-facet-panels-shell {
+.interview-timeline-workspace {
   border: 1px solid rgba(137, 161, 203, 0.14);
   background:
     radial-gradient(circle at top right, rgba(91, 140, 255, 0.08), transparent 30%),
     linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
-}
-
-.interview-session-answer-surface {
-  display: grid;
-  gap: 14px;
-}
-
-:root[data-theme="workspace"] .interview-session-layout__hero-side {
-  gap: 12px;
-}
-
-:root[data-theme="workspace"] .interview-session-workspace-surface {
-  border-color: rgba(137, 161, 203, 0.12);
-}
-
-:root[data-theme="workspace"] .interview-session-workspace-surface__branches {
-  gap: 8px;
-}
-
-:root[data-theme="workspace"] .interview-session-side-summary,
-:root[data-theme="workspace"] .interview-session-current,
-:root[data-theme="workspace"] .interview-session-answer-surface {
-  border-color: rgba(137, 161, 203, 0.12);
-  background: linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
-}
-
-.interview-session-answer-surface__actions {
-  justify-content: space-between;
 }
 
 .interview-timeline-card {
@@ -14568,14 +13784,6 @@ textarea::placeholder {
 }
 
 @media (max-width: 1099px) {
-  .interview-session-layout__hero {
-    grid-template-columns: 1fr;
-  }
-
-  .interview-session-layout__hero-side {
-    position: static;
-    top: auto;
-  }
 
   .question-hero__header,
   .question-hero__summary {
@@ -14978,9 +14186,7 @@ textarea::placeholder {
   text-transform: uppercase;
 }
 
-.interview-facet-summary-panel,
-.interview-coverage-panel,
-.interview-coverage-panel__section {
+.interview-facet-summary-panel {
   border-color: rgba(137, 161, 203, 0.12);
   background: linear-gradient(180deg, rgba(12, 19, 31, 0.98), rgba(9, 15, 25, 0.98));
   box-shadow: none;
@@ -14990,18 +14196,8 @@ textarea::placeholder {
   gap: 12px;
 }
 
-.interview-facet-summary-panel .page-card__body,
-.interview-coverage-panel .page-card__body {
+.interview-facet-summary-panel .page-card__body {
   max-width: 54ch;
-}
-
-.interview-coverage-panel__sections,
-.interview-coverage-panel .stack-list {
-  gap: 12px;
-}
-
-.interview-coverage-panel__section .section-heading {
-  margin-bottom: 0;
 }
 
 .coverage-evidence-card {
@@ -15019,9 +14215,7 @@ textarea::placeholder {
 }
 
 :root[data-theme="workspace"] .interview-timeline-workspace,
-:root[data-theme="workspace"] .interview-facet-summary-panel,
-:root[data-theme="workspace"] .interview-coverage-panel,
-:root[data-theme="workspace"] .interview-coverage-panel__section {
+:root[data-theme="workspace"] .interview-facet-summary-panel {
   box-shadow: none;
 }
 
@@ -15034,8 +14228,7 @@ textarea::placeholder {
 }
 
 :root[data-theme="workspace"] .interview-timeline-workspace__stack,
-:root[data-theme="workspace"] .interview-facet-panels,
-:root[data-theme="workspace"] .interview-coverage-panel__sections {
+:root[data-theme="workspace"] .interview-facet-panels {
   gap: 10px;
 }
 
@@ -15161,19 +14354,13 @@ textarea::placeholder {
   align-items: center;
 }
 
-.interview-coverage-panel,
 .interview-result-coverage-summary,
 .interview-result-catalog-section,
 .interview-result-pinned-evidence {
   gap: 12px;
 }
 
-.interview-coverage-panel .interview-coverage-summary__summary-row,
 .interview-result-coverage-summary .interview-coverage-summary__summary-row {
-  gap: 8px;
-}
-
-.interview-coverage-panel__section-summary-row {
   gap: 8px;
 }
 
@@ -15216,7 +14403,6 @@ textarea::placeholder {
 
 @media (max-width: 767px) {
 
-  .interview-coverage-panel .interview-coverage-summary__summary-row,
   .interview-result-coverage-summary .interview-coverage-summary__summary-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

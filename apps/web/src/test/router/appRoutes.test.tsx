@@ -46,4 +46,11 @@ describe("app routes", () => {
     expect(isFocusRoute(answer.map((match) => ({ handle: match.route.handle })))).toBe(true);
     expect(isFocusRoute(detail.map((match) => ({ handle: match.route.handle })))).toBe(false);
   });
+
+  it("runs a live mock interview in focus mode, but not its result", () => {
+    const focus = (pathname: string) => isFocusRoute((matchRoutes(appRoutes, pathname) ?? []).map((match) => ({ handle: match.route.handle })));
+
+    expect(focus("/interview/sessions/4")).toBe(true);
+    expect(focus("/interview/sessions/4/result")).toBe(false);
+  });
 });

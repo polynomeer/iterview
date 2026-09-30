@@ -1,0 +1,128 @@
+/* 면접 · live session in focus mode (docs/09 §4.4, mockup 07-interview). Token-only styles. */
+
+.session-page {
+  min-height: 100vh;
+  background: var(--iv-bg);
+  color: var(--iv-text);
+  font-family: var(--iv-font-sans);
+}
+
+.session-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--iv-space-4);
+  min-height: 3.5rem;
+  padding: var(--iv-space-2) var(--iv-space-6);
+  border-bottom: 1px solid var(--iv-border);
+  background: var(--iv-surface);
+}
+
+.session-bar__position {
+  padding: 2px var(--iv-space-2);
+  border-radius: var(--iv-radius-sm);
+  background: var(--iv-accent-soft);
+  color: var(--iv-accent-text);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.session-bar__progress { flex: 1; max-width: 16rem; }
+
+.session-bar__timer {
+  margin-left: auto;
+  font-family: var(--iv-font-mono);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.session-main { width: 100%; max-width: 72rem; margin: 0 auto; padding: var(--iv-space-8) var(--iv-space-6) var(--iv-space-10); }
+
+.session-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem); gap: var(--iv-space-8); align-items: start; }
+
+.session-stage { display: flex; flex-direction: column; gap: var(--iv-space-5); min-width: 0; }
+.session-aside { display: flex; flex-direction: column; gap: var(--iv-space-4); min-width: 0; }
+
+.session-question { display: flex; flex-direction: column; align-items: flex-start; gap: var(--iv-space-2); }
+.session-question__kicker { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+.session-question__title { margin: 0; font-size: var(--iv-text-2xl); font-weight: var(--iv-weight-bold); line-height: var(--iv-leading-tight); }
+.session-question__body { margin: 0; color: var(--iv-text-muted); line-height: var(--iv-leading-body); }
+
+.session-evidence { width: 100%; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+.session-evidence summary { color: var(--iv-accent-text); cursor: pointer; }
+.session-evidence p,
+.session-evidence ul { margin: var(--iv-space-2) 0 0; line-height: var(--iv-leading-body); }
+.session-evidence strong { color: var(--iv-text); }
+
+.session-answer {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface);
+}
+
+.session-answer:focus-within { border-color: var(--iv-accent); box-shadow: var(--iv-focus-ring); }
+
+.session-answer__input {
+  min-height: 14rem;
+  padding: var(--iv-space-5);
+  border: 0;
+  border-radius: var(--iv-radius-lg) var(--iv-radius-lg) 0 0;
+  background: transparent;
+  color: var(--iv-text);
+  font-family: var(--iv-font-sans);
+  font-size: var(--iv-text-md);
+  line-height: var(--iv-leading-reading);
+  resize: vertical;
+}
+
+.session-answer__input:focus { outline: none; }
+.session-answer__input::placeholder { color: var(--iv-text-subtle); }
+
+.session-answer__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--iv-space-2) var(--iv-space-3);
+  padding: var(--iv-space-3) var(--iv-space-4);
+  border-top: 1px solid var(--iv-border);
+}
+
+.session-answer__footer > .session-muted { flex: 1; }
+.session-next { margin-top: var(--iv-space-2); }
+
+.session-muted { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+.session-subtitle { margin: var(--iv-space-4) 0 var(--iv-space-2); color: var(--iv-text-muted); font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); }
+
+.session-flow__title { margin: 0 0 var(--iv-space-3); font-size: var(--iv-text-md); font-weight: var(--iv-weight-semibold); }
+.session-flow__list { display: flex; flex-direction: column; gap: var(--iv-space-2); margin: 0; padding: 0; list-style: none; }
+
+.session-flow__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--iv-space-2);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+}
+
+.session-flow__item[aria-current="step"] { color: var(--iv-text); font-weight: var(--iv-weight-semibold); }
+.session-flow__text { min-width: 0; overflow-wrap: anywhere; }
+
+.session-weak { margin: 0; padding-left: var(--iv-space-5); color: var(--iv-text); font-size: var(--iv-text-sm); }
+
+@media (max-width: 960px) {
+  .session-layout { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .session-bar { gap: var(--iv-space-2); padding: var(--iv-space-2) var(--iv-space-4); }
+  .session-main { padding: var(--iv-space-5) var(--iv-space-4) var(--iv-space-8); }
+  .session-answer__shortcut { display: none; }
+  .session-question__title { font-size: var(--iv-text-xl); }
+}
