@@ -176,3 +176,5 @@ Each ADR should include:
    Proposes five navigation areas, merged workspaces, and a single token design system based on the 2026-09 UX audit.
 75. [`0075-retire-light-theme-until-token-rebuild.md`](0075-retire-light-theme-until-token-rebuild.md)
    Makes `workspace` the default and retires the unreadable light theme until the token rebuild.
+76. [`0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md`](0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md)
+   Adds `--iv-` tokens and `ui-` primitives that coexist with `global.css` while screens migrate one at a time.

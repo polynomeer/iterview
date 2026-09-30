@@ -1,0 +1,145 @@
+/*
+ * Design tokens (ADR 0074, ADR 0076).
+ *
+ * This file is the only place where raw color, font-size, spacing, radius, and shadow values
+ * may be written for new UI. Components use the semantic `--iv-*` roles, never the raw scale.
+ * Tokens are prefixed with `--iv-` so they cannot collide with the legacy custom properties in
+ * `app/styles/global.css`, which are removed screen by screen as pages migrate.
+ */
+
+:root {
+  /* Type scale */
+  --iv-text-xs: 0.75rem; /* 12 */
+  --iv-text-sm: 0.8125rem; /* 13 */
+  --iv-text-md: 0.875rem; /* 14 */
+  --iv-text-lg: 1rem; /* 16 */
+  --iv-text-xl: 1.25rem; /* 20 */
+  --iv-text-2xl: 1.5rem; /* 24 */
+  --iv-text-3xl: 1.875rem; /* 30 */
+  --iv-leading-tight: 1.3;
+  --iv-leading-body: 1.6;
+  --iv-leading-reading: 1.75;
+  --iv-weight-regular: 400;
+  --iv-weight-medium: 500;
+  --iv-weight-semibold: 600;
+  --iv-weight-bold: 700;
+  --iv-font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+  --iv-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Spacing (4px base) */
+  --iv-space-1: 0.25rem;
+  --iv-space-2: 0.5rem;
+  --iv-space-3: 0.75rem;
+  --iv-space-4: 1rem;
+  --iv-space-5: 1.25rem;
+  --iv-space-6: 1.5rem;
+  --iv-space-8: 2rem;
+  --iv-space-10: 2.5rem;
+
+  /* Radius */
+  --iv-radius-sm: 6px;
+  --iv-radius-md: 10px;
+  --iv-radius-lg: 14px;
+  --iv-radius-full: 999px;
+
+  /* Control sizes */
+  --iv-control-sm: 1.875rem;
+  --iv-control-md: 2.25rem;
+  --iv-control-lg: 2.75rem;
+
+  /* Motion */
+  --iv-duration-fast: 120ms;
+  --iv-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Light roles. Used by the `light` theme and by `system` when the OS prefers light. */
+:root,
+:root[data-theme="light"] {
+  --iv-bg: #fafafa;
+  --iv-surface: #ffffff;
+  --iv-surface-sunken: #f5f6f7;
+  --iv-surface-hover: #f0f2f4;
+  --iv-border: #dfe2e7;
+  --iv-border-strong: #c7ccd4;
+  --iv-text: #131519;
+  --iv-text-muted: #5b6270;
+  --iv-text-subtle: #7b8290;
+  --iv-accent: #2f5fe0;
+  --iv-accent-hover: #2647b0;
+  --iv-accent-soft: #eef3ff;
+  --iv-accent-text: #2647b0;
+  --iv-on-accent: #ffffff;
+  --iv-success: #17804f;
+  --iv-success-soft: #e8f6ef;
+  --iv-warning: #9a6200;
+  --iv-warning-soft: #fdf4e3;
+  --iv-danger: #c4352c;
+  --iv-danger-soft: #fdecea;
+  --iv-overlay: rgba(16, 24, 40, 0.45);
+  --iv-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --iv-shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.14);
+  --iv-focus-ring: 0 0 0 3px rgba(47, 95, 224, 0.35);
+}
+
+/*
+ * Dark roles. Tuned to the navy workspace palette so primitives sit naturally inside screens that
+ * still use legacy styles. `dark` and `dracula` share these roles until those themes are retired.
+ */
+:root[data-theme="dark"],
+:root[data-theme="workspace"],
+:root[data-theme="dracula"] {
+  --iv-bg: #07101d;
+  --iv-surface: #0f1b30;
+  --iv-surface-sunken: #0b1526;
+  --iv-surface-hover: #14233d;
+  --iv-border: rgba(148, 173, 211, 0.18);
+  --iv-border-strong: rgba(148, 173, 211, 0.32);
+  --iv-text: #e6eefc;
+  --iv-text-muted: #93a8c8;
+  --iv-text-subtle: #7489a8;
+  --iv-accent: #2f6fe8;
+  --iv-accent-hover: #3f82ff;
+  --iv-accent-soft: rgba(63, 130, 255, 0.18);
+  --iv-accent-text: #8fb6ff;
+  --iv-on-accent: #ffffff;
+  --iv-success: #5fd39a;
+  --iv-success-soft: rgba(95, 211, 154, 0.14);
+  --iv-warning: #f0b45a;
+  --iv-warning-soft: rgba(240, 180, 90, 0.14);
+  --iv-danger: #ff8f7a;
+  --iv-danger-soft: rgba(255, 123, 83, 0.16);
+  --iv-overlay: rgba(2, 6, 14, 0.66);
+  --iv-shadow-sm: none;
+  --iv-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --iv-focus-ring: 0 0 0 3px rgba(63, 130, 255, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]),
+  :root[data-theme="system"] {
+    --iv-bg: #07101d;
+    --iv-surface: #0f1b30;
+    --iv-surface-sunken: #0b1526;
+    --iv-surface-hover: #14233d;
+    --iv-border: rgba(148, 173, 211, 0.18);
+    --iv-border-strong: rgba(148, 173, 211, 0.32);
+    --iv-text: #e6eefc;
+    --iv-text-muted: #93a8c8;
+    --iv-text-subtle: #7489a8;
+    --iv-accent: #2f6fe8;
+    --iv-accent-hover: #3f82ff;
+    --iv-accent-soft: rgba(63, 130, 255, 0.18);
+    --iv-accent-text: #8fb6ff;
+    --iv-on-accent: #ffffff;
+    --iv-success: #5fd39a;
+    --iv-success-soft: rgba(95, 211, 154, 0.14);
+    --iv-warning: #f0b45a;
+    --iv-warning-soft: rgba(240, 180, 90, 0.14);
+    --iv-danger: #ff8f7a;
+    --iv-danger-soft: rgba(255, 123, 83, 0.16);
+    --iv-overlay: rgba(2, 6, 14, 0.66);
+    --iv-shadow-sm: none;
+    --iv-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+    --iv-focus-ring: 0 0 0 3px rgba(63, 130, 255, 0.45);
+  }
+}
