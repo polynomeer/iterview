@@ -26486,3 +26486,40 @@ textarea::placeholder {
   :root[data-theme="workspace"] .result-score-card__score-ring { width: 138px; }
   :root[data-theme="workspace"] .result-score-card__score-ring::before { width: 116px; }
 }
+
+/* The card sits in a narrow stage column on desktop, so size its inner grid from the card's own
+   width instead of the viewport. Otherwise the title column collapses and overlaps the path panel. */
+.today-question-card {
+  container-type: inline-size;
+}
+
+.today-question-card__header,
+.today-question-card__body-grid,
+.today-question-card__focus-map {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.today-question-card__title {
+  max-width: none;
+  font-size: clamp(1.5rem, 7cqi, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+@container (min-width: 760px) {
+  .today-question-card__header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .today-question-card__body-grid {
+    grid-template-columns: minmax(0, 1.22fr) minmax(240px, 0.78fr);
+  }
+
+  .today-question-card__title {
+    max-width: 14ch;
+  }
+
+  .today-question-card__focus-map {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
