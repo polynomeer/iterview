@@ -1,11 +1,14 @@
-import { Link, useLocation } from "react-router-dom";
-import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useActiveResumeVersion } from "../../features/resume/model/useActiveResumeVersion";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { useAuth } from "../../shared/auth/useAuth";
 import { PRIMARY_AREAS, resolveNavLocation, SETTINGS_AREA, type NavArea } from "../../shared/config/navigation";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
+import { parsingStatusLabel } from "../../shared/lib/labels";
 import { Icon, type IconName } from "../../shared/ui/primitives";
+import { ResumeVersionSwitcher } from "./ResumeVersionSwitcher";
 
 type NavItemProps = {
   to: string;
@@ -29,28 +32,66 @@ function NavItem({ to, icon, label, isActive, badge }: NavItemProps) {
   );
 }
 
-function ActiveResumeCard() {
-  const { t } = useLocale();
-  const latestResumeQuery = useLatestResumeQuery();
-  const resume = latestResumeQuery.data?.items[0];
-  const activeVersion = resume?.versions.find((version) => version.isActive) ?? resume?.versions[0];
+/** Version-scoped resume pages follow the switch: /resume/3/heatmap → /resume/7/heatmap. */
+export function followVersion(pathname: string, versionId: string) {
+  const match = pathname.match(/^\/resume\/[^/]+(\/(claims|heatmap|tailor|versions)(\/.*)?)$/);
+  if (!match || /^\/resume\/(analysis|tailor)(\/|$)/.test(pathname)) {
+    return null;
+  }
+  // Anchors and analyses belong to the old version, so land on the tab itself.
+  return `/resume/${versionId}/${match[2]}`;
+}
 
-  if (latestResumeQuery.isLoading) {
+function ActiveResumeCard() {
+  const { t, locale } = useLocale();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { active, resumes, isLoading } = useActiveResumeVersion();
+  const [open, setOpen] = useState(false);
+  const hasVersions = resumes.some((resume) => resume.versions.length > 0);
+
+  if (isLoading) {
     return null;
   }
 
-  return (
-    <Link className="shell-nav__resume" to={routeConfig.resume.buildPath()}>
-      <Icon name="resume" />
-      <span className="shell-nav__resume-copy">
-        <span className="shell-nav__resume-label">{t("nav.activeResume")}</span>
-        <strong>{resume ? resume.title : t("nav.noActiveResume")}</strong>
-        <span className="shell-nav__resume-meta">
-          {activeVersion ? `${activeVersion.versionNumberLabel} · ${activeVersion.parsingStatusLabel}` : t("nav.uploadResume")}
+  if (!hasVersions) {
+    return (
+      <Link className="shell-nav__resume" to={routeConfig.resume.buildPath()}>
+        <Icon name="resume" />
+        <span className="shell-nav__resume-copy">
+          <span className="shell-nav__resume-label">{t("nav.activeResume")}</span>
+          <strong>{t("nav.noActiveResume")}</strong>
+          <span className="shell-nav__resume-meta">{t("nav.uploadResume")}</span>
         </span>
-      </span>
-      <Icon name="chevronRight" size={16} />
-    </Link>
+        <Icon name="chevronRight" size={16} />
+      </Link>
+    );
+  }
+
+  const status = active ? parsingStatusLabel(active.parsingStatus, locale) : null;
+
+  return (
+    <>
+      <button aria-haspopup="dialog" className="shell-nav__resume" onClick={() => setOpen(true)} type="button">
+        <Icon name="resume" />
+        <span className="shell-nav__resume-copy">
+          <span className="shell-nav__resume-label">{t("nav.activeResume")}</span>
+          <strong>{active ? active.resumeTitle : t("nav.noActiveResume")}</strong>
+          <span className="shell-nav__resume-meta">{active && status ? `${active.versionNumberLabel} · ${status.label}` : t("nav.chooseVersion")}</span>
+        </span>
+        <Icon name="chevronDown" size={16} />
+      </button>
+      <ResumeVersionSwitcher
+        onActivated={(versionId) => {
+          const next = followVersion(pathname, versionId);
+          if (next) {
+            navigate(next);
+          }
+        }}
+        onClose={() => setOpen(false)}
+        open={open}
+      />
+    </>
   );
 }
 

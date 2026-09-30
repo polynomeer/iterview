@@ -78,3 +78,16 @@ export function withSubjectParticle(word: string) {
   }
   return `${word}${code % 28 === 0 ? "가" : "이"}`;
 }
+
+const PARSING: Record<string, Localized & { tone: "success" | "warning" | "danger" | "neutral" | "accent" }> = {
+  COMPLETED: { ko: "분석 완료", en: "Analyzed", tone: "success" },
+  PROCESSING: { ko: "분석 중", en: "Analyzing", tone: "accent" },
+  PENDING: { ko: "분석 대기", en: "Queued", tone: "neutral" },
+  FAILED: { ko: "분석 실패", en: "Analysis failed", tone: "danger" },
+};
+
+/** Resume version parsing status (completed/processing/pending/failed) as a user word plus a tone. */
+export function parsingStatusLabel(status: string | null | undefined, locale: AppLocale) {
+  const entry = PARSING[(status ?? "").toUpperCase()];
+  return entry ? { label: entry[locale], tone: entry.tone } : { label: locale === "ko" ? "상태 확인 필요" : "Unknown", tone: "neutral" as const };
+}

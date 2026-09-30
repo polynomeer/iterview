@@ -1,14 +1,21 @@
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Route, Routes } from "react-router-dom";
+import { LocationDisplay } from "../utils";
 import { describe, expect, it, vi } from "vitest";
-import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
+import { useActivateResumeVersionMutation } from "../../features/resume/api/useActivateResumeVersionMutation";
+import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { useAuth } from "../../shared/auth/useAuth";
-import { SidebarNavigation } from "../../widgets/layout/SidebarNavigation";
+import { followVersion, SidebarNavigation } from "../../widgets/layout/SidebarNavigation";
 import { renderWithProviders } from "../utils";
 
 vi.mock("../../shared/auth/useAuth", () => ({ useAuth: vi.fn() }));
-vi.mock("../../features/resume/api/useLatestResumeQuery", () => ({ useLatestResumeQuery: vi.fn() }));
+vi.mock("../../features/resume/api/useResumeListQuery", () => ({ useResumeListQuery: vi.fn() }));
+vi.mock("../../features/resume/api/useActivateResumeVersionMutation", () => ({ useActivateResumeVersionMutation: vi.fn() }));
 vi.mock("../../features/review-queue/api/useReviewQueueQuery", () => ({ useReviewQueueQuery: vi.fn() }));
+
+const activate = vi.fn().mockResolvedValue(undefined);
 
 function signIn(isAuthenticated: boolean) {
   vi.mocked(useAuth).mockReturnValue({
@@ -18,7 +25,7 @@ function signIn(isAuthenticated: boolean) {
     clearSession: vi.fn(),
   });
   vi.mocked(useReviewQueueQuery).mockReturnValue({ data: { items: [{}, {}, {}, {}] } } as never);
-  vi.mocked(useLatestResumeQuery).mockReturnValue({
+  vi.mocked(useResumeListQuery).mockReturnValue({
     isLoading: false,
     data: {
       items: [
@@ -26,13 +33,14 @@ function signIn(isAuthenticated: boolean) {
           id: "1",
           title: "백엔드 이력서",
           versions: [
-            { id: "2", versionNumberLabel: "v2", isActive: false, parsingStatusLabel: "완료" },
-            { id: "3", versionNumberLabel: "v3", isActive: true, parsingStatusLabel: "완료" },
+            { id: "2", versionNumberLabel: "v2", isActive: false, parsingStatus: "completed", fileNameLabel: "v2.pdf", uploadedAtLabel: "9월 1일" },
+            { id: "3", versionNumberLabel: "v3", isActive: true, parsingStatus: "completed", fileNameLabel: "v3.pdf", uploadedAtLabel: "9월 20일" },
           ],
         },
       ],
     },
   } as never);
+  vi.mocked(useActivateResumeVersionMutation).mockReturnValue({ mutateAsync: activate, error: null } as never);
 }
 
 describe("SidebarNavigation", () => {
@@ -54,7 +62,7 @@ describe("SidebarNavigation", () => {
     signIn(true);
     renderWithProviders(<SidebarNavigation />, { route: "/settings/profile", locale: "ko" });
 
-    expect(screen.getByRole("link", { name: /백엔드 이력서.*v3 · 완료/ })).toHaveAttribute("href", "/resume");
+    expect(screen.getByRole("button", { name: /백엔드 이력서.*v3 · 분석 완료/ })).toHaveAttribute("aria-haspopup", "dialog");
     expect(screen.getByRole("link", { name: "설정" })).toHaveAttribute("aria-current", "page");
   });
 
@@ -66,5 +74,44 @@ describe("SidebarNavigation", () => {
     expect(labels).toEqual(["iiterview", "오늘", "질문", "둘러보기", "로그인", "회원가입"]);
     expect(screen.getByRole("link", { name: "둘러보기" })).toHaveAttribute("aria-current", "page");
     expect(useReviewQueueQuery).toHaveBeenCalledWith({ enabled: false });
+  });
+
+  it("switches the active version from a dialog and follows it on version-scoped pages", async () => {
+    signIn(true);
+    const user = userEvent.setup();
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={
+            <>
+              <SidebarNavigation />
+              <LocationDisplay />
+            </>
+          }
+          path="*"
+        />
+      </Routes>,
+      { route: "/resume/3/heatmap", locale: "ko" },
+    );
+
+    await user.click(screen.getByRole("button", { name: /백엔드 이력서/ }));
+    const dialog = screen.getByRole("dialog", { name: "활성 이력서 버전" });
+    expect(within(dialog).getByRole("button", { name: /v3/ })).toHaveAttribute("aria-current", "true");
+
+    await user.click(within(dialog).getByRole("button", { name: /v2/ }));
+
+    expect(activate).toHaveBeenCalledWith("2");
+    await waitFor(() => expect(screen.getByTestId("location-display")).toHaveTextContent("/resume/2/heatmap"));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+});
+
+describe("followVersion", () => {
+  it("maps version-scoped tabs and ignores other routes", () => {
+    expect(followVersion("/resume/3/claims", "7")).toBe("/resume/7/claims");
+    expect(followVersion("/resume/3/heatmap/anchors/project/1", "7")).toBe("/resume/7/heatmap");
+    expect(followVersion("/resume/3/tailor/9", "7")).toBe("/resume/7/tailor");
+    expect(followVersion("/resume/analysis", "7")).toBeNull();
+    expect(followVersion("/questions", "7")).toBeNull();
   });
 });

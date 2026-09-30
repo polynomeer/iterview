@@ -101,6 +101,7 @@
 }
 
 .shell-nav__resume:hover { background: var(--iv-surface-hover); }
+button.shell-nav__resume { width: 100%; background: none; font-family: var(--iv-font-sans); text-align: left; cursor: pointer; }
 
 .shell-nav__resume-copy {
   display: flex;
@@ -299,3 +300,32 @@
   min-height: 100vh;
   background: var(--iv-bg);
 }
+
+/* ---------- Resume version switcher ---------- */
+
+.version-switcher__resume + .version-switcher__resume { margin-top: var(--iv-space-5); }
+.version-switcher__title { margin: 0 0 var(--iv-space-2); color: var(--iv-text-muted); font-size: var(--iv-text-sm); font-weight: var(--iv-weight-semibold); }
+.version-switcher__list { display: flex; flex-direction: column; gap: var(--iv-space-2); margin: 0; padding: 0; list-style: none; }
+.version-switcher__empty { margin: 0; color: var(--iv-text-muted); }
+
+.version-switcher__option {
+  display: flex;
+  align-items: center;
+  gap: var(--iv-space-3);
+  width: 100%;
+  padding: var(--iv-space-3);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-md);
+  background: var(--iv-surface);
+  color: var(--iv-text);
+  font-family: var(--iv-font-sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.version-switcher__option:hover { border-color: var(--iv-border-strong); }
+.version-switcher__option[aria-current="true"] { border-color: var(--iv-accent); background: var(--iv-accent-soft); }
+.version-switcher__option:focus-visible { outline: none; box-shadow: var(--iv-focus-ring); }
+.version-switcher__option:disabled { cursor: progress; opacity: 0.7; }
+.version-switcher__copy { display: flex; flex: 1; flex-direction: column; min-width: 0; font-size: var(--iv-text-sm); }
+.version-switcher__copy span { color: var(--iv-text-muted); font-size: var(--iv-text-xs); }

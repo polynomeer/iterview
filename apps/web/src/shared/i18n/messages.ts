@@ -67,6 +67,7 @@ export const messages = {
       activeResume: "Active resume",
       noActiveResume: "No resume yet",
       uploadResume: "Upload a resume",
+      chooseVersion: "Choose a version",
       reviewDueCount: "{count} due for review",
     },
     navigation: {
@@ -868,6 +869,7 @@ export const messages = {
       activeResume: "활성 이력서",
       noActiveResume: "아직 이력서가 없어요",
       uploadResume: "이력서 올리기",
+      chooseVersion: "버전을 골라 주세요",
       reviewDueCount: "복습 {count}개 대기",
     },
     navigation: {
