@@ -19,7 +19,7 @@ import {
   Select,
   Stat,
 } from "../../shared/ui/primitives";
-import { HeatBadge, LinkedQuestionRow, PressureCounts, useHeatmapCopy } from "./heatmapParts";
+import { HeatBadge, LinkedQuestionRow, PressureCounts, useHeatmapLabels } from "./heatmapParts";
 import { anchorPathId, buildHeatmapAnchors, readFiltersFromSearchParams, writeFiltersToSearchParams, type HeatmapAnchor } from "./heatmapUtils";
 import "./heatmap.css";
 
@@ -30,7 +30,7 @@ function AnchorCard({ anchor, rank, versionId, selectedKey, onSelect }: {
   selectedKey: string | null;
   onSelect: (targetKey: string | null) => void;
 }) {
-  const { copy, group, target: targetLabel } = useHeatmapCopy();
+  const { t, group, target: targetLabel } = useHeatmapLabels();
   const { item } = anchor;
   const selected = anchor.overlayTargets.find((target) => target.targetKey === selectedKey) ?? null;
   const titleId = `heatmap-anchor-${item.id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
@@ -58,7 +58,7 @@ function AnchorCard({ anchor, rank, versionId, selectedKey, onSelect }: {
             to={routeConfig.resumeHeatmapAnchor.buildPath({ versionId, anchorType: item.anchorType, anchorId: anchorPathId(item) })}
             variant="ghost"
           >
-            {copy("자세히", "Details")}
+            {t("resumeHeatmap.details")}
           </ButtonLink>
         </div>
 
@@ -71,7 +71,7 @@ function AnchorCard({ anchor, rank, versionId, selectedKey, onSelect }: {
         ) : null}
 
         {anchor.overlayTargets.length > 0 ? (
-          <div aria-label={copy("질문을 받은 부분", "Parts that drew questions")} className="heatmap-targets" role="group">
+          <div aria-label={t("resumeHeatmap.partsThatDrewQuestions")} className="heatmap-targets" role="group">
             {anchor.overlayTargets.map((target) => {
               const isSelected = target.targetKey === selectedKey;
               return (
@@ -84,7 +84,7 @@ function AnchorCard({ anchor, rank, versionId, selectedKey, onSelect }: {
                 >
                   <span className="heatmap-target__type">{targetLabel(target.targetType)}</span>
                   <span className="heatmap-target__text">{target.textSnippet ?? target.fieldPath ?? target.targetKey}</span>
-                  <span className="heatmap-target__count">{copy(`질문 ${target.questionCount}`, `${target.questionCount} q`)}</span>
+                  <span className="heatmap-target__count">{t("resumeHeatmap.targetQuestionCount", { questionCount: target.questionCount })}</span>
                 </button>
               );
             })}
@@ -105,7 +105,7 @@ function AnchorCard({ anchor, rank, versionId, selectedKey, onSelect }: {
 
 /** 면접 압박 지도: resume claims ranked by how hard real interviews pushed on them. */
 export function ResumeHeatmapPage() {
-  const { copy, target: targetLabel } = useHeatmapCopy();
+  const { t, target: targetLabel } = useHeatmapLabels();
   const { versionId = "" } = useParams<{ versionId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMemo(() => readFiltersFromSearchParams(searchParams), [searchParams]);
@@ -139,7 +139,7 @@ export function ResumeHeatmapPage() {
   }
 
   if (heatmapQuery.isLoading || overlayTargetsQuery.isLoading || snapshotsQuery.isLoading) {
-    return <PageSkeleton label={copy("압박 지도를 불러오는 중", "Loading the pressure map")} />;
+    return <PageSkeleton label={t("resumeHeatmap.loadingThePressureMap")} />;
   }
 
   if (heatmapQuery.isError || overlayTargetsQuery.isError || !heatmapQuery.data) {
@@ -148,12 +148,12 @@ export function ResumeHeatmapPage() {
       <ErrorState
         actions={
           <Button onClick={() => void Promise.all([heatmapQuery.refetch(), overlayTargetsQuery.refetch()])} variant="primary">
-            {copy("다시 시도", "Try again")}
+            {t("resumeHeatmap.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(error, copy("압박 지도를 불러오지 못했어요.", "The pressure map could not be loaded."))}
+        body={userFacingErrorMessage(error, t("resumeHeatmap.thePressureMapCouldNot"))}
         details={getErrorDetails(error)}
-        title={copy("압박 지도를 불러올 수 없어요", "Unable to load the pressure map")}
+        title={t("resumeHeatmap.unableToLoadThePressure")}
       />
     );
   }
@@ -167,45 +167,42 @@ export function ResumeHeatmapPage() {
       <EmptyState
         actions={
           <ButtonLink to={routeConfig.practicalInterviewUpload.buildPath()} variant="primary">
-            {copy("실전 면접 올리기", "Upload a real interview")}
+            {t("resumeHeatmap.uploadARealInterview")}
           </ButtonLink>
         }
-        body={copy(
-          "실전 면접을 올리면 받은 질문을 이력서 문장에 연결해, 어떤 주장이 가장 많이 공격받는지 보여줘요.",
-          "Upload a real interview and we map each question back to the resume line it targeted, so you see which claims drew the most fire.",
-        )}
+        body={t("resumeHeatmap.uploadARealInterviewAnd")}
         icon="interview"
-        title={copy("아직 연결된 면접 질문이 없어요", "No interview questions mapped yet")}
+        title={t("resumeHeatmap.noInterviewQuestionsMappedYet")}
       />
     );
   }
 
   return (
     <div className="heatmap">
-      <div aria-label={copy("요약", "Summary")} className="heatmap-stats" role="group">
-        <Stat label={copy("질문받은 주장", "Claims questioned")} value={heatmapQuery.data.summary.totalAnchors} />
-        <Stat label={copy("연결된 질문", "Linked questions")} value={filterSummary.totalQuestions} />
-        <Stat label={copy("꼬리질문", "Follow-ups")} value={filterSummary.followUpQuestionCount} />
-        <Stat label={copy("약한 답변", "Weak answers")} tone={filterSummary.weakQuestionCount > 0 ? "danger" : "neutral"} value={filterSummary.weakQuestionCount} />
+      <div aria-label={t("resumeHeatmap.summary")} className="heatmap-stats" role="group">
+        <Stat label={t("resumeHeatmap.claimsQuestioned")} value={heatmapQuery.data.summary.totalAnchors} />
+        <Stat label={t("resumeHeatmap.linkedQuestions")} value={filterSummary.totalQuestions} />
+        <Stat label={t("resumeHeatmap.followUps")} value={filterSummary.followUpQuestionCount} />
+        <Stat label={t("resumeHeatmap.weakAnswers")} tone={filterSummary.weakQuestionCount > 0 ? "danger" : "neutral"} value={filterSummary.weakQuestionCount} />
       </div>
 
-      <div aria-label={copy("필터", "Filters")} className="heatmap-filters" role="group">
+      <div aria-label={t("resumeHeatmap.filters")} className="heatmap-filters" role="group">
         <Segmented
           items={[
-            { id: "all", label: copy("전체", "All") },
-            { id: "main", label: copy("메인 질문", "Main questions") },
-            { id: "follow_up", label: copy("꼬리질문", "Follow-ups") },
+            { id: "all", label: t("resumeHeatmap.all") },
+            { id: "main", label: t("resumeHeatmap.mainQuestions") },
+            { id: "follow_up", label: t("resumeHeatmap.followUps") },
           ]}
-          label={copy("질문 범위", "Question scope")}
+          label={t("resumeHeatmap.questionScope")}
           onChange={(scope: ResumeQuestionHeatmapScopeDto) => updateFilters({ ...filters, scope })}
           value={filters.scope ?? "all"}
         />
         <Button aria-pressed={Boolean(filters.weakOnly)} onClick={() => updateFilters({ ...filters, weakOnly: !filters.weakOnly })} size="sm" variant={filters.weakOnly ? "primary" : "secondary"}>
-          {copy("약한 답변만", "Weak answers only")}
+          {t("resumeHeatmap.weakAnswersOnly")}
         </Button>
         {filterSummary.companyNames.length > 0 ? (
-          <Select aria-label={copy("회사", "Company")} onChange={(event) => updateFilters({ ...filters, companyName: event.target.value })} value={filters.companyName ?? ""}>
-            <option value="">{copy("모든 회사", "All companies")}</option>
+          <Select aria-label={t("resumeHeatmap.company")} onChange={(event) => updateFilters({ ...filters, companyName: event.target.value })} value={filters.companyName ?? ""}>
+            <option value="">{t("resumeHeatmap.allCompanies")}</option>
             {filterSummary.companyNames.map((name) => (
               <option key={name} value={name}>
                 {name}
@@ -215,11 +212,11 @@ export function ResumeHeatmapPage() {
         ) : null}
         {filterSummary.availableTargetTypes.length > 1 ? (
           <Select
-            aria-label={copy("하이라이트 단위", "Highlight unit")}
+            aria-label={t("resumeHeatmap.highlightUnit")}
             onChange={(event) => updateFilters({ ...filters, targetType: (event.target.value || undefined) as ResumeQuestionHeatmapFiltersDto["targetType"] })}
             value={filters.targetType ?? ""}
           >
-            <option value="">{copy("모든 단위", "All units")}</option>
+            <option value="">{t("resumeHeatmap.allUnits")}</option>
             {filterSummary.availableTargetTypes.map((type) => (
               <option key={type} value={type}>
                 {`${targetLabel(type)} (${filterSummary.targetTypeCounts[type] ?? 0})`}
@@ -228,9 +225,9 @@ export function ResumeHeatmapPage() {
           </Select>
         ) : null}
         <span className="heatmap-filters__dates">
-          <Input aria-label={copy("면접일 시작", "Interviews from")} onChange={(event) => updateFilters({ ...filters, interviewDateFrom: event.target.value })} type="date" value={filters.interviewDateFrom ?? ""} />
+          <Input aria-label={t("resumeHeatmap.interviewsFrom")} onChange={(event) => updateFilters({ ...filters, interviewDateFrom: event.target.value })} type="date" value={filters.interviewDateFrom ?? ""} />
           <span aria-hidden="true">–</span>
-          <Input aria-label={copy("면접일 끝", "Interviews to")} onChange={(event) => updateFilters({ ...filters, interviewDateTo: event.target.value })} type="date" value={filters.interviewDateTo ?? ""} />
+          <Input aria-label={t("resumeHeatmap.interviewsTo")} onChange={(event) => updateFilters({ ...filters, interviewDateTo: event.target.value })} type="date" value={filters.interviewDateTo ?? ""} />
         </span>
       </div>
 
@@ -238,15 +235,15 @@ export function ResumeHeatmapPage() {
         <EmptyState
           actions={
             <Button onClick={() => updateFilters({ scope: "all" })} variant="primary">
-              {copy("필터 초기화", "Clear filters")}
+              {t("resumeHeatmap.clearFilters")}
             </Button>
           }
-          body={copy("조건을 넓혀 보세요.", "Try widening the filters.")}
+          body={t("resumeHeatmap.tryWideningTheFilters")}
           icon="search"
-          title={copy("조건에 맞는 주장이 없어요", "No claims match these filters")}
+          title={t("resumeHeatmap.noClaimsMatchTheseFilters")}
         />
       ) : (
-        <ol aria-label={copy("압박을 많이 받은 순서", "Most pressured first")} className="heatmap-anchors">
+        <ol aria-label={t("resumeHeatmap.mostPressuredFirst")} className="heatmap-anchors">
           {anchors.map((anchor, index) => (
             <AnchorCard
               anchor={anchor}

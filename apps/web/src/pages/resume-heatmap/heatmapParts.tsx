@@ -1,48 +1,48 @@
 import type { ReactNode } from "react";
 import type { ResumeQuestionHeatmapQuestionModel } from "../../entities/resume-heatmap/model";
 import { routeConfig } from "../../shared/config/routes";
-import { useLocale } from "../../shared/i18n";
+import { useLocale, type MessageKey } from "../../shared/i18n";
 import { Badge, ButtonLink, ListRow, type Tone } from "../../shared/ui/primitives";
 import type { HeatmapGroup } from "./heatmapUtils";
 
 type HeatTone = "low" | "medium" | "high" | "critical";
 
-const HEAT: Record<HeatTone, { tone: Tone; ko: string; en: string }> = {
-  critical: { tone: "danger", ko: "압박 매우 큼", en: "Very high pressure" },
-  high: { tone: "warning", ko: "압박 큼", en: "High pressure" },
-  medium: { tone: "accent", ko: "압박 보통", en: "Some pressure" },
-  low: { tone: "neutral", ko: "압박 적음", en: "Low pressure" },
+const HEAT: Record<HeatTone, { tone: Tone; label: MessageKey }> = {
+  critical: { tone: "danger", label: "resumeHeatmap.heatCritical" },
+  high: { tone: "warning", label: "resumeHeatmap.heatHigh" },
+  medium: { tone: "accent", label: "resumeHeatmap.heatMedium" },
+  low: { tone: "neutral", label: "resumeHeatmap.heatLow" },
 };
 
-const GROUP: Record<HeatmapGroup, [string, string]> = {
-  summary: ["요약", "Summary"],
-  project: ["프로젝트", "Project"],
-  experience: ["경력", "Experience"],
-  skill: ["스킬", "Skill"],
-  competency: ["역량", "Competency"],
-  other: ["기타", "Other"],
+const GROUP: Record<HeatmapGroup, MessageKey> = {
+  summary: "resumeHeatmap.groupSummary",
+  project: "resumeHeatmap.groupProject",
+  experience: "resumeHeatmap.groupExperience",
+  skill: "resumeHeatmap.groupSkill",
+  competency: "resumeHeatmap.groupCompetency",
+  other: "resumeHeatmap.groupOther",
 };
 
-const TARGET: Record<string, [string, string]> = {
-  block: ["문단", "Paragraph"],
-  sentence: ["문장", "Sentence"],
-  phrase: ["구절", "Phrase"],
-  keyword: ["키워드", "Keyword"],
+const TARGET: Record<string, MessageKey> = {
+  block: "resumeHeatmap.targetBlock",
+  sentence: "resumeHeatmap.targetSentence",
+  phrase: "resumeHeatmap.targetPhrase",
+  keyword: "resumeHeatmap.targetKeyword",
 };
 
-export function useHeatmapCopy() {
-  const { locale } = useLocale();
-  const copy = (ko: string, en: string) => (locale === "ko" ? ko : en);
+/** `t` plus the localized heat, group, and highlight-unit labels the heatmap screens share. */
+export function useHeatmapLabels() {
+  const { t } = useLocale();
   return {
-    copy,
-    heat: (tone: HeatTone) => ({ tone: HEAT[tone].tone, label: copy(HEAT[tone].ko, HEAT[tone].en) }),
-    group: (group: HeatmapGroup) => copy(...GROUP[group]),
-    target: (type: string | null) => (type && TARGET[type] ? copy(...TARGET[type]) : copy("하이라이트", "Highlight")),
+    t,
+    heat: (tone: HeatTone) => ({ tone: HEAT[tone].tone, label: t(HEAT[tone].label) }),
+    group: (group: HeatmapGroup) => t(GROUP[group]),
+    target: (type: string | null) => (type && TARGET[type] ? t(TARGET[type]) : t("resumeHeatmap.highlight")),
   };
 }
 
 export function HeatBadge({ tone }: { tone: HeatTone }) {
-  const { heat } = useHeatmapCopy();
+  const { heat } = useHeatmapLabels();
   const { tone: badgeTone, label } = heat(tone);
   return (
     <Badge dot tone={badgeTone}>
@@ -53,35 +53,35 @@ export function HeatBadge({ tone }: { tone: HeatTone }) {
 
 /** 질문 3 · 꼬리질문 2 · 약한 답변 1, skipping zeros after the first. */
 export function PressureCounts({ questions, followUps, pressure, weak }: { questions: number; followUps: number; pressure: number; weak: number }) {
-  const { copy } = useHeatmapCopy();
+  const { t } = useLocale();
   const parts = [
-    copy(`질문 ${questions}`, `${questions} questions`),
-    followUps > 0 ? copy(`꼬리질문 ${followUps}`, `${followUps} follow-ups`) : null,
-    pressure > 0 ? copy(`압박 ${pressure}`, `${pressure} pressure`) : null,
+    t("resumeHeatmap.questionCount", { questions }),
+    followUps > 0 ? t("resumeHeatmap.followUpCount", { followUps }) : null,
+    pressure > 0 ? t("resumeHeatmap.pressureCount", { pressure }) : null,
   ].filter(Boolean);
   return (
     <span className="heatmap-counts">
       {parts.join(" · ")}
-      {weak > 0 ? <strong className="ui-tone-text--danger">{copy(` · 약한 답변 ${weak}`, ` · ${weak} weak`)}</strong> : null}
+      {weak > 0 ? <strong className="ui-tone-text--danger">{t("resumeHeatmap.weakAnswerCount", { weak })}</strong> : null}
     </span>
   );
 }
 
 /** One interview question that landed on a resume claim, with where to go next. */
 export function LinkedQuestionRow({ question, action }: { question: ResumeQuestionHeatmapQuestionModel; action?: ReactNode }) {
-  const { copy } = useHeatmapCopy();
+  const { t } = useLocale();
   return (
     <ListRow
       className="heatmap-question"
       meta={
         <span className="heatmap-question__meta">
-          {question.isFollowUp ? <Badge tone="accent">{copy("꼬리질문", "Follow-up")}</Badge> : null}
-          {question.pressureQuestion ? <Badge tone="warning">{copy("압박", "Pressure")}</Badge> : null}
-          {question.weakAnswer ? <Badge tone="danger">{copy("약한 답변", "Weak answer")}</Badge> : null}
+          {question.isFollowUp ? <Badge tone="accent">{t("resumeHeatmap.followUp")}</Badge> : null}
+          {question.pressureQuestion ? <Badge tone="warning">{t("resumeHeatmap.pressure")}</Badge> : null}
+          {question.weakAnswer ? <Badge tone="danger">{t("resumeHeatmap.weakAnswer")}</Badge> : null}
           {question.weaknessTags.map((tag) => (
             <Badge key={tag}>{tag}</Badge>
           ))}
-          <span>{question.interviewDateLabel ?? copy("면접 일자 없음", "No interview date")}</span>
+          <span>{question.interviewDateLabel ?? t("resumeHeatmap.noInterviewDate")}</span>
         </span>
       }
       title={question.text}
@@ -92,11 +92,11 @@ export function LinkedQuestionRow({ question, action }: { question: ResumeQuesti
             to={routeConfig.practicalInterviewQuestion.buildPath({ recordId: question.sourceInterviewRecordId, questionId: question.interviewRecordQuestionId })}
             variant="ghost"
           >
-            {copy("면접 복기", "Interview review")}
+            {t("resumeHeatmap.interviewReview")}
           </ButtonLink>
           {question.linkedQuestionId ? (
             <ButtonLink size="sm" to={routeConfig.answerEditor.buildPath({ questionId: question.linkedQuestionId })}>
-              {copy("다시 답해보기", "Practice it")}
+              {t("resumeHeatmap.practiceIt")}
             </ButtonLink>
           ) : null}
           {action}

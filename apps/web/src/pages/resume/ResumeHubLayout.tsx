@@ -32,7 +32,6 @@ export function useResumeHub() {
 export function ResumeHubLayout() {
   const { versionId = "" } = useParams<{ versionId: string }>();
   const { t, locale } = useLocale();
-  const isKorean = locale === "ko";
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { resumes, isLoading, isError, error, refetch } = useActiveResumeVersion();
@@ -41,7 +40,7 @@ export function ResumeHubLayout() {
   const [switcherOpen, setSwitcherOpen] = useState(false);
 
   if (isLoading) {
-    return <PageSkeleton label={isKorean ? "이력서를 불러오는 중" : "Loading your resume"} />;
+    return <PageSkeleton label={t("resumeHub.loadingYourResume")} />;
   }
 
   if (isError) {
@@ -52,10 +51,10 @@ export function ResumeHubLayout() {
             {t("common.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(error, isKorean ? "이력서 목록을 불러오지 못했어요." : "The resume list could not be loaded.")}
+        body={userFacingErrorMessage(error, t("resumeHub.theResumeListCouldNot"))}
         details={getErrorDetails(error)}
         size="page"
-        title={isKorean ? "이력서를 불러올 수 없어요" : "Unable to load your resume"}
+        title={t("resumeHub.unableToLoadYourResume")}
       />
     );
   }
@@ -68,13 +67,13 @@ export function ResumeHubLayout() {
       <ErrorState
         actions={
           <ButtonLink to={routeConfig.resume.buildPath()} variant="primary">
-            {isKorean ? "내 이력서로" : "Go to my resume"}
+            {t("resumeHub.goToMyResume")}
           </ButtonLink>
         }
-        body={isKorean ? "삭제되었거나 다른 계정의 이력서일 수 있어요." : "It may have been deleted or belong to another account."}
+        body={t("resumeHub.itMayHaveBeenDeleted")}
         icon="search"
         size="page"
-        title={isKorean ? "이 이력서 버전을 찾을 수 없어요" : "We couldn't find this resume version"}
+        title={t("resumeHub.weCouldntFindThisResume")}
       />
     );
   }
@@ -82,7 +81,7 @@ export function ResumeHubLayout() {
   // The polled detail is fresher than the list while parsing runs.
   const version = status.versionQuery.data?.id === versionId ? { ...listed, ...status.versionQuery.data } : listed;
   const parsing = parsingStatusLabel(version.parsingStatus, locale);
-  const activateError = optionalErrorMessage(activateMutation.error, isKorean ? "활성화하지 못했어요. 다시 시도하세요." : "We couldn't activate it. Try again.");
+  const activateError = optionalErrorMessage(activateMutation.error, t("resumeHub.weCouldntActivateItTry"));
   const tabs = [
     { to: routeConfig.resumeOverview.buildPath({ versionId }), label: t("nav.resumeOverview"), end: true },
     { to: routeConfig.resumeEditor.buildPath({ versionId }), label: t("nav.resumeClaims") },
@@ -99,13 +98,13 @@ export function ResumeHubLayout() {
           <p className="resume-hub__meta">
             <span>{version.versionNumberLabel}</span>
             {version.fileNameLabel ? <span>{version.fileNameLabel}</span> : null}
-            {version.uploadedAtLabel ? <span>{isKorean ? `${version.uploadedAtLabel} 업로드` : `Uploaded ${version.uploadedAtLabel}`}</span> : null}
+            {version.uploadedAtLabel ? <span>{t("resumeHub.uploadedAt", { uploadedAtLabel: version.uploadedAtLabel })}</span> : null}
           </p>
         </div>
         <div className="resume-hub__badges">
           {version.isActive ? (
             <Badge dot tone="accent">
-              {isKorean ? "사용 중인 버전" : "Active version"}
+              {t("resumeHub.activeVersion")}
             </Badge>
           ) : null}
           {version.parsingStatus !== "completed" ? (
@@ -115,19 +114,17 @@ export function ResumeHubLayout() {
           ) : null}
         </div>
         <Button aria-haspopup="dialog" icon="resume" onClick={() => setSwitcherOpen(true)} size="sm">
-          {isKorean ? "버전 바꾸기" : "Switch version"}
+          {t("resumeHub.switchVersion")}
         </Button>
       </header>
 
       {!version.isActive ? (
         <Callout
-          title={isKorean ? "지금 사용 중인 버전이 아니에요" : "This isn't your active version"}
+          title={t("resumeHub.thisIsntYourActiveVersion")}
           tone="warning"
         >
           <p>
-            {isKorean
-              ? "질문 추천, 면접, 답변 평가는 사용 중인 버전을 기준으로 해요."
-              : "Question picks, interviews, and answer grading use the active version."}
+            {t("resumeHub.questionPicksInterviewsAndAnswer")}
           </p>
           {activateError ? <p className="ui-tone-text--danger">{activateError}</p> : null}
           <Button
@@ -136,12 +133,12 @@ export function ResumeHubLayout() {
             onClick={() => activateMutation.mutate(versionId)}
             size="sm"
           >
-            {isKorean ? "이 버전 사용하기" : "Use this version"}
+            {t("resumeHub.useThisVersion")}
           </Button>
         </Callout>
       ) : null}
 
-      <TabLinks items={tabs} label={isKorean ? "이력서 보기" : "Resume views"} />
+      <TabLinks items={tabs} label={t("resumeHub.resumeViews")} />
 
       <div className="resume-hub__panel">
         <Outlet context={{ versionId, resume, version, status } satisfies ResumeHubContext} />

@@ -21,7 +21,7 @@ import {
   PageSkeleton,
   Select,
 } from "../../shared/ui/primitives";
-import { HeatBadge, LinkedQuestionRow, PressureCounts, useHeatmapCopy } from "./heatmapParts";
+import { HeatBadge, LinkedQuestionRow, PressureCounts, useHeatmapLabels } from "./heatmapParts";
 import {
   anchorPathId,
   buildAnchorId,
@@ -58,7 +58,7 @@ function FixLinkDialog({
   onSave: (anchor: AnchorOption, overlay: OverlayOption | null) => void;
   onClose: () => void;
 }) {
-  const { copy, group, target: targetLabel } = useHeatmapCopy();
+  const { t, group, target: targetLabel } = useHeatmapLabels();
   const [draft, setDraft] = useState(initial);
   const anchor = anchorOptions.find((option) => option.id === draft.anchorId) ?? null;
   const overlays = anchor
@@ -68,25 +68,25 @@ function FixLinkDialog({
 
   return (
     <Dialog
-      closeLabel={copy("닫기", "Close")}
+      closeLabel={t("resumeHeatmap.close")}
       description={question.text}
       footer={
         <>
           <Button onClick={onClose} variant="ghost">
-            {copy("취소", "Cancel")}
+            {t("resumeHeatmap.cancel")}
           </Button>
           <Button disabled={!anchor} loading={pending} onClick={() => anchor && onSave(anchor, overlay)} variant="primary">
-            {copy("연결 저장", "Save link")}
+            {t("resumeHeatmap.saveLink")}
           </Button>
         </>
       }
       onClose={onClose}
       open
-      title={copy("질문이 겨냥한 이력서 부분 고치기", "Fix what this question targeted")}
+      title={t("resumeHeatmap.fixWhatThisQuestionTargeted")}
     >
       <div className="heatmap-link-form">
         {error ? <Callout tone="danger">{error}</Callout> : null}
-        <Field label={copy("이력서 항목", "Resume item")}>
+        <Field label={t("resumeHeatmap.resumeItem")}>
           {(control) => (
             <Select {...control} onChange={(event) => setDraft({ anchorId: event.target.value, targetKey: "" })} value={draft.anchorId}>
               {ANCHOR_TYPES.map((type) => {
@@ -104,10 +104,10 @@ function FixLinkDialog({
             </Select>
           )}
         </Field>
-        <Field hint={copy("비워 두면 항목 전체에 연결돼요.", "Leave empty to link the whole item.")} label={copy("정확한 부분 (선택)", "Exact part (optional)")}>
+        <Field hint={t("resumeHeatmap.leaveEmptyToLinkThe")} label={t("resumeHeatmap.exactPartOptional")}>
           {(control) => (
             <Select {...control} disabled={overlays.length === 0} onChange={(event) => setDraft({ ...draft, targetKey: event.target.value })} value={draft.targetKey}>
-              <option value="">{copy("항목 전체", "Whole item")}</option>
+              <option value="">{t("resumeHeatmap.wholeItem")}</option>
               {overlays.map((item) => (
                 <option key={item.targetKey} value={item.targetKey}>
                   {`${targetLabel(item.targetType)}: ${item.textSnippet ?? item.fieldPath ?? item.targetKey}`}
@@ -123,7 +123,7 @@ function FixLinkDialog({
 
 /** One resume claim: its text, the parts interviewers hit, and every question that landed on it. */
 export function ResumeHeatmapAnchorPage() {
-  const { copy, target: targetLabel } = useHeatmapCopy();
+  const { t, target: targetLabel } = useHeatmapLabels();
   const { versionId = "", anchorType, anchorId } = useParams<{ versionId: string; anchorType: string; anchorId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMemo(() => readFiltersFromSearchParams(searchParams), [searchParams]);
@@ -151,7 +151,7 @@ export function ResumeHeatmapAnchorPage() {
   const anchorOptions = useMemo(() => (snapshotsQuery.data ? buildAnchorOptions(snapshotsQuery.data) : []), [snapshotsQuery.data]);
 
   if (heatmapQuery.isLoading || overlayTargetsQuery.isLoading || snapshotsQuery.isLoading) {
-    return <PageSkeleton label={copy("이력서 항목을 불러오는 중", "Loading the resume item")} />;
+    return <PageSkeleton label={t("resumeHeatmap.loadingTheResumeItem")} />;
   }
 
   if (heatmapQuery.isError || overlayTargetsQuery.isError) {
@@ -160,12 +160,12 @@ export function ResumeHeatmapAnchorPage() {
       <ErrorState
         actions={
           <Button onClick={() => void Promise.all([heatmapQuery.refetch(), overlayTargetsQuery.refetch()])} variant="primary">
-            {copy("다시 시도", "Try again")}
+            {t("resumeHeatmap.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(error, copy("이 항목을 불러오지 못했어요.", "This item could not be loaded."))}
+        body={userFacingErrorMessage(error, t("resumeHeatmap.thisItemCouldNotBe"))}
         details={getErrorDetails(error)}
-        title={copy("항목을 불러올 수 없어요", "Unable to load this item")}
+        title={t("resumeHeatmap.unableToLoadThisItem")}
       />
     );
   }
@@ -175,12 +175,12 @@ export function ResumeHeatmapAnchorPage() {
       <EmptyState
         actions={
           <ButtonLink to={heatmapPath} variant="primary">
-            {copy("압박 지도로", "Back to the pressure map")}
+            {t("resumeHeatmap.backToThePressureMap")}
           </ButtonLink>
         }
-        body={copy("현재 필터에서는 이 항목에 연결된 질문이 없어요.", "No questions are linked to this item under the current filters.")}
+        body={t("resumeHeatmap.noQuestionsAreLinkedTo")}
         icon="search"
-        title={copy("이 항목을 찾을 수 없어요", "We couldn't find this item")}
+        title={t("resumeHeatmap.weCouldntFindThisItem")}
       />
     );
   }
@@ -190,8 +190,8 @@ export function ResumeHeatmapAnchorPage() {
   const questions = selectedTarget?.linkedQuestions ?? item.linkedQuestions;
   const editing = questions.find((question) => question.interviewRecordQuestionId === editingId) ?? null;
   const linkError =
-    optionalErrorMessage(createLinkMutation.error, copy("연결을 저장하지 못했어요.", "We couldn't save the link.")) ??
-    optionalErrorMessage(updateLinkMutation.error, copy("연결을 되돌리지 못했어요.", "We couldn't undo the link."));
+    optionalErrorMessage(createLinkMutation.error, t("resumeHeatmap.weCouldntSaveTheLink")) ??
+    optionalErrorMessage(updateLinkMutation.error, t("resumeHeatmap.weCouldntUndoTheLink"));
 
   function selectTarget(targetKey: string | null) {
     const params = new URLSearchParams(searchParams);
@@ -242,7 +242,7 @@ export function ResumeHeatmapAnchorPage() {
     <div className="heatmap-detail">
       <div>
         <ButtonLink size="sm" to={heatmapPath} variant="ghost">
-          {copy("← 압박 지도", "← Pressure map")}
+          {t("resumeHeatmap.backToPressureMapArrow")}
         </ButtonLink>
       </div>
       <header className="heatmap-detail__head">
@@ -256,7 +256,7 @@ export function ResumeHeatmapAnchorPage() {
 
       <Card aria-labelledby="heatmap-source-title" padded>
         <h3 className="resume-card-title" id="heatmap-source-title">
-          {copy("이력서 원문", "Resume text")}
+          {t("resumeHeatmap.resumeText")}
         </h3>
         {anchor.body.length > 0 ? (
           <div className="heatmap-anchor__body">
@@ -265,10 +265,10 @@ export function ResumeHeatmapAnchorPage() {
             ))}
           </div>
         ) : (
-          <p className="resume-muted">{copy("추출된 원문이 없어요.", "No extracted text.")}</p>
+          <p className="resume-muted">{t("resumeHeatmap.noExtractedText")}</p>
         )}
         {anchor.overlayTargets.length > 0 ? (
-          <div aria-label={copy("질문을 받은 부분으로 좁히기", "Narrow to a part that drew questions")} className="heatmap-targets" role="group">
+          <div aria-label={t("resumeHeatmap.narrowToAPartThat")} className="heatmap-targets" role="group">
             {anchor.overlayTargets.map((target) => {
               const isSelected = target.targetKey === selectedTargetKey;
               return (
@@ -281,7 +281,7 @@ export function ResumeHeatmapAnchorPage() {
                 >
                   <span className="heatmap-target__type">{targetLabel(target.targetType)}</span>
                   <span className="heatmap-target__text">{target.textSnippet ?? target.fieldPath ?? target.targetKey}</span>
-                  <span className="heatmap-target__count">{copy(`질문 ${target.questionCount}`, `${target.questionCount} q`)}</span>
+                  <span className="heatmap-target__count">{t("resumeHeatmap.targetQuestionCount", { questionCount: target.questionCount })}</span>
                 </button>
               );
             })}
@@ -292,21 +292,21 @@ export function ResumeHeatmapAnchorPage() {
       <Card aria-labelledby="heatmap-questions-title">
         <CardHeader
           meta={selectedTarget ? `“${selectedTarget.textSnippet ?? selectedTarget.targetKey}”` : undefined}
-          title={<span id="heatmap-questions-title">{copy(`받은 질문 ${questions.length}`, `Questions received ${questions.length}`)}</span>}
+          title={<span id="heatmap-questions-title">{t("resumeHeatmap.questionsReceived", { count: questions.length })}</span>}
         />
         {questions.length === 0 ? (
-          <p className="resume-muted resume-card-pad">{copy("연결된 질문이 없어요.", "No linked questions.")}</p>
+          <p className="resume-muted resume-card-pad">{t("resumeHeatmap.noLinkedQuestions")}</p>
         ) : (
           questions.map((question) => (
             <LinkedQuestionRow
               action={
                 <>
                   <Button onClick={() => setEditingId(question.interviewRecordQuestionId)} size="sm" variant="ghost">
-                    {copy("연결 고치기", "Fix link")}
+                    {t("resumeHeatmap.fixLink")}
                   </Button>
                   {manualLinkIds[question.interviewRecordQuestionId] ? (
                     <Button loading={updateLinkMutation.isPending} onClick={() => void undoLink(question.interviewRecordQuestionId)} size="sm" variant="ghost">
-                      {copy("되돌리기", "Undo")}
+                      {t("resumeHeatmap.undo")}
                     </Button>
                   ) : null}
                 </>

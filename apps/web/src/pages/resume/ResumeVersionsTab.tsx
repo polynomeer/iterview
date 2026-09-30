@@ -24,11 +24,6 @@ import {
 import { useResumeHub } from "./ResumeHubLayout";
 import { useDownloadResumeVersion, useStartResumeVersion } from "./resumeActions";
 
-function useCopy() {
-  const { locale } = useLocale();
-  return (ko: string, en: string) => (locale === "ko" ? ko : en);
-}
-
 function UploadButton({ label, disabled, onFile }: { label: string; disabled?: boolean; onFile: (file: File) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
@@ -56,10 +51,10 @@ function UploadButton({ label, disabled, onFile }: { label: string; disabled?: b
 }
 
 function CreateResumeDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const createMutation = useCreateResumeMutation();
   const [title, setTitle] = useState("");
-  const error = optionalErrorMessage(createMutation.error, copy("만들지 못했어요. 다시 시도하세요.", "We couldn't create it. Try again."));
+  const error = optionalErrorMessage(createMutation.error, t("resumeHub.weCouldntCreateItTry"));
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -77,25 +72,25 @@ function CreateResumeDialog({ open, onClose }: { open: boolean; onClose: () => v
 
   return (
     <Dialog
-      closeLabel={copy("닫기", "Close")}
-      description={copy("지원 직군별로 이력서를 나눠 두면 버전 기록이 섞이지 않아요.", "Keep one resume per target role so version histories stay separate.")}
+      closeLabel={t("resumeHub.close")}
+      description={t("resumeHub.keepOneResumePerTarget")}
       footer={
         <>
           <Button onClick={onClose} variant="ghost">
-            {copy("취소", "Cancel")}
+            {t("resumeHub.cancel")}
           </Button>
           <Button disabled={!title.trim()} form="resume-create-form" loading={createMutation.isPending} type="submit" variant="primary">
-            {copy("만들기", "Create")}
+            {t("resumeHub.create")}
           </Button>
         </>
       }
       onClose={onClose}
       open={open}
       size="sm"
-      title={copy("새 이력서", "New resume")}
+      title={t("resumeHub.newResume")}
     >
       <form id="resume-create-form" onSubmit={(event) => void handleSubmit(event)}>
-        <Field error={error ?? undefined} hint={copy("예: 백엔드 엔지니어 지원용", "e.g. Backend engineer applications")} label={copy("이력서 이름", "Resume name")}>
+        <Field error={error ?? undefined} hint={t("resumeHub.resumeNamePlaceholder")} label={t("resumeHub.resumeName")}>
           {(control) => <Input {...control} autoFocus onChange={(event) => setTitle(event.target.value)} value={title} />}
         </Field>
       </form>
@@ -104,8 +99,7 @@ function CreateResumeDialog({ open, onClose }: { open: boolean; onClose: () => v
 }
 
 function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; currentId: string }) {
-  const { locale } = useLocale();
-  const copy = useCopy();
+  const { t, locale } = useLocale();
   const navigate = useNavigate();
   const { active } = useActiveResumeVersion();
   const activateMutation = useActivateResumeVersionMutation();
@@ -113,9 +107,9 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
   const upload = useStartResumeVersion();
   const downloader = useDownloadResumeVersion();
   const error =
-    optionalErrorMessage(upload.error, copy("PDF를 올리지 못했어요. 다시 시도하세요.", "We couldn't upload the PDF. Try again.")) ??
-    optionalErrorMessage(activateMutation.error, copy("활성화하지 못했어요.", "We couldn't activate it.")) ??
-    optionalErrorMessage(reExtractMutation.error, copy("추출을 다시 시작하지 못했어요.", "We couldn't restart extraction."));
+    optionalErrorMessage(upload.error, t("resumeHub.weCouldntUploadThePdf")) ??
+    optionalErrorMessage(activateMutation.error, t("resumeHub.weCouldntActivateIt")) ??
+    optionalErrorMessage(reExtractMutation.error, t("resumeHub.weCouldntRestartExtraction"));
   const details = getErrorDetails(upload.error ?? activateMutation.error ?? reExtractMutation.error);
 
   async function handleUpload(file: File) {
@@ -130,8 +124,8 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
   return (
     <Card aria-labelledby={`resume-${resume.id}-title`}>
       <CardHeader
-        actions={<UploadButton disabled={upload.isPending} label={upload.isPending ? copy("올리는 중…", "Uploading…") : copy("새 버전 올리기", "Upload a version")} onFile={(file) => void handleUpload(file)} />}
-        meta={copy(`버전 ${resume.versions.length}개`, `${resume.versions.length} versions`)}
+        actions={<UploadButton disabled={upload.isPending} label={upload.isPending ? t("resumeHub.uploading") : t("resumeHub.uploadAVersion")} onFile={(file) => void handleUpload(file)} />}
+        meta={t("resumeHub.versionCount", { count: resume.versions.length })}
         title={<span id={`resume-${resume.id}-title`}>{resume.title}</span>}
         titleAs="h2"
       />
@@ -143,9 +137,9 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
           ))}
         </Callout>
       ) : null}
-      {downloader.failedId ? <Callout tone="danger">{copy("PDF를 받지 못했어요.", "We couldn't download the PDF.")}</Callout> : null}
+      {downloader.failedId ? <Callout tone="danger">{t("resumeHub.weCouldntDownloadThePdf")}</Callout> : null}
       {resume.versions.length === 0 ? (
-        <p className="resume-muted resume-card-pad">{copy("아직 올린 PDF가 없어요.", "No PDF uploaded yet.")}</p>
+        <p className="resume-muted resume-card-pad">{t("resumeHub.noPdfUploadedYet")}</p>
       ) : (
         <ul className="resume-version-list">
           {resume.versions.map((version) => {
@@ -159,7 +153,7 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
                   title={
                     <span className="resume-version-list__title">
                       {version.versionNumberLabel}
-                      {isActive ? <Badge tone="accent">{copy("사용 중", "Active")}</Badge> : null}
+                      {isActive ? <Badge tone="accent">{t("resumeHub.active")}</Badge> : null}
                       {version.parsingStatus !== "completed" ? <Badge tone={status.tone}>{status.label}</Badge> : null}
                     </span>
                   }
@@ -167,7 +161,7 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
                     <span className="resume-row-actions">
                       {!isCurrent ? (
                         <ButtonLink size="sm" to={routeConfig.resumeOverview.buildPath({ versionId: version.id })} variant="ghost">
-                          {copy("열기", "Open")}
+                          {t("resumeHub.open")}
                         </ButtonLink>
                       ) : null}
                       {!isActive && version.canActivate ? (
@@ -176,7 +170,7 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
                           onClick={() => activateMutation.mutate(version.id)}
                           size="sm"
                         >
-                          {copy("사용하기", "Use")}
+                          {t("resumeHub.use")}
                         </Button>
                       ) : null}
                       {version.parsingStatus === "completed" ? (
@@ -186,7 +180,7 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
                           size="sm"
                           variant="ghost"
                         >
-                          {copy("다시 추출", "Re-extract")}
+                          {t("resumeHub.reExtract")}
                         </Button>
                       ) : null}
                       <Button
@@ -212,7 +206,7 @@ function ResumeVersionsCard({ resume, currentId }: { resume: ResumeModel; curren
 
 /** 버전 관리: every resume and version, with upload, activation, re-extraction, and download. */
 export function ResumeVersionsTab() {
-  const copy = useCopy();
+  const { t } = useLocale();
   const { versionId, status } = useResumeHub();
   const { resumes } = useActiveResumeVersion();
   const [createOpen, setCreateOpen] = useState(false);
@@ -223,10 +217,10 @@ export function ResumeVersionsTab() {
     <div className="resume-versions">
       <div className="resume-versions__toolbar">
         <p className="resume-muted">
-          {copy("사용 중인 버전 하나가 질문 추천, 면접, 답변 평가의 기준이 돼요.", "The active version drives question picks, interviews, and answer grading.")}
+          {t("resumeHub.theActiveVersionDrivesQuestion")}
         </p>
         <Button icon="plus" onClick={() => setCreateOpen(true)} size="sm" variant="ghost">
-          {copy("새 이력서", "New resume")}
+          {t("resumeHub.newResume")}
         </Button>
       </div>
       {resumes.map((resume) => (
@@ -234,15 +228,15 @@ export function ResumeVersionsTab() {
       ))}
       {detail ? (
         <details className="resume-extraction-meta">
-          <summary>{copy("이 버전의 분석 정보", "Analysis details for this version")}</summary>
+          <summary>{t("resumeHub.analysisDetailsForThisVersion")}</summary>
           <dl>
-            <dt>{copy("파싱", "Parsing")}</dt>
+            <dt>{t("resumeHub.parsing")}</dt>
             <dd>{[detail.parsingStatusLabel, detail.parseCompletedAtLabel].filter(Boolean).join(" · ")}</dd>
-            <dt>{copy("구조화 추출", "Extraction")}</dt>
+            <dt>{t("resumeHub.extraction")}</dt>
             <dd>{[extraction?.extractionStatusLabel ?? detail.extractionStatusLabel, extraction?.completedAtLabel ?? detail.extractionCompletedAtLabel].filter(Boolean).join(" · ")}</dd>
-            <dt>{copy("모델", "Model")}</dt>
+            <dt>{t("resumeHub.model")}</dt>
             <dd>{[extraction?.modelLabel ?? detail.extractionModelLabel, extraction?.promptVersionLabel ?? detail.extractionPromptVersion].filter(Boolean).join(" · ") || "-"}</dd>
-            <dt>{copy("신뢰도", "Confidence")}</dt>
+            <dt>{t("resumeHub.confidence")}</dt>
             <dd>{detail.extractionConfidenceLabel ?? "-"}</dd>
           </dl>
         </details>

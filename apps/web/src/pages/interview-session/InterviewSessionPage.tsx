@@ -13,14 +13,9 @@ import { useSkipInterviewSessionQuestionMutation } from "../../features/intervie
 import { useSubmitInterviewSessionAnswerMutation } from "../../features/interview/api/useSubmitInterviewSessionAnswerMutation";
 import { ApiClientError, getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
-import { useLocale } from "../../shared/i18n";
+import { useLocale, type MessageKey } from "../../shared/i18n";
 import { Badge, Button, ButtonLink, Callout, Card, ErrorState, PageSkeleton, Progress } from "../../shared/ui/primitives";
 import "./session.css";
-
-function useCopy() {
-  const { locale } = useLocale();
-  return (ko: string, en: string) => (locale === "ko" ? ko : en);
-}
 
 function useElapsed(startedAt: string | null) {
   const [now, setNow] = useState(() => Date.now());
@@ -36,19 +31,19 @@ function useElapsed(startedAt: string | null) {
   return hours > 0 ? `${hours}:${clock}` : clock;
 }
 
-const STATUS: Record<string, [string, string, "success" | "neutral" | "accent" | "warning"]> = {
-  answered: ["답변함", "Answered", "success"],
-  skipped: ["건너뜀", "Skipped", "warning"],
-  current: ["지금", "Now", "accent"],
+const STATUS: Record<string, { label: MessageKey; tone: "success" | "neutral" | "accent" | "warning" }> = {
+  answered: { label: "interviewSession.statusAnswered", tone: "success" },
+  skipped: { label: "interviewSession.statusSkipped", tone: "warning" },
+  current: { label: "interviewSession.statusCurrent", tone: "accent" },
 };
 
 /** The questions so far, follow-ups indented under the question they came from. */
 function QuestionFlow({ session, currentId }: { session: InterviewSessionModel; currentId: string }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   return (
     <Card aria-labelledby="session-flow-title" className="session-flow" padded>
       <h2 className="session-flow__title" id="session-flow-title">
-        {copy("질문 흐름", "Question flow")}
+        {t("interviewSession.questionFlow")}
       </h2>
       <ol className="session-flow__list">
         {session.questions.map((question) => {
@@ -61,7 +56,7 @@ function QuestionFlow({ session, currentId }: { session: InterviewSessionModel; 
               style={{ paddingLeft: `calc(${Math.min(question.depth, 4)} * var(--iv-space-4))` }}
             >
               <span className="session-flow__text">{question.title}</span>
-              {status ? <Badge tone={status[2]}>{copy(status[0], status[1])}</Badge> : null}
+              {status ? <Badge tone={status.tone}>{t(status.label)}</Badge> : null}
             </li>
           );
         })}
@@ -71,7 +66,7 @@ function QuestionFlow({ session, currentId }: { session: InterviewSessionModel; 
 }
 
 function CoverageCard({ sessionId }: { sessionId: string }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const coverageQuery = useInterviewSessionCoverageQuery(sessionId, true);
   const coverage = coverageQuery.data;
   if (!coverage) {
@@ -81,13 +76,13 @@ function CoverageCard({ sessionId }: { sessionId: string }) {
   return (
     <Card aria-labelledby="session-coverage-title" padded>
       <h2 className="session-flow__title" id="session-coverage-title">
-        {copy("이력서 점검 범위", "Resume coverage")}
+        {t("interviewSession.resumeCoverage")}
       </h2>
-      <Progress label={copy("점검한 비율", "Covered")} value={coverage.overallCoveragePercent} />
-      <p className="session-muted">{copy(`${coverage.overallCoveragePercent}% 점검 · 방어 ${coverage.defendedCoveragePercent}%`, `${coverage.overallCoveragePercent}% covered · ${coverage.defendedCoveragePercent}% defended`)}</p>
+      <Progress label={t("interviewSession.covered")} value={coverage.overallCoveragePercent} />
+      <p className="session-muted">{t("interviewSession.coverageSummary", { overallCoveragePercent: coverage.overallCoveragePercent, defendedCoveragePercent: coverage.defendedCoveragePercent })}</p>
       {weak.length > 0 ? (
         <>
-          <h3 className="session-subtitle">{copy("다시 물어볼 부분", "Coming back to")}</h3>
+          <h3 className="session-subtitle">{t("interviewSession.comingBackTo")}</h3>
           <ul className="session-weak">
             {weak.map((facet) => (
               <li key={facet.id}>{facet.label ?? facet.sectionLabel}</li>
@@ -100,23 +95,23 @@ function CoverageCard({ sessionId }: { sessionId: string }) {
 }
 
 function QuestionHeader({ question, index, total }: { question: InterviewSessionQuestionModel; index: number; total: number }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const kicker = question.isFollowUp
-    ? copy(`꼬리질문 · 깊이 ${question.depth + 1}`, `Follow-up · depth ${question.depth + 1}`)
-    : copy(`질문 ${index}`, `Question ${index}`);
+    ? t("interviewSession.followUpDepth", { depth: question.depth + 1 })
+    : t("interviewSession.questionNumber", { index });
   return (
     <header className="session-question">
       <p className="session-question__kicker">
         {kicker}
         {question.categoryName ? ` · ${question.categoryName}` : ""}
-        {total > 0 ? <span className="ui-visually-hidden">{copy(` (전체 ${total}문항)`, ` (of ${total})`)}</span> : null}
+        {total > 0 ? <span className="ui-visually-hidden">{t("interviewSession.totalQuestionsHint", { total })}</span> : null}
       </p>
       <h1 className="session-question__title">{question.title}</h1>
       {question.bodyText && question.bodyText !== question.title ? <p className="session-question__body">{question.bodyText}</p> : null}
       {question.revisitLabel ? <Badge tone="warning">{question.revisitLabel}</Badge> : null}
       {question.resumeContextSummary || question.resumeEvidence.length > 0 ? (
         <details className="session-evidence">
-          <summary>{copy("이력서의 어느 부분에 대한 질문인가요?", "Which part of my resume is this about?")}</summary>
+          <summary>{t("interviewSession.whichPartOfMyResume")}</summary>
           {question.resumeContextSummary ? <p>{question.resumeContextSummary}</p> : null}
           <ul>
             {question.resumeEvidence.map((evidence) => (
@@ -135,7 +130,6 @@ function QuestionHeader({ question, index, total }: { question: InterviewSession
 export function InterviewSessionPage() {
   const navigate = useNavigate();
   const { t } = useLocale();
-  const copy = useCopy();
   const editorId = useId();
   const { sessionId = "" } = useParams<{ sessionId: string }>();
   const [draft, setDraft] = useState("");
@@ -149,7 +143,7 @@ export function InterviewSessionPage() {
   const exitBar = (
     <header className="session-bar">
       <ButtonLink icon="close" size="sm" to={routeConfig.interview.buildPath()} variant="ghost">
-        {copy("나가기", "Exit")}
+        {t("interviewSession.exit")}
       </ButtonLink>
     </header>
   );
@@ -165,7 +159,7 @@ export function InterviewSessionPage() {
       <div className="session-page">
         {exitBar}
         <main className="session-main">
-          <PageSkeleton label={copy("면접을 불러오는 중", "Loading the interview")} />
+          <PageSkeleton label={t("interviewSession.loadingTheInterview")} />
         </main>
       </div>
     );
@@ -188,7 +182,7 @@ export function InterviewSessionPage() {
                 </ButtonLink>
               ) : notFound ? (
                 <ButtonLink to={routeConfig.interview.buildPath()} variant="primary">
-                  {copy("새 면접 시작", "Start a new interview")}
+                  {t("interviewSession.startANewInterview")}
                 </ButtonLink>
               ) : (
                 <Button onClick={() => void sessionQuery.refetch()} variant="primary">
@@ -198,15 +192,15 @@ export function InterviewSessionPage() {
             }
             body={
               finished
-                ? copy("남은 질문이 없어요. 결과를 확인하세요.", "No questions left. Check the result.")
+                ? t("interviewSession.noQuestionsLeftCheckThe")
                 : notFound
-                  ? copy("삭제되었거나 다른 계정의 면접일 수 있어요.", "It may have been deleted or belong to another account.")
+                  ? t("interviewSession.itMayHaveBeenDeleted")
                   : userFacingErrorMessage(sessionQuery.error, t("interview.sessionUnavailableBody"))
             }
             details={getErrorDetails(sessionQuery.error)}
             icon={finished ? "check" : notFound ? "search" : undefined}
             size="page"
-            title={finished ? copy("모든 질문에 답했어요", "All questions answered") : notFound ? copy("면접을 찾을 수 없어요", "We couldn't find this interview") : t("interview.sessionUnavailableTitle")}
+            title={finished ? t("interviewSession.allQuestionsAnswered") : notFound ? t("interviewSession.weCouldntFindThisInterview") : t("interview.sessionUnavailableTitle")}
           />
         </main>
       </div>
@@ -230,7 +224,7 @@ export function InterviewSessionPage() {
       : optionalErrorMessage(advanceMutation.error, t("interview.advanceFailed"));
   const error =
     optionalErrorMessage(submitMutation.error, t("interview.answerSubmissionFailed")) ??
-    optionalErrorMessage(skipMutation.error, copy("건너뛰지 못했어요.", "We couldn't skip.")) ??
+    optionalErrorMessage(skipMutation.error, t("interviewSession.weCouldntSkip")) ??
     advanceError;
 
   async function submit() {
@@ -290,28 +284,28 @@ export function InterviewSessionPage() {
     <div className="session-page">
       <header className="session-bar">
         <ButtonLink icon="close" size="sm" to={routeConfig.interview.buildPath()} variant="ghost">
-          {copy("나가기", "Exit")}
+          {t("interviewSession.exit")}
         </ButtonLink>
         <span className="session-bar__position">
           {position} / {total}
         </span>
         <div className="session-bar__progress">
-          <Progress label={copy("답변한 질문", "Answered")} value={total > 0 ? Math.round((answered / total) * 100) : 0} />
+          <Progress label={t("interviewSession.answered")} value={total > 0 ? Math.round((answered / total) * 100) : 0} />
         </div>
         <span className="session-bar__timer">
-          <span className="ui-visually-hidden">{copy("경과 시간", "Elapsed time")}</span>
+          <span className="ui-visually-hidden">{t("interviewSession.elapsedTime")}</span>
           {elapsed}
         </span>
       </header>
 
       <main className="session-main session-layout">
-        <section aria-label={copy("현재 질문", "Current question")} className="session-stage">
+        <section aria-label={t("interviewSession.currentQuestion")} className="session-stage">
           <QuestionHeader index={position} question={currentQuestion} total={total} />
 
           {isCurrent ? (
             <div className="session-answer">
               <label className="ui-visually-hidden" htmlFor={editorId}>
-                {copy("답변", "Your answer")}
+                {t("interviewSession.yourAnswer")}
               </label>
               <textarea
                 autoFocus
@@ -320,16 +314,16 @@ export function InterviewSessionPage() {
                 id={editorId}
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={copy("면접관에게 말하듯 결론부터 답하세요.", "Answer as you would out loud: conclusion first.")}
+                placeholder={t("interviewSession.answerAsYouWouldOut")}
                 value={draft}
               />
               <div className="session-answer__footer">
                 <span className="session-muted">
-                  {copy(`${trimmed.length}자`, `${trimmed.length} chars`)}
-                  <span className="session-answer__shortcut">{copy(" · ⌘/Ctrl+Enter로 제출", " · ⌘/Ctrl+Enter to submit")}</span>
+                  {t("interviewSession.charCount", { count: trimmed.length })}
+                  <span className="session-answer__shortcut">{t("interviewSession.submitShortcutHint")}</span>
                 </span>
                 <Button disabled={busy} onClick={() => void skip()} variant="ghost">
-                  {copy("건너뛰기", "Skip")}
+                  {t("interviewSession.skip")}
                 </Button>
                 <Button disabled={!trimmed || busy} loading={submitMutation.isPending} onClick={() => void submit()} variant="primary">
                   {t("interview.submitAnswer")}
@@ -337,7 +331,7 @@ export function InterviewSessionPage() {
               </div>
             </div>
           ) : (
-            <Callout title={copy("이 질문은 끝났어요", "This question is done")} tone="success">
+            <Callout title={t("interviewSession.thisQuestionIsDone")} tone="success">
               <div className="session-next">
                 {isLast ? (
                   <ButtonLink to={resultPath} variant="primary">
@@ -361,7 +355,7 @@ export function InterviewSessionPage() {
           ) : null}
         </section>
 
-        <aside aria-label={copy("면접 진행", "Interview progress")} className="session-aside">
+        <aside aria-label={t("interviewSession.interviewProgress")} className="session-aside">
           <QuestionFlow currentId={currentQuestion.id} session={activeSession} />
           {activeSession.interviewMode === "full_coverage" ? <CoverageCard sessionId={sessionId} /> : null}
         </aside>

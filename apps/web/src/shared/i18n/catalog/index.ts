@@ -4,8 +4,12 @@ import { answerEditor } from "./answerEditor";
 import { appShell } from "./appShell";
 import { home } from "./home";
 import { interviewModel } from "./interviewModel";
+import { interviewResult } from "./interviewResult";
+import { interviewSession } from "./interviewSession";
+import { mockInterview } from "./mockInterview";
 import { modelCommon } from "./modelCommon";
 import { practicalModel } from "./practicalModel";
+import { practicalRecords } from "./practicalRecords";
 import { practicalReview } from "./practicalReview";
 import { practicalReviewPanels } from "./practicalReviewPanels";
 import { questionModel } from "./questionModel";
@@ -13,7 +17,10 @@ import { questionWorkspace } from "./questionWorkspace";
 import { resultAnalysis } from "./resultAnalysis";
 import { resultModel } from "./resultModel";
 import { resumeEditor } from "./resumeEditor";
+import { resumeHeatmap } from "./resumeHeatmap";
+import { resumeHub } from "./resumeHub";
 import { resumeModel } from "./resumeModel";
+import { resumeTailor } from "./resumeTailor";
 import { reviewModel } from "./reviewModel";
 import { reviewQueue } from "./reviewQueue";
 import { settings } from "./settings";
@@ -42,4 +49,11 @@ export const catalog = {
   practicalModel,
   practicalReview,
   practicalReviewPanels,
+  resumeHub,
+  resumeHeatmap,
+  resumeTailor,
+  mockInterview,
+  interviewSession,
+  interviewResult,
+  practicalRecords,
 } as const;

@@ -27,14 +27,9 @@ import {
 } from "../../shared/ui/primitives";
 import "./tailor.css";
 
-function useCopy() {
-  const { locale } = useLocale();
-  return (ko: string, en: string) => (locale === "ko" ? ko : en);
-}
-
 /** Save a job posting by pasting its text or importing its link. */
 function PostingForm({ onSaved, formId, submitLabel }: { onSaved: (postingId: string) => void; formId: string; submitLabel: string }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const createMutation = useCreateJobPostingMutation();
   const [inputType, setInputType] = useState<"text" | "link">("text");
   const [sourceUrl, setSourceUrl] = useState("");
@@ -43,7 +38,7 @@ function PostingForm({ onSaved, formId, submitLabel }: { onSaved: (postingId: st
   const [roleName, setRoleName] = useState("");
   const [tried, setTried] = useState(false);
   const missing = inputType === "link" ? !sourceUrl.trim() : !rawText.trim();
-  const error = optionalErrorMessage(createMutation.error, copy("공고를 저장하지 못했어요.", "We couldn't save the posting."));
+  const error = optionalErrorMessage(createMutation.error, t("resumeTailor.weCouldntSaveThePosting"));
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -69,27 +64,27 @@ function PostingForm({ onSaved, formId, submitLabel }: { onSaved: (postingId: st
     <form className="tailor-form" id={formId} onSubmit={(event) => void handleSubmit(event)}>
       <Segmented
         items={[
-          { id: "text", label: copy("본문 붙여넣기", "Paste text") },
-          { id: "link", label: copy("링크로 가져오기", "Import a link") },
+          { id: "text", label: t("resumeTailor.pasteText") },
+          { id: "link", label: t("resumeTailor.importALink") },
         ]}
-        label={copy("공고 입력 방식", "How to add the posting")}
+        label={t("resumeTailor.howToAddThePosting")}
         onChange={setInputType}
         value={inputType}
       />
       {inputType === "link" ? (
-        <Field error={tried && missing ? copy("공고 링크를 넣어주세요.", "Enter the posting link.") : undefined} label={copy("공고 링크", "Posting link")}>
+        <Field error={tried && missing ? t("resumeTailor.enterThePostingLink") : undefined} label={t("resumeTailor.postingLink")}>
           {(control) => <Input {...control} inputMode="url" onChange={(event) => setSourceUrl(event.target.value)} placeholder="https://" value={sourceUrl} />}
         </Field>
       ) : (
-        <Field error={tried && missing ? copy("공고 본문을 붙여넣어 주세요.", "Paste the posting text.") : undefined} label={copy("공고 본문", "Posting text")}>
+        <Field error={tried && missing ? t("resumeTailor.pasteThePostingText") : undefined} label={t("resumeTailor.postingText")}>
           {(control) => <Textarea {...control} onChange={(event) => setRawText(event.target.value)} rows={6} value={rawText} />}
         </Field>
       )}
       <div className="tailor-form__row">
-        <Field label={copy("회사 (선택)", "Company (optional)")}>
+        <Field label={t("resumeTailor.companyOptional")}>
           {(control) => <Input {...control} onChange={(event) => setCompanyName(event.target.value)} value={companyName} />}
         </Field>
-        <Field label={copy("직무 (선택)", "Role (optional)")}>
+        <Field label={t("resumeTailor.roleOptional")}>
           {(control) => <Input {...control} onChange={(event) => setRoleName(event.target.value)} value={roleName} />}
         </Field>
       </div>
@@ -110,7 +105,7 @@ function PostingForm({ onSaved, formId, submitLabel }: { onSaved: (postingId: st
 
 /** 공고 맞춤: saved postings and the fit analyses run for this resume version. */
 export function ResumeTailorAnalysisListPage() {
-  const copy = useCopy();
+  const { t } = useLocale();
   const navigate = useNavigate();
   const { versionId = "" } = useParams<{ versionId: string }>();
   const analysesQuery = useResumeAnalysesQuery(versionId);
@@ -121,7 +116,7 @@ export function ResumeTailorAnalysisListPage() {
   const postings = postingsQuery.data ?? [];
   const analyses = analysesQuery.data ?? [];
   const postingTitle = new Map(postings.map((posting) => [posting.id, posting.title]));
-  const runError = optionalErrorMessage(createAnalysis.error, copy("분석을 시작하지 못했어요.", "We couldn't start the analysis."));
+  const runError = optionalErrorMessage(createAnalysis.error, t("resumeTailor.weCouldntStartTheAnalysis"));
 
   async function runAnalysis(jobPostingId: string) {
     setRunningPostingId(jobPostingId);
@@ -136,7 +131,7 @@ export function ResumeTailorAnalysisListPage() {
   }
 
   if (analysesQuery.isLoading || postingsQuery.isLoading) {
-    return <PageSkeleton label={copy("공고 맞춤을 불러오는 중", "Loading job fit")} />;
+    return <PageSkeleton label={t("resumeTailor.loadingJobFit")} />;
   }
 
   if (analysesQuery.isError || postingsQuery.isError) {
@@ -145,12 +140,12 @@ export function ResumeTailorAnalysisListPage() {
       <ErrorState
         actions={
           <Button onClick={() => void Promise.all([analysesQuery.refetch(), postingsQuery.refetch()])} variant="primary">
-            {copy("다시 시도", "Try again")}
+            {t("resumeTailor.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(error, copy("공고 맞춤을 불러오지 못했어요.", "Job fit could not be loaded."))}
+        body={userFacingErrorMessage(error, t("resumeTailor.jobFitCouldNotBe"))}
         details={getErrorDetails(error)}
-        title={copy("공고 맞춤을 불러올 수 없어요", "Unable to load job fit")}
+        title={t("resumeTailor.unableToLoadJobFit")}
       />
     );
   }
@@ -159,15 +154,12 @@ export function ResumeTailorAnalysisListPage() {
     return (
       <Card aria-labelledby="tailor-first-title" className="tailor-first" padded>
         <h2 className="tailor-title" id="tailor-first-title">
-          {copy("지원할 공고를 넣어주세요", "Add a job posting you're applying to")}
+          {t("resumeTailor.addAJobPostingYoure")}
         </h2>
         <p className="tailor-muted">
-          {copy(
-            "이 이력서와 공고를 비교해 부족한 키워드와 고쳐 쓸 문장을 제안해요. 원본 이력서는 바뀌지 않아요.",
-            "We compare this resume with the posting and suggest missing keywords and rewrites. Your original resume stays unchanged.",
-          )}
+          {t("resumeTailor.weCompareThisResumeWith")}
         </p>
-        <PostingForm formId="tailor-first-form" onSaved={(postingId) => void runAnalysis(postingId)} submitLabel={copy("저장하고 분석하기", "Save and analyze")} />
+        <PostingForm formId="tailor-first-form" onSaved={(postingId) => void runAnalysis(postingId)} submitLabel={t("resumeTailor.saveAndAnalyze")} />
       </Card>
     );
   }
@@ -177,26 +169,26 @@ export function ResumeTailorAnalysisListPage() {
       {runError ? <Callout tone="danger">{runError}</Callout> : null}
       <Card aria-labelledby="tailor-analyses-title">
         <CardHeader
-          meta={copy("이 버전으로 실행한 분석", "Analyses run on this version")}
-          title={<span id="tailor-analyses-title">{copy(`분석 ${analyses.length}`, `Analyses ${analyses.length}`)}</span>}
+          meta={t("resumeTailor.analysesRunOnThisVersion")}
+          title={<span id="tailor-analyses-title">{t("resumeTailor.analysesCount", { count: analyses.length })}</span>}
           titleAs="h2"
         />
         {analyses.length === 0 ? (
-          <EmptyState body={copy("아래 공고에서 ‘분석하기’를 눌러 시작하세요.", "Pick a posting below and choose Analyze.")} title={copy("아직 분석이 없어요", "No analyses yet")} />
+          <EmptyState body={t("resumeTailor.pickAPostingBelowAnd")} title={t("resumeTailor.noAnalysesYet")} />
         ) : (
           analyses.map((analysis) => (
             <ListRow
               key={analysis.id}
               leading={
-                <span className={`tailor-score ui-tone-text--${scoreTone(analysis.overallScore)}`} aria-label={copy(`적합도 ${analysis.overallScoreLabel}`, `Fit ${analysis.overallScoreLabel}`)}>
+                <span className={`tailor-score ui-tone-text--${scoreTone(analysis.overallScore)}`} aria-label={t("resumeTailor.fitScore", { overallScoreLabel: analysis.overallScoreLabel })}>
                   {analysis.overallScoreLabel}
                 </span>
               }
               meta={[analysis.createdAtLabel, analysis.matchSummary].filter(Boolean).join(" · ")}
-              title={(analysis.jobPostingId && postingTitle.get(analysis.jobPostingId)) || analysis.suggestedHeadline || copy("공고 없는 분석", "Analysis without a posting")}
+              title={(analysis.jobPostingId && postingTitle.get(analysis.jobPostingId)) || analysis.suggestedHeadline || t("resumeTailor.analysisWithoutAPosting")}
               trailing={
                 <ButtonLink size="sm" to={routeConfig.resumeTailorAnalysisDetail.buildPath({ versionId, analysisId: analysis.id })} variant="ghost">
-                  {copy("열기", "Open")}
+                  {t("resumeTailor.open")}
                 </ButtonLink>
               }
             />
@@ -208,10 +200,10 @@ export function ResumeTailorAnalysisListPage() {
         <CardHeader
           actions={
             <Button icon="plus" onClick={() => setAddOpen(true)} size="sm">
-              {copy("공고 추가", "Add posting")}
+              {t("resumeTailor.addPosting")}
             </Button>
           }
-          title={<span id="tailor-postings-title">{copy(`저장한 공고 ${postings.length}`, `Saved postings ${postings.length}`)}</span>}
+          title={<span id="tailor-postings-title">{t("resumeTailor.savedPostingsCount", { count: postings.length })}</span>}
           titleAs="h2"
         />
         {postings.map((posting) => (
@@ -219,7 +211,7 @@ export function ResumeTailorAnalysisListPage() {
             key={posting.id}
             meta={
               <span className="tailor-posting-meta">
-                {posting.fetchStatus === "failed" ? <Badge tone="danger">{copy("가져오기 실패", "Import failed")}</Badge> : null}
+                {posting.fetchStatus === "failed" ? <Badge tone="danger">{t("resumeTailor.importFailed")}</Badge> : null}
                 {posting.parsedKeywords.slice(0, 5).map((keyword) => (
                   <Badge key={keyword}>{keyword}</Badge>
                 ))}
@@ -229,15 +221,15 @@ export function ResumeTailorAnalysisListPage() {
             title={posting.title}
             trailing={
               <Button loading={runningPostingId === posting.id} onClick={() => void runAnalysis(posting.id)} size="sm" variant="primary">
-                {copy("분석하기", "Analyze")}
+                {t("resumeTailor.analyze")}
               </Button>
             }
           />
         ))}
       </Card>
 
-      <Dialog closeLabel={copy("닫기", "Close")} onClose={() => setAddOpen(false)} open={addOpen} title={copy("공고 추가", "Add a posting")}>
-        <PostingForm formId="tailor-add-form" onSaved={() => setAddOpen(false)} submitLabel={copy("공고 저장", "Save posting")} />
+      <Dialog closeLabel={t("resumeTailor.close")} onClose={() => setAddOpen(false)} open={addOpen} title={t("resumeTailor.addAPosting")}>
+        <PostingForm formId="tailor-add-form" onSaved={() => setAddOpen(false)} submitLabel={t("resumeTailor.savePosting")} />
       </Dialog>
     </div>
   );

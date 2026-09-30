@@ -4,24 +4,23 @@ import { useCreateInterviewRecordMutation } from "../../features/practical-inter
 import { useActiveResumeVersion } from "../../features/resume/model/useActiveResumeVersion";
 import { getErrorDetails, optionalErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
-import { useLocale } from "../../shared/i18n";
+import { useLocale, type MessageKey } from "../../shared/i18n";
 import { Button, ButtonLink, Callout, Card, Field, Input, PageHeader, Segmented, Select, Textarea } from "../../shared/ui/primitives";
 import { INTERVIEW_TYPES } from "./interviewTypes";
 import { formatDuration, useAudioRecorder, type RecorderError } from "./useAudioRecorder";
 import "./practical.css";
 
 
-const RECORDER_ERRORS: Record<RecorderError, [string, string]> = {
-  "too-large": ["오디오 파일은 50MB 이하여야 해요. 더 짧게 녹음하거나 작은 파일을 고르세요.", "Audio files must be 50 MB or smaller. Record a shorter clip or pick a smaller file."],
-  consent: ["녹음하려면 먼저 녹음·업로드에 동의해 주세요.", "Agree to recording and upload first."],
-  unsupported: ["이 브라우저는 마이크 녹음을 지원하지 않아요. 파일을 올려주세요.", "This browser can't record from the microphone. Upload a file instead."],
-  permission: ["마이크를 쓸 수 없어요. 브라우저 권한을 확인하거나 파일을 올려주세요.", "The microphone isn't available. Check browser permissions or upload a file."],
+const RECORDER_ERRORS: Record<RecorderError, MessageKey> = {
+  "too-large": "practicalRecords.recorderTooLarge",
+  consent: "practicalRecords.recorderConsent",
+  unsupported: "practicalRecords.recorderUnsupported",
+  permission: "practicalRecords.recorderPermission",
 };
 
 /** 면접 기록 추가: one audio file (uploaded or recorded here) plus a few optional details. */
 export function PracticalInterviewUploadPage() {
-  const { locale } = useLocale();
-  const copy = (ko: string, en: string) => (locale === "ko" ? ko : en);
+  const { t } = useLocale();
   const navigate = useNavigate();
   const fileId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,7 +36,7 @@ export function PracticalInterviewUploadPage() {
   const [transcriptText, setTranscriptText] = useState("");
   const [linkResume, setLinkResume] = useState(true);
   const [tried, setTried] = useState(false);
-  const submitError = optionalErrorMessage(createMutation.error, copy("올리지 못했어요. 다시 시도하세요.", "We couldn't upload it. Try again."));
+  const submitError = optionalErrorMessage(createMutation.error, t("practicalRecords.weCouldntUploadItTry"));
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -71,19 +70,19 @@ export function PracticalInterviewUploadPage() {
   return (
     <div className="ui-page practical-upload">
       <PageHeader
-        description={copy("받은 질문을 뽑아 복습 목록에 넣고, 답변을 다시 연습할 수 있게 해요.", "We pull out the questions you were asked, add them to your review list, and let you practice the answers again.")}
-        title={copy("면접 기록 추가", "Add an interview")}
+        description={t("practicalRecords.wePullOutTheQuestions")}
+        title={t("practicalRecords.addAnInterview")}
       />
       <Card padded>
         <form className="practical-form" onSubmit={(event) => void handleSubmit(event)}>
           <fieldset className="practical-step">
-            <legend>{copy("1. 면접 녹음", "1. Interview audio")}</legend>
+            <legend>{t("practicalRecords.stepAudio")}</legend>
             <Segmented
               items={[
-                { id: "file", label: copy("파일 올리기", "Upload a file") },
-                { id: "record", label: copy("지금 녹음하기", "Record now") },
+                { id: "file", label: t("practicalRecords.uploadAFile") },
+                { id: "record", label: t("practicalRecords.recordNow") },
               ]}
-              label={copy("오디오 가져오는 방법", "How to add audio")}
+              label={t("practicalRecords.howToAddAudio")}
               onChange={(next) => {
                 if (!recorder.isRecording) {
                   setSource(next);
@@ -108,14 +107,14 @@ export function PracticalInterviewUploadPage() {
                   size="sm"
                   variant="ghost"
                 >
-                  {copy("다시 고르기", "Choose again")}
+                  {t("practicalRecords.chooseAgain")}
                 </Button>
               </div>
             ) : source === "file" ? (
               <>
                 <label className="practical-drop" htmlFor={fileId}>
-                  <strong>{copy("오디오 파일 선택", "Choose an audio file")}</strong>
-                  <span className="practical-muted">{copy("mp3, m4a, wav, webm · 50MB 이하", "mp3, m4a, wav, webm · up to 50 MB")}</span>
+                  <strong>{t("practicalRecords.chooseAnAudioFile")}</strong>
+                  <span className="practical-muted">{t("practicalRecords.audioFileHint")}</span>
                 </label>
                 <input
                   accept="audio/*"
@@ -134,42 +133,42 @@ export function PracticalInterviewUploadPage() {
               <div className="practical-recorder">
                 <label className="practical-check">
                   <input checked={consent} disabled={recorder.isRecording} onChange={(event) => setConsent(event.target.checked)} type="checkbox" />
-                  <span>{copy("면접 상대방의 동의를 받았고, 녹음 파일을 업로드해 분석하는 데 동의해요.", "I have the other party's consent, and I agree to upload the recording for analysis.")}</span>
+                  <span>{t("practicalRecords.recordingConsent")}</span>
                 </label>
                 {recorder.isRecording ? (
                   <Button onClick={recorder.stop} variant="danger">
-                    {copy(`녹음 중지 · ${formatDuration(recorder.seconds)}`, `Stop recording · ${formatDuration(recorder.seconds)}`)}
+                    {t("practicalRecords.stopRecordingTimer", { duration: formatDuration(recorder.seconds) })}
                   </Button>
                 ) : (
                   <Button disabled={!consent} onClick={() => void recorder.start(consent)}>
-                    {copy("녹음 시작", "Start recording")}
+                    {t("practicalRecords.startRecording")}
                   </Button>
                 )}
               </div>
             )}
             {recorder.error ? (
               <p className="ui-tone-text--danger" role="alert">
-                {copy(...RECORDER_ERRORS[recorder.error])}
+                {t(RECORDER_ERRORS[recorder.error])}
               </p>
             ) : tried && !recorder.file ? (
               <p className="ui-tone-text--danger" role="alert">
-                {copy("면접 녹음 파일이 필요해요.", "An interview recording is required.")}
+                {t("practicalRecords.anInterviewRecordingIsRequired")}
               </p>
             ) : null}
           </fieldset>
 
           <fieldset className="practical-step">
-            <legend>{copy("2. 어떤 면접이었나요? (선택)", "2. What was the interview? (optional)")}</legend>
+            <legend>{t("practicalRecords.stepDetails")}</legend>
             <div className="practical-grid">
-              <Field label={copy("회사", "Company")}>{(control) => <Input {...control} onChange={(event) => setCompanyName(event.target.value)} value={companyName} />}</Field>
-              <Field label={copy("직무", "Role")}>{(control) => <Input {...control} onChange={(event) => setRoleName(event.target.value)} value={roleName} />}</Field>
-              <Field label={copy("면접 날짜", "Interview date")}>{(control) => <Input {...control} onChange={(event) => setInterviewDate(event.target.value)} type="date" value={interviewDate} />}</Field>
-              <Field label={copy("면접 형태", "Interview type")}>
+              <Field label={t("practicalRecords.company")}>{(control) => <Input {...control} onChange={(event) => setCompanyName(event.target.value)} value={companyName} />}</Field>
+              <Field label={t("practicalRecords.role")}>{(control) => <Input {...control} onChange={(event) => setRoleName(event.target.value)} value={roleName} />}</Field>
+              <Field label={t("practicalRecords.interviewDate")}>{(control) => <Input {...control} onChange={(event) => setInterviewDate(event.target.value)} type="date" value={interviewDate} />}</Field>
+              <Field label={t("practicalRecords.interviewType")}>
                 {(control) => (
                   <Select {...control} onChange={(event) => setInterviewType(event.target.value)} value={interviewType}>
-                    {INTERVIEW_TYPES.map(([value, ko, en]) => (
+                    {Object.entries(INTERVIEW_TYPES).map(([value, labelKey]) => (
                       <option key={value} value={value}>
-                        {copy(ko, en)}
+                        {t(labelKey)}
                       </option>
                     ))}
                   </Select>
@@ -180,13 +179,13 @@ export function PracticalInterviewUploadPage() {
               <label className="practical-check">
                 <input checked={linkResume} onChange={(event) => setLinkResume(event.target.checked)} type="checkbox" />
                 <span>
-                  {copy(`받은 질문을 이력서(${active.resumeTitle} · ${active.versionNumberLabel})의 항목과 연결하기`, `Link the questions to my resume (${active.resumeTitle} · ${active.versionNumberLabel})`)}
+                  {t("practicalRecords.linkResume", { resumeTitle: active.resumeTitle, versionNumberLabel: active.versionNumberLabel })}
                 </span>
               </label>
             ) : null}
             <details className="practical-transcript">
-              <summary>{copy("대본이 이미 있나요?", "Already have a transcript?")}</summary>
-              <Field hint={copy("붙여넣으면 음성 인식 대신 이 대본을 써요.", "If pasted, we use it instead of speech recognition.")} label={copy("면접 대본", "Transcript")}>
+              <summary>{t("practicalRecords.alreadyHaveATranscript")}</summary>
+              <Field hint={t("practicalRecords.ifPastedWeUseIt")} label={t("practicalRecords.transcript")}>
                 {(control) => <Textarea {...control} onChange={(event) => setTranscriptText(event.target.value)} rows={6} value={transcriptText} />}
               </Field>
             </details>
@@ -202,10 +201,10 @@ export function PracticalInterviewUploadPage() {
           ) : null}
           <div className="practical-actions">
             <Button disabled={recorder.isRecording} loading={createMutation.isPending} size="lg" type="submit" variant="primary">
-              {copy("올리고 분석 시작", "Upload and analyze")}
+              {t("practicalRecords.uploadAndAnalyze")}
             </Button>
             <ButtonLink to={routeConfig.practicalInterviews.buildPath()} variant="ghost">
-              {copy("취소", "Cancel")}
+              {t("practicalRecords.cancel")}
             </ButtonLink>
           </div>
         </form>

@@ -19,11 +19,6 @@ import {
 } from "../../shared/ui/primitives";
 import { useResumeHub } from "./ResumeHubLayout";
 
-function useCopy() {
-  const { locale } = useLocale();
-  return (ko: string, en: string) => (locale === "ko" ? ko : en);
-}
-
 const SKILL_TONE = { positive: "success", accent: "accent", warning: "warning", neutral: "neutral" } as const;
 const SEVERITY_ORDER = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
 
@@ -33,8 +28,7 @@ function severityRank(value: string | null) {
 }
 
 function RisksCard({ risks, versionId }: { risks: ResumeSnapshotModel["risks"]; versionId: string }) {
-  const { locale } = useLocale();
-  const copy = useCopy();
+  const { t, locale } = useLocale();
   const sorted = [...risks].sort((a, b) => severityRank(a.severity) - severityRank(b.severity));
 
   return (
@@ -42,11 +36,11 @@ function RisksCard({ risks, versionId }: { risks: ResumeSnapshotModel["risks"]; 
       <CardHeader
         actions={
           <ButtonLink size="sm" to={routeConfig.resumeHeatmap.buildPath({ versionId })} variant="ghost">
-            {copy("압박 지도", "Pressure map")}
+            {t("resumeHub.pressureMap")}
           </ButtonLink>
         }
-        meta={copy("면접관이 파고들 가능성이 큰 주장", "Claims an interviewer is likely to probe")}
-        title={<span id="resume-risks-title">{copy("방어가 필요한 부분", "Needs defending")}</span>}
+        meta={t("resumeHub.claimsAnInterviewerIsLikely")}
+        title={<span id="resume-risks-title">{t("resumeHub.needsDefending")}</span>}
         titleAs="h2"
       />
       {sorted.map((risk) => {
@@ -61,7 +55,7 @@ function RisksCard({ risks, versionId }: { risks: ResumeSnapshotModel["risks"]; 
                   {severity ? <Badge tone={severity.tone}>{severity.label}</Badge> : null}
                   {risk.linkedQuestionId ? (
                     <ButtonLink size="sm" to={routeConfig.questionDetail.buildPath({ questionId: risk.linkedQuestionId })} variant="ghost">
-                      {copy("질문", "Question")}
+                      {t("resumeHub.question")}
                     </ButtonLink>
                   ) : null}
                 </span>
@@ -74,14 +68,14 @@ function RisksCard({ risks, versionId }: { risks: ResumeSnapshotModel["risks"]; 
 }
 
 function ProfileCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const { profile, contacts, skills } = snapshot;
   const facts = [profile?.yearsOfExperienceText, profile?.locationText].filter(Boolean);
 
   return (
     <Card aria-labelledby="resume-profile-title" padded>
       <h2 className="resume-card-title" id="resume-profile-title">
-        {profile?.fullName ?? copy("프로필", "Profile")}
+        {profile?.fullName ?? t("resumeHub.profile")}
       </h2>
       {profile?.headline ? <p className="resume-profile__headline">{profile.headline}</p> : null}
       {facts.length > 0 ? <p className="resume-muted">{facts.join(" · ")}</p> : null}
@@ -104,8 +98,8 @@ function ProfileCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
       ) : null}
       {skills.length > 0 ? (
         <>
-          <h3 className="resume-subtitle">{copy(`스킬 ${skills.length}`, `Skills ${skills.length}`)}</h3>
-          <ul aria-label={copy("스킬", "Skills")} className="resume-chips">
+          <h3 className="resume-subtitle">{t("resumeHub.skillsCount", { count: skills.length })}</h3>
+          <ul aria-label={t("resumeHub.skills")} className="resume-chips">
             {skills.map((skill) => (
               <li key={skill.id}>
                 <Badge tone={SKILL_TONE[skill.tone]}>{skill.label}</Badge>
@@ -119,15 +113,15 @@ function ProfileCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
 }
 
 function ExperienceCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const { experiences, projects } = snapshot;
 
   return (
     <Card aria-labelledby="resume-experience-title">
-      <CardHeader title={<span id="resume-experience-title">{copy("경력과 프로젝트", "Experience and projects")}</span>} titleAs="h2" />
+      <CardHeader title={<span id="resume-experience-title">{t("resumeHub.experienceAndProjects")}</span>} titleAs="h2" />
       <CardBody>
         {experiences.length === 0 && projects.length === 0 ? (
-          <p className="resume-muted">{copy("추출된 경력이 없어요.", "No experience was extracted.")}</p>
+          <p className="resume-muted">{t("resumeHub.noExperienceWasExtracted")}</p>
         ) : null}
         {experiences.length > 0 ? (
           <ol className="resume-timeline">
@@ -138,7 +132,7 @@ function ExperienceCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
                   <div className="resume-timeline__head">
                     <strong>{experience.companyName}</strong>
                     <span className="resume-muted">{[experience.roleName, experience.dateLabel].filter(Boolean).join(" · ")}</span>
-                    {experience.current ? <Badge tone="accent">{copy("재직 중", "Current")}</Badge> : null}
+                    {experience.current ? <Badge tone="accent">{t("resumeHub.current")}</Badge> : null}
                   </div>
                   {experience.summary ? <p className="resume-body">{experience.summary}</p> : null}
                   {experience.impactText ? <p className="resume-impact">{experience.impactText}</p> : null}
@@ -152,7 +146,7 @@ function ExperienceCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
           const loose = projects.filter((project) => !experiences.some((experience) => experience.id === project.relatedExperienceId));
           return loose.length > 0 ? (
             <>
-              {experiences.length > 0 ? <h3 className="resume-subtitle">{copy("프로젝트", "Projects")}</h3> : null}
+              {experiences.length > 0 ? <h3 className="resume-subtitle">{t("resumeHub.projects")}</h3> : null}
               <ProjectList projects={loose} />
             </>
           ) : null;
@@ -178,12 +172,12 @@ function ProjectList({ projects }: { projects: ResumeSnapshotModel["projects"] }
 }
 
 function OtherSectionsCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
-  const copy = useCopy();
+  const { t } = useLocale();
   const rows = [
-    ...snapshot.achievements.map((item) => ({ id: `achievement-${item.id}`, kind: copy("성과", "Achievement"), title: item.title, meta: [item.metricText, item.impactSummary] })),
-    ...snapshot.education.map((item) => ({ id: `education-${item.id}`, kind: copy("학력", "Education"), title: item.institutionName, meta: [item.degreeName, item.fieldOfStudy, item.dateLabel] })),
-    ...snapshot.certifications.map((item) => ({ id: `cert-${item.id}`, kind: copy("자격증", "Certification"), title: item.name, meta: [item.issuerName, item.dateLabel, item.scoreText] })),
-    ...snapshot.awards.map((item) => ({ id: `award-${item.id}`, kind: copy("수상", "Award"), title: item.title, meta: [item.issuerName, item.awardedOnLabel] })),
+    ...snapshot.achievements.map((item) => ({ id: `achievement-${item.id}`, kind: t("resumeHub.achievement"), title: item.title, meta: [item.metricText, item.impactSummary] })),
+    ...snapshot.education.map((item) => ({ id: `education-${item.id}`, kind: t("resumeHub.education"), title: item.institutionName, meta: [item.degreeName, item.fieldOfStudy, item.dateLabel] })),
+    ...snapshot.certifications.map((item) => ({ id: `cert-${item.id}`, kind: t("resumeHub.certification"), title: item.name, meta: [item.issuerName, item.dateLabel, item.scoreText] })),
+    ...snapshot.awards.map((item) => ({ id: `award-${item.id}`, kind: t("resumeHub.award"), title: item.title, meta: [item.issuerName, item.awardedOnLabel] })),
   ];
 
   if (rows.length === 0) {
@@ -192,7 +186,7 @@ function OtherSectionsCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
 
   return (
     <Card aria-labelledby="resume-other-title">
-      <CardHeader title={<span id="resume-other-title">{copy("성과 · 학력 · 자격", "Achievements, education, credentials")}</span>} titleAs="h2" />
+      <CardHeader title={<span id="resume-other-title">{t("resumeHub.achievementsEducationCredentials")}</span>} titleAs="h2" />
       {rows.map((row) => (
         <ListRow
           key={row.id}
@@ -207,7 +201,7 @@ function OtherSectionsCard({ snapshot }: { snapshot: ResumeSnapshotModel }) {
 
 /** 개요: what was extracted from this version, risks first. */
 export function ResumeOverviewTab() {
-  const copy = useCopy();
+  const { t } = useLocale();
   const { versionId, version, status } = useResumeHub();
   const snapshotsQuery = useResumeVersionSnapshotsQuery(versionId, status.canLoadSnapshots);
   const extraction = status.extractionQuery.data;
@@ -218,28 +212,25 @@ export function ResumeOverviewTab() {
       <ErrorState
         actions={
           <ButtonLink to={versionsPath} variant="primary">
-            {copy("새 PDF 올리기", "Upload a new PDF")}
+            {t("resumeHub.uploadANewPdf")}
           </ButtonLink>
         }
-        body={version.parseErrorMessage ?? copy("PDF에서 글자를 읽지 못했어요. 텍스트가 선택되는 PDF로 다시 올려주세요.", "We couldn't read text from this PDF. Upload one with selectable text.")}
-        title={copy("이력서를 분석하지 못했어요", "We couldn't analyze this resume")}
+        body={version.parseErrorMessage ?? t("resumeHub.weCouldntReadTextFrom")}
+        title={t("resumeHub.weCouldntAnalyzeThisResume")}
       />
     );
   }
 
   if (status.isProcessing || !status.canLoadSnapshots) {
     return (
-      <Callout title={copy("이력서를 분석하고 있어요", "Analyzing your resume")} tone="accent">
-        {copy(
-          "보통 1분 안에 끝나요. 이 화면은 자동으로 새로고침돼요.",
-          "This usually takes under a minute. This page refreshes on its own.",
-        )}
+      <Callout title={t("resumeHub.analyzingYourResume")} tone="accent">
+        {t("resumeHub.thisUsuallyTakesUnderA")}
       </Callout>
     );
   }
 
   if (snapshotsQuery.isLoading) {
-    return <PageSkeleton label={copy("추출 결과를 불러오는 중", "Loading the extraction")} />;
+    return <PageSkeleton label={t("resumeHub.loadingTheExtraction")} />;
   }
 
   if (snapshotsQuery.isError || !snapshotsQuery.data) {
@@ -247,12 +238,12 @@ export function ResumeOverviewTab() {
       <ErrorState
         actions={
           <Button onClick={() => void snapshotsQuery.refetch()} variant="primary">
-            {copy("다시 시도", "Try again")}
+            {t("resumeHub.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(snapshotsQuery.error, copy("추출 결과를 불러오지 못했어요.", "The extraction could not be loaded."))}
+        body={userFacingErrorMessage(snapshotsQuery.error, t("resumeHub.theExtractionCouldNotBe"))}
         details={getErrorDetails(snapshotsQuery.error)}
-        title={copy("추출 결과를 불러올 수 없어요", "Unable to load the extraction")}
+        title={t("resumeHub.unableToLoadTheExtraction")}
       />
     );
   }
@@ -264,26 +255,23 @@ export function ResumeOverviewTab() {
     <div className="resume-overview">
       {extraction?.extractionStatus === "fallback" || extraction?.extractionStatus === "skipped" ? (
         <Callout icon="info" tone="accent">
-          {copy(
-            "정밀 추출 대신 기본 추출을 사용했어요. 일부 항목이 빠졌다면 버전 관리에서 추출을 다시 실행하세요.",
-            "Basic extraction was used. If items are missing, re-run extraction from Versions.",
-          )}
+          {t("resumeHub.basicExtractionWasUsedIf")}
         </Callout>
       ) : null}
       {extraction?.extractionStatus === "failed" ? (
         <Callout tone="danger">
-          {extraction.errorMessage ?? copy("구조화 추출에 실패했어요. 버전 관리에서 다시 실행할 수 있어요.", "Extraction failed. You can re-run it from Versions.")}
+          {extraction.errorMessage ?? t("resumeHub.extractionFailedYouCanRe")}
         </Callout>
       ) : null}
       {isEmpty ? (
         <EmptyState
           actions={
             <ButtonLink to={versionsPath} variant="primary">
-              {copy("버전 관리로", "Go to versions")}
+              {t("resumeHub.goToVersions")}
             </ButtonLink>
           }
-          body={copy("이 버전에서 추출된 내용이 없어요.", "Nothing was extracted from this version.")}
-          title={copy("추출된 내용이 없어요", "Nothing extracted")}
+          body={t("resumeHub.nothingWasExtractedFromThis")}
+          title={t("resumeHub.nothingExtracted")}
         />
       ) : (
         <div className="resume-overview__grid">
@@ -292,7 +280,7 @@ export function ResumeOverviewTab() {
             <ExperienceCard snapshot={snapshot} />
             <OtherSectionsCard snapshot={snapshot} />
           </div>
-          <aside aria-label={copy("프로필과 스킬", "Profile and skills")} className="resume-overview__aside">
+          <aside aria-label={t("resumeHub.profileAndSkills")} className="resume-overview__aside">
             <ProfileCard snapshot={snapshot} />
           </aside>
         </div>
