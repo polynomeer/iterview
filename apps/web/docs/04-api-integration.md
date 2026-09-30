@@ -104,7 +104,7 @@ The review screen sorts and badges items by `scheduledFor` and `priority`, and s
 ### Current user and settings
 
 - `GET /api/me` returns `profile` (`nickname`, `jobRoleId`, `yearsOfExperience`, image fields), `settings`, `activeResumeVersionSummary`, and `targetCompanies`. It does not return the email or user id, so the settings page hides the email row.
-- `PATCH /api/me/profile` takes `nickname`, `jobRoleId`, and `yearsOfExperience`. There is no endpoint listing job roles, so the web app edits the name and years only.
+- `PATCH /api/me/profile` takes `nickname`, `jobRoleId`, and `yearsOfExperience`. The settings page offers the roles from `GET /api/job-roles` and shows Korean names for the seeded roles.
 - `PATCH /api/me/settings` saves practice goals and `preferredLanguage`. Switching the language on the settings page applies it at once and saves it.
 - `PUT /api/me/target-companies` replaces the whole list. The settings page sends the full list on every add or remove.
 

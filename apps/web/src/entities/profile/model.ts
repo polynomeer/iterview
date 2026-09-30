@@ -7,6 +7,8 @@ export type ProfileModel = {
   displayName: string;
   nickname: string;
   jobRole: string;
+  /** Selected role from GET /api/job-roles, or null. */
+  jobRoleId: number | null;
   yearsOfExperience: string;
   targetScoreThreshold: string;
   passScoreThreshold: string;
@@ -37,6 +39,7 @@ export function mapCurrentUserDtoToProfileModel(user: CurrentUserDto): ProfileMo
     displayName,
     nickname,
     jobRole,
+    jobRoleId: user.profile?.jobRoleId === null || user.profile?.jobRoleId === undefined || user.profile.jobRoleId === "" ? null : Number(user.profile.jobRoleId),
     yearsOfExperience:
       yearsOfExperience !== undefined ? String(yearsOfExperience) : "",
     targetScoreThreshold:

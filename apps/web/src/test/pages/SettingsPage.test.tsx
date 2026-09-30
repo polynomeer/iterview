@@ -11,6 +11,9 @@ import { renderWithProviders } from "../utils";
 
 vi.mock("../../features/auth/api/useCurrentUserQuery", () => ({ useCurrentUserQuery: vi.fn() }));
 vi.mock("../../features/auth/useLogout", () => ({ useLogout: () => vi.fn() }));
+vi.mock("../../features/profile/api/useJobRolesQuery", () => ({
+  useJobRolesQuery: () => ({ data: [{ id: 1, name: "Backend Engineer", parentRoleId: null }, { id: 2, name: "Frontend Engineer", parentRoleId: null }, { id: 9, name: "Site Reliability", parentRoleId: null }] }),
+}));
 vi.mock("../../features/profile/api/useUpdateProfileMutation", () => ({ useUpdateProfileMutation: vi.fn() }));
 vi.mock("../../features/profile/api/useUpdateSettingsMutation", () => ({ useUpdateSettingsMutation: vi.fn() }));
 vi.mock("../../features/profile/api/useUpdateTargetCompaniesMutation", () => ({ useUpdateTargetCompaniesMutation: vi.fn() }));
@@ -66,9 +69,12 @@ describe("SettingsPage", () => {
     renderWithProviders(<SettingsPage />, { route: "/settings", locale: "ko" });
 
     const profile = screen.getByRole("region", { name: "프로필" });
+    expect(within(profile).getByRole("option", { name: "백엔드 개발자" })).toBeInTheDocument();
+    expect(within(profile).getByRole("option", { name: "Site Reliability" })).toBeInTheDocument();
+    await userEvent.selectOptions(within(profile).getByLabelText("직무"), "2");
     await userEvent.selectOptions(within(profile).getByLabelText("경력 연차"), "7");
     await userEvent.click(within(profile).getByRole("button", { name: "저장" }));
-    expect(updateProfile).toHaveBeenCalledWith({ nickname: "Learner", yearsOfExperience: 7 });
+    expect(updateProfile).toHaveBeenCalledWith({ nickname: "Learner", jobRoleId: 2, yearsOfExperience: 7 });
     expect(await within(profile).findByText("저장했어요.")).toBeInTheDocument();
 
     const practice = screen.getByRole("region", { name: "연습" });

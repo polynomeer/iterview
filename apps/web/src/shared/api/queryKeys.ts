@@ -104,5 +104,6 @@ export const queryKeys = {
   auth: {
     root: ["auth"] as const,
     currentUser: ["auth", "current-user"] as const,
+    jobRoles: ["auth", "job-roles"] as const,
   },
 } as const;

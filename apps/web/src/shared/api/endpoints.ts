@@ -38,6 +38,7 @@ export const apiEndpoints = {
     profileImage: "/api/me/profile-image",
     settings: "/api/me/settings",
     targetCompanies: "/api/me/target-companies",
+    jobRoles: "/api/job-roles",
   },
   resumes: {
     root: "/api/resumes",

@@ -1,6 +1,7 @@
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { ProfileModel } from "../../entities/profile/model";
 import { useLogout } from "../../features/auth/useLogout";
+import { useJobRolesQuery } from "../../features/profile/api/useJobRolesQuery";
 import { useUpdateProfileMutation } from "../../features/profile/api/useUpdateProfileMutation";
 import { useUpdateSettingsMutation } from "../../features/profile/api/useUpdateSettingsMutation";
 import { useUpdateTargetCompaniesMutation } from "../../features/profile/api/useUpdateTargetCompaniesMutation";
@@ -37,8 +38,18 @@ function SaveBar({ pending, saved, error, onSave }: { pending: boolean; saved: b
   );
 }
 
+// Seeded role names (V2 migration) shown in the UI language; other names show as the API sends them.
+const ROLE_LABELS: Record<string, MessageKey> = {
+  "Backend Engineer": "settingsPage.roleBackendEngineer",
+  "Frontend Engineer": "settingsPage.roleFrontendEngineer",
+  "Fullstack Engineer": "settingsPage.roleFullstackEngineer",
+  "Data Engineer": "settingsPage.roleDataEngineer",
+};
+
 export function ProfileSection({ profile }: { profile: ProfileModel }) {
   const { t } = useLocale();
+  const jobRolesQuery = useJobRolesQuery();
+  const [jobRoleId, setJobRoleId] = useState(profile.jobRoleId === null ? "" : String(profile.jobRoleId));
   const updateMutation = useUpdateProfileMutation();
   const uploadMutation = useUploadProfileImageMutation();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -53,7 +64,7 @@ export function ProfileSection({ profile }: { profile: ProfileModel }) {
     event.preventDefault();
     setSaved(false);
     try {
-      await updateMutation.mutateAsync({ nickname: nickname.trim() || undefined, yearsOfExperience: Number(years) });
+      await updateMutation.mutateAsync({ nickname: nickname.trim() || undefined, jobRoleId: jobRoleId ? Number(jobRoleId) : undefined, yearsOfExperience: Number(years) });
       setSaved(true);
     } catch {
       // Rendered through `error`.
@@ -92,14 +103,24 @@ export function ProfileSection({ profile }: { profile: ProfileModel }) {
         <Row htmlFor="settings-nickname" label={t("settingsPage.nickname")}>
           <Input id="settings-nickname" onChange={(event) => setNickname(event.target.value)} value={nickname} />
         </Row>
-        <Row hint={t("settingsPage.roleHint")} htmlFor="settings-years" label={t("settingsPage.years")}>
-          <Select id="settings-years" onChange={(event) => setYears(event.target.value)} value={years}>
-            {Array.from({ length: 21 }, (_, count) => (
-              <option key={count} value={String(count)}>
-                {count === 0 ? t("settingsPage.yearsNew") : t("settingsPage.yearsOption", { count })}
-              </option>
-            ))}
-          </Select>
+        <Row hint={t("settingsPage.roleHint")} label={t("settingsPage.roleAndYears")}>
+          <div className="settings-pair">
+            <Select aria-label={t("settingsPage.role")} disabled={!jobRolesQuery.data} onChange={(event) => setJobRoleId(event.target.value)} value={jobRoleId}>
+              {jobRoleId === "" ? <option value="">{t("settingsPage.roleNone")}</option> : null}
+              {(jobRolesQuery.data ?? []).map((role) => (
+                <option key={role.id} value={String(role.id)}>
+                  {ROLE_LABELS[role.name] ? t(ROLE_LABELS[role.name]) : role.name}
+                </option>
+              ))}
+            </Select>
+            <Select aria-label={t("settingsPage.years")} onChange={(event) => setYears(event.target.value)} value={years}>
+              {Array.from({ length: 21 }, (_, count) => (
+                <option key={count} value={String(count)}>
+                  {count === 0 ? t("settingsPage.yearsNew") : t("settingsPage.yearsOption", { count })}
+                </option>
+              ))}
+            </Select>
+          </div>
         </Row>
         <SaveBar error={error} pending={updateMutation.isPending} saved={saved} />
       </form>

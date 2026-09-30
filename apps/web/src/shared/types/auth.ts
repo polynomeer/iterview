@@ -64,9 +64,15 @@ export type LoginResponseDto = AuthTokenDto & {
   user: CurrentUserDto;
 };
 
+export type JobRoleDto = {
+  id: number;
+  name: string;
+  parentRoleId: number | null;
+};
+
 export type UpdateProfileRequestDto = {
   nickname?: string;
-  /** The API takes a job role id; there is no endpoint listing roles yet, so the web app does not send it. */
+  /** One of the ids from GET /api/job-roles. */
   jobRoleId?: number;
   yearsOfExperience?: number;
 };

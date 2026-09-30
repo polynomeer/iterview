@@ -10,6 +10,7 @@ import type {
   UpdateProfileRequestDto,
   UpdateSettingsRequestDto,
   UpdateTargetCompaniesRequestDto,
+  JobRoleDto,
 } from "../types/auth";
 
 export function signupRequest(payload: SignupRequestDto) {
@@ -22,6 +23,10 @@ export function loginRequest(payload: LoginRequestDto) {
   return httpClient.post<LoginResponseDto, LoginRequestDto>(apiEndpoints.auth.login, {
     body: payload,
   });
+}
+
+export function getJobRolesRequest(signal?: AbortSignal) {
+  return httpClient.get<JobRoleDto[]>(apiEndpoints.users.jobRoles, { signal });
 }
 
 export function getCurrentUserRequest(signal?: AbortSignal) {
