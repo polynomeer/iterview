@@ -6,6 +6,7 @@ import { getCurrentAppLocale } from "../../shared/i18n/locale";
 export type AnswerHistoryItemModel = {
   answerAttemptId: string;
   submittedAtLabel: string;
+  totalScore: number | null;
   totalScoreLabel: string | null;
   evaluationResultLabel: string | null;
   progressStatusLabel: string | null;
@@ -22,6 +23,7 @@ export function mapQuestionAnswerHistoryResponseDtoToModel(
   return {
     items: toArray(response).map((item) => ({
       answerAttemptId: String(item.id),
+      totalScore: item.score?.totalScore ?? null,
       submittedAtLabel: formatApiDateTime(item.submittedAt) ?? (isKorean ? "최근 시도" : "Recent attempt"),
       totalScoreLabel:
         item.score?.totalScore !== undefined && item.score.totalScore !== null

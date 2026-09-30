@@ -203,7 +203,7 @@ export function mapQuestionDetailResponseDtoToModel(
     title: response.question.title,
     body: response.question.body,
     category: response.question.categoryName ?? (isKorean ? "일반" : "General"),
-    difficulty: response.question.difficultyLevel ?? (isKorean ? "일반" : "General"),
+    difficulty: response.question.difficulty ?? response.question.difficultyLevel ?? (isKorean ? "일반" : "General"),
     tags: toArray(response.tags).map((tag) => tag.name),
     companies: toArray(response.companies).map((company) => company.name),
     roles: toArray(response.roles).map((role) => role.name),

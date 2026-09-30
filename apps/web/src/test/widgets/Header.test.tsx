@@ -33,7 +33,7 @@ describe("Header", () => {
 
     renderWithProviders(<Header />, { route: "/questions/1", locale: "ko" });
 
-    expect(screen.getByText("질문 맥락 검토")).toBeInTheDocument();
+    expect(screen.getByText("질문 상세")).toBeInTheDocument();
     for (const button of screen.getAllByRole("button")) {
       expect(button).toHaveAccessibleName();
     }

@@ -97,4 +97,17 @@ describe("design tokens", () => {
     expect(Object.keys(stylesheets)).toContain(TOKENS_PATH);
     expect(offenders).toEqual([]);
   });
+
+  it("keeps new class names out of the legacy stylesheet so old rules cannot leak in", () => {
+    const legacy = stylesheets["app/styles/global.css"];
+    const collisions = Object.entries(stylesheets)
+      .filter(([path]) => path !== TOKENS_PATH && !LEGACY_STYLESHEETS.has(path))
+      .flatMap(([path, source]) =>
+        [...new Set([...source.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/\.([a-z][a-z0-9_-]*)/g)].map((match) => match[1]))]
+          .filter((className) => new RegExp(`\\.${className}(?![a-zA-Z0-9_-])`).test(legacy))
+          .map((className) => `${path}: .${className}`),
+      );
+
+    expect(collisions).toEqual([]);
+  });
 });

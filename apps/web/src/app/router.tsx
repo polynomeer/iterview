@@ -10,13 +10,12 @@ import { legacyRedirectRoutes } from "./router/legacyRedirects";
 import { RouteErrorBoundary } from "./router/RouteErrorBoundary";
 
 const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({ default: module.HomePage })));
-const PracticePage = lazy(() => import("../pages/practice/PracticePage").then((module) => ({ default: module.PracticePage })));
+const QuestionsIndexPage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionsIndexPage })));
+const QuestionWorkspacePage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionWorkspacePage })));
 const SkillsPage = lazy(() => import("../pages/skills/SkillsPage").then((module) => ({ default: module.SkillsPage })));
 const ReviewQueuePage = lazy(() => import("../pages/review-queue/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
 const ScheduledReviewsPage = lazy(() => import("../pages/scheduled-reviews/ScheduledReviewsPage").then((module) => ({ default: module.ScheduledReviewsPage })));
 const WeakNodesPage = lazy(() => import("../pages/weak-nodes/WeakNodesPage").then((module) => ({ default: module.WeakNodesPage })));
-const QuestionDetailPage = lazy(() => import("../pages/question-detail/QuestionDetailPage").then((module) => ({ default: module.QuestionDetailPage })));
-const QuestionTreePage = lazy(() => import("../pages/question-tree/QuestionTreePage").then((module) => ({ default: module.QuestionTreePage })));
 const AnswerEditorPage = lazy(() => import("../pages/answer-editor/AnswerEditorPage").then((module) => ({ default: module.AnswerEditorPage })));
 const ResultAnalysisPage = lazy(() => import("../pages/result-analysis/ResultAnalysisPage").then((module) => ({ default: module.ResultAnalysisPage })));
 const ArchivePage = lazy(() => import("../pages/archive/ArchivePage").then((module) => ({ default: module.ArchivePage })));
@@ -72,15 +71,15 @@ export const appRoutes: RouteObject[] = [
           },
           {
             path: routeConfig.practice.path,
-            element: withSuspense(<PracticePage />),
+            element: withSuspense(<QuestionsIndexPage />),
           },
           {
             path: routeConfig.questionDetail.path,
-            element: withSuspense(<QuestionDetailPage />),
+            element: withSuspense(<QuestionWorkspacePage />),
           },
           {
             path: routeConfig.questionTree.path,
-            element: withSuspense(<QuestionTreePage />),
+            element: withSuspense(<QuestionWorkspacePage defaultTreeOpen />),
           },
           {
             path: routeConfig.feed.path,

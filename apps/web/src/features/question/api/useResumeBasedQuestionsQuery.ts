@@ -4,8 +4,9 @@ import { queryKeys } from "../../../shared/api/queryKeys";
 import { toArray } from "../../../shared/lib/collection";
 import type { ResumeBasedQuestionDto } from "../../../shared/types/question";
 
-export function useResumeBasedQuestionsQuery(limit = 6) {
+export function useResumeBasedQuestionsQuery(limit = 6, { enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
+    enabled,
     queryKey: queryKeys.questions.resumeBased(limit),
     queryFn: async ({ signal }) =>
       toArray<ResumeBasedQuestionDto>(await getResumeBasedQuestionsRequest(limit, signal)),

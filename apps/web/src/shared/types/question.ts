@@ -85,6 +85,8 @@ export type QuestionDetailDto = {
   categoryId?: string | number | null;
   categoryName?: string | null;
   questionType?: string | null;
+  /** Sent by the API (QuestionMetadataDto.difficulty); `difficultyLevel` is a legacy alias. */
+  difficulty?: string | null;
   difficultyLevel?: string | null;
   qualityStatus?: string | null;
   expectedAnswerSeconds?: number | null;

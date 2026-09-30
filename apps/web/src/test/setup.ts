@@ -10,3 +10,8 @@ afterEach(() => {
   document.documentElement.removeAttribute("data-theme");
   document.documentElement.style.colorScheme = "";
 });
+
+// jsdom does not implement scrolling; components call it to reveal panels.
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => undefined;
+}
