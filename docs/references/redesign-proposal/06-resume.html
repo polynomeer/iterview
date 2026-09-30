@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 · Resume</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .version-bar { display: flex; align-items: center; gap: 16px; padding: 16px 20px; }
+  .coverage { display: grid; grid-template-columns: repeat(3, auto); gap: 24px; margin-left: auto; }
+  .claims { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 20px; align-items: start; }
+  .group-title { padding: 12px 20px 6px; font-size: var(--text-xs); font-weight: 700; color: var(--text-muted); }
+  .claim { display: flex; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--border); align-items: flex-start; }
+  .claim.selected { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+  .claim .txt { flex: 1; font-size: var(--text-sm); line-height: 1.55; }
+  .heat { display: flex; gap: 2px; margin-top: 6px; }
+  .heat i { width: 14px; height: 6px; border-radius: 2px; background: var(--surface-sunken); border: 1px solid var(--border); }
+  .heat i.h1 { background: var(--danger); border-color: var(--danger); }
+  .heat i.h2 { background: var(--warning); border-color: var(--warning); }
+  .heat i.h3 { background: var(--success); border-color: var(--success); }
+  .evidence { display: grid; grid-template-columns: 120px 1fr; gap: 12px 16px; font-size: var(--text-sm); }
+  .evidence dt { color: var(--text-muted); font-weight: 600; padding-top: 9px; }
+  .evidence dd { margin: 0; }
+</style>
+</head>
+<body data-nav="resume" data-crumbs="이력서|백엔드 이력서 v3">
+<div class="content content--wide" style="max-width:1400px">
+  <section class="card version-bar">
+    <i data-icon="file" class="icon-lg"></i>
+    <div>
+      <div class="row"><h2 style="font-size:18px">백엔드 이력서</h2><button class="btn btn-secondary btn-sm">v3 · 활성 <i data-icon="chevronDown"></i></button> <span class="note">1</span></div>
+      <div class="xs muted">backend-resume-2026.pdf · 9월 20일 업로드 · 분석 완료</div>
+    </div>
+    <div class="coverage">
+      <div class="stat"><span class="xs muted">항목</span><span class="value">24</span></div>
+      <div class="stat"><span class="xs muted">근거 작성</span><span class="value">17<span class="small muted">/24</span></span></div>
+      <div class="stat"><span class="xs muted">면접 대비</span><span class="value score-mid">62%</span></div>
+    </div>
+    <button class="btn btn-secondary"><i data-icon="upload"></i>새 버전 업로드</button>
+  </section>
+
+  <div class="tabs" role="tablist" style="margin-top:20px">
+    <span class="tab" role="tab" aria-selected="true">항목과 근거 <span class="n">24</span></span>
+    <span class="tab" role="tab">면접 압박 지도</span>
+    <span class="tab" role="tab">공고 맞춤 분석 <span class="n">2</span></span>
+    <span class="tab" role="tab">버전 기록 <span class="n">3</span></span>
+    <span class="note" style="align-self:center;margin-left:8px">2</span>
+  </div>
+
+  <div class="claims">
+    <section class="card" aria-label="이력서 항목">
+      <div class="card-head"><div class="segmented"><span aria-pressed="true">전체</span><span>근거 없음 7</span><span>약점 4</span></div></div>
+      <div class="group-title">정산 시스템 재구축 · 2024.01–2024.10</div>
+      <div class="claim selected"><i data-icon="alert" style="color:var(--danger);margin-top:2px"></i><div class="txt"><b>트랜잭션 경계 재설계로 정합성 오류 0건 달성</b><div class="heat" aria-label="연결 질문 5개 중 약점 2, 보완 1, 숙달 1, 미답변 1"><i class="h1"></i><i class="h1"></i><i class="h2"></i><i class="h3"></i><i></i></div></div><span class="badge badge-danger">약점</span></div>
+      <div class="claim"><i data-icon="alert" style="color:var(--warning);margin-top:2px"></i><div class="txt">배포 시간 70% 단축 (40분 → 12분)<div class="heat"><i class="h2"></i><i class="h3"></i><i></i><i></i></div></div><span class="badge badge-warning">근거 부족</span></div>
+      <div class="claim"><i data-icon="check" style="color:var(--success);margin-top:2px"></i><div class="txt">Kafka 기반 이벤트 파이프라인 설계<div class="heat"><i class="h3"></i><i class="h3"></i><i class="h3"></i></div></div><span class="badge badge-success">준비됨</span></div>
+      <div class="group-title">커머스 플랫폼 · 2022.03–2023.12</div>
+      <div class="claim"><i data-icon="alert" style="color:var(--danger);margin-top:2px"></i><div class="txt">MSA 전환 주도<div class="heat"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><span class="badge">근거 없음</span></div>
+      <div class="claim"><i data-icon="check" style="color:var(--success);margin-top:2px"></i><div class="txt">Redis 캐시 도입으로 p99 40% 개선<div class="heat"><i class="h3"></i><i class="h2"></i></div></div><span class="badge badge-success">준비됨</span></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h3>트랜잭션 경계 재설계로 정합성 오류 0건 달성</h3><span class="spacer"></span><button class="btn btn-ghost btn-sm"><i data-icon="edit"></i>문구 수정</button></div>
+      <div class="card-body stack">
+        <div class="callout danger"><i data-icon="alert"></i><div>연결된 질문 5개 중 2개가 약점이에요. 특히 <b>“0건을 어떻게 측정했나요?”</b>에 답할 근거가 비어 있어요. <span class="note">3</span></div></div>
+        <dl class="evidence">
+          <dt>상황</dt><dd><input class="input" style="width:100%" value="월 2억 건 정산 배치에서 부분 실패 시 롤백 범위 불일치"></dd>
+          <dt>내 역할</dt><dd><input class="input" style="width:100%" value="트랜잭션 경계 설계 및 배치 구조 분리 (팀 4명 중 리드)"></dd>
+          <dt>측정 방법</dt><dd><input class="input input--invalid" style="width:100%" placeholder="예: 대사(reconciliation) 배치로 일 단위 불일치 건수 집계"><div class="xs" style="color:var(--danger);margin-top:4px">면접관이 가장 먼저 물어볼 부분이에요</div></dd>
+          <dt>결과 수치</dt><dd><input class="input" style="width:100%" value="불일치 월 37건 → 0건 (6개월 유지)"></dd>
+        </dl>
+        <div class="divider"></div>
+        <div class="row between"><h4>이 항목에서 나오는 질문 <span class="note">4</span></h4><button class="btn btn-secondary btn-sm">이 항목으로 모의면접</button></div>
+        <div class="list" style="border:1px solid var(--border);border-radius:var(--radius-md)">
+          <div class="list-row"><span class="mastery m1"></span><div class="grow small">정합성 오류 0건은 어떻게 측정했나요?</div><span class="score-pill score-low">35</span></div>
+          <div class="list-row"><span class="mastery m1"></span><div class="grow small">Self-invocation 문제를 어떻게 해결했나요?</div><span class="score-pill score-low">42</span></div>
+          <div class="list-row"><span class="mastery m2"></span><div class="grow small">REQUIRES_NEW를 쓴 이유는?</div><span class="score-pill score-mid">64</span></div>
+          <div class="list-row"><span class="mastery m0"></span><div class="grow small">배치 재시작 시 중복 처리는?</div><span class="badge">미답변</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<section class="annotations">
+  <h2>개선 포인트 — 이력서 (기존 /profile/resumes, /profile/resumes/analysis, /resume-versions/:id/editor, …/heatmap, …/anchors/…, /resume-tailor/* 등 5개 URL 루트 9개 라우트 통합)</h2>
+  <ol>
+    <li><b>버전은 전역 컨텍스트.</b> 활성 버전을 상단 한 곳(+사이드바 하단 전환기)에서 바꾸고, 하위 화면은 모두 이 버전 기준. 기존에는 버전 선택·활성화 UI가 페이지마다 반복.</li>
+    <li><b>탭으로 통합.</b> 항목과 근거(편집기) / 면접 압박 지도(히트맵) / 공고 맞춤(테일러) / 버전 기록. URL은 /resume/:versionId/{claims|heatmap|tailor|versions}.</li>
+    <li><b>“기준 문서(source of truth)”를 작업 단위로.</b> 추상 용어 대신 “항목 하나 = 상황·역할·측정 방법·결과”를 채우는 폼. 비어 있는 필드를 면접 위험과 직접 연결.</li>
+    <li><b>항목 ↔ 질문 연결을 한 화면에.</b> 히트맵 막대(색+aria-label)로 질문 커버리지를 표시하고, 여기서 바로 해당 항목만으로 모의면접 시작. 기존 이력서 페이지는 5,258px 높이에 ‘Complete d’, ‘2026년 8월 20일’이 세로로 꺾여 표시됨.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

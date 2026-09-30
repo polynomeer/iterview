@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13 · Mobile Review</title>
+<link rel="stylesheet" href="proposal.css">
+<style>body { background: var(--surface-sunken); } .tabs { margin-bottom: 0; overflow-x: auto; }</style>
+</head>
+<body data-shell="mobile" data-nav="review" data-title="복습">
+<div class="tabs" role="tablist"><span class="tab" aria-selected="true">오늘 <span class="n">4</span></span><span class="tab">예정 <span class="n">11</span></span><span class="tab">약한 영역</span><span class="tab">완료</span></div>
+<button class="btn btn-primary btn-lg" style="width:100%"><i data-icon="play"></i>오늘 복습 시작 (4)</button>
+<section class="card">
+  <div class="list">
+    <div class="list-row" style="padding:14px 16px"><span class="mastery m1"></span><div class="grow"><div class="title small">Self-invocation 시 @Transactional…</div><div class="meta">42점 · 3회 · 이력서 연결</div></div><span class="badge badge-danger">오늘</span></div>
+    <div class="list-row" style="padding:14px 16px"><span class="mastery m1"></span><div class="grow"><div class="title small">Redis 분산 락이 만료될 때…</div><div class="meta">51점 · 모의면접</div></div><span class="badge badge-danger">오늘</span></div>
+    <div class="list-row" style="padding:14px 16px"><span class="mastery m2"></span><div class="grow"><div class="title small">p99 지연 40% 개선 측정</div><div class="meta">63점</div></div><span class="badge badge-warning">1일 지남</span></div>
+    <div class="list-row" style="padding:14px 16px"><span class="mastery m2"></span><div class="grow"><div class="title small">Kafka 리밸런싱 중 메시지 중복</div><div class="meta">66점 · 실전 복기</div></div><span class="badge badge-danger">오늘</span></div>
+  </div>
+</section>
+<p class="xs muted" style="text-align:center">완료하면 점수에 따라 3·7·14일 뒤 다시 나타나요 <span class="note">1</span></p>
+
+<section class="annotations">
+  <h2>개선 포인트 — 모바일 복습</h2>
+  <ol>
+    <li><b>탭으로 모든 복습 기능에 접근.</b> 기존 모바일에서는 복습 큐·예약 복습·약한 노드가 하단 탭에 없고 페이지 내부 링크로만 진입 가능.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

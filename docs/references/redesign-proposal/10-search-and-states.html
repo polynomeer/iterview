@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 · Search and States</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 40px 32px 56px; display: flex; flex-direction: column; gap: 40px; }
+  .palette { max-width: 640px; margin: 0 auto; width: 100%; box-shadow: var(--shadow-lg); overflow: hidden; }
+  .palette input { border: 0; border-bottom: 1px solid var(--border); border-radius: 0; width: 100%; height: 52px; font-size: var(--text-lg); padding: 0 16px 0 44px; }
+  .palette .search-ico { position: absolute; left: 16px; top: 18px; color: var(--text-subtle); }
+  .p-group { padding: 8px 8px 4px; }
+  .p-group .label { padding: 4px 8px; display: block; }
+  .p-item { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 10px; border-radius: var(--radius-sm); font-size: var(--text-md); }
+  .p-item[aria-selected="true"] { background: var(--accent-soft); }
+  .p-item .hint { margin-left: auto; font-size: var(--text-xs); color: var(--text-muted); }
+  .p-foot { display: flex; gap: 16px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: var(--text-xs); color: var(--text-muted); }
+  .states { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .states .card { min-height: 260px; display: flex; flex-direction: column; }
+</style>
+</head>
+<body data-shell="none">
+<main class="wrap">
+  <section class="stack">
+    <h2>명령 팔레트 (⌘K) — 실제 데이터 검색 <span class="note">1</span></h2>
+    <div class="card palette" role="dialog" aria-label="검색">
+      <div style="position:relative"><i data-icon="search" class="search-ico"></i><input class="input" value="트랜잭" aria-label="검색어"></div>
+      <div class="p-group" role="listbox">
+        <span class="label">질문</span>
+        <div class="p-item" aria-selected="true"><span class="mastery m1"></span>Self-invocation 시 <b>트랜잭</b>션이 적용되지 않는 이유<span class="hint">Spring · 42점</span></div>
+        <div class="p-item"><span class="mastery m2"></span><b>트랜잭</b>션 전파 속성 REQUIRES_NEW<span class="hint">Spring · 64점</span></div>
+        <div class="p-item"><span class="mastery m0"></span>분산 <b>트랜잭</b>션과 Saga 패턴<span class="hint">분산 시스템 · 미답변</span></div>
+      </div>
+      <div class="p-group">
+        <span class="label">이력서 항목</span>
+        <div class="p-item"><i data-icon="file"></i><b>트랜잭</b>션 경계 재설계로 정합성 오류 0건<span class="hint">정산 시스템 재구축</span></div>
+      </div>
+      <div class="p-group">
+        <span class="label">이동</span>
+        <div class="p-item"><i data-icon="review"></i>복습으로 이동<span class="hint"><kbd>G</kbd> <kbd>R</kbd></span></div>
+        <div class="p-item"><i data-icon="interview"></i>모의면접 시작<span class="hint"><kbd>G</kbd> <kbd>I</kbd></span></div>
+      </div>
+      <div class="p-foot"><span><kbd>↑</kbd><kbd>↓</kbd> 이동</span><span><kbd>↵</kbd> 열기</span><span><kbd>esc</kbd> 닫기</span></div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>상태 패턴 — 모든 화면 공통 <span class="note">2</span></h2>
+    <div class="states">
+      <div class="card">
+        <div class="card-head"><h4>불러오는 중 (스켈레톤)</h4></div>
+        <div class="card-body stack-sm" aria-busy="true">
+          <div class="skeleton" style="height:14px;width:40%"></div>
+          <div class="skeleton" style="height:22px;width:90%"></div>
+          <div class="skeleton" style="height:22px;width:70%"></div>
+          <div class="skeleton" style="height:36px;width:120px;margin-top:12px"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>비어 있음</h4></div>
+        <div class="empty" style="flex:1"><i data-icon="file"></i><h3>아직 이력서가 없어요</h3><p class="small">PDF를 올리면 항목별 예상 질문을 만들어 드려요.</p><button class="btn btn-primary btn-sm" style="margin-top:8px"><i data-icon="upload"></i>이력서 올리기</button></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>오류</h4></div>
+        <div class="empty" style="flex:1"><i data-icon="alert" style="color:var(--danger)"></i><h3>평가 결과를 찾을 수 없어요</h3><p class="small">삭제되었거나 다른 계정의 기록일 수 있어요.</p><div class="row" style="margin-top:8px"><button class="btn btn-secondary btn-sm">질문으로 돌아가기</button></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>404 / 앱 오류 경계</h4></div>
+        <div class="empty" style="flex:1"><span style="font-size:32px;font-weight:800;color:var(--text-subtle)">404</span><h3>페이지를 찾을 수 없어요</h3><p class="small">주소가 바뀌었을 수 있어요.</p><button class="btn btn-primary btn-sm" style="margin-top:8px">오늘로 이동</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="annotations">
+  <h2>개선 포인트 — 검색과 상태</h2>
+  <ol>
+    <li><b>팔레트는 실제 데이터를 검색.</b> 현재 명령 팔레트는 존재하지 않는 고정 ID(distributed-lock, kafka-rebalance, ?company=stripe)를 가리키는 15개 하드코딩 항목. 질문·이력서 항목·이동 명령을 서버 검색 + 최근 항목으로.</li>
+    <li><b>상태 4종을 공통 컴포넌트로.</b> 현재 404 라우트와 errorElement/ErrorBoundary가 없어 런타임 오류 시 React Router 기본 개발자 화면(“Hey developer 👋”)이 사용자에게 노출됨. 백엔드 원문 오류 메시지 대신 사용자 문장 + 복구 행동.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

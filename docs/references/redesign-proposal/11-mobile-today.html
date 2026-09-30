@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11 · Mobile Today</title>
+<link rel="stylesheet" href="proposal.css">
+<style>body { background: var(--surface-sunken); }</style>
+</head>
+<body data-shell="mobile" data-nav="today" data-title="오늘">
+<div class="stack-sm"><h2 style="font-size:20px">좋은 아침이에요, 민준님</h2><p class="small muted">오늘 할 일 3개 · 약 25분 <span class="note">1</span></p></div>
+
+<section class="card card-pad stack">
+  <div class="row wrap"><span class="badge badge-accent">다음 할 일</span><span class="badge">Kafka</span></div>
+  <h3 style="font-size:18px;line-height:1.45">결제 이벤트 컨슈머를 멱등하게 만들기 위해 어떤 설계를 했나요?</h3>
+  <p class="xs muted">이력서 항목 “중복 처리 0건”에 아직 근거가 없어요.</p>
+  <button class="btn btn-primary btn-lg" style="width:100%"><i data-icon="play"></i>답변 시작</button>
+</section>
+
+<section class="card">
+  <div class="card-head"><h4>복습할 질문</h4><span class="badge badge-danger">4</span><span class="spacer"></span><a class="small" href="#">전체</a></div>
+  <div class="list">
+    <div class="list-row" style="padding:12px 16px"><span class="mastery m1"></span><div class="grow"><div class="title small">Self-invocation 시 @Transactional…</div><div class="meta">42점 · 오늘</div></div><i data-icon="chevronRight"></i></div>
+    <div class="list-row" style="padding:12px 16px"><span class="mastery m1"></span><div class="grow"><div class="title small">Redis 분산 락이 만료될 때…</div><div class="meta">51점 · 오늘</div></div><i data-icon="chevronRight"></i></div>
+    <div class="list-row" style="padding:12px 16px"><span class="mastery m2"></span><div class="grow"><div class="title small">p99 지연 40% 개선 측정</div><div class="meta">63점 · 1일 지남</div></div><i data-icon="chevronRight"></i></div>
+  </div>
+</section>
+
+<section class="card card-pad stack-sm">
+  <div class="row between"><h4>이번 주</h4><span class="xs muted">답변 14 · 평균 68 (+7)</span></div>
+  <div class="row between small"><span>데이터베이스</span><b class="score-low">47</b></div><div class="progress danger"><i style="width:47%"></i></div>
+  <div class="row between small"><span>시스템 설계</span><b class="score-mid">61</b></div><div class="progress warning"><i style="width:61%"></i></div>
+</section>
+
+<section class="annotations">
+  <h2>개선 포인트 — 모바일 오늘</h2>
+  <ol>
+    <li><b>첫 화면 안에 주 행동.</b> 기존 모바일 홈은 상단 툴바(검색+KO/EN+‘알·활·프로필·종’ 버튼 2줄)가 화면의 1/4을 차지하고, 6,890px 스크롤 안에서 첫 질문 CTA가 두 번째 화면 아래에 있음. 하단 탭은 ‘01~05’ 숫자 아이콘.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

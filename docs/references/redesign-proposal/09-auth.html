@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09 · Auth</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .auth { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+  .auth-side { background: var(--surface-sunken); border-right: 1px solid var(--border); padding: 48px; display: flex; flex-direction: column; gap: 28px; justify-content: center; }
+  .auth-main { display: grid; place-items: center; padding: 48px; }
+  .auth-form { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 18px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step .n { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); display: grid; place-items: center; font-weight: 700; flex: none; font-size: var(--text-sm); }
+  .or { display: flex; align-items: center; gap: 12px; color: var(--text-subtle); font-size: var(--text-xs); }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+</style>
+</head>
+<body data-shell="none">
+<div class="auth">
+  <aside class="auth-side">
+    <div class="brand" style="padding:0"><span class="brand-mark">i</span>iterview</div>
+    <h1 style="font-size:30px;line-height:1.35">이력서 한 줄 한 줄을<br>면접에서 방어할 수 있게. <span class="note">1</span></h1>
+    <div class="stack">
+      <div class="step"><span class="n">1</span><div><b>이력서를 올리면</b><div class="small muted">항목마다 나올 질문과 꼬리질문을 만들어요.</div></div></div>
+      <div class="step"><span class="n">2</span><div><b>꼬리질문 끝까지 답하고</b><div class="small muted">답변마다 주장·근거·대비를 평가해요.</div></div></div>
+      <div class="step"><span class="n">3</span><div><b>약한 곳만 다시</b><div class="small muted">틀린 질문은 알맞은 간격으로 복습 목록에 올라와요.</div></div></div>
+    </div>
+  </aside>
+  <main class="auth-main">
+    <form class="auth-form" aria-labelledby="login-title">
+      <div class="stack-sm"><h2 id="login-title" style="font-size:24px">로그인</h2><p class="small muted">계정이 없나요? <a href="#">회원가입</a></p></div>
+      <div class="field"><label for="email">이메일</label><input id="email" class="input" type="email" autocomplete="email" placeholder="name@example.com"></div>
+      <div class="field"><div class="row between"><label for="pw">비밀번호</label><a href="#" class="xs">비밀번호 찾기</a></div><input id="pw" class="input" type="password" autocomplete="current-password"></div>
+      <button class="btn btn-primary btn-lg" type="submit">로그인 <span class="note" style="width:16px;height:16px;font-size:10px">2</span></button>
+      <div class="or">또는</div>
+      <button class="btn btn-secondary btn-lg" type="button">둘러보기 (로그인 없이 질문 보기)</button>
+      <p class="xs muted" style="text-align:center">로그인하면 <a href="#">이용약관</a>과 <a href="#">개인정보 처리방침</a>에 동의하게 됩니다.</p>
+    </form>
+  </main>
+</div>
+
+<section class="annotations">
+  <h2>개선 포인트 — 로그인/회원가입</h2>
+  <ol>
+    <li><b>인증 화면에는 앱 셸이 없다.</b> 기존 로그인은 사이드바(홈/질문 맵/피드/로그인/회원가입)와 상단 툴바 안에 렌더링되고, ‘MVP 인증 흐름’ 같은 내부 용어 배지가 노출됨. 제품 가치 3단계로 대체.</li>
+    <li><b>라벨·입력은 대비 확보.</b> 기존 라벨(이메일/비밀번호)은 어두운 카드 위 어두운 글자로 거의 보이지 않고, 입력창은 흰→회색 그라데이션. 표준 input + autocomplete + 오류 메시지 슬롯.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

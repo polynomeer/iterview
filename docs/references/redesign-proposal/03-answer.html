@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Answer</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .focus-bar { height: 56px; display: flex; align-items: center; gap: 16px; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .focus { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; }
+  .timer { font-family: var(--font-mono); font-weight: 600; }
+  .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--border); font-size: var(--text-sm); }
+  .check:first-of-type { border-top: 0; }
+  .tick { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: grid; place-items: center; flex: none; margin-top: 2px; }
+  .tick.on { background: var(--success); border-color: var(--success); color: #fff; }
+  .tick.on .icon { width: 12px; height: 12px; stroke-width: 3; }
+  .editor-foot { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--border); font-size: var(--text-sm); color: var(--text-muted); }
+  .editor { border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--surface); overflow: hidden; }
+  .editor .textarea { border: 0; border-radius: 0; width: 100%; min-height: 380px; display: block; }
+</style>
+</head>
+<body data-shell="none">
+<header class="focus-bar">
+  <button class="btn btn-ghost btn-sm"><i data-icon="x"></i>나가기</button>
+  <div class="path" style="flex:1"><span>Spring</span><i data-icon="chevronRight"></i><span>@Transactional 동작</span><i data-icon="chevronRight"></i><b>Self-invocation</b></div>
+  <span class="small muted">자동 저장됨 · 방금</span>
+  <span class="timer" aria-label="경과 시간">02:14 <span class="muted">/ 03:00</span></span>
+  <span class="note">1</span>
+</header>
+
+<main class="focus">
+  <section class="stack">
+    <div class="stack-sm">
+      <div class="row wrap"><span class="badge badge-danger dot">지난 점수 42</span><span class="badge">3번째 시도</span></div>
+      <h1>같은 클래스 안에서 @Transactional 메서드를 호출하면 트랜잭션이 적용되지 않는 이유는 무엇인가요?</h1>
+    </div>
+
+    <div class="callout warning"><i data-icon="info"></i><div><b>지난 피드백:</b> 주장은 명확했지만 “실제로 어떻게 해결했는지” 근거가 없었어요. 이번엔 정산 시스템 사례를 붙여보세요. <span class="note">2</span></div></div>
+
+    <div class="editor">
+      <textarea class="textarea" aria-label="답변 입력">Spring의 @Transactional은 프록시 기반 AOP로 동작합니다. 외부에서 빈을 호출하면 프록시가 트랜잭션을 시작하지만, 같은 클래스 내부에서 this.method()로 호출하면 프록시를 거치지 않기 때문에 어드바이스가 적용되지 않습니다.
+
+정산 시스템을 재구축할 때 배치 내부에서 건별 저장 메서드를 self 호출해서 한 건 실패 시 전체가 롤백되지 않는 문제가 있었고, </textarea>
+      <div class="editor-foot">
+        <span>412자 · 5문장</span>
+        <span>·</span>
+        <button class="btn btn-ghost btn-sm"><i data-icon="mic"></i>음성으로 답하기</button>
+        <span style="margin-left:auto"></span>
+        <button class="btn btn-secondary">임시 저장</button>
+        <button class="btn btn-primary">제출하고 평가받기 <span class="note" style="width:16px;height:16px;font-size:10px">3</span></button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="stack">
+    <section class="card card-pad">
+      <div class="row between" style="margin-bottom:6px"><h4>좋은 답변 체크 <span class="note">4</span></h4><span class="small muted">2 / 3</span></div>
+      <div class="check"><span class="tick on"><i data-icon="check"></i></span><div><b>주장</b><div class="muted">첫 문장에서 결론을 말했어요.</div></div></div>
+      <div class="check"><span class="tick on"><i data-icon="check"></i></span><div><b>근거</b><div class="muted">이력서 사례(정산 시스템)를 연결했어요.</div></div></div>
+      <div class="check"><span class="tick"></span><div><b>꼬리질문 대비</b><div class="muted">해결 방법(구조 분리·self 주입·AspectJ) 중 무엇을 왜 골랐는지 쓰면 좋아요.</div></div></div>
+    </section>
+    <section class="card card-pad stack-sm">
+      <span class="label">연결된 이력서 항목</span>
+      <p class="small"><b>정산 시스템 재구축</b><br><span class="muted">트랜잭션 경계 재설계로 정합성 오류 0건</span></p>
+    </section>
+    <details class="card card-pad">
+      <summary class="small" style="cursor:pointer;font-weight:600">모범 답안 보기 (평가 전엔 접어둠)</summary>
+    </details>
+  </aside>
+</main>
+
+<section class="annotations">
+  <h2>개선 포인트 — 답변</h2>
+  <ol>
+    <li><b>집중 모드.</b> 사이드바·상단 검색을 숨기고 경로·자동저장·타이머만. 기존 화면은 3열 × 카드 10개 이상에 입력창이 화면 중간 아래로 밀려 있었음.</li>
+    <li><b>지난 피드백을 입력 직전에.</b> 재시도 목적이 분명해지도록 이전 평가의 핵심 한 줄만 노출.</li>
+    <li><b>입력창은 평범하게.</b> 기존 입력창의 흰→회색 그라데이션 배경 제거, 16px/1.75 본문, 글자 수는 하단 한 줄.</li>
+    <li><b>가이드는 체크리스트 3개.</b> 기존의 “주장/근거/꼬리질문” 설명 카드 + “1.주장 2.근거 3.다음 가지” 중복 카드 + 세로로 꺾인 ‘이력서 상태/드래프트 길이/관련 스킬/트리 노드’ 컬럼을 하나의 라이브 체크리스트로 통합.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

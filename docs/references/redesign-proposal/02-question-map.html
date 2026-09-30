@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · Question Map</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .workspace { display: grid; grid-template-columns: 300px minmax(0, 1fr) 320px; height: calc(100vh - 56px); min-height: 820px; }
+  .pane { overflow: auto; }
+  .pane-left { border-right: 1px solid var(--border); background: var(--surface); padding: 16px 12px; display: flex; flex-direction: column; gap: 12px; }
+  .pane-center { padding: 28px 36px; display: flex; flex-direction: column; gap: 20px; }
+  .pane-right { border-left: 1px solid var(--border); background: var(--surface); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+  .indent-1 { padding-left: 20px; } .indent-2 { padding-left: 40px; } .indent-3 { padding-left: 60px; }
+  .child { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+  .child:hover { border-color: var(--border-strong); }
+  .q-body { font-size: var(--text-lg); line-height: 1.7; }
+  .legend { display: flex; gap: 12px; font-size: var(--text-xs); color: var(--text-muted); flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+</style>
+</head>
+<body data-nav="questions" data-crumbs="질문|Spring 트랜잭션|Self-invocation">
+<div class="workspace">
+  <!-- Left: tree navigator -->
+  <nav class="pane pane-left" aria-label="질문 트리">
+    <div class="row">
+      <div class="segmented"><span aria-pressed="true">트리</span><span>맵</span><span>목록</span></div>
+      <button class="btn btn-ghost btn-icon btn-sm" aria-label="필터" style="margin-left:auto"><i data-icon="filter"></i></button>
+    </div>
+    <input class="input" placeholder="질문 검색" aria-label="질문 검색">
+    <div class="legend"><span><i class="mastery m0"></i>미답변</span><span><i class="mastery m1"></i>약점</span><span><i class="mastery m2"></i>보완</span><span><i class="mastery m3"></i>숙달</span></div>
+    <div class="tree" role="tree">
+      <div class="tree-node dim"><i data-icon="chevronRight" class="twist"></i><span class="t">Java 기초</span><span class="xs subtle">12</span></div>
+      <div class="tree-node"><i data-icon="chevronDown" class="twist"></i><span class="t"><b>Spring</b></span><span class="xs subtle">18</span></div>
+      <div class="tree-node indent-1"><i data-icon="chevronDown" class="twist"></i><span class="mastery m2"></span><span class="t">트랜잭션 동작 원리</span></div>
+      <div class="tree-node indent-2"><i data-icon="chevronDown" class="twist"></i><span class="mastery m3"></span><span class="t">@Transactional은 어떻게 동작하나요?</span></div>
+      <div class="tree-node indent-3" aria-current="true"><span class="twist"></span><span class="mastery m1"></span><span class="t">Self-invocation 문제는?</span></div>
+      <div class="tree-node indent-3"><span class="twist"></span><span class="mastery m0"></span><span class="t">private 메서드에 붙이면?</span></div>
+      <div class="tree-node indent-2"><i data-icon="chevronRight" class="twist"></i><span class="mastery m2"></span><span class="t">전파 속성 (Propagation)</span></div>
+      <div class="tree-node indent-2"><i data-icon="chevronRight" class="twist"></i><span class="mastery m0"></span><span class="t">격리 수준 (Isolation)</span></div>
+      <div class="tree-node indent-1"><i data-icon="chevronRight" class="twist"></i><span class="mastery m3"></span><span class="t">Bean 생명주기</span></div>
+      <div class="tree-node dim"><i data-icon="chevronRight" class="twist"></i><span class="t">데이터베이스</span><span class="xs subtle">21</span></div>
+      <div class="tree-node dim"><i data-icon="chevronRight" class="twist"></i><span class="t">분산 시스템</span><span class="xs subtle">15</span></div>
+      <div class="tree-node dim"><i data-icon="chevronRight" class="twist"></i><span class="t">내 이력서에서 나온 질문</span><span class="xs subtle">9</span></div>
+    </div>
+  </nav>
+
+  <!-- Center: the question itself -->
+  <main class="pane pane-center">
+    <div class="path"><span>Spring</span><i data-icon="chevronRight"></i><span>트랜잭션 동작 원리</span><i data-icon="chevronRight"></i><span>@Transactional 동작</span><i data-icon="chevronRight"></i><b>Self-invocation</b><span class="badge" style="margin-left:6px">깊이 3</span> <span class="note">1</span></div>
+    <div class="stack-sm">
+      <div class="row wrap"><span class="badge badge-danger dot">약점 · 42</span><span class="badge">어려움</span><span class="badge">토스·카카오 기출</span></div>
+      <h1>같은 클래스 안에서 @Transactional 메서드를 호출하면 트랜잭션이 적용되지 않는 이유는 무엇인가요?</h1>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary"><i data-icon="play"></i>답변하기</button>
+      <button class="btn btn-secondary">모범 답안 보기</button>
+      <button class="btn btn-ghost btn-icon" aria-label="북마크"><i data-icon="library"></i></button>
+      <span class="note">2</span>
+    </div>
+
+    <section class="card card-pad stack-sm">
+      <span class="label">면접관이 확인하려는 것</span>
+      <p class="q-body">Spring AOP가 <b>프록시 기반</b>이라는 점을 이해하는지, 그리고 실무에서 이를 어떻게 우회했는지(구조 분리, self 주입, AspectJ 모드)를 설명할 수 있는지.</p>
+    </section>
+
+    <section class="stack-sm">
+      <div class="row between"><h3>다음 꼬리질문 <span class="note">3</span></h3><span class="small muted">답변 후 이어질 가능성이 높은 순</span></div>
+      <div class="child"><span class="mastery m0"></span><div class="grow"><b>AspectJ 모드로 바꾸면 무엇이 달라지나요?</b><div class="xs muted">예상 확률 높음 · 미답변</div></div><button class="btn btn-ghost btn-sm">열기 <i data-icon="arrowRight"></i></button></div>
+      <div class="child"><span class="mastery m0"></span><div class="grow"><b>실제 프로젝트에서 이 문제를 겪은 적이 있나요?</b><div class="xs muted">이력서 연결 · 정산 시스템 재구축</div></div><button class="btn btn-ghost btn-sm">열기 <i data-icon="arrowRight"></i></button></div>
+      <div class="child"><span class="mastery m2"></span><div class="grow"><b>프록시 객체는 언제 생성되나요?</b><div class="xs muted">지난 점수 61</div></div><button class="btn btn-ghost btn-sm">열기 <i data-icon="arrowRight"></i></button></div>
+    </section>
+  </main>
+
+  <!-- Right: inspector -->
+  <aside class="pane pane-right" aria-label="질문 정보">
+    <section class="stack-sm">
+      <span class="label">내 기록 <span class="note">4</span></span>
+      <div class="grid-2">
+        <div class="stat"><span class="xs muted">최고 점수</span><span class="value score-low">42</span></div>
+        <div class="stat"><span class="xs muted">시도</span><span class="value">3</span></div>
+      </div>
+      <div class="list" style="border:1px solid var(--border);border-radius:var(--radius-md)">
+        <div class="list-row" style="padding:10px 12px"><div class="grow small">9/28 · 주장은 명확, 근거 부족</div><span class="score-pill score-low">42</span></div>
+        <div class="list-row" style="padding:10px 12px"><div class="grow small">9/21 · 프록시 개념 누락</div><span class="score-pill score-low">35</span></div>
+        <div class="list-row" style="padding:10px 12px"><div class="grow small">9/14 · 첫 시도</div><span class="score-pill score-low">28</span></div>
+      </div>
+    </section>
+    <section class="stack-sm">
+      <span class="label">연결된 이력서 항목</span>
+      <div class="callout"><i data-icon="file"></i><div><b>정산 시스템 재구축</b><br><span class="muted">“트랜잭션 경계 재설계로 정합성 오류 0건”</span></div></div>
+    </section>
+    <section class="stack-sm">
+      <span class="label">학습 자료</span>
+      <a class="row small" href="#"><i data-icon="link"></i>Spring AOP 프록시 메커니즘 (공식 문서)</a>
+      <a class="row small" href="#"><i data-icon="link"></i>토스 기술 블로그 · 트랜잭션 전파</a>
+    </section>
+    <section class="stack-sm">
+      <span class="label">내 메모</span>
+      <textarea class="input" style="height:88px;padding:10px;resize:none" placeholder="이 질문에 대한 메모를 남기세요"></textarea>
+    </section>
+  </aside>
+</div>
+
+<section class="annotations">
+  <h2>개선 포인트 — 질문 (기존: /practice, /questions/:id, /questions/:id/tree 3개 페이지 통합)</h2>
+  <ol>
+    <li><b>위치는 항상 한 줄로.</b> 트리 + 경로(breadcrumb) + 깊이 배지. 기존의 “질문 경로 맥락 / 깊이 2 / 분기 1개 중 1개” 카드, 세로로 꺾인 “카테고리·난이도·회사 수” 컬럼 제거.</li>
+    <li><b>질문 상세와 트리를 한 화면에.</b> 트리에서 노드를 고르면 가운데가 바뀌고, “맵으로 돌아가기/이전/다음” 왕복이 필요 없음.</li>
+    <li><b>DFS는 용어가 아니라 동작으로.</b> “DFS 집중/전체 경로” 토글 대신 “다음 꼬리질문”을 확률순으로 제시.</li>
+    <li><b>인스펙터는 사실만.</b> 기존 우측 레일의 ‘마스터리 점수/0/0’ 무라벨 타일과 버튼 4개(답변 시작·빠른 복습·리뷰에 추가·노트로 이동)를 점수 이력 + 이력서 연결 + 자료 + 메모로 정리. 스킬 페이지의 ‘맵’ 보기는 여기 트리/맵 토글로 흡수.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · Today</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 0; overflow: hidden; }
+  .hero-main { padding: 28px 28px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .hero-side { padding: 24px; border-left: 1px solid var(--border); background: var(--surface-sunken); display: flex; flex-direction: column; gap: 14px; }
+  .hero h2 { font-size: 26px; line-height: 1.35; letter-spacing: -0.01em; }
+  .why { display: flex; gap: 10px; align-items: flex-start; font-size: var(--text-sm); }
+  .why .icon { color: var(--accent-text); margin-top: 3px; }
+</style>
+</head>
+<body data-nav="today" data-crumbs="오늘">
+<div class="content">
+  <div class="page-head">
+    <div>
+      <h1>좋은 아침이에요, 민준님 <span class="note">1</span></h1>
+      <p>오늘 할 일 3개 · 예상 25분</p>
+    </div>
+    <div class="actions"><span class="badge badge-warning dot">연속 6일</span></div>
+  </div>
+
+  <!-- 1. One primary action -->
+  <section class="card hero" aria-labelledby="next-title">
+    <div class="hero-main">
+      <div class="row wrap">
+        <span class="badge badge-accent">다음 할 일 <span class="note" style="margin-left:6px;width:16px;height:16px;font-size:10px">2</span></span>
+        <span class="badge">Kafka · 시스템 설계</span>
+        <span class="badge">보통</span>
+      </div>
+      <h2 id="next-title">결제 이벤트 컨슈머를 멱등하게 만들기 위해 어떤 설계를 했나요?</h2>
+      <div class="path"><span>이력서 v3</span><i data-icon="chevronRight"></i><span>정산 시스템 재구축</span><i data-icon="chevronRight"></i><b>중복 처리 0건 달성</b></div>
+      <div class="row">
+        <button class="btn btn-primary btn-lg"><i data-icon="play"></i>답변 시작</button>
+        <button class="btn btn-secondary btn-lg">꼬리질문 미리보기</button>
+        <span class="small muted" style="margin-left:8px"><i data-icon="clock"></i> 약 3분</span>
+      </div>
+    </div>
+    <aside class="hero-side">
+      <span class="label">왜 이 질문인가요? <span class="note">3</span></span>
+      <div class="why"><i data-icon="target"></i><span>이력서 항목 <b>“중복 처리 0건”</b>에 아직 근거가 없어요.</span></div>
+      <div class="why"><i data-icon="building"></i><span>목표 회사 <b>토스</b> 기출 빈도 상위 10%</span></div>
+      <div class="why"><i data-icon="trend"></i><span>관련 질문 평균 <b class="score-low">48점</b></span></div>
+    </aside>
+  </section>
+
+  <div class="split" style="margin-top:24px">
+    <div class="stack">
+      <!-- 2. Due reviews -->
+      <section class="card">
+        <div class="card-head">
+          <h3>복습할 질문 <span class="note">4</span></h3><span class="badge badge-danger">4</span><span class="spacer"></span>
+          <a href="#" class="small">전체 보기</a>
+        </div>
+        <div class="list">
+          <div class="list-row"><span class="mastery m1"></span><div class="grow"><div class="title">Self-invocation 시 @Transactional이 무시되는 이유</div><div class="meta">Spring · 지난 점수 42 · 오늘 예정</div></div><button class="btn btn-secondary btn-sm">다시 답하기</button></div>
+          <div class="list-row"><span class="mastery m1"></span><div class="grow"><div class="title">Redis 분산 락이 만료될 때 발생하는 문제</div><div class="meta">분산 시스템 · 지난 점수 51 · 오늘 예정</div></div><button class="btn btn-secondary btn-sm">다시 답하기</button></div>
+          <div class="list-row"><span class="mastery m2"></span><div class="grow"><div class="title">p99 지연 40% 개선을 어떻게 측정했나요?</div><div class="meta">이력서 · 지난 점수 63 · 1일 지남</div></div><button class="btn btn-secondary btn-sm">다시 답하기</button></div>
+          <div class="list-row"><span class="mastery m2"></span><div class="grow"><div class="title">Kafka 리밸런싱 중 메시지 중복</div><div class="meta">Kafka · 지난 점수 66 · 오늘 예정</div></div><button class="btn btn-secondary btn-sm">다시 답하기</button></div>
+        </div>
+      </section>
+
+      <!-- 3. Resume risk -->
+      <section class="card">
+        <div class="card-head"><h3>근거가 약한 이력서 항목</h3><span class="spacer"></span><a href="#" class="small">이력서로 이동</a></div>
+        <div class="list">
+          <div class="list-row"><i data-icon="alert" style="color:var(--warning)"></i><div class="grow"><div class="title">“배포 시간 70% 단축”</div><div class="meta">정산 시스템 재구축 · 연결된 질문 5개 · 답변 1개</div></div><span class="badge badge-warning">근거 부족</span></div>
+          <div class="list-row"><i data-icon="alert" style="color:var(--danger)"></i><div class="grow"><div class="title">“MSA 전환 주도”</div><div class="meta">커머스 플랫폼 · 연결된 질문 8개 · 답변 0개</div></div><span class="badge badge-danger">미검증</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 4. Progress (single, compact) -->
+    <aside class="stack sticky">
+      <section class="card card-pad stack">
+        <div class="row between"><h3>이번 주 진행 <span class="note">5</span></h3><span class="small muted">9/23–9/29</span></div>
+        <div class="grid-2">
+          <div class="stat"><span class="label">답변</span><span class="value">14</span><span class="delta-up">+5 지난주 대비</span></div>
+          <div class="stat"><span class="label">평균 점수</span><span class="value">68</span><span class="delta-up">+7</span></div>
+        </div>
+        <div class="divider" style="margin:4px 0"></div>
+        <div class="stack-sm">
+          <div class="row between small"><span>시스템 설계</span><b class="score-mid">61</b></div><div class="progress warning"><i style="width:61%"></i></div>
+          <div class="row between small"><span>Spring</span><b class="score-high">78</b></div><div class="progress success"><i style="width:78%"></i></div>
+          <div class="row between small"><span>데이터베이스</span><b class="score-low">47</b></div><div class="progress danger"><i style="width:47%"></i></div>
+        </div>
+        <a href="#" class="small">질문 맵에서 약한 영역 보기 →</a>
+      </section>
+      <section class="card card-pad stack-sm">
+        <span class="label">목표</span>
+        <div class="row"><i data-icon="building"></i><b>토스 · 서버 개발자</b><span class="badge" style="margin-left:auto">D-12</span></div>
+        <p class="small muted">면접까지 핵심 질문 32개 중 19개 준비 완료</p>
+        <div class="progress"><i style="width:59%"></i></div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<section class="annotations">
+  <h2>개선 포인트 — 오늘</h2>
+  <ol>
+    <li><b>페이지 목적을 한 문장으로.</b> 기존의 “이력서 기반 DFS 면접 연습 / 이력서를 한 분기씩 끝까지 방어하는 작업공간” 이중 제목과 설명 문단 삭제. 사용자 이름 + 오늘 분량만 표시.</li>
+    <li><b>주 행동은 하나.</b> 기존 화면에는 ‘답변 시작’ 류 CTA가 3곳(답변 이어가기·답변 시작·답변 시작)에 흩어져 있었음. 히어로 한 곳에만 btn-primary.</li>
+    <li><b>추천 이유를 데이터로.</b> “우측 레일은 오늘 이 질문을…” 같은 UI 설명 대신, 이력서 근거·목표 회사·점수 세 가지 사실만 제시.</li>
+    <li><b>복습은 바로 실행 가능한 목록.</b> 별도 페이지로 이동하지 않고 행 단위로 “다시 답하기”. 사이드바 배지 수와 동일한 숫자.</li>
+    <li><b>통계는 한 곳에서 한 번만.</b> 기존 홈은 재도전 수 3회, 리스크 수 2회, 0% 스킬 타일 6개 등 12개 이상의 스탯 타일을 반복. 주간 변화량(Δ)이 있는 지표만 남김.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

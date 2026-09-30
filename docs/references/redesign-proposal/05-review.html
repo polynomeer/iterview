@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · Review</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .day { padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); display: flex; flex-direction: column; gap: 4px; font-size: var(--text-xs); color: var(--text-muted); }
+  .day b { font-size: var(--text-lg); color: var(--text); }
+  .day.today { border-color: var(--accent); background: var(--accent-soft); }
+  .day .bar { height: 4px; border-radius: 2px; background: var(--accent); opacity: .7; }
+  .reason { font-size: var(--text-xs); color: var(--text-muted); }
+  .area { display: grid; grid-template-columns: 1fr 44px; gap: 6px 12px; align-items: center; font-size: var(--text-sm); }
+</style>
+</head>
+<body data-nav="review" data-crumbs="복습">
+<div class="content">
+  <div class="page-head">
+    <div><h1>복습</h1><p>틀렸거나 약했던 질문을 간격을 두고 다시 답합니다.</p></div>
+    <div class="actions"><button class="btn btn-primary"><i data-icon="play"></i>오늘 복습 시작 (4)</button></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <span class="tab" role="tab" aria-selected="true">오늘 <span class="n">4</span></span>
+    <span class="tab" role="tab">예정 <span class="n">11</span></span>
+    <span class="tab" role="tab">약한 영역 <span class="n">3</span></span>
+    <span class="tab" role="tab">완료 <span class="n">23</span></span>
+    <span class="note" style="align-self:center;margin-left:8px">1</span>
+  </div>
+
+  <div class="split">
+    <div class="stack">
+      <div class="week" aria-label="이번 주 복습 일정">
+        <div class="day">월<b>2</b><i class="bar" style="width:30%"></i></div>
+        <div class="day today">오늘<b>4</b><i class="bar" style="width:60%"></i></div>
+        <div class="day">수<b>1</b><i class="bar" style="width:15%"></i></div>
+        <div class="day">목<b>3</b><i class="bar" style="width:45%"></i></div>
+        <div class="day">금<b>0</b></div>
+        <div class="day">토<b>5</b><i class="bar" style="width:75%"></i></div>
+        <div class="day">일<b>2</b><i class="bar" style="width:30%"></i></div>
+      </div>
+
+      <section class="card">
+        <div class="card-head"><h3>오늘 다시 답할 질문</h3><span class="spacer"></span><div class="segmented"><span aria-pressed="true">우선순위</span><span>주제별</span></div></div>
+        <div class="list">
+          <div class="list-row"><span class="mastery m1"></span><div class="grow"><div class="title">Self-invocation 시 @Transactional이 무시되는 이유</div><div class="reason">점수 42 · 3회 시도 · 이력서 항목 연결 <span class="note" style="width:16px;height:16px;font-size:10px">2</span></div></div><span class="badge badge-danger">오늘</span><button class="btn btn-secondary btn-sm">답하기</button></div>
+          <div class="list-row"><span class="mastery m1"></span><div class="grow"><div class="title">Redis 분산 락이 만료될 때 발생하는 문제</div><div class="reason">점수 51 · 모의면접에서 막힘</div></div><span class="badge badge-danger">오늘</span><button class="btn btn-secondary btn-sm">답하기</button></div>
+          <div class="list-row"><span class="mastery m2"></span><div class="grow"><div class="title">p99 지연 40% 개선을 어떻게 측정했나요?</div><div class="reason">점수 63 · 1일 지남</div></div><span class="badge badge-warning">1일 지남</span><button class="btn btn-secondary btn-sm">답하기</button></div>
+          <div class="list-row"><span class="mastery m2"></span><div class="grow"><div class="title">Kafka 리밸런싱 중 메시지 중복</div><div class="reason">점수 66 · 실전 면접 복기에서 추가</div></div><span class="badge badge-danger">오늘</span><button class="btn btn-secondary btn-sm">답하기</button></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="empty" style="padding:24px">
+          <i data-icon="check"></i>
+          <h3>오늘 복습을 끝내면 여기에 표시돼요</h3>
+          <p class="small">완료한 질문은 점수에 따라 3일·7일·14일 뒤 다시 나타납니다. <span class="note">3</span></p>
+        </div>
+      </section>
+    </div>
+
+    <aside class="stack sticky">
+      <section class="card card-pad stack">
+        <div class="row between"><h4>약한 영역</h4><a href="#" class="small">질문 맵에서 보기</a></div>
+        <div class="area">
+          <span>데이터베이스 · 격리 수준</span><b class="score-low">47</b>
+          <div class="progress danger" style="grid-column:1/-1"><i style="width:47%"></i></div>
+          <span>분산 시스템 · 락</span><b class="score-low">51</b>
+          <div class="progress danger" style="grid-column:1/-1"><i style="width:51%"></i></div>
+          <span>Spring · 트랜잭션</span><b class="score-mid">61</b>
+          <div class="progress warning" style="grid-column:1/-1"><i style="width:61%"></i></div>
+        </div>
+      </section>
+      <section class="card card-pad stack-sm">
+        <h4>복습 효과</h4>
+        <div class="grid-2">
+          <div class="stat"><span class="xs muted">재시도 평균 상승</span><span class="value score-high">+18</span></div>
+          <div class="stat"><span class="xs muted">완료(숙달)</span><span class="value">23</span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<section class="annotations">
+  <h2>개선 포인트 — 복습 (기존 /review-queue, /scheduled-reviews, /weak-nodes, /archive 4개 페이지 통합)</h2>
+  <ol>
+    <li><b>하나의 목적 = 하나의 페이지.</b> ‘복습 큐 / 예약 복습 / 약한 노드 / 아카이브’는 모두 “다시 풀 질문”의 다른 필터. 탭 4개로 통합하고 사이드바 항목 4 → 1.</li>
+    <li><b>왜 여기 있는지 한 줄.</b> 점수·시도 수·출처(모의면접/실전 복기/이력서)를 각 행에 표시해 우선순위를 납득시킴.</li>
+    <li><b>목데이터 제거.</b> 기존 약한 노드·예약 복습 페이지는 하드코딩 배열(WEAK_NODES, INITIAL_REVIEW_BLOCKS)로 렌더링되고 있고, 약한 노드는 스타일이 적용되지 않은 채 노출됨. 실제 API(/api/review-queue, /api/skills/gaps) 기반으로 교체 전까지는 라우트 비노출.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

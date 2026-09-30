@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>00 · Design System</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .ds { max-width: 1240px; margin: 0 auto; padding: 40px 32px 64px; display: flex; flex-direction: column; gap: 40px; }
+  .ds > section { display: flex; flex-direction: column; gap: 16px; }
+  .ds h2 { font-size: var(--text-xl); }
+  .swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .sw { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); }
+  .sw i { display: block; height: 56px; }
+  .sw div { padding: 8px 10px; font-size: var(--text-xs); }
+  .sw b { display: block; font-size: var(--text-sm); color: var(--text); }
+  .type-row { display: grid; grid-template-columns: 140px 90px 1fr; align-items: baseline; gap: 16px; padding: 10px 0; border-top: 1px solid var(--border); }
+  .spacing { display: flex; align-items: flex-end; gap: 16px; }
+  .spacing div { background: var(--accent-soft); border: 1px solid var(--accent); }
+  .radius { display: flex; gap: 16px; }
+  .radius div { width: 88px; height: 64px; border: 1px solid var(--border-strong); background: var(--surface); display: grid; place-items: center; font-size: var(--text-xs); color: var(--text-muted); }
+  .two-theme { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .two-theme > div { padding: 24px; display: flex; flex-direction: column; gap: 16px; background: var(--bg); color: var(--text); }
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .rule { padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--surface); }
+  .rule.do { border-top: 3px solid var(--success); }
+  .rule.dont { border-top: 3px solid var(--danger); }
+</style>
+</head>
+<body data-shell="none">
+<main class="ds">
+  <header class="stack-sm">
+    <span class="badge badge-accent">Proposal · 2026-09</span>
+    <h1 style="font-size:var(--text-3xl)">iterview 디자인 시스템 v2</h1>
+    <p class="muted" style="max-width:720px">현재 global.css 26,488줄 · 하드코딩 색상 1,268종 · font-size 96종 · radius 32종 · 테마 4종을 아래 토큰 하나로 대체합니다. 모든 화면 시안은 이 파일의 토큰과 컴포넌트만 사용합니다.</p>
+  </header>
+
+  <section>
+    <h2>1. 색상 — 중립 + 강조색 1개 + 의미색 3개</h2>
+    <div class="swatches">
+      <div class="sw"><i style="background:var(--bg)"></i><div><b>bg</b>gray-25 / gray-950</div></div>
+      <div class="sw"><i style="background:var(--surface)"></i><div><b>surface</b>white / gray-900</div></div>
+      <div class="sw"><i style="background:var(--surface-sunken)"></i><div><b>surface-sunken</b>입력·트랙</div></div>
+      <div class="sw"><i style="background:var(--border)"></i><div><b>border</b>구분은 선으로</div></div>
+      <div class="sw"><i style="background:var(--text)"></i><div><b>text</b>본문 대비 15:1</div></div>
+      <div class="sw"><i style="background:var(--text-muted)"></i><div><b>text-muted</b>보조 대비 ≥ 4.5:1</div></div>
+      <div class="sw"><i style="background:var(--accent)"></i><div><b>accent</b>주 행동·선택 상태</div></div>
+      <div class="sw"><i style="background:var(--accent-soft)"></i><div><b>accent-soft</b>선택 배경</div></div>
+      <div class="sw"><i style="background:var(--success)"></i><div><b>success</b>숙달·통과</div></div>
+      <div class="sw"><i style="background:var(--warning)"></i><div><b>warning</b>보완 필요</div></div>
+      <div class="sw"><i style="background:var(--danger)"></i><div><b>danger</b>약점·오류</div></div>
+      <div class="sw"><i style="background:var(--surface-hover)"></i><div><b>surface-hover</b>행 hover</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. 타이포그래피 — 7단계</h2>
+    <div>
+      <div class="type-row"><span class="label">3xl · 30 / 700</span><span class="xs muted">대시 숫자</span><span style="font-size:30px;font-weight:700">82점</span></div>
+      <div class="type-row"><span class="label">2xl · 24 / 700</span><span class="xs muted">페이지 제목</span><h1>오늘의 질문</h1></div>
+      <div class="type-row"><span class="label">xl · 20 / 650</span><span class="xs muted">섹션 제목</span><h2>꼬리질문 흐름</h2></div>
+      <div class="type-row"><span class="label">lg · 16 / 600</span><span class="xs muted">카드 제목·답변 본문</span><h3>Kafka 컨슈머를 멱등하게 만드는 방법은?</h3></div>
+      <div class="type-row"><span class="label">md · 14 / 400</span><span class="xs muted">기본 본문</span><p>답변을 제출하면 주장·근거·꼬리질문 대비 세 항목으로 평가합니다.</p></div>
+      <div class="type-row"><span class="label">sm · 13 / 500</span><span class="xs muted">보조 정보</span><p class="small muted">마지막 시도 2일 전 · 3회 시도</p></div>
+      <div class="type-row"><span class="label">xs · 12 / 600</span><span class="xs muted">라벨·배지</span><span class="label">난이도</span></div>
+    </div>
+    <p class="small muted">규칙: 대문자 영문 라벨(letter-spacing 과다)과 세로로 꺾이는 좁은 컬럼 금지. 한국어 본문은 line-height 1.6 이상.</p>
+  </section>
+
+  <section class="grid-2" style="gap:32px">
+    <div class="stack">
+      <h2>3. 간격 — 4px 기반</h2>
+      <div class="spacing">
+        <div style="width:4px;height:4px"></div><div style="width:8px;height:8px"></div><div style="width:12px;height:12px"></div>
+        <div style="width:16px;height:16px"></div><div style="width:24px;height:24px"></div><div style="width:32px;height:32px"></div><div style="width:40px;height:40px"></div>
+      </div>
+      <p class="small muted">4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 만 사용</p>
+    </div>
+    <div class="stack">
+      <h2>4. 모서리 — 3단계</h2>
+      <div class="radius">
+        <div style="border-radius:6px">sm 6 · 컨트롤</div>
+        <div style="border-radius:10px">md 10 · 칩/콜아웃</div>
+        <div style="border-radius:14px">lg 14 · 카드</div>
+        <div style="border-radius:999px">full · 배지</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. 컴포넌트 — 라이트 / 다크 동시 검증</h2>
+    <div class="two-theme">
+      <div data-theme="light" id="light-pane"></div>
+      <div data-theme="dark" id="dark-pane"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. 사용 규칙</h2>
+    <div class="rules">
+      <div class="rule do"><h4>DO · 카드 1단계</h4><p class="small muted">카드 안에는 목록·구분선·텍스트만. 카드 속 카드 속 카드(현재 홈 3~4단)는 금지.</p></div>
+      <div class="rule dont"><h4>DON'T · 장식용 그라데이션</h4><p class="small muted">입력창·히어로 배경 그라데이션 제거. 현재 로그인/답변 입력창의 흰→회색 그라데이션은 가독성을 해칩니다.</p></div>
+      <div class="rule do"><h4>DO · 화면당 주 행동 1개</h4><p class="small muted">btn-primary는 한 뷰포트에 1개. 나머지는 secondary/ghost.</p></div>
+      <div class="rule dont"><h4>DON'T · 글자 아이콘</h4><p class="small muted">"WS·TD·QM", "알·활·종", "01~05" 같은 글자 아이콘 대신 한 가지 아이콘 세트(선형 24px) + aria-label.</p></div>
+      <div class="rule do"><h4>DO · 상태 = 색 + 텍스트</h4><p class="small muted">점수/약점은 색상과 함께 숫자·단어를 항상 병기 (색맹 대응).</p></div>
+      <div class="rule dont"><h4>DON'T · UI를 설명하는 카피</h4><p class="small muted">"우측 레일은…", "샘플 워크스페이스처럼…" 같은 화면 설명 문구 금지. 사용자의 다음 행동만 적습니다.</p></div>
+    </div>
+  </section>
+</main>
+
+<template id="components">
+  <div class="row wrap">
+    <button class="btn btn-primary">답변 시작</button>
+    <button class="btn btn-secondary">나중에</button>
+    <button class="btn btn-ghost">건너뛰기</button>
+    <button class="btn btn-danger btn-sm">삭제</button>
+    <button class="btn btn-secondary btn-icon" aria-label="더보기"><i data-icon="more"></i></button>
+  </div>
+  <div class="row wrap">
+    <span class="badge">미답변</span>
+    <span class="badge badge-accent dot">진행 중</span>
+    <span class="badge badge-success dot">숙달 · 86</span>
+    <span class="badge badge-warning dot">보완 · 64</span>
+    <span class="badge badge-danger dot">약점 · 42</span>
+  </div>
+  <div class="tabs" style="margin:0"><span class="tab" aria-selected="true">지금 복습 <span class="n">4</span></span><span class="tab">약한 질문 <span class="n">7</span></span><span class="tab">완료 <span class="n">23</span></span></div>
+  <div class="segmented"><span aria-pressed="true">트리</span><span>맵</span><span>목록</span></div>
+  <div class="field"><label for="e">이메일</label><input id="e" class="input" placeholder="name@example.com"><span class="hint">가입한 이메일을 입력하세요.</span></div>
+  <div class="field"><label for="p">비밀번호</label><input id="p" class="input input--invalid" type="password" value="12345"><span class="error">비밀번호는 8자 이상이어야 합니다.</span></div>
+  <div class="card">
+    <div class="list">
+      <div class="list-row"><span class="mastery m1"></span><div class="grow"><div class="title">Self-invocation 시 트랜잭션이 적용되지 않는 이유</div><div class="meta">Spring · 3회 시도</div></div><span class="score-pill score-low">42</span></div>
+      <div class="list-row"><span class="mastery m2"></span><div class="grow"><div class="title">REQUIRES_NEW 전파 속성의 커넥션 사용</div><div class="meta">Spring · 1회 시도</div></div><span class="score-pill score-mid">64</span></div>
+      <div class="list-row"><span class="mastery m3"></span><div class="grow"><div class="title">MVCC와 Snapshot Read</div><div class="meta">Database · 2회 시도</div></div><span class="score-pill score-high">86</span></div>
+    </div>
+  </div>
+  <div class="stack-sm"><div class="row between small"><span>숙달도</span><b>64%</b></div><div class="progress warning"><i style="width:64%"></i></div></div>
+  <div class="callout"><i data-icon="info"></i><div>답변은 자동 저장됩니다. 제출 후에도 다시 시도할 수 있어요.</div></div>
+  <div class="callout danger"><i data-icon="alert"></i><div><b>평가를 불러오지 못했어요.</b> 네트워크를 확인한 뒤 다시 시도하세요. <a href="#">다시 시도</a></div></div>
+</template>
+<script>
+  const tpl = document.getElementById("components");
+  document.getElementById("light-pane").appendChild(tpl.content.cloneNode(true));
+  document.getElementById("dark-pane").appendChild(tpl.content.cloneNode(true));
+</script>
+<script src="shell.js"></script>
+</body>
+</html>

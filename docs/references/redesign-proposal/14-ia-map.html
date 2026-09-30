@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>14 · IA Map</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 40px 32px 56px; display: flex; flex-direction: column; gap: 28px; }
+  .cols { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: stretch; }
+  .arrow { display: grid; place-items: center; color: var(--text-subtle); }
+  .arrow .icon { width: 28px; height: 28px; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .old { display: grid; grid-template-columns: 1fr; gap: 6px; }
+  .old-group { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+  .old-group h4 { margin-bottom: 6px; display: flex; gap: 8px; align-items: center; }
+  .route { display: inline-flex; margin: 2px 4px 2px 0; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 11.5px; background: var(--surface-sunken); border: 1px solid var(--border); color: var(--text-muted); }
+  .route.bad { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
+  .route.mock { background: var(--warning-soft); color: var(--warning); border-color: transparent; }
+  .new-area { padding: 14px 16px; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-md); background: var(--surface); }
+  .new-area h4 { display: flex; align-items: center; gap: 8px; }
+  .new-area .route { background: var(--accent-soft); color: var(--accent-text); border-color: transparent; }
+  .legend { display: flex; gap: 16px; font-size: var(--text-xs); color: var(--text-muted); }
+</style>
+</head>
+<body data-shell="none">
+<main class="wrap">
+  <header class="stack-sm">
+    <h1>정보 구조 (IA) — 현재 36개 라우트 · 사이드바 14개 → 5개 영역</h1>
+    <div class="legend"><span><span class="route bad">빨강</span> 크래시·도달 불가·중복</span><span><span class="route mock">노랑</span> 목데이터(하드코딩) 페이지</span></div>
+  </header>
+  <div class="cols">
+    <div class="col">
+      <h3 class="muted">현재</h3>
+      <div class="old">
+        <div class="old-group"><h4>홈 / 피드</h4><span class="route">/</span><span class="route bad">/feed (로그인 후 메뉴 없음)</span></div>
+        <div class="old-group"><h4>질문</h4><span class="route">/practice</span><span class="route">/questions/:id</span><span class="route">/questions/:id/tree</span><span class="route">/questions/:id/answer</span><span class="route">/answer-attempts/:id/result</span><span class="route">/skills</span></div>
+        <div class="old-group"><h4>복습 (사이드바 4개)</h4><span class="route">/review-queue</span><span class="route mock">/scheduled-reviews</span><span class="route mock">/weak-nodes (스타일 누락)</span><span class="route">/archive</span></div>
+        <div class="old-group"><h4>이력서 (URL 루트 3종)</h4><span class="route">/profile/resumes</span><span class="route">/profile/resumes/analysis</span><span class="route">/resume-versions/:id/editor</span><span class="route">/resume-versions/:id/heatmap</span><span class="route">…/heatmap/anchors/:type/:id</span><span class="route bad">/resume-tailor (진입점 없음)</span><span class="route">/resume-tailor/job-postings</span><span class="route">…/analyses</span><span class="route">…/analyses/:id</span></div>
+        <div class="old-group"><h4>면접</h4><span class="route">/interviews</span><span class="route">/interviews/:id</span><span class="route">/interviews/:id/result</span><span class="route bad">/interview* 레거시 3개 (리다이렉트 없음)</span><span class="route bad">/practical-interviews (메뉴 없음)</span><span class="route">…/upload</span><span class="route bad">…/:id (크래시)</span><span class="route bad">…/transcript (크래시)</span><span class="route bad">…/simulate (크래시)</span><span class="route">…/questions/:id</span></div>
+        <div class="old-group"><h4>계정·보조</h4><span class="route bad">/profile (아바타로만)</span><span class="route">/settings</span><span class="route mock">/target-companies</span><span class="route mock">/notes</span><span class="route mock">/bookmarks</span><span class="route">/login</span><span class="route">/signup</span><span class="route bad">404 없음</span></div>
+      </div>
+    </div>
+    <div class="arrow"><i data-icon="arrowRight"></i></div>
+    <div class="col">
+      <h3>제안</h3>
+      <div class="new-area"><h4><i data-icon="today"></i>오늘</h4><p class="small muted">다음 할 일 1개 · 오늘 복습 · 약한 이력서 항목 · 주간 진행</p><span class="route">/</span></div>
+      <div class="new-area"><h4><i data-icon="questions"></i>질문</h4><p class="small muted">트리/맵/목록 + 질문 상세 + 인스펙터 한 화면. 스킬 맵은 ‘맵’ 보기로 흡수</p><span class="route">/questions</span><span class="route">/questions/:id</span><span class="route">/questions/:id/answer</span><span class="route">/attempts/:id</span></div>
+      <div class="new-area"><h4><i data-icon="review"></i>복습</h4><p class="small muted">탭: 오늘 · 예정 · 약한 영역 · 완료</p><span class="route">/review?tab=today|upcoming|weak|done</span></div>
+      <div class="new-area"><h4><i data-icon="resume"></i>이력서</h4><p class="small muted">활성 버전 전역. 탭: 항목과 근거 · 면접 압박 지도 · 공고 맞춤 · 버전 기록</p><span class="route">/resume/:versionId/claims</span><span class="route">…/heatmap</span><span class="route">…/tailor</span><span class="route">…/versions</span></div>
+      <div class="new-area"><h4><i data-icon="interview"></i>면접</h4><p class="small muted">탭: 모의면접 · 실전 면접 복기</p><span class="route">/interview</span><span class="route">/interview/sessions/:id</span><span class="route">/interview/records/:id</span></div>
+      <div class="new-area" style="border-left-color:var(--border-strong)"><h4><i data-icon="library"></i>보관함 · <i data-icon="settings"></i>설정</h4><p class="small muted">보관함 = 북마크 + 메모 + 학습 자료(실데이터 연결 후 공개). 설정 = 프로필 · 목표 회사 · 언어/테마</p><span class="route">/library</span><span class="route">/settings/:section</span></div>
+      <div class="new-area" style="border-left-color:var(--border-strong)"><h4>공개 / 시스템</h4><p class="small muted">로그인·회원가입은 셸 없이. 피드는 비로그인 둘러보기로 한정. 404 + 오류 경계 추가. 기존 URL은 전부 새 경로로 리다이렉트(replace)</p><span class="route">/login</span><span class="route">/signup</span><span class="route">/explore</span><span class="route">*</span></div>
+    </div>
+  </div>
+</main>
+<script src="shell.js"></script>
+</body>
+</html>

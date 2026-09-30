@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Result</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .score-hero { display: grid; grid-template-columns: 220px 1fr 280px; gap: 0; }
+  .score-hero > div { padding: 24px; }
+  .score-hero > div + div { border-left: 1px solid var(--border); }
+  .big { font-size: 56px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+  .dim-row { display: grid; grid-template-columns: 110px 1fr 44px; gap: 12px; align-items: center; font-size: var(--text-sm); }
+  mark { background: var(--warning-soft); color: inherit; padding: 1px 2px; border-radius: 3px; border-bottom: 2px solid var(--warning); }
+  mark.good { background: var(--success-soft); border-color: var(--success); }
+  .answer-text { font-size: var(--text-lg); line-height: 1.85; }
+  .fb { display: flex; gap: 10px; padding: 12px 0; border-top: 1px solid var(--border); font-size: var(--text-sm); }
+  .fb:first-child { border-top: 0; }
+</style>
+</head>
+<body data-nav="questions" data-crumbs="질문|Self-invocation|평가 결과">
+<div class="content">
+  <div class="page-head">
+    <div><h1>평가 결과</h1><p>같은 클래스 안에서 @Transactional 메서드를 호출하면…</p></div>
+  </div>
+
+  <section class="card score-hero">
+    <div class="stack-sm">
+      <span class="label">총점 <span class="note">1</span></span>
+      <span class="big score-mid">68</span>
+      <span class="delta-up small" style="color:var(--success);font-weight:600">▲ 26 (지난 시도 42)</span>
+      <span class="badge badge-warning dot" style="align-self:flex-start">보완 필요</span>
+    </div>
+    <div class="stack">
+      <span class="label">항목별 점수</span>
+      <div class="dim-row"><span>주장 명확성</span><div class="progress success"><i style="width:86%"></i></div><b class="score-high">86</b></div>
+      <div class="dim-row"><span>근거 구체성</span><div class="progress warning"><i style="width:64%"></i></div><b class="score-mid">64</b></div>
+      <div class="dim-row"><span>꼬리질문 대비</span><div class="progress danger"><i style="width:48%"></i></div><b class="score-low">48</b></div>
+      <div class="dim-row"><span>전달력</span><div class="progress success"><i style="width:74%"></i></div><b class="score-high">74</b></div>
+    </div>
+    <div class="stack" style="background:var(--surface-sunken)">
+      <span class="label">다음 할 일 <span class="note">2</span></span>
+      <p><b>“꼬리질문 대비”</b>가 가장 약해요. 해결 방법을 고른 이유를 추가해서 다시 답해보세요.</p>
+      <button class="btn btn-primary">다시 답하기</button>
+      <button class="btn btn-secondary">다음 꼬리질문으로</button>
+      <span class="xs muted">3일 뒤 복습 목록에 자동 추가됩니다</span>
+    </div>
+  </section>
+
+  <div class="split" style="margin-top:24px">
+    <section class="card">
+      <div class="card-head"><h3>내 답변 <span class="note">3</span></h3><span class="spacer"></span><span class="xs muted"><mark class="good">좋은 부분</mark>&nbsp;&nbsp;<mark>보완할 부분</mark></span></div>
+      <div class="card-body answer-text">
+        <mark class="good">Spring의 @Transactional은 프록시 기반 AOP로 동작합니다.</mark> 외부에서 빈을 호출하면 프록시가 트랜잭션을 시작하지만, 같은 클래스 내부에서 this.method()로 호출하면 프록시를 거치지 않기 때문에 어드바이스가 적용되지 않습니다.
+        <br><br>
+        정산 시스템을 재구축할 때 배치 내부에서 건별 저장 메서드를 self 호출해서 한 건 실패 시 전체가 롤백되지 않는 문제가 있었고, <mark>그래서 구조를 분리해서 해결했습니다.</mark>
+      </div>
+    </section>
+    <aside class="card card-pad">
+      <h4 style="margin-bottom:6px">피드백</h4>
+      <div class="fb"><i data-icon="check" style="color:var(--success)"></i><div>첫 문장에서 원인(프록시)을 정확히 짚었어요.</div></div>
+      <div class="fb"><i data-icon="alert" style="color:var(--warning)"></i><div>“구조를 분리했다”만으로는 부족해요. 별도 빈으로 분리한 이유, self 주입·AspectJ 대비 장단점을 말해보세요.</div></div>
+      <div class="fb"><i data-icon="alert" style="color:var(--danger)"></i><div>면접관은 “REQUIRES_NEW와 함께 쓰면?”으로 이어갈 가능성이 높아요.</div></div>
+      <div class="divider"></div>
+      <a href="#" class="small">모범 답안과 비교하기 →</a>
+    </aside>
+  </div>
+</div>
+
+<section class="annotations">
+  <h2>개선 포인트 — 결과 (기존 /answer-attempts/:id/result + /interviews/:id/result 결과 화면 패턴 통일)</h2>
+  <ol>
+    <li><b>총점 + 변화량 + 상태 단어.</b> 이전 시도 대비 Δ를 항상 표시(“what improved after the last retry?” 질문에 답).</li>
+    <li><b>다음 행동이 결과 옆에.</b> 가장 약한 항목을 한 문장으로 짚고 “다시 답하기”를 주 행동으로. 복습 예약은 자동화하고 알림만.</li>
+    <li><b>답변 본문에 직접 하이라이트.</b> 별도 카드로 흩어진 피드백 대신, 문장 단위로 좋은/보완 부분 표시. 오류 시에는 백엔드 원문(“Answer attempt not found: 1”) 대신 사용자 문장 + 복구 링크.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>

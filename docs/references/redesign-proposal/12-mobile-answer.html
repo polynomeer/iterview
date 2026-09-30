@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12 · Mobile Answer</title>
+<link rel="stylesheet" href="proposal.css">
+<style>
+  body { background: var(--surface-sunken); }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 16px 24px; background: var(--surface); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+</style>
+</head>
+<body data-shell="mobile" data-nav="questions" data-title="답변" data-back="true" data-tabbar="false">
+<div class="row between xs muted"><span>Spring › Self-invocation</span><span class="mono">02:14 / 03:00</span></div>
+<h3 style="font-size:18px;line-height:1.45">같은 클래스 안에서 @Transactional 메서드를 호출하면 트랜잭션이 적용되지 않는 이유는?</h3>
+<div class="callout warning"><i data-icon="info"></i><div class="xs"><b>지난 피드백</b> · 해결 사례를 붙여보세요.</div></div>
+<textarea class="textarea" style="min-height:300px;font-size:16px" aria-label="답변 입력">Spring의 @Transactional은 프록시 기반 AOP로 동작합니다. 같은 클래스 내부에서 this로 호출하면 프록시를 거치지 않아서…</textarea>
+<div class="row wrap"><span class="badge badge-success dot">주장</span><span class="badge badge-success dot">근거</span><span class="badge">꼬리질문 대비</span> <span class="note">1</span></div>
+<div style="height:120px"></div>
+<div class="sheet">
+  <div class="row between xs muted"><span>412자 · 자동 저장됨</span><button class="btn btn-ghost btn-sm"><i data-icon="mic"></i>음성</button></div>
+  <button class="btn btn-primary btn-lg" style="width:100%">제출하고 평가받기</button>
+</div>
+
+<section class="annotations">
+  <h2>개선 포인트 — 모바일 답변</h2>
+  <ol>
+    <li><b>하단 탭 숨김 + 고정 제출 바.</b> 입력 중에는 탭바 대신 글자 수·자동저장·제출만. 체크리스트는 배지 3개로 축약. 기존 모바일 답변 화면은 5,479px 스크롤, 입력창이 3번째 카드 아래.</li>
+  </ol>
+</section>
+<script src="shell.js"></script>
+</body>
+</html>
