@@ -1,0 +1,117 @@
+/* 면접 압박 지도 (docs/09 §4.5). Token-only styles. */
+
+.heatmap { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+
+.heatmap-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--iv-space-3);
+}
+
+.heatmap-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--iv-space-2) var(--iv-space-3);
+}
+
+.heatmap-filters .ui-select { width: auto; min-width: 9rem; }
+.heatmap-filters__dates { display: inline-flex; align-items: center; gap: var(--iv-space-2); color: var(--iv-text-subtle); }
+.heatmap-filters__dates .ui-input { width: 10rem; }
+
+.heatmap-anchors { display: flex; flex-direction: column; gap: var(--iv-space-3); margin: 0; padding: 0; list-style: none; }
+
+.heatmap-anchor { border-left: 4px solid var(--iv-border); }
+.heatmap-anchor--critical { border-left-color: var(--iv-danger); }
+.heatmap-anchor--high { border-left-color: var(--iv-warning); }
+.heatmap-anchor--medium { border-left-color: var(--iv-accent); }
+
+.heatmap-anchor__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--iv-space-2) var(--iv-space-3);
+}
+
+.heatmap-anchor__rank {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-surface-sunken);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-semibold);
+}
+
+.heatmap-anchor__title-block { flex: 1; min-width: 12rem; }
+.heatmap-anchor__title { margin: 0; font-size: var(--iv-text-lg); font-weight: var(--iv-weight-semibold); }
+
+.heatmap-anchor__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--iv-space-1) var(--iv-space-2);
+  margin: var(--iv-space-1) 0 0;
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+}
+
+.heatmap-counts { font-variant-numeric: tabular-nums; }
+
+.heatmap-anchor__body {
+  margin-top: var(--iv-space-3);
+  color: var(--iv-text);
+  font-size: var(--iv-text-md);
+  line-height: var(--iv-leading-body);
+}
+
+.heatmap-anchor__body p { margin: 0 0 var(--iv-space-2); }
+
+.heatmap-targets { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); margin-top: var(--iv-space-3); }
+
+.heatmap-target {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--iv-space-2);
+  max-width: 100%;
+  padding: var(--iv-space-1) var(--iv-space-3);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-sm);
+  background: var(--iv-surface-sunken);
+  color: var(--iv-text);
+  font-family: var(--iv-font-sans);
+  font-size: var(--iv-text-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+.heatmap-target:hover { border-color: var(--iv-border-strong); }
+.heatmap-target:focus-visible { outline: none; box-shadow: var(--iv-focus-ring); }
+.heatmap-target[aria-expanded="true"] { border-color: var(--iv-accent); background: var(--iv-accent-soft); }
+.heatmap-target--critical { border-left: 3px solid var(--iv-danger); }
+.heatmap-target--high { border-left: 3px solid var(--iv-warning); }
+.heatmap-target__type { color: var(--iv-text-subtle); font-size: var(--iv-text-xs); white-space: nowrap; }
+.heatmap-target__text { min-width: 0; overflow-wrap: anywhere; }
+.heatmap-target__count { color: var(--iv-text-muted); font-size: var(--iv-text-xs); white-space: nowrap; }
+
+.heatmap-anchor__questions {
+  margin-top: var(--iv-space-3);
+  border-top: 1px solid var(--iv-border);
+}
+
+.heatmap-question__meta { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--iv-space-1) var(--iv-space-2); }
+.heatmap-question__actions { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--iv-space-2); }
+
+/* Anchor detail */
+.heatmap-detail { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+.heatmap-detail__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--iv-space-2) var(--iv-space-3); }
+.heatmap-detail__title { flex: 1; min-width: 12rem; margin: 0; font-size: var(--iv-text-xl); font-weight: var(--iv-weight-semibold); }
+.heatmap-link-form { display: flex; flex-direction: column; gap: var(--iv-space-3); }
+
+@media (max-width: 720px) {
+  .heatmap-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .heatmap-filters__dates .ui-input { width: 100%; }
+}

@@ -1,18 +1,14 @@
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent, screen, within } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { useCreateResumeQuestionHeatmapLinkMutation } from "../../features/resume-heatmap/api/useCreateResumeQuestionHeatmapLinkMutation";
 import { useResumeQuestionHeatmapOverlayTargetsQuery } from "../../features/resume-heatmap/api/useResumeQuestionHeatmapOverlayTargetsQuery";
 import { useResumeQuestionHeatmapQuery } from "../../features/resume-heatmap/api/useResumeQuestionHeatmapQuery";
 import { useUpdateResumeQuestionHeatmapLinkMutation } from "../../features/resume-heatmap/api/useUpdateResumeQuestionHeatmapLinkMutation";
-import { useResumeVersionDetailQuery } from "../../features/resume/api/useResumeVersionDetailQuery";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { ResumeHeatmapAnchorPage } from "../../pages/resume-heatmap/ResumeHeatmapAnchorPage";
 import { renderWithProviders } from "../utils";
 
-vi.mock("../../features/resume/api/useResumeVersionDetailQuery", () => ({
-  useResumeVersionDetailQuery: vi.fn(),
-}));
 vi.mock("../../features/resume/api/useResumeVersionSnapshotsQuery", () => ({
   useResumeVersionSnapshotsQuery: vi.fn(),
 }));
@@ -30,22 +26,11 @@ vi.mock("../../features/resume-heatmap/api/useUpdateResumeQuestionHeatmapLinkMut
 }));
 
 describe("ResumeHeatmapAnchorPage", () => {
-  it("renders anchor detail and saves a manual remap", async () => {
+  it("shows the claim and moves a question to the claim it really targeted", async () => {
     const createMutateAsync = vi.fn().mockResolvedValue({
       id: "manual-link-1",
     });
 
-    vi.mocked(useResumeVersionDetailQuery).mockReturnValue({
-      data: {
-        id: "version-1",
-        fileNameLabel: "backend-resume.pdf",
-        parsingStatusLabel: "Completed",
-      },
-      isLoading: false,
-      isError: false,
-      error: null,
-      refetch: vi.fn(),
-    } as never);
     vi.mocked(useResumeVersionSnapshotsQuery).mockReturnValue({
       data: {
         profile: {
@@ -280,21 +265,13 @@ describe("ResumeHeatmapAnchorPage", () => {
       { route: "/resume/version-1/heatmap/anchors/project/31" },
     );
 
-    expect(screen.getByText("Detailed anchor review")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Cache platform" })).toBeInTheDocument();
     expect(screen.getByText("What are cache-aside tradeoffs?")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Fix link" }));
-    expect(screen.getByText("Correct this question mapping")).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText("Anchor type"), {
-      target: { value: "experience" },
-    });
-    fireEvent.change(screen.getByLabelText("Resume anchor"), {
-      target: { value: "experience:21" },
-    });
-    fireEvent.change(screen.getByLabelText("Confidence score"), {
-      target: { value: "0.91" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: "Save manual remap" }));
+    const dialog = screen.getByRole("dialog", { name: "Fix what this question targeted" });
+    fireEvent.change(within(dialog).getByLabelText("Resume item"), { target: { value: "experience:21" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save link" }));
 
     expect(createMutateAsync).toHaveBeenCalledWith({
       interviewRecordQuestionId: "501",
@@ -305,7 +282,8 @@ describe("ResumeHeatmapAnchorPage", () => {
       overlayFieldPath: null,
       overlaySentenceIndex: null,
       overlayTextSnippet: null,
-      confidenceScore: 0.91,
+      confidenceScore: 0.72,
     });
+    expect(await screen.findByRole("button", { name: "Undo" })).toBeInTheDocument();
   });
 });

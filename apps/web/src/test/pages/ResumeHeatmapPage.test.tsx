@@ -3,14 +3,10 @@ import { Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { useResumeQuestionHeatmapOverlayTargetsQuery } from "../../features/resume-heatmap/api/useResumeQuestionHeatmapOverlayTargetsQuery";
 import { useResumeQuestionHeatmapQuery } from "../../features/resume-heatmap/api/useResumeQuestionHeatmapQuery";
-import { useResumeVersionDetailQuery } from "../../features/resume/api/useResumeVersionDetailQuery";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { ResumeHeatmapPage } from "../../pages/resume-heatmap/ResumeHeatmapPage";
 import { renderWithProviders } from "../utils";
 
-vi.mock("../../features/resume/api/useResumeVersionDetailQuery", () => ({
-  useResumeVersionDetailQuery: vi.fn(),
-}));
 vi.mock("../../features/resume/api/useResumeVersionSnapshotsQuery", () => ({
   useResumeVersionSnapshotsQuery: vi.fn(),
 }));
@@ -22,18 +18,7 @@ vi.mock("../../features/resume-heatmap/api/useResumeQuestionHeatmapOverlayTarget
 }));
 
 describe("ResumeHeatmapPage", () => {
-  it("renders a resume-first heatmap surface and opens inline question popovers", async () => {
-    vi.mocked(useResumeVersionDetailQuery).mockReturnValue({
-      data: {
-        id: "version-1",
-        fileNameLabel: "backend-resume.pdf",
-        parsingStatusLabel: "Completed",
-      },
-      isLoading: false,
-      isError: false,
-      error: null,
-      refetch: vi.fn(),
-    } as never);
+  it("ranks pressured claims and reveals the questions behind a highlight in place", async () => {
     vi.mocked(useResumeVersionSnapshotsQuery).mockReturnValue({
       data: {
         profile: {
@@ -311,21 +296,18 @@ describe("ResumeHeatmapPage", () => {
       { route: "/resume/version-1/heatmap" },
     );
 
-    expect(
-      screen.getByText("Use the heatmap to find which resume claims break first under interview pressure"),
-    ).toBeInTheDocument();
-    expect(screen.getAllByRole("heading", { name: "Cache platform" }).length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /Sentence \(1\)/ })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Projects" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Cache platform" })).toBeInTheDocument();
+    expect(screen.getByText("High pressure")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Details" })).toHaveAttribute("href", "/resume/version-1/heatmap/anchors/project/31");
+    expect(screen.getByRole("option", { name: "Sentence (1)" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Follow-up only" }));
-    expect(screen.getByRole("button", { name: "Follow-up only" })).toHaveClass("detail-chip--active");
-    fireEvent.click(
-      screen.getByRole("button", { name: /Sentence.*Built cache-side resiliency\./i }),
-    );
+    fireEvent.click(screen.getByRole("radio", { name: "Follow-ups" }));
+    expect(screen.getByRole("radio", { name: "Follow-ups" })).toHaveAttribute("aria-checked", "true");
+
+    const highlight = screen.getByRole("button", { name: /Sentence.*Built cache-side resiliency\./i });
+    fireEvent.click(highlight);
+    expect(highlight).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("What are cache-aside tradeoffs?")).toBeInTheDocument();
-    expect(screen.getByText("Related interview questions")).toBeInTheDocument();
-    expect(screen.getAllByText("Related interview questions").length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Open detailed analysis" }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: "Practice it" })).toHaveAttribute("href", "/questions/question-77/answer");
   });
 });

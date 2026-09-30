@@ -1,9 +1,6 @@
+import type { ResumeQuestionHeatmapModel, ResumeQuestionHeatmapOverlayTargetModel } from "../../entities/resume-heatmap/model";
 import type { ResumeSnapshotModel } from "../../entities/resume/model";
-import type {
-  ResumeQuestionHeatmapFiltersDto,
-  ResumeQuestionHeatmapScopeDto,
-  ResumeQuestionHeatmapTargetTypeDto,
-} from "../../shared/types/resumeHeatmap";
+import type { ResumeQuestionHeatmapFiltersDto } from "../../shared/types/resumeHeatmap";
 
 export type AnchorOption = {
   id: string;
@@ -17,22 +14,6 @@ export type AnchorOption = {
 export type AnchorPreview = {
   title: string;
   description: string | null;
-};
-
-export const HEATMAP_SCOPES: Array<{
-  value: ResumeQuestionHeatmapScopeDto;
-  label: string;
-}> = [
-  { value: "all", label: "All" },
-  { value: "main", label: "Main questions" },
-  { value: "follow_up", label: "Follow-up only" },
-];
-
-export const TARGET_TYPE_LABELS: Record<ResumeQuestionHeatmapTargetTypeDto, string> = {
-  block: "Block",
-  sentence: "Sentence",
-  phrase: "Phrase",
-  keyword: "Keyword",
 };
 
 export function buildAnchorId(
@@ -310,4 +291,78 @@ export function getAnchorPreview(
   }
 
   return null;
+}
+
+type HeatmapItem = ResumeQuestionHeatmapModel["items"][number];
+type OverlayTarget = ResumeQuestionHeatmapOverlayTargetModel;
+
+export type HeatmapGroup = "summary" | "project" | "experience" | "skill" | "competency" | "other";
+
+export type HeatmapAnchor = {
+  item: HeatmapItem;
+  group: HeatmapGroup;
+  title: string;
+  meta: string | null;
+  body: string[];
+  overlayTargets: OverlayTarget[];
+  /** Weak answers weigh most, then follow-ups, pressure questions, and plain questions. */
+  pressure: number;
+};
+
+export function pressureScore(item: Pick<HeatmapItem, "weaknessCount" | "followUpCount" | "pressureQuestionCount" | "directQuestionCount">) {
+  return item.weaknessCount * 5 + item.followUpCount * 3 + item.pressureQuestionCount * 2 + item.directQuestionCount;
+}
+
+/** The path segment the anchor detail route uses for an item. */
+export function anchorPathId(item: Pick<HeatmapItem, "anchorRecordId" | "anchorKey" | "id">) {
+  return item.anchorRecordId ?? item.anchorKey ?? item.id;
+}
+
+/** Highlights that actually drew questions, one per distinct text (the most questioned wins). */
+function questionedTargets(targets: OverlayTarget[]) {
+  const byText = new Map<string, OverlayTarget>();
+  targets
+    .filter((target) => target.questionCount > 0)
+    .forEach((target) => {
+      const key = `${target.targetType}:${(target.textSnippet ?? target.targetKey).trim()}`;
+      const current = byText.get(key);
+      if (!current || target.questionCount > current.questionCount) {
+        byText.set(key, target);
+      }
+    });
+  return sortOverlayTargetsForDisplay([...byText.values()]);
+}
+
+/**
+ * Joins heatmap items with the parsed resume text and their overlay highlights, most pressured
+ * first. Items without a matching snapshot still appear, using the heatmap's own snippet.
+ */
+export function buildHeatmapAnchors(
+  heatmap: ResumeQuestionHeatmapModel,
+  overlays: OverlayTarget[],
+  snapshots: ResumeSnapshotModel | undefined,
+): HeatmapAnchor[] {
+  const overlaysById = new Map<string, OverlayTarget[]>();
+  overlays.forEach((target) => {
+    const key = buildAnchorId(target.anchorType, target.anchorRecordId, target.anchorKey);
+    overlaysById.set(key, [...(overlaysById.get(key) ?? []), target]);
+  });
+
+  return heatmap.items
+    .map((item) => {
+      const preview = getAnchorPreview(item.anchorType, item.anchorRecordId, item.anchorKey, snapshots);
+      const experience = item.anchorType === "experience" ? snapshots?.experiences.find((entry) => entry.sourceRecordId === item.anchorRecordId) : undefined;
+      const project = item.anchorType === "project" ? snapshots?.projects.find((entry) => entry.sourceRecordId === item.anchorRecordId) : undefined;
+      const group: HeatmapGroup = (["summary", "project", "experience", "skill", "competency"] as const).find((type) => type === item.anchorType) ?? "other";
+      return {
+        item,
+        group,
+        title: preview && preview.title !== item.anchorKey ? preview.title : item.label,
+        meta: project?.dateLabel ?? experience?.dateLabel ?? null,
+        body: splitDocumentBlocks(preview?.description ?? item.snippet),
+        overlayTargets: questionedTargets(overlaysById.get(item.id) ?? []),
+        pressure: pressureScore(item),
+      };
+    })
+    .sort((left, right) => right.pressure - left.pressure);
 }
