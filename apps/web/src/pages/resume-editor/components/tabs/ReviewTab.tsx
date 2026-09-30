@@ -5,7 +5,7 @@ import type { EditorControllerProps } from "../../editorViewProps";
 
 export function ReviewTab({ ctrl }: EditorControllerProps) {
   const {
-    isKorean,
+    t,
     currentTab,
     markdownSource,
     selectedNodeId,
@@ -31,17 +31,13 @@ export function ReviewTab({ ctrl }: EditorControllerProps) {
     <article className="page-card page-card--muted resume-editor-document-preview">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">{isKorean ? "문서 프리뷰" : "Document preview"}</p>
-          <h3 className="page-card__title">{isKorean ? "읽기 화면" : "Reading surface"}</h3>
+          <p className="section-heading__eyebrow">{t("resumeEditor.documentPreview")}</p>
+          <h3 className="page-card__title">{t("resumeEditor.readingSurface")}</h3>
         </div>
         <span className="detail-chip">
           {richTreeEnabled
-            ? isKorean
-              ? "리치 트리 연결"
-              : "Rich-tree aware"
-            : isKorean
-              ? "마크다운 프리뷰"
-              : "Markdown preview"}
+            ? t("resumeEditor.richTreeAware")
+            : t("resumeEditor.markdownPreview")}
         </span>
       </div>
       {richTreeEnabled && documentTableOfContents.length > 0 ? (
@@ -67,7 +63,7 @@ export function ReviewTab({ ctrl }: EditorControllerProps) {
       ) : null}
       <div className="resume-editor-document-preview__body">
         {renderMarkdownDocumentPreview(markdownSource, {
-          isKorean,
+          t,
           selectedText: effectiveSelectedText,
           tableOfContents: documentTableOfContents,
           activeLineMenuIndex: activePreviewLineIndex,

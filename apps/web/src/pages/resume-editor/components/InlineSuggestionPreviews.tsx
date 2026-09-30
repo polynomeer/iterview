@@ -2,7 +2,7 @@ import type { EditorControllerProps } from "../editorViewProps";
 
 export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
   const {
-    isKorean,
+    t,
     selectedBlock,
     currentSelectionAnchor,
     setActiveSidePanel,
@@ -20,8 +20,8 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
         <article className="resume-editor-inline-preview">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">{isKorean ? "인라인 질문 제안" : "Inline question suggestions"}</p>
-              <h3 className="page-card__title">{isKorean ? "선택 영역 기반 질문 문구" : "Selection-based prompts"}</h3>
+              <p className="section-heading__eyebrow">{t("resumeEditor.inlineQuestionSuggestions")}</p>
+              <h3 className="page-card__title">{t("resumeEditor.selectionBasedPrompts")}</h3>
             </div>
             <button
               className="secondary-button"
@@ -31,11 +31,11 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
               }}
               type="button"
             >
-              {isKorean ? "전체 패널 열기" : "Open full panel"}
+              {t("resumeEditor.openFullPanel")}
             </button>
           </div>
           {questionSuggestionsMutation.isPending ? (
-            <p className="resume-tailor-muted">{isKorean ? "질문 제안을 생성하는 중..." : "Generating question suggestions..."}</p>
+            <p className="resume-tailor-muted">{t("resumeEditor.generatingQuestionSuggestions")}</p>
           ) : questionSuggestionsMutation.data ? (
             <div className="stack-list">
               {questionSuggestionsMutation.data.suggestions.slice(0, 2).map((suggestion) => (
@@ -69,7 +69,7 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
                       }}
                       type="button"
                     >
-                      {isKorean ? "카드 만들기" : "Create card"}
+                      {t("resumeEditor.createCard")}
                     </button>
                   </div>
                 </article>
@@ -82,8 +82,8 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
         <article className="resume-editor-inline-preview">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">{isKorean ? "인라인 문장 개선 제안" : "Inline rewrite suggestions"}</p>
-              <h3 className="page-card__title">{isKorean ? "선택 영역 기반 문구 옵션" : "Selection-based wording options"}</h3>
+              <p className="section-heading__eyebrow">{t("resumeEditor.inlineRewriteSuggestions")}</p>
+              <h3 className="page-card__title">{t("resumeEditor.selectionBasedWordingOptions")}</h3>
             </div>
             <button
               className="secondary-button"
@@ -93,17 +93,17 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
               }}
               type="button"
             >
-              {isKorean ? "전체 패널 열기" : "Open full panel"}
+              {t("resumeEditor.openFullPanel")}
             </button>
           </div>
           {rewriteSuggestionsMutation.isPending ? (
-            <p className="resume-tailor-muted">{isKorean ? "문장 개선 제안을 생성하는 중..." : "Generating rewrite suggestions..."}</p>
+            <p className="resume-tailor-muted">{t("resumeEditor.generatingRewriteSuggestions")}</p>
           ) : rewriteSuggestionsMutation.data ? (
             <div className="stack-list">
               {rewriteSuggestionsMutation.data.suggestions.slice(0, 2).map((suggestion) => (
                 <article className="page-card page-card--muted" key={suggestion.id}>
                   <p className="section-heading__eyebrow">
-                    {suggestion.focusArea ?? (isKorean ? "문장 개선 제안" : "Rewrite suggestion")}
+                    {suggestion.focusArea ?? (t("resumeEditor.rewriteSuggestion"))}
                   </p>
                   <p className="page-card__body resume-section__body--preserve">
                     {suggestion.suggestedText}
@@ -116,7 +116,7 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
                       }}
                       type="button"
                     >
-                      {isKorean ? "문장 적용" : "Apply rewrite"}
+                      {t("resumeEditor.applyRewrite")}
                     </button>
                   </div>
                 </article>

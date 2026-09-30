@@ -7,7 +7,7 @@ import type { EditorControllerProps } from "../../editorViewProps";
 
 export function EditTab({ ctrl }: EditorControllerProps) {
   const {
-    isKorean,
+    t,
     markdownSource,
     setSelectedNodeId,
     selectedMarkdownRange,
@@ -41,10 +41,10 @@ export function EditTab({ ctrl }: EditorControllerProps) {
         <article className="resume-editor-slash-menu">
           <div className="section-heading">
             <div>
-              <p className="section-heading__eyebrow">{isKorean ? "슬래시 메뉴" : "Slash menu"}</p>
-              <h3 className="page-card__title">{isKorean ? "빠른 블록 및 작업 명령" : "Quick block and action commands"}</h3>
+              <p className="section-heading__eyebrow">{t("resumeEditor.slashMenu")}</p>
+              <h3 className="page-card__title">{t("resumeEditor.quickBlockAndActionCommands")}</h3>
             </div>
-            <span className="detail-chip">/{slashCommand.query || (isKorean ? "입력" : "...")}</span>
+            <span className="detail-chip">/{slashCommand.query || (t("resumeEditor.slashQueryPlaceholder"))}</span>
           </div>
           <div className="resume-editor-slash-menu__list">
             {slashMenuItems.map((item) => (
@@ -63,17 +63,13 @@ export function EditTab({ ctrl }: EditorControllerProps) {
       <article className="page-card page-card--muted resume-editor-document-preview resume-editor-document-preview--editable">
         <div className="section-heading">
           <div>
-            <p className="section-heading__eyebrow">{isKorean ? "편집 화면" : "Editor surface"}</p>
-            <h3 className="page-card__title">{isKorean ? "각 행을 직접 편집" : "Edit each row directly"}</h3>
+            <p className="section-heading__eyebrow">{t("resumeEditor.editorSurface")}</p>
+            <h3 className="page-card__title">{t("resumeEditor.editEachRowDirectly")}</h3>
           </div>
           <span className="detail-chip">
             {selectedMarkdownRange?.text
-              ? isKorean
-                ? "선택 도구"
-                : "Selection tools"
-              : isKorean
-                ? "텍스트를 선택하거나 행 핸들을 사용하세요"
-                : "Select text or use row handles"}
+              ? t("resumeEditor.selectionTools")
+              : t("resumeEditor.selectTextOrUseRowHandles")}
           </span>
         </div>
         <div
@@ -85,7 +81,7 @@ export function EditTab({ ctrl }: EditorControllerProps) {
             <SelectionToolbar ctrl={ctrl} />
           ) : null}
           {renderMarkdownDocumentPreview(markdownSource, {
-            isKorean,
+            t,
             editable: true,
             selectedText: effectiveSelectedText,
             tableOfContents: documentTableOfContents,

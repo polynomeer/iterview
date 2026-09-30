@@ -1,3 +1,4 @@
+import { useLocale } from "../../../shared/i18n";
 import type { SelectionFormatAction } from "../editorTypes";
 import { getLineIndexForOffset, normalizePreviewLineText } from "../editorUtils";
 import type { useEditorAnnotations } from "./useEditorAnnotations";
@@ -7,18 +8,17 @@ import type { useLineEditing } from "./useLineEditing";
 
 /** Slash-menu commands and selection formatting that rewrite the markdown source. */
 export function useMarkdownCommands({
-  isKorean,
   doc,
   selection,
   annotations,
   lineEditing,
 }: {
-  isKorean: boolean;
   doc: ReturnType<typeof useEditorDocument>;
   selection: ReturnType<typeof useEditorSelection>;
   annotations: ReturnType<typeof useEditorAnnotations>;
   lineEditing: ReturnType<typeof useLineEditing>;
 }) {
+  const { t } = useLocale();
   const { markdownSource, setMarkdownSource } = doc;
   const { selectedMarkdownRange, setSelectedMarkdownRange } = selection;
   const { openInlineComposer, runInlineQuestionSuggestions, runInlineRewriteSuggestions } = annotations;
@@ -26,31 +26,31 @@ export function useMarkdownCommands({
   const slashMenuItems = [
     {
       id: "h1",
-      label: isKorean ? "제목 1" : "Heading 1",
+      label: t("resumeEditor.heading1"),
       matches: ["", "h1", "heading", "title"],
-      onSelect: () => replaceSlashLine("# __TEXT__", isKorean ? "섹션 제목" : "Section title"),
+      onSelect: () => replaceSlashLine("# __TEXT__", t("resumeEditor.sectionTitle")),
     },
     {
       id: "h2",
-      label: isKorean ? "제목 2" : "Heading 2",
+      label: t("resumeEditor.heading2"),
       matches: ["h2", "subheading", "subtitle"],
-      onSelect: () => replaceSlashLine("## __TEXT__", isKorean ? "하위 섹션" : "Subsection"),
+      onSelect: () => replaceSlashLine("## __TEXT__", t("resumeEditor.subsection")),
     },
     {
       id: "bullet",
-      label: isKorean ? "불릿 목록" : "Bullet list",
+      label: t("resumeEditor.bulletList"),
       matches: ["bullet", "list", "ul"],
-      onSelect: () => replaceSlashLine("- __TEXT__", isKorean ? "불릿 항목" : "Bullet point"),
+      onSelect: () => replaceSlashLine("- __TEXT__", t("resumeEditor.bulletPoint")),
     },
     {
       id: "quote",
-      label: isKorean ? "인용 / 콜아웃" : "Quote / callout",
+      label: t("resumeEditor.quoteCallout"),
       matches: ["quote", "callout"],
-      onSelect: () => replaceSlashLine("> __TEXT__", isKorean ? "콜아웃" : "Callout"),
+      onSelect: () => replaceSlashLine("> __TEXT__", t("resumeEditor.callout")),
     },
     {
       id: "comment",
-      label: isKorean ? "선택 영역에 댓글" : "Comment on selection",
+      label: t("resumeEditor.commentOnSelection"),
       matches: ["comment", "note"],
       onSelect: () => {
         openInlineComposer("comment");
@@ -59,7 +59,7 @@ export function useMarkdownCommands({
     },
     {
       id: "question",
-      label: isKorean ? "질문 제안" : "Question suggestion",
+      label: t("resumeEditor.questionSuggestion"),
       matches: ["question", "prompt"],
       onSelect: () => {
         void runInlineQuestionSuggestions();
@@ -68,7 +68,7 @@ export function useMarkdownCommands({
     },
     {
       id: "rewrite",
-      label: isKorean ? "문장 재작성 제안" : "Rewrite suggestion",
+      label: t("resumeEditor.rewriteSuggestionCommand"),
       matches: ["rewrite", "improve"],
       onSelect: () => {
         void runInlineRewriteSuggestions();

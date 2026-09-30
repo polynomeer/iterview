@@ -2,7 +2,7 @@ import type { EditorControllerProps } from "../editorViewProps";
 
 export function SelectionToolbar({ ctrl }: EditorControllerProps) {
   const {
-    isKorean,
+    t,
     setSelectedMarkdownRange,
     setInlineSuggestionPreview,
     setInlineComposerMode,
@@ -28,7 +28,7 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
         top: `${editorToolbarPosition.top}px`,
       }}
     >
-      <span className="resume-editor-context-toolbar__label">{isKorean ? "선택 도구" : "Selection tools"}</span>
+      <span className="resume-editor-context-toolbar__label">{t("resumeEditor.selectionTools")}</span>
       <div className="filter-chip-row">
         <div className="resume-editor-selection-format">
           <button
@@ -36,7 +36,7 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
             onClick={() => setIsSelectionFormatOpen((current) => !current)}
             type="button"
           >
-            {isKorean ? "서식" : "Format"}
+            {t("resumeEditor.format")}
           </button>
           {isSelectionFormatOpen ? (
             <div className="resume-editor-selection-format__menu">
@@ -45,14 +45,14 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
                 onClick={() => applySelectionFormat("bold")}
                 type="button"
               >
-                {isKorean ? "굵게" : "Bold"}
+                {t("resumeEditor.bold")}
               </button>
               <button
                 className="secondary-button"
                 onClick={() => applySelectionFormat("italic")}
                 type="button"
               >
-                {isKorean ? "기울임" : "Italic"}
+                {t("resumeEditor.italic")}
               </button>
               <button
                 className="secondary-button"
@@ -66,28 +66,28 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
                 onClick={() => applySelectionFormat("heading1")}
                 type="button"
               >
-                {isKorean ? "H1로 변경" : "Turn into H1"}
+                {t("resumeEditor.turnIntoH1")}
               </button>
               <button
                 className="secondary-button"
                 onClick={() => applySelectionFormat("heading2")}
                 type="button"
               >
-                {isKorean ? "H2로 변경" : "Turn into H2"}
+                {t("resumeEditor.turnIntoH2")}
               </button>
               <button
                 className="secondary-button"
                 onClick={() => applySelectionFormat("bullet")}
                 type="button"
               >
-                {isKorean ? "불릿 목록" : "Bullet list"}
+                {t("resumeEditor.bulletList")}
               </button>
               <button
                 className="secondary-button"
                 onClick={() => applySelectionFormat("quote")}
                 type="button"
               >
-                {isKorean ? "인용문" : "Quote"}
+                {t("resumeEditor.quote")}
               </button>
             </div>
           ) : null}
@@ -97,7 +97,7 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
           onClick={() => openInlineComposer("comment")}
           type="button"
         >
-          {isKorean ? "댓글" : "Comment"}
+          {t("resumeEditor.comment")}
         </button>
         <button
           className="detail-chip detail-chip--interactive"
@@ -106,7 +106,7 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
           }}
           type="button"
         >
-          {isKorean ? "질문" : "Question"}
+          {t("resumeEditor.question")}
         </button>
         <button
           className="detail-chip detail-chip--interactive"
@@ -115,7 +115,7 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
           }}
           type="button"
         >
-          {isKorean ? "개선" : "Rewrite"}
+          {t("resumeEditor.rewrite")}
         </button>
         <button
           className="detail-chip detail-chip--interactive"
@@ -126,7 +126,7 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
           }}
           type="button"
         >
-          {isKorean ? "지우기" : "Clear"}
+          {t("resumeEditor.clear")}
         </button>
       </div>
     </div>

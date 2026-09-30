@@ -3,7 +3,7 @@ import type { EditorViewProps } from "../../editorViewProps";
 
 export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
   const {
-    isKorean,
+    t,
     selectedBlock,
     effectiveSelectedText,
     currentSelectionAnchor,
@@ -19,10 +19,10 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
 
   return (
     <section className="page-card">
-      <span className="page-card__label">{isKorean ? "질문 카드" : "Question cards"}</span>
-      <h2 className="page-card__title">{isKorean ? "면접 및 학습 질문 문구" : "Interview and study prompts"}</h2>
+      <span className="page-card__label">{t("resumeEditor.questionCards")}</span>
+      <h2 className="page-card__title">{t("resumeEditor.interviewAndStudyPrompts")}</h2>
       <label className="form-field">
-        <span className="form-field__label">{isKorean ? "제목" : "Title"}</span>
+        <span className="form-field__label">{t("resumeEditor.title")}</span>
         <input
           className="form-field__input"
           onChange={(event) => setNewQuestionCardTitle(event.target.value)}
@@ -30,7 +30,7 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
         />
       </label>
       <label className="form-field">
-        <span className="form-field__label">{isKorean ? "질문 본문" : "Question text"}</span>
+        <span className="form-field__label">{t("resumeEditor.questionText")}</span>
         <textarea
           className="form-field__input form-input--textarea"
           onChange={(event) => setNewQuestionCardText(event.target.value)}
@@ -39,7 +39,7 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
         />
       </label>
       <label className="form-field">
-        <span className="form-field__label">{isKorean ? "질문 유형" : "Question type"}</span>
+        <span className="form-field__label">{t("resumeEditor.questionType")}</span>
         <input
           className="form-field__input"
           onChange={(event) => setNewQuestionCardType(event.target.value)}
@@ -73,14 +73,14 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
           }}
           type="button"
         >
-          {isKorean ? "질문 카드 만들기" : "Create question card"}
+          {t("resumeEditor.createQuestionCard")}
         </button>
       </div>
       <div className="stack-list">
         {workspace.questionCards.length === 0 ? (
           <EmptyStateCard
-            body={isKorean ? "아직 질문 카드가 없습니다." : "No question cards yet."}
-            title={isKorean ? "질문 카드 없음" : "No question cards"}
+            body={t("resumeEditor.noQuestionCardsYet")}
+            title={t("resumeEditor.noQuestionCards")}
           />
         ) : (
           workspace.questionCards.map((card) => (
@@ -118,12 +118,8 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
                   type="button"
                 >
                   {card.status === "archived"
-                    ? isKorean
-                      ? "복원"
-                      : "Restore"
-                    : isKorean
-                      ? "보관"
-                      : "Archive"}
+                    ? t("resumeEditor.restore")
+                    : t("resumeEditor.archive")}
                 </button>
               </div>
             </article>

@@ -4,7 +4,7 @@ import type { EditorViewProps } from "../editorViewProps";
 
 export function ContextRail({ ctrl, workspace }: EditorViewProps) {
   const {
-    isKorean,
+    t,
     currentTab,
     primarySidePanels,
     secondarySidePanels,
@@ -25,7 +25,7 @@ export function ContextRail({ ctrl, workspace }: EditorViewProps) {
 
   return (
     <div
-      aria-label={isKorean ? "컨텍스트 편집 도구" : "Contextual editor tools"}
+      aria-label={t("resumeEditor.contextualEditorTools")}
       className={`resume-editor-contextual ${isContextPanelOpen ? "resume-editor-contextual--open" : ""}`}
     >
       {isContextPanelOpen ? (
@@ -49,7 +49,7 @@ export function ContextRail({ ctrl, workspace }: EditorViewProps) {
             onClick={() => setIsSecondaryToolsOpen((current) => !current)}
             type="button"
           >
-            {isKorean ? "더보기" : "More"}
+            {t("resumeEditor.more")}
           </button>
           {isSecondaryToolsOpen || isSecondaryPanelActive ? (
             <div className="resume-editor-contextual__secondary">
@@ -74,7 +74,7 @@ export function ContextRail({ ctrl, workspace }: EditorViewProps) {
             onClick={() => setIsContextPanelOpen(false)}
             type="button"
           >
-            {isKorean ? "닫기" : "Close"}
+            {t("resumeEditor.close")}
           </button>
         </div>
       ) : currentTab !== "review" ? (
@@ -107,7 +107,7 @@ export function ContextRail({ ctrl, workspace }: EditorViewProps) {
             onClick={() => setIsContextPanelOpen(true)}
             type="button"
           >
-            {isKorean ? "도구 열기" : "Open tools"}
+            {t("resumeEditor.openTools")}
           </button>
         </div>
       ) : null}
@@ -117,17 +117,13 @@ export function ContextRail({ ctrl, workspace }: EditorViewProps) {
             <div>
               <p className="section-heading__eyebrow">
                 {richTreeEnabled
-                  ? isKorean
-                    ? "선택 노드"
-                    : "Selected node"
-                  : isKorean
-                    ? "선택 블록"
-                    : "Selected block"}
+                  ? t("resumeEditor.selectedNode")
+                  : t("resumeEditor.selectedBlock")}
               </p>
               <h3 className="page-card__title">
                 {richTreeEnabled
-                  ? selectedNode?.metadata.heading ?? selectedNode?.fieldPath ?? selectedNode?.nodeId ?? (isKorean ? "제목 없는 노드" : "Untitled node")
-                  : selectedBlock?.title || (isKorean ? "제목 없는 블록" : "Untitled block")}
+                  ? selectedNode?.metadata.heading ?? selectedNode?.fieldPath ?? selectedNode?.nodeId ?? (t("resumeEditor.untitledNode"))
+                  : selectedBlock?.title || (t("resumeEditor.untitledBlock"))}
               </h3>
             </div>
             <span className="detail-chip">

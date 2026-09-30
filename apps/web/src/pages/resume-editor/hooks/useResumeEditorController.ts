@@ -20,14 +20,13 @@ import { useRevisionHistory } from "./useRevisionHistory";
  * that the page and its tab/panel components read from.
  */
 export function useResumeEditorController() {
-  const { locale } = useLocale();
-  const isKorean = locale === "ko";
+  const { t } = useLocale();
   const { versionId } = useParams<{ versionId: string }>();
   const safeVersionId = versionId ?? "";
   const [searchParams, setSearchParams] = useSearchParams();
   const currentTab = normalizeEditorTab(searchParams.get("tab"));
   const [sessionKey] = useState(() => createEditorSessionKey());
-  const doc = useEditorDocument(versionId, isKorean, sessionKey);
+  const doc = useEditorDocument(versionId, sessionKey);
   const { workspaceQuery, setBlocks, setMarkdownSource, setLayoutMetadata, mergePreviewMutation } = doc;
   const snapshotsQuery = useResumeVersionSnapshotsQuery(versionId ?? null);
   const printPreviewQuery = useResumeEditorPrintPreviewQuery(
@@ -42,7 +41,6 @@ export function useResumeEditorController() {
   const annotations = useEditorAnnotations({ versionId, doc, selection });
   const review = useReviewSignals({
     currentTab,
-    isKorean,
     markdownSource: doc.markdownSource,
     workspaceQuery,
     questionSuggestionsMutation: annotations.questionSuggestionsMutation,
@@ -58,7 +56,7 @@ export function useResumeEditorController() {
   });
   const lineEditing = useLineEditing({ currentTab, doc, selection, panels, annotations });
   const { setSlashCommand } = lineEditing;
-  const markdownCommands = useMarkdownCommands({ isKorean, doc, selection, annotations, lineEditing });
+  const markdownCommands = useMarkdownCommands({ doc, selection, annotations, lineEditing });
 
   useEffect(() => {
     if (!workspaceQuery.data) {
@@ -91,40 +89,40 @@ export function useResumeEditorController() {
     return [
       snapshotsQuery.data.profile?.summaryText
         ? {
-            title: isKorean ? "프로필 요약" : "Profile summary",
+            title: t("resumeEditor.profileSummary"),
             body: snapshotsQuery.data.profile.summaryText,
           }
         : null,
       snapshotsQuery.data.skills.length > 0
         ? {
-            title: isKorean ? "스킬" : "Skills",
+            title: t("resumeEditor.skills"),
             body: snapshotsQuery.data.skills.map((skill) => skill.label).join(", "),
           }
         : null,
       snapshotsQuery.data.experiences[0]
         ? {
-            title: isKorean ? "원본 경력" : "Source experience",
+            title: t("resumeEditor.sourceExperience"),
             body: snapshotsQuery.data.experiences[0].impactText ?? snapshotsQuery.data.experiences[0].summary,
           }
         : null,
       snapshotsQuery.data.projects[0]
         ? {
-            title: isKorean ? "원본 프로젝트" : "Source project",
+            title: t("resumeEditor.sourceProject"),
             body: snapshotsQuery.data.projects[0].contentText ?? snapshotsQuery.data.projects[0].summary,
           }
         : null,
     ].filter(Boolean) as Array<{ title: string; body: string }>;
-  }, [isKorean, snapshotsQuery.data]);
+  }, [t, snapshotsQuery.data]);
 
   const primarySidePanels: Array<[EditorSidePanel, string]> = [
-    ["comments", isKorean ? "댓글" : "Comments"],
-    ["question-cards", isKorean ? "질문 카드" : "Question cards"],
-    ["suggestions", isKorean ? "제안" : "Suggestions"],
+    ["comments", t("resumeEditor.comments")],
+    ["question-cards", t("resumeEditor.questionCards")],
+    ["suggestions", t("resumeEditor.suggestions")],
   ];
 
   const secondarySidePanels: Array<[EditorSidePanel, string]> = [
-    ["source", isKorean ? "원본" : "Source"],
-    ["presence", isKorean ? "접속 상태" : "Presence"],
+    ["source", t("resumeEditor.source")],
+    ["presence", t("resumeEditor.presenceStatus")],
   ];
 
   const isSecondaryPanelActive = activeSidePanel === "source" || activeSidePanel === "presence";
@@ -173,7 +171,7 @@ export function useResumeEditorController() {
   }
 
   return {
-    isKorean,
+    t,
     versionId,
     safeVersionId,
     searchParams,

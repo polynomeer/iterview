@@ -3,7 +3,7 @@ import type { EditorControllerProps } from "../../editorViewProps";
 
 export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
   const {
-    isKorean,
+    t,
     selectedBlock,
     effectiveSelectedText,
     currentSelectionAnchor,
@@ -18,10 +18,10 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
   return (
     selectedBlock || currentSelectionAnchor ? (
       <section className="page-card">
-        <span className="page-card__label">{isKorean ? "제안" : "Suggestions"}</span>
-        <h2 className="page-card__title">{isKorean ? "질문 및 문장 개선 제안" : "Question and rewrite suggestions"}</h2>
+        <span className="page-card__label">{t("resumeEditor.suggestions")}</span>
+        <h2 className="page-card__title">{t("resumeEditor.questionAndRewriteSuggestions")}</h2>
         <label className="form-field">
-          <span className="form-field__label">{isKorean ? "최대 질문 제안 수" : "Max question suggestions"}</span>
+          <span className="form-field__label">{t("resumeEditor.maxQuestionSuggestions")}</span>
           <input
             className="form-field__input"
             onChange={(event) => setQuestionSuggestionMax(event.target.value)}
@@ -43,7 +43,7 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
             }}
             type="button"
           >
-            {isKorean ? "질문 제안 생성" : "Generate question suggestions"}
+            {t("resumeEditor.generateQuestionSuggestions")}
           </button>
           <button
             className="secondary-button"
@@ -57,7 +57,7 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
             }}
             type="button"
           >
-            {isKorean ? "문장 개선 제안 생성" : "Generate rewrite suggestions"}
+            {t("resumeEditor.generateRewriteSuggestions")}
           </button>
         </div>
         {questionSuggestionsMutation.data ? (
@@ -91,7 +91,7 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
                     }}
                     type="button"
                   >
-                    {isKorean ? "제안으로 질문 카드 만들기" : "Create question card from suggestion"}
+                    {t("resumeEditor.createQuestionCardFromSuggestion")}
                   </button>
                 </div>
               </article>
@@ -102,7 +102,7 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
           <div className="stack-list">
             {rewriteSuggestionsMutation.data.suggestions.map((suggestion) => (
               <article className="page-card page-card--muted" key={suggestion.id}>
-                <p className="section-heading__eyebrow">{suggestion.focusArea ?? (isKorean ? "문장 개선 제안" : "Rewrite suggestion")}</p>
+                <p className="section-heading__eyebrow">{suggestion.focusArea ?? (t("resumeEditor.rewriteSuggestion"))}</p>
                 <p className="page-card__body resume-section__body--preserve">{suggestion.suggestedText}</p>
                 <p className="resume-tailor-muted">{suggestion.rationale}</p>
                 <div className="page-card__actions">
@@ -113,7 +113,7 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
                     }}
                     type="button"
                   >
-                    {isKorean ? "초안에 문장 적용" : "Apply rewrite to draft"}
+                    {t("resumeEditor.applyRewriteToDraft")}
                   </button>
                 </div>
               </article>
@@ -123,8 +123,8 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
       </section>
     ) : (
       <EmptyStateCard
-        body={isKorean ? "질문과 문장 개선 제안을 생성하려면 먼저 블록이나 문장을 선택하세요." : "Select a block or sentence first to generate question and rewrite suggestions."}
-        title={isKorean ? "활성 선택 없음" : "No active selection"}
+        body={t("resumeEditor.suggestionsNeedSelection")}
+        title={t("resumeEditor.noActiveSelection")}
       />
     )
   );

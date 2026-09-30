@@ -3,7 +3,7 @@ import type { ResumeEditorController } from "../hooks/useResumeEditorController"
 /** Row menu renderers shared by the edit and review surfaces. */
 export function createLineMenuRenderers(ctrl: ResumeEditorController) {
   const {
-    isKorean,
+    t,
     markdownSource,
     activePreviewLineIndex,
     activePreviewLineMenuView,
@@ -21,35 +21,35 @@ export function createLineMenuRenderers(ctrl: ResumeEditorController) {
             onClick={() => setActivePreviewLineMenuView("root")}
             type="button"
           >
-            {isKorean ? "← 뒤로" : "← Back"}
+            {t("resumeEditor.back")}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("heading1", lineIndex, lineText)}
             type="button"
           >
-            {isKorean ? "제목 1" : "Heading 1"}
+            {t("resumeEditor.heading1")}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("heading2", lineIndex, lineText)}
             type="button"
           >
-            {isKorean ? "제목 2" : "Heading 2"}
+            {t("resumeEditor.heading2")}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("bullet", lineIndex, lineText)}
             type="button"
           >
-            {isKorean ? "불릿 목록" : "Bulleted list"}
+            {t("resumeEditor.bulletedList")}
           </button>
           <button
             className="resume-editor-document-preview__menu-item"
             onClick={() => handlePreviewLineAction("quote", lineIndex, lineText)}
             type="button"
           >
-            {isKorean ? "인용문" : "Quote"}
+            {t("resumeEditor.quote")}
           </button>
         </div>
       );
@@ -62,42 +62,42 @@ export function createLineMenuRenderers(ctrl: ResumeEditorController) {
           onClick={() => setActivePreviewLineMenuView("turn-into")}
           type="button"
         >
-          {isKorean ? "형식 바꾸기 →" : "Turn into →"}
+          {t("resumeEditor.turnInto")}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("duplicate", lineIndex, lineText)}
           type="button"
         >
-          {isKorean ? "복제" : "Duplicate"}
+          {t("resumeEditor.duplicate")}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("comment", lineIndex, lineText)}
           type="button"
         >
-          {isKorean ? "댓글" : "Comment"}
+          {t("resumeEditor.comment")}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("card", lineIndex, lineText)}
           type="button"
         >
-          {isKorean ? "카드 만들기" : "Create card"}
+          {t("resumeEditor.createCard")}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("rewrite", lineIndex, lineText)}
           type="button"
         >
-          {isKorean ? "문장 개선 제안" : "Suggest rewrite"}
+          {t("resumeEditor.suggestRewrite")}
         </button>
         <button
           className="resume-editor-document-preview__menu-item"
           onClick={() => handlePreviewLineAction("tools", lineIndex, lineText)}
           type="button"
         >
-          {isKorean ? "도구 열기" : "Open tools"}
+          {t("resumeEditor.openTools")}
         </button>
       </div>
     );

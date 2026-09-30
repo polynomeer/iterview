@@ -3,7 +3,7 @@ import type { EditorViewProps } from "../../editorViewProps";
 
 export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
   const {
-    isKorean,
+    t,
     selectedBlock,
     effectiveSelectedText,
     currentSelectionAnchor,
@@ -18,10 +18,10 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
 
   return (
     <section className="page-card">
-      <span className="page-card__label">{isKorean ? "댓글" : "Comments"}</span>
-      <h2 className="page-card__title">{isKorean ? "댓글 스레드" : "Comment threads"}</h2>
+      <span className="page-card__label">{t("resumeEditor.comments")}</span>
+      <h2 className="page-card__title">{t("resumeEditor.commentThreads")}</h2>
       <label className="form-field">
-        <span className="form-field__label">{isKorean ? "새 댓글" : "New comment"}</span>
+        <span className="form-field__label">{t("resumeEditor.newComment")}</span>
         <textarea
           className="form-field__input form-input--textarea"
           onChange={(event) => setNewCommentBody(event.target.value)}
@@ -55,14 +55,14 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
           }}
           type="button"
         >
-          {isKorean ? "댓글 추가" : "Add comment"}
+          {t("resumeEditor.addComment")}
         </button>
       </div>
       <div className="stack-list">
         {workspace.comments.length === 0 ? (
           <EmptyStateCard
-            body={isKorean ? "아직 댓글 스레드가 없습니다." : "No comment threads yet."}
-            title={isKorean ? "댓글 없음" : "No comments"}
+            body={t("resumeEditor.noCommentThreadsYet")}
+            title={t("resumeEditor.noComments")}
           />
         ) : (
           workspace.comments.map((comment) => (
@@ -85,12 +85,8 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
                   type="button"
                 >
                   {comment.status === "resolved"
-                    ? isKorean
-                      ? "다시 열기"
-                      : "Reopen"
-                    : isKorean
-                      ? "해결 처리"
-                      : "Resolve"}
+                    ? t("resumeEditor.reopen")
+                    : t("resumeEditor.resolve")}
                 </button>
               </div>
               <p className="page-card__body resume-section__body--preserve">{comment.body}</p>
@@ -101,7 +97,7 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
                 </div>
               ))}
               <label className="form-field">
-                <span className="form-field__label">{isKorean ? "답글" : "Reply"}</span>
+                <span className="form-field__label">{t("resumeEditor.reply")}</span>
                 <input
                   className="form-field__input"
                   onChange={(event) =>
@@ -128,7 +124,7 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
                   }}
                   type="button"
                 >
-                  {isKorean ? "답글 추가" : "Add reply"}
+                  {t("resumeEditor.addReply")}
                 </button>
               </div>
             </article>

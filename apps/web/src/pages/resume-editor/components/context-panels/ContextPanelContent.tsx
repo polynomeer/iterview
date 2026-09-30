@@ -6,7 +6,7 @@ import { SuggestionsPanel } from "./SuggestionsPanel";
 /** Body of the context rail for the active side panel. */
 export function ContextPanelContent({ ctrl, workspace }: EditorViewProps) {
   const {
-    isKorean,
+    t,
     sourceContextCards,
     activeSidePanel,
   } = ctrl;
@@ -15,8 +15,8 @@ export function ContextPanelContent({ ctrl, workspace }: EditorViewProps) {
     case "source":
       return (
         <section className="page-card">
-          <span className="page-card__label">{isKorean ? "원본 맥락" : "Source context"}</span>
-          <h2 className="page-card__title">{isKorean ? "변경 불가능한 원본 이력서 맥락" : "Immutable source resume context"}</h2>
+          <span className="page-card__label">{t("resumeEditor.sourceContext")}</span>
+          <h2 className="page-card__title">{t("resumeEditor.immutableSourceResumeContext")}</h2>
           <div className="stack-list">
             {sourceContextCards.map((card) => (
               <article className="page-card page-card--muted" key={card.title}>
@@ -30,8 +30,8 @@ export function ContextPanelContent({ ctrl, workspace }: EditorViewProps) {
     case "presence":
       return (
         <section className="page-card">
-          <span className="page-card__label">{isKorean ? "접속 상태" : "Presence"}</span>
-          <h2 className="page-card__title">{isKorean ? "작업공간 접속 상태" : "Workspace presence"}</h2>
+          <span className="page-card__label">{t("resumeEditor.presenceStatus")}</span>
+          <h2 className="page-card__title">{t("resumeEditor.workspacePresence")}</h2>
           <div className="filter-chip-row">
             {workspace.activePresence.length > 0 ? (
               workspace.activePresence.map((presence) => (
@@ -42,7 +42,7 @@ export function ContextPanelContent({ ctrl, workspace }: EditorViewProps) {
                 </span>
               ))
             ) : (
-              <span className="detail-chip">{isKorean ? "아직 활성 접속자가 없습니다" : "No active presence yet"}</span>
+              <span className="detail-chip">{t("resumeEditor.noActivePresenceYet")}</span>
             )}
           </div>
         </section>

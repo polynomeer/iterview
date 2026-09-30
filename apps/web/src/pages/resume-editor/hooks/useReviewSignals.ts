@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocale } from "../../../shared/i18n";
 import type { useResumeEditorWorkspaceQuery } from "../../../features/resume-editor/api/useResumeEditorWorkspaceQuery";
 import type { EditorTab, ReviewSignalType, ReviewSummaryItem } from "../editorTypes";
 import { buildPreviewReviewSignals } from "../editorUtils";
@@ -7,19 +8,18 @@ import type { useEditorAnnotations } from "./useEditorAnnotations";
 /** Per-line review signals, hotspot navigation, and the review summary cards. */
 export function useReviewSignals({
   currentTab,
-  isKorean,
   markdownSource,
   workspaceQuery,
   questionSuggestionsMutation,
   rewriteSuggestionsMutation,
 }: {
   currentTab: EditorTab;
-  isKorean: boolean;
   markdownSource: string;
   workspaceQuery: ReturnType<typeof useResumeEditorWorkspaceQuery>;
   questionSuggestionsMutation: ReturnType<typeof useEditorAnnotations>["questionSuggestionsMutation"];
   rewriteSuggestionsMutation: ReturnType<typeof useEditorAnnotations>["rewriteSuggestionsMutation"];
 }) {
+  const { t } = useLocale();
   const [focusedReviewLineIndex, setFocusedReviewLineIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -42,45 +42,33 @@ export function useReviewSignals({
     ? [
         {
           panelId: "comments" as ReviewSignalType,
-          label: isKorean ? "댓글" : "Comments",
+          label: t("resumeEditor.comments"),
           value: String(workspaceQuery.data.commentSummary.totalCount),
           helper:
             workspaceQuery.data.commentSummary.openCount > 0
-              ? isKorean
-                ? `${workspaceQuery.data.commentSummary.openCount}개 열림`
-                : `${workspaceQuery.data.commentSummary.openCount} open`
-              : isKorean
-                ? "열린 스레드 없음"
-                : "No open threads",
+              ? t("resumeEditor.openThreadCount", { count: workspaceQuery.data.commentSummary.openCount })
+              : t("resumeEditor.noOpenThreads"),
         },
         {
           panelId: "question-cards" as ReviewSignalType,
-          label: isKorean ? "카드" : "Cards",
+          label: t("resumeEditor.cards"),
           value: String(workspaceQuery.data.questionCardSummary.totalCount),
           helper:
             workspaceQuery.data.questionCardSummary.activeCount > 0
-              ? isKorean
-                ? `${workspaceQuery.data.questionCardSummary.activeCount}개 활성`
-                : `${workspaceQuery.data.questionCardSummary.activeCount} active`
-              : isKorean
-                ? "활성 카드 없음"
-                : "No active cards",
+              ? t("resumeEditor.activeCardCount", { count: workspaceQuery.data.questionCardSummary.activeCount })
+              : t("resumeEditor.noActiveCards"),
         },
         {
           panelId: "suggestions" as ReviewSignalType,
-          label: isKorean ? "제안" : "Suggestions",
+          label: t("resumeEditor.suggestions"),
           value: String(
             (questionSuggestionsMutation.data?.suggestions.length ?? 0) +
               (rewriteSuggestionsMutation.data?.suggestions.length ?? 0),
           ),
           helper:
             questionSuggestionsMutation.data || rewriteSuggestionsMutation.data
-              ? isKorean
-                ? "최근 결과"
-                : "Recent results"
-              : isKorean
-                ? "필요할 때 생성"
-                : "Generate on demand",
+              ? t("resumeEditor.recentResults")
+              : t("resumeEditor.generateOnDemand"),
         },
       ]
     : [];

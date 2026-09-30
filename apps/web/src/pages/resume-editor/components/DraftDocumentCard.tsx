@@ -6,7 +6,7 @@ import type { EditorControllerProps } from "../editorViewProps";
 
 export function DraftDocumentCard({ ctrl }: EditorControllerProps) {
   const {
-    isKorean,
+    t,
     currentTab,
     selectedBlock,
     selectedNode,
@@ -19,29 +19,23 @@ export function DraftDocumentCard({ ctrl }: EditorControllerProps) {
     <section className="page-card">
       <div className="section-heading">
         <div>
-          <p className="section-heading__eyebrow">{isKorean ? "초안 문서" : "Draft document"}</p>
+          <p className="section-heading__eyebrow">{t("resumeEditor.draftDocument")}</p>
           <h2 className="page-card__title">
             {currentTab === "review"
-              ? isKorean
-                ? "리뷰 읽기 화면"
-                : "Review reading surface"
+              ? t("resumeEditor.reviewReadingSurface")
               : richTreeEnabled
-                ? isKorean
-                  ? "리치 트리 앵커가 연결된 단일 편집 화면"
-                  : "Single-surface editor with rich-tree anchors"
-                : isKorean
-                  ? "단일 편집 화면"
-                  : "Single-surface editor"}
+                ? t("resumeEditor.singleSurfaceEditorRichTree")
+                : t("resumeEditor.singleSurfaceEditor")}
           </h2>
         </div>
         <div className="resume-status-badges">
           <span className="detail-chip">
-            {currentTab === "review" ? (isKorean ? "리뷰 모드" : "Review mode") : isKorean ? "행 편집기" : "Row editor"}
+            {currentTab === "review" ? (t("resumeEditor.reviewMode")) : t("resumeEditor.rowEditor")}
           </span>
           {selectedBlock || selectedNode ? (
             <>
               <span className="question-status-badge question-status-badge--neutral">
-                {isKorean ? "선택됨" : "Selected"} {richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockType}
+                {t("resumeEditor.selected")} {richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockType}
               </span>
               <button
                 className="secondary-button"
@@ -49,12 +43,8 @@ export function DraftDocumentCard({ ctrl }: EditorControllerProps) {
                 type="button"
               >
                 {isContextPanelOpen
-                  ? isKorean
-                    ? "도구 숨기기"
-                    : "Hide tools"
-                  : isKorean
-                    ? "도구 열기"
-                    : "Open tools"}
+                  ? t("resumeEditor.hideTools")
+                  : t("resumeEditor.openTools")}
               </button>
             </>
           ) : null}

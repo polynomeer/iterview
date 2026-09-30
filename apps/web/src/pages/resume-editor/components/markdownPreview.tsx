@@ -1,6 +1,7 @@
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
 import type { EditableBlock, ReviewLineSignal, ReviewSignalType } from "../editorTypes";
-import { decodeSoftBreaks, describeMarkdownLine } from "../editorUtils";
+import { translate } from "../../../shared/i18n";
+import { decodeSoftBreaks, describeMarkdownLine, type EditorTranslate } from "../editorUtils";
 
 export function renderAnnotatedText(
   text: string,
@@ -85,7 +86,7 @@ export function renderPreviewTextWithSelection(text: string, selectedText: strin
 export function renderMarkdownDocumentPreview(
   markdownSource: string,
   options?: {
-    isKorean?: boolean;
+    t?: EditorTranslate;
     selectedText?: string | null;
     tableOfContents?: Array<{ id: string; nodeId: string; title: string }>;
     editable?: boolean;
@@ -109,6 +110,7 @@ export function renderMarkdownDocumentPreview(
   const selectedText = options?.selectedText?.trim() ? options.selectedText : null;
   const tableOfContents = options?.tableOfContents ?? [];
   let tocIndex = 0;
+  const t = options?.t ?? translate;
 
   function renderEditableLine(
     lineIndex: number,
@@ -119,28 +121,18 @@ export function renderMarkdownDocumentPreview(
     const content = descriptor.content;
     const placeholder =
       descriptor.type === "bullet"
-        ? options?.isKorean
-          ? "목록 항목"
-          : "List item"
+        ? t("resumeEditor.listItemPlaceholder")
         : descriptor.type === "quote"
-          ? options?.isKorean
-            ? "인용문"
-            : "Quote"
+          ? t("resumeEditor.quote")
           : descriptor.type === "h1"
-            ? options?.isKorean
-              ? "제목"
-              : "Title"
+            ? t("resumeEditor.title")
             : descriptor.type === "h2" || descriptor.type === "h3"
-              ? options?.isKorean
-                ? "헤딩"
-                : "Heading"
-              : options?.isKorean
-                ? "여기에 작성"
-                : "Write here";
+              ? t("resumeEditor.headingPlaceholder")
+              : t("resumeEditor.writeHerePlaceholder");
 
     return (
       <div
-        aria-label={options?.isKorean ? `편집 가능한 줄 ${lineIndex + 1}` : `Editable line ${lineIndex + 1}`}
+        aria-label={t("resumeEditor.editableLine", { line: lineIndex + 1 })}
         className={`${className} resume-editor-document-preview__editable`}
         contentEditable
         data-placeholder={placeholder}
@@ -175,7 +167,7 @@ export function renderMarkdownDocumentPreview(
       >
         <div className="resume-editor-document-preview__controls">
           <button
-            aria-label={options?.isKorean ? `${lineIndex + 1}번 줄 다음에 줄 추가` : `Add line after ${lineIndex + 1}`}
+            aria-label={t("resumeEditor.addLineAfter", { line: lineIndex + 1 })}
             className="resume-editor-document-preview__handle"
             onClick={() => options?.onAddLine?.(lineIndex)}
             type="button"
@@ -183,7 +175,7 @@ export function renderMarkdownDocumentPreview(
             +
           </button>
           <button
-            aria-label={options?.isKorean ? `${lineIndex + 1}번 줄 메뉴` : `Preview line menu ${lineIndex + 1}`}
+            aria-label={t("resumeEditor.previewLineMenu", { line: lineIndex + 1 })}
             className="resume-editor-document-preview__grip"
             onClick={(event) => options?.onToggleLineMenu?.(lineIndex, event.currentTarget)}
             type="button"
@@ -193,14 +185,14 @@ export function renderMarkdownDocumentPreview(
         </div>
         <div className="resume-editor-document-preview__content">{content}</div>
         {hasReviewSignals ? (
-          <div className="resume-editor-document-preview__signals" aria-label={options?.isKorean ? `검토 신호 ${lineIndex + 1}` : `Review signals ${lineIndex + 1}`}>
+          <div className="resume-editor-document-preview__signals" aria-label={t("resumeEditor.reviewSignalsForLine", { line: lineIndex + 1 })}>
             {lineSignal.commentCount > 0 ? (
               <button
-                aria-label={options?.isKorean ? `이 줄의 댓글 스레드 ${lineSignal.commentCount}개` : `${lineSignal.commentCount} comment threads on this line`}
+                aria-label={t("resumeEditor.commentThreadsOnLine", { count: lineSignal.commentCount })}
                 className="detail-chip detail-chip--interactive detail-chip--accent resume-editor-document-preview__signal"
-                data-tooltip={options?.isKorean ? `댓글 스레드 ${lineSignal.commentCount}개` : `${lineSignal.commentCount} comment thread${lineSignal.commentCount > 1 ? "s" : ""}`}
+                data-tooltip={t(lineSignal.commentCount > 1 ? "resumeEditor.commentThreadCountOther" : "resumeEditor.commentThreadCountOne", { count: lineSignal.commentCount })}
                 onClick={() => options?.onReviewSignalClick?.("comments", lineIndex)}
-                title={options?.isKorean ? `댓글 스레드 ${lineSignal.commentCount}개` : `${lineSignal.commentCount} comment thread${lineSignal.commentCount > 1 ? "s" : ""}`}
+                title={t(lineSignal.commentCount > 1 ? "resumeEditor.commentThreadCountOther" : "resumeEditor.commentThreadCountOne", { count: lineSignal.commentCount })}
                 type="button"
               >
                 C {lineSignal.commentCount}
@@ -208,11 +200,11 @@ export function renderMarkdownDocumentPreview(
             ) : null}
             {lineSignal.cardCount > 0 ? (
               <button
-                aria-label={options?.isKorean ? `이 줄의 질문 카드 ${lineSignal.cardCount}개` : `${lineSignal.cardCount} question cards on this line`}
+                aria-label={t("resumeEditor.questionCardsOnLine", { count: lineSignal.cardCount })}
                 className="detail-chip detail-chip--interactive detail-chip--neutral resume-editor-document-preview__signal"
-                data-tooltip={options?.isKorean ? `질문 카드 ${lineSignal.cardCount}개` : `${lineSignal.cardCount} question card${lineSignal.cardCount > 1 ? "s" : ""}`}
+                data-tooltip={t(lineSignal.cardCount > 1 ? "resumeEditor.questionCardCountOther" : "resumeEditor.questionCardCountOne", { count: lineSignal.cardCount })}
                 onClick={() => options?.onReviewSignalClick?.("question-cards", lineIndex)}
-                title={options?.isKorean ? `질문 카드 ${lineSignal.cardCount}개` : `${lineSignal.cardCount} question card${lineSignal.cardCount > 1 ? "s" : ""}`}
+                title={t(lineSignal.cardCount > 1 ? "resumeEditor.questionCardCountOther" : "resumeEditor.questionCardCountOne", { count: lineSignal.cardCount })}
                 type="button"
               >
                 Q {lineSignal.cardCount}
@@ -220,11 +212,11 @@ export function renderMarkdownDocumentPreview(
             ) : null}
             {lineSignal.suggestionCount > 0 ? (
               <button
-                aria-label={options?.isKorean ? `이 줄에 연결된 제안 ${lineSignal.suggestionCount}개` : `${lineSignal.suggestionCount} suggestions linked to this line`}
+                aria-label={t("resumeEditor.suggestionsOnLine", { count: lineSignal.suggestionCount })}
                 className="detail-chip detail-chip--interactive resume-editor-document-preview__signal"
-                data-tooltip={options?.isKorean ? `제안 ${lineSignal.suggestionCount}개` : `${lineSignal.suggestionCount} suggestion${lineSignal.suggestionCount > 1 ? "s" : ""}`}
+                data-tooltip={t(lineSignal.suggestionCount > 1 ? "resumeEditor.suggestionCountOther" : "resumeEditor.suggestionCountOne", { count: lineSignal.suggestionCount })}
                 onClick={() => options?.onReviewSignalClick?.("suggestions", lineIndex)}
-                title={options?.isKorean ? `제안 ${lineSignal.suggestionCount}개` : `${lineSignal.suggestionCount} suggestion${lineSignal.suggestionCount > 1 ? "s" : ""}`}
+                title={t(lineSignal.suggestionCount > 1 ? "resumeEditor.suggestionCountOther" : "resumeEditor.suggestionCountOne", { count: lineSignal.suggestionCount })}
                 type="button"
               >
                 S {lineSignal.suggestionCount}

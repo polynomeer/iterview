@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ApiClientError } from "../../../shared/api/errors";
+import { useLocale } from "../../../shared/i18n";
 import { useResumeEditorWorkspaceQuery } from "../../../features/resume-editor/api/useResumeEditorWorkspaceQuery";
 import {
   useImportResumeEditorMarkdownMutation,
@@ -14,7 +15,8 @@ import { mapRichNodeRequest, splitLines } from "../editorUtils";
  * Owns the editable draft (blocks + markdown source), the save paths, and the
  * 409 stale-write recovery that turns a conflict into a server merge preview.
  */
-export function useEditorDocument(versionId: string | undefined, isKorean: boolean, sessionKey: string) {
+export function useEditorDocument(versionId: string | undefined, sessionKey: string) {
+  const { t } = useLocale();
   const workspaceQuery = useResumeEditorWorkspaceQuery(versionId ?? null);
   const updateDocumentMutation = useUpdateResumeEditorDocumentMutation(versionId ?? null);
   const patchDocumentOperationsMutation = usePatchResumeEditorDocumentOperationsMutation(
@@ -69,7 +71,7 @@ export function useEditorDocument(versionId: string | undefined, isKorean: boole
         baseRevisionNo: workspaceQuery.data.revisionNo,
         changeSource,
       });
-      setSaveMessage(isKorean ? "초안 작업공간을 저장했습니다." : "Draft workspace saved.");
+      setSaveMessage(t("resumeEditor.draftWorkspaceSaved"));
       setMergePreviewMessage(null);
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -110,12 +112,8 @@ export function useEditorDocument(versionId: string | undefined, isKorean: boole
 
         setMergePreviewMessage(
           mergePreview.mergeStatus === "clean"
-            ? isKorean
-              ? "서버가 충돌 없는 병합 초안을 준비했습니다. 아래에서 검토한 뒤 다시 저장하세요."
-              : "The server prepared a clean merged draft. Review it below and save again."
-            : isKorean
-              ? "서버가 병합 충돌을 감지했습니다. 충돌 블록을 검토한 뒤 다시 저장하세요."
-              : "The server detected merge conflicts. Review the conflicting blocks before saving again.",
+            ? t("resumeEditor.mergePreviewClean")
+            : t("resumeEditor.mergePreviewConflicts"),
         );
       } else {
         throw error;
@@ -135,7 +133,7 @@ export function useEditorDocument(versionId: string | undefined, isKorean: boole
         baseRevisionNo: workspaceQuery.data.revisionNo,
         changeSource,
       });
-      setSaveMessage(isKorean ? "초안 작업공간을 저장했습니다." : "Draft workspace saved.");
+      setSaveMessage(t("resumeEditor.draftWorkspaceSaved"));
       setMergePreviewMessage(null);
     } catch (error) {
       if (error instanceof ApiClientError && error.status === 409) {
@@ -176,12 +174,8 @@ export function useEditorDocument(versionId: string | undefined, isKorean: boole
 
         setMergePreviewMessage(
           mergePreview.mergeStatus === "clean"
-            ? isKorean
-              ? "서버가 충돌 없는 병합 초안을 준비했습니다. 아래에서 검토한 뒤 다시 저장하세요."
-              : "The server prepared a clean merged draft. Review it below and save again."
-            : isKorean
-              ? "서버가 병합 충돌을 감지했습니다. 충돌 블록을 검토한 뒤 다시 저장하세요."
-              : "The server detected merge conflicts. Review the conflicting blocks before saving again.",
+            ? t("resumeEditor.mergePreviewClean")
+            : t("resumeEditor.mergePreviewConflicts"),
         );
       } else {
         throw error;
@@ -216,7 +210,7 @@ export function useEditorDocument(versionId: string | undefined, isKorean: boole
       clientSessionKey: sessionKey,
       clientChangeId: `${changeSource}-${Date.now().toString(36)}`,
     });
-    setSaveMessage(isKorean ? "초안 작업공간을 저장했습니다." : "Draft workspace saved.");
+    setSaveMessage(t("resumeEditor.draftWorkspaceSaved"));
     setMergePreviewMessage(null);
   }
 

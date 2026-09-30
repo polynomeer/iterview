@@ -13,7 +13,7 @@ import { useResumeEditorController } from "./hooks/useResumeEditorController";
 export function ResumeEditorPage() {
   const ctrl = useResumeEditorController();
   const {
-    isKorean,
+    t,
     currentTab,
     workspaceQuery,
     updateDocumentMutation,
@@ -24,7 +24,7 @@ export function ResumeEditorPage() {
   } = ctrl;
 
   if (workspaceQuery.isLoading) {
-    return <PageSkeleton label={isKorean ? "근거 편집기를 준비하는 중" : "Preparing the evidence editor"} />;
+    return <PageSkeleton label={t("resumeEditor.preparingEvidenceEditor")} />;
   }
 
   if (workspaceQuery.isError || !workspaceQuery.data) {
@@ -32,12 +32,12 @@ export function ResumeEditorPage() {
       <ErrorState
         actions={
           <Button onClick={() => void workspaceQuery.refetch()} variant="primary">
-            {isKorean ? "다시 시도" : "Try again"}
+            {t("resumeEditor.tryAgain")}
           </Button>
         }
-        body={userFacingErrorMessage(workspaceQuery.error, isKorean ? "이력서 편집기를 불러오지 못했어요." : "The resume editor could not be loaded.")}
+        body={userFacingErrorMessage(workspaceQuery.error, t("resumeEditor.resumeEditorCouldNotBeLoaded"))}
         details={getErrorDetails(workspaceQuery.error)}
-        title={isKorean ? "편집기를 열 수 없어요" : "Unable to open the editor"}
+        title={t("resumeEditor.unableToOpenEditor")}
       />
     );
   }
@@ -47,11 +47,11 @@ export function ResumeEditorPage() {
 
   // Rendered inside the resume hub, which owns the page h1, the version bar, and the tab to the pressure map.
   return (
-    <section aria-label={isKorean ? "근거 편집" : "Evidence editor"} className="page-container page-container--hidden">
+    <section aria-label={t("resumeEditor.evidenceEditor")} className="page-container page-container--hidden">
       <div className="resume-editor-toolbar">
         <span className="resume-editor-toolbar__file">{workspace.sourceFileName}</span>
         <Button loading={saving} onClick={() => void saveCurrentDraft("manual_edit")} variant="primary">
-          {isKorean ? "초안 저장" : "Save draft"}
+          {t("resumeEditor.saveDraft")}
         </Button>
       </div>
       <div className="page-stack">

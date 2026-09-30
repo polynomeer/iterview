@@ -1,3 +1,4 @@
+import type { MessageKey, MessageParams } from "../../shared/i18n";
 import type {
   EditableBlock,
   EditorTab,
@@ -30,30 +31,27 @@ export function normalizeEditorTab(value: string | null): EditorTab {
   return "edit";
 }
 
-export function formatSupportedViewModeLabel(mode: string, isKorean: boolean) {
-  if (!isKorean) {
-    switch (mode) {
-      case "print-preview":
-        return "Print preview";
-      default:
-        return mode.charAt(0).toUpperCase() + mode.slice(1);
-    }
+const viewModeLabelKeys: Record<string, MessageKey> = {
+  edit: "resumeEditor.edit",
+  review: "resumeEditor.review",
+  heatmap: "resumeEditor.heatmap",
+  "print-preview": "resumeEditor.printPreview",
+  history: "resumeEditor.history",
+};
+
+export type EditorTranslate = (key: MessageKey, params?: MessageParams) => string;
+
+export function formatSupportedViewModeLabel(mode: string, t: EditorTranslate) {
+  const key = viewModeLabelKeys[mode];
+
+  if (key) {
+    return t(key);
   }
 
-  switch (mode) {
-    case "edit":
-      return "편집";
-    case "review":
-      return "리뷰";
-    case "heatmap":
-      return "히트맵";
-    case "print-preview":
-      return "출력 미리보기";
-    case "history":
-      return "히스토리";
-    default:
-      return mode;
-  }
+  return t("resumeEditor.unknownViewMode", {
+    mode,
+    capitalizedMode: mode.charAt(0).toUpperCase() + mode.slice(1),
+  });
 }
 
 export function mapEditableBlocks(

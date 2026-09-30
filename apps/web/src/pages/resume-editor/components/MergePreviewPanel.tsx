@@ -4,7 +4,7 @@ import type { EditorViewProps } from "../editorViewProps";
 
 export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
   const {
-    isKorean,
+    t,
     resolveConflictBlock,
     mergePreviewMutation,
     setBlocks,
@@ -15,16 +15,16 @@ export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
 
   return (
     <section className="page-card">
-      <span className="page-card__label">{isKorean ? "충돌 복구" : "Stale write recovery"}</span>
-      <h2 className="page-card__title">{isKorean ? "병합 미리보기" : "Merge preview"}</h2>
+      <span className="page-card__label">{t("resumeEditor.staleWriteRecovery")}</span>
+      <h2 className="page-card__title">{t("resumeEditor.mergePreview")}</h2>
       <p className="page-card__body">{mergePreviewMessage}</p>
       {mergePreviewMutation.data ? (
         <>
           <div className="stats-grid">
-            <MetricCard label={isKorean ? "상태" : "Status"} value={mergePreviewMutation.data.mergeStatusLabel} />
-            <MetricCard label={isKorean ? "추가" : "Added"} tone="accent" value={String(mergePreviewMutation.data.changeSummary.addedBlockCount)} />
-            <MetricCard label={isKorean ? "수정" : "Updated"} tone="muted" value={String(mergePreviewMutation.data.changeSummary.updatedBlockCount)} />
-            <MetricCard label={isKorean ? "충돌" : "Conflicts"} tone="muted" value={String(mergePreviewMutation.data.conflicts.length)} />
+            <MetricCard label={t("resumeEditor.status")} value={mergePreviewMutation.data.mergeStatusLabel} />
+            <MetricCard label={t("resumeEditor.added")} tone="accent" value={String(mergePreviewMutation.data.changeSummary.addedBlockCount)} />
+            <MetricCard label={t("resumeEditor.updated")} tone="muted" value={String(mergePreviewMutation.data.changeSummary.updatedBlockCount)} />
+            <MetricCard label={t("resumeEditor.conflicts")} tone="muted" value={String(mergePreviewMutation.data.conflicts.length)} />
           </div>
           {mergePreviewMutation.data.conflicts.length > 0 ? (
             <div className="stack-list">
@@ -41,20 +41,20 @@ export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
                       ))}
                     </div>
                   ) : null}
-                  <p className="resume-tailor-muted">{isKorean ? "서버 현재 버전" : "Server current"}</p>
+                  <p className="resume-tailor-muted">{t("resumeEditor.serverCurrent")}</p>
                   <div className="page-card__body resume-section__body--preserve">
                     {(conflict.currentTextLines.length > 0
                       ? conflict.currentTextLines
-                      : [conflict.currentText ?? (isKorean ? "텍스트 없음" : "No text")]
+                      : [conflict.currentText ?? (t("resumeEditor.noText"))]
                     ).map((line, index) => (
                       <p key={`${conflict.id}-current-${index}`}>{line || "\u00A0"}</p>
                     ))}
                   </div>
-                  <p className="resume-tailor-muted">{isKorean ? "내가 제안한 수정" : "Your proposed edit"}</p>
+                  <p className="resume-tailor-muted">{t("resumeEditor.yourProposedEdit")}</p>
                   <div className="page-card__body resume-section__body--preserve">
                     {(conflict.proposedTextLines.length > 0
                       ? conflict.proposedTextLines
-                      : [conflict.proposedText ?? (isKorean ? "텍스트 없음" : "No text")]
+                      : [conflict.proposedText ?? (t("resumeEditor.noText"))]
                     ).map((line, index) => (
                       <p key={`${conflict.id}-proposed-${index}`}>{line || "\u00A0"}</p>
                     ))}
@@ -65,21 +65,21 @@ export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
                       onClick={() => resolveConflictBlock(conflict.blockId, "current")}
                       type="button"
                     >
-                      {isKorean ? "서버 버전 유지" : "Keep server version"}
+                      {t("resumeEditor.keepServerVersion")}
                     </button>
                     <button
                       className="secondary-button"
                       onClick={() => resolveConflictBlock(conflict.blockId, "proposed")}
                       type="button"
                     >
-                      {isKorean ? "내 수정 유지" : "Keep my edit"}
+                      {t("resumeEditor.keepMyEdit")}
                     </button>
                     <button
                       className="secondary-button"
                       onClick={() => resolveConflictBlock(conflict.blockId, "merged")}
                       type="button"
                     >
-                      {isKorean ? "병합 텍스트 사용" : "Use merged text"}
+                      {t("resumeEditor.useMergedText")}
                     </button>
                   </div>
                 </article>
@@ -99,7 +99,7 @@ export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
               }}
               type="button"
             >
-              {isKorean ? "병합된 초안을 작업공간에 적용" : "Apply merged draft to workspace"}
+              {t("resumeEditor.applyMergedDraftToWorkspace")}
             </button>
             <button
               className="secondary-button"
@@ -108,7 +108,7 @@ export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
               }}
               type="button"
             >
-              {isKorean ? "해결된 초안 저장" : "Save resolved draft"}
+              {t("resumeEditor.saveResolvedDraft")}
             </button>
           </div>
         </>
