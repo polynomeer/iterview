@@ -1,11 +1,16 @@
 export type PracticeQuestionStatusDto = "new" | "retry" | "improving" | "archived";
 
 export type PracticeQuestionItemDto = {
-  id: string;
+  id: string | number;
   title: string;
-  prompt: string;
+  prompt?: string | null;
   category?: string | null;
   company?: string | null;
+  /** Fields sent by GET /api/questions (QuestionListItemDto); `category`/`company` above are legacy. */
+  categoryId?: string | number | null;
+  categoryName?: string | null;
+  companies?: Array<{ id?: string | number | null; name?: string | null }> | null;
+  questionType?: string | null;
   difficulty?: string | null;
   status?: PracticeQuestionStatusDto;
   resumeRelevance?: {

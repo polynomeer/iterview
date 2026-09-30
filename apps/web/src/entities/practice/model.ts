@@ -12,6 +12,9 @@ export type PracticeQuestionItemModel = {
   id: string;
   title: string;
   prompt: string;
+  categoryId: string | null;
+  /** Raw difficulty code (EASY/MEDIUM/HARD) for localization; difficultyLabel is kept for legacy screens. */
+  difficulty: string | null;
   categoryLabel: string;
   companyLabel: string;
   difficultyLabel: string;
@@ -85,13 +88,21 @@ export function mapPracticeListResponseDtoToModel(
     ? { items: response }
     : response;
 
-  return {
-    items: toArray(normalizedResponse.items).map((item) => ({
-      id: item.id,
+  const items = toArray(normalizedResponse.items).map((item) => {
+    const category = item.categoryName ?? item.category ?? null;
+    const companies = toArray(item.companies)
+      .map((company) => company.name)
+      .filter((name): name is string => Boolean(name));
+    const company = companies[0] ?? item.company ?? null;
+
+    return {
+      id: String(item.id),
       title: item.title,
-      prompt: item.prompt,
-      categoryLabel: item.category ?? (isKorean ? "일반" : "General"),
-      companyLabel: item.company ?? (isKorean ? "일반" : "General"),
+      prompt: item.prompt ?? "",
+      categoryId: item.categoryId === null || item.categoryId === undefined ? null : String(item.categoryId),
+      difficulty: item.difficulty ?? null,
+      categoryLabel: category ?? (isKorean ? "일반" : "General"),
+      companyLabel: company ?? (isKorean ? "일반" : "General"),
       difficultyLabel: item.difficulty ?? (isKorean ? "일반" : "General"),
       statusLabel: item.status ?? null,
       progressSummaryLabel: mapProgressSummaryLabel(item.userProgressSummary),
@@ -103,11 +114,26 @@ export function mapPracticeListResponseDtoToModel(
           : null,
       resumeRelevanceReason: item.resumeRelevance?.reason ?? null,
       relatedSkillLabels: toArray(item.relatedSkillCodes),
-    })),
+    };
+  });
+  const distinct = (options: PracticeFilterOptionModel[]) =>
+    [...new Map(options.map((option) => [option.id, option])).values()];
+
+  return {
+    items,
+    // GET /api/questions returns a bare list without filter metadata; derive options from the items.
     filters: {
-      categories: mapFilterOptions(normalizedResponse.filters?.categories),
+      categories: normalizedResponse.filters?.categories
+        ? mapFilterOptions(normalizedResponse.filters.categories)
+        : distinct(
+            items
+              .filter((item) => item.categoryId !== null && item.categoryLabel)
+              .map((item) => ({ id: item.categoryId as string, label: item.categoryLabel })),
+          ),
       companies: mapFilterOptions(normalizedResponse.filters?.companies),
-      difficulties: mapFilterOptions(normalizedResponse.filters?.difficulties),
+      difficulties: normalizedResponse.filters?.difficulties
+        ? mapFilterOptions(normalizedResponse.filters.difficulties)
+        : distinct(items.filter((item) => item.difficulty).map((item) => ({ id: item.difficulty as string, label: item.difficulty as string }))),
       statuses: mapFilterOptions(normalizedResponse.filters?.statuses),
     },
     page: normalizedResponse.page ?? 1,

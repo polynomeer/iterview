@@ -31,10 +31,11 @@ describe("PracticePage", () => {
       title: "Explain caching",
       categoryLabel: "System Design",
     });
+    // A bare list carries no filter metadata, so options are derived from the items.
     expect(model.filters).toEqual({
       categories: [],
       companies: [],
-      difficulties: [],
+      difficulties: [{ id: "Intermediate", label: "Intermediate" }],
       statuses: [],
     });
     expect(model.page).toBe(1);
