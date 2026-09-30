@@ -4996,10 +4996,6 @@ button {
   justify-content: center;
 }
 
-.resume-editor-surface--split {
-  grid-template-columns: minmax(0, 1fr);
-}
-
 .resume-editor-document-preview {
   gap: 14px;
 }
@@ -5280,10 +5276,6 @@ button {
   white-space: pre-wrap;
 }
 
-.resume-editor-surface--read .resume-editor-document-preview__body {
-  min-height: 520px;
-}
-
 .resume-editor-annotated-text__segment--marked {
   background: rgba(160, 129, 219, 0.18);
   border-radius: 6px;
@@ -5452,10 +5444,6 @@ button {
 }
 
 @media (min-width: 1120px) {
-  .resume-editor-surface--split {
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-    align-items: start;
-  }
 
   .resume-editor-block-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
