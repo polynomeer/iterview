@@ -1,0 +1,123 @@
+/*
+ * Navigation shell (docs/09 Phase 2). Token-only styles; the legacy `.sidebar-navigation`
+ * rules in global.css still provide the sticky column and background.
+ */
+
+.shell-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-2);
+  font-family: var(--iv-font-sans);
+}
+
+.shell-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--iv-space-2);
+  padding: var(--iv-space-1) var(--iv-space-2) var(--iv-space-5);
+  color: var(--iv-text);
+  font-size: var(--iv-text-lg);
+  font-weight: var(--iv-weight-bold);
+  text-decoration: none;
+}
+
+.shell-nav__brand-mark {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--iv-radius-sm);
+  background: var(--iv-accent);
+  color: var(--iv-on-accent);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-bold);
+}
+
+.shell-nav__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shell-nav__item {
+  display: flex;
+  align-items: center;
+  gap: var(--iv-space-3);
+  height: var(--iv-control-md);
+  padding: 0 var(--iv-space-3);
+  border-radius: var(--iv-radius-sm);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-md);
+  font-weight: var(--iv-weight-medium);
+  text-decoration: none;
+}
+
+.shell-nav__item:hover { background: var(--iv-surface-hover); color: var(--iv-text); }
+
+.shell-nav__item[aria-current="page"] {
+  background: var(--iv-accent-soft);
+  color: var(--iv-accent-text);
+  font-weight: var(--iv-weight-semibold);
+}
+
+.shell-nav__item:focus-visible,
+.shell-nav__resume:focus-visible,
+.shell-nav__brand:focus-visible {
+  outline: none;
+  box-shadow: var(--iv-focus-ring);
+}
+
+.shell-nav__label { flex: 1; min-width: 0; }
+
+.shell-nav__count {
+  display: grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 var(--iv-space-1);
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-danger-soft);
+  color: var(--iv-danger);
+  font-size: var(--iv-text-xs);
+  font-weight: var(--iv-weight-semibold);
+}
+
+.shell-nav__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-2);
+  margin-top: auto;
+}
+
+.shell-nav__resume {
+  display: flex;
+  align-items: center;
+  gap: var(--iv-space-3);
+  padding: var(--iv-space-3);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-md);
+  color: var(--iv-text);
+  text-decoration: none;
+}
+
+.shell-nav__resume:hover { background: var(--iv-surface-hover); }
+
+.shell-nav__resume-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--iv-text-sm);
+}
+
+.shell-nav__resume-copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shell-nav__resume-label,
+.shell-nav__resume-meta {
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-xs);
+}
