@@ -1,25 +1,43 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { usePracticeQuestionsQuery } from "../../features/practice/api/usePracticeQuestionsQuery";
+import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
+import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { useLocale } from "../../shared/i18n";
-import { getCommandPaletteItems, type CommandPaletteItem } from "./commandPaletteData";
+import {
+  buildNavigationItems,
+  buildQuestionItems,
+  buildResumeItems,
+  buildReviewItems,
+  matchesQuery,
+  type CommandPaletteItem,
+} from "./commandPaletteData";
+
+const QUESTION_SEARCH_DELAY_MS = 200;
+
+function useDebouncedValue(value: string, delayMs: number) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setDebounced(value), delayMs);
+    return () => window.clearTimeout(timeoutId);
+  }, [value, delayMs]);
+
+  return debounced;
+}
 
 type CommandPaletteProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-type LocalizedCommandPaletteItem = CommandPaletteItem & {
-  title: string;
-  subtitle: string;
-  section: string;
-};
 
 function normalizeSearchValue(value: string) {
   return value.toLowerCase().trim();
 }
 
-function groupPaletteItems(items: LocalizedCommandPaletteItem[]) {
-  return items.reduce<Record<string, LocalizedCommandPaletteItem[]>>((groups, item) => {
+function groupPaletteItems(items: CommandPaletteItem[]) {
+  return items.reduce<Record<string, CommandPaletteItem[]>>((groups, item) => {
     if (!groups[item.section]) {
       groups[item.section] = [];
     }
@@ -39,7 +57,6 @@ function getFocusableElements(container: HTMLElement) {
 
 export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const navigate = useNavigate();
-  const location = useLocation();
   const { t } = useLocale();
   const inputId = useId();
   const listboxId = `${inputId}-results`;
@@ -48,29 +65,29 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const commandPaletteItems = useMemo(
-    () =>
-      getCommandPaletteItems().map((item) => ({
-        ...item,
-        title: t(item.titleKey),
-        subtitle: t(item.subtitleKey),
-        section: t(item.sectionKey),
-      })),
-    [t],
+  const normalizedQuery = normalizeSearchValue(query);
+  const questionSearch = normalizeSearchValue(useDebouncedValue(query, QUESTION_SEARCH_DELAY_MS));
+  const questionsQuery = usePracticeQuestionsQuery(
+    { search: questionSearch },
+    { enabled: isOpen && questionSearch.length > 0 },
   );
+  const reviewQueueQuery = useReviewQueueQuery({ enabled: isOpen });
+  const latestResumeQuery = useLatestResumeQuery();
 
   const filteredItems = useMemo(() => {
-    const normalizedQuery = normalizeSearchValue(query);
+    // Due reviews and the active resume come before menus: they are what the user most likely needs next.
+    const localItems = [
+      ...buildReviewItems(reviewQueueQuery.data?.items ?? [], t),
+      ...buildResumeItems(latestResumeQuery.data, t),
+      ...buildNavigationItems(t),
+    ].filter((item) => matchesQuery(item, normalizedQuery));
+    const questionItems =
+      normalizedQuery && questionSearch === normalizedQuery ? buildQuestionItems(questionsQuery.data?.items ?? [], t) : [];
 
-    if (!normalizedQuery) {
-      return commandPaletteItems;
-    }
-
-    return commandPaletteItems.filter((item) => {
-      const searchText = [item.title, item.subtitle, ...item.keywords].join(" ").toLowerCase();
-      return searchText.includes(normalizedQuery);
-    });
-  }, [commandPaletteItems, query]);
+    // With a query, matching questions lead.
+    return normalizedQuery ? [...questionItems, ...localItems] : localItems;
+  }, [latestResumeQuery.data, normalizedQuery, questionSearch, questionsQuery.data, reviewQueueQuery.data, t]);
+  const isSearchingQuestions = normalizedQuery.length > 0 && (questionSearch !== normalizedQuery || questionsQuery.isFetching);
 
   const groupedItems = useMemo(() => groupPaletteItems(filteredItems), [filteredItems]);
 
@@ -215,8 +232,12 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
               Esc
             </span>
           </div>
-          <p className="command-palette__search-meta">
-            {t("commandPalette.currentWorkspace")}: <strong>{location.pathname}</strong>
+          <p aria-live="polite" className="command-palette__search-meta">
+            {isSearchingQuestions
+              ? t("commandPalette.searchingQuestions")
+              : questionsQuery.isError && normalizedQuery
+                ? t("commandPalette.questionSearchFailed")
+                : ""}
           </p>
         </div>
 

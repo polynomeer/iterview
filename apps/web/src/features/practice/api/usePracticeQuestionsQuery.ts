@@ -4,8 +4,9 @@ import { getPracticeQuestionsRequest } from "../../../shared/api/practiceApi";
 import { queryKeys } from "../../../shared/api/queryKeys";
 import type { PracticeListQueryParams } from "../../../shared/types/practice";
 
-export function usePracticeQuestionsQuery(params: PracticeListQueryParams) {
+export function usePracticeQuestionsQuery(params: PracticeListQueryParams, { enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
+    enabled,
     queryKey: queryKeys.questions.list(params),
     queryFn: async ({ signal }) =>
       mapPracticeListResponseDtoToModel(await getPracticeQuestionsRequest(params, signal)),

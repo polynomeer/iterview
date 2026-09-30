@@ -1,104 +1,95 @@
-import type { MessageKey } from "../../shared/i18n/messages";
+import type { PracticeQuestionItemModel } from "../../entities/practice/model";
+import type { ResumeListModel } from "../../entities/resume/model";
+import type { ReviewQueueItemModel } from "../../entities/review-queue/model";
+import { PRIMARY_AREAS, SETTINGS_AREA } from "../../shared/config/navigation";
 import { routeConfig } from "../../shared/config/routes";
-
-export type CommandPaletteSection =
-  | "commandPalette.sectionQuestions"
-  | "commandPalette.sectionSkills"
-  | "commandPalette.sectionResumeEvidence"
-  | "commandPalette.sectionCompanies"
-  | "commandPalette.sectionNotes"
-  | "commandPalette.sectionCommands";
+import type { MessageKey } from "../../shared/i18n/messages";
 
 export type CommandPaletteItem = {
   id: string;
-  titleKey: MessageKey;
-  subtitleKey: MessageKey;
-  sectionKey: CommandPaletteSection;
+  title: string;
+  subtitle: string;
+  section: string;
   to: string;
-  keywords: string[];
+  /** Local items are filtered in the browser; question results arrive already filtered by the API. */
+  searchText?: string;
 };
 
-export function getCommandPaletteItems(): CommandPaletteItem[] {
+type Translate = (key: MessageKey) => string;
+
+export function buildNavigationItems(t: Translate): CommandPaletteItem[] {
+  const section = t("commandPalette.sectionNavigation");
+
+  return [...PRIMARY_AREAS, SETTINGS_AREA].flatMap((area) => {
+    const areaLabel = t(area.labelKey);
+    const destinations = area.sections.length > 0 ? area.sections : [{ labelKey: area.labelKey, to: area.to }];
+
+    return destinations.map((destination) => {
+      const title = t(destination.labelKey);
+      return {
+        id: `nav:${destination.to}`,
+        title,
+        subtitle: title === areaLabel ? "" : areaLabel,
+        section,
+        to: destination.to,
+        searchText: `${title} ${areaLabel}`,
+      };
+    });
+  });
+}
+
+export function buildReviewItems(items: ReviewQueueItemModel[], t: Translate): CommandPaletteItem[] {
+  return items.slice(0, 5).map((item) => ({
+    id: `review:${item.id}`,
+    title: item.questionTitle,
+    subtitle: [t("commandPalette.answerAgain"), item.reasonTypeLabel].filter(Boolean).join(" · "),
+    section: t("commandPalette.sectionReview"),
+    to: routeConfig.answerEditor.buildPath({ questionId: item.questionId }),
+    searchText: `${item.questionTitle} ${item.relatedSkillLabels.join(" ")}`,
+  }));
+}
+
+export function buildResumeItems(resumes: ResumeListModel | undefined, t: Translate): CommandPaletteItem[] {
+  const resume = resumes?.items[0];
+  const version = resume?.versions.find((candidate) => candidate.isActive) ?? resume?.versions[0];
+
+  if (!resume || !version) {
+    return [];
+  }
+
+  const subtitle = `${resume.title} · ${version.versionNumberLabel}`;
+  const section = t("commandPalette.sectionResume");
+
   return [
     {
-      id: "question-distributed-lock-tree",
-      titleKey: "commandPalette.itemQuestionDistributedLockTitle",
-      subtitleKey: "commandPalette.itemQuestionDistributedLockSubtitle",
-      sectionKey: "commandPalette.sectionQuestions",
-      to: routeConfig.questionTree.buildPath({ questionId: "distributed-lock" }),
-      keywords: ["transaction", "distributed", "lock", "race", "consistency", "dfs"],
+      id: `resume:${version.id}:claims`,
+      title: t("commandPalette.resumeClaims"),
+      subtitle,
+      section,
+      to: routeConfig.resumeEditor.buildPath({ versionId: version.id }),
+      searchText: `${t("commandPalette.resumeClaims")} ${subtitle}`,
     },
     {
-      id: "question-transactional-detail",
-      titleKey: "commandPalette.itemQuestionTransactionalTitle",
-      subtitleKey: "commandPalette.itemQuestionTransactionalSubtitle",
-      sectionKey: "commandPalette.sectionQuestions",
-      to: routeConfig.questionDetail.buildPath({ questionId: "transactional-isolation" }),
-      keywords: ["transaction", "isolation", "spring", "database", "question"],
-    },
-    {
-      id: "question-kafka-answer",
-      titleKey: "commandPalette.itemQuestionKafkaTitle",
-      subtitleKey: "commandPalette.itemQuestionKafkaSubtitle",
-      sectionKey: "commandPalette.sectionQuestions",
-      to: routeConfig.answerEditor.buildPath({ questionId: "kafka-rebalance" }),
-      keywords: ["kafka", "rebalance", "consumer", "answer", "retry"],
-    },
-    {
-      id: "skill-distributed-systems",
-      titleKey: "commandPalette.itemSkillDistributedTitle",
-      subtitleKey: "commandPalette.itemSkillDistributedSubtitle",
-      sectionKey: "commandPalette.sectionSkills",
-      to: `${routeConfig.skills.buildPath()}?focus=distributed-systems`,
-      keywords: ["skill", "distributed", "system", "backend", "transaction"],
-    },
-    {
-      id: "skill-behavioral-ownership",
-      titleKey: "commandPalette.itemSkillOwnershipTitle",
-      subtitleKey: "commandPalette.itemSkillOwnershipSubtitle",
-      sectionKey: "commandPalette.sectionSkills",
-      to: `${routeConfig.skills.buildPath()}?focus=ownership`,
-      keywords: ["behavioral", "ownership", "conflict", "leadership", "story"],
-    },
-    {
-      id: "resume-settlement-experience",
-      titleKey: "commandPalette.itemResumeSettlementTitle",
-      subtitleKey: "commandPalette.itemResumeSettlementSubtitle",
-      sectionKey: "commandPalette.sectionResumeEvidence",
-      to: `${routeConfig.resume.buildPath()}?focus=settlement-platform`,
-      keywords: ["resume", "experience", "settlement", "payments", "project", "proof"],
-    },
-    {
-      id: "resume-metrics-analysis",
-      titleKey: "commandPalette.itemResumeMetricsTitle",
-      subtitleKey: "commandPalette.itemResumeMetricsSubtitle",
-      sectionKey: "commandPalette.sectionResumeEvidence",
-      to: `${routeConfig.resumeAnalysis.buildPath()}?focus=metrics-proof`,
-      keywords: ["resume", "analysis", "metrics", "evidence", "impact", "truth"],
-    },
-    {
-      id: "command-start-interview",
-      titleKey: "commandPalette.itemCommandStartInterviewTitle",
-      subtitleKey: "commandPalette.itemCommandStartInterviewSubtitle",
-      sectionKey: "commandPalette.sectionCommands",
-      to: routeConfig.interview.buildPath(),
-      keywords: ["command", "start", "interview", "session", "practice"],
-    },
-    {
-      id: "command-open-review-queue",
-      titleKey: "commandPalette.itemCommandOpenReviewQueueTitle",
-      subtitleKey: "commandPalette.itemCommandOpenReviewQueueSubtitle",
-      sectionKey: "commandPalette.sectionCommands",
-      to: routeConfig.reviewQueue.buildPath(),
-      keywords: ["command", "review", "queue", "retry", "dfs"],
-    },
-    {
-      id: "command-open-resume",
-      titleKey: "commandPalette.itemCommandOpenResumeTitle",
-      subtitleKey: "commandPalette.itemCommandOpenResumeSubtitle",
-      sectionKey: "commandPalette.sectionCommands",
-      to: routeConfig.resume.buildPath(),
-      keywords: ["command", "resume", "source of truth", "authoring"],
+      id: `resume:${version.id}:heatmap`,
+      title: t("commandPalette.resumeHeatmap"),
+      subtitle,
+      section,
+      to: routeConfig.resumeHeatmap.buildPath({ versionId: version.id }),
+      searchText: `${t("commandPalette.resumeHeatmap")} ${subtitle}`,
     },
   ];
+}
+
+export function buildQuestionItems(items: PracticeQuestionItemModel[], t: Translate): CommandPaletteItem[] {
+  return items.slice(0, 8).map((item) => ({
+    id: `question:${item.id}`,
+    title: item.title,
+    subtitle: [item.categoryLabel, item.difficultyLabel].filter(Boolean).join(" · "),
+    section: t("commandPalette.sectionQuestions"),
+    to: routeConfig.questionDetail.buildPath({ questionId: item.id }),
+  }));
+}
+
+export function matchesQuery(item: CommandPaletteItem, normalizedQuery: string) {
+  return !normalizedQuery || (item.searchText ?? `${item.title} ${item.subtitle}`).toLowerCase().includes(normalizedQuery);
 }
