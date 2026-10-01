@@ -194,3 +194,5 @@ Each ADR should include:
    Ships 보관함 on real data: question bookmarks, one private note per question, and the reading linked to them.
 84. [`0084-heatmap-questions-narrowed-to-claims.md`](0084-heatmap-questions-narrowed-to-claims.md)
    Narrows heatmap questions to one resume claim inside their project by manual pick, matching, or follow-up inheritance.
+85. [`0085-product-day-follows-configured-time-zone.md`](0085-product-day-follows-configured-time-zone.md)
+   "Today" for daily cards follows `app.time-zone` (default Asia/Seoul), not UTC; tests compare with `ClockService.today()`.

@@ -2,6 +2,7 @@ package com.example.interviewplatform.dailycard.controller
 
 import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.auth.service.TokenService
+import com.example.interviewplatform.common.service.ClockService
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -24,6 +25,9 @@ class HomeApiIntegrationTest {
 
     @Autowired
     private lateinit var tokenService: TokenService
+
+    @Autowired
+    private lateinit var clockService: ClockService
 
     private lateinit var authHeader: String
 
@@ -55,8 +59,9 @@ class HomeApiIntegrationTest {
             .andExpect(jsonPath("$.retryQuestions[0].questionId").doesNotExist())
 
         val cardCount = jdbcTemplate.queryForObject(
-            "SELECT COUNT(*) FROM daily_cards WHERE user_id = 1 AND card_date = current_date",
+            "SELECT COUNT(*) FROM daily_cards WHERE user_id = 1 AND card_date = ?",
             Int::class.java,
+            clockService.today(),
         )
         assertEquals(1, cardCount)
         assertTrue(queueId > 0)
@@ -144,8 +149,9 @@ class HomeApiIntegrationTest {
             .andExpect(jsonPath("$.summaryStats.retryQuestionCount").value(0))
 
         val ids = jdbcTemplate.queryForList(
-            "SELECT question_id FROM daily_cards WHERE user_id = 1 AND card_date = current_date ORDER BY created_at ASC",
+            "SELECT question_id FROM daily_cards WHERE user_id = 1 AND card_date = ? ORDER BY created_at ASC",
             Long::class.java,
+            clockService.today(),
         )
         assertEquals(listOf(targetQuestion), ids)
         assertTrue(otherQuestion > 0)

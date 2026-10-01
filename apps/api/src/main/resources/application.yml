@@ -26,6 +26,8 @@ server:
   shutdown: graceful
 
 app:
+  # The day boundary for daily cards (ADR 0085).
+  time-zone: ${APP_TIME_ZONE:Asia/Seoul}
   rate-limits:
     login:
       max-attempts: ${APP_RATE_LIMIT_LOGIN_MAX_ATTEMPTS:5}

@@ -33,7 +33,7 @@ class DailyCardGenerationService(
     @Transactional
     fun generateForToday(userId: Long): GeneratedDailySelection {
         val now = clockService.now()
-        val today = LocalDate.ofInstant(now, java.time.ZoneOffset.UTC)
+        val today = clockService.today()
 
         val existingCards = dailyCardRepository.findByUserIdAndCardDateOrderByCreatedAtAsc(userId, today)
         if (existingCards.isNotEmpty()) {
