@@ -8,6 +8,7 @@ import com.example.interviewplatform.interview.repository.InterviewRecordAnswerR
 import com.example.interviewplatform.interview.repository.InterviewRecordFollowUpEdgeRepository
 import com.example.interviewplatform.interview.repository.InterviewRecordQuestionRepository
 import com.example.interviewplatform.interview.repository.InterviewRecordRepository
+import com.example.interviewplatform.resume.dto.AssignResumeQuestionClaimRequest
 import com.example.interviewplatform.resume.dto.CreateResumeQuestionHeatmapLinkRequest
 import com.example.interviewplatform.resume.dto.ResumeQuestionHeatmapDto
 import com.example.interviewplatform.resume.dto.ResumeQuestionHeatmapAppliedFiltersDto
@@ -20,6 +21,7 @@ import com.example.interviewplatform.resume.dto.ResumeQuestionHeatmapQuestionDto
 import com.example.interviewplatform.resume.dto.ResumeQuestionHeatmapSummaryDto
 import com.example.interviewplatform.resume.dto.UpdateResumeQuestionHeatmapLinkRequest
 import com.example.interviewplatform.resume.entity.ResumeDocumentOverlayTargetEntity
+import com.example.interviewplatform.resume.entity.ResumeAchievementItemEntity
 import com.example.interviewplatform.resume.entity.ResumeQuestionHeatmapLinkEntity
 import com.example.interviewplatform.resume.repository.ResumeCompetencyItemRepository
 import com.example.interviewplatform.resume.repository.ResumeDocumentOverlayTargetRepository
@@ -27,6 +29,7 @@ import com.example.interviewplatform.resume.repository.ResumeExperienceSnapshotR
 import com.example.interviewplatform.resume.repository.ResumeProfileSnapshotRepository
 import com.example.interviewplatform.resume.repository.ResumeProjectSnapshotRepository
 import com.example.interviewplatform.resume.repository.ResumeProjectTagRepository
+import com.example.interviewplatform.resume.repository.ResumeAchievementItemRepository
 import com.example.interviewplatform.resume.repository.ResumeQuestionHeatmapLinkRepository
 import com.example.interviewplatform.resume.repository.ResumeSkillSnapshotRepository
 import com.example.interviewplatform.resume.repository.ResumeVersionRepository
@@ -55,6 +58,7 @@ class ResumeQuestionHeatmapService(
     private val interviewRecordAnswerRepository: InterviewRecordAnswerRepository,
     private val interviewRecordFollowUpEdgeRepository: InterviewRecordFollowUpEdgeRepository,
     private val resumeQuestionHeatmapLinkRepository: ResumeQuestionHeatmapLinkRepository,
+    private val resumeAchievementItemRepository: ResumeAchievementItemRepository,
     private val objectMapper: ObjectMapper,
     private val clockService: ClockService,
 ) {
@@ -159,6 +163,8 @@ class ResumeQuestionHeatmapService(
                 active = true,
                 createdAt = existing?.createdAt ?: now,
                 updatedAt = now,
+                achievementId = existing?.achievementId,
+                achievementAssigned = existing?.achievementAssigned ?: false,
             ),
         )
         return saved.toDto()
@@ -201,9 +207,80 @@ class ResumeQuestionHeatmapService(
                 active = request.active ?: existing.active,
                 createdAt = existing.createdAt,
                 updatedAt = clockService.now(),
+                achievementId = existing.achievementId,
+                achievementAssigned = existing.achievementAssigned,
             ),
         )
         return updated.toDto()
+    }
+
+    /**
+     * Narrows one question to a resume claim, or to none (ADR 0084). Picking a claim also moves the question
+     * to that claim's project or experience; clearing keeps the question where it is.
+     */
+    @Transactional
+    fun assignClaim(
+        userId: Long,
+        versionId: Long,
+        interviewRecordQuestionId: Long,
+        request: AssignResumeQuestionClaimRequest,
+    ): ResumeQuestionHeatmapLinkDto {
+        requireOwnedVersion(userId, versionId)
+        val question = requireLinkedQuestion(userId, versionId, interviewRecordQuestionId)
+        val existing = resumeQuestionHeatmapLinkRepository.findByInterviewRecordQuestionId(question.id)
+        val anchor = if (request.achievementId != null) {
+            val achievement = resumeAchievementItemRepository.findById(request.achievementId)
+                .filter { it.resumeVersionId == versionId }
+                .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Resume claim not found: ${request.achievementId}") }
+            achievement.resumeProjectSnapshotId?.let { AnchorIdentity("project", it, null) }
+                ?: achievement.resumeExperienceSnapshotId?.let { AnchorIdentity("experience", it, null) }
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Resume claim ${achievement.id} is not under a project or experience")
+        } else {
+            val resolved = resolveAnchor(question, existing, anchorResolver(versionId))?.anchor
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Interview record question $interviewRecordQuestionId has no resume anchor")
+            AnchorIdentity(resolved.anchorType, resolved.anchorRecordId, resolved.anchorKey)
+        }
+        val keepsAnchor = existing != null && existing.active &&
+            AnchorIdentity(existing.anchorType, existing.anchorRecordId, existing.anchorKey) == anchor
+        val now = clockService.now()
+        val saved = resumeQuestionHeatmapLinkRepository.save(
+            ResumeQuestionHeatmapLinkEntity(
+                id = existing?.id ?: 0,
+                userId = userId,
+                resumeVersionId = versionId,
+                interviewRecordQuestionId = question.id,
+                anchorType = anchor.anchorType,
+                anchorRecordId = anchor.anchorRecordId,
+                anchorKey = anchor.anchorKey,
+                // A highlight chosen inside the old anchor means nothing in a new one.
+                overlayTargetType = existing?.overlayTargetType?.takeIf { keepsAnchor },
+                overlayFieldPath = existing?.overlayFieldPath?.takeIf { keepsAnchor },
+                overlaySentenceIndex = existing?.overlaySentenceIndex?.takeIf { keepsAnchor },
+                overlayTextSnippet = existing?.overlayTextSnippet?.takeIf { keepsAnchor },
+                linkSource = "manual",
+                confidenceScore = if (keepsAnchor) existing?.confidenceScore else null,
+                active = true,
+                createdAt = existing?.createdAt ?: now,
+                updatedAt = now,
+                achievementId = request.achievementId,
+                achievementAssigned = true,
+            ),
+        )
+        return saved.toDto()
+    }
+
+    private fun anchorResolver(versionId: Long): AnchorResolver {
+        val projects = resumeProjectSnapshotRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId)
+        return AnchorResolver(
+            profile = resumeProfileSnapshotRepository.findByResumeVersionId(versionId),
+            competencies = resumeCompetencyItemRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId),
+            skills = resumeSkillSnapshotRepository.findByResumeVersionIdOrderByIdAsc(versionId),
+            experiences = resumeExperienceSnapshotRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId),
+            projects = projects,
+            projectTagsByProjectId = resumeProjectTagRepository
+                .findByResumeProjectSnapshotIdInOrderByResumeProjectSnapshotIdAscDisplayOrderAscIdAsc(projects.map { it.id })
+                .groupBy { it.resumeProjectSnapshotId },
+        )
     }
 
     private fun requireOwnedVersion(userId: Long, versionId: Long) =
@@ -387,17 +464,9 @@ class ResumeQuestionHeatmapService(
         val manualLinks = resumeQuestionHeatmapLinkRepository.findByResumeVersionIdAndActiveTrue(versionId)
             .associateBy { it.interviewRecordQuestionId }
         val recordsById = records.associateBy { it.id }
-        val projects = resumeProjectSnapshotRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId)
-        val anchorResolver = AnchorResolver(
-            profile = resumeProfileSnapshotRepository.findByResumeVersionId(versionId),
-            competencies = resumeCompetencyItemRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId),
-            skills = resumeSkillSnapshotRepository.findByResumeVersionIdOrderByIdAsc(versionId),
-            experiences = resumeExperienceSnapshotRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId),
-            projects = projects,
-            projectTagsByProjectId = resumeProjectTagRepository
-                .findByResumeProjectSnapshotIdInOrderByResumeProjectSnapshotIdAscDisplayOrderAscIdAsc(projects.map { it.id })
-                .groupBy { it.resumeProjectSnapshotId },
-        )
+        val anchorResolver = anchorResolver(versionId)
+        val claimMatcher = ClaimMatcher(resumeAchievementItemRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId))
+        val claimByQuestionId = mutableMapOf<Long, ClaimMatch>()
         val overlayTargetsByAnchor = resumeDocumentOverlayTargetRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(versionId)
             .groupBy { AnchorIdentity(it.anchorType, it.anchorRecordId, it.anchorKey) }
 
@@ -433,6 +502,13 @@ class ResumeQuestionHeatmapService(
             val weaknessTags = decodeStringList(answer?.weaknessTagsJson)
             val pressure = isPressureQuestion(question)
             val followUpCount = outgoingFollowUpCount[question.id] ?: 0
+            val claim = claimMatcher.match(
+                question = question,
+                anchor = anchor,
+                manualLink = manualLink,
+                parentClaim = question.parentQuestionId?.let(claimByQuestionId::get),
+            )
+            claim?.let { claimByQuestionId[question.id] = it }
             val questionDto = ResumeQuestionHeatmapQuestionDto(
                 interviewRecordQuestionId = question.id,
                 sourceInterviewRecordId = question.interviewRecordId,
@@ -447,6 +523,8 @@ class ResumeQuestionHeatmapService(
                 interviewDate = record.interviewDate,
                 linkSource = resolution.linkSource,
                 confidenceScore = resolution.confidenceScore,
+                achievementId = claim?.achievementId,
+                achievementSource = claim?.source,
             )
             val overlayTargetKey = selectOverlayTarget(
                 question = question,
@@ -710,6 +788,8 @@ class ResumeQuestionHeatmapService(
         linkSource = linkSource,
         confidenceScore = confidenceScore,
         active = active,
+        achievementId = achievementId,
+        achievementAssigned = achievementAssigned,
         createdAt = createdAt,
         updatedAt = updatedAt,
     )
@@ -972,3 +1052,74 @@ private data class HeatmapContext(
     val filterSummary: ResumeQuestionHeatmapFilterSummaryDto,
     val items: List<ResumeQuestionHeatmapItemDto>,
 )
+
+private data class ClaimMatch(
+    val achievementId: Long?,
+    val anchor: AnchorIdentity,
+    val source: String,
+)
+
+/**
+ * Narrows a question to one resume claim inside its project or experience (ADR 0084).
+ * A hand-picked claim wins, including "none". Otherwise the claim whose words the question repeats wins,
+ * if it clearly beats the others. Otherwise a follow-up keeps its parent's claim.
+ */
+private class ClaimMatcher(achievements: List<ResumeAchievementItemEntity>) {
+    private val byProject = achievements.filter { it.resumeProjectSnapshotId != null }.groupBy { it.resumeProjectSnapshotId!! }
+    private val byExperience = achievements.filter { it.resumeExperienceSnapshotId != null }.groupBy { it.resumeExperienceSnapshotId!! }
+    private val tokensByAchievementId = achievements.associate { achievement ->
+        achievement.id to claimTokens(listOfNotNull(achievement.title, achievement.metricText, achievement.impactSummary, achievement.sourceText).joinToString(" "))
+    }
+
+    fun match(
+        question: InterviewRecordQuestionEntity,
+        anchor: ResolvedAnchor,
+        manualLink: ResumeQuestionHeatmapLinkEntity?,
+        parentClaim: ClaimMatch?,
+    ): ClaimMatch? {
+        val identity = AnchorIdentity(anchor.anchorType, anchor.anchorRecordId, anchor.anchorKey)
+        val candidates = when (anchor.anchorType) {
+            "project" -> byProject[anchor.anchorRecordId].orEmpty()
+            "experience" -> byExperience[anchor.anchorRecordId].orEmpty()
+            else -> emptyList()
+        }
+        if (candidates.isEmpty()) {
+            return null
+        }
+        if (manualLink != null && manualLink.active && manualLink.achievementAssigned) {
+            val picked = manualLink.achievementId
+            if (picked == null || candidates.any { it.id == picked }) {
+                return ClaimMatch(picked, identity, "manual")
+            }
+        }
+        val questionText = "${question.text} ${question.normalizedText.orEmpty()}".lowercase()
+        val scored = candidates
+            .map { it.id to score(questionText, tokensByAchievementId[it.id].orEmpty()) }
+            .sortedByDescending { it.second }
+        val best = scored.first()
+        val runnerUp = scored.getOrNull(1)?.second ?: 0
+        if (best.second >= matchThreshold && best.second > runnerUp) {
+            return ClaimMatch(best.first, identity, "heuristic")
+        }
+        if (parentClaim != null && parentClaim.anchor == identity && parentClaim.achievementId != null) {
+            return parentClaim.copy(source = "heuristic")
+        }
+        return null
+    }
+
+    private fun score(questionText: String, tokens: Set<String>): Int =
+        tokens.sumOf { token -> if (!questionText.contains(token)) 0 else if (token.any(Char::isDigit)) 2 else 1 }
+
+    companion object {
+        private const val matchThreshold = 2
+        private val particles = listOf("으로", "에서", "을", "를", "이", "가", "은", "는", "로", "의", "에", "와", "과", "도")
+
+        /** Words of a claim, with one trailing Korean particle removed so "재설계로" still matches "재설계". */
+        fun claimTokens(text: String): Set<String> =
+            text.lowercase()
+                .split(Regex("[^\\p{L}\\p{N}%]+"))
+                .map { word -> particles.firstOrNull { word.length > it.length + 1 && word.endsWith(it) }?.let { word.dropLast(it.length) } ?: word }
+                .filter { it.length >= 2 }
+                .toSet()
+    }
+}

@@ -192,3 +192,5 @@ Each ADR should include:
    Supersedes 0075: themes are system (default), light, and dark on two token palettes; retired themes map to dark.
 83. [`0083-library-bookmarks-and-notes.md`](0083-library-bookmarks-and-notes.md)
    Ships 보관함 on real data: question bookmarks, one private note per question, and the reading linked to them.
+84. [`0084-heatmap-questions-narrowed-to-claims.md`](0084-heatmap-questions-narrowed-to-claims.md)
+   Narrows heatmap questions to one resume claim inside their project by manual pick, matching, or follow-up inheritance.

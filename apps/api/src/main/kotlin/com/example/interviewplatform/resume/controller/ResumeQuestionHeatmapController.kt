@@ -1,6 +1,7 @@
 package com.example.interviewplatform.resume.controller
 
 import com.example.interviewplatform.common.service.CurrentUserProvider
+import com.example.interviewplatform.resume.dto.AssignResumeQuestionClaimRequest
 import com.example.interviewplatform.resume.dto.CreateResumeQuestionHeatmapLinkRequest
 import com.example.interviewplatform.resume.dto.ResumeQuestionHeatmapDto
 import com.example.interviewplatform.resume.dto.ResumeQuestionHeatmapLinkDto
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -97,6 +99,20 @@ class ResumeQuestionHeatmapController(
             userId = currentUserProvider.currentUserId(),
             versionId = versionId,
             linkId = linkId,
+            request = request,
+        )
+
+    @PutMapping("/questions/{interviewRecordQuestionId}/claim")
+    @Operation(summary = "Narrow one interview question to a resume claim, or to none")
+    fun assignClaim(
+        @PathVariable versionId: Long,
+        @PathVariable interviewRecordQuestionId: Long,
+        @RequestBody request: AssignResumeQuestionClaimRequest,
+    ): ResumeQuestionHeatmapLinkDto =
+        resumeQuestionHeatmapService.assignClaim(
+            userId = currentUserProvider.currentUserId(),
+            versionId = versionId,
+            interviewRecordQuestionId = interviewRecordQuestionId,
             request = request,
         )
 }

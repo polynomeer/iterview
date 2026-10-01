@@ -1835,6 +1835,131 @@ class ResumeApiIntegrationTest {
             .andExpect(status().isNotFound)
     }
 
+    @Test
+    fun `heatmap questions narrow to one claim by matching, inheritance, or a manual pick`() {
+        val resumeId = createResume("Claim Heatmap Resume")
+        val versionId = createResumeVersion(
+            resumeId = resumeId,
+            fileUrl = "https://files.example.com/claim-heatmap.pdf",
+            summaryText = "Backend engineer",
+            rawText = """
+                프로젝트
+                Payments Platform Revamp 2024.02 ~ 2024.12
+                기술스택 Kotlin, Spring Boot, Redis
+                Rebuilt payment APIs, cache strategy, and settlement workflow.
+            """.trimIndent(),
+        )
+        val projectId = jdbcTemplate.queryForObject(
+            "SELECT id FROM resume_project_snapshots WHERE resume_version_id = ? ORDER BY display_order ASC, id ASC LIMIT 1",
+            Long::class.java,
+            versionId,
+        )
+        jdbcTemplate.update("DELETE FROM resume_achievement_items WHERE resume_version_id = ?", versionId)
+        val cacheClaim = insertAchievement(versionId, projectId, "Redis 캐시 전략 재설계로 p99 40% 개선", "40%", 1)
+        val settlementClaim = insertAchievement(versionId, projectId, "정산 배치 정합성 오류 0건 달성", "0건", 2)
+
+        val recordId = insertInterviewRecord(versionId)
+        val cacheQuestion = insertInterviewRecordQuestion(
+            interviewRecordId = recordId,
+            text = "Redis 캐시 전략에서 p99 40%는 어떻게 측정했나요?",
+            questionType = "verification",
+            intentTagsJson = "[]",
+            derivedFromResumeSection = "project",
+            derivedFromResumeRecordType = "project",
+            derivedFromResumeRecordId = projectId,
+            orderIndex = 0,
+        )
+        val followUp = insertInterviewRecordQuestion(
+            interviewRecordId = recordId,
+            text = "그때 장애 대응은 어떻게 했나요?",
+            questionType = "follow_up",
+            intentTagsJson = "[]",
+            derivedFromResumeSection = "project",
+            derivedFromResumeRecordType = "project",
+            derivedFromResumeRecordId = projectId,
+            parentQuestionId = cacheQuestion,
+            orderIndex = 1,
+        )
+        val generalQuestion = insertInterviewRecordQuestion(
+            interviewRecordId = recordId,
+            text = "이 프로젝트에서 가장 어려웠던 점은 무엇인가요?",
+            questionType = "behavioral",
+            intentTagsJson = "[]",
+            derivedFromResumeSection = "project",
+            derivedFromResumeRecordType = "project",
+            derivedFromResumeRecordId = projectId,
+            orderIndex = 2,
+        )
+
+        fun claimsByQuestion(): Map<Long, Pair<Long?, String?>> {
+            val body = mockMvc.perform(get("/api/resume-versions/$versionId/question-heatmap").header("Authorization", authHeader))
+                .andExpect(status().isOk)
+                .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+            val project = objectMapper.readTree(body).get("items").first { it.get("anchorType").asText() == "project" }
+            return project.get("linkedQuestions").associate { question ->
+                question.get("interviewRecordQuestionId").asLong() to Pair(
+                    question.get("achievementId").takeUnless { it.isNull }?.asLong(),
+                    question.get("achievementSource").takeUnless { it.isNull }?.asText(),
+                )
+            }
+        }
+
+        val matched = claimsByQuestion()
+        assertEquals(Pair(cacheClaim, "heuristic"), matched[cacheQuestion])
+        assertEquals(Pair(cacheClaim, "heuristic"), matched[followUp])
+        assertEquals(Pair<Long?, String?>(null, null), matched[generalQuestion])
+
+        mockMvc.perform(
+            put("/api/resume-versions/$versionId/question-heatmap/questions/$generalQuestion/claim")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"achievementId":$settlementClaim}"""),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.achievementId").value(settlementClaim))
+            .andExpect(jsonPath("$.achievementAssigned").value(true))
+            .andExpect(jsonPath("$.anchorType").value("project"))
+            .andExpect(jsonPath("$.anchorRecordId").value(projectId))
+        mockMvc.perform(
+            put("/api/resume-versions/$versionId/question-heatmap/questions/$cacheQuestion/claim")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"achievementId":null}"""),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.achievementAssigned").value(true))
+
+        val corrected = claimsByQuestion()
+        assertEquals(Pair(settlementClaim, "manual"), corrected[generalQuestion])
+        assertEquals(Pair<Long?, String?>(null, "manual"), corrected[cacheQuestion])
+        // With its parent cleared and no words of its own, the follow-up has no claim either.
+        assertEquals(Pair<Long?, String?>(null, null), corrected[followUp])
+
+        mockMvc.perform(
+            put("/api/resume-versions/$versionId/question-heatmap/questions/$generalQuestion/claim")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"achievementId":999999}"""),
+        )
+            .andExpect(status().isNotFound)
+    }
+
+    private fun insertAchievement(versionId: Long, projectId: Long, title: String, metric: String, displayOrder: Int): Long =
+        jdbcTemplate.queryForObject(
+            """
+            INSERT INTO resume_achievement_items (resume_version_id, resume_project_snapshot_id, title, metric_text, impact_summary, display_order, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, now(), now())
+            RETURNING id
+            """.trimIndent(),
+            Long::class.java,
+            versionId,
+            projectId,
+            title,
+            metric,
+            title,
+            displayOrder,
+        )
+
     private fun createResume(title: String): Long {
         val payload = objectMapper.writeValueAsString(
             mapOf(

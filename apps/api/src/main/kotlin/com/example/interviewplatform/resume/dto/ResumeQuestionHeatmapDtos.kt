@@ -109,6 +109,10 @@ data class ResumeQuestionHeatmapQuestionDto(
     val interviewDate: LocalDate?,
     val linkSource: String,
     val confidenceScore: BigDecimal?,
+    /** The resume claim inside the anchor this question is about, when one is known (ADR 0084). */
+    val achievementId: Long? = null,
+    /** "manual" when the user picked the claim (or picked none), "heuristic" when matched by text. */
+    val achievementSource: String? = null,
 )
 
 data class ResumeQuestionHeatmapLinkDto(
@@ -125,6 +129,8 @@ data class ResumeQuestionHeatmapLinkDto(
     val linkSource: String,
     val confidenceScore: BigDecimal?,
     val active: Boolean,
+    val achievementId: Long?,
+    val achievementAssigned: Boolean,
     val createdAt: Instant,
     val updatedAt: Instant,
 )
@@ -156,4 +162,9 @@ data class UpdateResumeQuestionHeatmapLinkRequest(
     @field:DecimalMax("1.0")
     val confidenceScore: BigDecimal? = null,
     val active: Boolean? = null,
+)
+
+/** Narrows a question to one claim, or to none when [achievementId] is null (ADR 0084). */
+data class AssignResumeQuestionClaimRequest(
+    val achievementId: Long? = null,
 )

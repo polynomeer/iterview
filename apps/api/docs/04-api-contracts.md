@@ -139,6 +139,13 @@ Endpoints:
 - `GET /api/resume-versions/{versionId}/question-heatmap/overlay-targets`
 - `POST /api/resume-versions/{versionId}/question-heatmap/links`
 - `PATCH /api/resume-versions/{versionId}/question-heatmap/links/{linkId}`
+- `PUT /api/resume-versions/{versionId}/question-heatmap/questions/{interviewRecordQuestionId}/claim`
+  - Body: `{ achievementId }`. It narrows the question to that resume claim, or to none when `achievementId` is null.
+  - Returns the link, including `achievementId` and `achievementAssigned`.
+  - Picking a claim moves the question to the claim's project or experience.
+  - 404 when the claim is not in the version. 400 when the claim has no project or experience, or when the question has no resume anchor to keep. (ADR 0084)
+
+Each heatmap question carries `achievementId` and `achievementSource` (`manual`, `heuristic`, or null), which give the claim inside its anchor. The claim comes from a manual pick, then from text matching, then from the parent question (ADR 0084).
 
 ## Resume Editor
 

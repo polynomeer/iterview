@@ -45,4 +45,9 @@ class ResumeQuestionHeatmapLinkEntity(
     val createdAt: Instant,
     @Column(name = "updated_at", nullable = false)
     val updatedAt: Instant,
+    /** The claim this question was narrowed to by hand; null with [achievementAssigned] means "no claim". */
+    @Column(name = "achievement_id")
+    val achievementId: Long? = null,
+    @Column(name = "achievement_assigned", nullable = false)
+    val achievementAssigned: Boolean = false,
 )
