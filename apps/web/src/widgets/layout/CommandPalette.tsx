@@ -4,6 +4,7 @@ import { usePracticeQuestionsQuery } from "../../features/practice/api/usePracti
 import { useLatestResumeQuery } from "../../features/resume/api/useLatestResumeQuery";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { useLocale } from "../../shared/i18n";
+import "./commandPalette.css";
 import {
   buildNavigationItems,
   buildQuestionItems,

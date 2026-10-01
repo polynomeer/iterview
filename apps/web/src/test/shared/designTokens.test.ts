@@ -12,10 +12,6 @@ const fs = (await import(/* @vite-ignore */ `node:${"fs"}`)) as FsModule;
 const { cwd } = (globalThis as unknown as { process: { cwd: () => string } }).process;
 const SRC_URL = new URL(`file://${cwd()}/src/`);
 const TOKENS_PATH = "shared/theme/tokens.css";
-// Legacy stylesheet that predates the token layer; it shrinks as screens migrate (docs/09 Phase 5).
-const LEGACY_STYLESHEETS = new Set(["app/styles/global.css"]);
-// Legacy rules used by a single screen were moved next to it as legacy-*.css; they follow the same rules.
-const isLegacy = (path: string) => LEGACY_STYLESHEETS.has(path) || /(^|\/)legacy-[^/]+\.css$/.test(path);
 
 function listStylesheets(relativeDir = ""): Record<string, string> {
   return Object.assign(
@@ -87,7 +83,7 @@ describe("design tokens", () => {
 
   it("keeps raw color and font-size values inside tokens.css", () => {
     const offenders = Object.entries(stylesheets)
-      .filter(([path]) => path !== TOKENS_PATH && !isLegacy(path))
+      .filter(([path]) => path !== TOKENS_PATH)
       .flatMap(([path, source]) =>
         source
           .split("\n")
@@ -100,23 +96,8 @@ describe("design tokens", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("keeps new class names out of the legacy stylesheet so old rules cannot leak in", () => {
-    const legacy = Object.entries(stylesheets)
-      .filter(([path]) => isLegacy(path))
-      .map(([, source]) => source)
-      .join("\n");
-    const collisions = Object.entries(stylesheets)
-      .filter(([path]) => path !== TOKENS_PATH && !isLegacy(path))
-      .flatMap(([path, source]) =>
-        [...new Set([...source.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/\.([a-z][a-z0-9_-]*)/g)].map((match) => match[1]))]
-          .filter((className) => new RegExp(`\\.${className}(?![a-zA-Z0-9_-])`).test(legacy))
-          .map((className) => `${path}: .${className}`),
-      );
-
-    expect(collisions).toEqual([]);
-  });
-
-  it("keeps the shared legacy stylesheet under 3,000 lines (docs/09 Phase 5)", () => {
-    expect(stylesheets["app/styles/global.css"].split("\n").length).toBeLessThan(3000);
+  it("has no legacy stylesheet left: every rule is written against tokens", () => {
+    const legacy = Object.keys(stylesheets).filter((path) => path === "app/styles/global.css" || /(^|\/)legacy-[^/]+\.css$/.test(path));
+    expect(legacy).toEqual([]);
   });
 });

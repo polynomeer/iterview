@@ -1,7 +1,32 @@
-/*
- * Navigation shell (docs/09 Phase 2). Token-only styles; the legacy `.sidebar-navigation`
- * rules in global.css still provide the sticky column and background.
- */
+/* Navigation shell (docs/09 Phase 2): app frame, sidebar, top bar, and mobile tab bar. Token-only styles. */
+
+.app-shell { min-height: 100vh; background: var(--iv-bg); color: var(--iv-text); }
+
+.app-shell--desktop {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.app-shell__ambient { display: none; }
+.app-shell__workspace { min-width: 0; }
+.app-shell__content { min-width: 0; }
+.app-shell__canvas { width: 100%; }
+.app-shell__canvas--desktop { max-width: 90rem; margin: 0 auto; padding: var(--iv-space-6) var(--iv-space-8) var(--iv-space-10); }
+
+.app-shell--mobile { padding-bottom: calc(var(--iv-space-10) * 2.5); }
+.app-shell__frame { width: 100%; }
+.app-shell__canvas--mobile { padding: var(--iv-space-4) var(--iv-space-4) var(--iv-space-6); }
+
+.shell-nav {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  padding: var(--iv-space-5) var(--iv-space-3) var(--iv-space-4);
+  overflow-y: auto;
+  border-right: 1px solid var(--iv-border);
+  background: var(--iv-surface-sunken);
+}
 
 .shell-nav {
   display: flex;
@@ -126,6 +151,9 @@ button.shell-nav__resume { width: 100%; background: none; font-family: var(--iv-
 /* ---------- Top bar ---------- */
 
 .shell-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 15;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--iv-border);
@@ -329,3 +357,37 @@ button.shell-nav__resume { width: 100%; background: none; font-family: var(--iv-
 .version-switcher__option:disabled { cursor: progress; opacity: 0.7; }
 .version-switcher__copy { display: flex; flex: 1; flex-direction: column; min-width: 0; font-size: var(--iv-text-sm); }
 .version-switcher__copy span { color: var(--iv-text-muted); font-size: var(--iv-text-xs); }
+
+/* Mobile tab bar */
+.bottom-tab-bar {
+  position: fixed;
+  right: var(--iv-space-3);
+  bottom: var(--iv-space-3);
+  left: var(--iv-space-3);
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--iv-space-1);
+  max-width: 35rem;
+  margin: 0 auto;
+  padding: var(--iv-space-2);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface);
+  box-shadow: var(--iv-shadow-lg);
+}
+
+.bottom-tab-bar__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--iv-space-1);
+  min-height: 3.25rem;
+  border-radius: var(--iv-radius-md);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-xs);
+}
+
+.bottom-tab-bar__link--active { background: var(--iv-accent-soft); color: var(--iv-accent-text); font-weight: var(--iv-weight-semibold); }
+.bottom-tab-bar__icon { display: inline-flex; }

@@ -156,7 +156,7 @@ Avoid placing product-specific concepts in `shared` just because they are reused
 
 - design tokens live in `src/shared/theme/tokens.css` (`--iv-*`); raw colors and font sizes are not allowed anywhere else (enforced by `src/test/shared/designTokens.test.ts`)
 - reusable controls come from `src/shared/ui/primitives` (`ui-*` classes); do not add new page-specific button, input, tab, or dialog styles
-- `src/app/styles/global.css` is legacy and capped under 3,000 lines. Every screen now styles itself with primitives and a token-only stylesheet next to it; no `legacy-*.css` files remain. The design token test still treats any future `legacy-*.css` like `global.css`.
+- There is no global stylesheet beyond `src/app/styles/base.css` (element defaults). Tokens live in `shared/theme/tokens.css`, primitives in `shared/ui/primitives/primitives.css`, the shell in `widgets/layout/shell.css`, and every screen keeps a token-only stylesheet next to its code. A design token test fails if `global.css` or a `legacy-*.css` file comes back, or if a raw color or font size appears outside `tokens.css`.
 - user-facing text lives in `src/shared/i18n/catalog/<namespace>.ts` (`{ en, ko }`), read with `t("ns.key", params)` or `translate()`. Inline `isKorean` ternaries are not allowed (ADR 0080).
 - run the dev server and open `/__ui` for a live reference of every primitive, icon, and state (development builds only)
 - use `EmptyState`, `ErrorState`, and `PageSkeleton` for new loading, empty, and error states instead of page-specific cards

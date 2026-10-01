@@ -1,0 +1,28 @@
+/* Element defaults for the whole app. Token-only; components style themselves next to their code. */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html,
+body,
+#root { min-height: 100%; margin: 0; }
+
+body {
+  background: var(--iv-bg);
+  color: var(--iv-text);
+  font-family: var(--iv-font-sans);
+  font-size: var(--iv-text-md);
+  line-height: var(--iv-leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, p { margin: 0; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { color: inherit; font: inherit; }
+button { cursor: pointer; }
+
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible { outline: none; box-shadow: var(--iv-focus-ring); }
+
+::selection { background: var(--iv-accent-soft); }

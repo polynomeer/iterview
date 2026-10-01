@@ -119,7 +119,7 @@ export function SidebarNavigation() {
   );
 
   return (
-    <aside className="sidebar-navigation shell-nav">
+    <aside className="shell-nav">
       <Link className="shell-nav__brand" to={routeConfig.home.buildPath()}>
         <span aria-hidden="true" className="shell-nav__brand-mark">
           i

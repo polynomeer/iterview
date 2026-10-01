@@ -7,7 +7,7 @@ type TopToolbarProps = {
 
 export function TopToolbar({ onOpenCommandPalette }: TopToolbarProps) {
   return (
-    <div className="top-toolbar shell-toolbar">
+    <div className="shell-toolbar">
       <Header onOpenCommandPalette={onOpenCommandPalette} />
       <AreaNavigation />
     </div>

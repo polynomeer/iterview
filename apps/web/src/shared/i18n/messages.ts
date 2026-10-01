@@ -91,12 +91,6 @@ export const messages = {
       answerAgain: "Answer again",
     },
     auth: {
-      loadingEyebrow: "Auth",
-      sessionChecks: "Session checks",
-      sessionCheckRestoreToken: "Restore the saved access token",
-      sessionCheckLoadProfile: "Load the current user profile",
-      sessionCheckOpenRoutes: "Open protected routes after verification",
-      whatOpensNext: "What opens next",
     },
     answer: {
       loadErrorTitle: "Unable to load question context",
@@ -246,12 +240,6 @@ export const messages = {
       answerAgain: "다시 답하기",
     },
     auth: {
-      loadingEyebrow: "인증",
-      sessionChecks: "세션 확인",
-      sessionCheckRestoreToken: "저장된 액세스 토큰 복구",
-      sessionCheckLoadProfile: "현재 사용자 프로필 불러오기",
-      sessionCheckOpenRoutes: "검증 후 보호된 경로 열기",
-      whatOpensNext: "다음에 열리는 화면",
     },
     answer: {
       loadErrorTitle: "질문 맥락을 불러올 수 없습니다",

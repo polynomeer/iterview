@@ -160,29 +160,16 @@ export function AuthBootstrap({ children }: PropsWithChildren) {
     const retrying = phase === "retrying";
     return (
       <AuthLoadingScreen
-        checks={
-          autoRestoreAttempts > 0
-            ? [t("appShell.authRetryCheckKeepToken"), t("appShell.authRetryCheckCurrentUser"), t("appShell.authRetryCheckResume")]
-            : undefined
-        }
         description={retrying ? t("appShell.authRetryingDescription") : t("appShell.authRestoringDescription")}
-        nextBody={t("appShell.authRestoreNextBody")}
-        statusBody={retrying ? t("appShell.authRetryingStatusBody") : t("appShell.authRestoringStatusBody")}
-        statusEyebrow={retrying ? t("appShell.authRetryingEyebrow") : t("common.loadingState")}
-        statusMeta={
+        meta={
           retrying
             ? t("appShell.authRetryScheduled", {
                 attempt: autoRestoreAttempts + 1,
                 max: MAX_AUTO_RESTORE_ATTEMPTS,
                 seconds: Math.floor(AUTO_RESTORE_DELAY_MS / 1000),
               })
-            : autoRestoreAttempts > 0
-              ? t(autoRestoreAttempts === 1 ? "appShell.authRecoveredAfterOneRetry" : "appShell.authRecoveredAfterRetries", {
-                  count: autoRestoreAttempts,
-                })
-              : undefined
+            : undefined
         }
-        statusTitle={retrying ? t("appShell.authRetryingStatusTitle") : t("appShell.authRestoringStatusTitle")}
         title={retrying ? t("appShell.authRetryingTitle") : t("appShell.authRestoringTitle")}
       />
     );

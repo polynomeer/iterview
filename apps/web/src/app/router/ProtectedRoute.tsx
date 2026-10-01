@@ -7,7 +7,7 @@ import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery
 import { useLogout } from "../../features/auth/useLogout";
 import { AuthLoadingScreen } from "../../shared/ui/AuthLoadingScreen";
 import { useLocale } from "../../shared/i18n";
-import { PageContainer } from "../../shared/ui/PageContainer";
+import { ButtonLink, ErrorState } from "../../shared/ui/primitives";
 
 export function ProtectedRoute() {
   const location = useLocation();
@@ -44,30 +44,22 @@ export function ProtectedRoute() {
 
   if (currentUserQuery.isLoading) {
     return (
-      <AuthLoadingScreen
-        description={t("appShell.protectedLoadingDescription")}
-        statusBody={t("appShell.protectedLoadingStatusBody")}
-        statusTitle={t("appShell.protectedLoadingStatusTitle")}
-        title={t("appShell.protectedLoadingTitle")}
-      />
+      <AuthLoadingScreen description={t("appShell.protectedLoadingDescription")} title={t("appShell.protectedLoadingTitle")} />
     );
   }
 
   if (currentUserQuery.isError) {
     return (
-      <PageContainer
-        description={t("appShell.sessionRequiredDescription")}
-        eyebrow={t("appShell.sessionRequiredEyebrow")}
+      <ErrorState
+        actions={
+          <ButtonLink to={routeConfig.login.buildPath()} variant="primary">
+            {t("appShell.signInAgain")}
+          </ButtonLink>
+        }
+        body={userFacingErrorMessage(currentUserQuery.error, t("appShell.sessionVerifyFailed"))}
+        size="page"
         title={t("appShell.sessionRequiredTitle")}
-      >
-        <section className="page-card">
-          <span className="page-card__label">{t("appShell.accessBlocked")}</span>
-          <h2 className="page-card__title">{t("appShell.signInAgain")}</h2>
-          <p className="page-card__body">
-            {userFacingErrorMessage(currentUserQuery.error, t("appShell.sessionVerifyFailed"))}
-          </p>
-        </section>
-      </PageContainer>
+      />
     );
   }
 

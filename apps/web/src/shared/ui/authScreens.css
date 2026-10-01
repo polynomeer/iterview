@@ -1,0 +1,47 @@
+/* Session restore and recovery screens, shown before the app shell. Token-only styles. */
+
+.auth-status { display: grid; place-items: center; min-height: 100dvh; padding: var(--iv-space-6) var(--iv-space-4); background: var(--iv-bg); }
+
+.auth-status__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-4);
+  width: min(28rem, 100%);
+  padding: var(--iv-space-8) var(--iv-space-6);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface);
+}
+
+.auth-status__title { color: var(--iv-text); font-size: var(--iv-text-xl); font-weight: var(--iv-weight-bold); line-height: var(--iv-leading-tight); }
+.auth-status__body { color: var(--iv-text-muted); line-height: var(--iv-leading-body); }
+.auth-status__meta { color: var(--iv-text-subtle); font-size: var(--iv-text-sm); }
+.auth-status__actions { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); }
+
+.auth-status__progress {
+  position: relative;
+  display: block;
+  height: 0.25rem;
+  overflow: hidden;
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-surface-sunken);
+}
+
+.auth-status__progress::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 35%;
+  border-radius: inherit;
+  background: var(--iv-accent);
+  animation: auth-status-progress 1.2s var(--iv-ease) infinite;
+}
+
+@keyframes auth-status-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-status__progress::after { animation: none; width: 100%; opacity: 0.4; }
+}
