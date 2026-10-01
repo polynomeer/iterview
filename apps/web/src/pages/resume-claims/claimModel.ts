@@ -31,7 +31,7 @@ export function riskiestEmptyField(claim: Claim, evidence: Pick<ResumeClaimEvide
   return order.find((field) => evidence[field].trim().length === 0) ?? null;
 }
 
-/** Heatmap links anchor to projects and experiences, so a claim shares the questions of its project. */
+/** Heatmap links anchor to projects and experiences; questions inside one carry the claim they are about (ADR 0084). */
 export function claimHeatmapItem(claim: Claim, items: HeatmapItem[]): HeatmapItem | null {
   const byAnchor = (type: string, id?: string) =>
     id ? items.find((item) => item.anchorType === type && item.anchorRecordId === id) ?? null : null;
@@ -58,4 +58,19 @@ export function groupClaims(snapshot: ResumeSnapshotModel): ClaimGroup[] {
     groups.get(key)!.claims.push(claim);
   }
   return [...groups.values()];
+}
+
+export type ClaimQuestions = {
+  /** Questions about this claim. */
+  own: HeatmapItem["linkedQuestions"];
+  /** Questions about the same project or experience that no claim took; they can be moved onto this one. */
+  unassigned: HeatmapItem["linkedQuestions"];
+};
+
+export function claimQuestions(claim: Claim, item: HeatmapItem | null): ClaimQuestions {
+  const questions = item?.linkedQuestions ?? [];
+  return {
+    own: questions.filter((question) => question.achievementId === claim.id),
+    unassigned: questions.filter((question) => question.achievementId === null),
+  };
 }

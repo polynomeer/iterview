@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import type { ResumeSnapshotModel } from "../../entities/resume/model";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { useUpdateClaimEvidenceMutation } from "../../features/resume-claims/api/useUpdateClaimEvidenceMutation";
+import { useAssignQuestionClaimMutation } from "../../features/resume-heatmap/api/useAssignQuestionClaimMutation";
 import { useResumeQuestionHeatmapQuery } from "../../features/resume-heatmap/api/useResumeQuestionHeatmapQuery";
 import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
@@ -28,6 +29,7 @@ import { anchorPathId } from "../resume-heatmap/heatmapUtils";
 import {
   answeredCount,
   claimHeatmapItem,
+  claimQuestions,
   EVIDENCE_FIELDS,
   evidenceStatus,
   groupClaims,
@@ -51,15 +53,16 @@ const FIELD_COPY: Record<EvidenceField, { label: MessageKey; placeholder: Messag
   result: { label: "resumeClaims.fieldResult", placeholder: "resumeClaims.placeholderResult", ask: "resumeClaims.askResult" },
 };
 
-function weakCount(item: HeatmapItem | null) {
-  return item?.linkedQuestions.filter((question) => question.weakAnswer).length ?? 0;
+/** Weak answers to this claim's own questions; other claims in the project do not count (ADR 0084). */
+function weakCount(claim: Claim, item: HeatmapItem | null) {
+  return claimQuestions(claim, item).own.filter((question) => question.weakAnswer).length;
 }
 
 function useClaimBadge() {
   const { t } = useLocale();
   return (claim: Claim, item: HeatmapItem | null): { tone: Tone; label: string } => {
     const status = evidenceStatus(claim.evidence);
-    if (status !== "ready" && weakCount(item) > 0) {
+    if (status !== "ready" && weakCount(claim, item) > 0) {
       return { tone: "danger", label: t("resumeClaims.statusWeak") };
     }
     if (status === "ready") {
@@ -93,7 +96,7 @@ function ClaimList({ snapshot, heatmapItems, selectedId, onSelect }: {
   const [filter, setFilter] = useState<Filter>("all");
   const claims = snapshot.achievements;
   const needsEvidence = claims.filter((claim) => evidenceStatus(claim.evidence) !== "ready");
-  const weak = needsEvidence.filter((claim) => weakCount(claimHeatmapItem(claim, heatmapItems)) > 0);
+  const weak = needsEvidence.filter((claim) => weakCount(claim, claimHeatmapItem(claim, heatmapItems)) > 0);
   const visible = new Set((filter === "weak" ? weak : filter === "needs-evidence" ? needsEvidence : claims).map((claim) => claim.id));
   const groups = groupClaims(snapshot)
     .map((group) => ({ ...group, claims: group.claims.filter((claim) => visible.has(claim.id)) }))
@@ -158,8 +161,9 @@ function ClaimEditor({ claim, item, versionId }: { claim: Claim; item: HeatmapIt
   const mutation = useUpdateClaimEvidenceMutation(versionId);
   const dirty = EVIDENCE_FIELDS.some((field) => draft[field] !== saved[field]);
   const risk = riskiestEmptyField(claim, draft);
-  const weak = weakCount(item);
-  const questions = item?.linkedQuestions ?? [];
+  const weak = weakCount(claim, item);
+  const { own: questions, unassigned } = claimQuestions(claim, item);
+  const assign = useAssignQuestionClaimMutation(versionId);
 
   function save() {
     if (!dirty || mutation.isPending) {
@@ -240,7 +244,7 @@ function ClaimEditor({ claim, item, versionId }: { claim: Claim; item: HeatmapIt
       <section aria-labelledby="claim-questions-title" className="claim-questions">
         <header className="claim-questions__head">
           <h3 className="claim-questions__title" id="claim-questions-title">
-            {t(item?.anchorType === "experience" || (!item && !claim.projectId) ? "resumeClaims.questionsFromExperience" : "resumeClaims.questionsFromProject")}
+            {t("resumeClaims.questionsForClaim")}
           </h3>
           {item ? (
             <ButtonLink
@@ -252,10 +256,46 @@ function ClaimEditor({ claim, item, versionId }: { claim: Claim; item: HeatmapIt
             </ButtonLink>
           ) : null}
         </header>
+        {assign.isError ? <p className="claim-questions__empty ui-tone-text--danger">{t("resumeClaims.assignFailed")}</p> : null}
         {questions.length === 0 ? <p className="claim-questions__empty">{t("resumeClaims.questionsEmpty")}</p> : null}
         {questions.slice(0, QUESTION_PREVIEW).map((question) => (
-          <LinkedQuestionRow key={question.id} question={question} />
+          <LinkedQuestionRow
+            action={
+              <Button
+                disabled={assign.isPending}
+                onClick={() => assign.mutate({ interviewRecordQuestionId: question.interviewRecordQuestionId, achievementId: null })}
+                size="sm"
+                variant="ghost"
+              >
+                {t("resumeClaims.unassign")}
+              </Button>
+            }
+            key={question.id}
+            question={question}
+          />
         ))}
+        {unassigned.length > 0 ? (
+          <>
+            <h4 className="claim-questions__subtitle">
+              {t(item?.anchorType === "experience" ? "resumeClaims.otherQuestionsInExperience" : "resumeClaims.otherQuestionsInProject", { count: unassigned.length })}
+            </h4>
+            {unassigned.slice(0, QUESTION_PREVIEW).map((question) => (
+              <LinkedQuestionRow
+                action={
+                  <Button
+                    disabled={assign.isPending}
+                    onClick={() => assign.mutate({ interviewRecordQuestionId: question.interviewRecordQuestionId, achievementId: claim.id })}
+                    size="sm"
+                  >
+                    {t("resumeClaims.assignHere")}
+                  </Button>
+                }
+                key={question.id}
+                question={question}
+              />
+            ))}
+          </>
+        ) : null}
       </section>
     </Card>
   );

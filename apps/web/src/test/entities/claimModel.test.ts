@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { mapClaimEvidence } from "../../entities/resume/model";
-import { claimHeatmapItem, evidenceStatus, riskiestEmptyField, type Claim, type HeatmapItem } from "../../pages/resume-claims/claimModel";
+import { claimHeatmapItem, claimQuestions, evidenceStatus, riskiestEmptyField, type Claim, type HeatmapItem } from "../../pages/resume-claims/claimModel";
 
 function claim(overrides: Partial<Claim> = {}): Claim {
   return { id: "a1", title: "Led the migration", impactSummary: "", evidence: mapClaimEvidence(null), ...overrides };
@@ -31,5 +31,19 @@ describe("claimModel", () => {
     expect(claimHeatmapItem(claim({ projectId: "p1", experienceId: "e1" }), items)).toBe(items[1]);
     expect(claimHeatmapItem(claim({ projectId: "p2", experienceId: "e1" }), items)).toBe(items[0]);
     expect(claimHeatmapItem(claim(), items)).toBeNull();
+  });
+
+  it("splits a project's questions into this claim's own and the unclaimed ones (ADR 0084)", () => {
+    const item = {
+      linkedQuestions: [
+        { id: "q1", achievementId: "a1" },
+        { id: "q2", achievementId: "a2" },
+        { id: "q3", achievementId: null },
+      ],
+    } as unknown as HeatmapItem;
+    const split = claimQuestions(claim({ id: "a1" }), item);
+    expect(split.own.map((question) => question.id)).toEqual(["q1"]);
+    expect(split.unassigned.map((question) => question.id)).toEqual(["q3"]);
+    expect(claimQuestions(claim(), null)).toEqual({ own: [], unassigned: [] });
   });
 });

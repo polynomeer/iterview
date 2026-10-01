@@ -89,3 +89,11 @@ export function updateResumeQuestionHeatmapLinkRequest(
     },
   );
 }
+
+/** Narrows an interview question to one resume claim, or to none (ADR 0084). */
+export function assignResumeQuestionClaimRequest(versionId: string, interviewRecordQuestionId: string, achievementId: string | null) {
+  return httpClient.put<ResumeQuestionHeatmapLinkDto, { achievementId: number | null }>(
+    apiEndpoints.resumeVersions.questionHeatmapClaim(versionId, interviewRecordQuestionId),
+    { body: { achievementId: achievementId === null ? null : Number(achievementId) } },
+  );
+}

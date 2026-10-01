@@ -102,6 +102,15 @@
 }
 
 .claim-questions__title { margin: 0; font-size: var(--iv-text-md); font-weight: var(--iv-weight-semibold); }
+.claim-questions__subtitle {
+  margin: 0;
+  padding: var(--iv-space-4) var(--iv-space-5) var(--iv-space-2);
+  border-top: 1px solid var(--iv-border);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-semibold);
+}
+
 .claim-questions__empty { margin: 0; padding: 0 var(--iv-space-5) var(--iv-space-5); color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
 
 @media (max-width: 960px) {

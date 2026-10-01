@@ -81,6 +81,9 @@ export type ResumeQuestionHeatmapQuestionModel = {
   linkSourceLabel: string;
   confidenceScore: number | null;
   confidenceLabel: string | null;
+  /** The resume claim this question is about, inside its project or experience (ADR 0084). */
+  achievementId: string | null;
+  achievementSource: "manual" | "heuristic" | null;
 };
 
 export type ResumeQuestionHeatmapOverlayTargetModel = {
@@ -257,6 +260,8 @@ function mapQuestion(
       question.confidenceScore === null || question.confidenceScore === undefined
         ? null
         : `${Math.round(question.confidenceScore * 100)}%`,
+    achievementId: question.achievementId === null || question.achievementId === undefined ? null : String(question.achievementId),
+    achievementSource: question.achievementSource ?? null,
   };
 }
 

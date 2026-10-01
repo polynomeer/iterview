@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mapClaimEvidence, type ResumeSnapshotModel } from "../../entities/resume/model";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { useUpdateClaimEvidenceMutation } from "../../features/resume-claims/api/useUpdateClaimEvidenceMutation";
+import { useAssignQuestionClaimMutation } from "../../features/resume-heatmap/api/useAssignQuestionClaimMutation";
 import { useResumeQuestionHeatmapQuery } from "../../features/resume-heatmap/api/useResumeQuestionHeatmapQuery";
 import { ResumeClaimsPage } from "../../pages/resume-claims/ResumeClaimsPage";
 import { LocationDisplay, renderWithProviders } from "../utils";
@@ -13,6 +14,7 @@ vi.mock("../../pages/resume/ResumeHubLayout", () => ({ useResumeHub: () => ({ ve
 vi.mock("../../features/resume/api/useResumeVersionSnapshotsQuery", () => ({ useResumeVersionSnapshotsQuery: vi.fn() }));
 vi.mock("../../features/resume-heatmap/api/useResumeQuestionHeatmapQuery", () => ({ useResumeQuestionHeatmapQuery: vi.fn() }));
 vi.mock("../../features/resume-claims/api/useUpdateClaimEvidenceMutation", () => ({ useUpdateClaimEvidenceMutation: vi.fn() }));
+vi.mock("../../features/resume-heatmap/api/useAssignQuestionClaimMutation", () => ({ useAssignQuestionClaimMutation: vi.fn() }));
 
 const ready = mapClaimEvidence({ situationText: "Batch drift", roleText: "Lead", measurementText: "Reconciliation job", resultText: "37 → 0" });
 
@@ -58,9 +60,13 @@ const question = {
   linkSourceLabel: "Heuristic",
   confidenceScore: 0.7,
   confidenceLabel: "70%",
+  achievementId: "a2",
+  achievementSource: "heuristic",
 };
+const otherQuestion = { ...question, id: "q2", interviewRecordQuestionId: "q2", text: "Why Kafka over a database queue?", weakAnswer: false, achievementId: null, achievementSource: null };
 
 const mutate = vi.fn();
+const assign = vi.fn();
 
 function mockSnapshot(achievements = claims) {
   vi.mocked(useResumeVersionSnapshotsQuery).mockReturnValue({ data: snapshot(achievements), isLoading: false, isError: false, error: null, refetch: vi.fn() } as never);
@@ -88,9 +94,27 @@ describe("ResumeClaimsPage", () => {
     mutate.mockReset();
     mockSnapshot();
     vi.mocked(useResumeQuestionHeatmapQuery).mockReturnValue({
-      data: { items: [{ id: "h1", anchorType: "project", anchorRecordId: "p1", anchorKey: null, linkedQuestions: [question] }] },
+      data: { items: [{ id: "h1", anchorType: "project", anchorRecordId: "p1", anchorKey: null, linkedQuestions: [question, otherQuestion] }] },
     } as never);
     vi.mocked(useUpdateClaimEvidenceMutation).mockReturnValue({ mutate, isPending: false, isError: false, isSuccess: false } as never);
+    assign.mockReset();
+    vi.mocked(useAssignQuestionClaimMutation).mockReturnValue({ mutate: assign, isPending: false, isError: false } as never);
+  });
+
+  it("judges 약점 from a claim's own questions and lets the user move questions between claims (ADR 0084)", async () => {
+    const user = userEvent.setup();
+    renderClaims();
+
+    // Only a2 drew the weak question; a1 shares the project but is not marked weak.
+    expect(screen.getByRole("button", { name: /Zero consistency errors.*Weak/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Kafka event pipeline.*Ready/ })).toBeInTheDocument();
+
+    expect(screen.getByRole("heading", { level: 3, name: "Questions about this claim" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 4, name: "Other questions about this project (1)" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Not about this" }));
+    expect(assign).toHaveBeenCalledWith({ interviewRecordQuestionId: "q1", achievementId: null });
+    await user.click(screen.getByRole("button", { name: "Move to this claim" }));
+    expect(assign).toHaveBeenCalledWith({ interviewRecordQuestionId: "q2", achievementId: "a2" });
   });
 
   it("groups claims by project, shows progress, and opens the first claim that needs evidence", () => {
@@ -135,8 +159,8 @@ describe("ResumeClaimsPage", () => {
 
     await user.click(screen.getByRole("button", { name: /Led the MSA migration/ }));
     expect(screen.getByTestId("location-display")).toHaveTextContent("/resume/v1/claims?claim=a3");
-    expect(screen.getByRole("heading", { level: 3, name: "Questions from this role" })).toBeInTheDocument();
-    expect(screen.getByText("No real interview question has landed here yet.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Questions about this claim" })).toBeInTheDocument();
+    expect(screen.getByText("No real interview question is about this claim yet.")).toBeInTheDocument();
 
     await user.type(screen.getByLabelText("Result"), "Deploys 40 → 12 minutes");
     expect(screen.getByText("Unsaved changes")).toBeInTheDocument();

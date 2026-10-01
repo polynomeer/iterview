@@ -60,6 +60,8 @@ export const apiEndpoints = {
     reExtract: (versionId: string) => `/api/resume-versions/${versionId}/re-extract`,
     file: (versionId: string) => `/api/resume-versions/${versionId}/file`,
     questionHeatmap: (versionId: string) => `/api/resume-versions/${versionId}/question-heatmap`,
+    questionHeatmapClaim: (versionId: string, interviewRecordQuestionId: string) =>
+      `/api/resume-versions/${versionId}/question-heatmap/questions/${interviewRecordQuestionId}/claim`,
     questionHeatmapOverlayTargets: (versionId: string) =>
       `/api/resume-versions/${versionId}/question-heatmap/overlay-targets`,
     questionHeatmapLinks: (versionId: string) =>

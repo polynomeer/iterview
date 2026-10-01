@@ -59,6 +59,9 @@ export type ResumeQuestionHeatmapQuestionDto = {
   interviewDate?: string | null;
   linkSource?: string | null;
   confidenceScore?: number | null;
+  /** The resume claim inside the anchor (ADR 0084). */
+  achievementId?: string | number | null;
+  achievementSource?: "manual" | "heuristic" | null;
 };
 
 export type ResumeQuestionHeatmapOverlayTargetDto = {
