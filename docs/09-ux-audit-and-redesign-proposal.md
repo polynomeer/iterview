@@ -501,8 +501,12 @@ After the redesign:
   - Settings offers 시스템 · 라이트 · 다크, with 시스템 as the default. Stored `workspace` and `dracula` values become 다크.
   - Twelve main routes, login, and the answer editor were checked in light and dark at 1440px, with spot checks at 390px.
 
+- **보관함 shipped (ADR 0083):** `/library` sits under the primary areas in the sidebar. It shows saved questions, notes, and the reading linked to them.
+  - A question page gets a 저장 toggle and a 노트 tab.
+  - `/notes` and `/bookmarks` now redirect there.
+  - The API stores one bookmark and one private note per user and question, and writes both atomically.
+
 Still open after the redesign:
-- 보관함, once notes and bookmarks APIs exist.
 
 ---
 

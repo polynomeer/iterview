@@ -62,7 +62,8 @@ Evidence:
 ### 5. Settings, Auth, And Explore
 
 Covered path:
-- Settings: profile, target companies, practice goals, language, and account on one page.
+- Settings: profile, target companies, practice goals, language, theme, and account on one page.
+- 보관함: saved questions, notes, and linked reading. Questions get a 저장 toggle and a 노트 tab.
 - Auth: login and signup without the app shell.
 - Explore: the public feed, with a sign-in state for guests.
 
@@ -71,6 +72,7 @@ Evidence:
 - `apps/web/src/test/pages/LoginPage.test.tsx`
 - `apps/web/src/test/pages/SignupPage.test.tsx`
 - `apps/web/src/test/pages/FeedPage.test.tsx`
+- `apps/web/src/test/pages/LibraryPage.test.tsx`
 - `apps/web/src/test/providers/AuthBootstrap.test.tsx`
 
 ### 6. Shell, Routing, And Navigation
