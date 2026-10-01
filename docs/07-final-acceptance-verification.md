@@ -124,6 +124,5 @@ Evidence:
 
 ## Known Gaps
 
-- The markdown document editor (`/resume/:versionId/claims/document`) keeps its legacy styling in `legacy-editor.css` next to it.
 - The demo data has no interview audio, so the record review's recording panel is covered by tests but has not been checked visually against real data.
 - Under heavy machine load, `ResumeEditorPage.test.tsx` can exceed its 15-second budget in the full run. It passes when run alone.

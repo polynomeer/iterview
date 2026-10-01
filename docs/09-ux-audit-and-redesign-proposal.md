@@ -491,8 +491,12 @@ After the redesign:
   - Server codes for question types, weakness tags, and next steps are translated.
   - `legacy-review.css` (773 lines) is deleted. `global.css` drops to 2,908 lines after pruning what that left unreferenced.
 
+- **Document editor restyled:** the markdown editor at `/resume/:versionId/claims/document` now uses the primitives and a token-only `editor.css`.
+  - One toolbar holds the way back to the claim form, the revision, 더 보기, and 초안 저장. The five views (편집 · 검토 · 압박 지도 · 인쇄 미리보기 · 기록) are one segmented control instead of two tabs and a dropdown.
+  - Layout narration, workspace internals (node ids, offsets, model and capability chips), and the annotated preview are removed. The import dialog uses the `Dialog` primitive.
+  - `legacy-editor.css` (713 lines) and the old `StateCard`, `MetricCard`, and `SectionPanel` helpers are deleted. No screen has co-located legacy CSS anymore. `global.css` is 2,555 lines.
+
 Still open after the redesign:
-- A restyle of the markdown document editor, which still renders with its co-located legacy CSS.
 - A token-based light theme (ADR 0075). The theme choices still differ only on legacy screens.
 - 보관함, once notes and bookmarks APIs exist.
 
