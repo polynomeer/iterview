@@ -31,8 +31,9 @@ export const LEGACY_REDIRECTS: LegacyRedirect[] = [
   { from: "/weak-nodes", to: () => routeConfig.reviewQueue.buildPath() },
   { from: "/scheduled-reviews", to: () => routeConfig.reviewQueue.buildPath() },
   { from: "/target-companies", to: () => routeConfig.settings.buildPath() },
-  { from: "/notes", to: () => routeConfig.practice.buildPath() },
-  { from: "/bookmarks", to: () => routeConfig.practice.buildPath() },
+  // 보관함 replaced the sample notes and bookmarks pages (ADR 0083).
+  { from: "/notes", to: () => routeConfig.library.buildPath() },
+  { from: "/bookmarks", to: () => routeConfig.library.buildPath() },
   {
     from: "/resume-versions/:versionId/editor",
     to: (params) => routeConfig.resumeEditor.buildPath({ versionId: param(params, "versionId") }),

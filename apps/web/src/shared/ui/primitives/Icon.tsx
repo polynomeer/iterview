@@ -26,6 +26,7 @@ const ICON_PATHS = {
   arrowRight: ["M5 12h14", "M13 6l6 6-6 6"],
   plus: ["M12 5v14", "M5 12h14"],
   more: ["circle:5,12,1", "circle:12,12,1", "circle:19,12,1"],
+  bookmark: ["M6 3h12v18l-6-4-6 4z"],
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;

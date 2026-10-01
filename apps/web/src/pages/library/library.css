@@ -1,0 +1,27 @@
+/* 보관함 (ADR 0083). Token-only styles. */
+
+.library { gap: var(--iv-space-4); }
+.library .ui-tabs__list { padding: 0 var(--iv-space-5); }
+.library__empty { margin: 0; padding: var(--iv-space-6) var(--iv-space-5); color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.library-list { margin: 0; padding: 0; list-style: none; }
+
+.library-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-2);
+  padding: var(--iv-space-4) var(--iv-space-5);
+  border-top: 1px solid var(--iv-border);
+}
+
+.library-item:first-child { border-top: 0; }
+.library-item--row { flex-direction: row; align-items: flex-start; justify-content: space-between; gap: var(--iv-space-3); }
+.library-item__main { display: flex; flex-direction: column; gap: var(--iv-space-2); min-width: 0; }
+
+.library-item__title { color: var(--iv-text); font-size: var(--iv-text-md); font-weight: var(--iv-weight-semibold); line-height: var(--iv-leading-tight); overflow-wrap: anywhere; }
+a.library-item__title:hover { color: var(--iv-accent-text); }
+
+.library-item__note { margin: 0; color: var(--iv-text); font-size: var(--iv-text-sm); line-height: var(--iv-leading-body); white-space: pre-wrap; overflow-wrap: anywhere; }
+.library-item__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--iv-space-1) var(--iv-space-2); margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-xs); }
+.library-item__question { color: var(--iv-text-muted); font-size: var(--iv-text-xs); }
+.library-item__question:hover { color: var(--iv-accent-text); }

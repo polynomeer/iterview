@@ -63,6 +63,7 @@ export const routeConfig = {
   archive: createStaticRoute("/review/done", "Done", true),
   feed: createStaticRoute("/explore", "Explore"),
   settings: createStaticRoute("/settings", "Settings", true),
+  library: createStaticRoute("/library", "Library", true),
   profile: createStaticRoute("/settings/profile", "Profile", true),
   resume: createStaticRoute("/resume", "Resume", true),
   resumeOverview: createDynamicRoute(

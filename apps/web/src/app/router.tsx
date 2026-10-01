@@ -13,6 +13,7 @@ const HomePage = lazy(() => import("../pages/home/HomePage").then((module) => ({
 const QuestionsIndexPage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionsIndexPage })));
 const QuestionWorkspacePage = lazy(() => import("../pages/questions/QuestionWorkspacePage").then((module) => ({ default: module.QuestionWorkspacePage })));
 const SkillMapPage = lazy(() => import("../pages/skills/SkillMapPage").then((module) => ({ default: module.SkillMapPage })));
+const LibraryPage = lazy(() => import("../pages/library/LibraryPage").then((module) => ({ default: module.LibraryPage })));
 const ReviewQueuePage = lazy(() => import("../pages/review/ReviewQueuePage").then((module) => ({ default: module.ReviewQueuePage })));
 const AnswerEditorPage = lazy(() => import("../pages/answer-editor/AnswerEditorPage").then((module) => ({ default: module.AnswerEditorPage })));
 const ResultAnalysisPage = lazy(() => import("../pages/result-analysis/ResultAnalysisPage").then((module) => ({ default: module.ResultAnalysisPage })));
@@ -113,6 +114,10 @@ export const appRoutes: RouteObject[] = [
               {
                 path: routeConfig.settings.path,
                 element: withSuspense(<SettingsPage />),
+              },
+              {
+                path: routeConfig.library.path,
+                element: withSuspense(<LibraryPage />),
               },
               {
                 // 프로필 merged into 설정 (Phase 5); keep the URL for links and bookmarks.

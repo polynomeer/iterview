@@ -5,6 +5,7 @@ import { explore } from "./explore";
 import { answerEditor } from "./answerEditor";
 import { appShell } from "./appShell";
 import { home } from "./home";
+import { library } from "./library";
 import { interviewModel } from "./interviewModel";
 import { interviewResult } from "./interviewResult";
 import { interviewSession } from "./interviewSession";
@@ -37,6 +38,7 @@ export const catalog = {
   resumeEditor,
   resumeClaims,
   home,
+  library,
   questionWorkspace,
   answerEditor,
   resultAnalysis,

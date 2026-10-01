@@ -1,7 +1,7 @@
 import type { PracticeQuestionItemModel } from "../../entities/practice/model";
 import type { ResumeListModel } from "../../entities/resume/model";
 import type { ReviewQueueItemModel } from "../../entities/review-queue/model";
-import { PRIMARY_AREAS, SETTINGS_AREA } from "../../shared/config/navigation";
+import { LIBRARY_AREA, PRIMARY_AREAS, SETTINGS_AREA } from "../../shared/config/navigation";
 import { routeConfig } from "../../shared/config/routes";
 import type { MessageKey } from "../../shared/i18n/messages";
 
@@ -20,7 +20,7 @@ type Translate = (key: MessageKey) => string;
 export function buildNavigationItems(t: Translate): CommandPaletteItem[] {
   const section = t("commandPalette.sectionNavigation");
 
-  return [...PRIMARY_AREAS, SETTINGS_AREA].flatMap((area) => {
+  return [...PRIMARY_AREAS, LIBRARY_AREA, SETTINGS_AREA].flatMap((area) => {
     const areaLabel = t(area.labelKey);
     const destinations = area.sections.length > 0 ? area.sections : [{ labelKey: area.labelKey, to: area.to }];
 

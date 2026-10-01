@@ -14,6 +14,7 @@ const HEADER_TITLES: Array<[path: string, titleKey: MessageKey]> = [
   [routeConfig.reviewQueue.path, "nav.reviewToday"],
   [routeConfig.archive.path, "nav.reviewDone"],
   [routeConfig.settings.path, "nav.settings"],
+  [routeConfig.library.path, "nav.library"],
   [routeConfig.resume.path, "nav.resume"],
   [routeConfig.resumeOverview.path, "nav.resume"],
   [routeConfig.resumeVersions.path, "nav.resumeVersions"],

@@ -12,7 +12,11 @@ export const apiEndpoints = {
       `/api/questions/${questionId}/recommended-followups`,
     resumeBased: "/api/questions/resume-based",
     answers: (questionId: string) => `/api/questions/${questionId}/answers`,
+    libraryState: (questionId: string) => `/api/questions/${questionId}/library-state`,
+    bookmark: (questionId: string) => `/api/questions/${questionId}/bookmark`,
+    note: (questionId: string) => `/api/questions/${questionId}/note`,
   },
+  library: "/api/library",
   answerAttempts: {
     detail: (answerAttemptId: string) => `/api/answer-attempts/${answerAttemptId}`,
     analysis: (answerAttemptId: string) => `/api/answer-attempts/${answerAttemptId}/analysis`,

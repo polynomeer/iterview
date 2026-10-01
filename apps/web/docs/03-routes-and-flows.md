@@ -22,6 +22,7 @@ The route map follows the five-area information architecture adopted in `docs/ad
 | 질문 | 스킬 맵 | `/questions/skills` | protected |
 | 복습 | 지금 복습 | `/review` | protected |
 | 복습 | 완료한 질문 | `/review/done` | protected |
+| 보관함 | 보관함 | `/library` (saved questions, notes, linked reading; ADR 0083) | protected |
 | 설정 | 설정 | `/settings` (profile, target companies, practice, language and display, account); `/settings/profile` jumps to the profile section | protected |
 | (public) | 로그인 · 회원가입 | `/login`, `/signup` (focus mode, no shell) | public |
 | (public) | 둘러보기 | `/explore` | public |
@@ -42,7 +43,7 @@ The route map follows the five-area information architecture adopted in `docs/ad
 
 Development builds also serve `/__ui`, the primitives gallery.
 
-Pages backed only by sample data are kept out of navigation until they have APIs. They keep their old URLs: `/weak-nodes`, `/scheduled-reviews`, `/target-companies`, `/notes`, `/bookmarks`.
+The sample-data pages were retired (ADR 0079), and their URLs redirect as listed below. `/notes` and `/bookmarks` now land on 보관함 (ADR 0083).
 
 ## Legacy Redirects
 
@@ -65,7 +66,7 @@ Pages backed only by sample data are kept out of navigation until they have APIs
 | `/practical-interviews/...` | `/interview/records/...` |
 | `/weak-nodes`, `/scheduled-reviews` | `/review` (sample-data pages retired, ADR 0079) |
 | `/target-companies` | `/settings` |
-| `/notes`, `/bookmarks` | `/questions` |
+| `/notes`, `/bookmarks` | `/library` |
 
 ## Navigation Model
 

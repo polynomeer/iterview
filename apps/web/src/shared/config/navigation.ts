@@ -11,7 +11,7 @@ export type NavSection = {
 };
 
 export type NavArea = {
-  id: "today" | "questions" | "review" | "resume" | "interview" | "settings";
+  id: "today" | "questions" | "review" | "resume" | "interview" | "library" | "settings";
   labelKey: MessageKey;
   icon: IconName;
   to: string;
@@ -90,7 +90,16 @@ export const SETTINGS_AREA: NavArea = {
   ],
 };
 
-const ALL_AREAS = [...PRIMARY_AREAS, SETTINGS_AREA];
+/** 보관함: the secondary entry between the primary areas and 설정 (ADR 0083). */
+export const LIBRARY_AREA: NavArea = {
+  id: "library",
+  labelKey: "nav.library",
+  icon: "bookmark",
+  to: routeConfig.library.buildPath(),
+  sections: [{ labelKey: "nav.library", to: routeConfig.library.buildPath(), match: [routeConfig.library.path] }],
+};
+
+const ALL_AREAS = [...PRIMARY_AREAS, LIBRARY_AREA, SETTINGS_AREA];
 
 // Rank candidates the way the router does, so /questions/skills beats /questions/:questionId.
 const SECTION_ROUTES = ALL_AREAS.flatMap((area) =>

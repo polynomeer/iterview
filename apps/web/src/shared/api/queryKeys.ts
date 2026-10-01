@@ -16,6 +16,10 @@ export const queryKeys = {
       ["questions", "recommended-followups", questionId] as const,
     resumeBased: (limit: number) => ["questions", "resume-based", limit] as const,
     answerHistory: (questionId: string) => ["questions", "answer-history", questionId] as const,
+    libraryState: (questionId: string) => ["questions", "library-state", questionId] as const,
+  },
+  library: {
+    root: ["library"] as const,
   },
   answerAttempts: {
     root: ["answer-attempts"] as const,

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useActiveResumeVersion } from "../../features/resume/model/useActiveResumeVersion";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { useAuth } from "../../shared/auth/useAuth";
-import { PRIMARY_AREAS, resolveNavLocation, SETTINGS_AREA, type NavArea } from "../../shared/config/navigation";
+import { LIBRARY_AREA, PRIMARY_AREAS, resolveNavLocation, SETTINGS_AREA, type NavArea } from "../../shared/config/navigation";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { parsingStatusLabel } from "../../shared/lib/labels";
@@ -142,6 +142,12 @@ export function SidebarNavigation() {
           </>
         )}
       </nav>
+
+      {isAuthenticated ? (
+        <nav aria-label={t("nav.library")} className="shell-nav__group shell-nav__group--secondary">
+          {areaItem(LIBRARY_AREA)}
+        </nav>
+      ) : null}
 
       <div className="shell-nav__footer">
         {isAuthenticated ? (

@@ -64,6 +64,8 @@
   gap: 2px;
 }
 
+.shell-nav__group--secondary { padding-top: var(--iv-space-3); border-top: 1px solid var(--iv-border); }
+
 .shell-nav__item {
   display: flex;
   align-items: center;

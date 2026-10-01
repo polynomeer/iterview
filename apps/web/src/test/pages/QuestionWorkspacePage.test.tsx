@@ -3,6 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { QuestionDetailModel } from "../../entities/question/model";
+import {
+  useQuestionLibraryStateQuery,
+  useSaveQuestionNoteMutation,
+  useToggleBookmarkMutation,
+} from "../../features/library/api/useQuestionLibraryState";
 import { usePracticeQuestionsQuery } from "../../features/practice/api/usePracticeQuestionsQuery";
 import { useCreateQuestionLearningMaterialMutation } from "../../features/question/api/useCreateQuestionLearningMaterialMutation";
 import { useCreateQuestionReferenceAnswerMutation } from "../../features/question/api/useCreateQuestionReferenceAnswerMutation";
@@ -18,6 +23,11 @@ import { useAuth } from "../../shared/auth/useAuth";
 import { LocationDisplay, renderWithProviders } from "../utils";
 
 vi.mock("../../shared/auth/useAuth", () => ({ useAuth: vi.fn() }));
+vi.mock("../../features/library/api/useQuestionLibraryState", () => ({
+  useQuestionLibraryStateQuery: vi.fn(),
+  useToggleBookmarkMutation: vi.fn(),
+  useSaveQuestionNoteMutation: vi.fn(),
+}));
 vi.mock("../../features/practice/api/usePracticeQuestionsQuery", () => ({ usePracticeQuestionsQuery: vi.fn() }));
 vi.mock("../../features/question/api/useQuestionDetailQuery", () => ({ useQuestionDetailQuery: vi.fn() }));
 vi.mock("../../features/question/api/useQuestionTreeQuery", () => ({ useQuestionTreeQuery: vi.fn() }));
@@ -51,6 +61,14 @@ const mutateAsync = vi.fn();
 beforeEach(() => {
   mutateAsync.mockReset().mockResolvedValue({});
   vi.mocked(useAuth).mockReturnValue({ accessToken: "t", isAuthenticated: true, setAccessToken: vi.fn(), clearSession: vi.fn() });
+  toggleBookmark.mockReset();
+  saveNote.mockReset();
+  vi.mocked(useQuestionLibraryStateQuery).mockReturnValue({
+    data: { questionId: 11, bookmarked: false, bookmarkedAt: null, note: { body: "프록시 경계 기억하기", updatedAt: "2026-10-01T00:00:00Z" } },
+    isError: false,
+  } as never);
+  vi.mocked(useToggleBookmarkMutation).mockReturnValue({ mutate: toggleBookmark, isPending: false, isError: false } as never);
+  vi.mocked(useSaveQuestionNoteMutation).mockReturnValue({ mutate: saveNote, isPending: false, isError: false, isSuccess: false } as never);
   vi.mocked(usePracticeQuestionsQuery).mockReturnValue({
     isLoading: false,
     isError: false,
@@ -98,7 +116,33 @@ function renderWorkspace(route = "/questions/11", element = <QuestionWorkspacePa
   );
 }
 
+const toggleBookmark = vi.fn();
+const saveNote = vi.fn();
+
 describe("QuestionWorkspacePage", () => {
+  it("saves the question to 보관함 and keeps a private note on it (ADR 0083)", async () => {
+    const user = userEvent.setup();
+    renderWorkspace();
+
+    const bookmark = screen.getByRole("button", { name: "저장" });
+    expect(bookmark).toHaveAttribute("aria-pressed", "false");
+    await user.click(bookmark);
+    expect(toggleBookmark).toHaveBeenCalledWith(true);
+
+    await user.click(screen.getByRole("tab", { name: "노트" }));
+    const note = screen.getByLabelText("내 노트");
+    expect(note).toHaveValue("프록시 경계 기억하기");
+    expect(screen.getByRole("button", { name: "노트 저장" })).toBeDisabled();
+    await user.clear(note);
+    await user.type(note, "self-invocation은 프록시를 우회한다");
+    expect(screen.getByText("저장하지 않은 변경")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "노트 저장" }));
+    // The click blurs the textarea first; that blur saves, and the click does not save again.
+    expect(saveNote).toHaveBeenCalledTimes(1);
+    expect(saveNote.mock.calls[0][0]).toBe("self-invocation은 프록시를 우회한다");
+  });
+
+
   it("shows the question with one primary action, localized metadata, and its mastery", () => {
     renderWorkspace();
 
@@ -153,6 +197,8 @@ describe("QuestionWorkspacePage", () => {
 
     expect(screen.getByText("내 기록은 로그인 후에 보여요")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "로그인" })).toHaveAttribute("href", "/login");
+    expect(screen.queryByRole("button", { name: "저장" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "노트" })).not.toBeInTheDocument();
   });
 
   it("jumps to reference answers from the header action", async () => {

@@ -214,3 +214,9 @@ Screens never render `error.message` directly. They call `userFacingErrorMessage
 - scattering endpoint strings or query keys across unrelated files
 - coupling one page too tightly to one exact payload revision
 
+## Library (보관함, ADR 0083)
+
+- `GET /api/library` (`useLibraryQuery`) feeds `/library`: saved questions, notes, and linked reading, as three tabs.
+- `GET /api/questions/{questionId}/library-state` (`useQuestionLibraryStateQuery`) drives the 저장 toggle and the 노트 tab on a question. The query runs only for signed-in users.
+- `PUT`/`DELETE /api/questions/{questionId}/bookmark` and `PUT /api/questions/{questionId}/note` write the response into the state cache and invalidate `queryKeys.library.root`.
+- The note saves on blur and on 노트 저장. An in-flight guard stops the blur and the click from sending two saves.

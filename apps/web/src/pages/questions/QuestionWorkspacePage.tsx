@@ -37,10 +37,11 @@ import {
 } from "../../shared/ui/primitives";
 import { MASTERY_LABEL, MASTERY_TONE, toMastery } from "./mastery";
 import { LearningMaterialDialog, ReferenceAnswerDialog } from "./QuestionAuthoringDialogs";
+import { BookmarkButton, NoteTab } from "./QuestionLibraryControls";
 import { QuestionNavigator } from "./QuestionNavigator";
 import "./questions.css";
 
-type InspectorTab = "record" | "materials" | "answers";
+type InspectorTab = "record" | "note" | "materials" | "answers";
 
 function MasteryBadge({ status }: { status: string | null | undefined }) {
   const { t } = useLocale();
@@ -384,6 +385,7 @@ export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTree
                 {t("questionWorkspace.answer")}
               </ButtonLink>
               <Button onClick={openReferenceAnswers}>{t("questionWorkspace.seeReferenceAnswers")}</Button>
+              {isAuthenticated ? <BookmarkButton questionId={questionId} /> : null}
             </>
           }
           title={question.title}
@@ -421,6 +423,7 @@ export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTree
                 <Tabs
                   items={[
                     { id: "record", label: t("questionWorkspace.tabRecord") },
+                    ...(isAuthenticated ? [{ id: "note" as const, label: t("library.noteTab") }] : []),
                     { id: "materials", label: t("questionWorkspace.tabMaterials"), count: learningMaterials.length },
                     { id: "answers", label: t("questionWorkspace.tabAnswers"), count: referenceAnswers.length },
                   ]}
@@ -429,6 +432,7 @@ export function QuestionWorkspacePage({ defaultTreeOpen = false }: { defaultTree
                   value={tab}
                 >
                   {tab === "record" ? <RecordTab question={question} questionId={questionId} /> : null}
+                  {tab === "note" && isAuthenticated ? <NoteTab questionId={questionId} /> : null}
                   {tab === "materials" ? <MaterialsTab canAdd={isAuthenticated} materials={learningMaterials} onAdd={() => setDialog("material")} /> : null}
                   {tab === "answers" ? <AnswersTab answers={referenceAnswers} canAdd={isAuthenticated} onAdd={() => setDialog("answer")} /> : null}
                 </Tabs>

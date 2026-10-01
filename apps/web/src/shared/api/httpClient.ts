@@ -180,5 +180,7 @@ export const httpClient = {
     request<TResponse, TBody>("PATCH", path, options),
   put: <TResponse, TBody = unknown>(path: string, options?: ApiRequestOptions<TBody>) =>
     request<TResponse, TBody>("PUT", path, options),
+  delete: <TResponse>(path: string, options?: ApiRequestOptions) =>
+    request<TResponse>("DELETE", path, options),
   getBlob: (path: string, options?: ApiRequestOptions) => requestBlob("GET", path, options),
 };
