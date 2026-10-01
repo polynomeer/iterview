@@ -483,8 +483,16 @@ After the redesign:
   - The project's real interview questions show below the form.
   - The markdown document editor moved to `/resume/:versionId/claims/document`.
 
+- **Record review rebuilt:** 실전 면접 복기 for one record now shows facts instead of narration.
+  - The heading has the date and the resume link. A summary card shows question, follow-up, weak-answer, and replayable counts.
+  - The two record actions are 이 면접 다시 연습 (a dialog) and 복기 확정.
+  - Tabs are 질문 (the default), 꼬리질문 흐름, and 전사, with the recording beside them when there is audio.
+  - Removed: the lane dashboard, the brief, the guidance cards, and internal provenance such as structuring sources.
+  - Server codes for question types, weakness tags, and next steps are translated.
+  - `legacy-review.css` (773 lines) is deleted. `global.css` drops to 2,908 lines after pruning what that left unreferenced.
+
 Still open after the redesign:
-- A restyle of the interview record review and of the markdown document editor. Both still render with their co-located legacy CSS.
+- A restyle of the markdown document editor, which still renders with its co-located legacy CSS.
 - A token-based light theme (ADR 0075). The theme choices still differ only on legacy screens.
 - 보관함, once notes and bookmarks APIs exist.
 

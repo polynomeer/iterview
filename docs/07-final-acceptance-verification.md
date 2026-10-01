@@ -50,7 +50,7 @@ Evidence:
 
 ### 4. Interview
 
-Covered path: launcher → live session (focus mode, graded against the session's resume version) → result. Real interviews: list, upload with an opt-out resume link, and record review including a replay launch.
+Covered path: launcher → live session (focus mode, graded against the session's resume version) → result. Real interviews: list, upload with an opt-out resume link, and record review: questions first, follow-up chains, transcript correction, and a replay dialog graded against the linked resume.
 
 Evidence:
 - `apps/web/src/test/pages/InterviewPage.test.tsx`
@@ -124,5 +124,6 @@ Evidence:
 
 ## Known Gaps
 
-- The markdown document editor (`/resume/:versionId/claims/document`) and the interview record review keep their legacy styling, now in `legacy-*.css` next to each screen.
+- The markdown document editor (`/resume/:versionId/claims/document`) keeps its legacy styling in `legacy-editor.css` next to it.
+- The demo data has no interview audio, so the record review's recording panel is covered by tests but has not been checked visually against real data.
 - Under heavy machine load, `ResumeEditorPage.test.tsx` can exceed its 15-second budget in the full run. It passes when run alone.
