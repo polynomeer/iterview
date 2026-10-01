@@ -124,8 +124,8 @@ Evidence:
 
 - Phase 5 CSS pruning and co-location were checked with full-page screenshots against the local API and demo data. Fifteen routes at 1440px and 390px were compared: the editor tabs, record review, and the rebuilt screens. They were pixel-identical before and after.
 - The real-data route sweeps at the end of Phases 3–5 found no crash and no horizontal scroll at 1440px or 390px.
+- The record review's player was checked against a local 60-second recording with eight transcript segments. Question playback, chapter jumps, the play and pause label, and the sticky position under the top bar all behaved correctly. The demo seed itself still has no audio.
 
 ## Known Gaps
 
-- The demo data has no interview audio, so the record review's recording panel is covered by tests but has not been checked visually against real data.
 - Under heavy machine load, `ResumeEditorPage.test.tsx` can exceed its 15-second budget in the full run. It passes when run alone.
