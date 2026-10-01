@@ -8,9 +8,7 @@ import com.example.interviewplatform.library.dto.LibraryQuestionDto
 import com.example.interviewplatform.library.dto.LibraryResponseDto
 import com.example.interviewplatform.library.dto.QuestionLibraryStateDto
 import com.example.interviewplatform.library.dto.QuestionNoteDto
-import com.example.interviewplatform.library.entity.QuestionBookmarkEntity
 import com.example.interviewplatform.library.entity.QuestionBookmarkId
-import com.example.interviewplatform.library.entity.QuestionNoteEntity
 import com.example.interviewplatform.library.repository.QuestionBookmarkRepository
 import com.example.interviewplatform.library.repository.QuestionNoteRepository
 import com.example.interviewplatform.question.repository.CategoryRepository
@@ -42,17 +40,14 @@ class LibraryService(
     @Transactional
     fun bookmark(userId: Long, questionId: Long): QuestionLibraryStateDto {
         requireQuestion(questionId)
-        val id = QuestionBookmarkId(userId, questionId)
-        if (!bookmarkRepository.existsById(id)) {
-            bookmarkRepository.save(QuestionBookmarkEntity(id = id, createdAt = clockService.now()))
-        }
+        bookmarkRepository.insertIfAbsent(userId, questionId, clockService.now())
         return state(userId, questionId)
     }
 
     @Transactional
     fun removeBookmark(userId: Long, questionId: Long): QuestionLibraryStateDto {
         requireQuestion(questionId)
-        bookmarkRepository.deleteById(QuestionBookmarkId(userId, questionId))
+        bookmarkRepository.deleteBookmark(userId, questionId)
         return state(userId, questionId)
     }
 
@@ -60,16 +55,10 @@ class LibraryService(
     fun saveNote(userId: Long, questionId: Long, body: String): QuestionLibraryStateDto {
         requireQuestion(questionId)
         val text = body.trim()
-        val existing = noteRepository.findByUserIdAndQuestionId(userId, questionId)
-        val now = clockService.now()
-        when {
-            text.isEmpty() -> existing?.let(noteRepository::delete)
-            existing != null -> {
-                existing.body = text
-                existing.updatedAt = now
-                noteRepository.save(existing)
-            }
-            else -> noteRepository.save(QuestionNoteEntity(userId = userId, questionId = questionId, body = text, createdAt = now, updatedAt = now))
+        if (text.isEmpty()) {
+            noteRepository.deleteNote(userId, questionId)
+        } else {
+            noteRepository.upsert(userId, questionId, text, clockService.now())
         }
         return state(userId, questionId)
     }

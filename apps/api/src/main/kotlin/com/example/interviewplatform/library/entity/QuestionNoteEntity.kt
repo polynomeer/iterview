@@ -19,9 +19,9 @@ class QuestionNoteEntity(
     @Column(name = "question_id", nullable = false)
     val questionId: Long,
     @Column(nullable = false)
-    var body: String,
+    val body: String,
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant,
     @Column(name = "updated_at", nullable = false)
-    var updatedAt: Instant,
+    val updatedAt: Instant,
 )

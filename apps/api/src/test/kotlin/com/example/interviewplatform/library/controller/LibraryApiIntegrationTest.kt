@@ -4,6 +4,7 @@ import com.example.interviewplatform.auth.service.TokenService
 import com.example.interviewplatform.support.ApiIntegrationTest
 import com.example.interviewplatform.support.TestDatabaseCleaner
 import org.hamcrest.Matchers.nullValue
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 @ApiIntegrationTest
 class LibraryApiIntegrationTest {
@@ -111,6 +114,33 @@ class LibraryApiIntegrationTest {
             .andExpect(jsonPath("$.bookmarks.length()").value(0))
             .andExpect(jsonPath("$.notes.length()").value(0))
             .andExpect(jsonPath("$.materials.length()").value(0))
+    }
+
+    @Test
+    fun `saving the same note or bookmark twice at once does not fail`() {
+        val questionId = insertQuestion("Concurrent question")
+        val pool = Executors.newFixedThreadPool(4)
+        try {
+            val statuses = (1..4).map { index ->
+                pool.submit<Int> {
+                    if (index % 2 == 0) {
+                        mockMvc.perform(put("/api/questions/$questionId/bookmark").header("Authorization", authHeader)).andReturn().response.status
+                    } else {
+                        mockMvc.perform(
+                            put("/api/questions/$questionId/note")
+                                .header("Authorization", authHeader)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""{"body":"note $index"}"""),
+                        ).andReturn().response.status
+                    }
+                }
+            }.map { it.get(30, TimeUnit.SECONDS) }
+            assertEquals(listOf(200, 200, 200, 200), statuses)
+        } finally {
+            pool.shutdown()
+        }
+        assertEquals(1, jdbcTemplate.queryForObject("SELECT COUNT(*) FROM question_notes", Int::class.java))
+        assertEquals(1, jdbcTemplate.queryForObject("SELECT COUNT(*) FROM question_bookmarks", Int::class.java))
     }
 
     @Test
