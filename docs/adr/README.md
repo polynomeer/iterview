@@ -190,3 +190,5 @@ Each ADR should include:
    Stores 상황 · 내 역할 · 측정 방법 · 결과 수치 per resume achievement, keeps them across re-extraction, and makes them the 근거 편집 form.
 82. [`0082-system-light-dark-themes.md`](0082-system-light-dark-themes.md)
    Supersedes 0075: themes are system (default), light, and dark on two token palettes; retired themes map to dark.
+83. [`0083-library-bookmarks-and-notes.md`](0083-library-bookmarks-and-notes.md)
+   Ships 보관함 on real data: question bookmarks, one private note per question, and the reading linked to them.

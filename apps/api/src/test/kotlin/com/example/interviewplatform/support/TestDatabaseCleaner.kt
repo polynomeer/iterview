@@ -7,6 +7,8 @@ object TestDatabaseCleaner {
         jdbcTemplate.execute(
             """
             TRUNCATE TABLE
+                question_bookmarks,
+                question_notes,
                 answer_feedback_items,
                 answer_scores,
                 review_queue,

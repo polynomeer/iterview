@@ -51,6 +51,10 @@ class SecurityConfig(
                         "/api/auth/me",
                         "/api/job-postings/**",
                         "/api/job-roles",
+                        "/api/library",
+                        "/api/questions/*/library-state",
+                        "/api/questions/*/bookmark",
+                        "/api/questions/*/note",
                     ).authenticated()
                     .requestMatchers("/api/questions/resume-based").authenticated()
                     .requestMatchers(

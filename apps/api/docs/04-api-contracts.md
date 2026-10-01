@@ -221,3 +221,16 @@ Endpoints:
 - preserve existing learning-loop flows
 - keep OpenAPI updated and align frontend docs with new fields
 
+## Library (보관함, ADR 0083)
+
+All require sign-in.
+
+- `GET /api/library` returns `{ bookmarks, notes, materials }`:
+  - `bookmarks[]`: `{ question, bookmarkedAt, hasNote }`, newest first.
+  - `notes[]`: `{ question, body, updatedAt, bookmarked }`, recently edited first.
+  - `materials[]`: `{ materialId, title, materialType, sourceName, contentUrl, estimatedMinutes, question }`. These are the learning materials linked to bookmarked or noted questions. Each appears once, under its most relevant saved question.
+  - `question` is `{ questionId, title, categoryName, difficultyLevel }`.
+- `GET /api/questions/{questionId}/library-state` returns `{ questionId, bookmarked, bookmarkedAt, note: { body, updatedAt } | null }`.
+- `PUT /api/questions/{questionId}/bookmark` and `DELETE /api/questions/{questionId}/bookmark` return the library state. Repeating either is a no-op.
+- `PUT /api/questions/{questionId}/note` takes `{ body }` (at most 5,000 characters) and returns the library state. A blank body deletes the note.
+- An unknown or inactive question returns 404.
