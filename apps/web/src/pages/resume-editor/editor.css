@@ -422,7 +422,7 @@ button.editor-item:focus-visible { outline: none; box-shadow: var(--iv-focus-rin
     align-items: start;
   }
 
-  .resume-editor-workspace__side { position: sticky; top: var(--iv-space-4); }
+  .resume-editor-workspace__side { position: sticky; top: calc(var(--shell-toolbar-height, 0px) + var(--iv-space-4)); }
 }
 
 /* Cards here are padded; their header should not add a second inset. */

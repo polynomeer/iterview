@@ -14,7 +14,7 @@
 
 .record-review__grid--single { grid-template-columns: minmax(0, 1fr); }
 .record-review__main { min-width: 0; }
-.record-review__aside { position: sticky; top: var(--iv-space-4); min-width: 0; }
+.record-review__aside { position: sticky; top: calc(var(--shell-toolbar-height, 0px) + var(--iv-space-4)); min-width: 0; }
 
 /* Summary */
 .record-summary { display: flex; flex-direction: column; gap: var(--iv-space-4); }

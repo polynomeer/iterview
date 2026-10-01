@@ -12,7 +12,7 @@
 .question-index { grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr); }
 .question-workspace { grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr) minmax(17rem, 21rem); }
 
-.question-index__placeholder { position: sticky; top: var(--iv-space-6); }
+.question-index__placeholder { position: sticky; top: calc(var(--shell-toolbar-height, 0px) + var(--iv-space-4)); }
 
 .question-workspace__main {
   display: flex;
@@ -24,8 +24,8 @@
 .question-workspace__nav,
 .question-workspace__inspector {
   position: sticky;
-  top: var(--iv-space-6);
-  max-height: calc(100vh - 8rem);
+  top: calc(var(--shell-toolbar-height, 0px) + var(--iv-space-4));
+  max-height: calc(100vh - var(--shell-toolbar-height, 0px) - var(--iv-space-8));
   overflow-y: auto;
 }
 
