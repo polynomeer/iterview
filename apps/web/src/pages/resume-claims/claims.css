@@ -51,7 +51,7 @@
 }
 
 .claim-row:hover { background: var(--iv-surface-hover); }
-.claim-row:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--iv-focus-ring); }
+.claim-row:focus-visible { position: relative; outline: none; box-shadow: var(--iv-focus-ring); }
 .claim-row--selected { border-left-color: var(--iv-accent); background: var(--iv-accent-soft); }
 .claim-row__title { min-width: 0; font-size: var(--iv-text-sm); font-weight: var(--iv-weight-medium); overflow-wrap: anywhere; }
 
