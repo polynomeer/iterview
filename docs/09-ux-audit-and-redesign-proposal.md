@@ -506,6 +506,8 @@ After the redesign:
   - `/notes` and `/bookmarks` now redirect there.
   - The API stores one bookmark and one private note per user and question, and writes both atomically.
 
+- **Questions per claim (ADR 0084):** heatmap questions are narrowed to one claim inside their project. A manual pick comes first, then a clear text match, then the parent question's claim. The claim form judges 약점 from a claim's own questions, so one weak answer no longer marks every claim in its project. Each question can be moved to a claim, or marked "이 항목 아님".
+
 Still open after the redesign:
 
 ---
