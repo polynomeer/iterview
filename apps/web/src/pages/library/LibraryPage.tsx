@@ -5,7 +5,7 @@ import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { formatApiDate } from "../../shared/lib/date";
-import { difficultyLabel } from "../../shared/lib/labels";
+import { difficultyLabel, materialTypeLabel } from "../../shared/lib/labels";
 import type { LibraryQuestionDto } from "../../shared/types/library";
 import { Badge, Button, ButtonLink, Card, EmptyState, ErrorState, PageHeader, PageSkeleton, Tabs } from "../../shared/ui/primitives";
 import "./library.css";
@@ -33,7 +33,7 @@ function QuestionLink({ question }: { question: LibraryQuestionDto }) {
 
 /** 보관함 (ADR 0083): saved questions, your notes, and the reading linked to them. */
 export function LibraryPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const libraryQuery = useLibraryQuery();
   const [tab, setTab] = useState<LibraryTab>("bookmarks");
   const header = <PageHeader description={t("library.pageDescription")} title={t("library.pageTitle")} />;
@@ -141,7 +141,7 @@ export function LibraryPage() {
                     <div className="library-item__main">
                       <span className="library-item__title">{item.title}</span>
                       <p className="library-item__meta">
-                        <Badge>{item.materialType}</Badge>
+                        <Badge>{materialTypeLabel(item.materialType, locale)}</Badge>
                         {item.sourceName ? <span>{item.sourceName}</span> : null}
                         {item.estimatedMinutes ? <span>{t("library.minutes", { count: item.estimatedMinutes })}</span> : null}
                       </p>

@@ -156,12 +156,6 @@ const QUESTION_TYPES: Record<string, MessageKey> = {
   system_design: "recordReview.typeSystemDesign",
 };
 
-const WEAKNESS_TAGS: Record<string, MessageKey> = {
-  missing_metric: "recordReview.weakMissingMetric",
-  missing_metrics: "recordReview.weakMissingMetric",
-  missing_tradeoff: "recordReview.weakMissingTradeoff",
-  missing_star_shape: "recordReview.weakMissingStructure",
-};
 
 const RESUME_SECTIONS: Record<string, MessageKey> = {
   project: "recordReview.sectionProject",
@@ -177,11 +171,6 @@ export function questionTypeLabel(code: string | null | undefined, t: ReviewTran
   return key ? t(key) : null;
 }
 
-/** A weakness tag in words; unknown codes are shown with spaces instead of underscores. */
-export function weaknessTagLabel(tag: string, t: ReviewTranslate) {
-  const key = WEAKNESS_TAGS[tag];
-  return key ? t(key) : tag.replace(/_/g, " ");
-}
 
 export function resumeSectionLabel(section: string, t: ReviewTranslate) {
   const key = RESUME_SECTIONS[section];

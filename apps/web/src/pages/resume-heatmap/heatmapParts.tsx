@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { ResumeQuestionHeatmapQuestionModel } from "../../entities/resume-heatmap/model";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale, type MessageKey } from "../../shared/i18n";
+import { weaknessTagLabel } from "../../shared/lib/labels";
 import { Badge, ButtonLink, ListRow, type Tone } from "../../shared/ui/primitives";
 import type { HeatmapGroup } from "./heatmapUtils";
 
@@ -69,7 +70,7 @@ export function PressureCounts({ questions, followUps, pressure, weak }: { quest
 
 /** One interview question that landed on a resume claim, with where to go next. */
 export function LinkedQuestionRow({ question, action }: { question: ResumeQuestionHeatmapQuestionModel; action?: ReactNode }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   return (
     <ListRow
       className="heatmap-question"
@@ -79,7 +80,7 @@ export function LinkedQuestionRow({ question, action }: { question: ResumeQuesti
           {question.pressureQuestion ? <Badge tone="warning">{t("resumeHeatmap.pressure")}</Badge> : null}
           {question.weakAnswer ? <Badge tone="danger">{t("resumeHeatmap.weakAnswer")}</Badge> : null}
           {question.weaknessTags.map((tag) => (
-            <Badge key={tag}>{tag}</Badge>
+            <Badge key={tag}>{weaknessTagLabel(tag, locale)}</Badge>
           ))}
           <span>{question.interviewDateLabel ?? t("resumeHeatmap.noInterviewDate")}</span>
         </span>

@@ -272,6 +272,19 @@ button.shell-nav__resume { width: 100%; background: none; font-family: var(--iv-
 
 .shell-topbar__avatar img { width: 100%; height: 100%; object-fit: cover; }
 
+.shell-topbar__library {
+  display: none;
+  place-items: center;
+  width: var(--iv-control-md);
+  height: var(--iv-control-md);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-md);
+  color: var(--iv-text-muted);
+}
+
+.shell-topbar__library:hover { color: var(--iv-text); }
+.shell-topbar__library[aria-current="page"] { border-color: var(--iv-accent); color: var(--iv-accent-text); }
+
 .shell-topbar__search:focus-visible,
 .shell-topbar__locale-option:focus-visible,
 .shell-topbar__avatar:focus-visible,
@@ -316,6 +329,7 @@ button.shell-nav__resume { width: 100%; background: none; font-family: var(--iv-
 
 @media (max-width: 1023px) {
   .shell-topbar { gap: var(--iv-space-2); padding: var(--iv-space-2) var(--iv-space-4); }
+  .shell-topbar__library { display: grid; }
   .shell-topbar__search { width: var(--iv-control-md); padding: 0; justify-content: center; }
   .shell-topbar__search-placeholder,
   .shell-topbar__kbd,

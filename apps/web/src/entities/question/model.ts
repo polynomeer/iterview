@@ -1,3 +1,5 @@
+import { getCurrentAppLocale } from "../../shared/i18n/locale";
+import { materialTypeLabel } from "../../shared/lib/labels";
 import type {
   LearningMaterialDto,
   QuestionDetailResponseDto,
@@ -76,7 +78,7 @@ export function mapLearningMaterial(material: LearningMaterialDto, index = 0) {
         : String(material.id),
     title: material.title ?? translate("questionModel.untitledMaterial"),
     description: material.description ?? "",
-    resourceTypeLabel: material.materialType ?? translate("questionModel.referenceMaterial"),
+    resourceTypeLabel: materialTypeLabel(material.materialType, getCurrentAppLocale()) ?? translate("questionModel.referenceMaterial"),
     sourceLabel: material.sourceLabel ?? material.sourceType ?? translate("questionModel.referenceMaterial"),
     sourceType: material.sourceType ?? translate("questionModel.referenceSourceType"),
     sourceName: material.sourceName ?? null,

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { useLogout } from "../../features/auth/useLogout";
 import { useUpdateSettingsMutation } from "../../features/profile/api/useUpdateSettingsMutation";
@@ -107,6 +107,10 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
         </div>
         {isAuthenticated && currentUser ? (
           <>
+            {/* The sidebar holds 보관함 on desktop; the mobile tab bar only fits the five areas. */}
+            <NavLink aria-label={t("nav.library")} className="shell-topbar__library" title={t("nav.library")} to={routeConfig.library.buildPath()}>
+              <Icon name="bookmark" size={18} />
+            </NavLink>
             <Link
               aria-label={`${t("nav.profile")} · ${displayName ?? ""}`}
               className="shell-topbar__avatar"

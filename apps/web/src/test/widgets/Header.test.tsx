@@ -37,6 +37,7 @@ describe("Header", () => {
     for (const button of screen.getAllByRole("button")) {
       expect(button).toHaveAccessibleName();
     }
+    expect(screen.getByRole("link", { name: "보관함" })).toHaveAttribute("href", "/library");
     expect(screen.queryByRole("button", { name: "알" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "활" })).not.toBeInTheDocument();
 

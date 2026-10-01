@@ -30,6 +30,26 @@ const SEVERITY: Record<string, { key: LabelKey; tone: "danger" | "warning" | "ne
   LOW: { key: "severityLow", tone: "neutral" },
 };
 
+const WEAKNESS_TAG: Record<string, LabelKey> = {
+  missing_metric: "weakMissingMetric",
+  missing_metrics: "weakMissingMetric",
+  missing_tradeoff: "weakMissingTradeoff",
+  missing_star_shape: "weakMissingStructure",
+};
+
+const MATERIAL_TYPE: Record<string, LabelKey> = {
+  article: "materialArticle",
+  blog: "materialArticle",
+  video: "materialVideo",
+  book: "materialBook",
+  docs: "materialDocs",
+  doc: "materialDocs",
+  documentation: "materialDocs",
+  course: "materialCourse",
+  paper: "materialPaper",
+  podcast: "materialPodcast",
+};
+
 function titleCase(code: string) {
   return code
     .toLowerCase()
@@ -55,6 +75,21 @@ export function skillCategoryLabel(code: string | null | undefined, locale: AppL
   }
   const key = SKILL_CATEGORY[code.toUpperCase()];
   return key ? label(locale, key) : titleCase(code);
+}
+
+/** Weakness tags from answer analysis (missing_metric, …) in words; unknown codes lose their underscores. */
+export function weaknessTagLabel(tag: string, locale: AppLocale) {
+  const key = WEAKNESS_TAG[tag.toLowerCase()];
+  return key ? label(locale, key) : tag.replace(/_/g, " ");
+}
+
+/** Learning material types (article, video, …) in words; free-text types pass through. */
+export function materialTypeLabel(value: string | null | undefined, locale: AppLocale) {
+  if (!value) {
+    return null;
+  }
+  const key = MATERIAL_TYPE[value.trim().toLowerCase()];
+  return key ? label(locale, key) : value;
 }
 
 /** Tone for a 0–100 score: below 50 needs work, below 75 is improving, otherwise solid. */

@@ -1,12 +1,12 @@
 import { routeConfig } from "../../../../shared/config/routes";
 import { useLocale } from "../../../../shared/i18n";
+import { weaknessTagLabel } from "../../../../shared/lib/labels";
 import { Badge, Button, ButtonLink, Segmented } from "../../../../shared/ui/primitives";
 import {
   buildHeatmapAnchorPath,
   localizeReviewPayloadText,
   questionTypeLabel,
   resumeSectionLabel,
-  weaknessTagLabel,
   type PlaybackRange,
   type ReplayPresetModel,
   type ReviewModel,
@@ -38,7 +38,7 @@ export function QuestionReviewPanel({
   openReplayLauncher: (preset: ReplayPresetModel) => void;
   canPlay: boolean;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const counts = review.questionFilterSummary;
   const questions = review.questionSummaries.filter((question) => {
     switch (activeQuestionFilter) {
@@ -111,7 +111,7 @@ export function QuestionReviewPanel({
                 <ul aria-label={t("recordReview.tags")} className="record-item__tags">
                   {question.weaknessTags.map((tag) => (
                     <li key={`weak-${tag}`}>
-                      <Badge tone="danger">{weaknessTagLabel(tag, t)}</Badge>
+                      <Badge tone="danger">{weaknessTagLabel(tag, locale)}</Badge>
                     </li>
                   ))}
                   {question.topicTags.map((tag) => (

@@ -5,7 +5,7 @@ import type { HomeModel, HomeQuestionCardModel } from "../../entities/home/model
 import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale, type AppLocale, type MessageKey } from "../../shared/i18n";
-import { difficultyLabel, scoreTone, severityLabel, skillCategoryLabel } from "../../shared/lib/labels";
+import { difficultyLabel, materialTypeLabel, scoreTone, severityLabel, skillCategoryLabel } from "../../shared/lib/labels";
 import {
   Badge,
   Button,
@@ -215,7 +215,7 @@ function ProgressCard({ home, locale }: { home: HomeModel; locale: AppLocale }) 
 }
 
 function MaterialsCard({ home }: { home: HomeModel }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   if (home.learningMaterials.length === 0) {
     return null;
@@ -227,7 +227,7 @@ function MaterialsCard({ home }: { home: HomeModel }) {
       {home.learningMaterials.slice(0, 3).map((material) => (
         <ListRow
           key={material.id}
-          meta={[material.materialType, material.sourceName].filter(Boolean).join(" · ")}
+          meta={[materialTypeLabel(material.materialType, locale), material.sourceName].filter(Boolean).join(" · ")}
           title={material.title}
           trailing={
             material.url ? (

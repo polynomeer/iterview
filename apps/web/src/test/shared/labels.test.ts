@@ -1,7 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { difficultyLabel, scoreTone, severityLabel, skillCategoryLabel, withSubjectParticle } from "../../shared/lib/labels";
+import { difficultyLabel, materialTypeLabel, scoreTone, severityLabel, skillCategoryLabel, weaknessTagLabel, withSubjectParticle } from "../../shared/lib/labels";
 
 describe("domain labels", () => {
+  it("names weakness tags and material types, keeping unknown values readable", () => {
+    expect(weaknessTagLabel("missing_metric", "ko")).toBe("수치 근거 없음");
+    expect(weaknessTagLabel("missing_metrics", "en")).toBe("No numbers");
+    expect(weaknessTagLabel("vague_scope", "en")).toBe("vague scope");
+    expect(materialTypeLabel("article", "ko")).toBe("아티클");
+    expect(materialTypeLabel(" Video ", "en")).toBe("Video");
+    expect(materialTypeLabel("사내 위키", "ko")).toBe("사내 위키");
+    expect(materialTypeLabel(null, "ko")).toBeNull();
+  });
+
+
   it("localizes difficulty codes and passes unknown values through", () => {
     expect(difficultyLabel("MEDIUM", "ko")).toBe("보통");
     expect(difficultyLabel("hard", "en")).toBe("Hard");
