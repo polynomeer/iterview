@@ -9,6 +9,7 @@ import com.example.interviewplatform.interview.repository.InterviewRecordAnswerR
 import com.example.interviewplatform.interview.repository.InterviewRecordFollowUpEdgeRepository
 import com.example.interviewplatform.interview.repository.InterviewRecordQuestionRepository
 import com.example.interviewplatform.interview.repository.InterviewRecordRepository
+import com.example.interviewplatform.interview.service.InterviewAudioStorageService
 import com.example.interviewplatform.resume.entity.ResumeEntity
 import com.example.interviewplatform.resume.entity.ResumeProfileSnapshotEntity
 import com.example.interviewplatform.resume.entity.ResumeProjectSnapshotEntity
@@ -30,10 +31,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Profile
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import java.nio.file.Files
 import java.time.LocalDate
 
 @Component
@@ -54,6 +57,8 @@ class LocalResumeHeatmapDemoDataInitializer(
     private val resumeDocumentOverlayTargetBuilder: ResumeDocumentOverlayTargetBuilder,
     private val passwordEncoder: PasswordEncoder,
     private val clockService: ClockService,
+    private val interviewAudioStorageService: InterviewAudioStorageService,
+    private val jdbcTemplate: JdbcTemplate,
 ) : ApplicationRunner {
 
     @Transactional
@@ -68,6 +73,7 @@ class LocalResumeHeatmapDemoDataInitializer(
                 DEMO_PASSWORD,
                 DEMO_RESUME_TITLE,
             )
+            ensureDemoRecording(user.id)
             return
         }
 
@@ -494,7 +500,96 @@ class LocalResumeHeatmapDemoDataInitializer(
             DEMO_RESUME_TITLE,
             version.id,
         )
+        ensureDemoRecording(user.id)
     }
+
+    /**
+     * Gives the main demo interview a recording and transcript segments, one question and one answer turn
+     * per question, so the review player has something to play. Runs on every start and only fills what
+     * is missing, so databases seeded before this existed get it too.
+     */
+    private fun ensureDemoRecording(userId: Long) {
+        val recordId = jdbcTemplate.queryForList(
+            "SELECT id FROM interview_records WHERE user_id = ? AND company_name = ? AND interview_date = ? ORDER BY id LIMIT 1",
+            Long::class.java,
+            userId,
+            DEMO_RECORDED_COMPANY,
+            LocalDate.of(2026, 3, 10),
+        ).firstOrNull() ?: return
+        val hasSegments = jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM interview_transcript_segments WHERE interview_record_id = ?",
+            Int::class.java,
+            recordId,
+        )!! > 0
+        val questions = jdbcTemplate.queryForList(
+            "SELECT id, text FROM interview_record_questions WHERE interview_record_id = ? ORDER BY order_index, id",
+            recordId,
+        )
+        if (hasSegments || questions.isEmpty()) {
+            return
+        }
+
+        val storageKey = "demo-interview-$recordId.wav"
+        val path = interviewAudioStorageService.resolveStoredPath(storageKey)
+        Files.createDirectories(path.parent)
+        Files.write(path, DemoInterviewRecording.wav(questions.size * 2))
+        val now = clockService.now()
+        jdbcTemplate.update(
+            """
+            UPDATE interview_records
+            SET source_audio_file_url = ?, source_audio_file_name = ?, source_audio_duration_ms = ?, source_audio_content_type = 'audio/wav', updated_at = ?
+            WHERE id = ?
+            """.trimIndent(),
+            "/uploads/interview-audio/$storageKey",
+            "demo-interview.wav",
+            questions.size * 2 * DemoInterviewRecording.SEGMENT_MS,
+            java.sql.Timestamp.from(now),
+            recordId,
+        )
+        questions.forEachIndexed { index, question ->
+            val questionId = (question["id"] as Number).toLong()
+            val answerText = jdbcTemplate.queryForList(
+                "SELECT text FROM interview_record_answers WHERE interview_record_question_id = ? ORDER BY order_index, id",
+                String::class.java,
+                questionId,
+            ).joinToString(" ")
+            val questionSegment = insertSegment(recordId, index * 2, "interviewer", question["text"] as String, now)
+            val answerSegment = insertSegment(recordId, index * 2 + 1, "candidate", answerText.ifBlank { "…" }, now)
+            jdbcTemplate.update(
+                "UPDATE interview_record_questions SET segment_start_id = ?, segment_end_id = ? WHERE id = ?",
+                questionSegment,
+                questionSegment,
+                questionId,
+            )
+            jdbcTemplate.update(
+                "UPDATE interview_record_answers SET segment_start_id = ?, segment_end_id = ? WHERE interview_record_question_id = ?",
+                answerSegment,
+                answerSegment,
+                questionId,
+            )
+        }
+        logger.info("Seeded a {}-turn demo recording for interview record {}.", questions.size * 2, recordId)
+    }
+
+    private fun insertSegment(recordId: Long, index: Int, speakerType: String, text: String, now: java.time.Instant): Long =
+        jdbcTemplate.queryForObject(
+            """
+            INSERT INTO interview_transcript_segments (
+                interview_record_id, start_ms, end_ms, speaker_type, raw_text, cleaned_text, confidence_score, sequence, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, 95.00, ?, ?, ?)
+            RETURNING id
+            """.trimIndent(),
+            Long::class.java,
+            recordId,
+            index * DemoInterviewRecording.SEGMENT_MS,
+            (index + 1) * DemoInterviewRecording.SEGMENT_MS - 1,
+            speakerType,
+            text,
+            text,
+            index + 1,
+            java.sql.Timestamp.from(now),
+            java.sql.Timestamp.from(now),
+        )!!
 
     private fun seedDemoUser(): UserEntity {
         val now = clockService.now()
@@ -514,6 +609,7 @@ class LocalResumeHeatmapDemoDataInitializer(
     private companion object {
         private val logger = LoggerFactory.getLogger(LocalResumeHeatmapDemoDataInitializer::class.java)
         private const val DEMO_EMAIL = "demo-heatmap@iterview.local"
+        private const val DEMO_RECORDED_COMPANY = "(주)드림어스컴퍼니(FLO)"
         private const val DEMO_PASSWORD = "demo1234!"
         private const val DEMO_RESUME_TITLE = "Heatmap Overlay Demo Resume"
         private const val DEMO_SUMMARY =
