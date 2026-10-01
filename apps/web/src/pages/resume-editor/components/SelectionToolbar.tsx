@@ -1,3 +1,4 @@
+import { Button } from "../../../shared/ui/primitives";
 import type { EditorControllerProps } from "../editorViewProps";
 
 export function SelectionToolbar({ ctrl }: EditorControllerProps) {
@@ -29,105 +30,106 @@ export function SelectionToolbar({ ctrl }: EditorControllerProps) {
       }}
     >
       <span className="resume-editor-context-toolbar__label">{t("resumeEditor.selectionTools")}</span>
-      <div className="filter-chip-row">
+      <div className="editor-chips">
         <div className="resume-editor-selection-format">
-          <button
-            className="detail-chip detail-chip--interactive"
+          <Button
+            aria-expanded={isSelectionFormatOpen}
             onClick={() => setIsSelectionFormatOpen((current) => !current)}
-            type="button"
+            size="sm"
+            variant={isSelectionFormatOpen ? "primary" : "ghost"}
           >
             {t("resumeEditor.format")}
-          </button>
+          </Button>
           {isSelectionFormatOpen ? (
             <div className="resume-editor-selection-format__menu">
-              <button
-                className="secondary-button"
+              <Button
                 onClick={() => applySelectionFormat("bold")}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
                 {t("resumeEditor.bold")}
-              </button>
-              <button
-                className="secondary-button"
+              </Button>
+              <Button
                 onClick={() => applySelectionFormat("italic")}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
                 {t("resumeEditor.italic")}
-              </button>
-              <button
-                className="secondary-button"
+              </Button>
+              <Button
                 onClick={() => applySelectionFormat("code")}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
                 Code
-              </button>
-              <button
-                className="secondary-button"
+              </Button>
+              <Button
                 onClick={() => applySelectionFormat("heading1")}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
                 {t("resumeEditor.turnIntoH1")}
-              </button>
-              <button
-                className="secondary-button"
+              </Button>
+              <Button
                 onClick={() => applySelectionFormat("heading2")}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
                 {t("resumeEditor.turnIntoH2")}
-              </button>
-              <button
-                className="secondary-button"
+              </Button>
+              <Button
                 onClick={() => applySelectionFormat("bullet")}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
                 {t("resumeEditor.bulletList")}
-              </button>
-              <button
-                className="secondary-button"
+              </Button>
+              <Button
                 onClick={() => applySelectionFormat("quote")}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
                 {t("resumeEditor.quote")}
-              </button>
+              </Button>
             </div>
           ) : null}
         </div>
-        <button
-          className="detail-chip detail-chip--interactive"
+        <Button
           onClick={() => openInlineComposer("comment")}
-          type="button"
+          size="sm"
+          variant="ghost"
         >
           {t("resumeEditor.comment")}
-        </button>
-        <button
-          className="detail-chip detail-chip--interactive"
+        </Button>
+        <Button
           onClick={() => {
             void runInlineQuestionSuggestions();
           }}
-          type="button"
+          size="sm"
+          variant="ghost"
         >
           {t("resumeEditor.question")}
-        </button>
-        <button
-          className="detail-chip detail-chip--interactive"
+        </Button>
+        <Button
           onClick={() => {
             void runInlineRewriteSuggestions();
           }}
-          type="button"
+          size="sm"
+          variant="ghost"
         >
           {t("resumeEditor.rewrite")}
-        </button>
-        <button
-          className="detail-chip detail-chip--interactive"
+        </Button>
+        <Button
           onClick={() => {
             setSelectedMarkdownRange(null);
             setInlineSuggestionPreview(null);
             setInlineComposerMode(null);
           }}
-          type="button"
+          size="sm"
+          variant="ghost"
         >
           {t("resumeEditor.clear")}
-        </button>
+        </Button>
       </div>
     </div>
   );

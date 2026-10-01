@@ -1,3 +1,4 @@
+import { Button } from "../../../../shared/ui/primitives";
 import { getSelectableLineRange, scrollToEditorHeading } from "../../editorUtils";
 import { createLineMenuRenderers } from "../LineMenu";
 import { renderMarkdownDocumentPreview } from "../markdownPreview";
@@ -28,25 +29,12 @@ export function ReviewTab({ ctrl }: EditorControllerProps) {
   const { renderLineMenu, renderFloatingLineMenu } = createLineMenuRenderers(ctrl);
 
   return (
-    <article className="page-card page-card--muted resume-editor-document-preview">
-      <div className="section-heading">
-        <div>
-          <p className="section-heading__eyebrow">{t("resumeEditor.documentPreview")}</p>
-          <h3 className="page-card__title">{t("resumeEditor.readingSurface")}</h3>
-        </div>
-        <span className="detail-chip">
-          {richTreeEnabled
-            ? t("resumeEditor.richTreeAware")
-            : t("resumeEditor.markdownPreview")}
-        </span>
-      </div>
+    <article className="resume-editor-document-preview">
       {richTreeEnabled && documentTableOfContents.length > 0 ? (
         <div className="resume-editor-document-preview__toc">
           {documentTableOfContents.map((item) => (
-            <button
-              className={`detail-chip detail-chip--interactive ${
-                item.nodeId === selectedNodeId ? "detail-chip--active" : ""
-              }`}
+            <Button
+              aria-pressed={item.nodeId === selectedNodeId}
               key={item.id}
               onClick={() => {
                 setSelectedNodeId(item.nodeId);
@@ -54,10 +42,11 @@ export function ReviewTab({ ctrl }: EditorControllerProps) {
                 setIsContextPanelOpen(true);
                 scrollToEditorHeading(item.nodeId);
               }}
-              type="button"
+              size="sm"
+              variant={item.nodeId === selectedNodeId ? "primary" : "ghost"}
             >
               {item.title}
-            </button>
+            </Button>
           ))}
         </div>
       ) : null}

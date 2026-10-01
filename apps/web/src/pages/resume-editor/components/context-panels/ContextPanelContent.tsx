@@ -1,3 +1,4 @@
+import { Badge, Card, CardHeader } from "../../../../shared/ui/primitives";
 import type { EditorViewProps } from "../../editorViewProps";
 import { CommentsPanel } from "./CommentsPanel";
 import { QuestionCardsPanel } from "./QuestionCardsPanel";
@@ -14,38 +15,35 @@ export function ContextPanelContent({ ctrl, workspace }: EditorViewProps) {
   switch (activeSidePanel) {
     case "source":
       return (
-        <section className="page-card">
-          <span className="page-card__label">{t("resumeEditor.sourceContext")}</span>
-          <h2 className="page-card__title">{t("resumeEditor.immutableSourceResumeContext")}</h2>
-          <div className="stack-list">
+        <Card padded>
+          <CardHeader title={t("resumeEditor.sourceContext")} titleAs="h2" />
+          <div className="editor-stack">
             {sourceContextCards.map((card) => (
-              <article className="page-card page-card--muted" key={card.title}>
-                <p className="section-heading__eyebrow">{card.title}</p>
-                <p className="page-card__body resume-section__body--preserve">{card.body}</p>
+              <article className="editor-inset" key={card.title}>
+                <p className="editor-label">{card.title}</p>
+                <p className="editor-text editor-preserve">{card.body}</p>
               </article>
             ))}
           </div>
-        </section>
+        </Card>
       );
     case "presence":
       return (
-        <section className="page-card">
-          <span className="page-card__label">{t("resumeEditor.presenceStatus")}</span>
-          <h2 className="page-card__title">{t("resumeEditor.workspacePresence")}</h2>
-          <div className="filter-chip-row">
+        <Card padded>
+          <CardHeader title={t("resumeEditor.presenceStatus")} titleAs="h2" />
+          <div className="editor-chips">
             {workspace.activePresence.length > 0 ? (
               workspace.activePresence.map((presence) => (
-                <span className="detail-chip" key={presence.sessionKey}>
+                <Badge dot key={presence.sessionKey} tone="accent">
                   {presence.userLabel}
                   {presence.viewMode ? ` · ${presence.viewMode}` : ""}
-                  {presence.selectedBlockId ? ` · ${presence.selectedBlockId}` : ""}
-                </span>
+                </Badge>
               ))
             ) : (
-              <span className="detail-chip">{t("resumeEditor.noActivePresenceYet")}</span>
+              <p className="editor-muted">{t("resumeEditor.noActivePresenceYet")}</p>
             )}
           </div>
-        </section>
+        </Card>
       );
     case "question-cards":
       return <QuestionCardsPanel ctrl={ctrl} workspace={workspace} />;

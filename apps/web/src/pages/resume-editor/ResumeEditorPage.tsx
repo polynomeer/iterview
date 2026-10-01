@@ -1,7 +1,5 @@
 import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
-import { routeConfig } from "../../shared/config/routes";
-import { Button, ButtonLink, ErrorState, PageSkeleton } from "../../shared/ui/primitives";
-import "./legacy-editor.css";
+import { Button, ErrorState, PageSkeleton } from "../../shared/ui/primitives";
 import "./editor.css";
 import { EditorHeader } from "./components/EditorHeader";
 import { ImportMarkdownDialog } from "./components/ImportMarkdownDialog";
@@ -21,7 +19,6 @@ export function ResumeEditorPage() {
     updateDocumentMutation,
     importMarkdownMutation,
     mergePreviewMessage,
-    saveCurrentDraft,
     importMarkdownOpen,
   } = ctrl;
 
@@ -49,33 +46,22 @@ export function ResumeEditorPage() {
 
   // Rendered inside the resume hub, which owns the page h1, the version bar, and the tab to the pressure map.
   return (
-    <section aria-label={t("resumeEditor.evidenceEditor")} className="page-container page-container--hidden">
-      <div className="resume-editor-toolbar">
-        <ButtonLink size="sm" to={routeConfig.resumeEditor.buildPath({ versionId: ctrl.safeVersionId })} variant="ghost">
-          {t("resumeClaims.backToClaims")}
-        </ButtonLink>
-        <span className="resume-editor-toolbar__file">{workspace.sourceFileName}</span>
-        <Button loading={saving} onClick={() => void saveCurrentDraft("manual_edit")} variant="primary">
-          {t("resumeEditor.saveDraft")}
-        </Button>
-      </div>
-      <div className="page-stack">
-        <EditorHeader ctrl={ctrl} workspace={workspace} />
+    <section aria-label={t("resumeEditor.evidenceEditor")} className="resume-editor">
+      <EditorHeader ctrl={ctrl} saving={saving} workspace={workspace} />
 
-        {importMarkdownOpen ? <ImportMarkdownDialog ctrl={ctrl} workspace={workspace} /> : null}
+      {importMarkdownOpen ? <ImportMarkdownDialog ctrl={ctrl} workspace={workspace} /> : null}
 
-        {mergePreviewMessage ? <MergePreviewPanel ctrl={ctrl} workspace={workspace} /> : null}
+      {mergePreviewMessage ? <MergePreviewPanel ctrl={ctrl} workspace={workspace} /> : null}
 
-        {currentTab === "edit" || currentTab === "review" ? (
-          <DocumentWorkspace ctrl={ctrl} workspace={workspace} />
-        ) : null}
+      {currentTab === "edit" || currentTab === "review" ? (
+        <DocumentWorkspace ctrl={ctrl} workspace={workspace} />
+      ) : null}
 
-        {currentTab === "heatmap" ? <HeatmapTab ctrl={ctrl} workspace={workspace} /> : null}
+      {currentTab === "heatmap" ? <HeatmapTab ctrl={ctrl} workspace={workspace} /> : null}
 
-        {currentTab === "print-preview" ? <PrintPreviewTab ctrl={ctrl} /> : null}
+      {currentTab === "print-preview" ? <PrintPreviewTab ctrl={ctrl} /> : null}
 
-        {currentTab === "history" ? <HistoryTab ctrl={ctrl} /> : null}
-      </div>
+      {currentTab === "history" ? <HistoryTab ctrl={ctrl} /> : null}
     </section>
   );
 }

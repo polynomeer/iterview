@@ -2,6 +2,7 @@ import { InlineComposers } from "../InlineComposers";
 import { InlineSuggestionPreviews } from "../InlineSuggestionPreviews";
 import { createLineMenuRenderers } from "../LineMenu";
 import { renderMarkdownDocumentPreview } from "../markdownPreview";
+import { Badge } from "../../../../shared/ui/primitives";
 import { SelectionToolbar } from "../SelectionToolbar";
 import type { EditorControllerProps } from "../../editorViewProps";
 
@@ -38,40 +39,18 @@ export function EditTab({ ctrl }: EditorControllerProps) {
     <div className="resume-editor-write-surface">
       <InlineSuggestionPreviews ctrl={ctrl} />
       {slashCommand ? (
-        <article className="resume-editor-slash-menu">
-          <div className="section-heading">
-            <div>
-              <p className="section-heading__eyebrow">{t("resumeEditor.slashMenu")}</p>
-              <h3 className="page-card__title">{t("resumeEditor.quickBlockAndActionCommands")}</h3>
-            </div>
-            <span className="detail-chip">/{slashCommand.query || (t("resumeEditor.slashQueryPlaceholder"))}</span>
-          </div>
+        <div aria-label={t("resumeEditor.slashMenu")} className="resume-editor-slash-menu" role="group">
+          <Badge>/{slashCommand.query || t("resumeEditor.slashQueryPlaceholder")}</Badge>
           <div className="resume-editor-slash-menu__list">
             {slashMenuItems.map((item) => (
-              <button
-                className="secondary-button resume-editor-slash-menu__item"
-                key={item.id}
-                onClick={item.onSelect}
-                type="button"
-              >
+              <button className="editor-menu__item resume-editor-slash-menu__item" key={item.id} onClick={item.onSelect} type="button">
                 {item.label}
               </button>
             ))}
           </div>
-        </article>
-      ) : null}
-      <article className="page-card page-card--muted resume-editor-document-preview resume-editor-document-preview--editable">
-        <div className="section-heading">
-          <div>
-            <p className="section-heading__eyebrow">{t("resumeEditor.editorSurface")}</p>
-            <h3 className="page-card__title">{t("resumeEditor.editEachRowDirectly")}</h3>
-          </div>
-          <span className="detail-chip">
-            {selectedMarkdownRange?.text
-              ? t("resumeEditor.selectionTools")
-              : t("resumeEditor.selectTextOrUseRowHandles")}
-          </span>
         </div>
+      ) : null}
+      <div className="resume-editor-document-preview resume-editor-document-preview--editable">
         <div
           className="resume-editor-document-preview__body"
           onMouseDown={handleEditorSurfaceMouseDown}
@@ -114,7 +93,7 @@ export function EditTab({ ctrl }: EditorControllerProps) {
           {renderFloatingLineMenu()}
           <InlineComposers ctrl={ctrl} />
         </div>
-      </article>
+      </div>
     </div>
   );
 }

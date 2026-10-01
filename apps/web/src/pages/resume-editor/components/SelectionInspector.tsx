@@ -1,58 +1,17 @@
-import { renderAnnotatedText } from "./markdownPreview";
 import type { EditorControllerProps } from "../editorViewProps";
 
+/** The text the next comment, question card, or rewrite will attach to. */
 export function SelectionInspector({ ctrl }: EditorControllerProps) {
-  const {
-    t,
-    currentTab,
-    selectedMarkdownRange,
-    selectedBlock,
-    effectiveSelectedText,
-    currentSelectionAnchor,
-  } = ctrl;
+  const { t, currentTab, effectiveSelectedText } = ctrl;
+
+  if (!effectiveSelectedText) {
+    return null;
+  }
 
   return (
-    <div className="resume-editor-selection">
-      <span className="detail-chip">
-        {selectedMarkdownRange
-          ? t("resumeEditor.markdownSelectionRange", {
-              start: selectedMarkdownRange.startOffset,
-              end: selectedMarkdownRange.endOffset,
-            })
-          : t("resumeEditor.noTextRangeSelected")}
-      </span>
-      <p className="resume-tailor-muted">
-        {effectiveSelectedText
-          ? t("resumeEditor.currentExcerpt", { text: effectiveSelectedText })
-          : currentTab === "review"
-            ? t("resumeEditor.reviewNoSelectionHint")
-            : t("resumeEditor.editNoSelectionHint")}
-      </p>
-      {effectiveSelectedText && currentTab !== "review" ? (
-        <p className="resume-tailor-muted">
-          {t("resumeEditor.selectionAttachHint")}
-        </p>
-      ) : null}
-      {currentSelectionAnchor?.nodeId ? (
-        <div className="filter-chip-row">
-          <span className="detail-chip">{t("resumeEditor.node")} {currentSelectionAnchor.nodeId}</span>
-          {currentSelectionAnchor.fieldPath ? (
-            <span className="detail-chip">{currentSelectionAnchor.fieldPath}</span>
-          ) : null}
-        </div>
-      ) : null}
-      {selectedBlock ? (
-        <article className="page-card page-card--muted resume-editor-annotated-text">
-          <p className="section-heading__eyebrow">{t("resumeEditor.annotatedPreview")}</p>
-          <div className="page-card__body resume-section__body--preserve">
-            {renderAnnotatedText(
-              selectedBlock.text,
-              selectedBlock.inlineMarks,
-              null,
-            )}
-          </div>
-        </article>
-      ) : null}
+    <div className="editor-inset resume-editor-selection">
+      <p className="editor-text">{t("resumeEditor.currentExcerpt", { text: effectiveSelectedText })}</p>
+      {currentTab !== "review" ? <p className="editor-muted">{t("resumeEditor.selectionAttachHint")}</p> : null}
     </div>
   );
 }

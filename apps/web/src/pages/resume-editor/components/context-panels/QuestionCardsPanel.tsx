@@ -1,4 +1,4 @@
-import { EmptyStateCard } from "../../../../shared/ui/EmptyStateCard";
+import { Badge, Button, Card, CardHeader, EmptyState, Field, Input, Textarea } from "../../../../shared/ui/primitives";
 import type { EditorViewProps } from "../../editorViewProps";
 
 export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
@@ -18,37 +18,39 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
   } = ctrl;
 
   return (
-    <section className="page-card">
-      <span className="page-card__label">{t("resumeEditor.questionCards")}</span>
-      <h2 className="page-card__title">{t("resumeEditor.interviewAndStudyPrompts")}</h2>
-      <label className="form-field">
-        <span className="form-field__label">{t("resumeEditor.title")}</span>
-        <input
-          className="form-field__input"
-          onChange={(event) => setNewQuestionCardTitle(event.target.value)}
-          value={newQuestionCardTitle}
-        />
-      </label>
-      <label className="form-field">
-        <span className="form-field__label">{t("resumeEditor.questionText")}</span>
-        <textarea
-          className="form-field__input form-input--textarea"
-          onChange={(event) => setNewQuestionCardText(event.target.value)}
-          rows={4}
-          value={newQuestionCardText}
-        />
-      </label>
-      <label className="form-field">
-        <span className="form-field__label">{t("resumeEditor.questionType")}</span>
-        <input
-          className="form-field__input"
-          onChange={(event) => setNewQuestionCardType(event.target.value)}
-          value={newQuestionCardType}
-        />
-      </label>
-      <div className="page-card__actions">
-        <button
-          className="primary-button"
+    <Card padded>
+      <CardHeader title={t("resumeEditor.questionCards")} titleAs="h2" />
+      <Field label={t("resumeEditor.title")}>
+        {(control) => (
+          <Input
+            {...control}
+            onChange={(event) => setNewQuestionCardTitle(event.target.value)}
+            value={newQuestionCardTitle}
+          />
+        )}
+      </Field>
+      <Field label={t("resumeEditor.questionText")}>
+        {(control) => (
+          <Textarea
+            {...control}
+            className="editor-textarea"
+            onChange={(event) => setNewQuestionCardText(event.target.value)}
+            rows={4}
+            value={newQuestionCardText}
+          />
+        )}
+      </Field>
+      <Field label={t("resumeEditor.questionType")}>
+        {(control) => (
+          <Input
+            {...control}
+            onChange={(event) => setNewQuestionCardType(event.target.value)}
+            value={newQuestionCardType}
+          />
+        )}
+      </Field>
+      <div className="editor-actions">
+        <Button
           disabled={(!selectedBlock && !currentSelectionAnchor) || !newQuestionCardText.trim()}
           onClick={() => {
             if (!selectedBlock && !currentSelectionAnchor) {
@@ -71,42 +73,38 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
             setNewQuestionCardTitle("");
             setNewQuestionCardText("");
           }}
-          type="button"
+          size="sm"
+          variant="primary"
         >
           {t("resumeEditor.createQuestionCard")}
-        </button>
+        </Button>
       </div>
-      <div className="stack-list">
+      <div className="editor-stack">
         {workspace.questionCards.length === 0 ? (
-          <EmptyStateCard
+          <EmptyState
             body={t("resumeEditor.noQuestionCardsYet")}
             title={t("resumeEditor.noQuestionCards")}
           />
         ) : (
           workspace.questionCards.map((card) => (
-            <article className="page-card page-card--muted" key={card.id}>
-              <div className="section-heading">
+            <article className="editor-item" key={card.id}>
+              <div className="editor-head">
                 <div>
-                  <p className="section-heading__eyebrow">{card.questionTypeLabel}</p>
-                  <h3 className="page-card__title">{card.title}</h3>
+                  <p className="editor-label">{card.questionTypeLabel}</p>
+                  <h3 className="editor-heading">{card.title}</h3>
                 </div>
-                <span className="question-status-badge question-status-badge--neutral">
-                  {card.statusLabel}
-                </span>
+                <Badge>{card.statusLabel}</Badge>
               </div>
-              <p className="page-card__body resume-section__body--preserve">{card.questionText}</p>
+              <p className="editor-text editor-preserve">{card.questionText}</p>
               {card.followUpSuggestions.length > 0 ? (
-                <div className="filter-chip-row">
+                <div className="editor-chips">
                   {card.followUpSuggestions.map((item) => (
-                    <span className="detail-chip" key={`${card.id}-${item}`}>
-                      {item}
-                    </span>
+                    <Badge key={`${card.id}-${item}`}>{item}</Badge>
                   ))}
                 </div>
               ) : null}
-              <div className="page-card__actions">
-                <button
-                  className="secondary-button"
+              <div className="editor-actions">
+                <Button
                   onClick={() => {
                     void updateQuestionCardMutation.mutateAsync({
                       cardId: card.id,
@@ -115,17 +113,17 @@ export function QuestionCardsPanel({ ctrl, workspace }: EditorViewProps) {
                       },
                     });
                   }}
-                  type="button"
+                  size="sm"
                 >
                   {card.status === "archived"
                     ? t("resumeEditor.restore")
                     : t("resumeEditor.archive")}
-                </button>
+                </Button>
               </div>
             </article>
           ))
         )}
       </div>
-    </section>
+    </Card>
   );
 }

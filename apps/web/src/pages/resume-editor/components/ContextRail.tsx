@@ -1,7 +1,50 @@
+import { Badge, Button } from "../../../shared/ui/primitives";
 import { findFirstReviewSignalLine } from "../editorUtils";
+import type { EditorControllerProps, EditorViewProps } from "../editorViewProps";
 import { ContextPanelContent } from "./context-panels/ContextPanelContent";
-import type { EditorViewProps } from "../editorViewProps";
 
+/** Comment, question card, and suggestion counts for the selection; each opens its panel. */
+export function ContextSummaryCards({ ctrl }: EditorControllerProps) {
+  const {
+    t,
+    contextualSummaryItems,
+    previewReviewSignals,
+    setFocusedReviewLineIndex,
+    setActiveSidePanel,
+    setIsContextPanelOpen,
+    setIsSecondaryToolsOpen,
+  } = ctrl;
+
+  return (
+    <div className="resume-editor-contextual__summary">
+      {contextualSummaryItems.map((item) => (
+        <button
+          className="resume-editor-contextual__summary-card"
+          key={item.panelId}
+          onClick={() => {
+            const matchedLineIndex = findFirstReviewSignalLine(previewReviewSignals, item.panelId);
+            if (matchedLineIndex >= 0) {
+              setFocusedReviewLineIndex(matchedLineIndex);
+            }
+            setActiveSidePanel(item.panelId);
+            setIsContextPanelOpen(true);
+            setIsSecondaryToolsOpen(false);
+          }}
+          type="button"
+        >
+          <span className="resume-editor-contextual__summary-label">{item.label}</span>
+          <strong className="resume-editor-contextual__summary-value">{item.value}</strong>
+          <span className="resume-editor-contextual__summary-helper">{item.helper}</span>
+        </button>
+      ))}
+      <Button onClick={() => setIsContextPanelOpen(true)} size="sm">
+        {t("resumeEditor.openTools")}
+      </Button>
+    </div>
+  );
+}
+
+/** The floating tool dock for the selected block: panel switcher and the open panel. */
 export function ContextRail({ ctrl, workspace }: EditorViewProps) {
   const {
     t,
@@ -18,117 +61,61 @@ export function ContextRail({ ctrl, workspace }: EditorViewProps) {
     setIsContextPanelOpen,
     isSecondaryToolsOpen,
     setIsSecondaryToolsOpen,
-    setFocusedReviewLineIndex,
-    contextualSummaryItems,
-    previewReviewSignals,
   } = ctrl;
+  const title = richTreeEnabled
+    ? selectedNode?.metadata.heading ?? selectedNode?.nodeTypeLabel ?? t("resumeEditor.untitledNode")
+    : selectedBlock?.title || t("resumeEditor.untitledBlock");
+  const typeLabel = richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockTypeLabel;
+
+  function panelButton(panelId: (typeof primarySidePanels)[number][0], label: string, keepSecondaryOpen: boolean) {
+    const active = activeSidePanel === panelId;
+    return (
+      <Button
+        aria-pressed={active}
+        key={panelId}
+        onClick={() => {
+          setActiveSidePanel(panelId);
+          setIsContextPanelOpen(true);
+          setIsSecondaryToolsOpen(keepSecondaryOpen);
+        }}
+        size="sm"
+        variant={active ? "primary" : "ghost"}
+      >
+        {label}
+      </Button>
+    );
+  }
 
   return (
-    <div
-      aria-label={t("resumeEditor.contextualEditorTools")}
-      className={`resume-editor-contextual ${isContextPanelOpen ? "resume-editor-contextual--open" : ""}`}
-    >
+    <div aria-label={t("resumeEditor.contextualEditorTools")} className="resume-editor-contextual" role="region">
       {isContextPanelOpen ? (
         <div className="resume-editor-contextual__dock">
-          {primarySidePanels.map(([panelId, label]) => (
-            <button
-              className={`detail-chip detail-chip--interactive ${activeSidePanel === panelId ? "detail-chip--active" : ""}`}
-              key={panelId}
-              onClick={() => {
-                setActiveSidePanel(panelId);
-                setIsContextPanelOpen(true);
-                setIsSecondaryToolsOpen(false);
-              }}
-              type="button"
-            >
-              {label}
-            </button>
-          ))}
-          <button
-            className={`detail-chip detail-chip--interactive ${isSecondaryToolsOpen || isSecondaryPanelActive ? "detail-chip--active" : ""}`}
+          {primarySidePanels.map(([panelId, label]) => panelButton(panelId, label, false))}
+          <Button
+            aria-expanded={isSecondaryToolsOpen || isSecondaryPanelActive}
             onClick={() => setIsSecondaryToolsOpen((current) => !current)}
-            type="button"
+            size="sm"
+            variant="ghost"
           >
             {t("resumeEditor.more")}
-          </button>
+          </Button>
           {isSecondaryToolsOpen || isSecondaryPanelActive ? (
             <div className="resume-editor-contextual__secondary">
-              {secondarySidePanels.map(([panelId, label]) => (
-                <button
-                  className={`detail-chip detail-chip--interactive ${activeSidePanel === panelId ? "detail-chip--active" : ""}`}
-                  key={panelId}
-                  onClick={() => {
-                    setActiveSidePanel(panelId);
-                    setIsContextPanelOpen(true);
-                    setIsSecondaryToolsOpen(true);
-                  }}
-                  type="button"
-                >
-                  {label}
-                </button>
-              ))}
+              {secondarySidePanels.map(([panelId, label]) => panelButton(panelId, label, true))}
             </div>
           ) : null}
-          <button
-            className="secondary-button"
-            onClick={() => setIsContextPanelOpen(false)}
-            type="button"
-          >
+          <Button onClick={() => setIsContextPanelOpen(false)} size="sm">
             {t("resumeEditor.close")}
-          </button>
+          </Button>
         </div>
       ) : currentTab !== "review" ? (
-        <div className="resume-editor-contextual__summary">
-          {contextualSummaryItems.map((item) => (
-            <button
-              className="resume-editor-contextual__summary-card"
-              key={item.panelId}
-              onClick={() => {
-                const matchedLineIndex = findFirstReviewSignalLine(
-                  previewReviewSignals,
-                  item.panelId,
-                );
-                if (matchedLineIndex >= 0) {
-                  setFocusedReviewLineIndex(matchedLineIndex);
-                }
-                setActiveSidePanel(item.panelId);
-                setIsContextPanelOpen(true);
-                setIsSecondaryToolsOpen(false);
-              }}
-              type="button"
-            >
-              <span className="resume-editor-contextual__summary-label">{item.label}</span>
-              <strong className="resume-editor-contextual__summary-value">{item.value}</strong>
-              <span className="resume-editor-contextual__summary-helper">{item.helper}</span>
-            </button>
-          ))}
-          <button
-            className="secondary-button"
-            onClick={() => setIsContextPanelOpen(true)}
-            type="button"
-          >
-            {t("resumeEditor.openTools")}
-          </button>
-        </div>
+        <ContextSummaryCards ctrl={ctrl} />
       ) : null}
       {isContextPanelOpen ? (
         <div className="resume-editor-contextual__panel">
-          <div className="section-heading">
-            <div>
-              <p className="section-heading__eyebrow">
-                {richTreeEnabled
-                  ? t("resumeEditor.selectedNode")
-                  : t("resumeEditor.selectedBlock")}
-              </p>
-              <h3 className="page-card__title">
-                {richTreeEnabled
-                  ? selectedNode?.metadata.heading ?? selectedNode?.fieldPath ?? selectedNode?.nodeId ?? (t("resumeEditor.untitledNode"))
-                  : selectedBlock?.title || (t("resumeEditor.untitledBlock"))}
-              </h3>
-            </div>
-            <span className="detail-chip">
-              {richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockTypeLabel}
-            </span>
+          <div className="editor-head">
+            <h3 className="editor-heading">{title}</h3>
+            {typeLabel && typeLabel !== title ? <Badge>{typeLabel}</Badge> : null}
           </div>
           <ContextPanelContent ctrl={ctrl} workspace={workspace} />
         </div>

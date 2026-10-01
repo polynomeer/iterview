@@ -189,7 +189,7 @@ export function renderMarkdownDocumentPreview(
             {lineSignal.commentCount > 0 ? (
               <button
                 aria-label={t("resumeEditor.commentThreadsOnLine", { count: lineSignal.commentCount })}
-                className="detail-chip detail-chip--interactive detail-chip--accent resume-editor-document-preview__signal"
+                className="resume-editor-document-preview__signal resume-editor-document-preview__signal--comments"
                 data-tooltip={t(lineSignal.commentCount > 1 ? "resumeEditor.commentThreadCountOther" : "resumeEditor.commentThreadCountOne", { count: lineSignal.commentCount })}
                 onClick={() => options?.onReviewSignalClick?.("comments", lineIndex)}
                 title={t(lineSignal.commentCount > 1 ? "resumeEditor.commentThreadCountOther" : "resumeEditor.commentThreadCountOne", { count: lineSignal.commentCount })}
@@ -201,7 +201,7 @@ export function renderMarkdownDocumentPreview(
             {lineSignal.cardCount > 0 ? (
               <button
                 aria-label={t("resumeEditor.questionCardsOnLine", { count: lineSignal.cardCount })}
-                className="detail-chip detail-chip--interactive detail-chip--neutral resume-editor-document-preview__signal"
+                className="resume-editor-document-preview__signal resume-editor-document-preview__signal--cards"
                 data-tooltip={t(lineSignal.cardCount > 1 ? "resumeEditor.questionCardCountOther" : "resumeEditor.questionCardCountOne", { count: lineSignal.cardCount })}
                 onClick={() => options?.onReviewSignalClick?.("question-cards", lineIndex)}
                 title={t(lineSignal.cardCount > 1 ? "resumeEditor.questionCardCountOther" : "resumeEditor.questionCardCountOne", { count: lineSignal.cardCount })}
@@ -213,7 +213,7 @@ export function renderMarkdownDocumentPreview(
             {lineSignal.suggestionCount > 0 ? (
               <button
                 aria-label={t("resumeEditor.suggestionsOnLine", { count: lineSignal.suggestionCount })}
-                className="detail-chip detail-chip--interactive resume-editor-document-preview__signal"
+                className="resume-editor-document-preview__signal resume-editor-document-preview__signal--suggestions"
                 data-tooltip={t(lineSignal.suggestionCount > 1 ? "resumeEditor.suggestionCountOther" : "resumeEditor.suggestionCountOne", { count: lineSignal.suggestionCount })}
                 onClick={() => options?.onReviewSignalClick?.("suggestions", lineIndex)}
                 title={t(lineSignal.suggestionCount > 1 ? "resumeEditor.suggestionCountOther" : "resumeEditor.suggestionCountOne", { count: lineSignal.suggestionCount })}

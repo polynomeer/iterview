@@ -407,86 +407,6 @@ button {
   backdrop-filter: blur(24px);
 }
 
-.metric-card {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--border-soft);
-  border-radius: 20px;
-  background: var(--surface-soft);
-}
-
-.metric-card__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.metric-card--accent {
-  background: var(--surface-accent-soft);
-  border-color: var(--border-info);
-}
-
-.metric-card--muted {
-  background: var(--surface-muted);
-}
-
-.metric-card__label {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  line-height: 1.35;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.metric-card__value {
-  font-size: 1.6rem;
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.metric-card__helper {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.86rem;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.question-status-badge {
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--border-soft) 86%, transparent);
-  background: color-mix(in srgb, var(--surface-muted) 84%, var(--surface-base));
-  color: var(--text-muted);
-  font-size: 0.7rem;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.06em;
-}
-
-.question-status-badge--accent {
-  background: var(--surface-accent-soft);
-  color: var(--accent-strong);
-}
-
-.question-status-badge--neutral {
-  background: var(--surface-muted);
-  color: var(--text-muted);
-}
-
 /* Reference workspace proportions: wide canvas with a compact inspector rail. */
 
 /* Keep authentication focused across every workspace theme. */
@@ -754,8 +674,7 @@ button {
   gap: 10px;
 }
 
-.page-container__content,
-.page-stack {
+.page-container__content {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -768,37 +687,6 @@ button {
   background: var(--surface-base);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-soft);
-}
-
-.state-card {
-  display: flex;
-  flex-direction: column;
-}
-
-.state-card--section {
-  padding: 16px;
-  border-radius: 20px;
-  background: var(--surface-soft);
-  box-shadow: none;
-}
-
-.section-panel--muted {
-  background: var(--surface-muted-strong);
-}
-
-.state-card--loading .page-card__label {
-  background: var(--surface-info-soft);
-  color: var(--text-info);
-}
-
-.state-card--empty .page-card__label {
-  background: var(--surface-accent-soft);
-  color: var(--accent-strong);
-}
-
-.state-card--error .page-card__label {
-  background: var(--surface-danger-strong);
-  color: var(--text-danger);
 }
 
 .page-card__label {
@@ -867,40 +755,6 @@ button {
 
 /* Authentication is a short transition, not a workspace dashboard. */
 
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-field__label {
-  font-size: 0.86rem;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-}
-
-.form-field__input {
-  width: 100%;
-  min-height: 48px;
-  padding: 0 14px;
-  border-radius: 16px;
-  border: 1px solid var(--border-soft);
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 84%, transparent), color-mix(in srgb, var(--input-background) 92%, transparent)),
-    var(--input-background);
-  color: var(--text-main);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--surface-strong) 72%, transparent),
-    0 10px 24px color-mix(in srgb, var(--shadow-soft) 22%, transparent);
-  transition:
-    border-color 140ms ease,
-    box-shadow 140ms ease,
-    background 140ms ease,
-    transform 140ms ease;
-}
-
-.form-field__input:focus,
 .practice-filter__select:focus,
 .answer-editor__textarea:focus {
   outline: 2px solid var(--input-focus-outline);
@@ -911,17 +765,14 @@ button {
     0 16px 34px color-mix(in srgb, var(--shadow-soft) 32%, transparent);
 }
 
-.form-field__input::placeholder,
 .answer-editor__textarea::placeholder {
   color: color-mix(in srgb, var(--text-muted) 88%, transparent);
 }
 
-.form-field__input:hover,
 .answer-editor__textarea:hover {
   border-color: color-mix(in srgb, var(--accent) 26%, var(--border-soft));
 }
 
-.form-input--textarea,
 .answer-editor__textarea {
   min-height: 220px;
   padding: 16px 18px;
@@ -934,21 +785,6 @@ button {
     inset 0 1px 0 color-mix(in srgb, var(--surface-strong) 78%, transparent),
     inset 0 -1px 0 color-mix(in srgb, var(--border-soft) 70%, transparent),
     0 16px 30px color-mix(in srgb, var(--shadow-soft) 24%, transparent);
-}
-
-.form-input--textarea {
-  resize: vertical;
-}
-
-.state-card__details {
-  margin: 8px 0 0;
-  padding-left: 18px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-.state-card__details li + li {
-  margin-top: 4px;
 }
 
 .section-heading {
@@ -1056,12 +892,6 @@ button {
   color: var(--text-main);
 }
 
-.stack-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1082,12 +912,6 @@ button {
 
 .resume-library__actions {
   margin-top: 0;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
 }
 
 .profile-avatar {
@@ -1116,25 +940,6 @@ button {
   font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--accent-strong);
-}
-
-.detail-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--border-soft) 84%, transparent);
-  background: var(--chip-background);
-  color: var(--chip-text);
-  font-size: 0.76rem;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.detail-chip--accent {
-  background: var(--chip-accent-background);
   color: var(--accent-strong);
 }
 
@@ -1207,16 +1012,6 @@ button {
   .bottom-tab-bar {
     max-width: 560px;
   }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 960px) {
-  .stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }
 
 @media (min-width: 1024px) {
@@ -1268,38 +1063,6 @@ button {
   .profile-layout__rail {
     position: static;
   }
-}
-
-.resume-editor-write-surface .form-field {
-  position: relative;
-}
-
-.resume-editor-document-preview__body {
-  position: relative;
-  display: grid;
-  gap: 6px;
-  padding: 16px 18px;
-  border-radius: 18px;
-  border: 1px solid rgba(161, 132, 220, 0.14);
-  background:
-    linear-gradient(180deg, rgba(73, 57, 106, 0.28), rgba(44, 35, 66, 0.54)),
-    rgba(28, 21, 43, 0.72);
-}
-
-.resume-editor-block--compact .page-card__body {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
-.resume-editor-contextual__panel > .section-heading,
-.resume-editor-contextual__panel > .page-card {
-  margin: 0;
-}
-
-.resume-editor-contextual__panel > .section-heading {
-  padding: 16px 18px 0;
 }
 
 /* Redesign override layer */
@@ -1566,8 +1329,7 @@ button {
   padding-bottom: 0;
 }
 
-.page-container__content,
-.page-stack {
+.page-container__content {
   gap: 16px;
 }
 
@@ -1578,11 +1340,6 @@ button {
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-soft);
   backdrop-filter: none;
-}
-
-.page-card--muted,
-.state-card--section {
-  background: color-mix(in srgb, var(--surface-soft) 88%, var(--surface-base));
 }
 
 .page-card__label {
@@ -1658,14 +1415,6 @@ button {
 .secondary-button:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--accent) 24%, transparent);
   outline-offset: 2px;
-}
-
-.state-card {
-  gap: 0;
-}
-
-.state-card .page-card__body {
-  max-width: 58ch;
 }
 
 .bottom-tab-bar {
@@ -1755,34 +1504,8 @@ button {
   line-height: 1.2;
 }
 
-.metric-card,
 .question-tree__content {
   border-radius: 16px;
-}
-
-.metric-card {
-  gap: 10px;
-  padding: 15px 16px;
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--surface-soft) 90%, var(--surface-base));
-}
-
-.metric-card__label {
-  font-size: 0.74rem;
-  letter-spacing: 0.1em;
-}
-
-.metric-card__value {
-  font-size: 1.52rem;
-}
-
-.metric-card__helper {
-  font-size: 0.82rem;
-  line-height: 1.45;
-}
-
-.detail-chip {
-  background: var(--surface-muted);
 }
 
 @media (min-width: 768px) {
@@ -2127,31 +1850,14 @@ button {
 }
 
 .page-card__body,
-.metric-card__helper,
-.metric-card__label,
 .section-heading__eyebrow {
   color: rgba(175, 189, 211, 0.78);
 }
 
-.metric-card {
-  background: rgba(16, 28, 47, 0.86);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.question-status-badge,
-.page-card__label,
-.detail-chip {
+.page-card__label {
   background: rgba(18, 31, 49, 0.94);
   border-color: rgba(255, 255, 255, 0.07);
   color: rgba(218, 227, 241, 0.86);
-}
-
-.question-status-badge--accent {
-  color: #7eb0ff;
-}
-
-.question-status-badge--neutral {
-  color: #c1cee4;
 }
 
 @media (max-width: 1023px) {
@@ -2239,27 +1945,14 @@ button {
 }
 
 .page-card__body,
-.metric-card__helper,
-.metric-card__label,
 .section-heading__eyebrow {
   color: rgba(71, 85, 105, 0.88);
 }
 
-.metric-card {
-  background: rgba(248, 250, 252, 0.94);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-.question-status-badge,
-.page-card__label,
-.detail-chip {
+.page-card__label {
   background: rgba(245, 247, 250, 0.94);
   border-color: rgba(15, 23, 42, 0.08);
   color: rgba(51, 65, 85, 0.9);
-}
-
-.question-status-badge--accent {
-  color: #0f766e;
 }
 
 :root[data-theme="dark"] .app-shell,
@@ -2314,10 +2007,7 @@ button {
 
 :root[data-theme="dark"] .page-card,
 :root[data-theme="dracula"] .page-card,
-:root[data-theme="workspace"] .page-card,
-:root[data-theme="dark"] .metric-card,
-:root[data-theme="dracula"] .metric-card,
-:root[data-theme="workspace"] .metric-card {
+:root[data-theme="workspace"] .page-card {
   background-color: color-mix(in srgb, var(--surface-strong) 90%, transparent);
   border-color: var(--border-soft);
   color: var(--text-main);
@@ -2327,37 +2017,18 @@ button {
 :root[data-theme="dark"] .page-card__body,
 :root[data-theme="dracula"] .page-card__body,
 :root[data-theme="workspace"] .page-card__body,
-:root[data-theme="dark"] .metric-card__helper,
-:root[data-theme="dracula"] .metric-card__helper,
-:root[data-theme="workspace"] .metric-card__helper,
-:root[data-theme="dark"] .metric-card__label,
-:root[data-theme="dracula"] .metric-card__label,
-:root[data-theme="workspace"] .metric-card__label,
 :root[data-theme="dark"] .section-heading__eyebrow,
 :root[data-theme="dracula"] .section-heading__eyebrow,
 :root[data-theme="workspace"] .section-heading__eyebrow {
   color: var(--text-muted);
 }
 
-:root[data-theme="dark"] .question-status-badge,
-:root[data-theme="dracula"] .question-status-badge,
-:root[data-theme="workspace"] .question-status-badge,
 :root[data-theme="dark"] .page-card__label,
 :root[data-theme="dracula"] .page-card__label,
-:root[data-theme="workspace"] .page-card__label,
-:root[data-theme="dark"] .detail-chip,
-:root[data-theme="dracula"] .detail-chip,
-:root[data-theme="workspace"] .detail-chip {
+:root[data-theme="workspace"] .page-card__label {
   background: color-mix(in srgb, var(--surface-muted) 82%, transparent);
   border-color: var(--border-soft);
   color: var(--text-main);
-}
-
-:root[data-theme="dark"] .question-status-badge--accent,
-:root[data-theme="dracula"] .question-status-badge--accent ,
-:root[data-theme="workspace"] .question-status-badge--accent {
-  background: color-mix(in srgb, var(--surface-accent-soft) 92%, transparent);
-  color: var(--accent-strong);
 }
 
 @media (max-width: 1023px) {
@@ -2547,20 +2218,6 @@ body {
   color: var(--text-muted);
 }
 
-.detail-chip,
-.question-status-badge {
-  border: 1px solid rgba(125, 145, 176, 0.14);
-  background: rgba(255, 255, 255, 0.03);
-  color: #cad8f0;
-}
-
-.detail-chip--accent,
-.question-status-badge--accent {
-  border-color: rgba(91, 140, 255, 0.22);
-  background: rgba(91, 140, 255, 0.14);
-  color: #dbe7ff;
-}
-
 .primary-button,
 .secondary-button {
   min-height: 46px;
@@ -2661,16 +2318,6 @@ textarea::placeholder {
   max-width: var(--workspace-reading-width);
   font-size: 0.92rem;
   line-height: 1.62;
-}
-
-.detail-chip,
-.question-status-badge {
-  min-height: 30px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
 }
 
 .primary-button,

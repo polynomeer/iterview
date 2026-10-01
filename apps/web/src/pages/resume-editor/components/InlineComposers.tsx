@@ -1,3 +1,4 @@
+import { Button, Field, Input, Textarea } from "../../../shared/ui/primitives";
 import type { EditorControllerProps } from "../editorViewProps";
 
 export function InlineComposers({ ctrl }: EditorControllerProps) {
@@ -36,37 +37,35 @@ export function InlineComposers({ ctrl }: EditorControllerProps) {
           }}
         >
           <div className="resume-editor-inline-composer__header">
-            <div>
-              <p className="section-heading__eyebrow">{t("resumeEditor.inlineComment")}</p>
-              <h3 className="page-card__title">{t("resumeEditor.commentOnCurrentSelection")}</h3>
-            </div>
-            <button
+            <h3 className="editor-heading">{t("resumeEditor.commentOnCurrentSelection")}</h3>
+            <Button
               aria-label={t("resumeEditor.closeInlineComment")}
-              className="secondary-button"
               onClick={() => setInlineComposerMode(null)}
-              type="button"
+              size="sm"
+              variant="ghost"
             >
               {t("resumeEditor.close")}
-            </button>
+            </Button>
           </div>
           {effectiveSelectedText ? (
             <p className="resume-editor-inline-composer__meta">
               {t("resumeEditor.selection")} {effectiveSelectedText}
             </p>
           ) : null}
-          <label className="form-field">
-            <span className="form-field__label">{t("resumeEditor.comment")}</span>
-            <textarea
-              aria-label={t("resumeEditor.inlineComment")}
-              className="form-field__input form-input--textarea"
-              onChange={(event) => setInlineCommentBody(event.target.value)}
-              rows={3}
-              value={inlineCommentBody}
-            />
-          </label>
-          <div className="page-card__actions resume-editor-inline-composer__actions">
-            <button
-              className="primary-button"
+          <Field label={t("resumeEditor.comment")}>
+            {(control) => (
+              <Textarea
+                {...control}
+                aria-label={t("resumeEditor.inlineComment")}
+                className="editor-textarea"
+                onChange={(event) => setInlineCommentBody(event.target.value)}
+                rows={3}
+                value={inlineCommentBody}
+              />
+            )}
+          </Field>
+          <div className="editor-actions resume-editor-inline-composer__actions">
+            <Button
               disabled={
                 createCommentMutation.isPending ||
                 (!selectedBlock && !currentSelectionAnchor) ||
@@ -75,20 +74,20 @@ export function InlineComposers({ ctrl }: EditorControllerProps) {
               onClick={() => {
                 void submitInlineComment();
               }}
-              type="button"
+              size="sm"
+              variant="primary"
             >
               {t("resumeEditor.saveInlineComment")}
-            </button>
-            <button
-              className="secondary-button"
+            </Button>
+            <Button
               onClick={() => {
                 setActiveSidePanel("comments");
                 setIsContextPanelOpen(true);
               }}
-              type="button"
+              size="sm"
             >
               {t("resumeEditor.openFullPanel")}
-            </button>
+            </Button>
           </div>
         </article>
       ) : null}
@@ -103,46 +102,45 @@ export function InlineComposers({ ctrl }: EditorControllerProps) {
           }}
         >
           <div className="resume-editor-inline-composer__header">
-            <div>
-              <p className="section-heading__eyebrow">{t("resumeEditor.inlineQuestionCard")}</p>
-              <h3 className="page-card__title">{t("resumeEditor.createPromptFromCurrentSelection")}</h3>
-            </div>
-            <button
+            <h3 className="editor-heading">{t("resumeEditor.inlineQuestionCard")}</h3>
+            <Button
               aria-label={t("resumeEditor.closeInlineQuestionCard")}
-              className="secondary-button"
               onClick={() => setInlineComposerMode(null)}
-              type="button"
+              size="sm"
+              variant="ghost"
             >
               {t("resumeEditor.close")}
-            </button>
+            </Button>
           </div>
           {effectiveSelectedText ? (
             <p className="resume-editor-inline-composer__meta">
               {t("resumeEditor.selection")} {effectiveSelectedText}
             </p>
           ) : null}
-          <label className="form-field">
-            <span className="form-field__label">{t("resumeEditor.title")}</span>
-            <input
-              aria-label={t("resumeEditor.inlineQuestionCardTitle")}
-              className="form-field__input"
-              onChange={(event) => setInlineCardTitle(event.target.value)}
-              value={inlineCardTitle}
-            />
-          </label>
-          <label className="form-field">
-            <span className="form-field__label">{t("resumeEditor.questionText")}</span>
-            <textarea
-              aria-label={t("resumeEditor.inlineQuestionCardText")}
-              className="form-field__input form-input--textarea"
-              onChange={(event) => setInlineCardText(event.target.value)}
-              rows={3}
-              value={inlineCardText}
-            />
-          </label>
-          <div className="page-card__actions resume-editor-inline-composer__actions">
-            <button
-              className="primary-button"
+          <Field label={t("resumeEditor.title")}>
+            {(control) => (
+              <Input
+                {...control}
+                aria-label={t("resumeEditor.inlineQuestionCardTitle")}
+                onChange={(event) => setInlineCardTitle(event.target.value)}
+                value={inlineCardTitle}
+              />
+            )}
+          </Field>
+          <Field label={t("resumeEditor.questionText")}>
+            {(control) => (
+              <Textarea
+                {...control}
+                aria-label={t("resumeEditor.inlineQuestionCardText")}
+                className="editor-textarea"
+                onChange={(event) => setInlineCardText(event.target.value)}
+                rows={3}
+                value={inlineCardText}
+              />
+            )}
+          </Field>
+          <div className="editor-actions resume-editor-inline-composer__actions">
+            <Button
               disabled={
                 createQuestionCardMutation.isPending ||
                 (!selectedBlock && !currentSelectionAnchor) ||
@@ -151,20 +149,20 @@ export function InlineComposers({ ctrl }: EditorControllerProps) {
               onClick={() => {
                 void submitInlineQuestionCard();
               }}
-              type="button"
+              size="sm"
+              variant="primary"
             >
               {t("resumeEditor.saveInlineCard")}
-            </button>
-            <button
-              className="secondary-button"
+            </Button>
+            <Button
               onClick={() => {
                 setActiveSidePanel("question-cards");
                 setIsContextPanelOpen(true);
               }}
-              type="button"
+              size="sm"
             >
               {t("resumeEditor.openFullPanel")}
-            </button>
+            </Button>
           </div>
         </article>
       ) : null}

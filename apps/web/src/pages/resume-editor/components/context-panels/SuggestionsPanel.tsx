@@ -1,4 +1,4 @@
-import { EmptyStateCard } from "../../../../shared/ui/EmptyStateCard";
+import { Button, Card, CardHeader, EmptyState, Field, Input } from "../../../../shared/ui/primitives";
 import type { EditorControllerProps } from "../../editorViewProps";
 
 export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
@@ -17,21 +17,20 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
 
   return (
     selectedBlock || currentSelectionAnchor ? (
-      <section className="page-card">
-        <span className="page-card__label">{t("resumeEditor.suggestions")}</span>
-        <h2 className="page-card__title">{t("resumeEditor.questionAndRewriteSuggestions")}</h2>
-        <label className="form-field">
-          <span className="form-field__label">{t("resumeEditor.maxQuestionSuggestions")}</span>
-          <input
-            className="form-field__input"
-            onChange={(event) => setQuestionSuggestionMax(event.target.value)}
-            type="number"
-            value={questionSuggestionMax}
-          />
-        </label>
-        <div className="page-card__actions">
-          <button
-            className="secondary-button"
+      <Card padded>
+        <CardHeader title={t("resumeEditor.suggestions")} titleAs="h2" />
+        <Field label={t("resumeEditor.maxQuestionSuggestions")}>
+          {(control) => (
+            <Input
+              {...control}
+              onChange={(event) => setQuestionSuggestionMax(event.target.value)}
+              type="number"
+              value={questionSuggestionMax}
+            />
+          )}
+        </Field>
+        <div className="editor-actions">
+          <Button
             onClick={() => {
               void questionSuggestionsMutation.mutateAsync({
                 blockId: selectedBlock?.blockId ?? null,
@@ -41,12 +40,11 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
                 maxSuggestions: Number(questionSuggestionMax) || 3,
               });
             }}
-            type="button"
+            size="sm"
           >
             {t("resumeEditor.generateQuestionSuggestions")}
-          </button>
-          <button
-            className="secondary-button"
+          </Button>
+          <Button
             onClick={() => {
               void rewriteSuggestionsMutation.mutateAsync({
                 blockId: selectedBlock?.blockId ?? null,
@@ -55,22 +53,21 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
                 selectedText: effectiveSelectedText,
               });
             }}
-            type="button"
+            size="sm"
           >
             {t("resumeEditor.generateRewriteSuggestions")}
-          </button>
+          </Button>
         </div>
         {questionSuggestionsMutation.data ? (
-          <div className="stack-list">
+          <div className="editor-stack">
             {questionSuggestionsMutation.data.suggestions.map((suggestion) => (
-              <article className="page-card page-card--muted" key={suggestion.id}>
-                <p className="section-heading__eyebrow">{suggestion.questionTypeLabel}</p>
-                <h3 className="page-card__title">{suggestion.title}</h3>
-                <p className="page-card__body resume-section__body--preserve">{suggestion.questionText}</p>
-                <p className="resume-tailor-muted">{suggestion.rationale}</p>
-                <div className="page-card__actions">
-                  <button
-                    className="secondary-button"
+              <article className="editor-item" key={suggestion.id}>
+                <p className="editor-label">{suggestion.questionTypeLabel}</p>
+                <h3 className="editor-heading">{suggestion.title}</h3>
+                <p className="editor-text editor-preserve">{suggestion.questionText}</p>
+                <p className="editor-muted">{suggestion.rationale}</p>
+                <div className="editor-actions">
+                  <Button
                     onClick={() => {
                       void createQuestionCardMutation.mutateAsync({
                         blockId: selectedBlock?.blockId ?? null,
@@ -89,40 +86,39 @@ export function SuggestionsPanel({ ctrl }: EditorControllerProps) {
                         followUpSuggestions: suggestion.followUpSuggestions,
                       });
                     }}
-                    type="button"
+                    size="sm"
                   >
                     {t("resumeEditor.createQuestionCardFromSuggestion")}
-                  </button>
+                  </Button>
                 </div>
               </article>
             ))}
           </div>
         ) : null}
         {rewriteSuggestionsMutation.data ? (
-          <div className="stack-list">
+          <div className="editor-stack">
             {rewriteSuggestionsMutation.data.suggestions.map((suggestion) => (
-              <article className="page-card page-card--muted" key={suggestion.id}>
-                <p className="section-heading__eyebrow">{suggestion.focusArea ?? (t("resumeEditor.rewriteSuggestion"))}</p>
-                <p className="page-card__body resume-section__body--preserve">{suggestion.suggestedText}</p>
-                <p className="resume-tailor-muted">{suggestion.rationale}</p>
-                <div className="page-card__actions">
-                  <button
-                    className="secondary-button"
+              <article className="editor-item" key={suggestion.id}>
+                <p className="editor-label">{suggestion.focusArea ?? (t("resumeEditor.rewriteSuggestion"))}</p>
+                <p className="editor-text editor-preserve">{suggestion.suggestedText}</p>
+                <p className="editor-muted">{suggestion.rationale}</p>
+                <div className="editor-actions">
+                  <Button
                     onClick={() => {
                       void handleApplyRewrite(suggestion.suggestedText);
                     }}
-                    type="button"
+                    size="sm"
                   >
                     {t("resumeEditor.applyRewriteToDraft")}
-                  </button>
+                  </Button>
                 </div>
               </article>
             ))}
           </div>
         ) : null}
-      </section>
+      </Card>
     ) : (
-      <EmptyStateCard
+      <EmptyState
         body={t("resumeEditor.suggestionsNeedSelection")}
         title={t("resumeEditor.noActiveSelection")}
       />

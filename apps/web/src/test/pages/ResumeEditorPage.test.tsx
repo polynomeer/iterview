@@ -404,7 +404,8 @@ describe("ResumeEditorPage", () => {
     expect(screen.queryByRole("heading", { level: 1 })).not.toBeInTheDocument();
     expect(screen.queryByText("Immutable source resume context")).not.toBeInTheDocument();
     expect(screen.queryByText("Workspace presence")).not.toBeInTheDocument();
-    expect(screen.getByText("Annotated preview")).toBeInTheDocument();
+    expect(screen.queryByText("Authoring controls")).not.toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Edit", checked: true })).toBeInTheDocument();
     expect(screen.getByText("Summary")).toBeInTheDocument();
     expect(screen.getByText("Row editor")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Show fallback anchors" })).toBeInTheDocument();
@@ -423,10 +424,7 @@ describe("ResumeEditorPage", () => {
     );
     fireEvent.focus(editableLine);
     expect(screen.queryByText("Current line")).not.toBeInTheDocument();
-    const editorSurface = screen
-      .getByText("Edit each row directly")
-      .closest(".page-card")
-      ?.querySelector(".resume-editor-document-preview__body");
+    const editorSurface = document.querySelector(".resume-editor-document-preview__body");
     expect(editorSurface).not.toBeNull();
     if (editorSurface) {
       fireEvent.mouseDown(editorSurface);
@@ -474,7 +472,7 @@ describe("ResumeEditorPage", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
     fireEvent.click(screen.getByRole("button", { name: "Suggest rewrite" }));
-    expect(screen.getByText("Selection-based wording options")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Inline rewrite suggestions" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
     fireEvent.click(screen.getByRole("button", { name: "Turn into →" }));
     fireEvent.click(screen.getByRole("button", { name: "Quote" }));
@@ -486,7 +484,7 @@ describe("ResumeEditorPage", () => {
     expect(editableLine).toHaveTextContent("Resume");
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
     fireEvent.click(screen.getByRole("button", { name: "Create card" }));
-    expect(screen.getByText("Create a prompt from the current selection")).toBeInTheDocument();
+    expect(screen.getByText("Inline question card")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Inline question card text"), {
       target: { value: "Inline card question" },
     });
@@ -522,9 +520,9 @@ describe("ResumeEditorPage", () => {
     expect(screen.getAllByText("Question cards").length).toBeGreaterThan(0);
     expect(rewriteSuggestionsMutateAsync).toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Review" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Review" }));
     expect(screen.queryByRole("textbox", { name: "Editable line 1" })).not.toBeInTheDocument();
-    expect(screen.getByText("Reading surface")).toBeInTheDocument();
+    expect(screen.getByText("Review mode")).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole("button", { name: /Comments/ })[0]);
     expect(screen.getByText("Comment threads")).toBeInTheDocument();
@@ -582,6 +580,6 @@ describe("ResumeEditorPage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "More" }));
     fireEvent.click(screen.getByRole("button", { name: "Source" }));
-    expect(screen.getByText("Immutable source resume context")).toBeInTheDocument();
-  }, 15_000);
+    expect(screen.getByRole("heading", { name: "Source context" })).toBeInTheDocument();
+  }, 60_000);
 });

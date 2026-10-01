@@ -1,8 +1,8 @@
-import { MetricCard } from "../../../shared/ui/MetricCard";
+import { Badge, Button, Callout, Card, CardHeader, Stat } from "../../../shared/ui/primitives";
 import { mapEditableBlocks } from "../editorUtils";
 import type { EditorViewProps } from "../editorViewProps";
 
-export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
+export function MergePreviewPanel({ ctrl }: EditorViewProps) {
   const {
     t,
     resolveConflictBlock,
@@ -14,81 +14,70 @@ export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
   } = ctrl;
 
   return (
-    <section className="page-card">
-      <span className="page-card__label">{t("resumeEditor.staleWriteRecovery")}</span>
-      <h2 className="page-card__title">{t("resumeEditor.mergePreview")}</h2>
-      <p className="page-card__body">{mergePreviewMessage}</p>
+    <Card padded>
+      <CardHeader title={t("resumeEditor.mergePreview")} titleAs="h2" />
+      {mergePreviewMessage ? <Callout tone="warning">{mergePreviewMessage}</Callout> : null}
       {mergePreviewMutation.data ? (
         <>
-          <div className="stats-grid">
-            <MetricCard label={t("resumeEditor.status")} value={mergePreviewMutation.data.mergeStatusLabel} />
-            <MetricCard label={t("resumeEditor.added")} tone="accent" value={String(mergePreviewMutation.data.changeSummary.addedBlockCount)} />
-            <MetricCard label={t("resumeEditor.updated")} tone="muted" value={String(mergePreviewMutation.data.changeSummary.updatedBlockCount)} />
-            <MetricCard label={t("resumeEditor.conflicts")} tone="muted" value={String(mergePreviewMutation.data.conflicts.length)} />
+          <div className="editor-stats">
+            <Stat label={t("resumeEditor.status")} value={mergePreviewMutation.data.mergeStatusLabel} />
+            <Stat label={t("resumeEditor.added")} tone="accent" value={String(mergePreviewMutation.data.changeSummary.addedBlockCount)} />
+            <Stat label={t("resumeEditor.updated")} value={String(mergePreviewMutation.data.changeSummary.updatedBlockCount)} />
+            <Stat
+              label={t("resumeEditor.conflicts")}
+              tone={mergePreviewMutation.data.conflicts.length > 0 ? "warning" : "neutral"}
+              value={String(mergePreviewMutation.data.conflicts.length)}
+            />
           </div>
           {mergePreviewMutation.data.conflicts.length > 0 ? (
-            <div className="stack-list">
+            <div className="editor-stack">
               {mergePreviewMutation.data.conflicts.map((conflict) => (
-                <article className="page-card page-card--muted" key={conflict.id}>
-                  <p className="section-heading__eyebrow">{conflict.conflictTypeLabel}</p>
-                  <h3 className="page-card__title">{conflict.nodeId ?? conflict.blockId}</h3>
-                  {conflict.conflictScopes.length > 0 ? (
-                    <div className="filter-chip-row">
-                      {conflict.conflictScopes.map((scope) => (
-                        <span className="detail-chip" key={`${conflict.id}-${scope}`}>
-                          {scope}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
-                  <p className="resume-tailor-muted">{t("resumeEditor.serverCurrent")}</p>
-                  <div className="page-card__body resume-section__body--preserve">
+                <article className="editor-panel" key={conflict.id}>
+                  <div className="editor-head">
+                    <h3 className="editor-heading">{conflict.conflictTypeLabel}</h3>
+                    {conflict.conflictScopes.length > 0 ? (
+                      <div className="editor-chips">
+                        {conflict.conflictScopes.map((scope) => (
+                          <Badge key={`${conflict.id}-${scope}`}>{scope}</Badge>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                  <p className="editor-label">{t("resumeEditor.serverCurrent")}</p>
+                  <div className="editor-inset editor-preserve">
                     {(conflict.currentTextLines.length > 0
                       ? conflict.currentTextLines
-                      : [conflict.currentText ?? (t("resumeEditor.noText"))]
+                      : [conflict.currentText ?? t("resumeEditor.noText")]
                     ).map((line, index) => (
-                      <p key={`${conflict.id}-current-${index}`}>{line || "\u00A0"}</p>
+                      <p key={`${conflict.id}-current-${index}`}>{line || " "}</p>
                     ))}
                   </div>
-                  <p className="resume-tailor-muted">{t("resumeEditor.yourProposedEdit")}</p>
-                  <div className="page-card__body resume-section__body--preserve">
+                  <p className="editor-label">{t("resumeEditor.yourProposedEdit")}</p>
+                  <div className="editor-inset editor-preserve">
                     {(conflict.proposedTextLines.length > 0
                       ? conflict.proposedTextLines
-                      : [conflict.proposedText ?? (t("resumeEditor.noText"))]
+                      : [conflict.proposedText ?? t("resumeEditor.noText")]
                     ).map((line, index) => (
-                      <p key={`${conflict.id}-proposed-${index}`}>{line || "\u00A0"}</p>
+                      <p key={`${conflict.id}-proposed-${index}`}>{line || " "}</p>
                     ))}
                   </div>
-                  <div className="page-card__actions">
-                    <button
-                      className="secondary-button"
-                      onClick={() => resolveConflictBlock(conflict.blockId, "current")}
-                      type="button"
-                    >
+                  <div className="editor-actions">
+                    <Button onClick={() => resolveConflictBlock(conflict.blockId, "current")} size="sm">
                       {t("resumeEditor.keepServerVersion")}
-                    </button>
-                    <button
-                      className="secondary-button"
-                      onClick={() => resolveConflictBlock(conflict.blockId, "proposed")}
-                      type="button"
-                    >
+                    </Button>
+                    <Button onClick={() => resolveConflictBlock(conflict.blockId, "proposed")} size="sm">
                       {t("resumeEditor.keepMyEdit")}
-                    </button>
-                    <button
-                      className="secondary-button"
-                      onClick={() => resolveConflictBlock(conflict.blockId, "merged")}
-                      type="button"
-                    >
+                    </Button>
+                    <Button onClick={() => resolveConflictBlock(conflict.blockId, "merged")} size="sm">
                       {t("resumeEditor.useMergedText")}
-                    </button>
+                    </Button>
                   </div>
                 </article>
               ))}
             </div>
           ) : null}
-          <div className="page-card__actions">
-            <button
-              className="primary-button"
+          <div className="editor-actions">
+            <Button
               onClick={() => {
                 if (!mergePreviewMutation.data) {
                   return;
@@ -97,22 +86,22 @@ export function MergePreviewPanel({ ctrl, workspace }: EditorViewProps) {
                 setBlocks(mapEditableBlocks(mergePreviewMutation.data.mergedDocument.blocks));
                 setMarkdownSource(mergePreviewMutation.data.mergedDocument.markdownSource);
               }}
-              type="button"
+              size="sm"
+              variant="primary"
             >
               {t("resumeEditor.applyMergedDraftToWorkspace")}
-            </button>
-            <button
-              className="secondary-button"
+            </Button>
+            <Button
               onClick={() => {
                 void saveCurrentDraft("merge_resolution");
               }}
-              type="button"
+              size="sm"
             >
               {t("resumeEditor.saveResolvedDraft")}
-            </button>
+            </Button>
           </div>
         </>
       ) : null}
-    </section>
+    </Card>
   );
 }

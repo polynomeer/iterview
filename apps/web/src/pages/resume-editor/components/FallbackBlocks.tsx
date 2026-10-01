@@ -1,3 +1,4 @@
+import { Badge, Button } from "../../../shared/ui/primitives";
 import type { EditorControllerProps } from "../editorViewProps";
 
 export function FallbackBlocks({ ctrl }: EditorControllerProps) {
@@ -18,106 +19,88 @@ export function FallbackBlocks({ ctrl }: EditorControllerProps) {
 
   return (
     <>
-      <div className="section-heading">
-        <div>
-          <p className="section-heading__eyebrow">
-            {richTreeEnabled
-              ? t("resumeEditor.fallbackBlocksAndNodeAnchors")
-              : t("resumeEditor.parsedBlocks")}
-          </p>
-          <h3 className="page-card__title">
-            {richTreeEnabled
-              ? t("resumeEditor.fallbackAnchorsHint")
-              : t("resumeEditor.clickSectionToOpenContextualTools")}
-          </h3>
-        </div>
-        <div className="page-card__actions">
-          <span className="detail-chip">{t("resumeEditor.blockCount", { count: blocks.length })}</span>
-          <button
-            className="secondary-button"
+      <div className="editor-head">
+        <h3 className="editor-heading">{t("resumeEditor.blocks")}</h3>
+        <div className="editor-actions">
+          <Badge>{t("resumeEditor.blockCount", { count: blocks.length })}</Badge>
+          <Button
+            aria-expanded={isFallbackBlocksOpen}
             onClick={() => setIsFallbackBlocksOpen((current) => !current)}
-            type="button"
+            size="sm"
           >
             {isFallbackBlocksOpen
               ? t("resumeEditor.hideFallbackAnchors")
               : t("resumeEditor.showFallbackAnchors")}
-          </button>
+          </Button>
         </div>
       </div>
       {!isFallbackBlocksOpen && selectedBlock ? (
-        <article className="page-card page-card--muted resume-editor-block resume-editor-block--selected">
-          <div className="section-heading">
-            <div>
-              <p className="section-heading__eyebrow">{t("resumeEditor.currentFallbackAnchor")}</p>
-              <h3 className="page-card__title">{selectedBlock.title || (t("resumeEditor.untitledBlock"))}</h3>
-            </div>
-            <button
-              className="secondary-button"
+        <article className="editor-item editor-item--selected resume-editor-block resume-editor-block--selected">
+          <div className="editor-head">
+            <h4 className="editor-heading">{selectedBlock.title || t("resumeEditor.untitledBlock")}</h4>
+            <Button
               onClick={() => {
                 setActiveSidePanel("comments");
                 setIsContextPanelOpen(true);
               }}
-              type="button"
+              size="sm"
             >
               {t("resumeEditor.openTools")}
-            </button>
+            </Button>
           </div>
-          <p className="page-card__body resume-section__body--preserve">
-            {selectedBlock.text || (t("resumeEditor.noBodyTextYet"))}
+          <p className="editor-text editor-preserve">
+            {selectedBlock.text || t("resumeEditor.noBodyTextYet")}
           </p>
         </article>
       ) : null}
       {isFallbackBlocksOpen ? (
         <div className="resume-editor-block-grid resume-editor-outline-list">
-          {blocks.map((block) => (
-            <article
-              className={`page-card page-card--muted resume-editor-block resume-editor-block--compact ${selectedBlockId === block.blockId ? "resume-editor-block--selected" : ""}`}
-              key={block.blockId}
-            >
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">{block.blockTypeLabel}</p>
-                  <h3 className="page-card__title">{block.title || (t("resumeEditor.untitledBlock"))}</h3>
+          {blocks.map((block) => {
+            const isSelected = selectedBlockId === block.blockId;
+            return (
+              <article
+                className={`editor-item resume-editor-block resume-editor-block--compact ${isSelected ? "editor-item--selected resume-editor-block--selected" : ""}`}
+                key={block.blockId}
+              >
+                <div className="editor-head">
+                  <div>
+                    <p className="editor-label">{block.blockTypeLabel}</p>
+                    <h4 className="editor-heading">{block.title || t("resumeEditor.untitledBlock")}</h4>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      setSelectedBlockId(block.blockId);
+                      if (richTreeEnabled) {
+                        const matchedNode = richNodes.find((node) => node.fieldPath === block.fieldPath);
+                        setSelectedNodeId(matchedNode?.nodeId ?? null);
+                      }
+                      setActiveSidePanel("comments");
+                      setIsContextPanelOpen(true);
+                    }}
+                    size="sm"
+                    variant={isSelected ? "primary" : "secondary"}
+                  >
+                    {isSelected
+                      ? t("resumeEditor.openTools")
+                      : t("resumeEditor.selectBlock")}
+                  </Button>
                 </div>
-                <button
-                  className="secondary-button"
-                  onClick={() => {
-                    setSelectedBlockId(block.blockId);
-                    if (richTreeEnabled) {
-                      const matchedNode = richNodes.find((node) => node.fieldPath === block.fieldPath);
-                      setSelectedNodeId(matchedNode?.nodeId ?? null);
-                    }
-                    setActiveSidePanel("comments");
-                    setIsContextPanelOpen(true);
-                  }}
-                  type="button"
-                >
-                  {selectedBlockId === block.blockId
-                    ? t("resumeEditor.openTools")
-                    : t("resumeEditor.selectBlock")}
-                </button>
-              </div>
-              <p className="page-card__body resume-section__body--preserve">
-                {block.text || (t("resumeEditor.noBodyTextYet"))}
-              </p>
-              <div className="filter-chip-row">
-                {block.sourceAnchorTypeLabel ? (
-                  <span className="detail-chip">{block.sourceAnchorTypeLabel}</span>
+                <p className="editor-text editor-preserve">
+                  {block.text || t("resumeEditor.noBodyTextYet")}
+                </p>
+                {block.sourceAnchorTypeLabel || block.inlineMarks.length > 0 ? (
+                  <div className="editor-chips">
+                    {block.sourceAnchorTypeLabel ? <Badge>{block.sourceAnchorTypeLabel}</Badge> : null}
+                    {block.inlineMarks.map((mark, index) => (
+                      <Badge key={`${block.blockId}-mark-${index}`} tone="accent">
+                        {mark.markTypeLabel}: {mark.text}
+                      </Badge>
+                    ))}
+                  </div>
                 ) : null}
-                {block.fieldPath ? <span className="detail-chip">{block.fieldPath}</span> : null}
-                <span className="detail-chip">{t("resumeEditor.order")} {block.displayOrder}</span>
-              </div>
-              {block.inlineMarks.length > 0 ? (
-                <div className="filter-chip-row">
-                  {block.inlineMarks.map((mark, index) => (
-                    <span className="detail-chip" key={`${block.blockId}-mark-${index}`}>
-                      {mark.markTypeLabel}: {mark.text}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       ) : null}
     </>

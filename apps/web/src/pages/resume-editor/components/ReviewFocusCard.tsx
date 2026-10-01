@@ -1,116 +1,47 @@
-import { MetricCard } from "../../../shared/ui/MetricCard";
-import { findFirstReviewSignalLine } from "../editorUtils";
+import { Button, Card, Stat } from "../../../shared/ui/primitives";
 import type { EditorViewProps } from "../editorViewProps";
+import { ContextSummaryCards } from "./ContextRail";
 
+/** Review mode: annotation counts and a way to step through the lines that drew them. */
 export function ReviewFocusCard({ ctrl, workspace }: EditorViewProps) {
   const {
     t,
     selectedBlock,
     selectedNode,
-    setActiveSidePanel,
-    setIsContextPanelOpen,
-    setIsSecondaryToolsOpen,
     questionSuggestionsMutation,
     rewriteSuggestionsMutation,
-    setFocusedReviewLineIndex,
-    contextualSummaryItems,
-    previewReviewSignals,
     reviewHotspotLineIndexes,
     focusReviewHotspot,
   } = ctrl;
+  const suggestionCount =
+    (questionSuggestionsMutation.data?.suggestions.length ?? 0) + (rewriteSuggestionsMutation.data?.suggestions.length ?? 0);
+  const hotspots = reviewHotspotLineIndexes.length;
 
   return (
-    <section className="page-card page-card--muted">
-      <div className="section-heading">
-        <div>
-          <p className="section-heading__eyebrow">{t("resumeEditor.reviewFocus")}</p>
-          <h2 className="page-card__title">
-            {t("resumeEditor.reviewFocusTitle")}
-          </h2>
+    <Card aria-label={t("resumeEditor.reviewFocus")} padded>
+      <div className="editor-stack">
+        {/* With a selection, the summary cards below carry the same counts and open their panels. */}
+        {selectedBlock || selectedNode ? null : (
+          <div className="editor-stats">
+            <Stat label={t("resumeEditor.comments")} value={workspace.commentSummary.totalCount} />
+            <Stat label={t("resumeEditor.questionCards")} value={workspace.questionCardSummary.totalCount} />
+            <Stat label={t("resumeEditor.suggestions")} value={suggestionCount} />
+          </div>
+        )}
+        <div className="editor-actions">
+          <span className="editor-muted">
+            {t(hotspots === 1 ? "resumeEditor.hotspotCountOne" : "resumeEditor.hotspotCountOther", { count: hotspots })}
+          </span>
+          <Button disabled={hotspots === 0} onClick={() => focusReviewHotspot("previous")} size="sm">
+            {t("resumeEditor.previousHotspot")}
+          </Button>
+          <Button disabled={hotspots === 0} onClick={() => focusReviewHotspot("next")} size="sm">
+            {t("resumeEditor.nextHotspot")}
+          </Button>
         </div>
-        <span className="detail-chip">{t("resumeEditor.reviewMode")}</span>
+        {selectedBlock || selectedNode ? <ContextSummaryCards ctrl={ctrl} /> : null}
       </div>
-      <div className="stats-grid">
-        <MetricCard
-          label={t("resumeEditor.comments")}
-          tone="accent"
-          value={String(workspace.commentSummary.totalCount)}
-        />
-        <MetricCard
-          label={t("resumeEditor.questionCards")}
-          tone="muted"
-          value={String(workspace.questionCardSummary.totalCount)}
-        />
-        <MetricCard
-          label={t("resumeEditor.suggestions")}
-          tone="muted"
-          value={String(
-            (questionSuggestionsMutation.data?.suggestions.length ?? 0) +
-              (rewriteSuggestionsMutation.data?.suggestions.length ?? 0),
-          )}
-        />
-      </div>
-      <p className="resume-tailor-muted">
-        {t("resumeEditor.reviewFocusHint")}
-      </p>
-      <div className="page-card__actions">
-        <span className="detail-chip">
-          {t(
-            reviewHotspotLineIndexes.length === 1 ? "resumeEditor.hotspotCountOne" : "resumeEditor.hotspotCountOther",
-            { count: reviewHotspotLineIndexes.length },
-          )}
-        </span>
-        <button
-          className="secondary-button"
-          disabled={reviewHotspotLineIndexes.length === 0}
-          onClick={() => focusReviewHotspot("previous")}
-          type="button"
-        >
-          {t("resumeEditor.previousHotspot")}
-        </button>
-        <button
-          className="secondary-button"
-          disabled={reviewHotspotLineIndexes.length === 0}
-          onClick={() => focusReviewHotspot("next")}
-          type="button"
-        >
-          {t("resumeEditor.nextHotspot")}
-        </button>
-      </div>
-      {selectedBlock || selectedNode ? (
-        <div className="resume-editor-contextual__summary resume-editor-review-summary">
-          {contextualSummaryItems.map((item) => (
-            <button
-              className="resume-editor-contextual__summary-card"
-              key={`review-${item.panelId}`}
-              onClick={() => {
-                const matchedLineIndex = findFirstReviewSignalLine(
-                  previewReviewSignals,
-                  item.panelId,
-                );
-                if (matchedLineIndex >= 0) {
-                  setFocusedReviewLineIndex(matchedLineIndex);
-                }
-                setActiveSidePanel(item.panelId);
-                setIsContextPanelOpen(true);
-                setIsSecondaryToolsOpen(false);
-              }}
-              type="button"
-            >
-              <span className="resume-editor-contextual__summary-label">{item.label}</span>
-              <strong className="resume-editor-contextual__summary-value">{item.value}</strong>
-              <span className="resume-editor-contextual__summary-helper">{item.helper}</span>
-            </button>
-          ))}
-          <button
-            className="secondary-button"
-            onClick={() => setIsContextPanelOpen(true)}
-            type="button"
-          >
-            {t("resumeEditor.openTools")}
-          </button>
-        </div>
-      ) : null}
-    </section>
+    </Card>
   );
 }
+

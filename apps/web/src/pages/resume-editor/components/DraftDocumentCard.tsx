@@ -1,3 +1,4 @@
+import { Badge, Button, Card } from "../../../shared/ui/primitives";
 import { FallbackBlocks } from "./FallbackBlocks";
 import { SelectionInspector } from "./SelectionInspector";
 import { EditTab } from "./tabs/EditTab";
@@ -5,57 +6,27 @@ import { ReviewTab } from "./tabs/ReviewTab";
 import type { EditorControllerProps } from "../editorViewProps";
 
 export function DraftDocumentCard({ ctrl }: EditorControllerProps) {
-  const {
-    t,
-    currentTab,
-    selectedBlock,
-    selectedNode,
-    richTreeEnabled,
-    isContextPanelOpen,
-    setIsContextPanelOpen,
-  } = ctrl;
+  const { t, currentTab, selectedBlock, selectedNode, richTreeEnabled, isContextPanelOpen, setIsContextPanelOpen } = ctrl;
+  const selectedLabel = richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockTypeLabel;
 
   return (
-    <section className="page-card">
-      <div className="section-heading">
-        <div>
-          <p className="section-heading__eyebrow">{t("resumeEditor.draftDocument")}</p>
-          <h2 className="page-card__title">
-            {currentTab === "review"
-              ? t("resumeEditor.reviewReadingSurface")
-              : richTreeEnabled
-                ? t("resumeEditor.singleSurfaceEditorRichTree")
-                : t("resumeEditor.singleSurfaceEditor")}
-          </h2>
+    <Card aria-label={t("resumeEditor.draftDocument")} className="resume-editor-document" padded>
+      <div className="editor-head">
+        <div className="editor-chips">
+          <Badge tone="accent">{currentTab === "review" ? t("resumeEditor.reviewMode") : t("resumeEditor.rowEditor")}</Badge>
+          {selectedLabel ? <Badge>{`${t("resumeEditor.selected")} · ${selectedLabel}`}</Badge> : null}
         </div>
-        <div className="resume-status-badges">
-          <span className="detail-chip">
-            {currentTab === "review" ? (t("resumeEditor.reviewMode")) : t("resumeEditor.rowEditor")}
-          </span>
-          {selectedBlock || selectedNode ? (
-            <>
-              <span className="question-status-badge question-status-badge--neutral">
-                {t("resumeEditor.selected")} {richTreeEnabled ? selectedNode?.nodeTypeLabel : selectedBlock?.blockType}
-              </span>
-              <button
-                className="secondary-button"
-                onClick={() => setIsContextPanelOpen((current) => !current)}
-                type="button"
-              >
-                {isContextPanelOpen
-                  ? t("resumeEditor.hideTools")
-                  : t("resumeEditor.openTools")}
-              </button>
-            </>
-          ) : null}
-        </div>
+        {selectedBlock || selectedNode ? (
+          <Button aria-expanded={isContextPanelOpen} onClick={() => setIsContextPanelOpen((current) => !current)} size="sm">
+            {isContextPanelOpen ? t("resumeEditor.hideTools") : t("resumeEditor.openTools")}
+          </Button>
+        ) : null}
       </div>
       <div className="resume-editor-surface">
-        {currentTab !== "review" ? <EditTab ctrl={ctrl} /> : null}
-        {currentTab === "review" ? <ReviewTab ctrl={ctrl} /> : null}
+        {currentTab !== "review" ? <EditTab ctrl={ctrl} /> : <ReviewTab ctrl={ctrl} />}
       </div>
       {selectedBlock || selectedNode ? <SelectionInspector ctrl={ctrl} /> : null}
       <FallbackBlocks ctrl={ctrl} />
-    </section>
+    </Card>
   );
 }

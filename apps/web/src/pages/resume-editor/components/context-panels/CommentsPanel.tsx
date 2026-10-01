@@ -1,4 +1,4 @@
-import { EmptyStateCard } from "../../../../shared/ui/EmptyStateCard";
+import { Badge, Button, Card, CardHeader, EmptyState, Field, Input, Textarea } from "../../../../shared/ui/primitives";
 import type { EditorViewProps } from "../../editorViewProps";
 
 export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
@@ -17,21 +17,21 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
   } = ctrl;
 
   return (
-    <section className="page-card">
-      <span className="page-card__label">{t("resumeEditor.comments")}</span>
-      <h2 className="page-card__title">{t("resumeEditor.commentThreads")}</h2>
-      <label className="form-field">
-        <span className="form-field__label">{t("resumeEditor.newComment")}</span>
-        <textarea
-          className="form-field__input form-input--textarea"
-          onChange={(event) => setNewCommentBody(event.target.value)}
-          rows={4}
-          value={newCommentBody}
-        />
-      </label>
-      <div className="page-card__actions">
-        <button
-          className="primary-button"
+    <Card padded>
+      <CardHeader title={t("resumeEditor.commentThreads")} titleAs="h2" />
+      <Field label={t("resumeEditor.newComment")}>
+        {(control) => (
+          <Textarea
+            {...control}
+            className="editor-textarea"
+            onChange={(event) => setNewCommentBody(event.target.value)}
+            rows={4}
+            value={newCommentBody}
+          />
+        )}
+      </Field>
+      <div className="editor-actions">
+        <Button
           disabled={
             (!selectedBlock && !currentSelectionAnchor) ||
             createCommentMutation.isPending ||
@@ -53,27 +53,26 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
             });
             setNewCommentBody("");
           }}
-          type="button"
+          size="sm"
+          variant="primary"
         >
           {t("resumeEditor.addComment")}
-        </button>
+        </Button>
       </div>
-      <div className="stack-list">
+      <div className="editor-stack">
         {workspace.comments.length === 0 ? (
-          <EmptyStateCard
+          <EmptyState
             body={t("resumeEditor.noCommentThreadsYet")}
             title={t("resumeEditor.noComments")}
           />
         ) : (
           workspace.comments.map((comment) => (
-            <article className="page-card page-card--muted" key={comment.id}>
-              <div className="section-heading">
-                <div>
-                  <p className="section-heading__eyebrow">{comment.statusLabel}</p>
-                  <h3 className="page-card__title">{comment.selectedText ?? comment.blockId}</h3>
-                </div>
-                <button
-                  className="secondary-button"
+            <article className="editor-item" key={comment.id}>
+              <div className="editor-head">
+                <Badge tone={comment.status === "resolved" ? "success" : "neutral"}>
+                  {comment.statusLabel}
+                </Badge>
+                <Button
                   onClick={() => {
                     void updateCommentMutation.mutateAsync({
                       commentId: comment.id,
@@ -82,36 +81,39 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
                       },
                     });
                   }}
-                  type="button"
+                  size="sm"
                 >
                   {comment.status === "resolved"
                     ? t("resumeEditor.reopen")
                     : t("resumeEditor.resolve")}
-                </button>
+                </Button>
               </div>
-              <p className="page-card__body resume-section__body--preserve">{comment.body}</p>
+              {comment.selectedText ? (
+                <p className="editor-inset editor-preserve">{comment.selectedText}</p>
+              ) : null}
+              <p className="editor-text editor-preserve">{comment.body}</p>
               {comment.replies.map((reply) => (
-                <div className="resume-tailor-compare-block" key={reply.id}>
-                  <p className="resume-tailor-muted">{reply.createdAtLabel}</p>
-                  <p className="page-card__body resume-section__body--preserve">{reply.body}</p>
+                <div className="editor-inset" key={reply.id}>
+                  <p className="editor-label">{reply.createdAtLabel}</p>
+                  <p className="editor-text editor-preserve">{reply.body}</p>
                 </div>
               ))}
-              <label className="form-field">
-                <span className="form-field__label">{t("resumeEditor.reply")}</span>
-                <input
-                  className="form-field__input"
-                  onChange={(event) =>
-                    setReplyDrafts((current) => ({
-                      ...current,
-                      [comment.id]: event.target.value,
-                    }))
-                  }
-                  value={replyDrafts[comment.id] ?? ""}
-                />
-              </label>
-              <div className="page-card__actions">
-                <button
-                  className="secondary-button"
+              <Field label={t("resumeEditor.reply")}>
+                {(control) => (
+                  <Input
+                    {...control}
+                    onChange={(event) =>
+                      setReplyDrafts((current) => ({
+                        ...current,
+                        [comment.id]: event.target.value,
+                      }))
+                    }
+                    value={replyDrafts[comment.id] ?? ""}
+                  />
+                )}
+              </Field>
+              <div className="editor-actions">
+                <Button
                   disabled={!replyDrafts[comment.id]?.trim()}
                   onClick={() => {
                     void createReplyMutation.mutateAsync({
@@ -122,15 +124,15 @@ export function CommentsPanel({ ctrl, workspace }: EditorViewProps) {
                     });
                     setReplyDrafts((current) => ({ ...current, [comment.id]: "" }));
                   }}
-                  type="button"
+                  size="sm"
                 >
                   {t("resumeEditor.addReply")}
-                </button>
+                </Button>
               </div>
             </article>
           ))
         )}
       </div>
-    </section>
+    </Card>
   );
 }

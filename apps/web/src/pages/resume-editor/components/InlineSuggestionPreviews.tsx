@@ -1,3 +1,4 @@
+import { Button } from "../../../shared/ui/primitives";
 import type { EditorControllerProps } from "../editorViewProps";
 
 export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
@@ -18,36 +19,32 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
     <>
       {inlineSuggestionPreview === "question" ? (
         <article className="resume-editor-inline-preview">
-          <div className="section-heading">
-            <div>
-              <p className="section-heading__eyebrow">{t("resumeEditor.inlineQuestionSuggestions")}</p>
-              <h3 className="page-card__title">{t("resumeEditor.selectionBasedPrompts")}</h3>
-            </div>
-            <button
-              className="secondary-button"
+          <div className="editor-head">
+            <h3 className="editor-heading">{t("resumeEditor.inlineQuestionSuggestions")}</h3>
+            <Button
               onClick={() => {
                 setActiveSidePanel("suggestions");
                 setIsContextPanelOpen(true);
               }}
-              type="button"
+              size="sm"
+              variant="ghost"
             >
               {t("resumeEditor.openFullPanel")}
-            </button>
+            </Button>
           </div>
           {questionSuggestionsMutation.isPending ? (
-            <p className="resume-tailor-muted">{t("resumeEditor.generatingQuestionSuggestions")}</p>
+            <p className="editor-muted">{t("resumeEditor.generatingQuestionSuggestions")}</p>
           ) : questionSuggestionsMutation.data ? (
-            <div className="stack-list">
+            <div className="editor-stack">
               {questionSuggestionsMutation.data.suggestions.slice(0, 2).map((suggestion) => (
-                <article className="page-card page-card--muted" key={suggestion.id}>
-                  <p className="section-heading__eyebrow">{suggestion.questionTypeLabel}</p>
-                  <h4 className="page-card__title">{suggestion.title}</h4>
-                  <p className="page-card__body resume-section__body--preserve">
+                <article className="editor-item" key={suggestion.id}>
+                  <p className="editor-label">{suggestion.questionTypeLabel}</p>
+                  <h4 className="editor-heading">{suggestion.title}</h4>
+                  <p className="editor-text editor-preserve">
                     {suggestion.questionText}
                   </p>
-                  <div className="page-card__actions">
-                    <button
-                      className="secondary-button"
+                  <div className="editor-actions">
+                    <Button
                       onClick={() => {
                         void createQuestionCardMutation.mutateAsync({
                           blockId: selectedBlock?.blockId ?? null,
@@ -67,10 +64,10 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
                           followUpSuggestions: suggestion.followUpSuggestions,
                         });
                       }}
-                      type="button"
+                      size="sm"
                     >
                       {t("resumeEditor.createCard")}
-                    </button>
+                    </Button>
                   </div>
                 </article>
               ))}
@@ -80,44 +77,40 @@ export function InlineSuggestionPreviews({ ctrl }: EditorControllerProps) {
       ) : null}
       {inlineSuggestionPreview === "rewrite" ? (
         <article className="resume-editor-inline-preview">
-          <div className="section-heading">
-            <div>
-              <p className="section-heading__eyebrow">{t("resumeEditor.inlineRewriteSuggestions")}</p>
-              <h3 className="page-card__title">{t("resumeEditor.selectionBasedWordingOptions")}</h3>
-            </div>
-            <button
-              className="secondary-button"
+          <div className="editor-head">
+            <h3 className="editor-heading">{t("resumeEditor.inlineRewriteSuggestions")}</h3>
+            <Button
               onClick={() => {
                 setActiveSidePanel("suggestions");
                 setIsContextPanelOpen(true);
               }}
-              type="button"
+              size="sm"
+              variant="ghost"
             >
               {t("resumeEditor.openFullPanel")}
-            </button>
+            </Button>
           </div>
           {rewriteSuggestionsMutation.isPending ? (
-            <p className="resume-tailor-muted">{t("resumeEditor.generatingRewriteSuggestions")}</p>
+            <p className="editor-muted">{t("resumeEditor.generatingRewriteSuggestions")}</p>
           ) : rewriteSuggestionsMutation.data ? (
-            <div className="stack-list">
+            <div className="editor-stack">
               {rewriteSuggestionsMutation.data.suggestions.slice(0, 2).map((suggestion) => (
-                <article className="page-card page-card--muted" key={suggestion.id}>
-                  <p className="section-heading__eyebrow">
+                <article className="editor-item" key={suggestion.id}>
+                  <p className="editor-label">
                     {suggestion.focusArea ?? (t("resumeEditor.rewriteSuggestion"))}
                   </p>
-                  <p className="page-card__body resume-section__body--preserve">
+                  <p className="editor-text editor-preserve">
                     {suggestion.suggestedText}
                   </p>
-                  <div className="page-card__actions">
-                    <button
-                      className="secondary-button"
+                  <div className="editor-actions">
+                    <Button
                       onClick={() => {
                         void handleApplyRewrite(suggestion.suggestedText);
                       }}
-                      type="button"
+                      size="sm"
                     >
                       {t("resumeEditor.applyRewrite")}
-                    </button>
+                    </Button>
                   </div>
                 </article>
               ))}

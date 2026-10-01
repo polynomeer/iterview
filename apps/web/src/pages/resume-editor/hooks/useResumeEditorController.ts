@@ -126,9 +126,6 @@ export function useResumeEditorController() {
   ];
 
   const isSecondaryPanelActive = activeSidePanel === "source" || activeSidePanel === "presence";
-  const primaryTabs: EditorTab[] = ["edit", "review"];
-  const secondaryTabs: EditorTab[] = ["heatmap", "print-preview", "history"];
-  const isSecondaryTabActive = secondaryTabs.includes(currentTab);
 
   function updateTab(nextTab: EditorTab) {
     const next = new URLSearchParams(searchParams);
@@ -184,9 +181,6 @@ export function useResumeEditorController() {
     primarySidePanels,
     secondarySidePanels,
     isSecondaryPanelActive,
-    primaryTabs,
-    secondaryTabs,
-    isSecondaryTabActive,
     updateTab,
     resolveConflictBlock,
     ...doc,
