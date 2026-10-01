@@ -5,7 +5,9 @@ import com.example.interviewplatform.resume.dto.ActivateResumeVersionResponse
 import com.example.interviewplatform.resume.dto.CreateResumeRequest
 import com.example.interviewplatform.resume.dto.CreateResumeVersionRequest
 import com.example.interviewplatform.resume.dto.ResumeDto
+import com.example.interviewplatform.resume.dto.ResumeAchievementItemDto
 import com.example.interviewplatform.resume.dto.ResumeAchievementItemResponseDto
+import com.example.interviewplatform.resume.dto.UpdateResumeAchievementEvidenceRequest
 import com.example.interviewplatform.resume.dto.ResumeAwardItemResponseDto
 import com.example.interviewplatform.resume.dto.ResumeCertificationItemResponseDto
 import com.example.interviewplatform.resume.dto.ResumeCompetencyItemResponseDto
@@ -361,6 +363,27 @@ class ResumeService(
         )
     }
 
+    @Transactional
+    fun updateAchievementEvidence(
+        userId: Long,
+        versionId: Long,
+        achievementId: Long,
+        request: UpdateResumeAchievementEvidenceRequest,
+    ): ResumeAchievementItemDto {
+        val version = requireOwnedVersion(userId, versionId)
+        val achievement = resumeAchievementItemRepository.findById(achievementId)
+            .filter { it.resumeVersionId == version.id }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Resume claim not found: $achievementId") }
+        val now = clockService.now()
+        achievement.situationText = request.situationText.normalizedEvidence()
+        achievement.roleText = request.roleText.normalizedEvidence()
+        achievement.measurementText = request.measurementText.normalizedEvidence()
+        achievement.resultText = request.resultText.normalizedEvidence()
+        achievement.evidenceUpdatedAt = now
+        achievement.updatedAt = now
+        return ResumeIntelligenceMapper.toAchievementDto(resumeAchievementItemRepository.save(achievement))
+    }
+
     @Transactional(readOnly = true)
     fun listResumeVersionEducation(userId: Long, versionId: Long): ResumeEducationItemResponseDto {
         val version = requireOwnedVersion(userId, versionId)
@@ -436,6 +459,10 @@ class ResumeService(
         }
     }
 
+    private fun String?.normalizedEvidence(): String? = this?.trim()?.takeIf { it.isNotEmpty() }
+
+    private fun String.evidenceKey(): String = trim().lowercase().replace(Regex("\\s+"), " ")
+
     private fun requireOwnedVersion(userId: Long, versionId: Long): ResumeVersionEntity {
         val version = resumeVersionRepository.findById(versionId)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Resume version not found: $versionId") }
@@ -469,6 +496,10 @@ class ResumeService(
             )
         }
         val now = clockService.now()
+        // Evidence is written by the user, not extracted, so it survives re-extraction for claims whose title is unchanged.
+        val evidenceByTitle = resumeAchievementItemRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(version.id)
+            .filter { it.evidenceUpdatedAt != null }
+            .associateBy { it.title.evidenceKey() }
         resumeRiskItemRepository.deleteByResumeVersionId(version.id)
         resumeAchievementItemRepository.deleteByResumeVersionId(version.id)
         val existingProjects = resumeProjectSnapshotRepository.findByResumeVersionIdOrderByDisplayOrderAscIdAsc(version.id)
@@ -639,7 +670,15 @@ class ResumeService(
                         displayOrder = achievement.displayOrder,
                         createdAt = now,
                         updatedAt = now,
-                    )
+                    ).apply {
+                        evidenceByTitle[title.evidenceKey()]?.let { previous ->
+                            situationText = previous.situationText
+                            roleText = previous.roleText
+                            measurementText = previous.measurementText
+                            resultText = previous.resultText
+                            evidenceUpdatedAt = previous.evidenceUpdatedAt
+                        }
+                    }
                 },
             )
         }

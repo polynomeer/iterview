@@ -2,7 +2,9 @@ package com.example.interviewplatform.resume.controller
 
 import com.example.interviewplatform.common.service.CurrentUserProvider
 import com.example.interviewplatform.resume.dto.ActivateResumeVersionResponse
+import com.example.interviewplatform.resume.dto.ResumeAchievementItemDto
 import com.example.interviewplatform.resume.dto.ResumeAchievementItemResponseDto
+import com.example.interviewplatform.resume.dto.UpdateResumeAchievementEvidenceRequest
 import com.example.interviewplatform.resume.dto.ResumeAwardItemResponseDto
 import com.example.interviewplatform.resume.dto.ResumeCertificationItemResponseDto
 import com.example.interviewplatform.resume.dto.ResumeCompetencyItemResponseDto
@@ -19,12 +21,15 @@ import com.example.interviewplatform.resume.service.ResumeService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -80,6 +85,15 @@ class ResumeVersionController(
     @Operation(summary = "Get extracted achievements for resume version")
     fun getResumeVersionAchievements(@PathVariable versionId: Long): ResumeAchievementItemResponseDto =
         resumeService.listResumeVersionAchievements(currentUserProvider.currentUserId(), versionId)
+
+    @PutMapping("/{versionId}/achievements/{achievementId}/evidence")
+    @Operation(summary = "Replace the evidence written for one resume claim")
+    fun updateAchievementEvidence(
+        @PathVariable versionId: Long,
+        @PathVariable achievementId: Long,
+        @Valid @RequestBody request: UpdateResumeAchievementEvidenceRequest,
+    ): ResumeAchievementItemDto =
+        resumeService.updateAchievementEvidence(currentUserProvider.currentUserId(), versionId, achievementId, request)
 
     @GetMapping("/{versionId}/education")
     @Operation(summary = "Get extracted education items for resume version")

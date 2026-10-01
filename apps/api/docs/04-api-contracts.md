@@ -100,7 +100,8 @@ Resume version endpoints:
 - `GET /api/resume-versions/{versionId}/skills`
 - `GET /api/resume-versions/{versionId}/experiences`
 - `GET /api/resume-versions/{versionId}/projects`
-- `GET /api/resume-versions/{versionId}/achievements`
+- `GET /api/resume-versions/{versionId}/achievements` (each item carries `evidence`: `situationText`, `roleText`, `measurementText`, `resultText`, `updatedAt`; null fields are unanswered)
+- `PUT /api/resume-versions/{versionId}/achievements/{achievementId}/evidence` (body: the four evidence fields, each at most 2,000 characters; replaces all four, stores blank as null, returns the updated achievement; 404 when the claim is not in that version; ADR 0081)
 - `GET /api/resume-versions/{versionId}/education`
 - `GET /api/resume-versions/{versionId}/certifications`
 - `GET /api/resume-versions/{versionId}/awards`

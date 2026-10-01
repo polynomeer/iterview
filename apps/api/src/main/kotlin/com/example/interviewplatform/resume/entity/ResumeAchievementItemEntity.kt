@@ -35,5 +35,15 @@ class ResumeAchievementItemEntity(
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant,
     @Column(name = "updated_at", nullable = false)
-    val updatedAt: Instant,
+    var updatedAt: Instant,
+    @Column(name = "situation_text")
+    var situationText: String? = null,
+    @Column(name = "role_text")
+    var roleText: String? = null,
+    @Column(name = "measurement_text")
+    var measurementText: String? = null,
+    @Column(name = "result_text")
+    var resultText: String? = null,
+    @Column(name = "evidence_updated_at")
+    var evidenceUpdatedAt: Instant? = null,
 )

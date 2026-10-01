@@ -1754,6 +1754,87 @@ class ResumeApiIntegrationTest {
             .andExpect(jsonPath("$.changes[0].afterTextLines").isArray)
     }
 
+    @Test
+    fun `claim evidence is saved per achievement and survives re-extraction`() {
+        val resumeId = createResume("Evidence Resume")
+        val versionId = createResumeVersion(
+            resumeId = resumeId,
+            fileUrl = "https://files.example.com/evidence-resume.pdf",
+            summaryText = "Backend engineer",
+            rawText = """
+                💼 경력
+                Dreamus - Backend Engineer 2023.01 ~ 현재
+                • 정산 배치 재설계로 처리 시간 40분 → 12분 단축
+                • 결제 정합성 오류 37건 → 0건
+            """.trimIndent(),
+        )
+        val achievements = objectMapper.readTree(
+            mockMvc.perform(get("/api/resume-versions/$versionId/achievements").header("Authorization", authHeader))
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.items[0].evidence.situationText").value(nullValue()))
+                .andReturn().response.getContentAsString(StandardCharsets.UTF_8),
+        ).get("items")
+        assertTrue(achievements.size() >= 1)
+        val achievementId = achievements[0].get("id").asLong()
+        val title = achievements[0].get("title").asText()
+
+        mockMvc.perform(
+            put("/api/resume-versions/$versionId/achievements/$achievementId/evidence")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    objectMapper.writeValueAsString(
+                        mapOf(
+                            "situationText" to "  월 2억 건 정산 배치에서 부분 실패  ",
+                            "roleText" to "트랜잭션 경계 설계 리드",
+                            "measurementText" to "   ",
+                            "resultText" to "불일치 월 37건 → 0건",
+                        ),
+                    ),
+                ),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id").value(achievementId))
+            .andExpect(jsonPath("$.evidence.situationText").value("월 2억 건 정산 배치에서 부분 실패"))
+            .andExpect(jsonPath("$.evidence.measurementText").value(nullValue()))
+            .andExpect(jsonPath("$.evidence.resultText").value("불일치 월 37건 → 0건"))
+            .andExpect(jsonPath("$.evidence.updatedAt").isNotEmpty)
+
+        mockMvc.perform(post("/api/resume-versions/$versionId/re-extract").header("Authorization", authHeader))
+            .andExpect(status().isOk)
+
+        val afterReExtract = objectMapper.readTree(
+            mockMvc.perform(get("/api/resume-versions/$versionId/achievements").header("Authorization", authHeader))
+                .andExpect(status().isOk)
+                .andReturn().response.getContentAsString(StandardCharsets.UTF_8),
+        ).get("items").first { it.get("title").asText() == title }
+        assertEquals("트랜잭션 경계 설계 리드", afterReExtract.get("evidence").get("roleText").asText())
+    }
+
+    @Test
+    fun `claim evidence rejects an achievement from another version`() {
+        val resumeId = createResume("Evidence Resume")
+        val versionId = createResumeVersion(resumeId, "https://files.example.com/a.pdf", "first")
+        val otherVersionId = createResumeVersion(resumeId, "https://files.example.com/b.pdf", "second")
+        val achievementId = jdbcTemplate.queryForObject(
+            """
+            INSERT INTO resume_achievement_items (resume_version_id, title, impact_summary, display_order, created_at, updated_at)
+            VALUES (?, 'Other claim', 'Other claim', 1, now(), now())
+            RETURNING id
+            """.trimIndent(),
+            Long::class.java,
+            otherVersionId,
+        )
+
+        mockMvc.perform(
+            put("/api/resume-versions/$versionId/achievements/$achievementId/evidence")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"roleText\":\"lead\"}"),
+        )
+            .andExpect(status().isNotFound)
+    }
+
     private fun createResume(title: String): Long {
         val payload = objectMapper.writeValueAsString(
             mapOf(

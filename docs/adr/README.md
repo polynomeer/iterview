@@ -186,3 +186,5 @@ Each ADR should include:
    Deletes the five hard-coded sample-data pages and redirects their URLs to 복습, 설정, and 질문.
 80. [`0080-namespaced-message-catalog.md`](0080-namespaced-message-catalog.md)
    Moves all Korean/English copy into per-namespace catalog files and guards against inline bilingual strings.
+81. [`0081-claim-evidence-on-resume-achievements.md`](0081-claim-evidence-on-resume-achievements.md)
+   Stores 상황 · 내 역할 · 측정 방법 · 결과 수치 per resume achievement, keeps them across re-extraction, and makes them the 근거 편집 form.

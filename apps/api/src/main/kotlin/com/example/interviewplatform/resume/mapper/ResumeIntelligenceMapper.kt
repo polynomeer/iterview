@@ -1,5 +1,6 @@
 package com.example.interviewplatform.resume.mapper
 
+import com.example.interviewplatform.resume.dto.ResumeAchievementEvidenceDto
 import com.example.interviewplatform.resume.dto.ResumeAchievementItemDto
 import com.example.interviewplatform.resume.dto.ResumeAwardItemDto
 import com.example.interviewplatform.resume.dto.ResumeCertificationItemDto
@@ -129,6 +130,13 @@ object ResumeIntelligenceMapper {
         sourceText = entity.sourceText,
         severityHint = entity.severityHint,
         displayOrder = entity.displayOrder,
+        evidence = ResumeAchievementEvidenceDto(
+            situationText = entity.situationText,
+            roleText = entity.roleText,
+            measurementText = entity.measurementText,
+            resultText = entity.resultText,
+            updatedAt = entity.evidenceUpdatedAt,
+        ),
     )
 
     fun toEducationDto(entity: ResumeEducationItemEntity): ResumeEducationItemDto = ResumeEducationItemDto(
