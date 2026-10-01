@@ -496,8 +496,12 @@ After the redesign:
   - Layout narration, workspace internals (node ids, offsets, model and capability chips), and the annotated preview are removed. The import dialog uses the `Dialog` primitive.
   - `legacy-editor.css` (713 lines) and the old `StateCard`, `MetricCard`, and `SectionPanel` helpers are deleted. No screen has co-located legacy CSS anymore. `global.css` is 2,555 lines.
 
+- **Light theme back (ADR 0082, superseding 0075):**
+  - `global.css` (2,555 lines) is deleted. The shell, tab bar, command palette, and session screens moved onto tokens next to their code, and `base.css` holds the element defaults.
+  - Settings offers 시스템 · 라이트 · 다크, with 시스템 as the default. Stored `workspace` and `dracula` values become 다크.
+  - Twelve main routes, login, and the answer editor were checked in light and dark at 1440px, with spot checks at 390px.
+
 Still open after the redesign:
-- A token-based light theme (ADR 0075). The theme choices still differ only on legacy screens.
 - 보관함, once notes and bookmarks APIs exist.
 
 ---

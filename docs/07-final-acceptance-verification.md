@@ -101,7 +101,8 @@ Covered rules:
 - No raw colors or font sizes appear outside `tokens.css`.
 - Text roles meet AA contrast.
 - New class names never collide with legacy styles.
-- `global.css` stays under 3,000 lines.
+- No legacy stylesheet (`global.css` or `legacy-*.css`) exists.
+- The light and dark palettes keep every text role at AA, and the system theme's dark block matches the dark palette.
 - Korean and English message keys match.
 - No inline Korean/English copy (`isKorean`, `copy(ko, en)`) exists outside the message catalog.
 - Error messages are mapped for users.
