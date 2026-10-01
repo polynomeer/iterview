@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type SyntheticEvent } from "react";
 import { getInterviewRecordAudioRequest } from "../../../../shared/api/practicalInterviewApi";
 import type { PlaybackRange } from "../reviewModel";
 
@@ -16,35 +16,31 @@ export function useRecordAudio(recordId: string | undefined, playbackSourceAudio
   const [activeReplayLabel, setActiveReplayLabel] = useState<string | null>(null);
 
   useEffect(() => {
-    const audio = audioRef.current;
-
-    if (!audio) {
-      return undefined;
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackRate;
     }
+  }, [audioSourceUrl, playbackRate]);
 
-    const handleTimeUpdate = () => {
+  // Passed as props on <audio> so they always reach the element React rendered. Listeners added in an
+  // effect missed an element that mounted later, which left the play button reading 재생 while playing.
+  const audioEvents = {
+    onTimeUpdate: (event: SyntheticEvent<HTMLAudioElement>) => {
+      const audio = event.currentTarget;
       const nextTimeMs = audio.currentTime * 1000;
       setCurrentTimeMs(nextTimeMs);
 
       if (activeRangeEndRef.current !== null && nextTimeMs >= activeRangeEndRef.current) {
+        activeRangeEndRef.current = null;
         audio.pause();
-        setIsPlayingAudio(false);
       }
-    };
-    const handlePlay = () => setIsPlayingAudio(true);
-    const handlePause = () => setIsPlayingAudio(false);
-
-    audio.playbackRate = playbackRate;
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("play", handlePlay);
-    audio.addEventListener("pause", handlePause);
-
-    return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("play", handlePlay);
-      audio.removeEventListener("pause", handlePause);
-    };
-  }, [audioSourceUrl, playbackRate]);
+    },
+    onPlay: () => setIsPlayingAudio(true),
+    onPause: () => setIsPlayingAudio(false),
+    onEnded: () => setIsPlayingAudio(false),
+    onLoadedMetadata: (event: SyntheticEvent<HTMLAudioElement>) => {
+      event.currentTarget.playbackRate = playbackRate;
+    },
+  };
 
   useEffect(() => {
     if (!recordId || !playbackSourceAudioFileUrl || typeof URL.createObjectURL !== "function") {
@@ -134,6 +130,7 @@ export function useRecordAudio(recordId: string | undefined, playbackSourceAudio
 
   return {
     audioRef,
+    audioEvents,
     currentTimeMs,
     playbackRate,
     setPlaybackRate,

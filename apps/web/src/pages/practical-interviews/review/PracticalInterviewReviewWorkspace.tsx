@@ -65,6 +65,7 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
   )?.sourceAudioFileUrl;
   const {
     audioRef,
+    audioEvents,
     currentTimeMs,
     playbackRate,
     setPlaybackRate,
@@ -422,6 +423,7 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
           <aside className="record-review__aside">
             <ReplayPlayer
               activeRangeLabel={activeReplayLabel}
+              audioEvents={audioEvents}
               audioRef={audioRef}
               audioSourceUrl={audioSourceUrl}
               chapters={chapterItems}

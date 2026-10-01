@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { useState, type ComponentProps, type RefObject } from "react";
 import { useLocale } from "../../../../shared/i18n";
 import { Button, Card, CardHeader, Segmented, Select } from "../../../../shared/ui/primitives";
 import { formatDurationLabel, truncateText, type PlaybackRange } from "../reviewModel";
@@ -39,6 +39,7 @@ export function ReplayPlayer(props: {
     isFollowUp: boolean;
   }>;
   audioRef: RefObject<HTMLAudioElement | null>;
+  audioEvents: Pick<ComponentProps<"audio">, "onTimeUpdate" | "onPlay" | "onPause" | "onEnded" | "onLoadedMetadata">;
   onTogglePlay: () => void;
   onSeekToMs: (ms: number) => void;
   onPlayRange: (range: PlaybackRange, label: string) => void;
@@ -85,7 +86,7 @@ export function ReplayPlayer(props: {
         titleAs="h2"
       />
       <div className="record-player__body">
-        <audio preload="metadata" ref={props.audioRef} src={props.audioSourceUrl ?? undefined} />
+        <audio {...props.audioEvents} preload="metadata" ref={props.audioRef} src={props.audioSourceUrl ?? undefined} />
         <p className="record-player__now">{props.activeRangeLabel ?? props.playback.sourceAudioFileName ?? t("recordReview.recording")}</p>
         <input
           aria-label={t("recordReview.position")}

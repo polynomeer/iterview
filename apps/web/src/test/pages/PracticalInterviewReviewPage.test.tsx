@@ -556,6 +556,12 @@ describe("PracticalInterviewReviewPage", () => {
     expect(within(player).getByRole("slider", { name: "재생 위치" })).toBeInTheDocument();
     expect(within(player).getByRole("button", { name: "재생" })).toBeInTheDocument();
     expect(within(player).getByRole("button", { name: /Q1\. How did you validate cache invalidation safety\?/ })).toBeInTheDocument();
+    // Play and pause come from the <audio> element itself, whenever it mounted.
+    const audio = player.querySelector("audio")!;
+    fireEvent.play(audio);
+    expect(within(player).getByRole("button", { name: "일시정지" })).toBeInTheDocument();
+    fireEvent.pause(audio);
+    expect(within(player).getByRole("button", { name: "재생" })).toBeInTheDocument();
     fireEvent.click(within(player).getByRole("radio", { name: "전사" }));
     expect(within(player).getByRole("button", { name: /1번 구간/ })).toBeInTheDocument();
   });
