@@ -8,7 +8,7 @@ This document records the automated evidence for the redesigned `iterview` web a
 
 From `apps/web`:
 - `npm run build` runs the TypeScript check and the production bundle.
-- `npm run test:run` runs 46 test files with 266 tests as of 2026-09-30.
+- `npm run test:run` runs 48 test files with 276 tests as of 2026-10-01.
 
 From `apps/api`:
 - `./gradlew test` runs the Testcontainers integration tests, so Docker must be running. As of 2026-10-01 the full suite passes (160 tests), and the two job-role tests added afterwards pass in `ProfileApiIntegrationTest`.
@@ -36,10 +36,12 @@ Evidence:
 
 ### 3. Resume Hub
 
-Covered path: `/resume` redirect or first upload, overview, version management, evidence editor, pressure map and claim detail, and job-fit analyses.
+Covered path: `/resume` redirect or first upload, overview, version management, the per-claim evidence form and the document editor, pressure map and claim detail, and job-fit analyses.
 
 Evidence:
 - `apps/web/src/test/pages/ResumeHub.test.tsx`
+- `apps/web/src/test/pages/ResumeClaimsPage.test.tsx`
+- `apps/web/src/test/entities/claimModel.test.ts`
 - `apps/web/src/test/pages/ResumeEditorPage.test.tsx`
 - `apps/web/src/test/pages/ResumeHeatmapPage.test.tsx`
 - `apps/web/src/test/pages/ResumeHeatmapAnchorPage.test.tsx`
@@ -122,4 +124,5 @@ Evidence:
 
 ## Known Gaps
 
-- The evidence editor and the interview record review keep their legacy styling, now in `legacy-*.css` next to each screen.
+- The markdown document editor (`/resume/:versionId/claims/document`) and the interview record review keep their legacy styling, now in `legacy-*.css` next to each screen.
+- Under heavy machine load, `ResumeEditorPage.test.tsx` can exceed its 15-second budget in the full run. It passes when run alone.

@@ -475,8 +475,16 @@ Deferred:
 Found and fixed along the way:
 - **Unsaved field:** the profile form sent a free-text `jobRole` that the API silently dropped, since it only accepts `jobRoleId` (`0e3495e`). `GET /api/job-roles` now lists the roles, and settings offers them as a select (`2a0e160`).
 
+After the redesign:
+- **Per-claim evidence form (ADR 0081):** 근거 편집 is now the proposal's claim form.
+  - Each extracted achievement has 상황, 내 역할, 측정 방법, and 결과 수치. They are stored on the achievement, saved with `PUT …/achievements/{id}/evidence`, and kept across re-extraction.
+  - The list groups claims by project and filters to 근거 부족 or 약점.
+  - The empty field an interviewer reaches first is marked and phrased as the question it leaves open.
+  - The project's real interview questions show below the form.
+  - The markdown document editor moved to `/resume/:versionId/claims/document`.
+
 Still open after the redesign:
-- The evidence editor's per-claim form (상황 / 역할 / 측정 방법 / 결과) and a restyle of the interview record review. Both still render with their co-located legacy CSS.
+- A restyle of the interview record review and of the markdown document editor. Both still render with their co-located legacy CSS.
 - A token-based light theme (ADR 0075). The theme choices still differ only on legacy screens.
 - 보관함, once notes and bookmarks APIs exist.
 
