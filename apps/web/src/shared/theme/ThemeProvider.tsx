@@ -13,8 +13,9 @@ function applyTheme(theme: AppTheme) {
     return;
   }
 
+  // tokens.css picks the palette and color-scheme from this attribute.
   document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = "dark";
+  document.documentElement.style.removeProperty("color-scheme");
 }
 
 function readInitialTheme() {

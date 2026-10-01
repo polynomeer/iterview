@@ -57,7 +57,7 @@ describe("design tokens", () => {
   const css = stylesheets[TOKENS_PATH];
   const modes = {
     light: readRoleBlock(css, ':root,\n:root[data-theme="light"]'),
-    dark: readRoleBlock(css, ':root[data-theme="dark"],\n:root[data-theme="workspace"],\n:root[data-theme="dracula"]'),
+    dark: readRoleBlock(css, ':root[data-theme="dark"]'),
   };
   const textPairs: Array<[foreground: string, background: string]> = [
     ["--iv-text", "--iv-bg"],
@@ -94,6 +94,14 @@ describe("design tokens", () => {
 
     expect(Object.keys(stylesheets)).toContain(TOKENS_PATH);
     expect(offenders).toEqual([]);
+  });
+
+  it("gives the system theme exactly the dark palette when the OS prefers dark (ADR 0082)", () => {
+    const css = stylesheets[TOKENS_PATH];
+    const dark = readRoleBlock(css, ':root[data-theme="dark"]');
+    const systemDark = readRoleBlock(css, '  :root:not([data-theme]),\n  :root[data-theme="system"]');
+    expect(dark.size).toBeGreaterThan(10);
+    expect(Object.fromEntries(systemDark)).toEqual(Object.fromEntries(dark));
   });
 
   it("has no legacy stylesheet left: every rule is written against tokens", () => {

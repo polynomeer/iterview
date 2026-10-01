@@ -228,9 +228,9 @@ export function PracticeSection({ profile }: { profile: ProfileModel }) {
 }
 
 const THEME_LABELS: Record<AppTheme, MessageKey> = {
-  workspace: "settingsPage.themeWorkspace",
+  system: "settingsPage.themeSystem",
+  light: "settingsPage.themeLight",
   dark: "settingsPage.themeDark",
-  dracula: "settingsPage.themeDracula",
 };
 
 export function DisplaySection() {
@@ -256,7 +256,7 @@ export function DisplaySection() {
           value={locale}
         />
       </Row>
-      <Row label={t("settingsPage.theme")}>
+      <Row hint={t("settingsPage.themeHint")} label={t("settingsPage.theme")}>
         <Segmented
           items={(Object.keys(THEME_LABELS) as AppTheme[]).map((id) => ({ id, label: t(THEME_LABELS[id]) }))}
           label={t("settingsPage.theme")}

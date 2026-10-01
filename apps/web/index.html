@@ -12,17 +12,12 @@
     />
     <title>이터뷰 | 이력서 기반 면접 준비</title>
     <script>
+      // Apply the stored theme before React mounts so a reload never flashes the other palette (ADR 0082).
       (() => {
-        const themeStorageKey = "iterview-theme";
-        const defaultTheme = "workspace";
-        const storedTheme = window.localStorage.getItem(themeStorageKey);
-        const nextTheme =
-          storedTheme === "dark" || storedTheme === "workspace" || storedTheme === "dracula"
-            ? storedTheme
-            : defaultTheme;
-
-        document.documentElement.dataset.theme = nextTheme;
-        document.documentElement.style.colorScheme = "dark";
+        const stored = window.localStorage.getItem("iterview-theme");
+        const retired = { workspace: "dark", dracula: "dark" };
+        const theme = stored === "system" || stored === "light" || stored === "dark" ? stored : retired[stored] || "system";
+        document.documentElement.dataset.theme = theme;
       })();
     </script>
   </head>

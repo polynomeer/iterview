@@ -53,9 +53,10 @@
   --iv-ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* Light roles. Used by the `light` theme and by `system` when the OS prefers light. */
+/* Light roles. Used by the `light` theme and by `system` when the OS prefers light (ADR 0082). */
 :root,
 :root[data-theme="light"] {
+  color-scheme: light;
   --iv-bg: #fafafa;
   --iv-surface: #ffffff;
   --iv-surface-sunken: #f5f6f7;
@@ -82,13 +83,9 @@
   --iv-focus-ring: 0 0 0 3px rgba(47, 95, 224, 0.35);
 }
 
-/*
- * Dark roles. Tuned to the navy workspace palette so primitives sit naturally inside screens that
- * still use legacy styles. `dark` and `dracula` share these roles until those themes are retired.
- */
-:root[data-theme="dark"],
-:root[data-theme="workspace"],
-:root[data-theme="dracula"] {
+/* Dark roles. Used by the `dark` theme and by `system` when the OS prefers dark. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
   --iv-bg: #07101d;
   --iv-surface: #0f1b30;
   --iv-surface-sunken: #0b1526;
@@ -118,6 +115,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]),
   :root[data-theme="system"] {
+    color-scheme: dark;
     --iv-bg: #07101d;
     --iv-surface: #0f1b30;
     --iv-surface-sunken: #0b1526;

@@ -1,7 +1,7 @@
 # 0075. Retire the Light Theme Until the Token Rebuild
 
 ## Status
-Accepted
+Superseded by ADR 0082.
 
 ## Date
 2026-09-30

@@ -175,7 +175,7 @@ Each ADR should include:
 74. [`0074-consolidate-ia-and-token-design-system.md`](0074-consolidate-ia-and-token-design-system.md)
    Adopts five navigation areas, merged workspaces, and a single token design system based on the 2026-09 UX audit.
 75. [`0075-retire-light-theme-until-token-rebuild.md`](0075-retire-light-theme-until-token-rebuild.md)
-   Makes `workspace` the default and retires the unreadable light theme until the token rebuild.
+   Superseded by 0082. Made `workspace` the default and retired the unreadable light theme until the token rebuild.
 76. [`0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md`](0076-namespaced-tokens-and-primitives-alongside-legacy-styles.md)
    Adds `--iv-` tokens and `ui-` primitives that coexist with `global.css` while screens migrate one at a time.
 77. [`0077-replace-skill-landscape-with-skill-map.md`](0077-replace-skill-landscape-with-skill-map.md)
@@ -188,3 +188,5 @@ Each ADR should include:
    Moves all Korean/English copy into per-namespace catalog files and guards against inline bilingual strings.
 81. [`0081-claim-evidence-on-resume-achievements.md`](0081-claim-evidence-on-resume-achievements.md)
    Stores 상황 · 내 역할 · 측정 방법 · 결과 수치 per resume achievement, keeps them across re-extraction, and makes them the 근거 편집 form.
+82. [`0082-system-light-dark-themes.md`](0082-system-light-dark-themes.md)
+   Supersedes 0075: themes are system (default), light, and dark on two token palettes; retired themes map to dark.
