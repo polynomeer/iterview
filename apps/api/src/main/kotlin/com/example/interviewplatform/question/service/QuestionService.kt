@@ -1,5 +1,6 @@
 package com.example.interviewplatform.question.service
 
+import com.example.interviewplatform.common.service.ClockService
 import com.example.interviewplatform.common.service.AppLocaleService
 import com.example.interviewplatform.question.dto.CreateQuestionLearningMaterialRequest
 import com.example.interviewplatform.question.dto.CreateQuestionReferenceAnswerRequest
@@ -55,7 +56,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigDecimal
-import java.time.Instant
 
 @Service
 class QuestionService(
@@ -87,6 +87,7 @@ class QuestionService(
     private val appLocaleService: AppLocaleService,
     private val questionReferenceContentGenerationService: QuestionReferenceContentGenerationService,
     private val objectMapper: ObjectMapper,
+    private val clockService: ClockService,
 ) {
     @Transactional(readOnly = true)
     fun listQuestions(filter: QuestionSearchFilter): List<QuestionListItemDto> {
@@ -173,7 +174,7 @@ class QuestionService(
         request: CreateQuestionReferenceAnswerRequest,
     ): QuestionReferenceAnswerDto {
         requireReadableQuestion(questionId, userId)
-        val now = Instant.now()
+        val now = clockService.now()
         val entity = userQuestionReferenceAnswerRepository.save(
             UserQuestionReferenceAnswerEntity(
                 questionId = questionId,
@@ -201,7 +202,7 @@ class QuestionService(
         if (request.contentText.isNullOrBlank() && request.contentUrl.isNullOrBlank()) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "contentText or contentUrl is required")
         }
-        val now = Instant.now()
+        val now = clockService.now()
         val entity = userQuestionLearningMaterialRepository.save(
             UserQuestionLearningMaterialEntity(
                 questionId = questionId,
@@ -430,7 +431,7 @@ class QuestionService(
             categoryName = categoryName,
             tags = tags,
         )
-        val now = Instant.now()
+        val now = clockService.now()
 
         if (!hasReferenceAnswers) {
             generated.referenceAnswers.forEach { answer ->

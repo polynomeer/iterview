@@ -1,5 +1,6 @@
 package com.example.interviewplatform.skill.service
 
+import com.example.interviewplatform.common.service.ClockService
 import com.example.interviewplatform.answer.repository.AnswerAnalysisRepository
 import com.example.interviewplatform.answer.repository.AnswerAttemptRepository
 import com.example.interviewplatform.answer.repository.AnswerScoreRepository
@@ -18,7 +19,6 @@ import com.example.interviewplatform.skill.repository.SkillRepository
 import com.example.interviewplatform.user.repository.UserProfileRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.Instant
 
 @Service
 class SkillRadarService(
@@ -33,13 +33,14 @@ class SkillRadarService(
     private val userQuestionProgressRepository: UserQuestionProgressRepository,
     private val userProfileRepository: UserProfileRepository,
     private val skillScoreCalculator: SkillScoreCalculator,
+    private val clockService: ClockService,
 ) {
     @Transactional
     fun getRadar(userId: Long): SkillRadarResponseDto {
         val recalculated = recalculate(userId)
         return SkillRadarResponseDto(
             categories = recalculated.map(::toRadarCategoryDto),
-            updatedAt = recalculated.maxOfOrNull { it.calculatedAt } ?: Instant.now(),
+            updatedAt = recalculated.maxOfOrNull { it.calculatedAt } ?: clockService.now(),
         )
     }
 
@@ -84,7 +85,7 @@ class SkillRadarService(
             .associateBy { it.answerAttemptId }
         val progressByQuestionId = userQuestionProgressRepository.findByUserIdAndQuestionIdIn(userId, latestAttemptsByQuestionId.keys.toList())
             .associateBy { it.questionId }
-        val now = Instant.now()
+        val now = clockService.now()
 
         categories.forEach { category ->
             val mappings = mappingsByCategoryId[category.id].orEmpty()
