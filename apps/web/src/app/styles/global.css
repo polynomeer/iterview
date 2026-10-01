@@ -880,8 +880,7 @@ button {
   letter-spacing: -0.01em;
 }
 
-.form-field__input,
-.form-input {
+.form-field__input {
   width: 100%;
   min-height: 48px;
   padding: 0 14px;
@@ -902,7 +901,6 @@ button {
 }
 
 .form-field__input:focus,
-.form-input:focus,
 .practice-filter__select:focus,
 .answer-editor__textarea:focus {
   outline: 2px solid var(--input-focus-outline);
@@ -914,13 +912,11 @@ button {
 }
 
 .form-field__input::placeholder,
-.form-input::placeholder,
 .answer-editor__textarea::placeholder {
   color: color-mix(in srgb, var(--text-muted) 88%, transparent);
 }
 
 .form-field__input:hover,
-.form-input:hover,
 .answer-editor__textarea:hover {
   border-color: color-mix(in srgb, var(--accent) 26%, var(--border-soft));
 }
@@ -944,41 +940,6 @@ button {
   resize: vertical;
 }
 
-.feedback-notice {
-  display: flex;
-  align-items: flex-start;
-  min-height: 52px;
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 14px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.feedback-notice--error {
-  background: var(--surface-danger-soft);
-  border: 1px solid var(--border-danger);
-  color: var(--text-danger);
-}
-
-.feedback-notice--success {
-  background: var(--surface-success-soft);
-  border: 1px solid var(--border-success);
-  color: var(--text-success);
-}
-
-.feedback-notice--info {
-  background: var(--surface-info-soft);
-  border: 1px solid var(--border-info);
-  color: var(--text-info);
-}
-
-.feedback-notice__message {
-  margin: 0;
-  line-height: 1.55;
-}
-
-.feedback-notice__details,
 .state-card__details {
   margin: 8px 0 0;
   padding-left: 18px;
@@ -986,7 +947,6 @@ button {
   line-height: 1.6;
 }
 
-.feedback-notice__details li + li,
 .state-card__details li + li {
   margin-top: 4px;
 }
@@ -1176,10 +1136,6 @@ button {
 .detail-chip--accent {
   background: var(--chip-accent-background);
   color: var(--accent-strong);
-}
-
-.practical-editor-field .form-input--textarea {
-  min-height: 190px;
 }
 
 .bottom-tab-bar {
@@ -1625,7 +1581,6 @@ button {
 }
 
 .page-card--muted,
-.page-card--inset,
 .state-card--section {
   background: color-mix(in srgb, var(--surface-soft) 88%, var(--surface-base));
 }
@@ -1801,7 +1756,6 @@ button {
 }
 
 .metric-card,
-.list-item-card,
 .question-tree__content {
   border-radius: 16px;
 }
@@ -2166,16 +2120,13 @@ button {
   max-width: 62ch;
 }
 
-.page-card,
-.list-item-card {
+.page-card {
   background-color: rgba(10, 18, 31, 0.88);
   border-color: rgba(255, 255, 255, 0.07);
   color: #f4f7fb;
 }
 
 .page-card__body,
-.list-item-card__body,
-.list-item-card__meta,
 .metric-card__helper,
 .metric-card__label,
 .section-heading__eyebrow {
@@ -2280,8 +2231,7 @@ button {
   color: rgba(71, 85, 105, 0.92);
 }
 
-.page-card,
-.list-item-card {
+.page-card {
   background-color: rgba(255, 255, 255, 0.9);
   border-color: rgba(15, 23, 42, 0.08);
   color: #0f172a;
@@ -2289,8 +2239,6 @@ button {
 }
 
 .page-card__body,
-.list-item-card__body,
-.list-item-card__meta,
 .metric-card__helper,
 .metric-card__label,
 .section-heading__eyebrow {
@@ -2367,9 +2315,6 @@ button {
 :root[data-theme="dark"] .page-card,
 :root[data-theme="dracula"] .page-card,
 :root[data-theme="workspace"] .page-card,
-:root[data-theme="dark"] .list-item-card,
-:root[data-theme="dracula"] .list-item-card,
-:root[data-theme="workspace"] .list-item-card,
 :root[data-theme="dark"] .metric-card,
 :root[data-theme="dracula"] .metric-card,
 :root[data-theme="workspace"] .metric-card {
@@ -2382,12 +2327,6 @@ button {
 :root[data-theme="dark"] .page-card__body,
 :root[data-theme="dracula"] .page-card__body,
 :root[data-theme="workspace"] .page-card__body,
-:root[data-theme="dark"] .list-item-card__body,
-:root[data-theme="dracula"] .list-item-card__body,
-:root[data-theme="workspace"] .list-item-card__body,
-:root[data-theme="dark"] .list-item-card__meta,
-:root[data-theme="dracula"] .list-item-card__meta,
-:root[data-theme="workspace"] .list-item-card__meta,
 :root[data-theme="dark"] .metric-card__helper,
 :root[data-theme="dracula"] .metric-card__helper,
 :root[data-theme="workspace"] .metric-card__helper,
@@ -2395,7 +2334,7 @@ button {
 :root[data-theme="dracula"] .metric-card__label,
 :root[data-theme="workspace"] .metric-card__label,
 :root[data-theme="dark"] .section-heading__eyebrow,
-:root[data-theme="dracula"] .section-heading__eyebrow ,
+:root[data-theme="dracula"] .section-heading__eyebrow,
 :root[data-theme="workspace"] .section-heading__eyebrow {
   color: var(--text-muted);
 }
@@ -2583,8 +2522,7 @@ body {
 }
 
 .page-card,
-.section-panel,
-.workspace-note-card {
+.section-panel {
   border: 1px solid rgba(125, 145, 176, 0.14);
   border-radius: 24px;
   background:
@@ -2644,8 +2582,7 @@ body {
   border-radius: 24px;
 }
 
-.resume-card,
-.list-item-card {
+.resume-card {
   border: 1px solid rgba(125, 145, 176, 0.12);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.02);
@@ -2696,8 +2633,7 @@ textarea::placeholder {
 }
 
 .page-card,
-.section-panel,
-.workspace-note-card {
+.section-panel {
   border-radius: var(--workspace-card-radius);
 }
 
@@ -2748,15 +2684,13 @@ textarea::placeholder {
 }
 
 .primary-button:hover,
-.secondary-button:hover,
-.list-item-card:hover {
+.secondary-button:hover {
   transition:
     border-color 160ms ease,
     background-color 160ms ease,
     transform 160ms ease;
 }
 
-.list-item-card,
 .resume-card {
   padding: 14px;
   border-radius: var(--workspace-inner-radius);

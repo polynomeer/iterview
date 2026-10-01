@@ -12,10 +12,9 @@ import { mockInterview } from "./mockInterview";
 import { modelCommon } from "./modelCommon";
 import { practicalModel } from "./practicalModel";
 import { practicalRecords } from "./practicalRecords";
-import { practicalReview } from "./practicalReview";
-import { practicalReviewPanels } from "./practicalReviewPanels";
 import { questionModel } from "./questionModel";
 import { questionWorkspace } from "./questionWorkspace";
+import { recordReview } from "./recordReview";
 import { resultAnalysis } from "./resultAnalysis";
 import { resultModel } from "./resultModel";
 import { resumeClaims } from "./resumeClaims";
@@ -53,8 +52,7 @@ export const catalog = {
   resultModel,
   interviewModel,
   practicalModel,
-  practicalReview,
-  practicalReviewPanels,
+  recordReview,
   resumeHub,
   resumeHeatmap,
   resumeTailor,

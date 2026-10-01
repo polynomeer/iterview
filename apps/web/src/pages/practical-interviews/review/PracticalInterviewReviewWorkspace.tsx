@@ -2,24 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { routeConfig } from "../../../shared/config/routes";
 import { useLocale } from "../../../shared/i18n";
-import { FeedbackNotice } from "../../../shared/ui/FeedbackNotice";
-import { PageContainer } from "../../../shared/ui/PageContainer";
-import { SectionPanel } from "../../../shared/ui/layout";
-import { QuestionReviewPanel } from "./components/QuestionReviewPanel";
+import { Button, Callout, Tabs } from "../../../shared/ui/primitives";
+import { QuestionReviewPanel, type QuestionFilter } from "./components/QuestionReviewPanel";
 import { RecordProcessingView } from "./components/RecordProcessingView";
-import { ReplayLaunchPanel } from "./components/ReplayLaunchPanel";
+import { ReplayLaunchDialog } from "./components/ReplayLaunchDialog";
 import { ReplayPlayer } from "./components/ReplayPlayer";
-import { ReviewBrief } from "./components/ReviewBrief";
-import { ReviewCrossLinks } from "./components/ReviewCrossLinks";
-import { ReviewLaneSwitcher } from "./components/ReviewLaneSwitcher";
-import { ReviewOverview } from "./components/ReviewOverview";
 import { MissingRecordView, ReviewLoadErrorView, ReviewLoadingView } from "./components/ReviewStatusViews";
+import { ReviewSummary } from "./components/ReviewSummary";
 import { ThreadReviewPanel } from "./components/ThreadReviewPanel";
 import { TranscriptReviewPanel } from "./components/TranscriptReviewPanel";
 import { useRecordAudio } from "./hooks/useRecordAudio";
 import { useReviewWorkspace } from "./hooks/useReviewWorkspace";
 import {
-  mapLaneTab,
   normalizeTab,
   type PlaybackRange,
   type ReplayPresetModel,
@@ -27,12 +21,12 @@ import {
   type ReviewTab,
   type SegmentDraftEdits,
 } from "./reviewModel";
-import "./legacy-review.css";
+import "./review.css";
 
 /**
- * Shared review workspace for one interview record. Every record route renders the same
- * workspace; `route` only decides the initial lane (transcript/question) and whether the
- * replay launcher opens automatically (simulate).
+ * 실전 면접 복기 for one record: the facts, then questions, follow-up chains, and the transcript as tabs,
+ * with the recording beside them. Every record route renders this; `route` picks the opening tab and
+ * whether the replay dialog opens (simulate).
  */
 export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRoute }) {
   const { t } = useLocale();
@@ -45,7 +39,7 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
   const [selectedThreadRootQuestionId, setSelectedThreadRootQuestionId] = useState<string | null>(
     null,
   );
-  const [activeQuestionFilter, setActiveQuestionFilter] = useState("all");
+  const [activeQuestionFilter, setActiveQuestionFilter] = useState<QuestionFilter>("all");
   const [selectedReplayMode, setSelectedReplayMode] = useState<string>("");
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(5);
   const [replayPreset, setReplayPreset] = useState<ReplayPresetModel>(null);
@@ -55,8 +49,6 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
     reviewQuery,
     transcriptQuery,
     questionsQuery,
-    analysisQuery,
-    interviewerProfileQuery,
     structuredQuestionById,
     updateSegmentMutation,
     updateReviewMutation,
@@ -173,14 +165,8 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
     return <ReviewLoadingView />;
   }
 
-  if (hasError || !detailQuery.data || (isRecordReadyForReview && (!reviewQuery.data || !transcriptQuery.data || !questionsQuery.data || !analysisQuery.data))) {
-    const error =
-      detailQuery.error ??
-      reviewQuery.error ??
-      transcriptQuery.error ??
-      questionsQuery.error ??
-      analysisQuery.error ??
-      interviewerProfileQuery.error;
+  if (hasError || !detailQuery.data || (isRecordReadyForReview && (!reviewQuery.data || !transcriptQuery.data || !questionsQuery.data))) {
+    const error = detailQuery.error ?? reviewQuery.error ?? transcriptQuery.error ?? questionsQuery.error;
 
     return (
       <ReviewLoadErrorView
@@ -191,8 +177,6 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
             reviewQuery.refetch(),
             transcriptQuery.refetch(),
             questionsQuery.refetch(),
-            analysisQuery.refetch(),
-            interviewerProfileQuery.refetch(),
           ]);
         }}
       />
@@ -215,10 +199,9 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
   const review = reviewQuery.data!;
   const transcript = transcriptQuery.data!;
   const questions = questionsQuery.data!;
-  const analysis = analysisQuery.data!;
-  const interviewerProfile = interviewerProfileQuery.data;
   const dirtyEditCount = Object.keys(draftEdits).length;
   const playback = review.playback ?? transcript.playback ?? questions.playback ?? null;
+  const canPlay = Boolean(playback?.playbackAvailable && playback.sourceAudioFileUrl);
 
 
   function changeTab(tab: ReviewTab) {
@@ -284,35 +267,6 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
   ) {
     jumpToQuestion(targetQuestionId);
     void playRange(range, label);
-  }
-
-  function applyTarget(target?: string | null, payload?: Record<string, string>) {
-    const targetTab = mapLaneTab(target, payload);
-    changeTab(targetTab);
-
-    if (payload?.sequence) {
-      jumpToSegment(Number(payload.sequence));
-    }
-
-    if (payload?.segmentSequence) {
-      jumpToSegment(Number(payload.segmentSequence));
-    }
-
-    if (payload?.questionId) {
-      jumpToQuestion(payload.questionId);
-    }
-
-    if (payload?.sourceInterviewQuestionId) {
-      jumpToQuestion(payload.sourceInterviewQuestionId);
-    }
-
-    if (payload?.threadRootQuestionId) {
-      jumpToThread(payload.threadRootQuestionId);
-    }
-
-    if ((target ?? "").toLowerCase().includes("replay")) {
-      openReplayLauncher(review.replayLaunchPreset);
-    }
   }
 
   async function handleSaveSegment(segmentId: string) {
@@ -386,35 +340,86 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
     }
   }
 
+  const tabs: Array<{ id: ReviewTab; label: string; count?: number }> = [
+    { id: "question", label: t("recordReview.tabQuestions"), count: review.totalQuestionCount },
+    { id: "thread", label: t("recordReview.tabThreads"), count: review.followUpThreads.length },
+    { id: "transcript", label: t("recordReview.tabTranscript") },
+  ];
+
   return (
-    <PageContainer
-      description={t("practicalReview.pageDescription")}
-      eyebrow={t("practicalReview.pageEyebrow")}
-      title={detail.title}
-    >
-      <div className="page-stack practical-review-layout">
-        <div className="practical-review-layout__hero">
-          <ReviewOverview
-            applyTarget={applyTarget}
-            confirmMutation={confirmMutation}
-            createReplayMutation={createReplayMutation}
-            detail={detail}
-            dirtyEditCount={dirtyEditCount}
-            handleConfirm={handleConfirm}
-            openReplayLauncher={openReplayLauncher}
-            review={review}
-            updateReviewMutation={updateReviewMutation}
-          />
+    <div className="ui-page record-review">
+      <ReviewSummary
+        confirmMutation={confirmMutation}
+        createReplayMutation={createReplayMutation}
+        detail={detail}
+        dirtyEditCount={dirtyEditCount}
+        handleConfirm={handleConfirm}
+        openReplayLauncher={openReplayLauncher}
+        review={review}
+        updateReviewMutation={updateReviewMutation}
+      />
 
-          <div className="practical-review-layout__hero-side">
-            <SectionPanel className="workspace-note-card workspace-note-card--accent practical-review-layout__hero-note" variant="muted">
-              <span className="page-card__label">{t("practicalReview.analysisFlowLabel")}</span>
-              <h2 className="page-card__title">{t("practicalReview.analysisFlowTitle")}</h2>
-              <p className="page-card__body">
-                {t("practicalReview.analysisFlowBody")}
-              </p>
-            </SectionPanel>
+      {dirtyEditCount > 0 ? (
+        <Callout className="record-review__dirty" tone="accent">
+          <p>{t(dirtyEditCount > 1 ? "recordReview.unsavedEditsOther" : "recordReview.unsavedEditsOne", { count: dirtyEditCount })}</p>
+          <Button loading={updateReviewMutation.isPending} onClick={() => void handleApplyBulkEdits(false).catch(() => undefined)} size="sm" variant="primary">
+            {t("recordReview.saveAllEdits")}
+          </Button>
+        </Callout>
+      ) : null}
 
+      <div className={canPlay ? "record-review__grid" : "record-review__grid record-review__grid--single"}>
+        <div className="record-review__main">
+          <Tabs items={tabs} label={t("recordReview.views")} onChange={changeTab} value={activeTab}>
+            {activeTab === "question" ? (
+              <QuestionReviewPanel
+                activeQuestionFilter={activeQuestionFilter}
+                canPlay={canPlay}
+                detail={detail}
+                focusQuestionWithPlayback={focusQuestionWithPlayback}
+                openReplayLauncher={openReplayLauncher}
+                review={review}
+                selectedQuestionId={selectedQuestionId}
+                setActiveQuestionFilter={setActiveQuestionFilter}
+                structuredQuestionById={structuredQuestionById}
+              />
+            ) : null}
+
+            {activeTab === "thread" ? (
+              <ThreadReviewPanel
+                canPlay={canPlay}
+                jumpToQuestion={jumpToQuestion}
+                openReplayLauncher={openReplayLauncher}
+                playRange={playRange}
+                review={review}
+                selectedThreadRootQuestionId={selectedThreadRootQuestionId}
+                setSelectedThreadRootQuestionId={setSelectedThreadRootQuestionId}
+              />
+            ) : null}
+
+            {activeTab === "transcript" ? (
+              <TranscriptReviewPanel
+                activePlaybackSegmentSequence={activePlaybackSegmentSequence}
+                canPlay={canPlay}
+                draftEdits={draftEdits}
+                handleSaveSegment={handleSaveSegment}
+                jumpToQuestion={jumpToQuestion}
+                jumpToSegment={jumpToSegment}
+                playRange={playRange}
+                review={review}
+                selectedSegmentSequence={selectedSegmentSequence}
+                setDraftEdits={setDraftEdits}
+                setSelectedQuestionId={setSelectedQuestionId}
+                setSelectedThreadRootQuestionId={setSelectedThreadRootQuestionId}
+                transcript={transcript}
+                updateSegmentMutation={updateSegmentMutation}
+              />
+            ) : null}
+          </Tabs>
+        </div>
+
+        {canPlay ? (
+          <aside className="record-review__aside">
             <ReplayPlayer
               activeRangeLabel={activeReplayLabel}
               audioRef={audioRef}
@@ -432,92 +437,21 @@ export function PracticalInterviewReviewWorkspace({ route }: { route: ReviewRout
               playbackRate={playbackRate}
               transcriptTimeline={transcriptTimeline}
             />
-          </div>
-        </div>
-
-        <ReviewBrief
-          analysis={analysis}
-          applyTarget={applyTarget}
-          interviewerProfile={interviewerProfile}
-          questions={questions}
-          review={review}
-          transcript={transcript}
-        />
-
-        {dirtyEditCount > 0 ? (
-          <FeedbackNotice
-            message={t(
-              dirtyEditCount > 1 ? "practicalReview.unsavedEditsOther" : "practicalReview.unsavedEditsOne",
-              { count: dirtyEditCount },
-            )}
-            tone="info"
-          />
+          </aside>
         ) : null}
-
-        <ReviewLaneSwitcher activeTab={activeTab} changeTab={changeTab}>
-          {activeTab === "transcript" ? (
-            <TranscriptReviewPanel
-              activePlaybackSegmentSequence={activePlaybackSegmentSequence}
-              dirtyEditCount={dirtyEditCount}
-              draftEdits={draftEdits}
-              handleApplyBulkEdits={handleApplyBulkEdits}
-              handleSaveSegment={handleSaveSegment}
-              jumpToQuestion={jumpToQuestion}
-              jumpToSegment={jumpToSegment}
-              playRange={playRange}
-              review={review}
-              selectedSegmentSequence={selectedSegmentSequence}
-              setDraftEdits={setDraftEdits}
-              setSelectedQuestionId={setSelectedQuestionId}
-              setSelectedThreadRootQuestionId={setSelectedThreadRootQuestionId}
-              transcript={transcript}
-              updateReviewMutation={updateReviewMutation}
-              updateSegmentMutation={updateSegmentMutation}
-            />
-          ) : null}
-
-          {activeTab === "question" ? (
-            <QuestionReviewPanel
-              activeQuestionFilter={activeQuestionFilter}
-              detail={detail}
-              focusQuestionWithPlayback={focusQuestionWithPlayback}
-              openReplayLauncher={openReplayLauncher}
-              recordId={recordId}
-              review={review}
-              selectedQuestionId={selectedQuestionId}
-              setActiveQuestionFilter={setActiveQuestionFilter}
-              structuredQuestionById={structuredQuestionById}
-            />
-          ) : null}
-
-          {activeTab === "thread" ? (
-            <ThreadReviewPanel
-              jumpToQuestion={jumpToQuestion}
-              openReplayLauncher={openReplayLauncher}
-              playRange={playRange}
-              review={review}
-              selectedThreadRootQuestionId={selectedThreadRootQuestionId}
-              setSelectedThreadRootQuestionId={setSelectedThreadRootQuestionId}
-            />
-          ) : null}
-        </ReviewLaneSwitcher>
-
-        {replayPreset ? (
-          <ReplayLaunchPanel
-            createReplayMutation={createReplayMutation}
-            handleStartReplay={handleStartReplay}
-            replayPreset={replayPreset}
-            review={review}
-            selectedQuestionCount={selectedQuestionCount}
-            selectedReplayMode={selectedReplayMode}
-            setReplayPreset={setReplayPreset}
-            setSelectedQuestionCount={setSelectedQuestionCount}
-            setSelectedReplayMode={setSelectedReplayMode}
-          />
-        ) : null}
-
-        <ReviewCrossLinks />
       </div>
-    </PageContainer>
+
+      <ReplayLaunchDialog
+        createReplayMutation={createReplayMutation}
+        handleStartReplay={handleStartReplay}
+        onClose={() => setReplayPreset(null)}
+        replayPreset={replayPreset}
+        review={review}
+        selectedQuestionCount={selectedQuestionCount}
+        selectedReplayMode={selectedReplayMode}
+        setSelectedQuestionCount={setSelectedQuestionCount}
+        setSelectedReplayMode={setSelectedReplayMode}
+      />
+    </div>
   );
 }

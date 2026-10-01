@@ -1,13 +1,11 @@
 import { useMemo } from "react";
 import { useCreateInterviewSessionMutation } from "../../../../features/interview/api/useCreateInterviewSessionMutation";
 import { useConfirmInterviewRecordMutation } from "../../../../features/practical-interview/api/useConfirmInterviewRecordMutation";
-import { useInterviewRecordAnalysisQuery } from "../../../../features/practical-interview/api/useInterviewRecordAnalysisQuery";
 import { useInterviewRecordDetailQuery } from "../../../../features/practical-interview/api/useInterviewRecordDetailQuery";
 import { useInterviewRecordQuestionsQuery } from "../../../../features/practical-interview/api/useInterviewRecordQuestionsQuery";
 import { useRetryInterviewRecordTranscriptionMutation } from "../../../../features/practical-interview/api/useRetryInterviewRecordTranscriptionMutation";
 import { useInterviewRecordReviewQuery } from "../../../../features/practical-interview/api/useInterviewRecordReviewQuery";
 import { useInterviewRecordTranscriptQuery } from "../../../../features/practical-interview/api/useInterviewRecordTranscriptQuery";
-import { useInterviewerProfileQuery } from "../../../../features/practical-interview/api/useInterviewerProfileQuery";
 import { useUpdateInterviewReviewMutation } from "../../../../features/practical-interview/api/useUpdateInterviewReviewMutation";
 import { useUpdateInterviewTranscriptSegmentMutation } from "../../../../features/practical-interview/api/useUpdateInterviewTranscriptSegmentMutation";
 
@@ -21,8 +19,6 @@ export function useReviewWorkspace(recordId: string | undefined) {
   const reviewQuery = useInterviewRecordReviewQuery(recordId, isRecordReadyForReview);
   const transcriptQuery = useInterviewRecordTranscriptQuery(recordId, isRecordReadyForReview);
   const questionsQuery = useInterviewRecordQuestionsQuery(recordId, isRecordReadyForReview);
-  const analysisQuery = useInterviewRecordAnalysisQuery(recordId, isRecordReadyForReview);
-  const interviewerProfileQuery = useInterviewerProfileQuery(recordId, isRecordReadyForReview);
   const structuredQuestionById = useMemo(
     () => new Map((questionsQuery.data?.items ?? []).map((item) => [item.id, item])),
     [questionsQuery.data?.items],
@@ -37,17 +33,13 @@ export function useReviewWorkspace(recordId: string | undefined) {
     (isRecordReadyForReview &&
       (reviewQuery.isLoading ||
         transcriptQuery.isLoading ||
-        questionsQuery.isLoading ||
-        analysisQuery.isLoading ||
-        interviewerProfileQuery.isLoading));
+        questionsQuery.isLoading));
   const hasError =
     detailQuery.isError ||
     (isRecordReadyForReview &&
       (reviewQuery.isError ||
         transcriptQuery.isError ||
-        questionsQuery.isError ||
-        analysisQuery.isError ||
-        interviewerProfileQuery.isError));
+        questionsQuery.isError));
   const transcriptTimeline = useMemo(
     () =>
       (transcriptQuery.data?.segments ?? [])
@@ -93,8 +85,6 @@ export function useReviewWorkspace(recordId: string | undefined) {
     reviewQuery,
     transcriptQuery,
     questionsQuery,
-    analysisQuery,
-    interviewerProfileQuery,
     structuredQuestionById,
     updateSegmentMutation,
     updateReviewMutation,

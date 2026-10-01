@@ -1,13 +1,8 @@
 import { useLocale } from "../../../../shared/i18n";
-import { MetricCard } from "../../../../shared/ui/MetricCard";
-import {
-  localizeReviewPayloadText,
-  type PlayRange,
-  type ReplayPresetModel,
-  type ReviewModel,
-} from "../reviewModel";
+import { Badge, Button } from "../../../../shared/ui/primitives";
+import { threadActionLabel, type PlayRange, type ReplayPresetModel, type ReviewModel } from "../reviewModel";
 
-/** Thread lane: follow-up chains with replay and preset launch actions. */
+/** Each opening question with the follow-ups it drew, and a replay of that chain. */
 export function ThreadReviewPanel({
   review,
   selectedThreadRootQuestionId,
@@ -15,6 +10,7 @@ export function ThreadReviewPanel({
   jumpToQuestion,
   playRange,
   openReplayLauncher,
+  canPlay,
 }: {
   review: ReviewModel;
   selectedThreadRootQuestionId: string | null;
@@ -22,104 +18,73 @@ export function ThreadReviewPanel({
   jumpToQuestion: (targetQuestionId: string | null) => void;
   playRange: PlayRange;
   openReplayLauncher: (preset: ReplayPresetModel) => void;
+  canPlay: boolean;
 }) {
   const { t } = useLocale();
 
+  if (review.followUpThreads.length === 0) {
+    return <p className="record-panel__empty">{t("recordReview.noThreads")}</p>;
+  }
+
   return (
-    <div className="page-stack">
-      <span className="page-card__label">{t("practicalReviewPanels.threads")}</span>
-      <h2 className="page-card__title">{t("practicalReviewPanels.followUpChainsReplay")}</h2>
-      <div className="stack-list">
-        {review.followUpThreads.map((thread) => (
-          <article
-            className={`page-card page-card--inset practical-thread-row${selectedThreadRootQuestionId === thread.id ? " practical-thread-row--selected" : ""}`}
+    <ol className="record-list">
+      {review.followUpThreads.map((thread) => {
+        const number = thread.rootOrderIndex + 1;
+        const nextStep = threadActionLabel(thread.recommendedAction, t);
+        return (
+          <li
+            aria-current={selectedThreadRootQuestionId === thread.id ? "true" : undefined}
+            className="record-item"
             id={`practical-thread-${thread.id}`}
             key={thread.id}
           >
-            <div className="section-heading">
-              <div>
-                <p className="section-heading__eyebrow">
-                  {t("practicalReviewPanels.rootLabel", { number: thread.rootOrderIndex + 1 })}
-                </p>
-                <h3 className="page-card__title">{thread.rootText}</h3>
-              </div>
-              <div className="chip-list">
-                {thread.weakQuestionCount > 0 ? (
-                  <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.weakChain")}</span>
-                ) : null}
-                {thread.quantifiedQuestionCount > 0 ? (
-                  <span className="detail-chip">{t("practicalReviewPanels.quantified")}</span>
-                ) : null}
-                {thread.structuredQuestionCount > 0 ? (
-                  <span className="detail-chip">{t("practicalReviewPanels.structured")}</span>
-                ) : null}
-                {thread.tradeoffAwareQuestionCount > 0 ? (
-                  <span className="detail-chip">{t("practicalReviewPanels.tradeoffAware")}</span>
-                ) : null}
-                {thread.uncertainQuestionCount > 0 ? (
-                  <span className="detail-chip detail-chip--accent">{t("practicalReviewPanels.uncertain")}</span>
-                ) : null}
-              </div>
-            </div>
-            <div className="practical-review-meta">
-              <div className="practical-review-meta__row">
-                <span className="practical-review-meta__label">{t("practicalReviewPanels.recommendedAction")}</span>
-                <span className="practical-review-meta__value">
-                  {thread.recommendedAction
-                    ? localizeReviewPayloadText(thread.recommendedAction, t)
-                    : t("practicalReviewPanels.continueReview")}
-                </span>
-              </div>
-              {thread.structuringSources.length > 0 ? (
-                <div className="practical-review-meta__row">
-                  <span className="practical-review-meta__label">{t("practicalReviewPanels.structuringSources")}</span>
-                  <span className="practical-review-meta__value">
-                    {thread.structuringSources.map((item) => localizeReviewPayloadText(item, t)).join(" · ")}
-                  </span>
-                </div>
-              ) : null}
-            </div>
-            <div className="stats-grid">
-              <MetricCard label={t("practicalReviewPanels.questions")} value={String(thread.questionIds.length)} />
-              <MetricCard label={t("practicalReviewPanels.followUps")} tone="muted" value={String(thread.followUpCount)} />
-              <MetricCard label={t("practicalReviewPanels.answered")} tone="accent" value={String(thread.answeredQuestionCount)} />
-            </div>
-            <div className="page-card__actions">
-              <button
-                className="secondary-button"
+            <p className="record-item__eyebrow">
+              <span>{t("recordReview.questionNumber", { number })}</span>
+              <span>{t("recordReview.threadCounts", { questions: thread.questionIds.length, followUps: thread.followUpCount, answered: thread.answeredQuestionCount })}</span>
+              {thread.weakQuestionCount > 0 ? <Badge tone="danger">{t("recordReview.weakInThread", { count: thread.weakQuestionCount })}</Badge> : null}
+              {thread.uncertainQuestionCount > 0 ? <Badge tone="warning">{t("recordReview.uncertain")}</Badge> : null}
+              {thread.quantifiedQuestionCount > 0 ? <Badge tone="success">{t("recordReview.quantified")}</Badge> : null}
+              {thread.tradeoffAwareQuestionCount > 0 ? <Badge tone="success">{t("recordReview.tradeoffAware")}</Badge> : null}
+            </p>
+            <h3 className="record-item__title">{thread.rootText}</h3>
+            {nextStep ? (
+              <p className="record-item__body">
+                <span className="record-item__label">{t("recordReview.nextStep")}</span>
+                {nextStep}
+              </p>
+            ) : null}
+            <div className="record-item__actions">
+              <Button
                 onClick={() => {
                   setSelectedThreadRootQuestionId(thread.id);
                   jumpToQuestion(thread.id);
                 }}
-                type="button"
+                size="sm"
+                variant="ghost"
               >
-                {t("practicalReviewPanels.focusRootQuestion")}
-              </button>
-              {thread.threadRange ? (
-                <button
-                  className="secondary-button"
+                {t("recordReview.showQuestion")}
+              </Button>
+              {canPlay && thread.threadRange ? (
+                <Button
                   onClick={() => {
                     setSelectedThreadRootQuestionId(thread.id);
-                    void playRange(thread.threadRange, t("practicalReviewPanels.threadLabel", { number: thread.rootOrderIndex + 1 }));
+                    void playRange(thread.threadRange, t("recordReview.threadNumber", { number }));
                   }}
-                  type="button"
+                  size="sm"
+                  variant="ghost"
                 >
-                  {t("practicalReviewPanels.playThread")}
-                </button>
+                  {t("recordReview.playThread")}
+                </Button>
               ) : null}
               {thread.replayLaunchPreset ? (
-                <button
-                  className="primary-button"
-                  onClick={() => openReplayLauncher(thread.replayLaunchPreset)}
-                  type="button"
-                >
-                  {localizeReviewPayloadText(thread.replayLaunchPreset.launchButtonLabel, t)}
-                </button>
+                <Button onClick={() => openReplayLauncher(thread.replayLaunchPreset)} size="sm">
+                  {t("recordReview.replayThread")}
+                </Button>
               ) : null}
             </div>
-          </article>
-        ))}
-      </div>
-    </div>
+          </li>
+        );
+      })}
+    </ol>
   );
 }

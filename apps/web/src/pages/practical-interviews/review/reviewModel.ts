@@ -1,13 +1,11 @@
-import type { useInterviewRecordAnalysisQuery } from "../../../features/practical-interview/api/useInterviewRecordAnalysisQuery";
 import type { useInterviewRecordDetailQuery } from "../../../features/practical-interview/api/useInterviewRecordDetailQuery";
 import type { useInterviewRecordQuestionsQuery } from "../../../features/practical-interview/api/useInterviewRecordQuestionsQuery";
 import type { useInterviewRecordReviewQuery } from "../../../features/practical-interview/api/useInterviewRecordReviewQuery";
 import type { useInterviewRecordTranscriptQuery } from "../../../features/practical-interview/api/useInterviewRecordTranscriptQuery";
-import type { useInterviewerProfileQuery } from "../../../features/practical-interview/api/useInterviewerProfileQuery";
 import { routeConfig } from "../../../shared/config/routes";
 import type { MessageKey, MessageParams } from "../../../shared/i18n";
 
-export const REVIEW_TABS = ["transcript", "question", "thread"] as const;
+export const REVIEW_TABS = ["question", "thread", "transcript"] as const;
 export type ReviewTab = (typeof REVIEW_TABS)[number];
 
 /** Which record route rendered the review workspace. */
@@ -17,8 +15,6 @@ export type ReviewRecordDetail = NonNullable<ReturnType<typeof useInterviewRecor
 export type ReviewModel = NonNullable<ReturnType<typeof useInterviewRecordReviewQuery>["data"]>;
 export type ReviewTranscript = NonNullable<ReturnType<typeof useInterviewRecordTranscriptQuery>["data"]>;
 export type ReviewQuestions = NonNullable<ReturnType<typeof useInterviewRecordQuestionsQuery>["data"]>;
-export type ReviewAnalysis = NonNullable<ReturnType<typeof useInterviewRecordAnalysisQuery>["data"]>;
-export type ReviewInterviewerProfile = ReturnType<typeof useInterviewerProfileQuery>["data"];
 export type ReplayPresetModel = ReviewModel["replayLaunchPreset"];
 export type StructuredQuestion = ReviewQuestions["items"][number];
 
@@ -37,31 +33,13 @@ export type SegmentDraftEdits = Record<
   { speakerType: string; cleanedText: string; confirmedText: string }
 >;
 
+/** Questions are the default view; the transcript is for checking what was said. */
 export function normalizeTab(value: string | null | undefined): ReviewTab {
-  if (value === "question" || value === "thread") {
+  if (value === "transcript" || value === "thread") {
     return value;
   }
 
-  return "transcript";
-}
-
-export function mapLaneTab(target?: string | null, payload?: Record<string, string>) {
-  const normalizedTarget = (target ?? "").toLowerCase();
-  const payloadTab = normalizeTab(payload?.recommendedTab ?? payload?.tab);
-
-  if (normalizedTarget.includes("question")) {
-    return "question" as const;
-  }
-
-  if (normalizedTarget.includes("thread")) {
-    return "thread" as const;
-  }
-
-  if (normalizedTarget.includes("transcript")) {
-    return "transcript" as const;
-  }
-
-  return payloadTab;
+  return "question";
 }
 
 export function buildHeatmapAnchorPath(params: {
@@ -113,42 +91,42 @@ export type ReviewTranslate = (key: MessageKey, params?: MessageParams) => strin
 
 /** Fixed server payload labels that have a catalog translation, keyed by the raw payload value. */
 const reviewPayloadMessageKeys: Record<string, MessageKey> = {
-  Reviewed: "practicalReview.payloadReviewed",
-  Pending: "practicalReview.payloadPending",
-  Confirmed: "practicalReview.payloadConfirmed",
-  Completed: "practicalReview.payloadCompleted",
-  Failed: "practicalReview.payloadFailed",
-  warning: "practicalReview.payloadWarning",
-  high: "practicalReview.payloadHigh",
-  needs_review: "practicalReview.payloadNeedsReview",
-  ready: "practicalReview.payloadReady",
-  Question: "practicalReview.payloadQuestion",
-  Answer: "practicalReview.payloadAnswer",
-  Behavioral: "practicalReview.payloadBehavioral",
-  "Resume Linked": "practicalReview.payloadResumeLinked",
-  "Question lane": "practicalReview.payloadQuestionLane",
-  "Transcript lane": "practicalReview.payloadTranscriptLane",
-  "Thread lane": "practicalReview.payloadThreadLane",
-  "Review transcript lane": "practicalReview.payloadReviewTranscriptLane",
-  "Review structured questions": "practicalReview.payloadReviewStructuredQuestions",
-  "Transcript needs final review": "practicalReview.payloadTranscriptNeedsFinalReview",
-  "Check follow-up chains": "practicalReview.payloadCheckFollowUpChains",
-  "Question structure is the replay backbone.": "practicalReview.payloadQuestionStructureBackbone",
-  "Transcript issues affect all downstream structuring.": "practicalReview.payloadTranscriptIssuesDownstream",
-  "Thread quality affects realistic replay.": "practicalReview.payloadThreadQualityReplay",
-  "Original replay": "practicalReview.payloadOriginalReplay",
-  "Pressure variant": "practicalReview.payloadPressureVariant",
-  "Replay this interview": "practicalReview.payloadReplayThisInterview",
-  "Use the reviewed practical interview as a replay seed.": "practicalReview.payloadReplaySeedDescription",
-  "Start replay": "practicalReview.payloadStartReplay",
-  "Low confidence words detected.": "practicalReview.payloadLowConfidenceWords",
-  "Review segment 1": "practicalReview.payloadReviewSegmentOne",
-  ai_enriched: "practicalReview.payloadAiEnriched",
-  confirmed: "practicalReview.payloadConfirmedSource",
-  deep_dive: "practicalReview.payloadDeepDive",
-  Skeptical: "practicalReview.payloadSkeptical",
-  candidate: "practicalReview.payloadCandidateLower",
-  Candidate: "practicalReview.payloadCandidate",
+  Reviewed: "recordReview.payloadReviewed",
+  Pending: "recordReview.payloadPending",
+  Confirmed: "recordReview.payloadConfirmed",
+  Completed: "recordReview.payloadCompleted",
+  Failed: "recordReview.payloadFailed",
+  warning: "recordReview.payloadWarning",
+  high: "recordReview.payloadHigh",
+  needs_review: "recordReview.payloadNeedsReview",
+  ready: "recordReview.payloadReady",
+  Question: "recordReview.payloadQuestion",
+  Answer: "recordReview.payloadAnswer",
+  Behavioral: "recordReview.payloadBehavioral",
+  "Resume Linked": "recordReview.payloadResumeLinked",
+  "Question lane": "recordReview.payloadQuestionLane",
+  "Transcript lane": "recordReview.payloadTranscriptLane",
+  "Thread lane": "recordReview.payloadThreadLane",
+  "Review transcript lane": "recordReview.payloadReviewTranscriptLane",
+  "Review structured questions": "recordReview.payloadReviewStructuredQuestions",
+  "Transcript needs final review": "recordReview.payloadTranscriptNeedsFinalReview",
+  "Check follow-up chains": "recordReview.payloadCheckFollowUpChains",
+  "Question structure is the replay backbone.": "recordReview.payloadQuestionStructureBackbone",
+  "Transcript issues affect all downstream structuring.": "recordReview.payloadTranscriptIssuesDownstream",
+  "Thread quality affects realistic replay.": "recordReview.payloadThreadQualityReplay",
+  "Original replay": "recordReview.payloadOriginalReplay",
+  "Pressure variant": "recordReview.payloadPressureVariant",
+  "Replay this interview": "recordReview.payloadReplayThisInterview",
+  "Use the reviewed practical interview as a replay seed.": "recordReview.payloadReplaySeedDescription",
+  "Start replay": "recordReview.payloadStartReplay",
+  "Low confidence words detected.": "recordReview.payloadLowConfidenceWords",
+  "Review segment 1": "recordReview.payloadReviewSegmentOne",
+  ai_enriched: "recordReview.payloadAiEnriched",
+  confirmed: "recordReview.payloadConfirmedSource",
+  deep_dive: "recordReview.payloadDeepDive",
+  Skeptical: "recordReview.payloadSkeptical",
+  candidate: "recordReview.payloadCandidateLower",
+  Candidate: "recordReview.payloadCandidate",
 };
 
 /** Translates a known server payload label; unknown values pass through unchanged. */
@@ -166,23 +144,58 @@ export function localizeReplayModeLabel(value: string | null | undefined, t: Rev
   return localizeReviewPayloadText(value, t);
 }
 
-/** Lane and replay-blocker signals shared by the overview and the brief. */
-export function deriveReviewSignals(review: ReviewModel, t: ReviewTranslate) {
-  const laneNeedsReviewTotal = review.laneItems.reduce(
-    (count, lane) => count + lane.needsReviewCount,
-    0,
-  );
-  const primaryReviewLane =
-    [...review.laneItems].sort((left, right) => left.sortOrder - right.sortOrder)[0] ?? null;
-  const replayBlockerCount = review.replayReadiness.blockerDetails.length;
-  const reviewSignal =
-    replayBlockerCount > 0
-      ? t("practicalReview.clearReplayBlockers")
-      : primaryReviewLane
-        ? t("practicalReview.openLane", {
-            lane: localizeReviewPayloadText(primaryReviewLane.badgeText, t),
-          })
-        : t("practicalReview.stabilizeActiveLane");
+const QUESTION_TYPES: Record<string, MessageKey> = {
+  behavioral: "recordReview.typeBehavioral",
+  ownership: "recordReview.typeOwnership",
+  storytelling: "recordReview.typeStorytelling",
+  technical_deep_dive: "recordReview.typeTechnicalDeepDive",
+  tradeoff: "recordReview.typeTradeoff",
+  verification: "recordReview.typeVerification",
+  project: "recordReview.typeProject",
+  technical: "recordReview.typeTechnical",
+  system_design: "recordReview.typeSystemDesign",
+};
 
-  return { laneNeedsReviewTotal, primaryReviewLane, replayBlockerCount, reviewSignal };
+const WEAKNESS_TAGS: Record<string, MessageKey> = {
+  missing_metric: "recordReview.weakMissingMetric",
+  missing_metrics: "recordReview.weakMissingMetric",
+  missing_tradeoff: "recordReview.weakMissingTradeoff",
+  missing_star_shape: "recordReview.weakMissingStructure",
+};
+
+const RESUME_SECTIONS: Record<string, MessageKey> = {
+  project: "recordReview.sectionProject",
+  experience: "recordReview.sectionExperience",
+  skill: "recordReview.sectionSkill",
+  competency: "recordReview.sectionCompetency",
+  summary: "recordReview.sectionSummary",
+};
+
+/** The question's kind, or null for follow-ups (they carry their own badge) and unknown codes. */
+export function questionTypeLabel(code: string | null | undefined, t: ReviewTranslate) {
+  const key = code ? QUESTION_TYPES[code] : undefined;
+  return key ? t(key) : null;
+}
+
+/** A weakness tag in words; unknown codes are shown with spaces instead of underscores. */
+export function weaknessTagLabel(tag: string, t: ReviewTranslate) {
+  const key = WEAKNESS_TAGS[tag];
+  return key ? t(key) : tag.replace(/_/g, " ");
+}
+
+export function resumeSectionLabel(section: string, t: ReviewTranslate) {
+  const key = RESUME_SECTIONS[section];
+  return key ? t(key) : section;
+}
+
+const THREAD_ACTIONS: Record<string, MessageKey> = {
+  review_weak_chain: "recordReview.actionReviewWeakChain",
+  replay_chain: "recordReview.actionReplayChain",
+  stable_chain: "recordReview.actionStableChain",
+};
+
+/** The server's next step for a follow-up chain, in words; unknown codes are hidden. */
+export function threadActionLabel(code: string | null | undefined, t: ReviewTranslate) {
+  const key = code ? THREAD_ACTIONS[code] : undefined;
+  return key ? t(key) : null;
 }

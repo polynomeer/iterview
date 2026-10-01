@@ -4,13 +4,11 @@ import { describe, expect, it, vi } from "vitest";
 import { PracticalInterviewOverviewPage } from "../../pages/practical-interviews/PracticalInterviewOverviewPage";
 import { useCreateInterviewSessionMutation } from "../../features/interview/api/useCreateInterviewSessionMutation";
 import { useConfirmInterviewRecordMutation } from "../../features/practical-interview/api/useConfirmInterviewRecordMutation";
-import { useInterviewRecordAnalysisQuery } from "../../features/practical-interview/api/useInterviewRecordAnalysisQuery";
 import { useInterviewRecordDetailQuery } from "../../features/practical-interview/api/useInterviewRecordDetailQuery";
 import { useInterviewRecordQuestionsQuery } from "../../features/practical-interview/api/useInterviewRecordQuestionsQuery";
 import { useRetryInterviewRecordTranscriptionMutation } from "../../features/practical-interview/api/useRetryInterviewRecordTranscriptionMutation";
 import { useInterviewRecordReviewQuery } from "../../features/practical-interview/api/useInterviewRecordReviewQuery";
 import { useInterviewRecordTranscriptQuery } from "../../features/practical-interview/api/useInterviewRecordTranscriptQuery";
-import { useInterviewerProfileQuery } from "../../features/practical-interview/api/useInterviewerProfileQuery";
 import { useUpdateInterviewReviewMutation } from "../../features/practical-interview/api/useUpdateInterviewReviewMutation";
 import { useUpdateInterviewTranscriptSegmentMutation } from "../../features/practical-interview/api/useUpdateInterviewTranscriptSegmentMutation";
 import { renderWithProviders } from "../utils";
@@ -20,9 +18,6 @@ vi.mock("../../features/interview/api/useCreateInterviewSessionMutation", () => 
 }));
 vi.mock("../../features/practical-interview/api/useConfirmInterviewRecordMutation", () => ({
   useConfirmInterviewRecordMutation: vi.fn(),
-}));
-vi.mock("../../features/practical-interview/api/useInterviewRecordAnalysisQuery", () => ({
-  useInterviewRecordAnalysisQuery: vi.fn(),
 }));
 vi.mock("../../features/practical-interview/api/useInterviewRecordDetailQuery", () => ({
   useInterviewRecordDetailQuery: vi.fn(),
@@ -38,9 +33,6 @@ vi.mock("../../features/practical-interview/api/useInterviewRecordReviewQuery", 
 }));
 vi.mock("../../features/practical-interview/api/useInterviewRecordTranscriptQuery", () => ({
   useInterviewRecordTranscriptQuery: vi.fn(),
-}));
-vi.mock("../../features/practical-interview/api/useInterviewerProfileQuery", () => ({
-  useInterviewerProfileQuery: vi.fn(),
 }));
 vi.mock("../../features/practical-interview/api/useUpdateInterviewReviewMutation", () => ({
   useUpdateInterviewReviewMutation: vi.fn(),
@@ -115,23 +107,6 @@ function mockConfirmedReviewPayload() {
           derivedFromResumeRecordId: "31",
         },
       ],
-    },
-    isLoading: false,
-    isError: false,
-    error: null,
-    refetch: vi.fn(),
-  } as never);
-  vi.mocked(useInterviewRecordAnalysisQuery).mockReturnValue({
-    data: { topicTags: ["Caching"] },
-    isLoading: false,
-    isError: false,
-    error: null,
-    refetch: vi.fn(),
-  } as never);
-  vi.mocked(useInterviewerProfileQuery).mockReturnValue({
-    data: {
-      styleTags: ["deep_dive"],
-      toneProfile: "Skeptical",
     },
     isLoading: false,
     isError: false,
@@ -388,20 +363,6 @@ describe("PracticalInterviewReviewPage", () => {
       error: null,
       refetch: vi.fn(),
     } as never);
-    vi.mocked(useInterviewRecordAnalysisQuery).mockReturnValue({
-      data: undefined,
-      isLoading: false,
-      isError: false,
-      error: null,
-      refetch: vi.fn(),
-    } as never);
-    vi.mocked(useInterviewerProfileQuery).mockReturnValue({
-      data: undefined,
-      isLoading: false,
-      isError: false,
-      error: null,
-      refetch: vi.fn(),
-    } as never);
     vi.mocked(useInterviewRecordReviewQuery).mockReturnValue({
       data: undefined,
       isLoading: false,
@@ -448,10 +409,11 @@ describe("PracticalInterviewReviewPage", () => {
       { route: "/interview/records/record-2?processing=1", locale: "ko" },
     );
 
-    expect(screen.getByText("전사 추출 진행 중")).toBeInTheDocument();
-    expect(screen.getByText("상태 새로고침")).toBeInTheDocument();
-    expect(screen.getByText("업로드한 원본이 보관되었습니다")).toBeInTheDocument();
-    expect(screen.getByText(/처리 시작 Mar 16, 2026, 10:00 AM/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "녹음을 받아쓰는 중" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "상태 다시 확인" })).toBeInTheDocument();
+    expect(screen.getByText("마지막 시도")).toBeInTheDocument();
+    expect(screen.getByText("Mar 16, 2026, 10:00 AM")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "받아쓰기 다시 시도" })).not.toBeInTheDocument();
   });
 
   it("renders retry controls when transcript extraction failed", () => {
@@ -505,20 +467,6 @@ describe("PracticalInterviewReviewPage", () => {
       error: null,
       refetch: vi.fn(),
     } as never);
-    vi.mocked(useInterviewRecordAnalysisQuery).mockReturnValue({
-      data: undefined,
-      isLoading: false,
-      isError: false,
-      error: null,
-      refetch: vi.fn(),
-    } as never);
-    vi.mocked(useInterviewerProfileQuery).mockReturnValue({
-      data: undefined,
-      isLoading: false,
-      isError: false,
-      error: null,
-      refetch: vi.fn(),
-    } as never);
     vi.mocked(useInterviewRecordReviewQuery).mockReturnValue({
       data: undefined,
       isLoading: false,
@@ -565,55 +513,74 @@ describe("PracticalInterviewReviewPage", () => {
       { route: "/interview/records/record-3", locale: "ko" },
     );
 
-    expect(screen.getByText("전사 추출에 확인이 필요합니다")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "받아쓰기에 실패했어요" })).toBeInTheDocument();
     expect(screen.getByText("The audio could not be transcribed.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "전사 다시 시도" })).toBeInTheDocument();
+    expect(screen.getByText("녹음 파일은 보관되어 있어서 다시 올리지 않아도 재시도할 수 있어요.")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "전사 다시 시도" }));
+    fireEvent.click(screen.getByRole("button", { name: "받아쓰기 다시 시도" }));
 
     expect(retryMutateAsync).toHaveBeenCalledTimes(1);
   });
 
-  it("renders lane dashboard, transcript actions, and replay launcher from review payload", () => {
-    mockConfirmedReviewPayload();
-
-    renderWithProviders(
+  function renderRecord() {
+    return renderWithProviders(
       <Routes>
         <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
       </Routes>,
       { route: "/interview/records/record-1", locale: "ko" },
     );
+  }
 
-    expect(screen.getByText("리뷰 원칙")).toBeInTheDocument();
-    expect(screen.getByText("먼저 열기")).toBeInTheDocument();
-    expect(screen.getByText("서버 우선순위 레인")).toBeInTheDocument();
-    expect(screen.getAllByText("리플레이 준비 상태").length).toBeGreaterThan(0);
-    expect(screen.getByText("전사 위에 리플레이 컨텍스트를 유지하세요")).toBeInTheDocument();
-    const replaySection = screen.getByText("오디오 리플레이").closest("section");
-    expect(replaySection).not.toBeNull();
-    const replayScope = within(replaySection!);
-    expect(replayScope.getByRole("button", { name: "재생" })).toBeInTheDocument();
-    expect(replayScope.getByRole("slider", { name: "리플레이 위치" })).toBeInTheDocument();
-    expect(replayScope.getByRole("button", { name: "타임라인" })).toBeInTheDocument();
-    expect(replayScope.getByRole("button", { name: "챕터" })).toBeInTheDocument();
-    expect(replayScope.getByText("1번 세그먼트")).toBeInTheDocument();
+  it("opens on the questions with the interview facts and the recording beside them", () => {
+    mockConfirmedReviewPayload();
+    renderRecord();
 
-    fireEvent.click(screen.getByRole("button", { name: "전사 리뷰" }));
+    expect(screen.getByRole("heading", { level: 1, name: "Datadog · Backend Engineer" })).toBeInTheDocument();
+    expect(screen.getByText("확정 전")).toBeInTheDocument();
+    expect(screen.getByText("Overall summary")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /질문/, selected: true })).toBeInTheDocument();
+    // Internal lane narration is gone.
+    expect(screen.queryByText(/레인/)).not.toBeInTheDocument();
 
-    expect(screen.getAllByText("I used Redis for caching.").length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: "세그먼트 재생" })).toBeInTheDocument();
-    fireEvent.click(replayScope.getByRole("button", { name: "챕터" }));
-    expect(replayScope.getByRole("button", { name: /Q1\. How did you validate cache invalidation safety\?/i })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "리플레이 시작" }));
-
-    expect(screen.getByText("이 면접 리플레이")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("원본 리플레이")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "질문 리뷰" }));
-    expect(screen.getByRole("button", { name: "문답 재생" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "히트맵 앵커 열기" })).toHaveAttribute(
+    expect(screen.getByRole("heading", { level: 3, name: "How did you validate cache invalidation safety?" })).toBeInTheDocument();
+    expect(within(screen.getByRole("tabpanel")).getByText("Talked about invalidation but skipped rollback detail.")).toBeInTheDocument();
+    expect(screen.getByText("이력서 연결")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "압박 지도에서 보기" })).toHaveAttribute(
       "href",
       "/resume/resume-version-1/heatmap?selectedAnchor=project%3A31&scope=follow_up&weakOnly=true",
+    );
+    expect(screen.getByRole("link", { name: "답변 연습" })).toHaveAttribute("href", "/questions/catalog-question-1/answer");
+    expect(screen.getByRole("button", { name: "질문 듣기" })).toBeInTheDocument();
+
+    const player = screen.getByRole("region", { name: "녹음" });
+    expect(within(player).getByRole("slider", { name: "재생 위치" })).toBeInTheDocument();
+    expect(within(player).getByRole("button", { name: "재생" })).toBeInTheDocument();
+    expect(within(player).getByRole("button", { name: /Q1\. How did you validate cache invalidation safety\?/ })).toBeInTheDocument();
+    fireEvent.click(within(player).getByRole("radio", { name: "전사" }));
+    expect(within(player).getByRole("button", { name: /1번 구간/ })).toBeInTheDocument();
+  });
+
+  it("checks the transcript and saves a corrected segment", async () => {
+    mockConfirmedReviewPayload();
+    const saveSegment = vi.fn().mockResolvedValue({});
+    vi.mocked(useUpdateInterviewTranscriptSegmentMutation).mockReturnValue({ mutateAsync: saveSegment, isPending: false, isError: false } as never);
+    renderRecord();
+
+    fireEvent.click(screen.getByRole("tab", { name: "전사" }));
+    expect(screen.getByRole("heading", { name: /먼저 확인할 구간/ })).toBeInTheDocument();
+    expect(screen.getByText("알아듣기 어려운 단어가 있어요.")).toBeInTheDocument();
+    expect(screen.getByText("I used Redis for caching.")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "수정" }));
+    fireEvent.change(screen.getByLabelText("다듬은 문장"), { target: { value: "I used Redis as a cache-aside layer." } });
+    expect(screen.getByText("저장하지 않은 전사 수정이 1개 있어요.")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "저장" }));
+    await waitFor(() =>
+      expect(saveSegment).toHaveBeenCalledWith({
+        segmentId: "segment-1",
+        payload: { speakerType: "candidate", cleanedText: "I used Redis as a cache-aside layer.", confirmedText: null },
+      }),
     );
   });
 
@@ -621,25 +588,20 @@ describe("PracticalInterviewReviewPage", () => {
     mockConfirmedReviewPayload();
     const createReplay = vi.fn().mockResolvedValue({ id: null });
     vi.mocked(useCreateInterviewSessionMutation).mockReturnValue({ mutateAsync: createReplay, isPending: false, isError: false, error: null } as never);
+    renderRecord();
 
-    renderWithProviders(
-      <Routes>
-        <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
-      </Routes>,
-      { route: "/interview/records/record-1", locale: "ko" },
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: "리플레이 시작" }));
-    const launcher = screen.getByText("이 면접 리플레이").closest("section");
-    expect(launcher).not.toBeNull();
-    const launchButtons = within(launcher!).getAllByRole("button").filter((button) => button.className.includes("primary-button"));
-    fireEvent.click(launchButtons[0]);
+    fireEvent.click(screen.getByRole("button", { name: "이 면접 다시 연습" }));
+    const dialog = screen.getByRole("dialog", { name: "이 면접 다시 연습" });
+    expect(within(dialog).getByDisplayValue("원래 순서대로")).toBeInTheDocument();
+    expect(within(dialog).getByText("이 면접에서 다시 쓸 수 있는 질문은 5개예요.")).toBeInTheDocument();
+    fireEvent.click(within(dialog).getByRole("button", { name: "모의면접 시작" }));
 
     await waitFor(() => expect(createReplay).toHaveBeenCalled());
     expect(createReplay.mock.calls[0][0]).toMatchObject({
       sessionType: "replay_mock",
       sourceInterviewRecordId: "record-1",
       resumeVersionId: "resume-version-1",
+      replayMode: "original_replay",
     });
   });
 
@@ -653,12 +615,7 @@ describe("PracticalInterviewReviewPage", () => {
       error: null,
     } as never);
 
-    const view = renderWithProviders(
-      <Routes>
-        <Route element={<PracticalInterviewOverviewPage />} path="/interview/records/:recordId" />
-      </Routes>,
-      { route: "/interview/records/record-1", locale: "ko" },
-    );
+    const view = renderRecord();
 
     vi.mocked(useInterviewRecordDetailQuery).mockImplementation(loadedDetail);
 
@@ -669,6 +626,6 @@ describe("PracticalInterviewReviewPage", () => {
         </Routes>,
       ),
     ).not.toThrow();
-    expect(screen.getByText("리뷰 원칙")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Datadog · Backend Engineer" })).toBeInTheDocument();
   });
 });
