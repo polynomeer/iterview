@@ -1,0 +1,109 @@
+/* 근거 편집: per-claim evidence form (docs/09 §4.5, mockup 06-resume, ADR 0081). Token-only styles. */
+
+.claims { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+.claims__toolbar { display: flex; justify-content: flex-end; }
+
+.claims__grid {
+  display: grid;
+  grid-template-columns: minmax(16rem, 2fr) minmax(0, 3fr);
+  gap: var(--iv-space-5);
+  align-items: start;
+}
+
+/* Claim list */
+.claim-list { min-width: 0; }
+.claim-list__progress { color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+.claim-list__filter { padding: 0 var(--iv-space-5) var(--iv-space-3); overflow-x: auto; }
+.claim-list__empty { margin: 0; padding: var(--iv-space-4) var(--iv-space-5); color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.claim-group { border-top: 1px solid var(--iv-border); }
+
+.claim-group__title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--iv-space-1) var(--iv-space-2);
+  margin: 0;
+  padding: var(--iv-space-3) var(--iv-space-5) var(--iv-space-2);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-xs);
+  font-weight: var(--iv-weight-semibold);
+}
+
+.claim-group__meta { font-weight: var(--iv-weight-regular); }
+.claim-group__items { margin: 0; padding: 0; list-style: none; }
+
+.claim-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--iv-space-2) var(--iv-space-3);
+  align-items: center;
+  width: 100%;
+  padding: var(--iv-space-3) var(--iv-space-5);
+  border: 0;
+  border-top: 1px solid var(--iv-border);
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: var(--iv-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--iv-duration-fast) var(--iv-ease);
+}
+
+.claim-row:hover { background: var(--iv-surface-hover); }
+.claim-row:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--iv-focus-ring); }
+.claim-row--selected { border-left-color: var(--iv-accent); background: var(--iv-accent-soft); }
+.claim-row__title { min-width: 0; font-size: var(--iv-text-sm); font-weight: var(--iv-weight-medium); overflow-wrap: anywhere; }
+
+.claim-meter { display: inline-flex; grid-column: 1 / -1; gap: var(--iv-space-1); }
+.claim-meter__cell { width: 1.25rem; height: 0.25rem; border-radius: var(--iv-radius-full); background: var(--iv-border); }
+.claim-meter__cell--done { background: var(--iv-success); }
+
+/* Claim editor */
+.claim-editor { min-width: 0; }
+.claim-editor__body { display: flex; flex-direction: column; gap: var(--iv-space-4); padding: var(--iv-space-4) var(--iv-space-5) var(--iv-space-5); }
+
+.claim-editor__source {
+  margin: 0;
+  padding: var(--iv-space-3) var(--iv-space-4);
+  border-radius: var(--iv-radius-md);
+  background: var(--iv-surface-sunken);
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+  line-height: var(--iv-leading-body);
+}
+
+.claim-editor__source-label { display: block; margin-bottom: var(--iv-space-1); color: var(--iv-text-subtle); font-size: var(--iv-text-xs); font-weight: var(--iv-weight-semibold); }
+
+.claim-form { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+
+.claim-form__input.ui-textarea {
+  min-height: 4.5rem;
+  padding: var(--iv-space-2) var(--iv-space-3);
+  font-size: var(--iv-text-md);
+  line-height: var(--iv-leading-body);
+}
+
+.claim-form__input--risk.ui-textarea { border-color: var(--iv-danger); }
+.claim-form__field:has(.claim-form__input--risk) .ui-field__hint { color: var(--iv-danger); }
+
+.claim-form__actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--iv-space-3); }
+.claim-form__status { color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.claim-questions { border-top: 1px solid var(--iv-border); }
+
+.claim-questions__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--iv-space-2);
+  padding: var(--iv-space-4) var(--iv-space-5) var(--iv-space-2);
+}
+
+.claim-questions__title { margin: 0; font-size: var(--iv-text-md); font-weight: var(--iv-weight-semibold); }
+.claim-questions__empty { margin: 0; padding: 0 var(--iv-space-5) var(--iv-space-5); color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+@media (max-width: 960px) {
+  .claims__grid { grid-template-columns: minmax(0, 1fr); }
+}

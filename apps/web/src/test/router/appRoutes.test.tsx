@@ -24,6 +24,7 @@ describe("app routes", () => {
     ["/resume/tailor", routeConfig.resumeTailor.path],
     ["/resume/tailor/job-postings", routeConfig.resumeTailorJobPostings.path],
     ["/resume/3/claims", routeConfig.resumeEditor.path],
+    ["/resume/3/claims/document", routeConfig.resumeDocumentEditor.path],
     ["/resume/3/tailor/9", routeConfig.resumeTailorAnalysisDetail.path],
     ["/interview", routeConfig.interview.path],
     ["/interview/sessions/4/result", routeConfig.interviewSessionResult.path],

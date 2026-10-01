@@ -18,6 +18,7 @@ import { questionModel } from "./questionModel";
 import { questionWorkspace } from "./questionWorkspace";
 import { resultAnalysis } from "./resultAnalysis";
 import { resultModel } from "./resultModel";
+import { resumeClaims } from "./resumeClaims";
 import { resumeEditor } from "./resumeEditor";
 import { resumeHeatmap } from "./resumeHeatmap";
 import { resumeHub } from "./resumeHub";
@@ -35,6 +36,7 @@ export const catalog = {
   authScreen,
   settingsPage: settings,
   resumeEditor,
+  resumeClaims,
   home,
   questionWorkspace,
   answerEditor,

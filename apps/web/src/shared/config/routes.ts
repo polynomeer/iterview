@@ -85,9 +85,15 @@ export const routeConfig = {
   ),
   resumeEditor: createDynamicRoute(
     "/resume/:versionId/claims",
-    "Resume Editor",
+    "Resume Claims",
     true,
     ({ versionId }) => `/resume/${versionId}/claims`,
+  ),
+  resumeDocumentEditor: createDynamicRoute(
+    "/resume/:versionId/claims/document",
+    "Resume Document Editor",
+    true,
+    ({ versionId }) => `/resume/${versionId}/claims/document`,
   ),
   resumeHeatmapAnchor: createDynamicRoute(
     "/resume/:versionId/heatmap/anchors/:anchorType/:anchorId",

@@ -1,5 +1,6 @@
 import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
-import { Button, ErrorState, PageSkeleton } from "../../shared/ui/primitives";
+import { routeConfig } from "../../shared/config/routes";
+import { Button, ButtonLink, ErrorState, PageSkeleton } from "../../shared/ui/primitives";
 import "./legacy-editor.css";
 import "./editor.css";
 import { EditorHeader } from "./components/EditorHeader";
@@ -50,6 +51,9 @@ export function ResumeEditorPage() {
   return (
     <section aria-label={t("resumeEditor.evidenceEditor")} className="page-container page-container--hidden">
       <div className="resume-editor-toolbar">
+        <ButtonLink size="sm" to={routeConfig.resumeEditor.buildPath({ versionId: ctrl.safeVersionId })} variant="ghost">
+          {t("resumeClaims.backToClaims")}
+        </ButtonLink>
         <span className="resume-editor-toolbar__file">{workspace.sourceFileName}</span>
         <Button loading={saving} onClick={() => void saveCurrentDraft("manual_edit")} variant="primary">
           {t("resumeEditor.saveDraft")}

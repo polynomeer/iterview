@@ -1,4 +1,5 @@
 import type {
+  ResumeAchievementEvidenceDto,
   ResumeAchievementItemResponseDto,
   ResumeAwardItemResponseDto,
   ResumeCertificationItemResponseDto,
@@ -119,6 +120,15 @@ export type ResumeExtractionModel = {
   canRetry: boolean;
 };
 
+/** What the user wrote to back one claim (ADR 0081). Empty strings are unanswered fields. */
+export type ResumeClaimEvidenceModel = {
+  situation: string;
+  role: string;
+  measurement: string;
+  result: string;
+  updatedAt: string | null;
+};
+
 export type ResumeSnapshotModel = {
   profile: {
     fullName: string | null;
@@ -181,6 +191,10 @@ export type ResumeSnapshotModel = {
     metricText?: string;
     impactSummary: string;
     severityHint?: string;
+    sourceText?: string;
+    experienceId?: string;
+    projectId?: string;
+    evidence: ResumeClaimEvidenceModel;
   }>;
   education: Array<{
     id: string;
@@ -215,6 +229,20 @@ export type ResumeMappedExperienceModel = ResumeSnapshotModel["experiences"][num
 export type ResumeMappedProjectModel = ResumeSnapshotModel["projects"][number] & {
   sourceJoinKey: string;
 };
+
+function optionalId(value?: string | number | null) {
+  return value === null || value === undefined ? undefined : String(value);
+}
+
+export function mapClaimEvidence(evidence?: ResumeAchievementEvidenceDto | null): ResumeClaimEvidenceModel {
+  return {
+    situation: evidence?.situationText ?? "",
+    role: evidence?.roleText ?? "",
+    measurement: evidence?.measurementText ?? "",
+    result: evidence?.resultText ?? "",
+    updatedAt: evidence?.updatedAt ?? null,
+  };
+}
 
 function formatFileSize(bytes?: number | null) {
   if (bytes === null || bytes === undefined || Number.isNaN(bytes)) {
@@ -638,6 +666,10 @@ export function mapResumeSnapshotsToModel(params: {
           achievement.impactSummary ??
           translate("resumeModel.noImpactSummary"),
         severityHint: achievement.severityHint ?? undefined,
+        sourceText: achievement.sourceText ?? undefined,
+        experienceId: optionalId(achievement.resumeExperienceSnapshotId),
+        projectId: optionalId(achievement.resumeProjectSnapshotId),
+        evidence: mapClaimEvidence(achievement.evidence),
       })),
     education: toArray(educationResponse.items)
       .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0))

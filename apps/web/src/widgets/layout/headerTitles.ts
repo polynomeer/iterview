@@ -18,6 +18,7 @@ const HEADER_TITLES: Array<[path: string, titleKey: MessageKey]> = [
   [routeConfig.resumeOverview.path, "nav.resume"],
   [routeConfig.resumeVersions.path, "nav.resumeVersions"],
   [routeConfig.resumeEditor.path, "header.resumeEditor"],
+  [routeConfig.resumeDocumentEditor.path, "header.resumeEditor"],
   [`${routeConfig.resumeHeatmap.path}/*`, "header.resumeHeatmap"],
   [`${routeConfig.resumeTailor.path}/*`, "nav.resumeTailor"],
   [routeConfig.resumeTailorAnalysisList.path, "nav.resumeTailor"],

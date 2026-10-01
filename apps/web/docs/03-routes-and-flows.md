@@ -27,7 +27,8 @@ The route map follows the five-area information architecture adopted in `docs/ad
 | (public) | 둘러보기 | `/explore` | public |
 | 이력서 | (hub entry) | `/resume` redirects to the active version's hub, or shows the first upload | protected |
 | 이력서 | 개요 tab | `/resume/:versionId` | protected |
-| 이력서 | 근거 편집 tab | `/resume/:versionId/claims` | protected |
+| 이력서 | 근거 편집 tab: per-claim evidence form (ADR 0081) | `/resume/:versionId/claims` | protected |
+| 이력서 | 근거 편집 document editor, linked from the claim form | `/resume/:versionId/claims/document` | protected |
 | 이력서 | 면접 압박 지도 tab | `/resume/:versionId/heatmap`, `/resume/:versionId/heatmap/anchors/:anchorType/:anchorId` | protected |
 | 이력서 | 공고 맞춤 tab | `/resume/:versionId/tailor`, `/resume/:versionId/tailor/:analysisId` | protected |
 | 이력서 | 버전 관리 tab | `/resume/:versionId/versions` | protected |

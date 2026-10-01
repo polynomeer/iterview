@@ -4,7 +4,9 @@ import type {
   CreateResumeRequestDto,
   CreateResumeVersionRequestDto,
   ResumeDto,
+  ResumeAchievementItemDto,
   ResumeAchievementItemResponseDto,
+  UpdateResumeAchievementEvidenceRequestDto,
   ResumeAwardItemResponseDto,
   ResumeCertificationItemResponseDto,
   ResumeCompetencyItemResponseDto,
@@ -127,6 +129,17 @@ export function getResumeVersionAchievementsRequest(versionId: string, signal?: 
   return httpClient.get<ResumeAchievementItemResponseDto>(
     apiEndpoints.resumeVersions.achievements(versionId),
     { signal },
+  );
+}
+
+export function updateResumeAchievementEvidenceRequest(
+  versionId: string,
+  achievementId: string,
+  body: UpdateResumeAchievementEvidenceRequestDto,
+) {
+  return httpClient.put<ResumeAchievementItemDto, UpdateResumeAchievementEvidenceRequestDto>(
+    apiEndpoints.resumeVersions.achievementEvidence(versionId, achievementId),
+    { body },
   );
 }
 

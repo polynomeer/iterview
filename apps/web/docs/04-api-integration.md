@@ -128,9 +128,12 @@ Primary endpoints:
   - `/certifications`
   - `/awards`
   - `/risks`
+- `PUT /api/resume-versions/{versionId}/achievements/{achievementId}/evidence`
 - `POST /api/resume-versions/{versionId}/activate`
 - `POST /api/resume-versions/{versionId}/re-extract`
 - `GET /api/resume-versions/{versionId}/file`
+
+The 근거 편집 tab (`ResumeClaimsPage`) lists `/achievements` grouped by project or experience. Each claim's `evidence` fills four fields: 상황, 내 역할, 측정 방법, and 결과 수치. Completeness is derived from the fields on the client. Saving sends all four through `PUT …/evidence` and writes the response back into the snapshot cache. A field also saves when it loses focus. Linked questions come from the heatmap item of the claim's project, or its experience (ADR 0081).
 
 The resume hub reads the version from the URL and polls `GET /api/resume-versions/{versionId}` and `/extraction` while parsing or extraction runs (`useResumeVersionStatus`). When either settles, it refreshes the resume list, the latest resume, the current user, and the version's snapshots. The 개요 tab reads the snapshot subresources. Risks sort by the raw `severity` code, and the tab shows no scores the API does not send.
 

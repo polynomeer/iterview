@@ -199,6 +199,23 @@ export type ResumeAchievementItemDto = {
   sourceText?: string | null;
   severityHint?: string | null;
   displayOrder?: number | null;
+  evidence?: ResumeAchievementEvidenceDto | null;
+};
+
+/** 상황 · 내 역할 · 측정 방법 · 결과 수치 written for one claim (ADR 0081). Null fields are unanswered. */
+export type ResumeAchievementEvidenceDto = {
+  situationText?: string | null;
+  roleText?: string | null;
+  measurementText?: string | null;
+  resultText?: string | null;
+  updatedAt?: string | null;
+};
+
+export type UpdateResumeAchievementEvidenceRequestDto = {
+  situationText: string;
+  roleText: string;
+  measurementText: string;
+  resultText: string;
 };
 
 export type ResumeAchievementItemResponseDto = {

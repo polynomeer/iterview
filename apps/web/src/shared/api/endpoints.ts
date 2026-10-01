@@ -100,6 +100,8 @@ export const apiEndpoints = {
     experiences: (versionId: string) => `/api/resume-versions/${versionId}/experiences`,
     projects: (versionId: string) => `/api/resume-versions/${versionId}/projects`,
     achievements: (versionId: string) => `/api/resume-versions/${versionId}/achievements`,
+    achievementEvidence: (versionId: string, achievementId: string) =>
+      `/api/resume-versions/${versionId}/achievements/${achievementId}/evidence`,
     education: (versionId: string) => `/api/resume-versions/${versionId}/education`,
     certifications: (versionId: string) => `/api/resume-versions/${versionId}/certifications`,
     awards: (versionId: string) => `/api/resume-versions/${versionId}/awards`,

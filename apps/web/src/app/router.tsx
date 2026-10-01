@@ -28,6 +28,7 @@ const ResumeTailorAnalysisListPage = lazy(() => import("../pages/resume-tailor/R
 const ResumeTailorAnalysisDetailPage = lazy(() => import("../pages/resume-tailor/ResumeTailorAnalysisDetailPage").then((module) => ({ default: module.ResumeTailorAnalysisDetailPage })));
 const ResumeHeatmapPage = lazy(() => import("../pages/resume-heatmap/ResumeHeatmapPage").then((module) => ({ default: module.ResumeHeatmapPage })));
 const ResumeHeatmapAnchorPage = lazy(() => import("../pages/resume-heatmap/ResumeHeatmapAnchorPage").then((module) => ({ default: module.ResumeHeatmapAnchorPage })));
+const ResumeClaimsPage = lazy(() => import("../pages/resume-claims/ResumeClaimsPage").then((module) => ({ default: module.ResumeClaimsPage })));
 const ResumeEditorPage = lazy(() => import("../pages/resume-editor/ResumeEditorPage").then((module) => ({ default: module.ResumeEditorPage })));
 const InterviewPage = lazy(() => import("../pages/interview/InterviewPage").then((module) => ({ default: module.InterviewPage })));
 const InterviewSessionPage = lazy(() => import("../pages/interview-session/InterviewSessionPage").then((module) => ({ default: module.InterviewSessionPage })));
@@ -128,7 +129,8 @@ export const appRoutes: RouteObject[] = [
                 element: withSuspense(<ResumeHubLayout />),
                 children: [
                   { index: true, element: withSuspense(<ResumeOverviewTab />) },
-                  { path: routeConfig.resumeEditor.path, element: withSuspense(<ResumeEditorPage />) },
+                  { path: routeConfig.resumeEditor.path, element: withSuspense(<ResumeClaimsPage />) },
+                  { path: routeConfig.resumeDocumentEditor.path, element: withSuspense(<ResumeEditorPage />) },
                   { path: routeConfig.resumeHeatmap.path, element: withSuspense(<ResumeHeatmapPage />) },
                   { path: routeConfig.resumeHeatmapAnchor.path, element: withSuspense(<ResumeHeatmapAnchorPage />) },
                   { path: routeConfig.resumeTailorAnalysisList.path, element: withSuspense(<ResumeTailorAnalysisListPage />) },
