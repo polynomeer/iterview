@@ -133,7 +133,7 @@ class PlaceholderResumeSignalExtractionService(
         version: ResumeVersionEntity,
         sections: ParsedResumeSections,
     ): List<ExtractedResumeExperience> {
-        val grouped = sections.careerEntries.takeIf { it.isNotEmpty() } ?: fallbackExperienceGroups(version)
+        val grouped = sections.careerEntries.takeIf { it.isNotEmpty() } ?: fallbackExperienceGroups(version, sections)
         return grouped.take(6).mapIndexed { index, entry ->
             val header = parseCareerHeader(entry.firstOrNull().orEmpty())
             val sourceText = entry.joinToString(" ")
@@ -154,14 +154,16 @@ class PlaceholderResumeSignalExtractionService(
         }
     }
 
-    private fun fallbackExperienceGroups(version: ResumeVersionEntity): List<List<String>> {
+    // The name, headline and contact lines at the top are not experience; a parsed summary that
+    // merely repeats them is skipped too, so the interview never anchors on the header.
+    private fun fallbackExperienceGroups(version: ResumeVersionEntity, sections: ParsedResumeSections): List<List<String>> {
+        val headerText = sections.headerLines.joinToString(" ")
         val source = buildString {
-            if (!version.summaryText.isNullOrBlank()) {
-                appendLine(version.summaryText.trim())
+            val summary = version.summaryText?.trim().orEmpty()
+            if (summary.isNotBlank() && !headerText.startsWith(summary.trimEnd('.'))) {
+                appendLine(summary)
             }
-            if (!version.rawText.isNullOrBlank()) {
-                appendLine(version.rawText.trim())
-            }
+            sections.lines.drop(sections.headerLines.size).forEach(::appendLine)
         }.trim()
         return source.split('.', '\n')
             .map { it.trim() }
@@ -174,14 +176,21 @@ class PlaceholderResumeSignalExtractionService(
         sections: ParsedResumeSections,
         experiences: List<ExtractedResumeExperience>,
     ): List<ExtractedResumeProject> =
-        sections.projectEntries.take(12).mapIndexed { index, entry ->
-            val header = parseProjectHeader(entry.firstOrNull().orEmpty())
+        sections.projectEntries.take(12).mapIndexed { index, rawEntry ->
+            val header = parseProjectHeader(rawEntry.firstOrNull().orEmpty())
+            // A detailed project write-up often names the company on the line under the title.
+            val owner = rawEntry.getOrNull(1)?.let { line ->
+                experiences.firstOrNull { experience ->
+                    experience.companyName?.let { compact(it) == compact(line) } == true
+                }
+            }
+            val entry = if (owner != null) rawEntry.filterIndexed { lineIndex, _ -> lineIndex != 1 } else rawEntry
             val sourceText = entry.joinToString(" ")
             val contentText = entry.drop(1).joinToString("\n").ifBlank { null }
             val category = inferProjectCategory(sourceText)
             ExtractedResumeProject(
                 title = header.title ?: "Project ${index + 1}",
-                organizationName = experiences.getOrNull(index)?.companyName,
+                organizationName = owner?.companyName ?: experiences.getOrNull(index)?.companyName,
                 roleName = null,
                 summaryText = entry.drop(1).take(4).joinToString(" ").ifBlank { sourceText },
                 contentText = contentText,
@@ -193,9 +202,11 @@ class PlaceholderResumeSignalExtractionService(
                 endedOn = header.endedOn,
                 displayOrder = index + 1,
                 sourceText = sourceText,
-                experienceDisplayOrder = experiences.getOrNull(index)?.displayOrder,
+                experienceDisplayOrder = owner?.displayOrder ?: experiences.getOrNull(index)?.displayOrder,
             )
         }
+
+    private fun compact(value: String): String = value.replace(Regex("\\s+"), "")
 
     private fun extractAchievements(
         experiences: List<ExtractedResumeExperience>,
@@ -214,7 +225,7 @@ class PlaceholderResumeSignalExtractionService(
             projects.forEach {
                 add(
                     AchievementSource(
-                        sourceText = it.sourceText ?: it.summaryText,
+                        sourceText = it.contentText ?: it.sourceText ?: it.summaryText,
                         experienceDisplayOrder = it.experienceDisplayOrder,
                         projectDisplayOrder = it.displayOrder,
                     ),
@@ -227,7 +238,8 @@ class PlaceholderResumeSignalExtractionService(
             }
             .flatMap { source ->
                 source.sourceText
-                    .split("•", "·", "\n")
+                    // A middle dot between words ("앨범·트랙") is not a bullet; only a spaced one is.
+                    .split("•", " · ", "\n")
                     .map { it.trim() }
                     .filter { it.isNotBlank() && (it.contains("→") || METRIC_PATTERN.containsMatchIn(it)) }
                     .ifEmpty { listOf(source.sourceText) }
@@ -331,13 +343,13 @@ class PlaceholderResumeSignalExtractionService(
 
     private fun parseCareerHeader(line: String): CareerHeader {
         val normalized = line.trim()
-        val rangeMatch = RANGE_PATTERN.find(normalized)
+        val rangeMatch = topLevelRange(normalized)
         val (startedOn, endedOn, isCurrent) = parseRange(rangeMatch?.value)
-        val prefix = normalized.substringBefore(rangeMatch?.value ?: "").trim()
-        val parts = prefix.split(" - ").map { it.trim() }
+        val prefix = rangeMatch?.let { normalized.substring(0, it.range.first) }?.trim() ?: normalized
+        val parts = prefix.split(TITLE_SEPARATOR).map { it.trim() }
         return CareerHeader(
             companyName = parts.getOrNull(0),
-            roleName = parts.getOrNull(1),
+            roleName = parts.getOrNull(1)?.substringBefore(" · ")?.trim(),
             startedOn = startedOn,
             endedOn = endedOn,
             isCurrent = isCurrent,
@@ -346,10 +358,10 @@ class PlaceholderResumeSignalExtractionService(
 
     private fun parseProjectHeader(line: String): ProjectHeader {
         val normalized = line.trim()
-        val rangeMatch = RANGE_PATTERN.find(normalized)
+        val rangeMatch = topLevelRange(normalized)
         val (startedOn, endedOn, _) = parseRange(rangeMatch?.value)
         val title = if (rangeMatch != null) {
-            normalized.substringBefore(rangeMatch.value).trim().takeIf { it.isNotBlank() }
+            normalized.substring(0, rangeMatch.range.first).trim().takeIf { it.isNotBlank() }
         } else {
             normalized.takeIf { it.isNotBlank() }
         }
@@ -368,11 +380,11 @@ class PlaceholderResumeSignalExtractionService(
 
     private fun parseRange(value: String?): Triple<LocalDate?, LocalDate?, Boolean> {
         if (value.isNullOrBlank()) return Triple(null, null, false)
-        val parts = value.split("~").map { it.trim() }
+        val parts = value.split(RANGE_SEPARATOR, limit = 2).map { it.trim() }
         val started = parts.getOrNull(0)?.let(::toLocalDate)
         val endText = parts.getOrNull(1)
-        val isCurrent = endText?.contains("현재") == true
-        val ended = endText?.takeUnless { it.contains("현재") }?.let(::toLocalDate)
+        val isCurrent = endText?.let { OPEN_END_PATTERN.containsMatchIn(it) } == true
+        val ended = endText?.takeUnless { isCurrent }?.let(::toLocalDate)
         return Triple(started, ended, isCurrent)
     }
 
@@ -422,12 +434,14 @@ class PlaceholderResumeSignalExtractionService(
         val IMPACT_HINTS = listOf("improved", "reduced", "increased", "latency", "throughput", "개선", "단축")
         val RISK_HINTS = listOf("designed", "built", "scaled", "migrated", "introduced", "improved", "설계", "구축")
         val CONTACT_PATTERNS = listOf(
-            "phone" to Regex("""Contact\s*:\s*([0-9\-+() ]+)"""),
-            "blog" to Regex("""Blog\s*:\s*(https?://\S+)"""),
-            "email" to Regex("""Mail\s*:\s*([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})"""),
-            "github" to Regex("""GitHub\s*:\s*(https?://\S+)"""),
+            "phone" to Regex("""(?:Contact|Tel|Phone)\s*:?\s*(\+?[0-9][0-9\-() ]{6,}[0-9])"""),
+            "blog" to Regex("""Blog\s*:?\s*((?:https?://)?[A-Za-z0-9.-]+\.[A-Za-z]{2,}\S*)"""),
+            "email" to Regex("""Mail\s*:?\s*([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})"""),
+            "github" to Regex("""GitHub\s*:?\s*((?:https?://)?github\.com/\S+)""", RegexOption.IGNORE_CASE),
         )
-        val RANGE_PATTERN = Regex("""(\d{4}\.\d{1,2}(?:\.\d{1,2})?)\s*~\s*(\d{4}\.\d{1,2}(?:\.\d{1,2})?|현재)""")
+        val RANGE_PATTERN = resumeDateRangePattern
+        val RANGE_SEPARATOR = Regex("""\s*[~–—-]\s*""")
+        val OPEN_END_PATTERN = Regex("""현재|진행\s?중|present""", RegexOption.IGNORE_CASE)
         val SINGLE_DATE_PATTERN = Regex("""(\d{4})\.(\d{1,2})(?:\.(\d{1,2}))?""")
         val METRIC_PATTERN = Regex("""\d+(?:\.\d+)?(?:%|배|건|GB|MB|초|분|시간)""")
         val CERT_CODE_PATTERN = Regex("""[A-Z0-9-]{5,}""")
@@ -442,8 +456,23 @@ class PlaceholderResumeSignalExtractionService(
     }
 }
 
+private val resumeDateRangePattern =
+    Regex("""(\d{4}\.\d{1,2}(?:\.\d{1,2})?)\s*[~–—-]\s*(\d{4}\.\d{1,2}(?:\.\d{1,2})?|현재|진행\s?중|[Pp]resent)""")
+
+// "Company — Role" or "Company - Role" in an entry title.
+private val TITLE_SEPARATOR = Regex("""\s[-–—]\s""")
+
+// A date range that is not inside parentheses, so "개편(2024.1–2024.11)을 마친 뒤" or
+// "ParityPay — 결제 (2026.7 – 진행 중)" stay body text instead of starting a new entry.
+private fun topLevelRange(line: String): MatchResult? =
+    resumeDateRangePattern.findAll(line).firstOrNull { match ->
+        val before = line.substring(0, match.range.first)
+        before.count { it == '(' } <= before.count { it == ')' }
+    }
+
 private data class ParsedResumeSections(
     val lines: List<String>,
+    val headerLines: List<String>,
     val summaryLines: List<String>,
     val skillLines: List<String>,
     val competencyLines: List<String>,
@@ -454,7 +483,24 @@ private data class ParsedResumeSections(
     val projectEntries: List<List<String>>,
 ) {
     companion object {
-        private val ENTRY_RANGE_PATTERN = Regex("""(\d{4}\.\d{1,2}(?:\.\d{1,2})?)\s*~\s*(\d{4}\.\d{1,2}(?:\.\d{1,2})?|현재)""")
+        // Plain section titles used by many resumes. 경력기술서 is a per-project write-up, so its
+        // titled blocks are read as projects.
+        private val SECTION_TITLES = mapOf(
+            "SUMMARY" to "summary",
+            "ABOUT ME" to "summary",
+            "CAREER" to "career",
+            "EXPERIENCE" to "career",
+            "WORK EXPERIENCE" to "career",
+            "PROFESSIONAL EXPERIENCE" to "career",
+            "PROJECTS" to "projects",
+            "SKILLS" to "skills",
+            "TECH STACK" to "skills",
+            "EDUCATION" to "education",
+            "AWARDS" to "awards",
+            "CERTIFICATIONS" to "certifications",
+            "CERTIFICATES" to "certifications",
+            "경력기술서" to "projects",
+        )
 
         fun parse(version: ResumeVersionEntity): ParsedResumeSections {
             val lines = version.rawText.orEmpty()
@@ -473,7 +519,7 @@ private data class ParsedResumeSections(
                     line.contains("자격사항") -> "certifications"
                     line == "💼 경력" || line == "경력" -> "career"
                     line == "📜 프로젝트" || line == "프로젝트" -> "projects"
-                    else -> null
+                    else -> SECTION_TITLES[line.uppercase()]
                 }
                 if (nextSection != null) {
                     current = nextSection
@@ -482,9 +528,11 @@ private data class ParsedResumeSections(
                     sections.computeIfAbsent(current) { mutableListOf() }.add(line)
                 }
             }
+            val intro = sections["intro"].orEmpty()
             return ParsedResumeSections(
                 lines = lines,
-                summaryLines = sections["intro"].orEmpty().drop(5).take(6),
+                headerLines = resumeHeaderLines(intro),
+                summaryLines = sections["summary"]?.take(6) ?: intro.drop(5).take(6),
                 skillLines = sections["skills"].orEmpty(),
                 competencyLines = sections["competencies"].orEmpty(),
                 educationLines = sections["education"].orEmpty().filter(::isContentLine),
@@ -498,7 +546,8 @@ private data class ParsedResumeSections(
         private fun groupCareerEntries(lines: List<String>): List<List<String>> {
             val results = mutableListOf<MutableList<String>>()
             lines.forEach { line ->
-                if (line.contains(" - ") && ENTRY_RANGE_PATTERN.containsMatchIn(line)) {
+                val range = topLevelRange(line)
+                if (range != null && TITLE_SEPARATOR.containsMatchIn(line.substring(0, range.range.first))) {
                     results.add(mutableListOf(line))
                 } else if (results.isNotEmpty()) {
                     results.last().add(line)
@@ -510,7 +559,9 @@ private data class ParsedResumeSections(
         private fun groupProjectEntries(lines: List<String>): List<List<String>> {
             val results = mutableListOf<MutableList<String>>()
             lines.forEach { line ->
-                if (!line.startsWith("문제") && !line.startsWith("개선") && !line.startsWith("성과") && ENTRY_RANGE_PATTERN.containsMatchIn(line)) {
+                val range = topLevelRange(line)
+                val titled = range != null && line.substring(0, range.range.first).isNotBlank()
+                if (!line.startsWith("문제") && !line.startsWith("개선") && !line.startsWith("성과") && titled) {
                     results.add(mutableListOf(line))
                 } else if (results.isNotEmpty()) {
                     results.last().add(line)
