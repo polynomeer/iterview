@@ -71,4 +71,29 @@ class ResumeEvidenceSentencesTest {
 
         assertEquals(listOf("메모리 피크를 3.8GB → 1.6GB로 줄였습니다.", "배치 처리 시간을 2시간 → 5분으로 단축했습니다."), sentences)
     }
+
+    @Test
+    fun `facet follows what the sentence does`() {
+        assertEquals("problem", ResumeEvidenceSentences.facetOf("삭제 배치가 2시간 이상 걸려 실행계획을 분석한 결과, 인덱스를 활용하지 못하고 있었습니다."))
+        assertEquals("problem", ResumeEvidenceSentences.facetOf("대량 업로드 시 등록에 40분 이상 걸렸습니다."))
+        assertEquals("metric", ResumeEvidenceSentences.facetOf("삭제 처리 시간을 2시간 → 5분(24배)으로 단축했습니다."))
+        assertEquals("result", ResumeEvidenceSentences.facetOf("외부 연동 장애가 핵심 데이터로 전파되던 문제를 해소했습니다."))
+        assertEquals("action", ResumeEvidenceSentences.facetOf("Apache POI의 SXSSF 스트리밍 API를 적용했습니다."))
+        assertEquals("tradeoff", ResumeEvidenceSentences.facetOf("물리 DB 락 대신 상태 기반 제어와 TTL 자동 복구를 택했습니다."))
+        assertEquals("action", ResumeEvidenceSentences.facetOf("검증을 Bean Validation → DTO 매핑 → 도메인 규칙 단계로 나눴습니다."))
+        assertEquals("action", ResumeEvidenceSentences.facetOf("외부 연동이 실패해도 핵심 데이터 저장에는 영향이 없도록 분리했습니다."))
+        assertEquals("metric", ResumeEvidenceSentences.facetOf("스택 샘플링으로 병목을 찾아 틱 처리량 8배 개선"))
+    }
+
+    @Test
+    fun `notes to the reader are not evidence`() {
+        val sentences = ResumeEvidenceSentences.select(
+            listOf("퇴사 후 진행한 개인 프로젝트이며, 자세한 내용은 포트폴리오를 참고해 주시기 바랍니다.\n결제 원장을 이중 기입 방식으로 설계했습니다."),
+            limit = 4,
+            maxLength = 220,
+            pageWidth = pageWidth,
+        )
+
+        assertEquals(listOf("결제 원장을 이중 기입 방식으로 설계했습니다."), sentences)
+    }
 }
