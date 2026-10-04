@@ -1243,14 +1243,21 @@ class InterviewSessionService(
         if (evidenceItems.isEmpty()) {
             return null
         }
+        val linkCountsByEvidenceId = interviewSessionQuestionEvidenceLinkRepository
+            .findByIdInterviewSessionEvidenceItemIdIn(evidenceItems.map { it.id })
+            .groupingBy { it.id.interviewSessionEvidenceItemId }
+            .eachCount()
+        // Each resume detail is asked at most twice: once, plus one revisit when it was skipped,
+        // weak, or worth a deeper pass. Without the cap a skipped detail comes back forever.
+        val openItems = evidenceItems.filter { (linkCountsByEvidenceId[it.id] ?: 0) < MAX_QUESTIONS_PER_EVIDENCE_ITEM }
         val candidateItems = when {
-            evidenceItems.any { it.coverageStatus == COVERAGE_STATUS_UNASKED } ->
-                evidenceItems.filter { it.coverageStatus == COVERAGE_STATUS_UNASKED }
-            evidenceItems.any { it.coverageStatus == COVERAGE_STATUS_WEAK } ->
-                evidenceItems.filter { it.coverageStatus == COVERAGE_STATUS_WEAK }
-            evidenceItems.any { it.coverageStatus == COVERAGE_STATUS_SKIPPED } ->
-                evidenceItems.filter { it.coverageStatus == COVERAGE_STATUS_SKIPPED }
-            else -> evidenceItems
+            openItems.any { it.coverageStatus == COVERAGE_STATUS_UNASKED } ->
+                openItems.filter { it.coverageStatus == COVERAGE_STATUS_UNASKED }
+            openItems.any { it.coverageStatus == COVERAGE_STATUS_WEAK } ->
+                openItems.filter { it.coverageStatus == COVERAGE_STATUS_WEAK }
+            openItems.any { it.coverageStatus == COVERAGE_STATUS_SKIPPED } ->
+                openItems.filter { it.coverageStatus == COVERAGE_STATUS_SKIPPED }
+            else -> openItems
         }
         val availableFacetsByRecord = evidenceItems
             .groupBy { evidenceKey(it.sourceRecordType, it.sourceRecordId) }
@@ -1259,10 +1266,6 @@ class InterviewSessionService(
             .filter { it.coverageStatus != COVERAGE_STATUS_UNASKED }
             .groupBy { evidenceKey(it.sourceRecordType, it.sourceRecordId) }
             .mapValues { (_, items) -> items.map { it.facet }.distinct() }
-        val linkCountsByEvidenceId = interviewSessionQuestionEvidenceLinkRepository
-            .findByIdInterviewSessionEvidenceItemIdIn(evidenceItems.map { it.id })
-            .groupingBy { it.id.interviewSessionEvidenceItemId }
-            .eachCount()
         val unresolvedRecoveryCountByRecord = evidenceItems
             .groupBy { evidenceKey(it.sourceRecordType, it.sourceRecordId) }
             .mapValues { (_, items) ->
@@ -1598,19 +1601,19 @@ class InterviewSessionService(
     private fun deterministicCoverageTitleEn(targetItem: InterviewSessionEvidenceItemEntity, coverageStatus: String): String =
         when {
             coverageStatus == COVERAGE_STATUS_WEAK ->
-                "Your earlier answer did not fully defend ${targetItem.label ?: "this evidence"}. Rebuild the case with concrete detail."
+                "Your earlier answer did not fully defend ${coverageSubject(targetItem, "this evidence")}. Rebuild the case with concrete detail."
             coverageStatus == COVERAGE_STATUS_SKIPPED ->
-                "Let's come back to ${targetItem.label ?: "this evidence"} that we skipped earlier. Walk me through it clearly."
+                "Let's come back to ${coverageSubject(targetItem, "this evidence")} that we skipped earlier. Walk me through it clearly."
             else -> when (targetItem.facet) {
-                "problem" -> "What concrete problem or constraint led you to take on ${targetItem.label ?: "this work"}?"
-                "action" -> "Walk me through the key implementation decisions you made in ${targetItem.label ?: "this work"}."
-                "result" -> "What outcome did ${targetItem.label ?: "this work"} actually produce, and how did you validate it?"
-                "metric" -> "Which metrics proved that ${targetItem.label ?: "this work"} was working as intended?"
-                "tradeoff" -> "What trade-offs did you weigh while driving ${targetItem.label ?: "this work"}?"
+                "problem" -> "What concrete problem or constraint led you to take on ${coverageSubject(targetItem, "this work")}?"
+                "action" -> "Walk me through the key implementation decisions you made in ${coverageSubject(targetItem, "this work")}."
+                "result" -> "What outcome did ${coverageSubject(targetItem, "this work")} actually produce, and how did you validate it?"
+                "metric" -> "Which metrics proved that ${coverageSubject(targetItem, "this work")} was working as intended?"
+                "tradeoff" -> "What trade-offs did you weigh while driving ${coverageSubject(targetItem, "this work")}?"
                 else -> when (targetItem.section) {
-                    "project" -> "Walk me through ${targetItem.label ?: "this project"} in concrete detail."
-                    "experience" -> "Describe the problem and solution behind ${targetItem.label ?: "this experience"}."
-                    else -> "Explain the concrete example behind ${targetItem.label ?: "this resume detail"}."
+                    "project" -> "Walk me through ${coverageSubject(targetItem, "this project")} in concrete detail."
+                    "experience" -> "Describe the problem and solution behind ${coverageSubject(targetItem, "this experience")}."
+                    else -> "Explain the concrete example behind ${coverageSubject(targetItem, "this resume detail")}."
                 }
             }
         }
@@ -1618,22 +1621,39 @@ class InterviewSessionService(
     private fun deterministicCoverageTitleKo(targetItem: InterviewSessionEvidenceItemEntity, coverageStatus: String): String =
         when {
             coverageStatus == COVERAGE_STATUS_WEAK ->
-                "앞선 답변만으로는 ${targetItem.label ?: "이 근거"}가 충분히 방어되지 않았습니다. 이번에는 더 구체적으로 설명해 주세요."
+                "앞선 답변만으로는 ${coverageSubject(targetItem, "이 근거")}가 충분히 방어되지 않았습니다. 이번에는 더 구체적으로 설명해 주세요."
             coverageStatus == COVERAGE_STATUS_SKIPPED ->
-                "앞에서 건너뛴 ${targetItem.label ?: "이 근거"}로 다시 돌아가 보겠습니다. 이번에는 명확하게 설명해 주세요."
+                "앞에서 건너뛴 ${coverageSubject(targetItem, "이 근거")}로 다시 돌아가 보겠습니다. 이번에는 명확하게 설명해 주세요."
             else -> when (targetItem.facet) {
-                "problem" -> "${targetItem.label ?: "이 경험"}을 시작하게 된 구체적인 문제와 제약이 무엇이었는지 설명해 주세요."
-                "action" -> "${targetItem.label ?: "이 경험"}에서 어떤 구현과 의사결정을 직접 했는지 구체적으로 설명해 주세요."
-                "result" -> "${targetItem.label ?: "이 경험"}이 실제로 어떤 결과를 냈고, 그 결과를 어떻게 검증했는지 설명해 주세요."
-                "metric" -> "${targetItem.label ?: "이 경험"}의 효과를 어떤 지표로 판단했고 기준을 어떻게 잡았는지 설명해 주세요."
-                "tradeoff" -> "${targetItem.label ?: "이 경험"}을 진행하면서 어떤 대안과 트레이드오프를 비교했는지 설명해 주세요."
+                "problem" -> "${coverageSubject(targetItem, "이 경험")}을 시작하게 된 구체적인 문제와 제약이 무엇이었는지 설명해 주세요."
+                "action" -> "${coverageSubject(targetItem, "이 경험")}에서 어떤 구현과 의사결정을 직접 했는지 구체적으로 설명해 주세요."
+                "result" -> "${coverageSubject(targetItem, "이 경험")}이 실제로 어떤 결과를 냈고, 그 결과를 어떻게 검증했는지 설명해 주세요."
+                "metric" -> "${coverageSubject(targetItem, "이 경험")}의 효과를 어떤 지표로 판단했고 기준을 어떻게 잡았는지 설명해 주세요."
+                "tradeoff" -> "${coverageSubject(targetItem, "이 경험")}을 진행하면서 어떤 대안과 트레이드오프를 비교했는지 설명해 주세요."
                 else -> when (targetItem.section) {
-                    "project" -> "${targetItem.label ?: "이 프로젝트"}를 어떤 문제와 맥락에서 진행했는지 구체적으로 설명해 주세요."
-                    "experience" -> "${targetItem.label ?: "이 경험"}에서 해결하려던 문제와 실제 해결 과정을 설명해 주세요."
-                    else -> "${targetItem.label ?: "이 이력서 내용"}에 담긴 구체적인 사례를 설명해 주세요."
+                    "project" -> "${coverageSubject(targetItem, "이 프로젝트")}를 어떤 문제와 맥락에서 진행했는지 구체적으로 설명해 주세요."
+                    "experience" -> "${coverageSubject(targetItem, "이 경험")}에서 해결하려던 문제와 실제 해결 과정을 설명해 주세요."
+                    else -> "${coverageSubject(targetItem, "이 이력서 내용")}에 담긴 구체적인 사례를 설명해 주세요."
                 }
             }
         }
+
+    // Unlabeled evidence names itself by a short quote, so successive questions about different
+    // resume lines do not read identically: "이 경험(“SQS 이벤트 파이프라인…”)에서 …".
+    private fun coverageSubject(targetItem: InterviewSessionEvidenceItemEntity, fallback: String): String {
+        targetItem.label?.takeIf { it.isNotBlank() }?.let { return it }
+        val snippet = targetItem.snippet.trim()
+        if (snippet.isBlank()) {
+            return fallback
+        }
+        val quote = if (snippet.length > COVERAGE_SUBJECT_QUOTE_LENGTH) {
+            snippet.take(COVERAGE_SUBJECT_QUOTE_LENGTH).trimEnd() + "…"
+        } else {
+            snippet
+        }
+        val separator = if (fallback.first().code < 128) " " else ""
+        return "$fallback$separator(“$quote”)"
+    }
 
     private fun deterministicCoverageBodyEn(targetItem: InterviewSessionEvidenceItemEntity, coverageStatus: String): String =
         when {
@@ -2054,6 +2074,8 @@ class InterviewSessionService(
         const val COVERAGE_DEFENDED_SCORE_THRESHOLD = 70
         const val MAX_PREFERRED_FOLLOW_UP_EVIDENCE_CANDIDATES = 4
         const val FULL_COVERAGE_EVIDENCE_LIMIT = 64
+        const val MAX_QUESTIONS_PER_EVIDENCE_ITEM = 2
+        const val COVERAGE_SUBJECT_QUOTE_LENGTH = 24
         val FACET_PROGRESSION = listOf("problem", "action", "result", "metric", "tradeoff", "general")
         val SUPPORTED_SESSION_TYPES = setOf(SESSION_TYPE_RESUME_MOCK, SESSION_TYPE_REVIEW_MOCK, SESSION_TYPE_TOPIC_MOCK, SESSION_TYPE_REPLAY_MOCK)
         val SUPPORTED_INTERVIEW_MODES = setOf(

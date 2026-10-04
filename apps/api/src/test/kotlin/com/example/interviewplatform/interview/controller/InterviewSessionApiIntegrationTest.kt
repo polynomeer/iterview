@@ -6,6 +6,7 @@ import com.example.interviewplatform.support.TestDatabaseCleaner
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.hamcrest.Matchers.greaterThan
@@ -580,6 +581,71 @@ class InterviewSessionApiIntegrationTest {
             .andExpect(jsonPath("$.currentQuestion.bodyText").value(startsWith("이력서 근거: Weak metric facet snippet")))
             .andExpect(jsonPath("$.currentQuestion.bodyText").value(org.hamcrest.Matchers.containsString("어떤 지표를 봤는지")))
             .andExpect(jsonPath("$.currentQuestion.generationRationale").value(org.hamcrest.Matchers.containsString("약한 이력서 facet")))
+    }
+
+    @Test
+    fun `full coverage skips the resume header and stops revisiting skipped evidence`() {
+        val resumeVersionId = insertResumeVersion()
+        jdbcTemplate.update(
+            "UPDATE resume_versions SET raw_text = ? WHERE id = ?",
+            "Kim Dev Backend Engineer\nSmall steps win.\nTel 010-1234-5678 Mail kim@example.com\nCAREER",
+            resumeVersionId,
+        )
+        insertSnippetOnlyExperience(resumeVersionId, "Kim Dev Backend Engineer Small steps win", 1)
+        insertSnippetOnlyExperience(resumeVersionId, "Moved the settlement batch onto an event queue with retries and a dead letter queue", 2)
+
+        val sessionResponse = mockMvc.perform(
+            post("/api/interview-sessions")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    objectMapper.writeValueAsString(
+                        mapOf(
+                            "sessionType" to "resume_mock",
+                            "interviewMode" to "full_coverage",
+                            "questionCount" to 1,
+                            "resumeVersionId" to resumeVersionId,
+                        ),
+                    ),
+                ),
+        )
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+            .let(objectMapper::readTree)
+        val sessionId = sessionResponse.get("id").asLong()
+
+        mockMvc.perform(get("/api/interview-sessions/$sessionId/coverage").header("Authorization", authHeader))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.evidenceItems.length()").value(1))
+            .andExpect(jsonPath("$.evidenceItems[0].snippet").value(startsWith("Moved the settlement batch")))
+
+        var current = sessionResponse.get("currentQuestion")
+        val titles = mutableListOf<String>()
+        var skips = 0
+        while (current != null && !current.isNull && skips < 10) {
+            titles += current.get("title").asText()
+            val advance = mockMvc.perform(
+                post("/api/interview-sessions/$sessionId/skip-question")
+                    .header("Authorization", authHeader)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(mapOf("sessionQuestionId" to current.get("id").asLong()))),
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+                .response
+                .contentAsString
+                .let(objectMapper::readTree)
+            skips += 1
+            current = advance.get("currentQuestion")
+            if (current == null || current.isNull) {
+                assertEquals("completed", advance.get("status").asText())
+            }
+        }
+
+        assertEquals(2, skips)
+        assertTrue(titles.all { it.contains("Moved the settlement") }, titles.toString())
     }
 
     @Test
@@ -1222,6 +1288,21 @@ class InterviewSessionApiIntegrationTest {
             """.trimIndent(),
             Long::class.java,
             resumeVersionId,
+        )
+
+    private fun insertSnippetOnlyExperience(resumeVersionId: Long, text: String, displayOrder: Int): Long =
+        jdbcTemplate.queryForObject(
+            """
+            INSERT INTO resume_experience_snapshots (
+                resume_version_id, summary_text, source_text, risk_level, display_order, is_confirmed, created_at, updated_at
+            ) VALUES (?, ?, ?, 'low', ?, false, now(), now())
+            RETURNING id
+            """.trimIndent(),
+            Long::class.java,
+            resumeVersionId,
+            text,
+            text,
+            displayOrder,
         )
 
     private fun insertResumeExperience(resumeVersionId: Long): Long =

@@ -196,3 +196,5 @@ Each ADR should include:
    Narrows heatmap questions to one resume claim inside their project by manual pick, matching, or follow-up inheritance.
 85. [`0085-product-day-follows-configured-time-zone.md`](0085-product-day-follows-configured-time-zone.md)
    "Today" for daily cards follows `app.time-zone` (default Asia/Seoul), not UTC; tests compare with `ClockService.today()`.
+86. [`0086-full-coverage-asks-each-resume-detail-at-most-twice.md`](0086-full-coverage-asks-each-resume-detail-at-most-twice.md)
+   Full coverage asks each resume detail at most twice and then completes; header-only and too-short snippets are not evidence.

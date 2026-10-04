@@ -2,6 +2,8 @@ package com.example.interviewplatform.interview.service
 
 import com.example.interviewplatform.resume.repository.ResumeExperienceSnapshotRepository
 import com.example.interviewplatform.resume.repository.ResumeProjectSnapshotRepository
+import com.example.interviewplatform.resume.repository.ResumeVersionRepository
+import com.example.interviewplatform.resume.service.resumeHeaderLines
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 class InterviewResumeEvidenceAssembler(
     private val resumeProjectSnapshotRepository: ResumeProjectSnapshotRepository,
     private val resumeExperienceSnapshotRepository: ResumeExperienceSnapshotRepository,
+    private val resumeVersionRepository: ResumeVersionRepository,
 ) {
     @Transactional(readOnly = true)
     fun loadCandidates(resumeVersionId: Long, limit: Int = 8): List<InterviewResumeEvidenceCandidate> {
@@ -48,8 +51,28 @@ class InterviewResumeEvidenceAssembler(
             }
             .also(candidates::addAll)
 
-        return candidates.distinctBy { Triple(it.sourceRecordType, it.sourceRecordId, it.snippet) }.take(limit)
+        val headerTokens = resumeVersionRepository.findById(resumeVersionId).orElse(null)
+            ?.rawText.orEmpty()
+            .lines()
+            .map(String::trim)
+            .filter(String::isNotBlank)
+            .let(::resumeHeaderLines)
+            .flatMap(::tokens)
+            .toSet()
+        return candidates
+            .filter { isSubstantive(it.snippet, headerTokens) }
+            .distinctBy { Triple(it.sourceRecordType, it.sourceRecordId, it.snippet) }
+            .take(limit)
     }
+
+    // A snippet must say something beyond the person's name, headline and contacts; a bare
+    // "Name Backend Engineer" line is not something an interviewer can ask about.
+    private fun isSubstantive(snippet: String, headerTokens: Set<String>): Boolean =
+        snippet.length >= MIN_SNIPPET_LENGTH &&
+            tokens(snippet).filterNot(headerTokens::contains).distinct().size >= MIN_SUBSTANTIVE_TOKENS
+
+    private fun tokens(value: String): List<String> =
+        value.lowercase().split(Regex("[^\\p{L}\\p{N}]+")).filter(String::isNotBlank)
 
     private fun projectSnippets(summaryText: String?, contentText: String?, sourceText: String?): List<String> =
         buildEvidenceSnippets(
@@ -90,7 +113,7 @@ class InterviewResumeEvidenceAssembler(
         val bySentence = normalized
             .split(Regex("(?<=[.!?])\\s+|\\s*[\\n\\r]+\\s*"))
             .flatMap { sentence ->
-                sentence.split(Regex("\\s*[;•·]\\s*|,\\s+"))
+                sentence.split(Regex("\\s*[;•]\\s*|\\s·\\s|,\\s+"))
             }
             .mapNotNull(::excerpt)
             .distinct()
@@ -127,5 +150,7 @@ class InterviewResumeEvidenceAssembler(
     private companion object {
         const val MAX_SNIPPET_LENGTH = 220
         const val MAX_SNIPPETS_PER_RECORD = 4
+        const val MIN_SNIPPET_LENGTH = 15
+        const val MIN_SUBSTANTIVE_TOKENS = 3
     }
 }
