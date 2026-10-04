@@ -156,7 +156,7 @@ class InterviewSessionApiIntegrationTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.interviewMode").value("full_coverage"))
             .andExpect(jsonPath("$.currentQuestion.sourceType").value("coverage_planner"))
-            .andExpect(jsonPath("$.currentQuestion.title").value("Payment platform migration을 어떤 문제와 맥락에서 진행했는지 구체적으로 설명해 주세요."))
+            .andExpect(jsonPath("$.currentQuestion.title").value("Payment platform migration을 시작하게 된 구체적인 문제와 제약이 무엇이었는지 설명해 주세요."))
             .andExpect(jsonPath("$.currentQuestion.bodyText").value(startsWith("이력서 근거: ")))
             .andExpect(jsonPath("$.currentQuestion.contentLocale").value("ko"))
             .andExpect(jsonPath("$.currentQuestion.resumeEvidence[0].sourceRecordType").value("resume_project_snapshot"))

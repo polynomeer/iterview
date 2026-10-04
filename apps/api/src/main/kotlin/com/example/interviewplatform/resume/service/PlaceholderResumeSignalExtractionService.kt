@@ -136,7 +136,7 @@ class PlaceholderResumeSignalExtractionService(
         val grouped = sections.careerEntries.takeIf { it.isNotEmpty() } ?: fallbackExperienceGroups(version, sections)
         return grouped.take(6).mapIndexed { index, entry ->
             val header = parseCareerHeader(entry.firstOrNull().orEmpty())
-            val sourceText = entry.joinToString(" ")
+            val sourceText = entry.joinToString("\n")
             ExtractedResumeExperience(
                 projectName = null,
                 companyName = header.companyName,
@@ -145,7 +145,13 @@ class PlaceholderResumeSignalExtractionService(
                 startedOn = header.startedOn,
                 endedOn = header.endedOn,
                 isCurrent = header.isCurrent,
-                summaryText = entry.drop(1).take(3).joinToString(" ").ifBlank { sourceText },
+                // Body lines before the first project title inside the entry; the projects carry
+                // their own detail. Lines stay separate so evidence can be read line by line.
+                summaryText = entry.drop(1)
+                    .takeWhile { resumeDateRangeOutsideParentheses(it) == null }
+                    .take(3)
+                    .joinToString("\n")
+                    .ifBlank { entry.firstOrNull().orEmpty() },
                 impactText = entry.firstOrNull { line -> IMPACT_HINTS.any { hint -> line.contains(hint, ignoreCase = true) } || line.contains("→") },
                 sourceText = sourceText,
                 riskLevel = riskLevelFor(sourceText),
@@ -343,7 +349,7 @@ class PlaceholderResumeSignalExtractionService(
 
     private fun parseCareerHeader(line: String): CareerHeader {
         val normalized = line.trim()
-        val rangeMatch = topLevelRange(normalized)
+        val rangeMatch = resumeDateRangeOutsideParentheses(normalized)
         val (startedOn, endedOn, isCurrent) = parseRange(rangeMatch?.value)
         val prefix = rangeMatch?.let { normalized.substring(0, it.range.first) }?.trim() ?: normalized
         val parts = prefix.split(TITLE_SEPARATOR).map { it.trim() }
@@ -358,7 +364,7 @@ class PlaceholderResumeSignalExtractionService(
 
     private fun parseProjectHeader(line: String): ProjectHeader {
         val normalized = line.trim()
-        val rangeMatch = topLevelRange(normalized)
+        val rangeMatch = resumeDateRangeOutsideParentheses(normalized)
         val (startedOn, endedOn, _) = parseRange(rangeMatch?.value)
         val title = if (rangeMatch != null) {
             normalized.substring(0, rangeMatch.range.first).trim().takeIf { it.isNotBlank() }
@@ -439,7 +445,7 @@ class PlaceholderResumeSignalExtractionService(
             "email" to Regex("""Mail\s*:?\s*([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})"""),
             "github" to Regex("""GitHub\s*:?\s*((?:https?://)?github\.com/\S+)""", RegexOption.IGNORE_CASE),
         )
-        val RANGE_PATTERN = resumeDateRangePattern
+        val RANGE_PATTERN = RESUME_DATE_RANGE
         val RANGE_SEPARATOR = Regex("""\s*[~–—-]\s*""")
         val OPEN_END_PATTERN = Regex("""현재|진행\s?중|present""", RegexOption.IGNORE_CASE)
         val SINGLE_DATE_PATTERN = Regex("""(\d{4})\.(\d{1,2})(?:\.(\d{1,2}))?""")
@@ -456,19 +462,8 @@ class PlaceholderResumeSignalExtractionService(
     }
 }
 
-private val resumeDateRangePattern =
-    Regex("""(\d{4}\.\d{1,2}(?:\.\d{1,2})?)\s*[~–—-]\s*(\d{4}\.\d{1,2}(?:\.\d{1,2})?|현재|진행\s?중|[Pp]resent)""")
-
 // "Company — Role" or "Company - Role" in an entry title.
 private val TITLE_SEPARATOR = Regex("""\s[-–—]\s""")
-
-// A date range that is not inside parentheses, so "개편(2024.1–2024.11)을 마친 뒤" or
-// "ParityPay — 결제 (2026.7 – 진행 중)" stay body text instead of starting a new entry.
-private fun topLevelRange(line: String): MatchResult? =
-    resumeDateRangePattern.findAll(line).firstOrNull { match ->
-        val before = line.substring(0, match.range.first)
-        before.count { it == '(' } <= before.count { it == ')' }
-    }
 
 private data class ParsedResumeSections(
     val lines: List<String>,
@@ -546,7 +541,7 @@ private data class ParsedResumeSections(
         private fun groupCareerEntries(lines: List<String>): List<List<String>> {
             val results = mutableListOf<MutableList<String>>()
             lines.forEach { line ->
-                val range = topLevelRange(line)
+                val range = resumeDateRangeOutsideParentheses(line)
                 if (range != null && TITLE_SEPARATOR.containsMatchIn(line.substring(0, range.range.first))) {
                     results.add(mutableListOf(line))
                 } else if (results.isNotEmpty()) {
@@ -559,7 +554,7 @@ private data class ParsedResumeSections(
         private fun groupProjectEntries(lines: List<String>): List<List<String>> {
             val results = mutableListOf<MutableList<String>>()
             lines.forEach { line ->
-                val range = topLevelRange(line)
+                val range = resumeDateRangeOutsideParentheses(line)
                 val titled = range != null && line.substring(0, range.range.first).isNotBlank()
                 if (!line.startsWith("문제") && !line.startsWith("개선") && !line.startsWith("성과") && titled) {
                     results.add(mutableListOf(line))

@@ -15,6 +15,7 @@ Evidence also came from any line stored as an experience or project. When the fa
 - An evidence item is asked at most twice in a session: the first question, plus one revisit when it was weak, skipped, or chosen for a deeper pass. Follow-ups linked to the item count toward the two. When no item has a question left, the session completes.
 - The first pass goes one resume section (project or experience) at a time. A section answered well continues into its next facet. A weak or skipped answer moves on to a section with nothing asked yet, and that section's remaining items wait until every other section has had its turn. Revisits of weak and skipped items come only after that pass.
 - An evidence snippet must be at least 15 characters and contain at least three distinct words beyond the resume's header lines (name, headline, contacts). Shorter snippets are not interview evidence.
+- Evidence is whole sentences. Lines the page wrapped are joined back (a line close to the resume's widest line continues on the next), field labels (개요, 역할, 과제) and tech-stack rows are dropped, text is split at sentence ends and never at commas, and near-duplicates merge. An experience stops at the first dated project title inside it, since the project carries that detail. Each record keeps up to four sentences, preferring measured results and concrete actions.
 - A question about an unlabeled item quotes the start of its snippet in the title, for example 이 경험(“SQS 이벤트 파이프라인…”)에서.
 
 ## Consequences
