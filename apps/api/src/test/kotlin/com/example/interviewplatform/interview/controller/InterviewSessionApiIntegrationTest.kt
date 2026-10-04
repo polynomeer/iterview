@@ -156,7 +156,7 @@ class InterviewSessionApiIntegrationTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.interviewMode").value("full_coverage"))
             .andExpect(jsonPath("$.currentQuestion.sourceType").value("coverage_planner"))
-            .andExpect(jsonPath("$.currentQuestion.title").value("Payment platform migration를 어떤 문제와 맥락에서 진행했는지 구체적으로 설명해 주세요."))
+            .andExpect(jsonPath("$.currentQuestion.title").value("Payment platform migration을 어떤 문제와 맥락에서 진행했는지 구체적으로 설명해 주세요."))
             .andExpect(jsonPath("$.currentQuestion.bodyText").value(startsWith("이력서 근거: ")))
             .andExpect(jsonPath("$.currentQuestion.contentLocale").value("ko"))
             .andExpect(jsonPath("$.currentQuestion.resumeEvidence[0].sourceRecordType").value("resume_project_snapshot"))
@@ -646,6 +646,47 @@ class InterviewSessionApiIntegrationTest {
 
         assertEquals(2, skips)
         assertTrue(titles.all { it.contains("Moved the settlement") }, titles.toString())
+    }
+
+    @Test
+    fun `full coverage moves to the next resume section after a skip`() {
+        val resumeVersionId = insertResumeVersion()
+        insertResumeProject(resumeVersionId)
+        insertResumeExperience(resumeVersionId)
+
+        val sessionResponse = mockMvc.perform(
+            post("/api/interview-sessions")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    objectMapper.writeValueAsString(
+                        mapOf(
+                            "sessionType" to "resume_mock",
+                            "interviewMode" to "full_coverage",
+                            "questionCount" to 1,
+                            "resumeVersionId" to resumeVersionId,
+                        ),
+                    ),
+                ),
+        )
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+            .let(objectMapper::readTree)
+        val sessionId = sessionResponse.get("id").asLong()
+        val first = sessionResponse.get("currentQuestion")
+        assertEquals("resume_project_snapshot", first.get("resumeEvidence")[0].get("sourceRecordType").asText())
+
+        mockMvc.perform(
+            post("/api/interview-sessions/$sessionId/skip-question")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("sessionQuestionId" to first.get("id").asLong()))),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.currentQuestion.resumeEvidence[0].sourceRecordType").value("resume_experience_snapshot"))
+            .andExpect(jsonPath("$.currentQuestion.title").value(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("건너뛴"))))
     }
 
     @Test

@@ -1283,11 +1283,26 @@ class InterviewSessionService(
                 .sumOf { candidate -> linkCountsByEvidenceId[candidate.id] ?: 0 }
             item.id to sameRecordFacetLinkCount
         }
+        val askedCountByRecord = evidenceItems
+            .groupBy { evidenceKey(it.sourceRecordType, it.sourceRecordId) }
+            .mapValues { (_, items) -> items.count { it.coverageStatus != COVERAGE_STATUS_UNASKED } }
+        val currentRecord = lastResolvedRecord(sessionId, evidenceItems)
+            ?.takeIf { (unresolvedRecoveryCountByRecord[it] ?: 0) == 0 }
+        val firstPass = candidateItems.all { it.coverageStatus == COVERAGE_STATUS_UNASKED }
+        val recordOf = { item: InterviewSessionEvidenceItemEntity -> evidenceKey(item.sourceRecordType, item.sourceRecordId) }
+        // First pass, one resume section at a time: a section answered well keeps going into its
+        // next facet; a weak or skipped answer moves on to a section not yet asked, and the
+        // unfinished section waits until every other section has had its turn.
+        val sectionOrder = if (firstPass) {
+            compareBy<InterviewSessionEvidenceItemEntity> { if ((unresolvedRecoveryCountByRecord[recordOf(it)] ?: 0) > 0) 1 else 0 }
+                .thenBy { if (recordOf(it) == currentRecord) 0 else 1 }
+                .thenBy { askedCountByRecord[recordOf(it)] ?: 0 }
+        } else {
+            compareByDescending<InterviewSessionEvidenceItemEntity> { unresolvedRecoveryCountByRecord[recordOf(it)] ?: 0 }
+        }
         return candidateItems
             .sortedWith(
-                compareByDescending<InterviewSessionEvidenceItemEntity> {
-                    unresolvedRecoveryCountByRecord[evidenceKey(it.sourceRecordType, it.sourceRecordId)] ?: 0
-                }
+                sectionOrder
                     .thenBy {
                         facetPathPriority(
                             facet = it.facet,
@@ -1303,6 +1318,17 @@ class InterviewSessionService(
                     .thenBy { it.id },
             )
             .firstOrNull()
+    }
+
+    private fun lastResolvedRecord(sessionId: Long, evidenceItems: List<InterviewSessionEvidenceItemEntity>): String? {
+        val lastResolved = interviewSessionQuestionRepository.findByInterviewSessionIdOrderByOrderIndexAsc(sessionId)
+            .lastOrNull { it.answerAttemptId != null || it.skippedAt != null }
+            ?: return null
+        val itemsById = evidenceItems.associateBy { it.id }
+        return interviewSessionQuestionEvidenceLinkRepository.findByIdInterviewSessionQuestionIdIn(listOf(lastResolved.id))
+            .sortedBy { if (it.linkRole == LINK_ROLE_PRIMARY) 0 else 1 }
+            .firstNotNullOfOrNull { link -> itemsById[link.id.interviewSessionEvidenceItemId] }
+            ?.let { evidenceKey(it.sourceRecordType, it.sourceRecordId) }
     }
 
     private fun buildDeterministicCoverageRow(
@@ -1618,25 +1644,55 @@ class InterviewSessionService(
             }
         }
 
-    private fun deterministicCoverageTitleKo(targetItem: InterviewSessionEvidenceItemEntity, coverageStatus: String): String =
-        when {
+    private fun deterministicCoverageTitleKo(targetItem: InterviewSessionEvidenceItemEntity, coverageStatus: String): String {
+        fun subject(fallback: String, withFinal: String = "", withoutFinal: String = "") =
+            coverageSubjectKo(targetItem, fallback, withFinal, withoutFinal)
+        return when {
             coverageStatus == COVERAGE_STATUS_WEAK ->
-                "앞선 답변만으로는 ${coverageSubject(targetItem, "이 근거")}가 충분히 방어되지 않았습니다. 이번에는 더 구체적으로 설명해 주세요."
+                "앞선 답변만으로는 ${subject("이 근거", "이", "가")} 충분히 방어되지 않았습니다. 이번에는 더 구체적으로 설명해 주세요."
             coverageStatus == COVERAGE_STATUS_SKIPPED ->
-                "앞에서 건너뛴 ${coverageSubject(targetItem, "이 근거")}로 다시 돌아가 보겠습니다. 이번에는 명확하게 설명해 주세요."
+                "앞에서 건너뛴 ${subject("이 근거", "으로", "로")} 다시 돌아가 보겠습니다. 이번에는 명확하게 설명해 주세요."
             else -> when (targetItem.facet) {
-                "problem" -> "${coverageSubject(targetItem, "이 경험")}을 시작하게 된 구체적인 문제와 제약이 무엇이었는지 설명해 주세요."
-                "action" -> "${coverageSubject(targetItem, "이 경험")}에서 어떤 구현과 의사결정을 직접 했는지 구체적으로 설명해 주세요."
-                "result" -> "${coverageSubject(targetItem, "이 경험")}이 실제로 어떤 결과를 냈고, 그 결과를 어떻게 검증했는지 설명해 주세요."
-                "metric" -> "${coverageSubject(targetItem, "이 경험")}의 효과를 어떤 지표로 판단했고 기준을 어떻게 잡았는지 설명해 주세요."
-                "tradeoff" -> "${coverageSubject(targetItem, "이 경험")}을 진행하면서 어떤 대안과 트레이드오프를 비교했는지 설명해 주세요."
+                "problem" -> "${subject("이 경험", "을", "를")} 시작하게 된 구체적인 문제와 제약이 무엇이었는지 설명해 주세요."
+                "action" -> "${subject("이 경험")}에서 어떤 구현과 의사결정을 직접 했는지 구체적으로 설명해 주세요."
+                "result" -> "${subject("이 경험", "이", "가")} 실제로 어떤 결과를 냈고, 그 결과를 어떻게 검증했는지 설명해 주세요."
+                "metric" -> "${subject("이 경험")}의 효과를 어떤 지표로 판단했고 기준을 어떻게 잡았는지 설명해 주세요."
+                "tradeoff" -> "${subject("이 경험", "을", "를")} 진행하면서 어떤 대안과 트레이드오프를 비교했는지 설명해 주세요."
                 else -> when (targetItem.section) {
-                    "project" -> "${coverageSubject(targetItem, "이 프로젝트")}를 어떤 문제와 맥락에서 진행했는지 구체적으로 설명해 주세요."
-                    "experience" -> "${coverageSubject(targetItem, "이 경험")}에서 해결하려던 문제와 실제 해결 과정을 설명해 주세요."
-                    else -> "${coverageSubject(targetItem, "이 이력서 내용")}에 담긴 구체적인 사례를 설명해 주세요."
+                    "project" -> "${subject("이 프로젝트", "을", "를")} 어떤 문제와 맥락에서 진행했는지 구체적으로 설명해 주세요."
+                    "experience" -> "${subject("이 경험")}에서 해결하려던 문제와 실제 해결 과정을 설명해 주세요."
+                    else -> "${subject("이 이력서 내용")}에 담긴 구체적인 사례를 설명해 주세요."
                 }
             }
         }
+    }
+
+    // The particle follows the word it attaches to: the label, or the fallback noun when the
+    // subject is "이 경험(“…”)". 으로 becomes 로 after a ㄹ final, as in 개편으로 / 설계로.
+    private fun coverageSubjectKo(
+        targetItem: InterviewSessionEvidenceItemEntity,
+        fallback: String,
+        withFinal: String,
+        withoutFinal: String,
+    ): String {
+        val subject = coverageSubject(targetItem, fallback)
+        if (withFinal.isEmpty()) {
+            return subject
+        }
+        val anchor = if (targetItem.label.isNullOrBlank()) fallback else subject
+        val last = anchor.trimEnd { !it.isLetterOrDigit() }.lastOrNull() ?: return subject + withoutFinal
+        val finalConsonant = when (last) {
+            in '\uAC00'..'\uD7A3' -> (last - '\uAC00') % 28
+            in '0'..'9' -> if (last in "013678") (if (last in "178") 8 else 1) else 0
+            else -> if (last.lowercaseChar() in "lr") 8 else if (last.lowercaseChar() in "mn") 1 else 0
+        }
+        val particle = when {
+            finalConsonant == 0 -> withoutFinal
+            withFinal == "으로" && finalConsonant == 8 -> withoutFinal
+            else -> withFinal
+        }
+        return subject + particle
+    }
 
     // Unlabeled evidence names itself by a short quote, so successive questions about different
     // resume lines do not read identically: "이 경험(“SQS 이벤트 파이프라인…”)에서 …".
