@@ -81,6 +81,33 @@ class AnswerApiIntegrationTest {
     }
 
     @Test
+    fun `feedback and analysis summaries follow the user's language`() {
+        val questionId = insertQuestion(title = "Explain caching strategy")
+        val hangul = org.hamcrest.Matchers.matchesPattern(".*[가-힣].*")
+
+        val korean = objectMapper.readTree(submitAnswer(questionId, "잘 모르겠습니다."))
+        mockMvc.perform(get("/api/answer-attempts/${korean.get("answerAttemptId").asLong()}").header("Authorization", authHeader))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.feedback[0].title").value(hangul))
+            .andExpect(jsonPath("$.feedback[1].body").value(hangul))
+            .andExpect(jsonPath("$.analysis.weaknessSummary").value(hangul))
+            .andExpect(jsonPath("$.analysis.recommendedNextStep").value(hangul))
+
+        val english = mockMvc.perform(
+            post("/api/questions/$questionId/answers")
+                .header("Authorization", authHeader)
+                .header("X-App-Locale", "en")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("answerMode" to "text", "contentText" to "Not sure."))),
+        )
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString.let(objectMapper::readTree)
+        mockMvc.perform(get("/api/answer-attempts/${english.get("answerAttemptId").asLong()}").header("Authorization", authHeader))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.feedback[0].title").value("Add clearer structure"))
+    }
+
+    @Test
     fun `progress updates latest and best attempt`() {
         val questionId = insertQuestion(title = "Design retry strategy")
 

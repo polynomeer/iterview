@@ -558,15 +558,16 @@ class QuestionService(
         curated: List<QuestionReferenceAnswerDto>,
         practicalInterviewContext: PracticalInterviewQuestionContextDto?,
     ): List<QuestionReferenceAnswerDto> {
+        val korean = appLocaleService.resolveLanguage() == "ko"
         val imported = practicalInterviewContext?.importedAnswerSummary?.takeIf { it.isNotBlank() }?.let {
             listOf(
                 QuestionReferenceAnswerDto(
                     id = -practicalInterviewContext.sourceInterviewQuestionId,
-                    title = "Imported real interview answer summary",
+                    title = if (korean) "실제 면접에서 한 답변 요약" else "Imported real interview answer summary",
                     answerText = practicalInterviewContext.importedAnswerText?.takeIf { text -> text.isNotBlank() } ?: it,
                     answerFormat = if (practicalInterviewContext.importedAnswerText.isNullOrBlank()) "summary" else "transcript_excerpt",
                     sourceType = QUESTION_SOURCE_TYPE_REAL_INTERVIEW_IMPORT,
-                    sourceLabel = "Real interview",
+                    sourceLabel = if (korean) "실제 면접" else "Real interview",
                     contentLocale = null,
                     isUserGenerated = false,
                     targetRoleId = null,

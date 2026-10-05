@@ -42,25 +42,54 @@ class AnswerAnalysisService(
             },
         )
 
+        val korean = appLocaleService.resolveLanguage() == "ko"
+        fun text(ko: String, en: String) = if (korean) ko else en
+
         val strengthSummary = when {
-            score.totalScore >= 85 -> "Strong answer with clear structure and defensible technical choices."
-            score.totalScore >= 65 -> "Solid baseline answer that covers the prompt and shows partial depth."
-            else -> feedback.firstOrNull()?.body ?: "The answer shows initial understanding but needs stronger structure and evidence."
+            score.totalScore >= 85 -> text(
+                "구조가 분명하고 기술적 선택을 방어할 수 있는 답변입니다.",
+                "Strong answer with clear structure and defensible technical choices.",
+            )
+            score.totalScore >= 65 -> text(
+                "질문을 빠짐없이 다루고 어느 정도 깊이도 보이는 안정적인 답변입니다.",
+                "Solid baseline answer that covers the prompt and shows partial depth.",
+            )
+            // Not the first feedback item: for a weak answer that is an improvement, and the
+            // result screen shows this line as a strength.
+            else -> text(
+                "질문의 방향은 잡았지만 구조와 근거를 더 보강해야 합니다.",
+                "The answer shows initial understanding but needs stronger structure and evidence.",
+            )
         }
 
         val weaknessSummary = when {
-            score.totalScore < 60 -> "Add more concrete examples, tradeoffs, and a clearer explanation of why your approach works."
-            tradeoffScore.toInt() < 60 -> "The answer needs a stronger explanation of tradeoffs, constraints, and failure handling."
-            else -> "Push deeper on examples and measurable outcomes to make the answer more interview-ready."
+            score.totalScore < 60 -> text(
+                "구체적인 사례와 트레이드오프, 그리고 그 방법이 왜 맞는지에 대한 설명을 더 넣어 보세요.",
+                "Add more concrete examples, tradeoffs, and a clearer explanation of why your approach works.",
+            )
+            tradeoffScore.toInt() < 60 -> text(
+                "트레이드오프, 제약, 실패했을 때의 대응을 더 분명히 설명해야 합니다.",
+                "The answer needs a stronger explanation of tradeoffs, constraints, and failure handling.",
+            )
+            else -> text(
+                "사례와 측정 가능한 결과를 더 깊이 다뤄 면접에서 통할 수준으로 끌어올려 보세요.",
+                "Push deeper on examples and measurable outcomes to make the answer more interview-ready.",
+            )
         }
 
         val recommendedNextStep = when {
-            attempt.answerMode == "skip" || attempt.answerMode == "unanswered" ->
-                "Write a full first-pass answer before optimizing for depth."
-            score.totalScore < 60 ->
-                "Re-answer using a concrete production example with metrics, constraints, and tradeoffs."
-            else ->
-                "Practice one likely follow-up question and make the tradeoff discussion more explicit."
+            attempt.answerMode == "skip" || attempt.answerMode == "unanswered" -> text(
+                "깊이를 다듬기 전에 먼저 처음부터 끝까지 답변을 써 보세요.",
+                "Write a full first-pass answer before optimizing for depth.",
+            )
+            score.totalScore < 60 -> text(
+                "수치, 제약, 트레이드오프가 담긴 실제 운영 사례로 다시 답해 보세요.",
+                "Re-answer using a concrete production example with metrics, constraints, and tradeoffs.",
+            )
+            else -> text(
+                "나올 법한 꼬리질문 하나를 연습하고 트레이드오프를 더 분명하게 말해 보세요.",
+                "Practice one likely follow-up question and make the tradeoff discussion more explicit.",
+            )
         }
         val generated = generateDeepFeedback(
             questionTitle = questionTitle,
@@ -226,7 +255,13 @@ class AnswerAnalysisService(
     private fun weighted(value: Double): BigDecimal = value.coerceIn(0.0, 100.0).toBigDecimal().setScale(2, RoundingMode.HALF_UP)
 
     private companion object {
-        val TRADEOFF_HINTS = listOf("tradeoff", "however", "instead", "versus", "vs", "cost")
-        val EXAMPLE_HINTS = listOf("for example", "for instance", "because", "measured", "latency", "throughput")
+        val TRADEOFF_HINTS = listOf(
+            "tradeoff", "however", "instead", "versus", "vs", "cost",
+            "트레이드오프", "대신", "반면", "하지만", "비용", "단점", "감수",
+        )
+        val EXAMPLE_HINTS = listOf(
+            "for example", "for instance", "because", "measured", "latency", "throughput",
+            "예를 들어", "예를 들면", "예컨대", "실제로", "측정", "지연", "처리량", "때문에",
+        )
     }
 }

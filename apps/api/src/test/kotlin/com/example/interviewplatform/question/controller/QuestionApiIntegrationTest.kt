@@ -536,7 +536,7 @@ class QuestionApiIntegrationTest {
             .andExpect(jsonPath("$.practicalInterviewContext.interviewerProfileId").value(interviewerProfileId))
             .andExpect(jsonPath("$.practicalInterviewContext.topicTags[0]").value("incident"))
             .andExpect(jsonPath("$.referenceAnswers[2].sourceType").value("real_interview_import"))
-            .andExpect(jsonPath("$.referenceAnswers[2].title").value("Imported real interview answer summary"))
+            .andExpect(jsonPath("$.referenceAnswers[2].title").value("실제 면접에서 한 답변 요약"))
 
         mockMvc.perform(get("/api/questions/$linkedQuestionId/reference-answers").header("Authorization", authHeader))
             .andExpect(status().isOk)

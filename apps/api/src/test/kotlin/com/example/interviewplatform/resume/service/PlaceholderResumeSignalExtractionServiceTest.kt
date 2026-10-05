@@ -1,16 +1,21 @@
 package com.example.interviewplatform.resume.service
 
+import com.example.interviewplatform.common.service.AppLocaleService
 import com.example.interviewplatform.resume.entity.ResumeVersionEntity
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import java.time.Instant
 import java.time.LocalDate
 
 class PlaceholderResumeSignalExtractionServiceTest {
-    private val service = PlaceholderResumeSignalExtractionService(ObjectMapper())
+    private val locale = Mockito.mock(AppLocaleService::class.java).also {
+        Mockito.`when`(it.resolveLanguage()).thenReturn("ko")
+    }
+    private val service = PlaceholderResumeSignalExtractionService(ObjectMapper(), locale)
 
     @Test
     fun `english section titles and dash ranges are read as career and projects`() {
@@ -33,6 +38,8 @@ class PlaceholderResumeSignalExtractionServiceTest {
         assertTrue(signals.achievements.any { it.sourceText == "API latency 1.5초 → 300ms after the 앨범·트랙 split" })
         assertEquals("API latency 1.5초 → 300ms after the 앨범·트랙 split", signals.achievements.first { it.sourceText.orEmpty().startsWith("API latency") }.title)
         assertTrue(signals.achievements.none { it.sourceText.orEmpty().contains("took 2시간 and delayed") })
+        assertTrue(signals.risks.isNotEmpty())
+        assertTrue(signals.risks.all { it.title == "근거가 필요한 수치 성과" || it.title == "꼬리질문에 대비할 이력서 주장" }, signals.risks.toString())
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.example.interviewplatform.resume.service
 
+import com.example.interviewplatform.common.service.AppLocaleService
 import com.example.interviewplatform.resume.entity.ResumeVersionEntity
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -9,6 +10,7 @@ import java.time.LocalDate
 @Service
 class PlaceholderResumeSignalExtractionService(
     private val objectMapper: ObjectMapper,
+    private val appLocaleService: AppLocaleService,
 ) : ResumeSignalExtractionService {
     override fun extract(version: ResumeVersionEntity): ExtractedResumeSignals {
         val sections = ParsedResumeSections.parse(version)
@@ -343,8 +345,11 @@ class PlaceholderResumeSignalExtractionService(
         .map {
             ExtractedResumeRisk(
                 riskType = if (it.sourceText.contains('%')) "impact_claim" else "experience_claim",
-                title = "Resume claim needs follow-up defense",
-                description = "Be ready to defend this claim from resume version ${version.versionNo}: ${it.sourceText}",
+                title = text("꼬리질문에 대비할 이력서 주장", "Resume claim needs follow-up defense"),
+                description = text(
+                    "이력서 ${version.versionNo}번 버전의 이 주장을 방어할 준비를 하세요: ${it.sourceText}",
+                    "Be ready to defend this claim from resume version ${version.versionNo}: ${it.sourceText}",
+                ),
                 severity = it.riskLevel.uppercase(),
             )
         } + achievements
@@ -352,11 +357,17 @@ class PlaceholderResumeSignalExtractionService(
         .map {
             ExtractedResumeRisk(
                 riskType = "achievement_claim",
-                title = "Measured achievement needs evidence",
-                description = "Be ready to explain the evidence and method behind: ${it.impactSummary}",
+                title = text("근거가 필요한 수치 성과", "Measured achievement needs evidence"),
+                description = text(
+                    "이 성과의 근거와 측정 방법을 설명할 준비를 하세요: ${it.impactSummary}",
+                    "Be ready to explain the evidence and method behind: ${it.impactSummary}",
+                ),
                 severity = "HIGH",
             )
         }).distinctBy { it.riskType to it.description }
+
+    // Risk notes are read in the language the user works in, like the rest of the generated text.
+    private fun text(ko: String, en: String): String = if (appLocaleService.resolveLanguage() == "ko") ko else en
 
     private fun parseCareerHeader(line: String): CareerHeader {
         val normalized = line.trim()

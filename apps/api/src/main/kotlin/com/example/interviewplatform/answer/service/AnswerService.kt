@@ -16,6 +16,7 @@ import com.example.interviewplatform.answer.repository.AnswerAnalysisRepository
 import com.example.interviewplatform.answer.repository.AnswerAttemptRepository
 import com.example.interviewplatform.answer.repository.AnswerFeedbackItemRepository
 import com.example.interviewplatform.answer.repository.AnswerScoreRepository
+import com.example.interviewplatform.common.service.AppLocaleService
 import com.example.interviewplatform.common.service.ClockService
 import com.example.interviewplatform.question.dto.UserProgressSummaryDto
 import com.example.interviewplatform.question.entity.UserQuestionProgressEntity
@@ -44,6 +45,7 @@ class AnswerService(
     private val answerPolicyService: AnswerPolicyService,
     private val retrySchedulingService: RetrySchedulingService,
     private val clockService: ClockService,
+    private val appLocaleService: AppLocaleService,
 ) {
     @Transactional
     fun submitAnswer(
@@ -222,13 +224,16 @@ class AnswerService(
         )
 
     private fun buildFeedback(score: ScoreSummaryDto, answerAttemptId: Long, now: java.time.Instant): List<AnswerFeedbackItemEntity> {
+        // Stored in the language the answer was given in, like the rest of the analysis.
+        val korean = appLocaleService.resolveLanguage() == "ko"
+        fun text(ko: String, en: String) = if (korean) ko else en
         val primary = if (score.evaluationResult == PASS_RESULT) {
             AnswerFeedbackItemEntity(
                 answerAttemptId = answerAttemptId,
                 feedbackType = "strength",
                 severity = "info",
-                title = "Good baseline answer",
-                body = "Your answer covers the question and keeps a coherent flow.",
+                title = text("기본기가 갖춰진 답변", "Good baseline answer"),
+                body = text("질문에 답하고 있고 흐름도 자연스럽게 이어집니다.", "Your answer covers the question and keeps a coherent flow."),
                 displayOrder = 1,
                 createdAt = now,
             )
@@ -237,8 +242,8 @@ class AnswerService(
                 answerAttemptId = answerAttemptId,
                 feedbackType = "improvement",
                 severity = "high",
-                title = "Add clearer structure",
-                body = "Use a short intro, key points, and a concise conclusion.",
+                title = text("구조를 더 분명하게", "Add clearer structure"),
+                body = text("짧은 도입, 핵심 포인트, 간결한 결론 순서로 말해 보세요.", "Use a short intro, key points, and a concise conclusion."),
                 displayOrder = 1,
                 createdAt = now,
             )
@@ -249,8 +254,11 @@ class AnswerService(
                 answerAttemptId = answerAttemptId,
                 feedbackType = "next_step",
                 severity = "low",
-                title = "Raise company relevance",
-                body = "Connect your example to the target company context for stronger fit.",
+                title = text("지원 회사와 연결하기", "Raise company relevance"),
+                body = text(
+                    "사례를 지원하는 회사의 상황과 연결하면 적합도가 더 잘 드러나요.",
+                    "Connect your example to the target company context for stronger fit.",
+                ),
                 displayOrder = 2,
                 createdAt = now,
             )
@@ -259,8 +267,8 @@ class AnswerService(
                 answerAttemptId = answerAttemptId,
                 feedbackType = "improvement",
                 severity = "medium",
-                title = "Increase specificity",
-                body = "Include concrete examples, metrics, and technical decisions.",
+                title = text("더 구체적으로", "Increase specificity"),
+                body = text("실제 사례, 수치, 기술적 판단을 넣어 보세요.", "Include concrete examples, metrics, and technical decisions."),
                 displayOrder = 2,
                 createdAt = now,
             )
