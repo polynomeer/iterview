@@ -200,3 +200,5 @@ Each ADR should include:
    Full coverage asks each resume detail at most twice and then completes; header-only and too-short snippets are not evidence.
 87. [`0087-record-initial-technology-selection.md`](0087-record-initial-technology-selection.md)
    Reconstructs, with alternatives and costs, why the initial commits chose Kotlin/Spring Boot, PostgreSQL, OpenAI over HTTP, and a Vite React SPA.
+88. [`0088-browser-journeys-with-playwright.md`](0088-browser-journeys-with-playwright.md)
+   Core journeys run in Chromium with Playwright, each on a fresh account; `./scripts/e2e.sh` and a CI job run them.

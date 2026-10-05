@@ -65,6 +65,8 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: "jsdom",
       setupFiles: "./src/test/setup.ts",
+      // Browser journeys under e2e/ run with Playwright, not Vitest.
+      include: ["src/**/*.{test,spec}.{ts,tsx}"],
     },
   };
 });

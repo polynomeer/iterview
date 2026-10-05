@@ -33,3 +33,7 @@ coverage/
 .idea/
 .vscode/
 *.local
+
+# Playwright
+test-results/
+playwright-report/

@@ -33,6 +33,8 @@ Run from the repository root unless noted.
 | All tests | `./scripts/test_all.sh` |
 | Full handoff check | `./scripts/verify_all.sh` |
 | Full local stack (Docker) | `./scripts/dev_all.sh` |
+| Browser journeys (stack running) | `./scripts/e2e.sh` |
+| Browser journeys (start API + web) | `./scripts/e2e.sh --start` |
 
 API integration tests use Testcontainers, so Docker must be running for `./gradlew test`.
 
