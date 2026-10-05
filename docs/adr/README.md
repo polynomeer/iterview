@@ -198,3 +198,5 @@ Each ADR should include:
    "Today" for daily cards follows `app.time-zone` (default Asia/Seoul), not UTC; tests compare with `ClockService.today()`.
 86. [`0086-full-coverage-asks-each-resume-detail-at-most-twice.md`](0086-full-coverage-asks-each-resume-detail-at-most-twice.md)
    Full coverage asks each resume detail at most twice and then completes; header-only and too-short snippets are not evidence.
+87. [`0087-record-initial-technology-selection.md`](0087-record-initial-technology-selection.md)
+   Reconstructs, with alternatives and costs, why the initial commits chose Kotlin/Spring Boot, PostgreSQL, OpenAI over HTTP, and a Vite React SPA.
