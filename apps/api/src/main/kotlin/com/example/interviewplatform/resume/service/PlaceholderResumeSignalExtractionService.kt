@@ -247,8 +247,9 @@ class PlaceholderResumeSignalExtractionService(
                     // A middle dot between words ("앨범·트랙") is not a bullet; only a spaced one is.
                     .split("•", " · ", "\n")
                     .map { it.trim() }
-                    .filter { it.isNotBlank() && (it.contains("→") || METRIC_PATTERN.containsMatchIn(it)) }
-                    .ifEmpty { listOf(source.sourceText) }
+                    // A claim reports a change ("2시간 → 10분", "35% 개선"); a figure that only sets
+                    // the scene ("2시간 이상 걸려 지연됐습니다") is the problem, not an achievement.
+                    .filter { it.isNotBlank() && isAchievementLine(it) }
                     .map { line -> source to line }
             }
             .distinctBy { (_, line) -> line }
@@ -256,7 +257,7 @@ class PlaceholderResumeSignalExtractionService(
             .mapIndexed { index, (source, line) ->
                 val metric = METRIC_PATTERN.find(line)?.value
                 ExtractedResumeAchievement(
-                    title = line.substringBefore("→").substringBefore(":").trim().ifBlank { "Achievement ${index + 1}" },
+                    title = achievementTitle(line).ifBlank { "Achievement ${index + 1}" },
                     metricText = metric,
                     impactSummary = line,
                     sourceText = line,
@@ -266,6 +267,16 @@ class PlaceholderResumeSignalExtractionService(
                     projectDisplayOrder = source.projectDisplayOrder,
                 )
             }
+    }
+
+    private fun isAchievementLine(line: String): Boolean =
+        CHANGE_ARROW.containsMatchIn(line) || (METRIC_PATTERN.containsMatchIn(line) && OUTCOME_PATTERN.containsMatchIn(line))
+
+    // The whole claim, or the label of a "label: detail" line.
+    private fun achievementTitle(line: String): String {
+        val label = line.substringBefore(":", missingDelimiterValue = "").trim()
+        val title = if (label.length in 2..30) label else line.trim().trimEnd('.')
+        return title.take(ACHIEVEMENT_TITLE_LENGTH)
     }
 
     private fun extractEducation(sections: ParsedResumeSections): List<ExtractedResumeEducation> =
@@ -449,6 +460,12 @@ class PlaceholderResumeSignalExtractionService(
         val RANGE_SEPARATOR = Regex("""\s*[~–—-]\s*""")
         val OPEN_END_PATTERN = Regex("""현재|진행\s?중|present""", RegexOption.IGNORE_CASE)
         val SINGLE_DATE_PATTERN = Regex("""(\d{4})\.(\d{1,2})(?:\.(\d{1,2}))?""")
+        const val ACHIEVEMENT_TITLE_LENGTH = 120
+        val CHANGE_ARROW = Regex("""→|⇒|->""")
+        val OUTCOME_PATTERN = Regex(
+            """단축|줄였|줄어|감소|개선|향상|증가|높였|늘렸|절감|reduced|improved|increased|cut|grew|saved""",
+            RegexOption.IGNORE_CASE,
+        )
         val METRIC_PATTERN = Regex("""\d+(?:\.\d+)?(?:%|배|건|GB|MB|초|분|시간)""")
         val CERT_CODE_PATTERN = Regex("""[A-Z0-9-]{5,}""")
         val SCORE_PATTERN = Regex("""\b\d{3,4}점\b""")

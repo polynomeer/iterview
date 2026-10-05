@@ -31,6 +31,8 @@ class PlaceholderResumeSignalExtractionServiceTest {
 
         assertTrue(signals.contacts.any { it.contactType == "email" && it.valueText == "kim@example.com" })
         assertTrue(signals.achievements.any { it.sourceText == "API latency 1.5초 → 300ms after the 앨범·트랙 split" })
+        assertEquals("API latency 1.5초 → 300ms after the 앨범·트랙 split", signals.achievements.first { it.sourceText.orEmpty().startsWith("API latency") }.title)
+        assertTrue(signals.achievements.none { it.sourceText.orEmpty().contains("took 2시간 and delayed") })
     }
 
     @Test
@@ -82,6 +84,7 @@ class PlaceholderResumeSignalExtractionServiceTest {
             Acme Music (Acme Music, 2021.12 – 2025.2) runs a streaming service.
             Contents platform rebuild 2024.1 – 2025.2
             Acme Music
+            The nightly batch took 2시간 and delayed settlement.
             API latency 1.5초 → 300ms after the 앨범·트랙 split
             Batch memory tuning 2022.9 – 2022.12
             Acme Music
