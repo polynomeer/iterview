@@ -33,7 +33,7 @@ class FeedService(
 ) {
     @Transactional(readOnly = true)
     fun getFeed(userId: Long): FeedDto {
-        val questions = questionRepository.findByIsActiveTrue()
+        val questions = questionRepository.findPublicActive()
         if (questions.isEmpty()) {
             return FeedDto(popular = emptyList(), trending = emptyList(), companyRelated = emptyList())
         }

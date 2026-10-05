@@ -2025,7 +2025,7 @@ class InterviewSessionService(
     ): List<Long> {
         val limit = requestedCount.coerceIn(1, 10)
         val selected = linkedSetOf<Long>()
-        val activeQuestionsById = questionRepository.findByIsActiveTrue().associateBy { it.id }
+        val activeQuestionsById = questionRepository.findVisibleActive(userId).associateBy { it.id }
 
         seedQuestionIds.forEach { questionId ->
             if (questionId in activeQuestionsById) {

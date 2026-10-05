@@ -1133,7 +1133,7 @@ class InterviewSessionApiIntegrationTest {
             INSERT INTO questions (
                 category_id, title, body, question_type, difficulty_level, source_type, quality_status, visibility,
                 expected_answer_seconds, is_active, created_at, updated_at
-            ) VALUES (?, ?, ?, 'behavioral', 'MEDIUM', 'seed', 'approved', 'private', 180, true, now(), now())
+            ) VALUES (?, ?, ?, 'behavioral', 'MEDIUM', 'seed', 'approved', 'public', 180, true, now(), now())
             RETURNING id
             """.trimIndent(),
             Long::class.java,

@@ -256,6 +256,31 @@ class HomeApiIntegrationTest {
             .andExpect(jsonPath("$.resumeRiskPreview[0].questionId").value(riskQuestionId))
     }
 
+    @Test
+    fun `another users private interview question never becomes a daily card`() {
+        jdbcTemplate.update(
+            """
+            INSERT INTO users (id, email, password_hash, provider, provider_user_id, status, created_at, updated_at)
+            VALUES (2, 'other-user@example.com', NULL, 'local', NULL, 'ACTIVE', now(), now())
+            """.trimIndent(),
+        )
+        val privateQuestion = insertQuestion("Other user's interview question", "MEDIUM", true)
+        jdbcTemplate.update("UPDATE questions SET author_user_id = 2, visibility = 'private' WHERE id = ?", privateQuestion)
+        jdbcTemplate.update(
+            """
+            INSERT INTO daily_cards (user_id, question_id, card_date, card_type, source_reason, status, created_at)
+            VALUES (1, ?, ?, 'daily', 'recommendation', 'new', now())
+            """.trimIndent(),
+            privateQuestion,
+            clockService.today(),
+        )
+        val publicQuestion = insertQuestion("Catalog Question", "MEDIUM", true)
+
+        mockMvc.perform(get("/api/home").header("Authorization", authHeader))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.todayQuestion.questionId").value(publicQuestion))
+    }
+
     private fun insertQuestion(title: String, difficulty: String, active: Boolean): Long {
         val categoryId = jdbcTemplate.queryForObject("SELECT id FROM categories WHERE name = 'System Design'", Long::class.java)
         return jdbcTemplate.queryForObject(

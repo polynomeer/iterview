@@ -35,7 +35,11 @@ class DailyCardGenerationService(
         val now = clockService.now()
         val today = clockService.today()
 
+        val activeQuestionsById = questionRepository.findVisibleActive(userId).associateBy { it.id }
+        // Cards dated today but pointing at a question this user may not see (another user's
+        // private interview question, issued before visibility was enforced) are ignored.
         val existingCards = dailyCardRepository.findByUserIdAndCardDateOrderByCreatedAtAsc(userId, today)
+            .filter { it.questionId in activeQuestionsById }
         if (existingCards.isNotEmpty()) {
             return GeneratedDailySelection(
                 allCards = existingCards,
@@ -43,7 +47,6 @@ class DailyCardGenerationService(
             )
         }
 
-        val activeQuestionsById = questionRepository.findByIsActiveTrue().associateBy { it.id }
         if (activeQuestionsById.isEmpty()) {
             return GeneratedDailySelection(emptyList(), null)
         }
@@ -82,7 +85,13 @@ class DailyCardGenerationService(
         }
 
         if (mainCard == null) {
-            val fallback = pickFallbackQuestion(userId, activeQuestionsById.values, selectedQuestionIds)
+            // A new daily question comes from the public catalog; private questions generated
+            // inside an interview only make sense there.
+            val fallback = pickFallbackQuestion(
+                userId,
+                activeQuestionsById.values.filter { it.visibility.equals(QUESTION_VISIBILITY_PUBLIC, ignoreCase = true) },
+                selectedQuestionIds,
+            )
             if (fallback != null) {
                 mainCard = newCard(
                     userId = userId,
@@ -104,7 +113,7 @@ class DailyCardGenerationService(
     @Transactional(readOnly = true)
     fun resolveRetryCandidatesForHome(userId: Long): List<ReviewQueueEntity> {
         val now = clockService.now()
-        val activeIds = questionRepository.findByIsActiveTrue().map { it.id }.toSet()
+        val activeIds = questionRepository.findVisibleActive(userId).map { it.id }.toSet()
         return resolveRetryCandidates(userId, now, activeIds)
     }
 
@@ -223,6 +232,7 @@ class DailyCardGenerationService(
         const val STATUS_ARCHIVED = "archived"
         const val STATUS_NEW = "new"
         const val CARD_TYPE_DAILY = "daily"
+        const val QUESTION_VISIBILITY_PUBLIC = "public"
         const val CARD_TYPE_RETRY = "retry"
         const val SOURCE_REASON_RETRY_QUEUE = "retry_queue"
         const val SOURCE_REASON_RECOMMENDATION = "recommendation"
