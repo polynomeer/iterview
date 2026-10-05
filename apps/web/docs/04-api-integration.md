@@ -99,7 +99,7 @@ Primary endpoints:
 - `POST /api/review-queue/{queueId}/done`
 - `GET /api/archive`
 
-The review screen sorts and badges items by `scheduledFor` and `priority`, and shows `questionDifficulty`. The archive has no filter metadata, so source and title filtering happen in the browser.
+`GET /api/review-queue` returns due and upcoming pending items. The review screen sorts and badges items by `scheduledFor` and `priority`, shows `questionDifficulty`, and plots upcoming items on the week strip; the navigation badge and the mock-interview review count include due items only. The archive has no filter metadata, so source and title filtering happen in the browser.
 
 ### Current user and settings
 

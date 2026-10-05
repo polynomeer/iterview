@@ -53,11 +53,14 @@ class ReviewQueueApiIntegrationTest {
         val firstQueueId = insertQueue(q1, a1, 10, "now() - interval '2 hour'")
         val secondQueueId = insertQueue(q2, a2, 80, "now() - interval '1 hour'")
         insertQueue(q3, a3, 40, "now() - interval '1 hour'")
+        val q4 = insertQuestion("Queue Q4")
+        val upcomingQueueId = insertQueue(q4, insertAttempt(q4), 90, "now() + interval '2 day'")
 
         mockMvc.perform(get("/api/review-queue").header("Authorization", authHeader))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id").value(firstQueueId))
             .andExpect(jsonPath("$[1].id").value(secondQueueId))
+            .andExpect(jsonPath("$[3].id").value(upcomingQueueId))
 
         mockMvc.perform(post("/api/review-queue/$firstQueueId/skip").header("Authorization", authHeader))
             .andExpect(status().isOk)

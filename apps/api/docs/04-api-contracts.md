@@ -73,7 +73,7 @@ Endpoints:
 ## Review Queue And Archive
 
 Endpoints:
-- `GET /api/review-queue`
+- `GET /api/review-queue` returns every pending item, due and upcoming, ordered by `scheduledFor` then priority. An item is due when `scheduledFor` is today or earlier.
 - `POST /api/review-queue/{queueId}/skip`
 - `POST /api/review-queue/{queueId}/done`
 - `GET /api/archive`

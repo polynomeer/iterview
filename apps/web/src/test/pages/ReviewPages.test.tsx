@@ -6,7 +6,7 @@ import { useArchiveQuery } from "../../features/archive/api/useArchiveQuery";
 import { useReviewQueueActionMutation } from "../../features/review-queue/api/useReviewQueueActionMutation";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { ArchivePage } from "../../pages/review/ArchivePage";
-import { daysUntil, weekLoad } from "../../pages/review/dueDates";
+import { countDue, daysUntil, weekLoad } from "../../entities/review-queue/dueDates";
 import { ReviewQueuePage } from "../../pages/review/ReviewQueuePage";
 import { ApiClientError } from "../../shared/api/errors";
 import { renderWithProviders } from "../utils";
@@ -30,6 +30,11 @@ describe("due dates", () => {
     const week = weekLoad([at(0), at(0), at(1), at(-2), at(9)], NOW);
     expect(week.map((day) => day.count)).toEqual([1, 0, 2, 1, 0, 0, 0]);
     expect(week.findIndex((day) => day.isToday)).toBe(2);
+  });
+
+  it("counts only items due today or overdue", () => {
+    const items = [at(-1), at(0), at(1), at(5)].map((scheduledAt) => ({ scheduledAt }));
+    expect(countDue(items, NOW)).toBe(2);
   });
 });
 

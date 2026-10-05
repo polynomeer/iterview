@@ -4,6 +4,7 @@ import type { InterviewSessionListItemModel } from "../../entities/interview/mod
 import { useCreateInterviewSessionMutation } from "../../features/interview/api/useCreateInterviewSessionMutation";
 import { useInterviewSessionsQuery } from "../../features/interview/api/useInterviewSessionsQuery";
 import { useActiveResumeVersion } from "../../features/resume/model/useActiveResumeVersion";
+import { countDue } from "../../entities/review-queue/dueDates";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { getErrorDetails, optionalErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
@@ -77,7 +78,7 @@ export function InterviewPage() {
   const [basis, setBasis] = useState<Basis>("resume_mock");
   const [mode, setMode] = useState<Mode>("mock_30");
   const [questionCount, setQuestionCount] = useState<"3" | "5">("3");
-  const reviewCount = reviewQueueQuery.data?.items.length ?? 0;
+  const reviewCount = countDue(reviewQueueQuery.data?.items ?? []);
   const effectiveBasis: Basis = basis === "resume_mock" && !active && reviewCount > 0 ? "review_mock" : basis;
   const canStart = effectiveBasis === "resume_mock" ? Boolean(active) : reviewCount > 0;
   const modeOptions = effectiveBasis === "resume_mock" ? MODES : MODES.filter((candidate) => candidate.id !== "full_coverage");

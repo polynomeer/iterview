@@ -20,7 +20,7 @@ import {
   PageSkeleton,
   Segmented,
 } from "../../shared/ui/primitives";
-import { daysUntil, weekLoad } from "./dueDates";
+import { daysUntil, weekLoad } from "../../entities/review-queue/dueDates";
 import "./review.css";
 
 type SortMode = "due" | "priority";

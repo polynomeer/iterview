@@ -33,3 +33,8 @@ export function weekLoad(dueDates: Array<string | null>, now = new Date()) {
     return { date: day, count, isToday: day.getTime() === today.getTime() };
   });
 }
+
+/** Items due today or overdue. The queue also lists upcoming items for the week view. */
+export function countDue(items: Array<{ scheduledAt: string | null }>, now = new Date()) {
+  return items.filter((item) => (daysUntil(item.scheduledAt, now) ?? 0) <= 0).length;
+}

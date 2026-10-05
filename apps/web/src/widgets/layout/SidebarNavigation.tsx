@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useActiveResumeVersion } from "../../features/resume/model/useActiveResumeVersion";
+import { countDue } from "../../entities/review-queue/dueDates";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { useAuth } from "../../shared/auth/useAuth";
 import { LIBRARY_AREA, PRIMARY_AREAS, resolveNavLocation, SETTINGS_AREA, type NavArea } from "../../shared/config/navigation";
@@ -101,7 +102,7 @@ export function SidebarNavigation() {
   const { pathname } = useLocation();
   const activeArea = resolveNavLocation(pathname).area;
   const reviewQueueQuery = useReviewQueueQuery({ enabled: isAuthenticated });
-  const reviewCount = reviewQueueQuery.data?.items.length ?? 0;
+  const reviewCount = countDue(reviewQueueQuery.data?.items ?? []);
 
   const areaItem = (area: NavArea) => (
     <NavItem

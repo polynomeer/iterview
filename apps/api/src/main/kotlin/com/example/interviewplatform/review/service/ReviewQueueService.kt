@@ -32,7 +32,8 @@ class ReviewQueueService(
     fun listPending(userId: Long): List<ReviewQueueItemDto> {
         val now = clockService.now()
         refreshPendingPriorities(userId, now)
-        val rows = reviewQueueRepository.findByUserIdAndStatusAndScheduledForLessThanEqualOrderByScheduledForAscPriorityDesc(userId, STATUS_PENDING, now)
+        // Due and upcoming items: the review screen lists what is due now and plans the week ahead.
+        val rows = reviewQueueRepository.findByUserIdAndStatusOrderByScheduledForAscPriorityDesc(userId, STATUS_PENDING)
         if (rows.isEmpty()) {
             return emptyList()
         }
