@@ -16,7 +16,7 @@ interface ResumeVersionRepository : JpaRepository<ResumeVersionEntity, Long> {
     @Query("update ResumeVersionEntity rv set rv.isActive = false where rv.resumeId = :resumeId and rv.isActive = true")
     fun deactivateActiveByResumeId(resumeId: Long): Int
 
-    @Modifying
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update ResumeVersionEntity rv set rv.isActive = true where rv.id = :versionId")
     fun activateByVersionId(versionId: Long): Int
 

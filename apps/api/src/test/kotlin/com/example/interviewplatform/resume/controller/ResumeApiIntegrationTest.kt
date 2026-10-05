@@ -261,7 +261,17 @@ class ResumeApiIntegrationTest {
             )))
             .andExpect(jsonPath("$.parseCompletedAt").isNotEmpty)
             .andExpect(jsonPath("$.fileUrl").exists())
+            .andExpect(jsonPath("$.isActive").value(true))
             .andReturn()
+
+        mockMvc.perform(
+            multipart("/api/resumes/$resumeId/versions/upload")
+                .file(pdf)
+                .header("Authorization", authHeader),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.versionNo").value(2))
+            .andExpect(jsonPath("$.isActive").value(false))
 
         val root = objectMapper.readTree(result.response.contentAsString)
         val versionId = root.get("id").asLong()

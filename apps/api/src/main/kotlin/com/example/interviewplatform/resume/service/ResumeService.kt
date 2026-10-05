@@ -229,7 +229,14 @@ class ResumeService(
                     parseErrorMessage = null,
                 ),
             )
-            ResumeMapper.toVersionDto(extractAndPersistSignals(completedVersion))
+            val extracted = extractAndPersistSignals(completedVersion)
+            // A first upload becomes the version in use, so interviews and question picks work
+            // right away (ADR 0078); later uploads wait until the user switches to them.
+            val hasActiveVersion = resumeVersionRepository.findByResumeIdOrderByVersionNoAsc(resume.id).any { it.isActive }
+            if (!hasActiveVersion) {
+                resumeVersionRepository.activateByVersionId(extracted.id)
+            }
+            ResumeMapper.toVersionDto(resumeVersionRepository.findById(extracted.id).orElse(extracted))
         } catch (ex: Exception) {
             val failedAt = clockService.now()
             val failedVersion = saveResumeVersion(
