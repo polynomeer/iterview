@@ -32,6 +32,13 @@ app:
     login:
       max-attempts: ${APP_RATE_LIMIT_LOGIN_MAX_ATTEMPTS:5}
       window-seconds: ${APP_RATE_LIMIT_LOGIN_WINDOW_SECONDS:900}
+    # Per user, per hour (ADR 0090). 0 turns a limit off.
+    upload:
+      max-requests: ${APP_RATE_LIMIT_UPLOAD_MAX_REQUESTS:20}
+      window-seconds: ${APP_RATE_LIMIT_UPLOAD_WINDOW_SECONDS:3600}
+    generation:
+      max-requests: ${APP_RATE_LIMIT_GENERATION_MAX_REQUESTS:120}
+      window-seconds: ${APP_RATE_LIMIT_GENERATION_WINDOW_SECONDS:3600}
 
 auth:
   token:

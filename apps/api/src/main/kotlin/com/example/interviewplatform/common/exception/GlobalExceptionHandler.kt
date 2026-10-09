@@ -3,6 +3,7 @@ package com.example.interviewplatform.common.exception
 import com.example.interviewplatform.common.ApiErrorDetail
 import com.example.interviewplatform.common.ApiErrorResponse
 import com.example.interviewplatform.auth.service.LoginAttemptRateLimitExceededException
+import com.example.interviewplatform.common.ratelimit.RequestRateLimitExceededException
 import com.example.interviewplatform.common.service.AppLocaleService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
@@ -139,6 +140,25 @@ class GlobalExceptionHandler(
                     status = HttpStatus.TOO_MANY_REQUESTS.value(),
                     code = "LOGIN_RATE_LIMITED",
                     message = appLocaleService.getMessage("error.login_rate_limited", request),
+                    path = request.requestURI,
+                ),
+            )
+    }
+
+    @ExceptionHandler(RequestRateLimitExceededException::class)
+    fun handleRequestRateLimit(
+        ex: RequestRateLimitExceededException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ApiErrorResponse> {
+        log.warn("request_rate_limited path={} group={} retry_after_seconds={}", request.requestURI, ex.group, ex.retryAfterSeconds)
+        val minutes = ((ex.retryAfterSeconds + 59) / 60).coerceAtLeast(1)
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+            .header(HttpHeaders.RETRY_AFTER, ex.retryAfterSeconds.toString())
+            .body(
+                errorFactory.build(
+                    status = HttpStatus.TOO_MANY_REQUESTS.value(),
+                    code = "RATE_LIMITED",
+                    message = appLocaleService.getMessage("error.rate_limited.${ex.group}", request, minutes),
                     path = request.requestURI,
                 ),
             )

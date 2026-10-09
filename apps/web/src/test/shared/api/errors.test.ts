@@ -26,7 +26,7 @@ describe("mapApiError", () => {
 });
 
 describe("userFacingErrorMessage", () => {
-  it.each([400, 409, 422])("keeps the server message for actionable %s responses", (status) => {
+  it.each([400, 409, 422, 429])("keeps the server message for actionable %s responses", (status) => {
     const error = new ApiClientError(status, "이메일 형식이 올바르지 않습니다.");
 
     expect(userFacingErrorMessage(error, FALLBACK)).toBe("이메일 형식이 올바르지 않습니다.");

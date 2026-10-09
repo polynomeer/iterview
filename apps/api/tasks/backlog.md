@@ -19,7 +19,7 @@ and Testcontainers integration coverage are intentionally excluded.
 
 ### P1. Security And Reliability
 - authentication and authorization hardening, including token lifecycle review and sensitive-action policies
-- rate limiting for authentication, AI-assisted generation, and upload endpoints
+- rate limiting beyond one node: the per-user limits for login, uploads and generation (ADR 0090) are in memory, so several instances would each allow the full budget
 - observability: structured operational metrics, tracing boundaries, and alertable failure signals
 
 ### P2. Scale And Operations

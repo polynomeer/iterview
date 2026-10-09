@@ -22,10 +22,11 @@ export class ApiClientError extends Error {
   }
 }
 
-// Statuses whose server message tells the user how to fix their input. Everything else (missing
-// records, server faults, timeouts) is replaced by the screen's own localized fallback so raw
-// backend text such as "Answer attempt not found: 1" never reaches the UI.
-const ACTIONABLE_STATUSES = new Set([400, 409, 422]);
+// Statuses whose server message tells the user what to do: fix their input, or wait out a rate
+// limit ("요청이 너무 많아요. 12분 뒤에 다시 시도하세요."). Everything else (missing records, server
+// faults, timeouts) is replaced by the screen's own localized fallback so raw backend text such as
+// "Answer attempt not found: 1" never reaches the UI.
+const ACTIONABLE_STATUSES = new Set([400, 409, 422, 429]);
 
 export function userFacingErrorMessage(error: unknown, fallback: string) {
   if (error instanceof ApiClientError && ACTIONABLE_STATUSES.has(error.status) && error.message.trim()) {

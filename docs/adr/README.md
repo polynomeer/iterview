@@ -204,3 +204,5 @@ Each ADR should include:
    Core journeys run in Chromium with Playwright, each on a fresh account; `./scripts/e2e.sh` and a CI job run them.
 89. [`0089-today-follows-the-browser-time-zone.md`](0089-today-follows-the-browser-time-zone.md)
    The web sends `X-Time-Zone`; `ClockService.today()` uses it and falls back to `app.time-zone`. Amends 0085.
+90. [`0090-per-user-budgets-for-uploads-and-generation.md`](0090-per-user-budgets-for-uploads-and-generation.md)
+   Uploads (20/h) and LLM-backed requests (120/h) get per-user budgets; past them the API answers 429 with a localized wait.

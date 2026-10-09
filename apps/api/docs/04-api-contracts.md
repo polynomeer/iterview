@@ -20,6 +20,14 @@ Every endpoint accepts two optional headers:
 - `X-App-Locale` (`ko` or `en`): the language of generated text and localized errors. Without it the user's saved language, then `Accept-Language`, then `ko` applies.
 - `X-Time-Zone` (IANA name such as `Asia/Seoul`): the calendar for "today", which dates daily cards. A missing, unknown or offset-only value falls back to `app.time-zone` (default `Asia/Seoul`). ADR 0089.
 
+## Rate Limits
+
+Expensive requests have a per-user hourly budget (ADR 0090). Past it the API answers `429` with `Retry-After` (seconds) and error code `RATE_LIMITED`, with a localized message that says how many minutes to wait. Login keeps its own per-email limit (`LOGIN_RATE_LIMITED`).
+- `upload` (20 per hour): `POST /api/resumes/{resumeId}/versions/upload`, `POST /api/interview-records`, `POST /api/me/profile-image`
+- `generation` (120 per hour): `POST /api/questions/{questionId}/answers`, `POST /api/interview-sessions`, `POST /api/interview-sessions/{sessionId}/answers`, `POST /api/interview-records/{recordId}/retry-transcription`, `POST /api/resumes/{resumeId}/versions`, `POST /api/resume-versions/{versionId}/re-extract`, `POST /api/resume-versions/{versionId}/analyses`, `POST /api/resume-versions/{versionId}/editor/rewrite-suggestions`, `POST /api/resume-versions/{versionId}/editor/auto-question-suggestions`
+
+`APP_RATE_LIMIT_{UPLOAD,GENERATION}_{MAX_REQUESTS,WINDOW_SECONDS}` change the budgets; `0` turns one off.
+
 ## Public And Auth Endpoints
 
 ### Authentication

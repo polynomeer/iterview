@@ -26,9 +26,25 @@ class GlobalExceptionHandlerTest {
                 addMessage("error.upload_too_large", java.util.Locale.KOREAN, "업로드 파일이 너무 큽니다")
                 addMessage("error.unexpected_server_error", java.util.Locale.KOREAN, "예상하지 못한 서버 오류가 발생했습니다")
                 addMessage("error.upload_too_large", java.util.Locale.ENGLISH, "Uploaded file is too large")
+                addMessage("error.rate_limited.upload", java.util.Locale.KOREAN, "업로드를 너무 많이 했어요. {0}분 뒤에 다시 시도하세요.")
             },
         ),
     )
+
+    @Test
+    fun `a rate-limited group answers 429 with retry-after and the wait in minutes`() {
+        val request = MockHttpServletRequest("POST", "/api/resumes/6/versions/upload")
+
+        val response = handler.handleRequestRateLimit(
+            com.example.interviewplatform.common.ratelimit.RequestRateLimitExceededException("upload", 125),
+            request,
+        )
+
+        assertEquals(HttpStatus.TOO_MANY_REQUESTS, response.statusCode)
+        assertEquals("125", response.headers.getFirst("Retry-After"))
+        assertEquals("RATE_LIMITED", response.body?.error?.code)
+        assertEquals("업로드를 너무 많이 했어요. 3분 뒤에 다시 시도하세요.", response.body?.error?.message)
+    }
 
     @Test
     fun `max upload size exceeded maps to payload too large response`() {
