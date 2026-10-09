@@ -21,6 +21,6 @@ API integration tests cover each endpoint, and Vitest covers each screen with it
 
 ## Consequences
 - A change that breaks a core journey fails CI even when unit and API tests pass.
-- Every local run adds a few `e2e-*@iterview.test` accounts to the dev database. They are ordinary accounts and can be deleted by email domain.
+- Every local run adds a few `e2e-*@iterview.test` accounts to the dev database. `./scripts/e2e_cleanup.sh` removes them, with every row that depends on them and their uploads. It reports first and deletes only with `--apply`, and it only touches the local compose database.
 - The journeys run without an LLM key, so they exercise the deterministic extraction and question paths. LLM-backed behavior stays covered by the client unit tests.
 - Journey files are type-checked only by Playwright's transpiler, not by `tsc -b`, because the web app has no Node types.

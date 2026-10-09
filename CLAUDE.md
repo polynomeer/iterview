@@ -35,6 +35,7 @@ Run from the repository root unless noted.
 | Full local stack (Docker) | `./scripts/dev_all.sh` |
 | Browser journeys (stack running) | `./scripts/e2e.sh` |
 | Browser journeys (start API + web) | `./scripts/e2e.sh --start` |
+| Remove local journey accounts | `./scripts/e2e_cleanup.sh` (dry run), then `--apply` |
 
 API integration tests use Testcontainers, so Docker must be running for `./gradlew test`.
 
