@@ -1,7 +1,7 @@
 # 0085. The Product Day Follows a Configured Time Zone
 
 ## Status
-Accepted.
+Accepted. Amended by ADR 0089: the configured zone is now the fallback when the browser sends none.
 
 ## Date
 2026-10-02

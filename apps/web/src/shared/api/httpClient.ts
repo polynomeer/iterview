@@ -33,6 +33,27 @@ function createRequestSignal(sourceSignal?: AbortSignal) {
   };
 }
 
+/** The browser's IANA time zone, such as "Asia/Seoul"; the API dates "today" with it (ADR 0089). */
+export function browserTimeZone(): string | null {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || null;
+  } catch {
+    return null;
+  }
+}
+
+// Who is asking and where: the chosen UI language and the browser's time zone.
+function applyClientContext(headers: Headers) {
+  const appLocale = typeof window !== "undefined" ? getStoredAppLocale(window.localStorage) : null;
+  if (appLocale) {
+    headers.set("X-App-Locale", appLocale);
+  }
+  const timeZone = browserTimeZone();
+  if (timeZone) {
+    headers.set("X-Time-Zone", timeZone);
+  }
+}
+
 async function parseResponseBody(response: Response) {
   const contentType = response.headers.get("content-type") ?? "";
 
@@ -56,12 +77,7 @@ async function request<TResponse, TBody = unknown>(
 
   headers.set("Accept", "application/json");
 
-  const appLocale =
-    typeof window !== "undefined" ? getStoredAppLocale(window.localStorage) : null;
-
-  if (appLocale) {
-    headers.set("X-App-Locale", appLocale);
-  }
+  applyClientContext(headers);
 
   const isFormData = options.body instanceof FormData;
 
@@ -127,12 +143,7 @@ async function requestBlob(method: ApiMethod, path: string, options: ApiRequestO
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const appLocale =
-    typeof window !== "undefined" ? getStoredAppLocale(window.localStorage) : null;
-
-  if (appLocale) {
-    headers.set("X-App-Locale", appLocale);
-  }
+  applyClientContext(headers);
 
   const response = await fetch(`${env.apiBaseUrl}${path}`, {
     method,

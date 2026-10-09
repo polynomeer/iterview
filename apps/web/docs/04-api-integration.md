@@ -24,6 +24,8 @@ Configured through:
 - public routes can consume public endpoints
 - protected routes depend on authenticated bootstrap and route guarding
 
+Every request from `httpClient` also carries `X-App-Locale` (the chosen UI language) and `X-Time-Zone` (the browser's IANA time zone, from `Intl`), so generated text and the day boundary for 오늘 match what the user sees.
+
 Frontend-critical auth endpoints:
 - `POST /api/auth/signup`
 - `POST /api/auth/login`

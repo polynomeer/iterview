@@ -257,6 +257,19 @@ class HomeApiIntegrationTest {
     }
 
     @Test
+    fun `daily cards are dated in the time zone the browser sends`() {
+        insertQuestion("Catalog Question", "MEDIUM", true)
+        val zone = java.time.ZoneId.of("Pacific/Kiritimati")
+
+        mockMvc.perform(get("/api/home").header("Authorization", authHeader).header("X-Time-Zone", zone.id))
+            .andExpect(status().isOk)
+
+        val dates = jdbcTemplate.queryForList("SELECT card_date FROM daily_cards WHERE user_id = 1", java.sql.Date::class.java)
+            .map { it.toLocalDate() }
+        assertEquals(listOf(java.time.LocalDate.now(zone)), dates)
+    }
+
+    @Test
     fun `another users private interview question never becomes a daily card`() {
         jdbcTemplate.update(
             """

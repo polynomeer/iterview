@@ -14,6 +14,12 @@ This file exists to explain structure and intent, not to replace generated API r
 - additive response evolution is preferred over breaking replacements
 - product semantics should be visible in endpoint grouping
 
+## Request Context Headers
+
+Every endpoint accepts two optional headers:
+- `X-App-Locale` (`ko` or `en`): the language of generated text and localized errors. Without it the user's saved language, then `Accept-Language`, then `ko` applies.
+- `X-Time-Zone` (IANA name such as `Asia/Seoul`): the calendar for "today", which dates daily cards. A missing, unknown or offset-only value falls back to `app.time-zone` (default `Asia/Seoul`). ADR 0089.
+
 ## Public And Auth Endpoints
 
 ### Authentication
