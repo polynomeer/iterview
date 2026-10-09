@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { ResumeSnapshotModel } from "../../entities/resume/model";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
@@ -165,14 +165,39 @@ function ClaimEditor({ claim, item, versionId }: { claim: Claim; item: HeatmapIt
   const { own: questions, unassigned } = claimQuestions(claim, item);
   const assign = useAssignQuestionClaimMutation(versionId);
 
+  // Fields save when focus leaves them. A blur during a save in flight must not be dropped: it is
+  // remembered, and the latest draft is sent once the first save settles.
+  const latestDraft = useRef(draft);
+  latestDraft.current = draft;
+  const saveAgain = useRef(false);
+
+  function send(evidence: Draft) {
+    mutation.mutate(
+      {
+        achievementId: claim.id,
+        evidence: { situationText: evidence.situation, roleText: evidence.role, measurementText: evidence.measurement, resultText: evidence.result },
+      },
+      {
+        onSettled: () => {
+          const latest = latestDraft.current;
+          const changed = EVIDENCE_FIELDS.some((field) => latest[field] !== evidence[field]);
+          if (saveAgain.current && changed) {
+            send(latest);
+          }
+          saveAgain.current = false;
+        },
+      },
+    );
+  }
+
   function save() {
-    if (!dirty || mutation.isPending) {
+    if (mutation.isPending) {
+      saveAgain.current = true;
       return;
     }
-    mutation.mutate({
-      achievementId: claim.id,
-      evidence: { situationText: draft.situation, roleText: draft.role, measurementText: draft.measurement, resultText: draft.result },
-    });
+    if (dirty) {
+      send(draft);
+    }
   }
 
   const status = mutation.isError ? (

@@ -166,9 +166,36 @@ describe("ResumeClaimsPage", () => {
     expect(screen.getByText("Unsaved changes")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(mutate).toHaveBeenCalledWith({
+    expect(mutate).toHaveBeenCalledWith(
+      {
+        achievementId: "a3",
+        evidence: { situationText: "", roleText: "", measurementText: "", resultText: "Deploys 40 → 12 minutes" },
+      },
+      expect.anything(),
+    );
+  });
+
+  it("saves a field left while an earlier save is still in flight once that save settles", async () => {
+    const user = userEvent.setup();
+    renderClaims();
+    await user.click(screen.getByRole("button", { name: /Led the MSA migration/ }));
+
+    await user.type(screen.getByLabelText("Situation"), "Weekly deploys broke");
+    await user.tab();
+    expect(mutate).toHaveBeenCalledTimes(1);
+    const [, firstOptions] = mutate.mock.calls[0] as [unknown, { onSettled: () => void }];
+
+    // The first save is still running while the user fills and leaves the next field.
+    vi.mocked(useUpdateClaimEvidenceMutation).mockReturnValue({ mutate, isPending: true, isError: false, isSuccess: false } as never);
+    await user.type(screen.getByLabelText("Your role"), "Owned the pipeline");
+    await user.tab();
+    expect(mutate).toHaveBeenCalledTimes(1);
+
+    firstOptions.onSettled();
+    expect(mutate).toHaveBeenCalledTimes(2);
+    expect(mutate.mock.calls[1][0]).toEqual({
       achievementId: "a3",
-      evidence: { situationText: "", roleText: "", measurementText: "", resultText: "Deploys 40 → 12 minutes" },
+      evidence: { situationText: "Weekly deploys broke", roleText: "Owned the pipeline", measurementText: "", resultText: "" },
     });
   });
 

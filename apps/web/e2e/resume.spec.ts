@@ -19,7 +19,9 @@ test("a first resume upload is ready to use and its claims take evidence", async
   await editor.getByRole("textbox", { name: "내 역할" }).fill("배치 구조 재설계와 병렬화를 맡았습니다.");
   await editor.getByRole("textbox", { name: "측정 방법" }).fill("배치 실행 로그의 시작·종료 시각으로 측정했습니다.");
   await editor.getByRole("textbox", { name: "결과 수치" }).fill("2시간 → 10분, 3개월간 유지");
-  await editor.getByRole("button", { name: "저장" }).click();
+  // Fields save as focus leaves them; leaving the last one saves it too.
+  await editor.getByRole("textbox", { name: "결과 수치" }).press("Tab");
+  await expect(editor.getByText("저장했어요")).toBeVisible();
 
   await expect(page.getByRole("button", { name: /처리 시간을 2시간 → 10분으로 단축했습니다.*근거 4칸 중 4칸 작성/ })).toBeVisible();
   await page.reload();
