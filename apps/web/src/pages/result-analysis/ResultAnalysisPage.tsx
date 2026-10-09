@@ -112,52 +112,90 @@ function ScoreHero({ result }: { result: ResultAnalysisModel }) {
   );
 }
 
+const MAX_STRENGTHS = 2;
+const MAX_IMPROVEMENTS = 3;
+
+function distinct(values: string[]) {
+  return values.filter((value, index) => value.trim() && values.indexOf(value) === index);
+}
+
+/**
+ * What the feedback card shows: a couple of strengths, the top improvements, and the missed
+ * points on one line. The summaries and the rule-based feedback items repeat the analysis, so
+ * they only stand in when the analysis has nothing for that group.
+ */
+export function feedbackGroups(result: ResultAnalysisModel) {
+  const strengths = distinct(
+    result.strengthPoints.length > 0 ? result.strengthPoints : result.strengthSummary ? [result.strengthSummary] : [],
+  ).slice(0, MAX_STRENGTHS);
+  const improvements = distinct(
+    result.improvementPoints.length > 0 ? result.improvementPoints : result.weaknessSummary ? [result.weaknessSummary] : [],
+  ).slice(0, MAX_IMPROVEMENTS);
+  const missed = distinct(result.missedPoints);
+  const items =
+    strengths.length === 0 && improvements.length === 0 ? result.feedbackItems.filter((item) => item.description) : [];
+  return { strengths, improvements, missed, items };
+}
+
 function FeedbackCard({ result }: { result: ResultAnalysisModel }) {
   const { t } = useLocale();
-  const good = [...result.strengthPoints, ...(result.strengthSummary ? [result.strengthSummary] : [])];
-  const improve = [...result.improvementPoints, ...result.missedPoints, ...(result.weaknessSummary ? [result.weaknessSummary] : [])];
-  const extra = result.feedbackItems.filter((item) => item.description);
+  const { strengths, improvements, missed, items } = feedbackGroups(result);
 
-  if (good.length === 0 && improve.length === 0 && extra.length === 0) {
+  if (strengths.length === 0 && improvements.length === 0 && missed.length === 0 && items.length === 0) {
     return null;
   }
 
   return (
     <Card aria-labelledby="result-feedback-title">
       <CardHeader title={<span id="result-feedback-title">{t("resultAnalysis.feedback")}</span>} />
-      <CardBody>
-        <ul className="result-feedback">
-          {good.map((point) => (
-            <li key={`good-${point}`}>
-              <Icon className="ui-tone-text--success" name="check" size={16} />
-              <span>
-                <span className="ui-visually-hidden">{t("resultAnalysis.strengthPrefix")}</span>
-                {point}
-              </span>
-            </li>
-          ))}
-          {improve.map((point) => (
-            <li key={`improve-${point}`}>
-              <Icon className="ui-tone-text--warning" name="alert" size={16} />
-              <span>
-                <span className="ui-visually-hidden">{t("resultAnalysis.improvePrefix")}</span>
-                {point}
-              </span>
-            </li>
-          ))}
-          {extra.map((item) => (
-            <li key={item.id}>
-              <Icon
-                className={`ui-tone-text--${item.tone === "positive" ? "success" : item.tone === "improving" ? "warning" : "neutral"}`}
-                name={item.tone === "positive" ? "check" : "info"}
-                size={16}
-              />
-              <span>
-                <strong>{item.title}</strong> {item.description}
-              </span>
-            </li>
-          ))}
-        </ul>
+      <CardBody className="result-feedback-groups">
+        {strengths.length > 0 ? (
+          <section aria-labelledby="result-strengths-title">
+            <h4 className="result-feedback-heading" id="result-strengths-title">{t("resultAnalysis.strengthsHeading")}</h4>
+            <ul className="result-feedback">
+              {strengths.map((point) => (
+                <li key={point}>
+                  <Icon className="ui-tone-text--success" name="check" size={16} />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+        {improvements.length > 0 ? (
+          <section aria-labelledby="result-improve-title">
+            <h4 className="result-feedback-heading" id="result-improve-title">{t("resultAnalysis.improveHeading")}</h4>
+            <ul className="result-feedback">
+              {improvements.map((point) => (
+                <li key={point}>
+                  <Icon className="ui-tone-text--warning" name="alert" size={16} />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+        {missed.length > 0 ? (
+          <p className="result-feedback-missed">
+            <strong>{t("resultAnalysis.missedHeading")}</strong> {missed.join(" · ")}
+          </p>
+        ) : null}
+        {items.length > 0 ? (
+          <ul className="result-feedback">
+            {items.map((item) => (
+              <li key={item.id}>
+                <Icon
+                  className={`ui-tone-text--${item.tone === "positive" ? "success" : item.tone === "improving" ? "warning" : "neutral"}`}
+                  name={item.tone === "positive" ? "check" : "info"}
+                  size={16}
+                />
+                <span>
+                  <strong>{item.title}</strong> {item.description}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </CardBody>
     </Card>
   );

@@ -67,6 +67,10 @@
 .result-feedback { display: flex; flex-direction: column; gap: var(--iv-space-3); margin: 0; padding: 0; list-style: none; }
 .result-feedback li { display: flex; gap: var(--iv-space-2); font-size: var(--iv-text-sm); line-height: var(--iv-leading-body); }
 .result-feedback .ui-icon { margin-top: 3px; }
+.result-feedback-groups { display: flex; flex-direction: column; gap: var(--iv-space-4); }
+.result-feedback-heading { margin: 0 0 var(--iv-space-2); color: var(--iv-text-muted); font-size: var(--iv-text-xs); font-weight: var(--iv-weight-semibold); }
+.result-feedback-missed { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); line-height: var(--iv-leading-body); }
+.result-feedback-missed strong { margin-right: var(--iv-space-1); color: var(--iv-text); font-weight: var(--iv-weight-semibold); }
 
 @media (max-width: 1023px) {
   .result-hero,

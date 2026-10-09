@@ -2,10 +2,10 @@ import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ResultAnalysisModel } from "../../entities/result/model";
+import type { ResultAnalysisModel, ResultFeedbackItemModel } from "../../entities/result/model";
 import { useQuestionAnswerHistoryQuery } from "../../features/question/api/useQuestionAnswerHistoryQuery";
 import { useResultAnalysisQuery } from "../../features/result/api/useResultAnalysisQuery";
-import { ResultAnalysisPage } from "../../pages/result-analysis/ResultAnalysisPage";
+import { feedbackGroups, ResultAnalysisPage } from "../../pages/result-analysis/ResultAnalysisPage";
 import { ApiClientError } from "../../shared/api/errors";
 import { renderWithProviders } from "../utils";
 
@@ -69,6 +69,8 @@ function renderResult(query: Partial<ReturnType<typeof useResultAnalysisQuery>>)
   );
 }
 
+const feedbackItem: ResultFeedbackItemModel = { id: "1", title: "", description: "", tone: "neutral" };
+
 describe("ResultAnalysisPage", () => {
   it("shows the total with its change since the last attempt and a status word", () => {
     renderResult({ data: RESULT });
@@ -97,9 +99,39 @@ describe("ResultAnalysisPage", () => {
 
     expect(screen.getByText("Spring의 @Transactional은 프록시 기반 AOP로 동작합니다.")).toBeInTheDocument();
     const feedback = screen.getByRole("region", { name: "피드백" });
-    expect(within(feedback).getByText(/잘한 점:/)).toBeInTheDocument();
-    expect(within(feedback).getByText(/보완할 점:/)).toBeInTheDocument();
+    expect(within(feedback).getByRole("region", { name: "잘한 점" })).toHaveTextContent("첫 문장에서 원인을 정확히 짚었어요.")
+    expect(within(feedback).getByRole("region", { name: "보완할 점" })).toHaveTextContent("구조 분리의 근거가 부족해요.")
     expect(screen.getByText("모범 답안과 비교하기").closest("details")).not.toHaveAttribute("open");
+  });
+
+  it("keeps feedback short: two strengths, three improvements, missed points on one line", () => {
+    const groups = feedbackGroups({
+      ...RESULT,
+      strengthSummary: "요약 강점",
+      strengthPoints: ["강점 1", "강점 2", "강점 3"],
+      improvementPoints: ["보완 1", "보완 2", "보완 3", "보완 4"],
+      missedPoints: ["검증 방식", "대안 비교", "검증 방식"],
+      weaknessSummary: "요약 약점",
+      feedbackItems: [{ ...feedbackItem, title: "구조를 더 분명하게", description: "짧은 도입" }],
+    });
+
+    expect(groups.strengths).toEqual(["강점 1", "강점 2"]);
+    expect(groups.improvements).toEqual(["보완 1", "보완 2", "보완 3"]);
+    expect(groups.missed).toEqual(["검증 방식", "대안 비교"]);
+    expect(groups.items).toEqual([]);
+  });
+
+  it("falls back to the summaries and rule-based items when there is no analysis", () => {
+    const noAnalysis = feedbackGroups({ ...RESULT, strengthPoints: [], improvementPoints: [], weaknessSummary: "요약 약점" });
+    expect(noAnalysis.improvements).toEqual(["요약 약점"]);
+
+    const itemsOnly = feedbackGroups({
+      ...RESULT,
+      strengthPoints: [],
+      improvementPoints: [],
+      feedbackItems: [{ ...feedbackItem, title: "구조를 더 분명하게", description: "짧은 도입" }],
+    });
+    expect(itemsOnly.items).toHaveLength(1);
   });
 
   it("explains a missing evaluation instead of showing the raw backend message", () => {
