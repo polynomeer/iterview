@@ -48,7 +48,7 @@
 .auth-screen__panel { display: flex; flex-direction: column; gap: var(--iv-space-4); width: 100%; max-width: 24rem; }
 .auth-screen__title { margin: 0; font-size: var(--iv-text-2xl); font-weight: var(--iv-weight-bold); }
 .auth-screen__switch { margin: calc(-1 * var(--iv-space-2)) 0 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
-.auth-screen__switch a { color: var(--iv-accent-text); }
+.auth-screen__switch a { color: var(--iv-accent-text); text-decoration: underline; text-underline-offset: 2px; }
 .auth-screen__form { display: flex; flex-direction: column; gap: var(--iv-space-4); }
 
 .auth-screen__divider { display: flex; align-items: center; gap: var(--iv-space-3); color: var(--iv-text-subtle); font-size: var(--iv-text-xs); }

@@ -246,10 +246,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           <div aria-label={t("commandPalette.results")} className="command-palette__results" id={listboxId} role="listbox">
             {Object.entries(groupedItems).map(([section, items]) => (
               <section aria-label={section} className="command-palette__group" key={section} role="group">
-                <header className="command-palette__group-header">
+                {/* The group is named by aria-label; this visual header is not a listbox child. */}
+                <div aria-hidden="true" className="command-palette__group-header">
                   <span>{section}</span>
                   <span>{items.length}</span>
-                </header>
+                </div>
                 <div className="command-palette__group-list">
                   {items.map((item) => {
                     const itemIndex = filteredItems.findIndex((candidate) => candidate.id === item.id);

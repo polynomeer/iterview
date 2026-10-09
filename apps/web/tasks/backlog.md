@@ -19,8 +19,8 @@ pass are already shipped and are intentionally excluded.
 ## Experience Hardening
 
 ### P1. Accessibility And Interaction
-- complete keyboard and screen-reader review of high-frequency write flows
-- add focus-visible and error-announcement regression coverage where page-specific tests do not reach it
+- extend the axe and keyboard journeys (`e2e/a11y.spec.ts`) to the remaining write flows: resume evidence, interview answers and the document editor
+- manual screen-reader pass (VoiceOver, NVDA) over the same flows; axe cannot judge reading order or announcement wording
 - apply optimistic updates only where conflict recovery is explicit and safe
 
 ### P2. Architecture And System Quality
