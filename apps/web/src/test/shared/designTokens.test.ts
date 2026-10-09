@@ -84,6 +84,24 @@ describe("design tokens", () => {
     }
   });
 
+  // Badges set a status color on its soft tint. Dark softs are translucent overlays on bright text,
+  // so only the light theme's solid tints can fall short.
+  it("keeps light badge text at WCAG AA on its soft background", () => {
+    const badgePairs: Array<[foreground: string, background: string]> = [
+      ["--iv-accent-text", "--iv-accent-soft"],
+      ["--iv-success", "--iv-success-soft"],
+      ["--iv-warning", "--iv-warning-soft"],
+      ["--iv-danger", "--iv-danger-soft"],
+    ];
+    for (const [foreground, background] of badgePairs) {
+      const ratio = contrast(modes.light.get(foreground)!, modes.light.get(background)!);
+      expect({ pair: `${foreground} on ${background}`, passes: ratio >= 4.5 }).toEqual({
+        pair: `${foreground} on ${background}`,
+        passes: true,
+      });
+    }
+  });
+
   it("keeps raw color and font-size values inside tokens.css", () => {
     const offenders = Object.entries(stylesheets)
       .filter(([path]) => path !== TOKENS_PATH)

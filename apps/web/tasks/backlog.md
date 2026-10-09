@@ -19,7 +19,7 @@ pass are already shipped and are intentionally excluded.
 ## Experience Hardening
 
 ### P1. Accessibility And Interaction
-- extend the axe and keyboard journeys (`e2e/a11y.spec.ts`) to the remaining write flows: resume evidence, interview answers and the document editor
+- keyboard journey through the resume document editor (its slash menu and selection toolbar); axe already scans it
 - manual screen-reader pass (VoiceOver, NVDA) over the same flows; axe cannot judge reading order or announcement wording
 - apply optimistic updates only where conflict recovery is explicit and safe
 
