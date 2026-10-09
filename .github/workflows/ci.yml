@@ -75,11 +75,30 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Install web dependencies and Chromium
+      - name: Install web dependencies
         working-directory: apps/web
         run: |
           npm ci
-          npx playwright install --with-deps chromium
+          echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
+
+      # The journeys run headless, so only Chromium's headless shell is needed. ubuntu-latest
+      # already ships the libraries it links against (it has Google Chrome installed), so the
+      # slow apt step of `--with-deps` is skipped unless the shell cannot start.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-chromium-shell
+
+      - name: Install Chromium headless shell
+        working-directory: apps/web
+        run: |
+          npx playwright install --only-shell chromium
+          SHELL_BIN="$(ls -d ~/.cache/ms-playwright/chromium_headless_shell-*/*/chrome-headless-shell | head -1)"
+          if ldd "$SHELL_BIN" | grep -q "not found"; then
+            echo "Missing system libraries for Chromium; installing them."
+            npx playwright install-deps chromium
+          fi
 
       - name: Run browser journeys
         run: bash ./scripts/e2e.sh --start
