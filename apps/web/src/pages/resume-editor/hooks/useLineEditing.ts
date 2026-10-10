@@ -342,6 +342,15 @@ export function useLineEditing({
       return;
     }
 
+    if (event.altKey && event.key === "F10") {
+      const toolbarButton = document.querySelector<HTMLElement>('.resume-editor-context-toolbar[role="toolbar"] button');
+      if (toolbarButton) {
+        event.preventDefault();
+        toolbarButton.focus();
+      }
+      return;
+    }
+
     const plainArrow =
       (event.key === "ArrowUp" || event.key === "ArrowDown") &&
       !event.shiftKey && !event.altKey && !event.metaKey && !event.ctrlKey;

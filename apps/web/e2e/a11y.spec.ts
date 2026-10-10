@@ -276,4 +276,28 @@ test("the resume document editor works from the keyboard", async ({ page }) => {
   await page.keyboard.press("Enter");
   await expect(page.getByRole("listbox", { name: "슬래시 메뉴" })).toHaveCount(0);
   await expect(line(2)).not.toHaveText(/^\//);
+
+  // Selecting text shows the selection toolbar: Alt+F10 reaches it, Escape goes back to the line,
+  // and applying a format returns focus to the line instead of dropping it.
+  const target = line(1);
+  await target.focus();
+  await page.keyboard.press(lineStart);
+  await page.keyboard.press(process.platform === "darwin" ? "Meta+Shift+ArrowRight" : "Shift+End");
+  const toolbar = page.getByRole("toolbar", { name: "선택 도구" });
+  await expect(toolbar).toBeVisible();
+  await page.keyboard.press("Alt+F10");
+  await expect(toolbar.getByRole("button", { name: "서식" })).toBeFocused();
+  await expectAccessible(page, "editor selection toolbar");
+  await page.keyboard.press("Escape");
+  await expect(target).toBeFocused();
+
+  await page.keyboard.press(lineStart);
+  await page.keyboard.press(process.platform === "darwin" ? "Meta+Shift+ArrowRight" : "Shift+End");
+  await page.keyboard.press("Alt+F10");
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Tab");
+  await expect(toolbar.getByRole("button", { name: "굵게" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(target).toHaveText(/^\*\*.+\*\*$/);
+  await expect(target).toBeFocused();
 });

@@ -188,7 +188,7 @@ export function renderMarkdownDocumentPreview(
         role="textbox"
         aria-activedescendant={options?.activeDescendant?.lineIndex === lineIndex ? options.activeDescendant.id : undefined}
         aria-controls={options?.activeDescendant?.lineIndex === lineIndex ? options.activeDescendant.listId : undefined}
-        aria-keyshortcuts="Shift+F10"
+        aria-keyshortcuts="Shift+F10 Alt+F10"
         tabIndex={lineIndex === (options?.tabStopLineIndex ?? 0) ? 0 : -1}
       />
     );
