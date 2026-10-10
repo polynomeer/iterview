@@ -1,4 +1,4 @@
-import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
+import { useLayoutEffect, useRef, type HTMLAttributes, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import type { EditableBlock, ReviewLineSignal, ReviewSignalType } from "../editorTypes";
 import { translate } from "../../../shared/i18n";
 import { decodeSoftBreaks, describeMarkdownLine, type EditorTranslate } from "../editorUtils";
@@ -83,6 +83,43 @@ export function renderPreviewTextWithSelection(text: string, selectedText: strin
   });
 }
 
+/**
+ * One contentEditable line. React never renders its text as children: re-rendering the text the
+ * browser just typed replaced the text node and threw the caret back to the start of the line, so
+ * "abc" came out as "cba". The DOM is written only when the value differs from what it shows, as
+ * when a line is turned into a heading or a slash command is applied.
+ */
+function EditableLine({
+  value,
+  lineRef,
+  ...props
+}: Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+  value: string;
+  lineRef: (element: HTMLDivElement | null) => void;
+  "data-placeholder"?: string;
+}) {
+  const elementRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const element = elementRef.current;
+    if (element && element.innerText !== value && element.textContent !== value) {
+      element.textContent = value;
+    }
+  }, [value]);
+
+  return (
+    <div
+      {...props}
+      contentEditable
+      ref={(element) => {
+        elementRef.current = element;
+        lineRef(element);
+      }}
+      suppressContentEditableWarning
+    />
+  );
+}
+
 export function renderMarkdownDocumentPreview(
   markdownSource: string,
   options?: {
@@ -131,11 +168,11 @@ export function renderMarkdownDocumentPreview(
               : t("resumeEditor.writeHerePlaceholder");
 
     return (
-      <div
+      <EditableLine
         aria-label={t("resumeEditor.editableLine", { line: lineIndex + 1 })}
         className={`${className} resume-editor-document-preview__editable`}
-        contentEditable
         data-placeholder={placeholder}
+        value={content}
         onFocus={() => options?.onEditableLineFocus?.(lineIndex, lineText)}
         onInput={(event) => {
           options?.onEditableLineInput?.(lineIndex, event.currentTarget.innerText ?? "");
@@ -143,12 +180,9 @@ export function renderMarkdownDocumentPreview(
         onKeyDown={(event) => options?.onEditableLineKeyDown?.(lineIndex, event)}
         onKeyUp={(event) => options?.onEditableLineSelection?.(lineIndex, event.currentTarget)}
         onMouseUp={(event) => options?.onEditableLineSelection?.(lineIndex, event.currentTarget)}
-        ref={(element) => options?.lineRef?.(lineIndex, element)}
+        lineRef={(element) => options?.lineRef?.(lineIndex, element)}
         role="textbox"
-        suppressContentEditableWarning
-      >
-        {content}
-      </div>
+      />
     );
   }
 

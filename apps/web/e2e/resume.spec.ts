@@ -55,3 +55,22 @@ test("a full-coverage resume interview moves to the next section after a skip", 
   await current.getByRole("button", { name: "답변 제출" }).click();
   await expect(page.getByRole("region", { name: "질문 흐름" }).getByRole("listitem")).toHaveCount(3);
 });
+
+test("typing in the document editor keeps the caret where the user types", async ({ page }) => {
+  await signUp(page, "editor-typing");
+  await uploadResume(page);
+  await page.goto(`${new URL(page.url()).pathname}/claims/document`);
+
+  const lineEnd = process.platform === "darwin" ? "Meta+ArrowRight" : "End";
+  const line = (n: number) => page.getByRole("textbox", { name: `편집 가능한 줄 ${n}`, exact: true });
+  await line(1).click();
+  await page.keyboard.press(lineEnd);
+  await page.keyboard.press("Enter");
+  await expect(line(2)).toBeFocused();
+
+  // Each keystroke used to re-render the line and send the caret to its start: "abc" became "cba".
+  await page.keyboard.type("정산 배치 개편");
+  await expect(line(2)).toHaveText("정산 배치 개편");
+  await page.keyboard.type(" 리드");
+  await expect(line(2)).toHaveText("정산 배치 개편 리드");
+});
