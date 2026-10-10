@@ -19,7 +19,7 @@ pass are already shipped and are intentionally excluded.
 ## Experience Hardening
 
 ### P1. Accessibility And Interaction
-- keyboard journey through the resume document editor (its slash menu and selection toolbar); axe already scans it
+- check and cover keyboard access to the document editor's selection toolbar, which appears on a text selection (Shift+arrows) and has no keyboard journey yet
 - manual screen-reader pass (VoiceOver, NVDA) over the same flows; axe cannot judge reading order or announcement wording
 - apply optimistic updates only where conflict recovery is explicit and safe
 

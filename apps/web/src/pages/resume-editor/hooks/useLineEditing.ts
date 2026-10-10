@@ -331,6 +331,35 @@ export function useLineEditing({
   }
 
   function handleEditableLineKeyDown(lineIndex: number, event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
+      const grip = event.currentTarget
+        .closest("[data-line-index]")
+        ?.querySelector<HTMLButtonElement>(".resume-editor-document-preview__grip");
+      if (grip) {
+        event.preventDefault();
+        openPreviewLineMenu(lineIndex, grip);
+      }
+      return;
+    }
+
+    const plainArrow =
+      (event.key === "ArrowUp" || event.key === "ArrowDown") &&
+      !event.shiftKey && !event.altKey && !event.metaKey && !event.ctrlKey;
+    if (plainArrow) {
+      const up = event.key === "ArrowUp";
+      const offset = caretOffsetIn(event.currentTarget);
+      const length = (event.currentTarget.textContent ?? "").length;
+      const atEdge = offset !== null && (up ? offset === 0 : offset >= length);
+      const target = documentEditorLineRefs.current[lineIndex + (up ? -1 : 1)];
+      if (atEdge && target) {
+        event.preventDefault();
+        setCurrentCursorLineIndex(lineIndex + (up ? -1 : 1));
+        target.focus();
+        placeCaret(target, up);
+      }
+      return;
+    }
+
     if (
       (event.key === "Backspace" || event.key === "Delete") &&
       !(event.currentTarget.innerText ?? "").trim()
@@ -479,4 +508,33 @@ export function useLineEditing({
     handleEditorSurfaceMouseDown,
     handlePreviewLineAction,
   };
+}
+
+/** Characters before the caret inside [element], or null when the selection is elsewhere or a range. */
+function caretOffsetIn(element: HTMLElement): number | null {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) {
+    return null;
+  }
+  const range = selection.getRangeAt(0);
+  if (!range.collapsed || !element.contains(range.startContainer)) {
+    return null;
+  }
+  const before = range.cloneRange();
+  before.selectNodeContents(element);
+  before.setEnd(range.startContainer, range.startOffset);
+  return before.toString().length;
+}
+
+// Moving up lands at the end of the line above, moving down at the start of the line below.
+function placeCaret(element: HTMLElement, atEnd: boolean) {
+  const selection = window.getSelection();
+  if (!selection) {
+    return;
+  }
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  range.collapse(!atEnd);
+  selection.removeAllRanges();
+  selection.addRange(range);
 }

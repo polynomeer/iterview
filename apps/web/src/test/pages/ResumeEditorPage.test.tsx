@@ -432,8 +432,8 @@ describe("ResumeEditorPage", () => {
     expect(screen.queryByText("Selection tools")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    fireEvent.click(screen.getByRole("button", { name: "Turn into →" }));
-    fireEvent.click(screen.getByRole("button", { name: "Heading 1" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Turn into →" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Heading 1" }));
     expect(editableLine).toHaveTextContent("Resume");
     Object.defineProperty(editableLine, "innerText", {
       configurable: true,
@@ -442,11 +442,11 @@ describe("ResumeEditorPage", () => {
     fireEvent.input(editableLine);
     fireEvent.click(screen.getByRole("button", { name: "Save draft" }));
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    expect(screen.getByRole("button", { name: "Turn into →" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Comment" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Create card" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Suggest rewrite" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Comment" }));
+    expect(screen.getByRole("menuitem", { name: "Turn into →" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "Comment" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "Create card" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "Suggest rewrite" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("menuitem", { name: "Comment" }));
     expect(screen.getByText("Comment on the current selection")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Inline comment"), {
       target: { value: "Inline note for this line." },
@@ -471,19 +471,19 @@ describe("ResumeEditorPage", () => {
       body: "Inline note for this line.",
     });
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    fireEvent.click(screen.getByRole("button", { name: "Suggest rewrite" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Suggest rewrite" }));
     expect(screen.getByRole("heading", { name: "Inline rewrite suggestions" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    fireEvent.click(screen.getByRole("button", { name: "Turn into →" }));
-    fireEvent.click(screen.getByRole("button", { name: "Quote" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Turn into →" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Quote" }));
     expect(editableLine).toHaveTextContent("Resume");
 
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    fireEvent.click(screen.getByRole("button", { name: "Turn into →" }));
-    fireEvent.click(screen.getByRole("button", { name: "Heading 2" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Turn into →" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Heading 2" }));
     expect(editableLine).toHaveTextContent("Resume");
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    fireEvent.click(screen.getByRole("button", { name: "Create card" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Create card" }));
     expect(screen.getByText("Inline question card")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Inline question card text"), {
       target: { value: "Inline card question" },
@@ -513,9 +513,9 @@ describe("ResumeEditorPage", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    fireEvent.click(screen.getByRole("button", { name: "Suggest rewrite" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Suggest rewrite" }));
     fireEvent.click(screen.getByRole("button", { name: "Preview line menu 1" }));
-    fireEvent.click(screen.getByRole("button", { name: "Create card" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Create card" }));
     fireEvent.click(screen.getAllByRole("button", { name: "Open full panel" })[0]);
     expect(screen.getAllByText("Question cards").length).toBeGreaterThan(0);
     expect(rewriteSuggestionsMutateAsync).toHaveBeenCalled();

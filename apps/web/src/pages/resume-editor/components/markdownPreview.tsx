@@ -141,6 +141,10 @@ export function renderMarkdownDocumentPreview(
     reviewSignals?: ReviewLineSignal[];
     onReviewSignalClick?: (signalType: ReviewSignalType, lineIndex: number) => void;
     focusedLineIndex?: number | null;
+    /** The one editable line in the tab order; arrow keys move between lines. */
+    tabStopLineIndex?: number | null;
+    /** The slash menu option the keyboard is on, announced from the line being typed in. */
+    activeDescendant?: { lineIndex: number; id: string; listId: string } | null;
   },
 ) {
   const lines = markdownSource.split("\n");
@@ -182,6 +186,10 @@ export function renderMarkdownDocumentPreview(
         onMouseUp={(event) => options?.onEditableLineSelection?.(lineIndex, event.currentTarget)}
         lineRef={(element) => options?.lineRef?.(lineIndex, element)}
         role="textbox"
+        aria-activedescendant={options?.activeDescendant?.lineIndex === lineIndex ? options.activeDescendant.id : undefined}
+        aria-controls={options?.activeDescendant?.lineIndex === lineIndex ? options.activeDescendant.listId : undefined}
+        aria-keyshortcuts="Shift+F10"
+        tabIndex={lineIndex === (options?.tabStopLineIndex ?? 0) ? 0 : -1}
       />
     );
   }
@@ -204,6 +212,8 @@ export function renderMarkdownDocumentPreview(
             aria-label={t("resumeEditor.addLineAfter", { line: lineIndex + 1 })}
             className="resume-editor-document-preview__handle"
             onClick={() => options?.onAddLine?.(lineIndex)}
+            // While editing, Enter adds a line and Shift+F10 opens the menu, so these stay mouse-only.
+            tabIndex={options?.editable ? -1 : undefined}
             type="button"
           >
             +
@@ -212,6 +222,7 @@ export function renderMarkdownDocumentPreview(
             aria-label={t("resumeEditor.previewLineMenu", { line: lineIndex + 1 })}
             className="resume-editor-document-preview__grip"
             onClick={(event) => options?.onToggleLineMenu?.(lineIndex, event.currentTarget)}
+            tabIndex={options?.editable ? -1 : undefined}
             type="button"
           >
             ⋮⋮

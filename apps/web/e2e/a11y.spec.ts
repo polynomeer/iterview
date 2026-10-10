@@ -222,3 +222,58 @@ test("an interview question can be answered and skipped with the keyboard alone"
   await page.keyboard.press("Enter");
   await expect(flow.getByText("건너뜀").first()).toBeVisible();
 });
+
+test("the resume document editor works from the keyboard", async ({ page }) => {
+  test.setTimeout(120_000);
+  await signUp(page, "keyboard-editor");
+  await uploadResume(page);
+  await page.goto(`${new URL(page.url()).pathname}/claims/document`);
+
+  // Home/End only move the caret within a line on Linux and Windows; macOS uses Cmd+arrows.
+  const lineEnd = process.platform === "darwin" ? "Meta+ArrowRight" : "End";
+  const lineStart = process.platform === "darwin" ? "Meta+ArrowLeft" : "Home";
+  const document = page.getByRole("region", { name: "초안 문서" });
+  const line = (n: number) => document.getByRole("textbox", { name: `편집 가능한 줄 ${n}`, exact: true });
+
+  // The document is one tab stop: the row buttons stay out of the way and Tab leaves the document.
+  await tabTo(page, line(1));
+  await page.keyboard.press("Tab");
+  await expect(document.getByRole("textbox").filter({ has: page.locator(":focus") })).toHaveCount(0);
+  await expect(page.locator(":focus")).not.toHaveAttribute("aria-label", /줄 다음에 줄 추가|줄 메뉴/);
+
+  // Arrow keys move between lines at the start and end of a line.
+  await line(1).focus();
+  await page.keyboard.press(lineEnd);
+  await page.keyboard.press("ArrowDown");
+  await expect(line(2)).toBeFocused();
+  await page.keyboard.press(lineStart);
+  await page.keyboard.press("ArrowUp");
+  await expect(line(1)).toBeFocused();
+
+  // Shift+F10 opens the row menu with focus on its first item; Escape returns to the line.
+  await page.keyboard.press("Shift+F10");
+  const menu = page.getByRole("menu", { name: "1번 줄 메뉴" });
+  await expect(menu.getByRole("menuitem").first()).toBeFocused();
+  await expectAccessible(page, "editor row menu");
+  await page.keyboard.press("ArrowDown");
+  await expect(menu.getByRole("menuitem", { name: "복제" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(menu).toHaveCount(0);
+  await expect(line(1)).toBeFocused();
+
+  // A slash command on a new line: arrows pick an option, Enter applies it, focus stays in the text.
+  const lineCount = await document.getByRole("textbox").count();
+  await page.keyboard.press(lineEnd);
+  await page.keyboard.press("Enter");
+  await expect(document.getByRole("textbox")).toHaveCount(lineCount + 1);
+  await expect(line(2)).toBeFocused();
+  await page.keyboard.type("/list");
+  const options = page.getByRole("listbox", { name: "슬래시 메뉴" }).getByRole("option");
+  await expect(options.first()).toHaveAttribute("aria-selected", "true");
+  await expectAccessible(page, "editor slash menu");
+  await page.keyboard.press("ArrowDown");
+  await expect(options.nth(1)).toHaveAttribute("aria-selected", "true");
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("listbox", { name: "슬래시 메뉴" })).toHaveCount(0);
+  await expect(line(2)).not.toHaveText(/^\//);
+});
