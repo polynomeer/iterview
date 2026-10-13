@@ -1,6 +1,8 @@
 package com.example.interviewplatform.user.service
 
+import com.example.interviewplatform.common.storage.UploadArea
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -15,7 +17,15 @@ import java.util.UUID
 class ProfileImageStorageService(
     @Value("\${app.storage.profile-image-dir:uploads/profile-images}")
     private val profileImageDir: String,
-) {
+    private val jdbcTemplate: JdbcTemplate,
+) : UploadArea {
+    override val name = "profile-images"
+
+    override val root: Path get() = Paths.get(profileImageDir)
+
+    override fun referencedKeys(): Set<String> =
+        jdbcTemplate.queryForList("SELECT profile_image_url FROM user_profiles WHERE profile_image_url IS NOT NULL", String::class.java).map { it.removePrefix(PUBLIC_PREFIX) }.toSet()
+
     fun store(userId: Long, file: MultipartFile): StoredProfileImage {
         validate(file)
         val uploadDir = Paths.get(profileImageDir).toAbsolutePath().normalize()
@@ -30,9 +40,22 @@ class ProfileImageStorageService(
         return StoredProfileImage(
             fileName = fileName,
             contentType = file.contentType!!,
-            publicUrl = "/uploads/profile-images/$fileName",
+            publicUrl = "$PUBLIC_PREFIX$fileName",
             absolutePath = targetPath,
         )
+    }
+
+    /** Deletes the file behind a profile image URL this service issued; other URLs are ignored. */
+    fun delete(publicUrl: String) {
+        val fileName = publicUrl.removePrefix(PUBLIC_PREFIX)
+        if (fileName == publicUrl || fileName.isBlank() || fileName.contains('/') || fileName.contains("..")) {
+            return
+        }
+        val uploadDir = Paths.get(profileImageDir).toAbsolutePath().normalize()
+        val target = uploadDir.resolve(fileName).normalize()
+        if (target.parent == uploadDir) {
+            Files.deleteIfExists(target)
+        }
     }
 
     private fun validate(file: MultipartFile) {
@@ -72,3 +95,5 @@ class ProfileImageStorageService(
         )
     }
 }
+
+private const val PUBLIC_PREFIX = "/uploads/profile-images/"

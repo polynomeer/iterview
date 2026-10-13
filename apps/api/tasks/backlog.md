@@ -25,7 +25,7 @@ and Testcontainers integration coverage are intentionally excluded.
 ### P2. Scale And Operations
 - pagination strategy standardization for expanding collection endpoints
 - background-job lifecycle for daily-card generation when synchronous generation is no longer sufficient
-- retention and cleanup policies for uploaded interview audio and generated artifacts
+- an age-based retention period for interview audio and resume exports (orphaned uploads are already swept, ADR 0091); needs a product decision on how long recordings are kept
 
 ## Delivery Rule
 

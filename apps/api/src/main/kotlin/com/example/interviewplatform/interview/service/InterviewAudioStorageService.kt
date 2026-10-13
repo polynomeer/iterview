@@ -1,6 +1,8 @@
 package com.example.interviewplatform.interview.service
 
+import com.example.interviewplatform.common.storage.UploadArea
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
@@ -14,7 +16,15 @@ import java.nio.file.Path
 class InterviewAudioStorageService(
     @Value("\${app.storage.interview-audio-dir:uploads/interview-audio}")
     private val interviewAudioDir: String,
-) {
+    private val jdbcTemplate: JdbcTemplate,
+) : UploadArea {
+    override val name = "interview-audio"
+
+    override val root: Path get() = Paths.get(interviewAudioDir)
+
+    override fun referencedKeys(): Set<String> =
+        jdbcTemplate.queryForList("SELECT source_audio_file_url FROM interview_records WHERE source_audio_file_url IS NOT NULL", String::class.java).map { it.removePrefix("/uploads/interview-audio/") }.toSet()
+
     fun store(userId: Long, file: MultipartFile, now: Instant): StoredInterviewAudioFile {
         val originalName = sanitizeFileName(file.originalFilename)
         val directory = Paths.get(interviewAudioDir, "user-$userId").toAbsolutePath().normalize()

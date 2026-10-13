@@ -165,6 +165,28 @@ class ProfileApiIntegrationTest {
     }
 
     @Test
+    fun `replacing the profile image removes the previous file`() {
+        fun upload(name: String): String = mockMvc.perform(
+            multipart("/api/me/profile-image")
+                .file(MockMultipartFile("file", name, "image/png", "png-$name".toByteArray()))
+                .header("Authorization", authHeader),
+        )
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+            .let { com.fasterxml.jackson.databind.ObjectMapper().readTree(it).get("imageUrl").asText() }
+
+        val dir = java.nio.file.Paths.get("build/test-uploads/profile-images")
+        val first = upload("first.png")
+        val firstFile = dir.resolve(first.substringAfterLast('/'))
+        org.junit.jupiter.api.Assertions.assertTrue(java.nio.file.Files.exists(firstFile))
+
+        val second = upload("second.png")
+
+        org.junit.jupiter.api.Assertions.assertFalse(java.nio.file.Files.exists(firstFile))
+        org.junit.jupiter.api.Assertions.assertTrue(java.nio.file.Files.exists(dir.resolve(second.substringAfterLast('/'))))
+    }
+
+    @Test
     fun `put target companies replaces user target list`() {
         val amazonId = jdbcTemplate.queryForObject(
             "SELECT id FROM companies WHERE normalized_name = 'amazon'",

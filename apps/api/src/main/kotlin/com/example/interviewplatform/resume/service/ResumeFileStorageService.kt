@@ -1,6 +1,8 @@
 package com.example.interviewplatform.resume.service
 
+import com.example.interviewplatform.common.storage.UploadArea
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
@@ -16,7 +18,15 @@ import java.time.Instant
 class ResumeFileStorageService(
     @Value("\${app.storage.resume-dir:uploads/resume-files}")
     private val resumeDir: String,
-) {
+    private val jdbcTemplate: JdbcTemplate,
+) : UploadArea {
+    override val name = "resume-files"
+
+    override val root: Path get() = Paths.get(resumeDir)
+
+    override fun referencedKeys(): Set<String> =
+        jdbcTemplate.queryForList("SELECT storage_key FROM resume_versions WHERE storage_key IS NOT NULL", String::class.java).toSet()
+
     fun store(userId: Long, resumeId: Long, versionNo: Int, file: MultipartFile, now: Instant): StoredResumeFile {
         val originalName = sanitizeFileName(file.originalFilename)
         val directory = Paths.get(resumeDir, "user-$userId", "resume-$resumeId").toAbsolutePath().normalize()

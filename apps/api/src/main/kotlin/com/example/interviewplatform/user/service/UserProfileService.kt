@@ -27,6 +27,8 @@ import com.example.interviewplatform.user.repository.UserSettingsRepository
 import com.example.interviewplatform.user.repository.UserTargetCompanyRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.support.TransactionSynchronization
+import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 
@@ -88,6 +90,8 @@ class UserProfileService(
     fun uploadProfileImage(userId: Long, file: org.springframework.web.multipart.MultipartFile): ProfileImageUploadResponseDto {
         requireUser(userId)
         val existing = userProfileRepository.findById(userId).orElseGet { defaultProfile(userId) }
+        // Read before saving: the save merges the new values into this managed entity.
+        val previousImageUrl = existing.profileImageUrl
         val stored = profileImageStorageService.store(userId, file)
         val now = clockService.now()
         val updated = UserProfileEntity(
@@ -106,6 +110,16 @@ class UserProfileService(
             updatedAt = now,
         )
         userProfileRepository.save(updated)
+        // The replaced image is no longer referenced; remove it once the new URL is committed.
+        previousImageUrl?.takeIf { it != stored.publicUrl }?.let { previous ->
+            TransactionSynchronizationManager.registerSynchronization(
+                object : TransactionSynchronization {
+                    override fun afterCommit() {
+                        profileImageStorageService.delete(previous)
+                    }
+                },
+            )
+        }
         return ProfileImageUploadResponseDto(
             imageUrl = stored.publicUrl,
             fileName = stored.fileName,

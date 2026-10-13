@@ -206,3 +206,5 @@ Each ADR should include:
    The web sends `X-Time-Zone`; `ClockService.today()` uses it and falls back to `app.time-zone`. Amends 0085.
 90. [`0090-per-user-budgets-for-uploads-and-generation.md`](0090-per-user-budgets-for-uploads-and-generation.md)
    Uploads (20/h) and LLM-backed requests (120/h) get per-user budgets; past them the API answers 429 with a localized wait.
+91. [`0091-uploads-live-as-long-as-their-records.md`](0091-uploads-live-as-long-as-their-records.md)
+   Uploads live as long as a record references them; an opt-in sweeper removes orphans after 24h; tests write uploads under build/.

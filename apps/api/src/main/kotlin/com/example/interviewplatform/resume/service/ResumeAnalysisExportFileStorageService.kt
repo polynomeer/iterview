@@ -1,6 +1,8 @@
 package com.example.interviewplatform.resume.service
 
+import com.example.interviewplatform.common.storage.UploadArea
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
@@ -14,7 +16,15 @@ import java.time.Instant
 class ResumeAnalysisExportFileStorageService(
     @Value("\${app.storage.resume-analysis-export-dir:uploads/resume-analysis-exports}")
     private val exportDir: String,
-) {
+    private val jdbcTemplate: JdbcTemplate,
+) : UploadArea {
+    override val name = "resume-analysis-exports"
+
+    override val root: Path get() = Paths.get(exportDir)
+
+    override fun referencedKeys(): Set<String> =
+        jdbcTemplate.queryForList("SELECT storage_key FROM resume_analysis_exports WHERE storage_key IS NOT NULL", String::class.java).toSet()
+
     fun store(userId: Long, analysisId: Long, fileName: String, content: ByteArray, now: Instant): StoredResumeAnalysisExportFile {
         val directory = Paths.get(exportDir, "user-$userId", "analysis-$analysisId").toAbsolutePath().normalize()
         Files.createDirectories(directory)

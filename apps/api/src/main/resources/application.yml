@@ -39,6 +39,12 @@ app:
     generation:
       max-requests: ${APP_RATE_LIMIT_GENERATION_MAX_REQUESTS:120}
       window-seconds: ${APP_RATE_LIMIT_GENERATION_WINDOW_SECONDS:3600}
+  storage:
+    # Deletes uploads no record references, after a grace period (ADR 0091). Opt-in.
+    orphan-sweep:
+      enabled: ${APP_STORAGE_ORPHAN_SWEEP_ENABLED:false}
+      grace-hours: ${APP_STORAGE_ORPHAN_SWEEP_GRACE_HOURS:24}
+      cron: ${APP_STORAGE_ORPHAN_SWEEP_CRON:0 30 4 * * *}
 
 auth:
   token:

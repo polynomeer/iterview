@@ -14,3 +14,13 @@ auth:
   token:
     secret: test-only-secret
     ttl-seconds: 86400
+
+# Every test profile writes uploads under build/, never into a developer's apps/api/uploads (ADR 0091).
+app:
+  storage:
+    resume-dir: build/test-uploads/resume-files
+    profile-image-dir: build/test-uploads/profile-images
+    interview-audio-dir: build/test-uploads/interview-audio
+    resume-analysis-export-dir: build/test-uploads/resume-analysis-exports
+    orphan-sweep:
+      enabled: false
