@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultTheme, getStoredTheme, themeOptions } from "../../shared/theme/theme";
+import { defaultPalette, defaultTheme, getStoredPalette, getStoredTheme, paletteOptions, themeOptions } from "../../shared/theme/theme";
 
 function storageWith(value: string | null) {
   return { getItem: () => value };
@@ -21,5 +21,13 @@ describe("theme", () => {
   it("keeps a stored theme that is still offered", () => {
     expect(getStoredTheme(storageWith("light"))).toBe("light");
     expect(getStoredTheme(storageWith("dark"))).toBe("dark");
+  });
+
+  it("keeps the classic palette unless Ink & Signal was chosen (ADR 0093)", () => {
+    expect(paletteOptions.map((option) => option.id)).toEqual(["ink", "classic"]);
+    expect(defaultPalette).toBe("classic");
+    expect(getStoredPalette(storageWith(null))).toBe("classic");
+    expect(getStoredPalette(storageWith("dracula"))).toBe("classic");
+    expect(getStoredPalette(storageWith("ink"))).toBe("ink");
   });
 });

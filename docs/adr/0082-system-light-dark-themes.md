@@ -1,7 +1,7 @@
 # 0082. System, Light, and Dark Themes on Tokens
 
 ## Status
-Accepted. Supersedes ADR 0075.
+Accepted. Supersedes ADR 0075. Amended by ADR 0093: palettes are now chosen separately from brightness, so `tokens.css` holds one light and one dark block per palette.
 
 ## Date
 2026-10-01

@@ -103,4 +103,17 @@ describe("SettingsPage", () => {
     expect(updateSettingsSync).toHaveBeenCalledWith({ preferredLanguage: "en" });
     expect(screen.getByRole("heading", { level: 1, name: "Settings" })).toBeInTheDocument();
   });
+
+  it("picks the color theme separately from brightness and keeps it for the next visit", async () => {
+    renderWithProviders(<SettingsPage />, { route: "/settings", locale: "ko" });
+
+    expect(screen.getByRole("radio", { name: "클래식" })).toBeChecked();
+    await userEvent.click(screen.getByRole("radio", { name: "다크" }));
+    await userEvent.click(screen.getByRole("radio", { name: "Ink & Signal" }));
+
+    expect(document.documentElement.dataset.palette).toBe("ink");
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(window.localStorage.getItem("iterview-palette")).toBe("ink");
+    expect(window.localStorage.getItem("iterview-theme")).toBe("dark");
+  });
 });

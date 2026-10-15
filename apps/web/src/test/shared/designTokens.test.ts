@@ -55,9 +55,15 @@ function contrast(foreground: string, background: string) {
 
 describe("design tokens", () => {
   const css = stylesheets[TOKENS_PATH];
+  // Every palette x brightness pair a user can pick (ADR 0082, ADR 0093). Ink & Signal blocks only
+  // override colors, so they are read on top of the classic block they outrank.
+  const classicLight = readRoleBlock(css, ':root,\n:root[data-theme="light"]');
+  const inkLight = new Map([...classicLight, ...readRoleBlock(css, ':root[data-palette="ink"]')]);
   const modes = {
-    light: readRoleBlock(css, ':root,\n:root[data-theme="light"]'),
-    dark: readRoleBlock(css, ':root[data-theme="dark"]'),
+    "classic light": classicLight,
+    "classic dark": readRoleBlock(css, ':root[data-theme="dark"]'),
+    "ink light": inkLight,
+    "ink dark": new Map([...inkLight, ...readRoleBlock(css, ':root[data-palette="ink"][data-theme="dark"]')]),
   };
   const textPairs: Array<[foreground: string, background: string]> = [
     ["--iv-text", "--iv-bg"],
@@ -72,34 +78,37 @@ describe("design tokens", () => {
     ["--iv-success", "--iv-surface"],
     ["--iv-warning", "--iv-surface"],
     ["--iv-danger", "--iv-surface"],
+    ["--iv-nav-text", "--iv-nav-bg"],
+    ["--iv-nav-text", "--iv-nav-hover"],
+    ["--iv-nav-text-strong", "--iv-nav-bg"],
+    ["--iv-nav-text-strong", "--iv-nav-hover"],
   ];
 
-  it.each(Object.entries(modes))("keeps %s text roles at WCAG AA contrast", (_mode, roles) => {
-    for (const [foreground, background] of textPairs) {
-      const ratio = contrast(roles.get(foreground)!, roles.get(background)!);
+  function expectAA(roles: Map<string, string>, pairs: Array<[foreground: string, background: string]>) {
+    for (const [foreground, background] of pairs) {
+      const [fg, bg] = [roles.get(foreground), roles.get(background)];
+      const ratio = fg && bg ? contrast(fg, bg) : 0;
       expect({ pair: `${foreground} on ${background}`, passes: ratio >= 4.5 }).toEqual({
         pair: `${foreground} on ${background}`,
         passes: true,
       });
     }
+  }
+
+  it.each(Object.entries(modes))("keeps %s text roles at WCAG AA contrast", (_mode, roles) => {
+    expectAA(roles, textPairs);
   });
 
-  // Badges set a status color on its soft tint. Dark softs are translucent overlays on bright text,
-  // so only the light theme's solid tints can fall short.
-  it("keeps light badge text at WCAG AA on its soft background", () => {
-    const badgePairs: Array<[foreground: string, background: string]> = [
+  // Badges and the active nav item set text on a tint. Classic dark tints are translucent overlays on
+  // bright text, so only the solid tints are checked.
+  it.each([["classic light"], ["ink light"], ["ink dark"]] as const)("keeps %s tinted text at WCAG AA", (mode) => {
+    expectAA(modes[mode], [
       ["--iv-accent-text", "--iv-accent-soft"],
       ["--iv-success", "--iv-success-soft"],
       ["--iv-warning", "--iv-warning-soft"],
       ["--iv-danger", "--iv-danger-soft"],
-    ];
-    for (const [foreground, background] of badgePairs) {
-      const ratio = contrast(modes.light.get(foreground)!, modes.light.get(background)!);
-      expect({ pair: `${foreground} on ${background}`, passes: ratio >= 4.5 }).toEqual({
-        pair: `${foreground} on ${background}`,
-        passes: true,
-      });
-    }
+      ["--iv-nav-active-text", "--iv-nav-active"],
+    ]);
   });
 
   it("keeps raw color and font-size values inside tokens.css", () => {
@@ -117,12 +126,21 @@ describe("design tokens", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("gives the system theme exactly the dark palette when the OS prefers dark (ADR 0082)", () => {
-    const css = stylesheets[TOKENS_PATH];
-    const dark = readRoleBlock(css, ':root[data-theme="dark"]');
-    const systemDark = readRoleBlock(css, '  :root:not([data-theme]),\n  :root[data-theme="system"]');
+  it.each([
+    ["classic", ':root[data-theme="dark"]', '  :root:not([data-theme]),\n  :root[data-theme="system"]'],
+    ["ink", ':root[data-palette="ink"][data-theme="dark"]', '  :root[data-palette="ink"]:not([data-theme]),\n  :root[data-palette="ink"][data-theme="system"]'],
+  ])("gives the %s system theme exactly its dark roles when the OS prefers dark (ADR 0082)", (_palette, darkSelector, systemSelector) => {
+    const dark = readRoleBlock(css, darkSelector);
+    const systemDark = readRoleBlock(css, systemSelector);
     expect(dark.size).toBeGreaterThan(10);
     expect(Object.fromEntries(systemDark)).toEqual(Object.fromEntries(dark));
+  });
+
+  it("gives Ink & Signal every color role the classic palette has", () => {
+    const ink = readRoleBlock(css, ':root[data-palette="ink"]');
+    const inkDark = readRoleBlock(css, ':root[data-palette="ink"][data-theme="dark"]');
+    expect([...ink.keys()].sort()).toEqual([...classicLight.keys()].sort());
+    expect([...inkDark.keys()].sort()).toEqual([...classicLight.keys()].sort());
   });
 
   it("has no legacy stylesheet left: every rule is written against tokens", () => {

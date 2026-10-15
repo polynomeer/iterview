@@ -53,7 +53,7 @@
   --iv-ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* Light roles. Used by the `light` theme and by `system` when the OS prefers light (ADR 0082). */
+/* Classic light roles (the default palette, ADR 0093). Used by the `light` theme and by `system` when the OS prefers light (ADR 0082). */
 :root,
 :root[data-theme="light"] {
   color-scheme: light;
@@ -81,9 +81,16 @@
   --iv-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
   --iv-shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.14);
   --iv-focus-ring: 0 0 0 3px rgba(47, 95, 224, 0.35);
+  --iv-nav-bg: #f5f6f7;
+  --iv-nav-border: #dfe2e7;
+  --iv-nav-text: #5b6270;
+  --iv-nav-text-strong: #131519;
+  --iv-nav-hover: #f0f2f4;
+  --iv-nav-active: #eef3ff;
+  --iv-nav-active-text: #2647b0;
 }
 
-/* Dark roles. Used by the `dark` theme and by `system` when the OS prefers dark. */
+/* Classic dark roles. Used by the `dark` theme and by `system` when the OS prefers dark. */
 :root[data-theme="dark"] {
   color-scheme: dark;
   --iv-bg: #07101d;
@@ -110,6 +117,13 @@
   --iv-shadow-sm: none;
   --iv-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
   --iv-focus-ring: 0 0 0 3px rgba(63, 130, 255, 0.45);
+  --iv-nav-bg: #0b1526;
+  --iv-nav-border: rgba(148, 173, 211, 0.18);
+  --iv-nav-text: #93a8c8;
+  --iv-nav-text-strong: #e6eefc;
+  --iv-nav-hover: #14233d;
+  --iv-nav-active: rgba(63, 130, 255, 0.18);
+  --iv-nav-active-text: #8fb6ff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -140,5 +154,127 @@
     --iv-shadow-sm: none;
     --iv-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
     --iv-focus-ring: 0 0 0 3px rgba(63, 130, 255, 0.45);
+    --iv-nav-bg: #0b1526;
+    --iv-nav-border: rgba(148, 173, 211, 0.18);
+    --iv-nav-text: #93a8c8;
+    --iv-nav-text-strong: #e6eefc;
+    --iv-nav-hover: #14233d;
+    --iv-nav-active: rgba(63, 130, 255, 0.18);
+    --iv-nav-active-text: #8fb6ff;
+  }
+}
+
+/*
+ * Ink & Signal palette (ADR 0093), chosen with `data-palette="ink"`. Brightness still comes from
+ * `data-theme`, so each block outranks the classic block for the same brightness. The sidebar
+ * stays dark in both brightnesses. Signal orange (#ff7a3d) is reserved for non-text marks.
+ */
+:root[data-palette="ink"] {
+  color-scheme: light;
+  --iv-font-sans: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+  --iv-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --iv-bg: #f4f5f6;
+  --iv-surface: #ffffff;
+  --iv-surface-sunken: #eef0f2;
+  --iv-surface-hover: #eceef1;
+  --iv-border: #e3e5e8;
+  --iv-border-strong: #c9cdd3;
+  --iv-text: #14161a;
+  --iv-text-muted: #5b616c;
+  --iv-text-subtle: #5f6570;
+  --iv-accent: #2b59ff;
+  --iv-accent-hover: #1d3fcc;
+  --iv-accent-soft: #edf1ff;
+  --iv-accent-text: #1d3fcc;
+  --iv-on-accent: #ffffff;
+  --iv-success: #15703a;
+  --iv-success-soft: #e9f6ee;
+  --iv-warning: #8a5300;
+  --iv-warning-soft: #fff6e0;
+  --iv-danger: #9a3412;
+  --iv-danger-soft: #fff1e8;
+  --iv-overlay: rgba(20, 22, 26, 0.45);
+  --iv-shadow-sm: 0 1px 2px rgba(20, 22, 26, 0.06);
+  --iv-shadow-lg: 0 12px 32px rgba(20, 22, 26, 0.14);
+  --iv-focus-ring: 0 0 0 3px rgba(43, 89, 255, 0.35);
+  --iv-nav-bg: #14161a;
+  --iv-nav-border: #262a31;
+  --iv-nav-text: #a9afba;
+  --iv-nav-text-strong: #f2f3f5;
+  --iv-nav-hover: #1b1e23;
+  --iv-nav-active: #262a31;
+  --iv-nav-active-text: #ffffff;
+}
+
+:root[data-palette="ink"][data-theme="dark"] {
+  color-scheme: dark;
+  --iv-bg: #0e1013;
+  --iv-surface: #17191e;
+  --iv-surface-sunken: #1b1e23;
+  --iv-surface-hover: #1f2228;
+  --iv-border: #262a31;
+  --iv-border-strong: #343943;
+  --iv-text: #f2f3f5;
+  --iv-text-muted: #a9afba;
+  --iv-text-subtle: #8e95a1;
+  --iv-accent: #2b59ff;
+  --iv-accent-hover: #4a71ff;
+  --iv-accent-soft: #1a2547;
+  --iv-accent-text: #8faaff;
+  --iv-on-accent: #ffffff;
+  --iv-success: #6ee7a0;
+  --iv-success-soft: #142a1e;
+  --iv-warning: #f5c266;
+  --iv-warning-soft: #2a2314;
+  --iv-danger: #ffd3bd;
+  --iv-danger-soft: #2a1c14;
+  --iv-overlay: rgba(4, 5, 7, 0.7);
+  --iv-shadow-sm: none;
+  --iv-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+  --iv-focus-ring: 0 0 0 3px rgba(43, 89, 255, 0.5);
+  --iv-nav-bg: #08090b;
+  --iv-nav-border: #1b1e23;
+  --iv-nav-text: #a9afba;
+  --iv-nav-text-strong: #f2f3f5;
+  --iv-nav-hover: #17191e;
+  --iv-nav-active: #262a31;
+  --iv-nav-active-text: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="ink"]:not([data-theme]),
+  :root[data-palette="ink"][data-theme="system"] {
+    color-scheme: dark;
+    --iv-bg: #0e1013;
+    --iv-surface: #17191e;
+    --iv-surface-sunken: #1b1e23;
+    --iv-surface-hover: #1f2228;
+    --iv-border: #262a31;
+    --iv-border-strong: #343943;
+    --iv-text: #f2f3f5;
+    --iv-text-muted: #a9afba;
+    --iv-text-subtle: #8e95a1;
+    --iv-accent: #2b59ff;
+    --iv-accent-hover: #4a71ff;
+    --iv-accent-soft: #1a2547;
+    --iv-accent-text: #8faaff;
+    --iv-on-accent: #ffffff;
+    --iv-success: #6ee7a0;
+    --iv-success-soft: #142a1e;
+    --iv-warning: #f5c266;
+    --iv-warning-soft: #2a2314;
+    --iv-danger: #ffd3bd;
+    --iv-danger-soft: #2a1c14;
+    --iv-overlay: rgba(4, 5, 7, 0.7);
+    --iv-shadow-sm: none;
+    --iv-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+    --iv-focus-ring: 0 0 0 3px rgba(43, 89, 255, 0.5);
+    --iv-nav-bg: #08090b;
+    --iv-nav-border: #1b1e23;
+    --iv-nav-text: #a9afba;
+    --iv-nav-text-strong: #f2f3f5;
+    --iv-nav-hover: #17191e;
+    --iv-nav-active: #262a31;
+    --iv-nav-active-text: #ffffff;
   }
 }

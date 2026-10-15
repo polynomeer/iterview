@@ -10,7 +10,7 @@ import { optionalErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale, type AppLocale, type MessageKey } from "../../shared/i18n";
 import { useTheme } from "../../shared/theme";
-import type { AppTheme } from "../../shared/theme/theme";
+import type { AppPalette, AppTheme } from "../../shared/theme/theme";
 import { Button, ButtonLink, Card, CardHeader, Callout, IconButton, Input, Segmented, Select } from "../../shared/ui/primitives";
 
 /** One labelled row: the label and hint on the left, the control on the right. */
@@ -233,9 +233,14 @@ const THEME_LABELS: Record<AppTheme, MessageKey> = {
   dark: "settingsPage.themeDark",
 };
 
+const PALETTE_LABELS: Record<AppPalette, MessageKey> = {
+  ink: "settingsPage.paletteInk",
+  classic: "settingsPage.paletteClassic",
+};
+
 export function DisplaySection() {
   const { t, locale, setLocale } = useLocale();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, palette, setPalette } = useTheme();
   const mutation = useUpdateSettingsMutation();
   const error = optionalErrorMessage(mutation.error, t("settingsPage.saveFailed"));
 
@@ -254,6 +259,14 @@ export function DisplaySection() {
             mutation.mutate({ preferredLanguage: next });
           }}
           value={locale}
+        />
+      </Row>
+      <Row hint={t("settingsPage.paletteHint")} label={t("settingsPage.palette")}>
+        <Segmented
+          items={(Object.keys(PALETTE_LABELS) as AppPalette[]).map((id) => ({ id, label: t(PALETTE_LABELS[id]) }))}
+          label={t("settingsPage.palette")}
+          onChange={setPalette}
+          value={palette}
         />
       </Row>
       <Row hint={t("settingsPage.themeHint")} label={t("settingsPage.theme")}>

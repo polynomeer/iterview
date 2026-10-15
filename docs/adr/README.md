@@ -210,3 +210,5 @@ Each ADR should include:
    Uploads live as long as a record references them; an opt-in sweeper removes orphans after 24h; tests write uploads under build/.
 92. [`0092-local-scripts-pick-free-ports.md`](0092-local-scripts-pick-free-ports.md)
    Scripts start from 5432/8080/5173 and move to the next free port; `POSTGRES_PORT`/`API_PORT`/`WEB_PORT` pin them; e2e finds the running stack's ports.
+93. [`0093-color-palettes-separate-from-brightness.md`](0093-color-palettes-separate-from-brightness.md)
+   Color palette (`classic` default, `ink` Ink & Signal) is a setting separate from brightness, on `data-palette`; sidebar gets `--iv-nav-*` roles. Amends 0082.

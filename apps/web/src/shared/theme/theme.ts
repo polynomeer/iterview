@@ -29,3 +29,25 @@ export function resolveStoredTheme(value: string | null | undefined): AppTheme {
 export function getStoredTheme(storage: Pick<Storage, "getItem"> | null | undefined) {
   return storage ? resolveStoredTheme(storage.getItem(themeStorageKey)) : defaultTheme;
 }
+
+// Palettes pick the colors; the theme above picks brightness (ADR 0093). Classic stays the default
+// so an upgrade never changes anyone's screen.
+export const paletteOptions = [
+  { id: "ink", label: "Ink & Signal" },
+  { id: "classic", label: "Classic" },
+] as const;
+
+export type AppPalette = (typeof paletteOptions)[number]["id"];
+
+export const defaultPalette: AppPalette = "classic";
+
+export const paletteStorageKey = "iterview-palette";
+
+export function isAppPalette(value: string | null | undefined): value is AppPalette {
+  return paletteOptions.some((option) => option.id === value);
+}
+
+export function getStoredPalette(storage: Pick<Storage, "getItem"> | null | undefined) {
+  const value = storage?.getItem(paletteStorageKey);
+  return isAppPalette(value) ? value : defaultPalette;
+}

@@ -8,6 +8,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   window.localStorage.clear();
   document.documentElement.removeAttribute("data-theme");
+  document.documentElement.removeAttribute("data-palette");
   document.documentElement.style.colorScheme = "";
 });
 
