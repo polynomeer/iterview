@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+LOG_TAG=e2e_cleanup
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-COMPOSE_FILE="$ROOT_DIR/compose.yml"
-UPLOADS_DIR="$ROOT_DIR/apps/api/uploads"
+UPLOADS_DIR="$API_DIR/uploads"
 EMAIL_PATTERN="${E2E_EMAIL_PATTERN:-e2e-%@iterview.test}"
 APPLY=false
 
@@ -24,17 +24,16 @@ for arg in "$@"; do
   case "$arg" in
     -h | --help) usage; exit 0 ;;
     --apply) APPLY=true ;;
-    *) echo "Unknown argument: $arg" >&2; usage >&2; exit 1 ;;
+    *) usage >&2; die "Unknown argument: $arg" ;;
   esac
 done
 
-if [[ "$EMAIL_PATTERN" != *"@iterview.test" ]]; then
-  echo "Refusing to clean accounts outside the @iterview.test test domain: $EMAIL_PATTERN" >&2
-  exit 1
-fi
+[[ "$EMAIL_PATTERN" == *"@iterview.test" ]] ||
+  die "Refusing to clean accounts outside the @iterview.test test domain: $EMAIL_PATTERN"
+[[ -n "$(compose ps -q postgres 2>/dev/null)" ]] || die "The Compose postgres is not running. Start it with ./scripts/dev_all.sh."
 
 psql_local() {
-  docker compose -f "$COMPOSE_FILE" exec -T postgres \
+  compose exec -T postgres \
     psql -U "${POSTGRES_USER:-iterview}" -d "${POSTGRES_DB:-iterview}" -v ON_ERROR_STOP=1 -q "$@"
 }
 

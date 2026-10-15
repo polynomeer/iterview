@@ -208,3 +208,5 @@ Each ADR should include:
    Uploads (20/h) and LLM-backed requests (120/h) get per-user budgets; past them the API answers 429 with a localized wait.
 91. [`0091-uploads-live-as-long-as-their-records.md`](0091-uploads-live-as-long-as-their-records.md)
    Uploads live as long as a record references them; an opt-in sweeper removes orphans after 24h; tests write uploads under build/.
+92. [`0092-local-scripts-pick-free-ports.md`](0092-local-scripts-pick-free-ports.md)
+   Scripts start from 5432/8080/5173 and move to the next free port; `POSTGRES_PORT`/`API_PORT`/`WEB_PORT` pin them; e2e finds the running stack's ports.

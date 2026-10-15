@@ -30,7 +30,7 @@ Shared assets currently live at the root:
 - setup: `./scripts/setup_all.sh`
 - start backend only: `./scripts/dev_api.sh`
 - start frontend only: `./scripts/dev_web.sh`
-- start both: `./scripts/dev_all.sh`
+- start both: `./scripts/dev_all.sh` (stop: `./scripts/stop_all.sh`)
 - tests: `./scripts/test_all.sh`
 - builds: `./scripts/build_all.sh`
 - full verify: `./scripts/verify_all.sh`

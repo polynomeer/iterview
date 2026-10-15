@@ -107,31 +107,26 @@ streams logs:
 ./scripts/dev_all.sh
 ```
 
-Use `Ctrl+C` to stop log streaming; the containers keep running. Set
-`STACK_START_TIMEOUT_SECONDS` when the first Gradle startup needs more than the default
-four minutes.
+Use `Ctrl+C` to stop log streaming; the containers keep running, and `./scripts/stop_all.sh`
+stops them. Set `STACK_START_TIMEOUT_SECONDS` when the first Gradle startup needs more than the
+default four minutes.
+
+Ports start at 5432 (PostgreSQL), 8080 (API) and 5173 (web). When another process already holds
+one, the script moves to the next free port and prints the URLs it used. Set `POSTGRES_PORT`,
+`API_PORT` or `WEB_PORT` in `.env` to pin them.
 
 ### 3. Start applications separately
 
 Use this only when you need to debug an application outside the full Compose stack.
 
 ```bash
-cd apps/api
-docker compose up -d postgres
-./gradlew bootRun
+./scripts/dev_api.sh   # API on the host, against the Compose postgres when it runs
+./scripts/dev_web.sh   # Vite in a second terminal, proxying /api to the running API
 ```
 
-### 4. Start the frontend
-
-In a second terminal:
-
-```bash
-cd apps/web
-npm run dev
-```
-
-Default local URLs:
-- frontend: Vite local dev URL printed in the terminal, usually `http://localhost:5173`
+Both pick a free port the same way and print it. Default local URLs, when nothing else holds
+the ports:
+- frontend: `http://localhost:5173`
 - backend API: `http://localhost:8080`
 - backend Swagger UI: `http://localhost:8080/swagger-ui.html`
 
@@ -143,12 +138,15 @@ Common commands:
 
 ```bash
 ./scripts/setup_all.sh
+./scripts/dev_all.sh
+./scripts/stop_all.sh
 ./scripts/dev_api.sh
 ./scripts/dev_web.sh
-./scripts/dev_all.sh
-./scripts/build_all.sh
 ./scripts/test_all.sh
+./scripts/build_all.sh
 ./scripts/verify_all.sh
+./scripts/e2e.sh
+./scripts/e2e_cleanup.sh
 ```
 
 More detail: [`scripts/README.md`](scripts/README.md)

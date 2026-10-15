@@ -1,41 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+LOG_TAG=setup
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-INSTALL_MODE="${1:-install}"
+usage() {
+  echo "Usage: ./scripts/setup_all.sh [install|ci]"
+  echo
+  echo "Installs the web dependencies (npm install, or npm ci with 'ci'). The API needs no setup;"
+  echo "Gradle fetches its dependencies on the first build."
+}
 
-if [[ ! -f "$ROOT_DIR/apps/api/gradlew" ]]; then
-  echo "Missing apps/api/gradlew" >&2
-  exit 1
-fi
-
-if [[ ! -f "$ROOT_DIR/apps/web/package.json" ]]; then
-  echo "Missing apps/web/package.json" >&2
-  exit 1
-fi
-
-case "$INSTALL_MODE" in
-  install)
-    echo "[web] npm install"
-    (
-      cd "$ROOT_DIR/apps/web"
-      npm install
-    )
-    ;;
-  ci)
-    echo "[web] npm ci"
-    (
-      cd "$ROOT_DIR/apps/web"
-      npm ci
-    )
-    ;;
-  *)
-    echo "Unsupported install mode: $INSTALL_MODE" >&2
-    echo "Usage: $0 [install|ci]" >&2
-    exit 1
-    ;;
+case "${1:-install}" in
+  -h | --help) usage; exit 0 ;;
+  install) NPM_COMMAND=install ;;
+  ci) NPM_COMMAND=ci ;;
+  *) usage >&2; die "Unsupported install mode: $1" ;;
 esac
 
-echo "Setup completed for the monorepo."
-echo "- backend wrapper found at apps/api/gradlew"
-echo "- frontend dependencies prepared in apps/web"
+[[ -x "$API_DIR/gradlew" ]] || die "Missing apps/api/gradlew"
+[[ -f "$WEB_DIR/package.json" ]] || die "Missing apps/web/package.json"
+
+in_app web npm "$NPM_COMMAND"
+log "done"

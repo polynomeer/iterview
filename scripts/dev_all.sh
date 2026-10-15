@@ -1,103 +1,53 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-COMPOSE_FILE="$ROOT_DIR/compose.yml"
-DOCKER_START_TIMEOUT_SECONDS="${DOCKER_START_TIMEOUT_SECONDS:-120}"
-STACK_START_TIMEOUT_SECONDS="${STACK_START_TIMEOUT_SECONDS:-240}"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+LOG_TAG=dev_all
 
 usage() {
-  cat <<'EOF'
+  cat <<'USAGE'
 Usage:
-  ./scripts/dev_all.sh
+  ./scripts/dev_all.sh [--no-logs]
 
-Behavior:
-  - ensures the Docker daemon is running
-  - stops the existing iterview Docker Compose stack when present
-  - starts a fresh stack and waits for its health checks to pass
-  - follows logs from postgres, api, and web containers
+Restarts the iterview Docker Compose stack (postgres, api, web), waits for its health checks and
+follows the logs. Docker Desktop or the Docker service is started when needed.
 
-Notes:
-  - the compose project name is iterview
-  - set STACK_START_TIMEOUT_SECONDS to change the startup wait limit (default: 240)
-  - stop log streaming with Ctrl+C; containers keep running
-EOF
+Host ports start at 5432, 8080 and 5173 and move to the next free port when another process
+holds one; POSTGRES_PORT, API_PORT and WEB_PORT (environment or .env) pin them.
+
+  --no-logs   return after the stack is healthy instead of following the logs
+
+STACK_START_TIMEOUT_SECONDS changes the readiness wait (default 240). Ctrl+C stops following the
+logs; the containers keep running. ./scripts/stop_all.sh stops them.
+USAGE
 }
 
-if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-  usage
-  exit 0
-fi
-
-if [[ ! -f "$COMPOSE_FILE" ]]; then
-  echo "Missing $COMPOSE_FILE" >&2
-  exit 1
-fi
-
-docker_compose() {
-  (
-    cd "$ROOT_DIR"
-    docker compose -f "$COMPOSE_FILE" "$@"
-  )
-}
-
-docker_daemon_ready() {
-  docker info >/dev/null 2>&1
-}
-
-ensure_docker_cli() {
-  if ! command -v docker >/dev/null 2>&1; then
-    echo "Docker CLI is not installed or not on PATH." >&2
-    exit 1
-  fi
-}
-
-start_docker_daemon() {
-  if docker_daemon_ready; then
-    return
-  fi
-
-  case "$(uname -s)" in
-    Darwin)
-      if command -v open >/dev/null 2>&1; then
-        echo "[docker] starting Docker Desktop"
-        open -a Docker >/dev/null 2>&1 || true
-      fi
-      ;;
-    Linux)
-      if command -v systemctl >/dev/null 2>&1; then
-        echo "[docker] starting Docker service"
-        systemctl --user start docker >/dev/null 2>&1 || systemctl start docker >/dev/null 2>&1 || true
-      fi
-      ;;
+FOLLOW_LOGS=true
+for arg in "$@"; do
+  case "$arg" in
+    -h | --help) usage; exit 0 ;;
+    --no-logs) FOLLOW_LOGS=false ;;
+    *) usage >&2; die "Unknown argument: $arg" ;;
   esac
+done
 
-  local waited=0
-  until docker_daemon_ready; do
-    if (( waited >= DOCKER_START_TIMEOUT_SECONDS )); then
-      echo "Docker daemon did not become ready within ${DOCKER_START_TIMEOUT_SECONDS}s." >&2
-      exit 1
-    fi
+ensure_docker
+load_port_settings
 
-    sleep 2
-    waited=$((waited + 2))
-  done
-}
+log "stopping the existing stack"
+compose down --remove-orphans
 
-restart_stack() {
-  echo "[docker] stopping existing iterview stack"
-  docker_compose down --remove-orphans
+# Chosen after `down`, so the stack's own previous ports count as free.
+export POSTGRES_PORT API_PORT WEB_PORT
+POSTGRES_PORT="$(choose_port POSTGRES_PORT "$DEFAULT_POSTGRES_PORT" postgres)"
+API_PORT="$(choose_port API_PORT "$DEFAULT_API_PORT" api)"
+WEB_PORT="$(choose_port WEB_PORT "$DEFAULT_WEB_PORT" web)"
 
-  echo "[docker] starting fresh iterview stack"
-  docker_compose up -d --remove-orphans --wait --wait-timeout "$STACK_START_TIMEOUT_SECONDS"
-}
+log "starting the stack"
+compose up -d --remove-orphans --wait --wait-timeout "${STACK_START_TIMEOUT_SECONDS:-240}"
 
-ensure_docker_cli
-start_docker_daemon
-restart_stack
+log "web:      http://localhost:$WEB_PORT"
+log "api:      http://localhost:$API_PORT"
+log "postgres: localhost:$POSTGRES_PORT"
 
-echo "[docker] project: iterview"
-echo "[docker] frontend: http://localhost:5173"
-echo "[docker] backend:  http://localhost:8080"
-
-docker_compose logs -f --tail=100 postgres api web
+[[ "$FOLLOW_LOGS" == true ]] && compose logs -f --tail=100 postgres api web
+exit 0
