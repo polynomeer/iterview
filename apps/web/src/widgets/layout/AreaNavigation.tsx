@@ -8,7 +8,7 @@ export function AreaNavigation() {
   const { pathname } = useLocation();
   const { area, section } = resolveNavLocation(pathname);
 
-  if (!area || area.sections.length < 2) {
+  if (!area || area.sections.length < 2 || section?.ownTabs) {
     return null;
   }
 

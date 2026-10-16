@@ -160,16 +160,18 @@ export function ReviewQueuePage() {
 
   const first = dueNow[0] ?? items[0] ?? null;
   const selectedDate = selectedDay ? week.find((day) => day.date.toISOString() === selectedDay)?.date ?? null : null;
+  // With nothing due, the today view lists what comes next instead of an empty card.
+  const showUpcoming = view === "upcoming" || (dueNow.length === 0 && upcoming.length > 0);
   const listItems = selectedDate
     ? items.filter((item) => sameDay(item.scheduledAt, selectedDate))
-    : view === "upcoming"
+    : showUpcoming
       ? upcoming
       : dueNow;
   const listTitle = selectedDate
     ? t("reviewQueue.dayListTitle", {
         date: selectedDate.toLocaleDateString(dateLocale(locale), { month: "long", day: "numeric", weekday: "short" }),
       })
-    : view === "upcoming"
+    : showUpcoming
       ? t("reviewQueue.upcomingListTitle")
       : t("reviewQueue.listTitle");
 

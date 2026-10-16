@@ -5,11 +5,19 @@ import { renderWithProviders } from "../utils";
 
 describe("AreaNavigation", () => {
   it("lists the sections of the current area and marks the active one", () => {
-    renderWithProviders(<AreaNavigation />, { route: "/review/done", locale: "ko" });
+    renderWithProviders(<AreaNavigation />, { route: "/interview/records", locale: "ko" });
 
-    const nav = screen.getByRole("navigation", { name: "복습 하위 메뉴" });
-    expect(nav).toHaveTextContent("지금 복습완료한 질문");
-    expect(screen.getByRole("link", { name: "완료한 질문" })).toHaveAttribute("aria-current", "page");
+    const nav = screen.getByRole("navigation", { name: "면접 하위 메뉴" });
+    expect(nav).toHaveTextContent("모의면접");
+    expect(screen.getByRole("link", { name: "실전 면접 복기" })).toHaveAttribute("aria-current", "page");
+  });
+
+  it("leaves pages that draw their own tabs to them", () => {
+    for (const route of ["/review", "/review/done", "/interview"]) {
+      const { container, unmount } = renderWithProviders(<AreaNavigation />, { route, locale: "ko" });
+      expect(container).toBeEmptyDOMElement();
+      unmount();
+    }
   });
 
   it("leaves the resume hub to its own route tabs", () => {

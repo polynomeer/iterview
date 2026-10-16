@@ -8,6 +8,8 @@ export type NavSection = {
   to: string;
   /** Extra route patterns that belong to this section (detail pages, sub-steps). */
   match: string[];
+  /** The page draws its own tabs for the area, so the shell's section links would repeat them. */
+  ownTabs?: true;
 };
 
 export type NavArea = {
@@ -52,8 +54,8 @@ export const PRIMARY_AREAS: NavArea[] = [
     icon: "review",
     to: routeConfig.reviewQueue.buildPath(),
     sections: [
-      { labelKey: "nav.reviewToday", to: routeConfig.reviewQueue.buildPath(), match: [routeConfig.reviewQueue.path] },
-      { labelKey: "nav.reviewDone", to: routeConfig.archive.buildPath(), match: [routeConfig.archive.path] },
+      { labelKey: "nav.reviewToday", to: routeConfig.reviewQueue.buildPath(), match: [routeConfig.reviewQueue.path], ownTabs: true },
+      { labelKey: "nav.reviewDone", to: routeConfig.archive.buildPath(), match: [routeConfig.archive.path], ownTabs: true },
     ],
   },
   {
@@ -70,7 +72,12 @@ export const PRIMARY_AREAS: NavArea[] = [
     icon: "interview",
     to: routeConfig.interview.buildPath(),
     sections: [
-      { labelKey: "nav.mockInterview", to: routeConfig.interview.buildPath(), match: [routeConfig.interview.path, prefix("/interview/sessions")] },
+      {
+        labelKey: "nav.mockInterview",
+        to: routeConfig.interview.buildPath(),
+        match: [routeConfig.interview.path, prefix("/interview/sessions")],
+        ownTabs: true,
+      },
       {
         labelKey: "nav.practicalInterview",
         to: routeConfig.practicalInterviews.buildPath(),
