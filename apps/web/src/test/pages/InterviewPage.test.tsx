@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useCreateInterviewSessionMutation } from "../../features/interview/api/useCreateInterviewSessionMutation";
 import { useInterviewSessionsQuery } from "../../features/interview/api/useInterviewSessionsQuery";
+import { useInterviewRecordListQuery } from "../../features/practical-interview/api/useInterviewRecordListQuery";
 import { useResumeListQuery } from "../../features/resume/api/useResumeListQuery";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { InterviewPage } from "../../pages/interview/InterviewPage";
@@ -11,6 +12,7 @@ import { LocationDisplay, renderWithProviders } from "../utils";
 
 vi.mock("../../features/interview/api/useCreateInterviewSessionMutation", () => ({ useCreateInterviewSessionMutation: vi.fn() }));
 vi.mock("../../features/interview/api/useInterviewSessionsQuery", () => ({ useInterviewSessionsQuery: vi.fn() }));
+vi.mock("../../features/practical-interview/api/useInterviewRecordListQuery", () => ({ useInterviewRecordListQuery: vi.fn() }));
 vi.mock("../../features/resume/api/useResumeListQuery", () => ({ useResumeListQuery: vi.fn() }));
 vi.mock("../../features/review-queue/api/useReviewQueueQuery", () => ({ useReviewQueueQuery: vi.fn() }));
 
@@ -40,6 +42,11 @@ beforeEach(() => {
     isLoading: false,
     isError: false,
   } as never);
+  vi.mocked(useInterviewRecordListQuery).mockReturnValue({
+    data: [{ id: "record-7", title: "Acme · Backend", interviewDateLabel: "2026. 10. 2.", createdAtLabel: null, questionCount: 12 }],
+    isLoading: false,
+    isError: false,
+  } as never);
 });
 
 function renderPage() {
@@ -57,13 +64,20 @@ describe("InterviewPage", () => {
     mockResume(true);
     renderPage();
 
-    expect(screen.getByRole("heading", { level: 1, name: "모의면접" })).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: /내 이력서/ })).toBeChecked();
-    expect(screen.getByText("Backend Resume · Version 2")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "면접" })).toBeInTheDocument();
+    const views = screen.getByRole("navigation", { name: "면접 종류" });
+    expect(within(views).getByRole("link", { name: "모의면접" })).toHaveAttribute("aria-current", "page");
+    expect(within(views).getByRole("link", { name: "실전 면접 복기" })).toHaveAttribute("href", "/interview/records");
+    expect(screen.getByRole("heading", { level: 2, name: "세 가지만 정하면 바로 시작해요" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "내 이력서" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "내 이력서" })).toHaveAccessibleDescription("Backend Resume · Version 2");
+    expect(screen.getByRole("radio", { name: "모의 30" })).toBeChecked();
 
     await userEvent.click(screen.getByRole("radio", { name: "전체 범위" }));
     await userEvent.click(screen.getByRole("radio", { name: "5문항" }));
-    await userEvent.click(screen.getByRole("button", { name: "면접 시작" }));
+    expect(screen.getByRole("radio", { name: "5문항" })).toBeChecked();
+    expect(screen.getByText(/Backend Resume · Version 2 · 전체 범위 · 5문항/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "모의면접 시작" }));
 
     expect(mutateAsync).toHaveBeenCalledWith({ sessionType: "resume_mock", interviewMode: "full_coverage", questionCount: 5, resumeVersionId: "version-2" });
     await waitFor(() => expect(screen.getByTestId("location-display")).toHaveTextContent("/interview/sessions/session-2"));
@@ -73,21 +87,41 @@ describe("InterviewPage", () => {
     mockResume(false);
     renderPage();
 
-    expect(screen.getByRole("radio", { name: /내 이력서/ })).toBeDisabled();
-    expect(screen.getByRole("radio", { name: /복습할 질문/ })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "내 이력서" })).toBeDisabled();
+    expect(screen.getByRole("radio", { name: "복습할 질문" })).toBeChecked();
     expect(screen.queryByRole("radio", { name: "전체 범위" })).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "면접 시작" }));
+    await userEvent.click(screen.getByRole("button", { name: "모의면접 시작" }));
     expect(mutateAsync).toHaveBeenCalledWith({ sessionType: "review_mock", interviewMode: "mock_30", questionCount: 3, resumeVersionId: null });
   });
 
-  it("links finished sessions to results and unfinished ones back into the session", () => {
+  it("lists past mock sessions and real interview records, each linking to its page", () => {
     mockResume(true);
     renderPage();
 
-    const history = screen.getByRole("region", { name: "지난 모의면접" });
-    expect(within(history).getByRole("link", { name: "결과" })).toHaveAttribute("href", "/interview/sessions/session-1/result");
-    expect(within(history).getByRole("link", { name: "이어서" })).toHaveAttribute("href", "/interview/sessions/session-3");
-    expect(within(history).getByText("84")).toBeInTheDocument();
+    const history = screen.getByRole("region", { name: "지난 면접" });
+    expect(within(history).getByRole("link", { name: /84.*결과/ })).toHaveAttribute("href", "/interview/sessions/session-1/result");
+    expect(within(history).getByRole("link", { name: /진행 중.*이어서/ })).toHaveAttribute("href", "/interview/sessions/session-3");
+    const record = within(history).getByRole("link", { name: /실전.*Acme · Backend/ });
+    expect(record).toHaveAttribute("href", "/interview/records/record-7");
+    expect(within(record).getByText("2026. 10. 2. · 받은 질문 12개 기록")).toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: "면접 복기 기록하기" })).toHaveAttribute("href", "/interview/records/upload");
+    expect(screen.getAllByRole("button", { name: "모의면접 시작" })).toHaveLength(1);
+  });
+
+  it("keeps an empty state and a retry when past sessions cannot load", async () => {
+    mockResume(true);
+    vi.mocked(useInterviewRecordListQuery).mockReturnValue({ data: [], isLoading: false, isError: false } as never);
+    const refetch = vi.fn();
+    vi.mocked(useInterviewSessionsQuery).mockReturnValue({ data: [], isLoading: false, isError: false, refetch } as never);
+    const { unmount } = renderWithProviders(<InterviewPage />, { route: "/interview", locale: "ko" });
+    expect(screen.getByText("아직 본 면접이 없어요.")).toBeInTheDocument();
+    unmount();
+
+    vi.mocked(useInterviewSessionsQuery).mockReturnValue({ data: undefined, isLoading: false, isError: true, refetch } as never);
+    renderWithProviders(<InterviewPage />, { route: "/interview", locale: "ko" });
+    await userEvent.click(within(screen.getByRole("region", { name: "지난 면접" })).getByRole("button", { name: "다시 시도" }));
+    expect(refetch).toHaveBeenCalled();
   });
 });
