@@ -1,11 +1,13 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useCurrentUserQuery } from "../../features/auth/api/useCurrentUserQuery";
 import { useHomeQuery } from "../../features/home/api/useHomeQuery";
-import type { HomeModel, HomeQuestionCardModel } from "../../entities/home/model";
+import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
+import type { HomeModel } from "../../entities/home/model";
 import { ApiClientError, getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale, type AppLocale, type MessageKey } from "../../shared/i18n";
 import { difficultyLabel, materialTypeLabel, scoreTone, severityLabel, skillCategoryLabel } from "../../shared/lib/labels";
+import type { CurrentUserDto } from "../../shared/types/auth";
 import {
   Badge,
   Button,
@@ -14,110 +16,89 @@ import {
   CardHeader,
   EmptyState,
   ErrorState,
-  Icon,
   ListRow,
   PageHeader,
   PageSkeleton,
   Progress,
   Stat,
 } from "../../shared/ui/primitives";
+import { TodayNextQuestion } from "./TodayNextQuestion";
 import "./home.css";
 
-const STATUS_KEYS: Record<HomeQuestionCardModel["status"], MessageKey> = {
-  new: "home.statusNew",
-  retry: "home.statusRetry",
-  improving: "home.statusImproving",
-  archived: "home.statusArchived",
-};
-
-function NextQuestionCard({ question, locale }: { question: HomeQuestionCardModel | null; locale: AppLocale }) {
-  const { t } = useLocale();
-
-  if (!question) {
-    return (
-      <Card className="today-next">
-        <EmptyState
-          actions={
-            <ButtonLink to={routeConfig.practice.buildPath()} variant="primary">
-              {t("home.browseQuestions")}
-            </ButtonLink>
-          }
-          body={t("home.noAssignedBody")}
-          title={t("home.noAssignedTitle")}
-        />
-      </Card>
-    );
+function headline(home: HomeModel, t: ReturnType<typeof useLocale>["t"]) {
+  const reviews = home.retryQuestions.length;
+  if (home.todayQuestion) {
+    if (reviews === 0) return t("home.headlineQuestionOnly");
+    return reviews === 1 ? t("home.headlineQuestionReviewOne") : t("home.headlineQuestionReviewOther", { count: reviews });
   }
+  if (reviews > 0) {
+    return reviews === 1 ? t("home.headlineReviewOne") : t("home.headlineReviewOther", { count: reviews });
+  }
+  return t("home.allDone");
+}
 
-  const difficulty = difficultyLabel(question.difficulty, locale);
+function targetCompaniesOf(user: CurrentUserDto | undefined) {
+  return (user?.targetCompanies ?? [])
+    .map((company) => (typeof company === "string" ? company : (company.companyName ?? "")).trim())
+    .filter((company) => company.length > 0);
+}
+
+function TodayHeader({ home, targetCompanies }: { home: HomeModel; targetCompanies: string[] }) {
+  const { t, locale } = useLocale();
+  const date = new Intl.DateTimeFormat(locale === "ko" ? "ko-KR" : "en-US", { month: "long", day: "numeric", weekday: "long" }).format(new Date());
+  const eyebrow = [date, targetCompanies.length > 0 ? t("home.targetCompanies", { companies: targetCompanies.slice(0, 2).join(", ") }) : null]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
-    <Card aria-labelledby="today-next-title" className="today-next">
-      <div className="today-next__main">
-        <div className="today-next__badges">
-          <Badge tone="accent">{t("home.upNext")}</Badge>
-          {question.status === "retry" ? <Badge tone="warning">{t("home.retry")}</Badge> : null}
-          {difficulty ? <Badge>{difficulty}</Badge> : null}
-        </div>
-        <h2 className="today-next__title" id="today-next-title">
-          {question.title}
-        </h2>
-        <div className="today-next__actions">
-          <ButtonLink icon="arrowRight" size="lg" to={routeConfig.answerEditor.buildPath({ questionId: question.id })} variant="primary">
-            {t("home.startAnswering")}
-          </ButtonLink>
-          <ButtonLink size="lg" to={routeConfig.questionDetail.buildPath({ questionId: question.id })}>
-            {t("home.viewQuestionDetail")}
-          </ButtonLink>
-        </div>
-      </div>
-      <aside aria-label={t("home.aboutQuestion")} className="today-next__about">
-        <span className="today-next__about-label">{t("home.aboutQuestion")}</span>
-        <p className="today-next__fact">
-          <Icon name="info" size={16} />
-          {t(STATUS_KEYS[question.status])}
-        </p>
-        {question.scheduledLabel ? (
-          <p className="today-next__fact">
-            <Icon name="today" size={16} />
-            {t("home.assignedOn", { date: question.scheduledLabel })}
-          </p>
-        ) : null}
-      </aside>
-    </Card>
+    <header className="today-header">
+      <span className="today-header__eyebrow">{eyebrow}</span>
+      <h1 className="today-header__title">{headline(home, t)}</h1>
+    </header>
   );
 }
 
 function DueReviewCard({ home, locale }: { home: HomeModel; locale: AppLocale }) {
   const { t } = useLocale();
   const items = home.retryQuestions;
+  const reviewQueueQuery = useReviewQueueQuery({ enabled: items.length > 0 });
+  const reasons = new Map((reviewQueueQuery.data?.items ?? []).map((item) => [item.questionId, item.reasonTypeLabel]));
 
   return (
-    <Card aria-labelledby="today-review-title">
-      <CardHeader
-        actions={
-          <ButtonLink size="sm" to={routeConfig.reviewQueue.buildPath()} variant="ghost">
-            {t("home.viewAll")}
-          </ButtonLink>
-        }
-        meta={items.length > 0 ? <Badge tone="danger">{items.length}</Badge> : null}
-        title={<span id="today-review-title">{t("home.dueForReview")}</span>}
-      />
+    <Card aria-labelledby="today-review-title" className="today-panel">
+      <header className="today-panel__header">
+        <h3 className="today-panel__title" id="today-review-title">
+          {t("home.dueForReview")}
+          {items.length > 0 ? (
+            <>
+              {" "}
+              <span className="today-panel__count">{items.length}</span>
+            </>
+          ) : null}
+        </h3>
+        <Link className="today-link" to={routeConfig.reviewQueue.buildPath()}>
+          {t("home.viewAll")}
+        </Link>
+      </header>
       {items.length === 0 ? (
         <EmptyState body={t("home.noDueBody")} icon="check" title={t("home.noDueTitle")} />
       ) : (
-        items.slice(0, 5).map((item) => (
-          <ListRow
-            key={item.id}
-            meta={[difficultyLabel(item.difficulty, locale), item.scheduledLabel].filter(Boolean).join(" · ")}
-            title={item.title}
-            trailing={
-              <ButtonLink size="sm" to={routeConfig.answerEditor.buildPath({ questionId: item.id })}>
-                {t("home.answerAgain")}
-              </ButtonLink>
-            }
-          />
-        ))
+        <ul className="today-review">
+          {items.slice(0, 5).map((item) => {
+            const meta = [reasons.get(item.id), item.scheduledLabel, difficultyLabel(item.difficulty, locale)].filter(Boolean).join(" · ");
+            return (
+              <li className="today-review__row" key={item.id}>
+                <span className="today-review__main">
+                  <span className="today-review__title">{item.title}</span>
+                  {meta ? <span className="today-review__meta">{meta}</span> : null}
+                </span>
+                <Link className="today-link" to={routeConfig.answerEditor.buildPath({ questionId: item.id })}>
+                  {t("home.answerAgain")}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </Card>
   );
@@ -131,39 +112,38 @@ function ResumeRiskCard({ home, locale }: { home: HomeModel; locale: AppLocale }
   }
 
   return (
-    <Card aria-labelledby="today-risk-title">
-      <CardHeader
-        actions={
-          <ButtonLink size="sm" to={routeConfig.resume.buildPath()} variant="ghost">
-            {t("home.resumeOverview")}
-          </ButtonLink>
-        }
-        title={<span id="today-risk-title">{t("home.resumeRisksTitle")}</span>}
-      />
-      {home.resumeRisks.slice(0, 4).map((risk) => {
-        const severity = severityLabel(risk.severity, locale);
-        return (
-          <ListRow
-            key={risk.id}
-            leading={<Icon className="today-risk__icon" name="alert" />}
-            title={risk.title}
-            trailing={
-              <>
+    <Card aria-labelledby="today-risk-title" className="today-panel">
+      <header className="today-panel__header">
+        <h3 className="today-panel__title" id="today-risk-title">
+          {t("home.resumeRisksTitle")}
+        </h3>
+        <Link className="today-link" to={routeConfig.resume.buildPath()}>
+          {t("home.resumeOverview")}
+        </Link>
+      </header>
+      <ul className="today-risks">
+        {home.resumeRisks.slice(0, 3).map((risk) => {
+          const severity = severityLabel(risk.severity, locale);
+          return (
+            <li className={`today-risk${severity?.tone === "danger" ? " today-risk--high" : ""}`} key={risk.id}>
+              <span className="today-risk__label">{t("home.resumeRiskQuestion")}</span>
+              <span className="today-risk__title">{risk.title}</span>
+              <span className="today-risk__footer">
                 {severity ? (
                   <Badge dot tone={severity.tone}>
                     {t("home.riskLevel", { level: severity.label })}
                   </Badge>
                 ) : null}
                 {risk.questionId ? (
-                  <ButtonLink size="sm" to={routeConfig.questionDetail.buildPath({ questionId: risk.questionId })} variant="ghost">
+                  <Link className="today-link" to={routeConfig.questionDetail.buildPath({ questionId: risk.questionId })}>
                     {t("home.viewQuestion")}
-                  </ButtonLink>
+                  </Link>
                 ) : null}
-              </>
-            }
-          />
-        );
-      })}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
     </Card>
   );
 }
@@ -173,12 +153,12 @@ function ProgressCard({ home, locale }: { home: HomeModel; locale: AppLocale }) 
   const summary = home.summary;
 
   return (
-    <Card aria-labelledby="today-progress-title" padded>
-      <h2 className="today-aside__title" id="today-progress-title">
+    <Card aria-labelledby="today-progress-title" className="today-progress" padded>
+      <h3 className="today-panel__title" id="today-progress-title">
         {t("home.progress")}
-      </h2>
+      </h3>
       {summary ? (
-        <div className="today-aside__stats">
+        <div className="today-progress__stats">
           <Stat label={t("home.statToday")} value={summary.dailyQuestionCount} />
           <Stat label={t("home.statRetries")} value={summary.retryQuestionCount} />
           <Stat label={t("home.statDue")} value={summary.pendingReviewCount} />
@@ -186,17 +166,17 @@ function ProgressCard({ home, locale }: { home: HomeModel; locale: AppLocale }) 
         </div>
       ) : null}
       {home.skillReadiness.length > 0 ? (
-        <div className="today-aside__skills">
+        <div className="today-progress__skills">
           {/* The home preview has no answer counts; a score of 0 means the area is not measured yet. */}
           {home.skillReadiness.every((skill) => !skill.score) ? (
-            <p className="today-aside__empty">{t("home.readinessEmpty")}</p>
+            <p className="today-progress__empty">{t("home.readinessEmpty")}</p>
           ) : (
             home.skillReadiness.slice(0, 5).map((skill) => {
               const label = skillCategoryLabel(skill.code, locale) ?? skill.code;
               const measured = Boolean(skill.score);
               return (
-                <div className="today-aside__skill" key={skill.code}>
-                  <div className="today-aside__skill-row">
+                <div className="today-progress__skill" key={skill.code}>
+                  <div className="today-progress__skill-row">
                     <span>{label}</span>
                     <strong>{measured ? Math.round(skill.score ?? 0) : t("home.notMeasured")}</strong>
                   </div>
@@ -222,7 +202,7 @@ function MaterialsCard({ home }: { home: HomeModel }) {
   }
 
   return (
-    <Card aria-labelledby="today-materials-title">
+    <Card aria-labelledby="today-materials-title" className="today-materials">
       <CardHeader title={<span id="today-materials-title">{t("home.readingTitle")}</span>} />
       {home.learningMaterials.slice(0, 3).map((material) => (
         <ListRow
@@ -271,7 +251,7 @@ function GuestHome() {
             </li>
           ))}
         </ol>
-        <div className="today-next__actions">
+        <div className="today-guest__actions">
           <ButtonLink
             size="lg"
             state={{ redirectTo: `${location.pathname}${location.search}` }}
@@ -298,6 +278,7 @@ export function HomePage() {
   const { locale, t } = useLocale();
   const home = homeQuery.data;
 
+
   if (homeQuery.isLoading) {
     return <PageSkeleton label={t("home.loading")} />;
   }
@@ -322,31 +303,20 @@ export function HomePage() {
     );
   }
 
-  const user = currentUserQuery.data;
-  const name = user?.profile?.nickname?.trim() || user?.nickname?.trim() || user?.name;
-  const taskCount = (home.todayQuestion ? 1 : 0) + home.retryQuestions.length;
+  const targetCompanies = targetCompaniesOf(currentUserQuery.data);
 
   return (
     <div className="ui-page today-page">
-      <PageHeader
-        description={
-          taskCount > 0
-            ? t(taskCount === 1 ? "home.taskCountOne" : "home.taskCountOther", { count: taskCount })
-            : t("home.allDone")
-        }
-        title={name ? t("home.greeting", { name }) : t("home.title")}
-      />
-      <NextQuestionCard locale={locale} question={home.todayQuestion} />
-      <div className="today-layout">
-        <div className="today-layout__main">
-          <DueReviewCard home={home} locale={locale} />
-          <ResumeRiskCard home={home} locale={locale} />
-        </div>
-        <aside aria-label={t("home.asideLabel")} className="today-layout__aside">
-          <ProgressCard home={home} locale={locale} />
-          <MaterialsCard home={home} />
-        </aside>
+      <TodayHeader home={home} targetCompanies={targetCompanies} />
+      <TodayNextQuestion home={home} question={home.todayQuestion} targetCompanies={targetCompanies} />
+      <div className="today-row">
+        <DueReviewCard home={home} locale={locale} />
+        <ResumeRiskCard home={home} locale={locale} />
       </div>
+      <section aria-label={t("home.lowerLabel")} className="today-row today-row--lower">
+        <ProgressCard home={home} locale={locale} />
+        <MaterialsCard home={home} />
+      </section>
     </div>
   );
 }
