@@ -6,7 +6,7 @@ import {
 } from "../../features/library/api/useQuestionLibraryState";
 import { useLocale } from "../../shared/i18n";
 import type { QuestionLibraryStateDto } from "../../shared/types/library";
-import { Button, Field, Textarea } from "../../shared/ui/primitives";
+import { Button, Field, IconButton, Textarea } from "../../shared/ui/primitives";
 
 /** Saves the question to 보관함 (ADR 0083). Signed-in users only. */
 export function BookmarkButton({ questionId }: { questionId: string }) {
@@ -16,17 +16,17 @@ export function BookmarkButton({ questionId }: { questionId: string }) {
   const bookmarked = stateQuery.data?.bookmarked ?? false;
 
   return (
-    <Button
+    <IconButton
+      aria-busy={mutation.isPending || undefined}
       aria-pressed={bookmarked}
-      disabled={!stateQuery.data}
+      className="question-bookmark"
+      disabled={!stateQuery.data || mutation.isPending}
       icon="bookmark"
-      loading={mutation.isPending}
+      label={mutation.isError ? `${t("library.bookmark")} · ${t("library.bookmarkFailed")}` : t("library.bookmark")}
       onClick={() => mutation.mutate(!bookmarked)}
-      title={mutation.isError ? t("library.bookmarkFailed") : undefined}
-      variant={bookmarked ? "primary" : "secondary"}
-    >
-      {bookmarked ? t("library.bookmarked") : t("library.bookmark")}
-    </Button>
+      size="lg"
+      variant="secondary"
+    />
   );
 }
 
@@ -93,8 +93,8 @@ function NoteEditor({ questionId, state }: { questionId: string; state: Question
   );
 }
 
-/** The inspector's 노트 tab: one private note per question. */
-export function NoteTab({ questionId }: { questionId: string }) {
+/** 내 메모 in the side column: one private note per question. */
+export function NoteSection({ questionId }: { questionId: string }) {
   const { t } = useLocale();
   const stateQuery = useQuestionLibraryStateQuery(questionId, true);
 
