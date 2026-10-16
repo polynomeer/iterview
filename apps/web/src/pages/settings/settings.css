@@ -6,13 +6,14 @@
 
 .settings-nav a {
   padding: var(--iv-space-2) var(--iv-space-3);
-  border-radius: var(--iv-radius-sm);
+  border-radius: var(--iv-radius-md);
   color: var(--iv-text-muted);
   font-size: var(--iv-text-sm);
   text-decoration: none;
 }
 
 .settings-nav a:hover { background: var(--iv-surface-sunken); color: var(--iv-text); }
+.settings-nav a[aria-current] { background: var(--iv-accent-soft); color: var(--iv-accent-text); font-weight: var(--iv-weight-semibold); }
 .settings-nav a:focus-visible { outline: none; box-shadow: var(--iv-focus-ring); }
 
 .settings-sections { display: flex; flex-direction: column; gap: var(--iv-space-5); min-width: 0; }
@@ -71,6 +72,95 @@
 
 .settings-save { display: flex; align-items: center; justify-content: flex-end; gap: var(--iv-space-3); padding: var(--iv-space-4) var(--iv-space-5); border-top: 1px solid var(--iv-border); }
 .settings-muted { margin: 0; color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+/* 언어와 화면: palette cards, brightness, live preview (SettingsTheme.dc mockup). */
+.settings-body > .settings-fieldset + .settings-fieldset,
+.settings-body > .settings-preview { margin-top: var(--iv-space-3); }
+.settings-fieldset { display: flex; flex-direction: column; align-items: flex-start; gap: var(--iv-space-2); align-self: stretch; min-width: 0; margin: 0; padding: 0; border: 0; }
+.settings-subheading { margin: 0; padding: 0; color: var(--iv-text); font-size: var(--iv-text-md); font-weight: var(--iv-weight-semibold); }
+.settings-fieldset .settings-muted + .settings-palettes { margin-top: var(--iv-space-1); }
+
+.settings-palettes { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--iv-space-3); align-self: stretch; }
+
+.settings-palette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-3);
+  padding: var(--iv-space-4);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface);
+  color: var(--iv-text);
+  cursor: pointer;
+  transition: border-color var(--iv-duration-fast) var(--iv-ease);
+}
+
+.settings-palette:hover { border-color: var(--iv-border-strong); }
+.settings-palette--checked,
+.settings-palette--checked:hover { border-color: var(--iv-accent); box-shadow: 0 0 0 1px var(--iv-accent); }
+.settings-palette:has(input:focus-visible) { box-shadow: var(--iv-focus-ring); }
+
+.settings-palette__strip { display: flex; height: 4rem; overflow: hidden; border: 1px solid var(--iv-border); border-radius: var(--iv-radius-md); }
+.settings-palette__rail { flex: 1; background: var(--iv-surface-sunken); }
+.settings-palette__canvas { display: flex; flex: 2; align-items: center; justify-content: center; gap: var(--iv-space-2); background: var(--iv-surface); }
+.settings-palette__surface { flex: 2; background: var(--iv-surface-sunken); }
+.settings-palette__dot { width: 1.125rem; height: 1.125rem; border-radius: var(--iv-radius-full); background: var(--iv-border-strong); }
+
+/* Only the active palette's colors are reachable through tokens, so only its strip is live. */
+.settings-palette__strip--live .settings-palette__rail { background: var(--iv-nav-bg); }
+.settings-palette__strip--live .settings-palette__canvas { background: var(--iv-bg); }
+.settings-palette__strip--live .settings-palette__surface { background: var(--iv-surface); }
+.settings-palette__strip--live .settings-palette__dot--accent { background: var(--iv-accent); }
+.settings-palette__strip--live .settings-palette__dot--signal { background: var(--iv-signal); }
+
+.settings-palette__head { display: flex; align-items: center; gap: var(--iv-space-2); }
+.settings-palette__name { flex: 1; font-size: var(--iv-text-md); font-weight: var(--iv-weight-semibold); }
+.settings-palette__in-use { color: var(--iv-accent-text); font-size: var(--iv-text-xs); font-weight: var(--iv-weight-semibold); }
+.settings-palette__description { color: var(--iv-text-muted); font-size: var(--iv-text-sm); }
+
+.settings-preview { display: flex; flex-direction: column; gap: var(--iv-space-2); align-self: stretch; }
+
+.settings-preview__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--iv-space-3);
+  padding: var(--iv-space-5);
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-bg);
+}
+
+.settings-preview__topic { display: inline-flex; align-items: center; gap: var(--iv-space-2); color: var(--iv-text-muted); font-size: var(--iv-text-xs); }
+.settings-preview__depth { padding: 0 var(--iv-space-2); border: 1px solid var(--iv-text); border-radius: var(--iv-radius-sm); color: var(--iv-text); font-family: var(--iv-font-mono); }
+.settings-preview__question { margin: 0; color: var(--iv-text); font-size: var(--iv-text-lg); font-weight: var(--iv-weight-semibold); line-height: var(--iv-leading-reading); }
+.settings-preview__badges { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); }
+
+.settings-preview__weak {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--iv-space-1);
+  padding: var(--iv-space-1) var(--iv-space-3);
+  border-radius: var(--iv-radius-full);
+  background: var(--iv-danger-soft);
+  color: var(--iv-danger);
+  font-size: var(--iv-text-xs);
+  font-weight: var(--iv-weight-semibold);
+}
+
+.settings-preview__weak-dot { width: 0.5rem; height: 0.5rem; border-radius: var(--iv-radius-full); background: var(--iv-signal); }
+
+.settings-preview__button {
+  display: inline-flex;
+  align-items: center;
+  height: var(--iv-control-lg);
+  padding: 0 var(--iv-space-5);
+  border-radius: var(--iv-radius-md);
+  background: var(--iv-accent);
+  color: var(--iv-on-accent);
+  font-size: var(--iv-text-sm);
+  font-weight: var(--iv-weight-semibold);
+}
 
 @media (max-width: 960px) {
   .settings-grid { grid-template-columns: minmax(0, 1fr); }

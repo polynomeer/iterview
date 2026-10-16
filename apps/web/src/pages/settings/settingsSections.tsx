@@ -11,7 +11,7 @@ import { routeConfig } from "../../shared/config/routes";
 import { useLocale, type AppLocale, type MessageKey } from "../../shared/i18n";
 import { useTheme } from "../../shared/theme";
 import type { AppPalette, AppTheme } from "../../shared/theme/theme";
-import { Button, ButtonLink, Card, CardHeader, Callout, IconButton, Input, Segmented, Select } from "../../shared/ui/primitives";
+import { Badge, Button, ButtonLink, Card, CardHeader, Callout, IconButton, Input, Segmented, Select } from "../../shared/ui/primitives";
 
 /** One labelled row: the label and hint on the left, the control on the right. */
 function Row({ label, hint, htmlFor, children }: { label: string; hint?: string; htmlFor?: string; children: ReactNode }) {
@@ -233,10 +233,84 @@ const THEME_LABELS: Record<AppTheme, MessageKey> = {
   dark: "settingsPage.themeDark",
 };
 
-const PALETTE_LABELS: Record<AppPalette, MessageKey> = {
-  ink: "settingsPage.paletteInk",
-  classic: "settingsPage.paletteClassic",
+const PALETTES: Array<{ id: AppPalette; label: MessageKey; description: MessageKey }> = [
+  { id: "ink", label: "settingsPage.paletteInk", description: "settingsPage.paletteInkDescription" },
+  { id: "classic", label: "settingsPage.paletteClassic", description: "settingsPage.paletteClassicDescription" },
+];
+
+const THEME_NOTES: Record<AppTheme, MessageKey> = {
+  system: "settingsPage.themeNoteSystem",
+  light: "settingsPage.themeNoteLight",
+  dark: "settingsPage.themeNoteDark",
 };
+
+/**
+ * A palette choice: a real radio styled as a card. Tokens follow the active palette, so only the
+ * checked card can show live colors in its strip; the other shows a neutral strip and its words.
+ */
+function PaletteCard({ id, label, description, checked, onSelect }: { id: AppPalette; label: string; description: string; checked: boolean; onSelect: () => void }) {
+  const { t } = useLocale();
+  return (
+    <label className={`settings-palette${checked ? " settings-palette--checked" : ""}`}>
+      <input
+        aria-describedby={`settings-palette-${id}-description`}
+        aria-labelledby={`settings-palette-${id}-label`}
+        checked={checked}
+        className="ui-visually-hidden"
+        name="settings-palette"
+        onChange={onSelect}
+        type="radio"
+        value={id}
+      />
+      <span aria-hidden="true" className={`settings-palette__strip${checked ? " settings-palette__strip--live" : ""}`}>
+        <span className="settings-palette__rail" />
+        <span className="settings-palette__canvas">
+          <span className="settings-palette__dot settings-palette__dot--accent" />
+          <span className="settings-palette__dot settings-palette__dot--signal" />
+        </span>
+        <span className="settings-palette__surface" />
+      </span>
+      <span className="settings-palette__head">
+        <span className="settings-palette__name" id={`settings-palette-${id}-label`}>
+          {label}
+        </span>
+        {checked ? <span className="settings-palette__in-use">{t("settingsPage.paletteInUse")}</span> : null}
+      </span>
+      <span className="settings-palette__description" id={`settings-palette-${id}-description`}>
+        {description}
+      </span>
+    </label>
+  );
+}
+
+/** A static sample drawn only with tokens, so it shows whatever palette and brightness are active. */
+function ThemePreview() {
+  const { t } = useLocale();
+  return (
+    <section aria-labelledby="settings-preview-title" className="settings-preview">
+      <h3 className="settings-subheading" id="settings-preview-title">
+        {t("settingsPage.previewTitle")}
+      </h3>
+      <div className="settings-preview__card">
+        <span className="settings-preview__topic">
+          {t("settingsPage.previewTopic")}
+          <span className="settings-preview__depth">{t("settingsPage.previewDepth")}</span>
+        </span>
+        <p className="settings-preview__question">{t("settingsPage.previewQuestion")}</p>
+        <span className="settings-preview__badges">
+          <span className="settings-preview__weak">
+            <span aria-hidden="true" className="settings-preview__weak-dot" />
+            {t("settingsPage.previewWeak")}
+          </span>
+          <Badge tone="success">{t("settingsPage.previewMastered")}</Badge>
+        </span>
+        <span aria-hidden="true" className="settings-preview__button">
+          {t("settingsPage.previewAction")}
+        </span>
+      </div>
+    </section>
+  );
+}
 
 export function DisplaySection() {
   const { t, locale, setLocale } = useLocale();
@@ -246,7 +320,7 @@ export function DisplaySection() {
 
   return (
     <Card aria-labelledby="settings-display" id="display">
-      <CardHeader title={<span id="settings-display">{t("settingsPage.displayTitle")}</span>} titleAs="h2" />
+      <CardHeader meta={t("settingsPage.displayMeta")} title={<span id="settings-display">{t("settingsPage.displayTitle")}</span>} titleAs="h2" />
       <Row hint={error ?? t("settingsPage.languageHint")} label={t("settingsPage.language")}>
         <Segmented
           items={[
@@ -261,22 +335,37 @@ export function DisplaySection() {
           value={locale}
         />
       </Row>
-      <Row hint={t("settingsPage.paletteHint")} label={t("settingsPage.palette")}>
-        <Segmented
-          items={(Object.keys(PALETTE_LABELS) as AppPalette[]).map((id) => ({ id, label: t(PALETTE_LABELS[id]) }))}
-          label={t("settingsPage.palette")}
-          onChange={setPalette}
-          value={palette}
-        />
-      </Row>
-      <Row hint={t("settingsPage.themeHint")} label={t("settingsPage.theme")}>
-        <Segmented
-          items={(Object.keys(THEME_LABELS) as AppTheme[]).map((id) => ({ id, label: t(THEME_LABELS[id]) }))}
-          label={t("settingsPage.theme")}
-          onChange={setTheme}
-          value={theme}
-        />
-      </Row>
+      <div className="settings-body">
+        <fieldset className="settings-fieldset">
+          <legend className="settings-subheading">{t("settingsPage.palette")}</legend>
+          <p className="settings-muted">{t("settingsPage.paletteHint")}</p>
+          <div className="settings-palettes">
+            {PALETTES.map((option) => (
+              <PaletteCard
+                checked={palette === option.id}
+                description={t(option.description)}
+                id={option.id}
+                key={option.id}
+                label={t(option.label)}
+                onSelect={() => setPalette(option.id)}
+              />
+            ))}
+          </div>
+        </fieldset>
+        <div className="settings-fieldset">
+          <h3 className="settings-subheading">{t("settingsPage.theme")}</h3>
+          <Segmented
+            items={(Object.keys(THEME_LABELS) as AppTheme[]).map((id) => ({ id, label: t(THEME_LABELS[id]) }))}
+            label={t("settingsPage.theme")}
+            onChange={setTheme}
+            value={theme}
+          />
+          <p aria-live="polite" className="settings-muted">
+            {t(THEME_NOTES[theme])}
+          </p>
+        </div>
+        <ThemePreview />
+      </div>
     </Card>
   );
 }

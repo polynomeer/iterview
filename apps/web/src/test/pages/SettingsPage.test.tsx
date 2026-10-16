@@ -107,13 +107,41 @@ describe("SettingsPage", () => {
   it("picks the color theme separately from brightness and keeps it for the next visit", async () => {
     renderWithProviders(<SettingsPage />, { route: "/settings", locale: "ko" });
 
-    expect(screen.getByRole("radio", { name: "Ink & Signal" })).toBeChecked();
-    await userEvent.click(screen.getByRole("radio", { name: "다크" }));
-    await userEvent.click(screen.getByRole("radio", { name: "클래식" }));
+    const display = screen.getByRole("region", { name: "언어와 화면" });
+    const palettes = within(display).getByRole("group", { name: "색 테마" });
+    const ink = within(palettes).getByRole("radio", { name: "Ink & Signal" });
+    expect(ink).toBeChecked();
+    expect(ink).toHaveAccessibleDescription(/먹색 사이드바/);
+    expect(ink.closest("label")).toHaveTextContent("사용 중");
+    expect(within(display).getByText("기기의 라이트·다크 설정을 따라가요.")).toBeInTheDocument();
 
+    await userEvent.click(within(display).getByRole("radio", { name: "다크" }));
+    expect(within(display).getByText("항상 다크로 보여줘요.")).toBeInTheDocument();
+    await userEvent.click(within(palettes).getByRole("radio", { name: "클래식" }));
+
+    const classic = within(palettes).getByRole("radio", { name: "클래식" });
+    expect(classic).toBeChecked();
+    expect(classic.closest("label")).toHaveTextContent("사용 중");
+    expect(ink.closest("label")).not.toHaveTextContent("사용 중");
     expect(document.documentElement.dataset.palette).toBe("classic");
     expect(document.documentElement.dataset.theme).toBe("dark");
     expect(window.localStorage.getItem("iterview-palette")).toBe("classic");
     expect(window.localStorage.getItem("iterview-theme")).toBe("dark");
+  });
+
+  it("shows a live preview of the chosen theme and marks the section being read", async () => {
+    renderWithProviders(<SettingsPage />, { route: "/settings", locale: "ko" });
+
+    const preview = screen.getByRole("region", { name: "미리보기" });
+    expect(within(preview).getByText("깊이 1")).toBeInTheDocument();
+    expect(within(preview).getByText("약점")).toBeInTheDocument();
+    expect(within(preview).getByText("숙달")).toBeInTheDocument();
+    expect(within(preview).queryByRole("button")).not.toBeInTheDocument();
+
+    const nav = screen.getByRole("navigation", { name: "설정 항목" });
+    expect(within(nav).getByRole("link", { name: "프로필" })).toHaveAttribute("aria-current", "location");
+    await userEvent.click(within(nav).getByRole("link", { name: "언어와 화면" }));
+    expect(within(nav).getByRole("link", { name: "언어와 화면" })).toHaveAttribute("aria-current", "location");
+    expect(within(nav).getByRole("link", { name: "프로필" })).not.toHaveAttribute("aria-current");
   });
 });
