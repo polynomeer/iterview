@@ -14,16 +14,6 @@
 
 .auth-screen__brand { display: flex; align-items: center; gap: var(--iv-space-2); margin: 0; font-weight: var(--iv-weight-bold); }
 
-.auth-screen__brand span {
-  display: inline-grid;
-  place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: var(--iv-radius-sm);
-  background: var(--iv-accent);
-  color: var(--iv-on-accent);
-  font-size: var(--iv-text-sm);
-}
 
 .auth-screen__headline { max-width: 24rem; margin: 0; font-size: var(--iv-text-2xl); font-weight: var(--iv-weight-bold); line-height: var(--iv-leading-tight); }
 .auth-screen__steps { display: flex; flex-direction: column; gap: var(--iv-space-4); margin: 0; padding: 0; list-style: none; }

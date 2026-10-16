@@ -6,7 +6,7 @@ import { ApiClientError } from "../../shared/api/errors";
 import { useAuth } from "../../shared/auth/useAuth";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale, type MessageKey } from "../../shared/i18n";
-import { ButtonLink, PageSkeleton } from "../../shared/ui/primitives";
+import { BrandMark, ButtonLink, PageSkeleton } from "../../shared/ui/primitives";
 import "./auth.css";
 
 const STEPS: Array<[MessageKey, MessageKey]> = [
@@ -52,7 +52,8 @@ export function AuthScreen({ title, switchPrompt, children, onSubmit }: { title:
     <div className="auth-screen">
       <aside className="auth-screen__pitch">
         <p className="auth-screen__brand">
-          <span aria-hidden="true">i</span>iterview
+          <BrandMark />
+          iterview
         </p>
         <p className="auth-screen__headline">{t("authScreen.headline")}</p>
         <ol className="auth-screen__steps">

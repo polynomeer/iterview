@@ -24,10 +24,15 @@ function useActiveSection(ready: boolean) {
       return;
     }
     const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) {
-          setActive(visible[0].target.id);
+      () => {
+        // The current section is the last one whose top has crossed the upper 40% of the viewport.
+        const line = window.innerHeight * 0.4;
+        const crossed = SECTIONS.map(([id]) => document.getElementById(id)).filter(
+          (element): element is HTMLElement => element !== null && element.getBoundingClientRect().top <= line,
+        );
+        const current = crossed[crossed.length - 1];
+        if (current) {
+          setActive(current.id);
         }
       },
       { rootMargin: "0px 0px -60% 0px" },
