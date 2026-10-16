@@ -91,8 +91,9 @@
   height: 1.25rem;
   padding: 0 var(--iv-space-1);
   border-radius: var(--iv-radius-full);
-  background: var(--iv-danger-soft);
-  color: var(--iv-danger);
+  background: var(--iv-nav-count-bg);
+  color: var(--iv-nav-count-text);
+  font-family: var(--iv-font-mono);
   font-size: var(--iv-text-xs);
   font-weight: var(--iv-weight-semibold);
 }
@@ -147,7 +148,7 @@ button.shell-nav__resume { width: 100%; background: none; font-family: var(--iv-
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--iv-border);
-  background: var(--iv-bg);
+  background: var(--iv-surface);
 }
 
 .shell-topbar {
@@ -194,7 +195,7 @@ button.shell-nav__resume { width: 100%; background: none; font-family: var(--iv-
   padding: 0 var(--iv-space-3);
   border: 1px solid var(--iv-border);
   border-radius: var(--iv-radius-sm);
-  background: var(--iv-surface);
+  background: var(--iv-surface-sunken);
   color: var(--iv-text-subtle);
   font-family: var(--iv-font-sans);
   font-size: var(--iv-text-sm);
