@@ -11,7 +11,7 @@ test("a first resume upload is ready to use and its claims take evidence", async
   await expect(experience.getByText("정산 배치 개편")).toBeVisible();
   await expect(experience.getByText("결제 API 멱등성 도입")).toBeVisible();
 
-  await page.getByRole("link", { name: "근거 편집" }).click();
+  await page.getByRole("link", { name: "항목과 근거" }).click();
   const claim = page.getByRole("button", { name: /처리 시간을 2시간 → 10분으로 단축했습니다/ });
   await claim.click();
   const editor = page.getByRole("region", { name: /처리 시간을 2시간 → 10분으로 단축했습니다/ });

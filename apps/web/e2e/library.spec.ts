@@ -7,10 +7,10 @@ test("a saved question and its note show up in 보관함", async ({ page }) => {
   await page.goto("/questions/1");
   await expect(page.getByRole("link", { name: "답변하기" })).toBeVisible();
   const title = (await page.getByRole("heading", { level: 1 }).textContent())?.trim() ?? "";
-  await page.getByRole("button", { name: "저장", exact: true }).click();
-  await expect(page.getByRole("button", { name: "저장됨" })).toHaveAttribute("aria-pressed", "true");
+  const save = page.getByRole("button", { name: "저장", exact: true });
+  await save.click();
+  await expect(save).toHaveAttribute("aria-pressed", "true");
 
-  await page.getByRole("tab", { name: "노트" }).click();
   await page.getByRole("textbox", { name: "내 노트" }).fill("멱등 키는 요청 단위가 아니라 비즈니스 이벤트 단위로 잡는다.");
   await page.getByRole("button", { name: "노트 저장" }).click();
   await expect(page.getByRole("button", { name: "노트 저장" })).toBeDisabled();

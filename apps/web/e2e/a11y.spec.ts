@@ -126,7 +126,7 @@ test("today's question can be answered with the keyboard alone", async ({ page }
   await page.keyboard.press("ControlOrMeta+Enter");
 
   await expect(page).toHaveURL(/\/attempts\/\d+/);
-  await expect(page.getByRole("heading", { level: 1, name: /평가 결과/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: /답변 결과/ })).toBeVisible();
 });
 
 test("write flows meet WCAG AA while editing, after saving and after answering", async ({ page }) => {
@@ -169,7 +169,7 @@ test("write flows meet WCAG AA while editing, after saving and after answering",
 test("a claim's evidence can be filled and saved with the keyboard alone", async ({ page }) => {
   await signUp(page, "keyboard-claim");
   await uploadResume(page);
-  await page.getByRole("link", { name: "근거 편집" }).click();
+  await page.getByRole("link", { name: "항목과 근거" }).click();
 
   const claim = page.getByRole("button", { name: /중복 결제 건수를 월 12건 → 0건/ });
   await tabTo(page, claim);

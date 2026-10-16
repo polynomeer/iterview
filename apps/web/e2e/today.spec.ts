@@ -30,7 +30,7 @@ test("today's question is answered and scored", async ({ page }) => {
   await page.getByRole("button", { name: "제출하고 평가받기" }).click();
 
   await expect(page).toHaveURL(/\/attempts\/\d+/);
-  await expect(page.getByRole("heading", { level: 1, name: /평가 결과/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: /답변 결과/ })).toBeVisible();
   const scores = page.getByRole("region", { name: "점수 요약" });
   await expect(scores.getByText("총점")).toBeVisible();
   await expect(scores.getByRole("progressbar")).toHaveCount(6);
