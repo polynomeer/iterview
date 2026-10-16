@@ -121,12 +121,40 @@ describe("resume hub", () => {
     expect(screen.getByTestId("location-display")).toHaveTextContent("/resume/v1");
     const tabs = screen.getByRole("navigation", { name: "이력서 보기" });
     expect(within(tabs).getByRole("link", { name: "개요" })).toHaveAttribute("aria-current", "page");
-    expect(within(tabs).getByRole("link", { name: "근거 편집" })).toHaveAttribute("href", "/resume/v1/claims");
+    expect(within(tabs).getByRole("link", { name: "항목과 근거" })).toHaveAttribute("href", "/resume/v1/claims");
+    expect(within(tabs).getByRole("link", { name: "버전 기록" })).toHaveAttribute("href", "/resume/v1/versions");
+    expect(screen.getByRole("button", { name: "Backend Resume" })).toHaveAttribute("aria-haspopup", "dialog");
+    expect(screen.getByText("사용 중인 버전")).toBeInTheDocument();
+    // No claims were extracted, so there is no evidence coverage to show.
+    expect(screen.queryByText("항목에 근거")).not.toBeInTheDocument();
     const risks = screen.getByRole("region", { name: "방어가 필요한 부분" });
     const titles = within(risks).getAllByText(/Unproven|Vague/).map((node) => node.textContent);
     expect(titles).toEqual(["Unproven 40% claim", "Vague ownership"]);
     expect(screen.getByText("Settlement rewrite")).toBeInTheDocument();
     expect(screen.queryByText("지금 사용 중인 버전이 아니에요")).not.toBeInTheDocument();
+  });
+
+  it("shows how many resume claims have all four evidence fields in the version bar", () => {
+    const ready = { situation: "Drift", role: "Lead", measurement: "Reconciliation", result: "37 → 0" };
+    const empty = { situation: "", role: "", measurement: "", result: "" };
+    vi.mocked(useResumeVersionSnapshotsQuery).mockReturnValue({
+      data: {
+        ...snapshot,
+        achievements: [
+          { id: "a1", title: "Pipeline", impactSummary: "", evidence: ready },
+          { id: "a2", title: "Migration", impactSummary: "", evidence: empty },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+    } as never);
+    mockList({ items: [{ id: "r1", title: "Backend Resume", versions: [version()] }] });
+    mockVersion(version());
+    renderHub("/resume/v1");
+
+    expect(screen.getByRole("progressbar", { name: "이력서 항목 2개 중 1개에 근거 작성" })).toHaveAttribute("aria-valuenow", "50");
+    expect(screen.getByText("1 / 2")).toBeInTheDocument();
+    expect(screen.getByText("항목에 근거")).toBeInTheDocument();
   });
 
   it("shows first-run onboarding when nothing is uploaded yet", async () => {

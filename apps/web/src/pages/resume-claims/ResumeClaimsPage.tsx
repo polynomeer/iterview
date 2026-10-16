@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import type { ResumeSnapshotModel } from "../../entities/resume/model";
 import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { useUpdateClaimEvidenceMutation } from "../../features/resume-claims/api/useUpdateClaimEvidenceMutation";
@@ -8,23 +8,9 @@ import { useResumeQuestionHeatmapQuery } from "../../features/resume-heatmap/api
 import { getErrorDetails, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale, type MessageKey } from "../../shared/i18n";
-import {
-  Badge,
-  Button,
-  ButtonLink,
-  Callout,
-  Card,
-  CardHeader,
-  EmptyState,
-  ErrorState,
-  Field,
-  PageSkeleton,
-  Segmented,
-  Textarea,
-  type Tone,
-} from "../../shared/ui/primitives";
+import type { ResumeQuestionHeatmapQuestionModel } from "../../entities/resume-heatmap/model";
+import { Button, ButtonLink, Callout, EmptyState, ErrorState, Field, PageSkeleton, Segmented, Textarea } from "../../shared/ui/primitives";
 import { useResumeHub } from "../resume/ResumeHubLayout";
-import { LinkedQuestionRow } from "../resume-heatmap/heatmapParts";
 import { anchorPathId } from "../resume-heatmap/heatmapUtils";
 import {
   answeredCount,
@@ -58,41 +44,48 @@ function weakCount(claim: Claim, item: HeatmapItem | null) {
   return claimQuestions(claim, item).own.filter((question) => question.weakAnswer).length;
 }
 
-function useClaimBadge() {
+/** The mono line under a claim: "4/4 · 질문 6" when backed, else the gap an interviewer reaches first. */
+function useClaimStatus() {
   const { t } = useLocale();
-  return (claim: Claim, item: HeatmapItem | null): { tone: Tone; label: string } => {
-    const status = evidenceStatus(claim.evidence);
-    if (status !== "ready" && weakCount(claim, item) > 0) {
-      return { tone: "danger", label: t("resumeClaims.statusWeak") };
+  return (claim: Claim, item: HeatmapItem | null): { weak: boolean; label: string } => {
+    const done = answeredCount(claim.evidence);
+    if (evidenceStatus(claim.evidence) === "ready") {
+      return { weak: false, label: t("resumeClaims.statusLineReady", { count: claimQuestions(claim, item).own.length }) };
     }
-    if (status === "ready") {
-      return { tone: "success", label: t("resumeClaims.statusReady") };
-    }
-    return status === "partial"
-      ? { tone: "warning", label: t("resumeClaims.statusPartial") }
-      : { tone: "neutral", label: t("resumeClaims.statusEmpty") };
+    const gap = riskiestEmptyField(claim, claim.evidence);
+    const empty = EVIDENCE_FIELDS.length - done;
+    const gapLabel =
+      done === 0 || !gap
+        ? t("resumeClaims.statusEmpty")
+        : empty === 1
+          ? t("resumeClaims.statusLineGap", { field: t(FIELD_COPY[gap].label) })
+          : t("resumeClaims.statusLineGaps", { field: t(FIELD_COPY[gap].label), count: empty - 1 });
+    const weak = weakCount(claim, item) > 0;
+    return { weak, label: weak ? `${t("resumeClaims.statusWeak")} · ${gapLabel}` : gapLabel };
   };
 }
 
-function EvidenceMeter({ done }: { done: number }) {
+/** Four pips for 상황 · 역할 · 측정 방법 · 결과; an empty one is marked in signal. */
+function EvidencePips({ evidence }: { evidence: Claim["evidence"] }) {
   const { t } = useLocale();
   return (
-    <span aria-label={t("resumeClaims.meterLabel", { done })} className="claim-meter" role="img">
-      {EVIDENCE_FIELDS.map((field, index) => (
-        <span className={index < done ? "claim-meter__cell claim-meter__cell--done" : "claim-meter__cell"} key={field} />
+    <span aria-label={t("resumeClaims.meterLabel", { done: answeredCount(evidence) })} className="claim-pips" role="img">
+      {EVIDENCE_FIELDS.map((field) => (
+        <span className={evidence[field].trim() ? "claim-pip claim-pip--done" : "claim-pip"} key={field} />
       ))}
     </span>
   );
 }
 
-function ClaimList({ snapshot, heatmapItems, selectedId, onSelect }: {
+function ClaimList({ snapshot, heatmapItems, selectedId, onSelect, footer }: {
   snapshot: ResumeSnapshotModel;
   heatmapItems: HeatmapItem[];
   selectedId: string | null;
   onSelect: (claimId: string) => void;
+  footer: ReactNode;
 }) {
   const { t } = useLocale();
-  const badge = useClaimBadge();
+  const status = useClaimStatus();
   const [filter, setFilter] = useState<Filter>("all");
   const claims = snapshot.achievements;
   const needsEvidence = claims.filter((claim) => evidenceStatus(claim.evidence) !== "ready");
@@ -103,12 +96,7 @@ function ClaimList({ snapshot, heatmapItems, selectedId, onSelect }: {
     .filter((group) => group.claims.length > 0);
 
   return (
-    <Card aria-labelledby="claim-list-title" className="claim-list">
-      <CardHeader
-        meta={<span className="claim-list__progress">{t("resumeClaims.evidenceProgress", { done: claims.length - needsEvidence.length, total: claims.length })}</span>}
-        title={<span id="claim-list-title">{t("resumeClaims.claimList")}</span>}
-        titleAs="h2"
-      />
+    <nav aria-label={t("resumeClaims.claimList")} className="claim-list">
       <div className="claim-list__filter">
         <Segmented
           items={[
@@ -126,12 +114,13 @@ function ClaimList({ snapshot, heatmapItems, selectedId, onSelect }: {
         <section aria-label={group.title ?? t("resumeClaims.otherGroup")} className="claim-group" key={group.key}>
           <h3 className="claim-group__title">
             {group.title ?? t("resumeClaims.otherGroup")}
-            {group.meta ? <span className="claim-group__meta">{group.meta}</span> : null}
+            {group.meta ? <span className="claim-group__meta">· {group.meta}</span> : null}
           </h3>
           <ul className="claim-group__items">
             {group.claims.map((claim) => {
-              const { tone, label } = badge(claim, claimHeatmapItem(claim, heatmapItems));
+              const line = status(claim, claimHeatmapItem(claim, heatmapItems));
               const selected = claim.id === selectedId;
+              const ready = evidenceStatus(claim.evidence) === "ready";
               return (
                 <li key={claim.id}>
                   <button
@@ -141,8 +130,10 @@ function ClaimList({ snapshot, heatmapItems, selectedId, onSelect }: {
                     type="button"
                   >
                     <span className="claim-row__title">{claim.title}</span>
-                    <Badge tone={tone}>{label}</Badge>
-                    <EvidenceMeter done={answeredCount(claim.evidence)} />
+                    <span className="claim-row__status">
+                      <EvidencePips evidence={claim.evidence} />
+                      <span className={ready ? "claim-row__line" : "claim-row__line claim-row__line--gap"}>{line.label}</span>
+                    </span>
                   </button>
                 </li>
               );
@@ -150,7 +141,43 @@ function ClaimList({ snapshot, heatmapItems, selectedId, onSelect }: {
           </ul>
         </section>
       ))}
-    </Card>
+      <div className="claim-list__footer">{footer}</div>
+    </nav>
+  );
+}
+
+/** One real interview question about the claim: weak mark, the question (opens its review), and what else it carries. */
+function ClaimQuestionRow({ question, action }: { question: ResumeQuestionHeatmapQuestionModel; action: ReactNode }) {
+  const { t } = useLocale();
+  const meta = [
+    question.isFollowUp ? t("resumeClaims.followUpQuestion") : null,
+    question.followUpCount > 0 ? t("resumeClaims.followUpCount", { count: question.followUpCount }) : null,
+    question.interviewDateLabel,
+  ].filter(Boolean);
+  return (
+    <li className="claim-question">
+      <span aria-hidden="true" className={question.weakAnswer ? "claim-question__mark claim-question__mark--weak" : "claim-question__mark"} />
+      <span className="claim-question__main">
+        <Link
+          className="claim-question__text"
+          to={routeConfig.practicalInterviewQuestion.buildPath({ recordId: question.sourceInterviewRecordId, questionId: question.interviewRecordQuestionId })}
+        >
+          {question.text}
+        </Link>
+        <span className="claim-question__meta">
+          {question.weakAnswer ? <span className="claim-question__weak">{t("resumeClaims.weakAnswer")}</span> : null}
+          {meta.length > 0 ? <span>{meta.join(" · ")}</span> : null}
+        </span>
+      </span>
+      <span className="claim-question__actions">
+        {question.linkedQuestionId ? (
+          <ButtonLink size="sm" to={routeConfig.answerEditor.buildPath({ questionId: question.linkedQuestionId })} variant="ghost">
+            {t("resumeClaims.practice")}
+          </ButtonLink>
+        ) : null}
+        {action}
+      </span>
+    </li>
   );
 }
 
@@ -209,36 +236,35 @@ function ClaimEditor({ claim, item, versionId }: { claim: Claim; item: HeatmapIt
   ) : null;
 
   return (
-    <Card aria-labelledby="claim-editor-title" className="claim-editor">
-      <CardHeader title={<span id="claim-editor-title">{claim.title}</span>} titleAs="h2" />
-      <div className="claim-editor__body">
-        {claim.sourceText && claim.sourceText !== claim.title ? (
-          <p className="claim-editor__source">
-            <span className="claim-editor__source-label">{t("resumeClaims.original")}</span>
-            {claim.sourceText}
+    <section aria-labelledby="claim-editor-title" className="claim-editor">
+      <header className="claim-editor__head">
+        <span className="claim-editor__eyebrow">{t("resumeClaims.sentenceLabel")}</span>
+        <h2 className="claim-editor__title" id="claim-editor-title">
+          {claim.sourceText?.trim() || claim.title}
+        </h2>
+      </header>
+
+      {risk ? (
+        <Callout tone={weak > 0 ? "danger" : "warning"}>
+          <p>
+            {weak > 0 ? `${t("resumeClaims.riskWeakQuestions", { weak, total: questions.length })} ` : null}
+            {t("resumeClaims.riskEmptyField", { field: t(FIELD_COPY[risk].label), question: t(FIELD_COPY[risk].ask) })}
           </p>
-        ) : null}
+        </Callout>
+      ) : (
+        <Callout title={t("resumeClaims.readyTitle")} tone="success">
+          <p>{t("resumeClaims.readyBody")}</p>
+        </Callout>
+      )}
 
-        {risk ? (
-          <Callout tone={weak > 0 ? "danger" : "warning"}>
-            <p>
-              {weak > 0 ? `${t("resumeClaims.riskWeakQuestions", { weak, total: questions.length })} ` : null}
-              {t("resumeClaims.riskEmptyField", { field: t(FIELD_COPY[risk].label), question: t(FIELD_COPY[risk].ask) })}
-            </p>
-          </Callout>
-        ) : (
-          <Callout title={t("resumeClaims.readyTitle")} tone="success">
-            <p>{t("resumeClaims.readyBody")}</p>
-          </Callout>
-        )}
-
-        <form
-          className="claim-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            save();
-          }}
-        >
+      <form
+        className="claim-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          save();
+        }}
+      >
+        <div className="claim-form__grid">
           {EVIDENCE_FIELDS.map((field) => (
             <Field className="claim-form__field" hint={field === risk ? t("resumeClaims.riskHint") : undefined} key={field} label={t(FIELD_COPY[field].label)}>
               {(control) => (
@@ -249,27 +275,27 @@ function ClaimEditor({ claim, item, versionId }: { claim: Claim; item: HeatmapIt
                   onBlur={save}
                   onChange={(event) => setDraft((current) => ({ ...current, [field]: event.target.value }))}
                   placeholder={t(FIELD_COPY[field].placeholder)}
-                  rows={2}
+                  rows={3}
                   value={draft[field]}
                 />
               )}
             </Field>
           ))}
-          <div className="claim-form__actions">
-            <span aria-live="polite" className="claim-form__status">
-              {status}
-            </span>
-            <Button disabled={!dirty} loading={mutation.isPending} type="submit" variant="primary">
-              {t("resumeClaims.save")}
-            </Button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div className="claim-form__actions">
+          <span aria-live="polite" className="claim-form__status">
+            {status}
+          </span>
+          <Button disabled={!dirty} loading={mutation.isPending} type="submit" variant="primary">
+            {t("resumeClaims.save")}
+          </Button>
+        </div>
+      </form>
 
       <section aria-labelledby="claim-questions-title" className="claim-questions">
         <header className="claim-questions__head">
           <h3 className="claim-questions__title" id="claim-questions-title">
-            {t("resumeClaims.questionsForClaim")}
+            {t("resumeClaims.questionsForClaim")} <span className="claim-questions__count">{questions.length}</span>
           </h3>
           {item ? (
             <ButtonLink
@@ -283,52 +309,59 @@ function ClaimEditor({ claim, item, versionId }: { claim: Claim; item: HeatmapIt
         </header>
         {assign.isError ? <p className="claim-questions__empty ui-tone-text--danger">{t("resumeClaims.assignFailed")}</p> : null}
         {questions.length === 0 ? <p className="claim-questions__empty">{t("resumeClaims.questionsEmpty")}</p> : null}
-        {questions.slice(0, QUESTION_PREVIEW).map((question) => (
-          <LinkedQuestionRow
-            action={
-              <Button
-                disabled={assign.isPending}
-                onClick={() => assign.mutate({ interviewRecordQuestionId: question.interviewRecordQuestionId, achievementId: null })}
-                size="sm"
-                variant="ghost"
-              >
-                {t("resumeClaims.unassign")}
-              </Button>
-            }
-            key={question.id}
-            question={question}
-          />
-        ))}
-        {unassigned.length > 0 ? (
-          <>
-            <h4 className="claim-questions__subtitle">
-              {t(item?.anchorType === "experience" ? "resumeClaims.otherQuestionsInExperience" : "resumeClaims.otherQuestionsInProject", { count: unassigned.length })}
-            </h4>
-            {unassigned.slice(0, QUESTION_PREVIEW).map((question) => (
-              <LinkedQuestionRow
+        {questions.length > 0 ? (
+          <ul className="claim-questions__list">
+            {questions.slice(0, QUESTION_PREVIEW).map((question) => (
+              <ClaimQuestionRow
                 action={
                   <Button
                     disabled={assign.isPending}
-                    onClick={() => assign.mutate({ interviewRecordQuestionId: question.interviewRecordQuestionId, achievementId: claim.id })}
+                    onClick={() => assign.mutate({ interviewRecordQuestionId: question.interviewRecordQuestionId, achievementId: null })}
                     size="sm"
+                    variant="ghost"
                   >
-                    {t("resumeClaims.assignHere")}
+                    {t("resumeClaims.unassign")}
                   </Button>
                 }
                 key={question.id}
                 question={question}
               />
             ))}
+          </ul>
+        ) : null}
+        {unassigned.length > 0 ? (
+          <>
+            <h4 className="claim-questions__subtitle">
+              {t(item?.anchorType === "experience" ? "resumeClaims.otherQuestionsInExperience" : "resumeClaims.otherQuestionsInProject", { count: unassigned.length })}
+            </h4>
+            <ul className="claim-questions__list">
+              {unassigned.slice(0, QUESTION_PREVIEW).map((question) => (
+                <ClaimQuestionRow
+                  action={
+                    <Button
+                      disabled={assign.isPending}
+                      onClick={() => assign.mutate({ interviewRecordQuestionId: question.interviewRecordQuestionId, achievementId: claim.id })}
+                      size="sm"
+                    >
+                      {t("resumeClaims.assignHere")}
+                    </Button>
+                  }
+                  key={question.id}
+                  question={question}
+                />
+              ))}
+            </ul>
           </>
         ) : null}
       </section>
-    </Card>
+    </section>
   );
 }
 
 /**
- * 근거 편집 (docs/09 §4.5, ADR 0081): each resume claim backed by 상황 · 내 역할 · 측정 방법 · 결과 수치,
- * with the empty field tied to the question it leaves open. The full document editor sits one link away.
+ * 항목과 근거 (docs/09 §4.5, ADR 0081): resume claims grouped by experience, each backed by 상황 · 내 역할 ·
+ * 측정 방법 · 결과 수치, with the empty field tied to the question it leaves open and the real interview
+ * questions it drew. The full document editor sits one link away.
  */
 export function ResumeClaimsPage() {
   const { t } = useLocale();
@@ -337,8 +370,8 @@ export function ResumeClaimsPage() {
   const snapshotsQuery = useResumeVersionSnapshotsQuery(versionId);
   const heatmapQuery = useResumeQuestionHeatmapQuery(versionId, ALL_SCOPE);
   const heatmapItems = useMemo(() => heatmapQuery.data?.items ?? [], [heatmapQuery.data]);
-  const documentLink = (
-    <ButtonLink icon="resume" size="sm" to={routeConfig.resumeDocumentEditor.buildPath({ versionId })}>
+  const documentLink = (variant?: "ghost") => (
+    <ButtonLink icon="resume" size="sm" to={routeConfig.resumeDocumentEditor.buildPath({ versionId })} variant={variant}>
       {t("resumeClaims.editDocument")}
     </ButtonLink>
   );
@@ -366,7 +399,7 @@ export function ResumeClaimsPage() {
   const claims = snapshot.achievements;
 
   if (claims.length === 0) {
-    return <EmptyState actions={documentLink} body={t("resumeClaims.emptyBody")} icon="resume" title={t("resumeClaims.emptyTitle")} />;
+    return <EmptyState actions={documentLink()} body={t("resumeClaims.emptyBody")} icon="resume" title={t("resumeClaims.emptyTitle")} />;
   }
 
   // Without a choice in the URL, open the first claim that still needs evidence.
@@ -381,11 +414,8 @@ export function ResumeClaimsPage() {
 
   return (
     <div className="claims">
-      <div className="claims__toolbar">{documentLink}</div>
-      <div className="claims__grid">
-        <ClaimList heatmapItems={heatmapItems} onSelect={select} selectedId={selected.id} snapshot={snapshot} />
-        <ClaimEditor claim={selected} item={claimHeatmapItem(selected, heatmapItems)} key={selected.id} versionId={versionId} />
-      </div>
+      <ClaimList footer={documentLink("ghost")} heatmapItems={heatmapItems} onSelect={select} selectedId={selected.id} snapshot={snapshot} />
+      <ClaimEditor claim={selected} item={claimHeatmapItem(selected, heatmapItems)} key={selected.id} versionId={versionId} />
     </div>
   );
 }

@@ -40,18 +40,22 @@ export function claimHeatmapItem(claim: Claim, items: HeatmapItem[]): HeatmapIte
 
 export type ClaimGroup = { key: string; title: string | null; meta: string | null; claims: Claim[] };
 
-/** Claims under their project, else their experience, in resume order. */
+/**
+ * Claims under the experience (company · period) they belong to, in resume order. A claim tied only
+ * to a project follows that project's experience; a project without one becomes its own group.
+ */
 export function groupClaims(snapshot: ResumeSnapshotModel): ClaimGroup[] {
   const groups = new Map<string, ClaimGroup>();
   for (const claim of snapshot.achievements) {
     const project = claim.projectId ? snapshot.projects.find((item) => item.id === claim.projectId) : undefined;
-    const experience = claim.experienceId ? snapshot.experiences.find((item) => item.id === claim.experienceId) : undefined;
-    const key = project ? `project-${project.id}` : experience ? `experience-${experience.id}` : "other";
+    const experienceId = claim.experienceId ?? project?.relatedExperienceId;
+    const experience = experienceId ? snapshot.experiences.find((item) => item.id === experienceId) : undefined;
+    const key = experience ? `experience-${experience.id}` : project ? `project-${project.id}` : "other";
     if (!groups.has(key)) {
       groups.set(key, {
         key,
-        title: project?.title ?? experience?.companyName ?? null,
-        meta: (project?.dateLabel || experience?.dateLabel) ?? null,
+        title: experience?.companyName || project?.title || null,
+        meta: (experience ? experience.dateLabel : project?.dateLabel) || null,
         claims: [],
       });
     }

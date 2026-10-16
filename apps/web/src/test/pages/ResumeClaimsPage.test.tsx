@@ -105,11 +105,13 @@ describe("ResumeClaimsPage", () => {
     const user = userEvent.setup();
     renderClaims();
 
-    // Only a2 drew the weak question; a1 shares the project but is not marked weak.
-    expect(screen.getByRole("button", { name: /Zero consistency errors.*Weak/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Kafka event pipeline.*Ready/ })).toBeInTheDocument();
+    // Only a2 drew the weak question; a1 shares the project but is fully backed.
+    expect(screen.getByRole("button", { name: /Zero consistency errors.*Weak · How you measured it and 2 more empty/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Kafka event pipeline.*4\/4 · 0 questions/ })).toBeInTheDocument();
 
-    expect(screen.getByRole("heading", { level: 3, name: "Questions about this claim" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Questions from this claim 1" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "How did you measure zero errors?" })).toHaveAttribute("href", "/interview/records/record-1/questions/q1");
+    expect(screen.getAllByText("Weak answer")).toHaveLength(1);
     expect(screen.getByRole("heading", { level: 4, name: "Other questions about this project (1)" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Not about this" }));
     expect(assign).toHaveBeenCalledWith({ interviewRecordQuestionId: "q1", achievementId: null });
@@ -117,23 +119,25 @@ describe("ResumeClaimsPage", () => {
     expect(assign).toHaveBeenCalledWith({ interviewRecordQuestionId: "q2", achievementId: "a2" });
   });
 
-  it("groups claims by project, shows progress, and opens the first claim that needs evidence", () => {
+  it("groups claims by experience with evidence pips and opens the first claim that needs evidence", () => {
     renderClaims();
 
-    expect(screen.getByText("Evidence written for 1 of 3")).toBeInTheDocument();
-    const project = screen.getByRole("region", { name: "Settlement rewrite" });
-    expect(within(project).getAllByRole("button")).toHaveLength(2);
-    expect(within(screen.getByRole("region", { name: "Acme" })).getByRole("button", { name: /Led the MSA migration/ })).toBeInTheDocument();
+    const list = screen.getByRole("navigation", { name: "Resume claims" });
+    const experience = within(list).getByRole("region", { name: "Acme" });
+    expect(within(experience).getByRole("heading", { level: 3 })).toHaveTextContent("Acme· 2020 - 2024");
+    expect(within(experience).getAllByRole("button")).toHaveLength(3);
+    expect(within(experience).getByRole("button", { name: /Led the MSA migration.*No evidence/ })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "1 of 4 evidence fields written" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "4 of 4 evidence fields written" })).toBeInTheDocument();
 
-    // a2 has a number, so the measurement is the first gap; its project drew a weak answer.
-    expect(screen.getByRole("heading", { level: 2, name: "Zero consistency errors after 40% faster batches" })).toBeInTheDocument();
+    // a2 has a number, so the measurement is the first gap; its own question drew a weak answer.
+    expect(screen.getByText("Resume line")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Redesigned transaction boundaries → zero consistency errors" })).toBeInTheDocument();
     expect(
       screen.getByText("1 of the 1 questions asked about this were weak answers. How you measured it is empty. Interviewers ask “How did you measure that number?”"),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("How you measured it")).toHaveAccessibleDescription("The interviewer will ask about this first.");
-    expect(screen.getByText("Redesigned transaction boundaries → zero consistency errors")).toBeInTheDocument();
-    expect(screen.getByText("How did you measure zero errors?")).toBeInTheDocument();
+    expect(screen.getByLabelText("Situation")).toHaveValue("Monthly batch drift");
     expect(screen.getByRole("link", { name: "Open in pressure map" })).toHaveAttribute("href", "/resume/v1/heatmap/anchors/project/p1");
     expect(screen.getByRole("link", { name: "Edit as a document" })).toHaveAttribute("href", "/resume/v1/claims/document");
   });
@@ -143,9 +147,9 @@ describe("ResumeClaimsPage", () => {
     renderClaims();
 
     await user.click(screen.getByRole("radio", { name: "Weak 1" }));
-    expect(within(screen.getByRole("region", { name: "Settlement rewrite" })).getAllByRole("button")).toHaveLength(1);
+    expect(within(screen.getByRole("region", { name: "Acme" })).getAllByRole("button")).toHaveLength(1);
     expect(screen.getByRole("button", { name: /Zero consistency errors.*Weak/ })).toBeInTheDocument();
-    expect(screen.queryByRole("region", { name: "Acme" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Led the MSA migration/ })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Kafka event pipeline/ })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("radio", { name: "Needs evidence 2" }));
@@ -159,7 +163,8 @@ describe("ResumeClaimsPage", () => {
 
     await user.click(screen.getByRole("button", { name: /Led the MSA migration/ }));
     expect(screen.getByTestId("location-display")).toHaveTextContent("/resume/v1/claims?claim=a3");
-    expect(screen.getByRole("heading", { level: 3, name: "Questions about this claim" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Led the MSA migration" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Questions from this claim 0" })).toBeInTheDocument();
     expect(screen.getByText("No real interview question is about this claim yet.")).toBeInTheDocument();
 
     await user.type(screen.getByLabelText("Result"), "Deploys 40 → 12 minutes");

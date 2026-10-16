@@ -2,32 +2,89 @@
 
 .resume-hub { gap: var(--iv-space-4); }
 
+/* Version bar: title as the version switcher, badges, evidence coverage, then the tabs. */
 .resume-hub__bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iv-space-4);
+  padding: var(--iv-space-5) var(--iv-space-6) 0;
+  border: 1px solid var(--iv-border);
+  border-radius: var(--iv-radius-lg);
+  background: var(--iv-surface);
+}
+
+.resume-hub__row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--iv-space-3) var(--iv-space-4);
 }
 
-.resume-hub__identity { flex: 1; min-width: 14rem; }
+.resume-hub__identity { flex: 1 1 14rem; min-width: 0; }
 
 .resume-hub__title {
   margin: 0;
-  font-size: var(--iv-text-2xl);
+  font-size: var(--iv-text-xl);
   font-weight: var(--iv-weight-bold);
   line-height: var(--iv-leading-tight);
 }
+
+.resume-hub__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--iv-space-2);
+  min-height: var(--iv-control-lg);
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--iv-radius-sm);
+  background: transparent;
+  color: var(--iv-text);
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.resume-hub__switch:hover { color: var(--iv-accent-text); }
+.resume-hub__switch:focus-visible { outline: none; box-shadow: var(--iv-focus-ring); }
+.resume-hub__switch .ui-icon { flex: none; color: var(--iv-text-muted); }
 
 .resume-hub__meta {
   display: flex;
   flex-wrap: wrap;
   gap: var(--iv-space-1) var(--iv-space-3);
-  margin: var(--iv-space-1) 0 0;
+  margin: 0;
   color: var(--iv-text-muted);
   font-size: var(--iv-text-sm);
 }
 
 .resume-hub__badges { display: flex; flex-wrap: wrap; gap: var(--iv-space-2); }
+
+.resume-hub__coverage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--iv-space-2) var(--iv-space-3);
+  margin: 0 0 0 auto;
+  color: var(--iv-text-muted);
+  font-size: var(--iv-text-sm);
+}
+
+.resume-hub__coverage-bar { width: 10rem; }
+.resume-hub__coverage-bar .ui-progress__bar { background: var(--iv-text); }
+
+.resume-hub__coverage-count {
+  color: var(--iv-text);
+  font-family: var(--iv-font-mono);
+  font-weight: var(--iv-weight-semibold);
+}
+
+/* Underline tabs sit on the bar's bottom edge, marked in ink rather than accent. */
+.resume-hub__tabs .ui-tabs__list { gap: var(--iv-space-4); border-bottom: 0; }
+.resume-hub__tabs .ui-tabs__tab { padding: 0; }
+.resume-hub__tabs .ui-tabs__tab[aria-current="page"] { border-bottom-color: var(--iv-text); }
+
 .resume-hub__panel { min-width: 0; }
 
 /* Shared text roles */
@@ -162,6 +219,11 @@
 
 .resume-onboarding__drop:hover { border-color: var(--iv-accent); }
 .resume-onboarding__file:focus-within .resume-onboarding__drop { box-shadow: var(--iv-focus-ring); }
+
+@media (max-width: 640px) {
+  .resume-hub__bar { padding: var(--iv-space-4) var(--iv-space-4) 0; }
+  .resume-hub__coverage { margin-left: 0; }
+}
 
 @media (max-width: 960px) {
   .resume-overview__grid { grid-template-columns: minmax(0, 1fr); }

@@ -3,12 +3,14 @@ import { Outlet, useLocation, useNavigate, useOutletContext, useParams } from "r
 import type { ResumeModel, ResumeVersionModel } from "../../entities/resume/model";
 import { useActivateResumeVersionMutation } from "../../features/resume/api/useActivateResumeVersionMutation";
 import { useActiveResumeVersion } from "../../features/resume/model/useActiveResumeVersion";
+import { useResumeVersionSnapshotsQuery } from "../../features/resume/api/useResumeVersionSnapshotsQuery";
 import { useResumeVersionStatus } from "../../features/resume/model/useResumeVersionStatus";
 import { getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { parsingStatusLabel } from "../../shared/lib/labels";
-import { Badge, Button, ButtonLink, Callout, ErrorState, PageSkeleton, TabLinks } from "../../shared/ui/primitives";
+import { Badge, Button, ButtonLink, Callout, ErrorState, Icon, PageSkeleton, Progress, TabLinks } from "../../shared/ui/primitives";
+import { evidenceStatus } from "../resume-claims/claimModel";
 import { followVersion } from "../../widgets/layout/SidebarNavigation";
 import { ResumeVersionSwitcher } from "../../widgets/layout/ResumeVersionSwitcher";
 import "./resume.css";
@@ -23,6 +25,28 @@ export type ResumeHubContext = {
 /** Shared state for the tabs under /resume/:versionId. */
 export function useResumeHub() {
   return useOutletContext<ResumeHubContext>();
+}
+
+/** "N / M 항목에 근거": claims with all four evidence fields written. Hidden until claims exist. */
+function EvidenceCoverage({ versionId }: { versionId: string }) {
+  const { t } = useLocale();
+  const snapshotsQuery = useResumeVersionSnapshotsQuery(versionId);
+  const claims = snapshotsQuery.data?.achievements ?? [];
+  if (claims.length === 0) {
+    return null;
+  }
+  const done = claims.filter((claim) => evidenceStatus(claim.evidence) === "ready").length;
+  return (
+    <p className="resume-hub__coverage">
+      <span className="resume-hub__coverage-bar">
+        <Progress label={t("resumeHub.coverageLabel", { done, total: claims.length })} tone="neutral" value={(done / claims.length) * 100} />
+      </span>
+      <span className="resume-hub__coverage-count">
+        {done} / {claims.length}
+      </span>
+      <span>{t("resumeHub.coverageSuffix")}</span>
+    </p>
+  );
 }
 
 /**
@@ -83,39 +107,49 @@ export function ResumeHubLayout() {
   const parsing = parsingStatusLabel(version.parsingStatus, locale);
   const activateError = optionalErrorMessage(activateMutation.error, t("resumeHub.weCouldntActivateItTry"));
   const tabs = [
-    { to: routeConfig.resumeOverview.buildPath({ versionId }), label: t("nav.resumeOverview"), end: true },
-    { to: routeConfig.resumeEditor.buildPath({ versionId }), label: t("nav.resumeClaims") },
-    { to: routeConfig.resumeHeatmap.buildPath({ versionId }), label: t("nav.resumeHeatmap") },
-    { to: routeConfig.resumeTailorAnalysisList.buildPath({ versionId }), label: t("nav.resumeTailor") },
-    { to: routeConfig.resumeVersions.buildPath({ versionId }), label: t("nav.resumeVersions") },
+    { to: routeConfig.resumeOverview.buildPath({ versionId }), label: t("resumeHub.tabOverview"), end: true },
+    { to: routeConfig.resumeEditor.buildPath({ versionId }), label: t("resumeHub.tabClaims") },
+    { to: routeConfig.resumeHeatmap.buildPath({ versionId }), label: t("resumeHub.tabHeatmap") },
+    { to: routeConfig.resumeTailorAnalysisList.buildPath({ versionId }), label: t("resumeHub.tabTailor") },
+    { to: routeConfig.resumeVersions.buildPath({ versionId }), label: t("resumeHub.tabVersions") },
   ];
 
   return (
     <div className="ui-page resume-hub">
       <header className="resume-hub__bar">
-        <div className="resume-hub__identity">
-          <h1 className="resume-hub__title">{resume.title}</h1>
-          <p className="resume-hub__meta">
-            <span>{version.versionNumberLabel}</span>
-            {version.fileNameLabel ? <span>{version.fileNameLabel}</span> : null}
-            {version.uploadedAtLabel ? <span>{t("resumeHub.uploadedAt", { uploadedAtLabel: version.uploadedAtLabel })}</span> : null}
-          </p>
+        <div className="resume-hub__row">
+          <div className="resume-hub__identity">
+            <h1 className="resume-hub__title">
+              <button
+                aria-haspopup="dialog"
+                className="resume-hub__switch"
+                onClick={() => setSwitcherOpen(true)}
+                title={t("resumeHub.switchVersion")}
+                type="button"
+              >
+                {resume.title}
+                <Icon name="chevronDown" size={16} />
+              </button>
+            </h1>
+            <p className="resume-hub__meta">
+              <span>{version.versionNumberLabel}</span>
+              {version.fileNameLabel ? <span>{version.fileNameLabel}</span> : null}
+              {version.uploadedAtLabel ? <span>{t("resumeHub.uploadedAt", { uploadedAtLabel: version.uploadedAtLabel })}</span> : null}
+            </p>
+          </div>
+          <div className="resume-hub__badges">
+            {version.isActive ? <Badge tone="success">{t("resumeHub.activeVersion")}</Badge> : null}
+            {version.parsingStatus !== "completed" ? (
+              <Badge dot tone={parsing.tone}>
+                {parsing.label}
+              </Badge>
+            ) : null}
+          </div>
+          <EvidenceCoverage versionId={versionId} />
         </div>
-        <div className="resume-hub__badges">
-          {version.isActive ? (
-            <Badge dot tone="accent">
-              {t("resumeHub.activeVersion")}
-            </Badge>
-          ) : null}
-          {version.parsingStatus !== "completed" ? (
-            <Badge dot tone={parsing.tone}>
-              {parsing.label}
-            </Badge>
-          ) : null}
+        <div className="resume-hub__tabs">
+          <TabLinks items={tabs} label={t("resumeHub.resumeViews")} />
         </div>
-        <Button aria-haspopup="dialog" icon="resume" onClick={() => setSwitcherOpen(true)} size="sm">
-          {t("resumeHub.switchVersion")}
-        </Button>
       </header>
 
       {!version.isActive ? (
@@ -137,8 +171,6 @@ export function ResumeHubLayout() {
           </Button>
         </Callout>
       ) : null}
-
-      <TabLinks items={tabs} label={t("resumeHub.resumeViews")} />
 
       <div className="resume-hub__panel">
         <Outlet context={{ versionId, resume, version, status } satisfies ResumeHubContext} />
