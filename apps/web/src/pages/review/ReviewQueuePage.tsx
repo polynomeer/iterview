@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import type { ReviewQueueItemModel } from "../../entities/review-queue/model";
+import { useHomeQuery } from "../../features/home/api/useHomeQuery";
 import { useReviewQueueActionMutation } from "../../features/review-queue/api/useReviewQueueActionMutation";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { getErrorDetails, optionalErrorMessage, userFacingErrorMessage } from "../../shared/api/errors";
@@ -16,29 +18,41 @@ import {
   EmptyState,
   ErrorState,
   ListRow,
-  PageHeader,
   PageSkeleton,
   Segmented,
 } from "../../shared/ui/primitives";
 import { daysUntil, weekLoad } from "../../entities/review-queue/dueDates";
+import { parseReviewView, ReviewTabs } from "./ReviewTabs";
+import { weakAreas, type WeakArea } from "./weakAreas";
 import "./review.css";
 
 type SortMode = "due" | "priority";
 
-function DueBadge({ scheduledAt, locale }: { scheduledAt: string | null; locale: AppLocale }) {
+/** The API's highest retry priority: a very low total, a severely weak dimension, or a skipped answer. */
+const HIGH_PRIORITY = 100;
+
+function dateLocale(locale: AppLocale) {
+  return locale === "ko" ? "ko-KR" : "en-US";
+}
+
+function DueLabel({ scheduledAt, locale }: { scheduledAt: string | null; locale: AppLocale }) {
   const { t } = useLocale();
   const days = daysUntil(scheduledAt);
   if (days === null) {
-    return null;
+    return <span className="review-item__due">-</span>;
   }
   if (days < 0) {
-    return <Badge tone="danger">{t("reviewQueue.overdueDays", { days: -days })}</Badge>;
+    return <span className="review-item__due review-item__due--overdue">{t("reviewQueue.overdueDays", { days: -days })}</span>;
   }
   if (days === 0) {
-    return <Badge tone="danger">{t("reviewQueue.today")}</Badge>;
+    return <span className="review-item__due review-item__due--today">{t("reviewQueue.today")}</span>;
   }
   const date = new Date(scheduledAt as string);
-  return <Badge>{date.toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US", { month: "short", day: "numeric" })}</Badge>;
+  return (
+    <span className="review-item__due review-item__due--later">
+      {date.toLocaleDateString(dateLocale(locale), { month: "numeric", day: "numeric" })}
+    </span>
+  );
 }
 
 function sortItems(items: ReviewQueueItemModel[], mode: SortMode) {
@@ -52,17 +66,59 @@ function sortItems(items: ReviewQueueItemModel[], mode: SortMode) {
   });
 }
 
+function sameDay(iso: string | null, day: Date) {
+  if (!iso) {
+    return false;
+  }
+  const due = new Date(iso);
+  return due.getFullYear() === day.getFullYear() && due.getMonth() === day.getMonth() && due.getDate() === day.getDate();
+}
+
+function WeakAreaList({ areas, limit }: { areas: WeakArea[]; limit?: number }) {
+  const { t } = useLocale();
+  return (
+    <ul className="review-weak">
+      {areas.slice(0, limit).map((area) => (
+        <li key={area.code}>
+          <Link className="review-weak__item" to={routeConfig.skills.buildPath()}>
+            <span className="review-weak__row">
+              <span>{area.label}</span>
+              <span className={`review-weak__score ui-tone-text--${area.tone}`}>{area.score}</span>
+            </span>
+            <span
+              aria-label={t("reviewQueue.weakAreaScore", { area: area.label })}
+              aria-valuemax={100}
+              aria-valuemin={0}
+              aria-valuenow={area.score}
+              className={`review-weak__track review-weak__track--${area.tone}`}
+              role="progressbar"
+            >
+              <span className="review-weak__fill" style={{ width: `${Math.min(100, area.score)}%` }} />
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function ReviewQueuePage() {
   const { locale, t } = useLocale();
+  const [searchParams] = useSearchParams();
+  const view = parseReviewView(searchParams.get("view"));
   const queueQuery = useReviewQueueQuery();
+  const homeQuery = useHomeQuery();
   const skipMutation = useReviewQueueActionMutation("skip");
   const doneMutation = useReviewQueueActionMutation("done");
   const [sortMode, setSortMode] = useState<SortMode>("due");
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const items = useMemo(() => sortItems(queueQuery.data?.items ?? [], sortMode), [queueQuery.data, sortMode]);
   const dueNow = items.filter((item) => (daysUntil(item.scheduledAt) ?? 0) <= 0);
+  const upcoming = items.filter((item) => (daysUntil(item.scheduledAt) ?? 0) > 0);
   const week = weekLoad(items.map((item) => item.scheduledAt));
+  const areas = weakAreas(homeQuery.data, locale);
   const actionError = optionalErrorMessage(skipMutation.error ?? doneMutation.error, t("reviewQueue.actionError"));
 
   async function act(item: ReviewQueueItemModel, action: "skip" | "done") {
@@ -103,30 +159,107 @@ export function ReviewQueuePage() {
   }
 
   const first = dueNow[0] ?? items[0] ?? null;
+  const selectedDate = selectedDay ? week.find((day) => day.date.toISOString() === selectedDay)?.date ?? null : null;
+  const listItems = selectedDate
+    ? items.filter((item) => sameDay(item.scheduledAt, selectedDate))
+    : view === "upcoming"
+      ? upcoming
+      : dueNow;
+  const listTitle = selectedDate
+    ? t("reviewQueue.dayListTitle", {
+        date: selectedDate.toLocaleDateString(dateLocale(locale), { month: "long", day: "numeric", weekday: "short" }),
+      })
+    : view === "upcoming"
+      ? t("reviewQueue.upcomingListTitle")
+      : t("reviewQueue.listTitle");
+
+  const list = (
+    <Card aria-labelledby="review-list-title" className="review-list">
+      <CardHeader
+        actions={
+          <Segmented
+            items={[
+              { id: "due", label: t("reviewQueue.sortByDue") },
+              { id: "priority", label: t("reviewQueue.sortByPriority") },
+            ]}
+            label={t("reviewQueue.sort")}
+            onChange={setSortMode}
+            value={sortMode}
+          />
+        }
+        titleAs="h2"
+        title={<span id="review-list-title">{listTitle}</span>}
+      />
+      {listItems.length === 0 ? (
+        <EmptyState
+          actions={
+            items.length === 0 ? (
+              <ButtonLink to={routeConfig.practice.buildPath()}>{t("reviewQueue.browseQuestions")}</ButtonLink>
+            ) : null
+          }
+          body={items.length === 0 ? t("reviewQueue.emptyBody") : t("reviewQueue.emptyViewBody")}
+          icon="check"
+          title={items.length === 0 ? t("reviewQueue.emptyTitle") : t("reviewQueue.emptyViewTitle")}
+        />
+      ) : (
+        listItems.map((item) => (
+          <ListRow
+            className="review-item"
+            key={item.id}
+            leading={<DueLabel locale={locale} scheduledAt={item.scheduledAt} />}
+            meta={[item.reasonTypeLabel, difficultyLabel(item.difficulty, locale), ...item.relatedSkillLabels].filter(Boolean).join(" · ")}
+            title={
+              <Link className="review-item__title" to={routeConfig.answerEditor.buildPath({ questionId: item.questionId })}>
+                {item.questionTitle}
+              </Link>
+            }
+            trailing={
+              <>
+                {item.priority !== null ? (
+                  <Badge tone={item.priority >= HIGH_PRIORITY ? "danger" : "warning"}>
+                    {item.priority >= HIGH_PRIORITY ? t("reviewQueue.badgeWeak") : t("reviewQueue.badgeNeedsWork")}
+                  </Badge>
+                ) : null}
+                <Button disabled={pendingId === item.id} onClick={() => void act(item, "skip")} size="sm" variant="ghost">
+                  {t("reviewQueue.later")}
+                </Button>
+                <Button disabled={pendingId === item.id} onClick={() => void act(item, "done")} size="sm" variant="ghost">
+                  {t("reviewQueue.done")}
+                </Button>
+              </>
+            }
+          />
+        ))
+      )}
+    </Card>
+  );
+
+  const weakCard = (
+    <Card aria-labelledby="review-weak-title" className="review-weak-card">
+      <CardHeader titleAs="h2" title={<span id="review-weak-title">{t("reviewQueue.weakTitle")}</span>} />
+      {homeQuery.isLoading ? (
+        <p className="review-muted">{t("reviewQueue.weakLoading")}</p>
+      ) : areas.length === 0 ? (
+        <p className="review-muted">{homeQuery.isError ? t("reviewQueue.weakUnavailable") : t("reviewQueue.weakEmpty")}</p>
+      ) : (
+        <WeakAreaList areas={areas} limit={view === "weak" ? undefined : 3} />
+      )}
+    </Card>
+  );
 
   return (
     <div className="ui-page review-page">
-      <PageHeader
-        actions={
-          first ? (
+      <header className="review-header">
+        <div className="review-header__row">
+          <h1 className="review-header__title">{t("reviewQueue.title")}</h1>
+          {first ? (
             <ButtonLink icon="arrowRight" to={routeConfig.answerEditor.buildPath({ questionId: first.questionId })} variant="primary">
               {dueNow.length > 0 ? t("reviewQueue.startTodayReviews", { count: dueNow.length }) : t("reviewQueue.startNextReview")}
             </ButtonLink>
-          ) : null
-        }
-        description={t("reviewQueue.description")}
-        title={t("reviewQueue.title")}
-      />
-
-      <ol aria-label={t("reviewQueue.weekLabel")} className="review-week">
-        {week.map((day) => (
-          <li className={`review-week__day${day.isToday ? " review-week__day--today" : ""}`} key={day.date.toISOString()}>
-            <span>{day.isToday ? t("reviewQueue.today") : day.date.toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US", { weekday: "short" })}</span>
-            <strong>{day.count}</strong>
-            <span className="review-week__bar" style={{ width: `${Math.min(100, day.count * 20)}%` }} />
-          </li>
-        ))}
-      </ol>
+          ) : null}
+        </div>
+        <ReviewTabs active={view} />
+      </header>
 
       <div aria-live="polite" className="review-status">
         {status ? <Callout tone="success">{status}</Callout> : null}
@@ -137,55 +270,48 @@ export function ReviewQueuePage() {
         ) : null}
       </div>
 
-      <Card aria-labelledby="review-list-title">
-        <CardHeader
-          actions={
-            <Segmented
-              items={[
-                { id: "due", label: t("reviewQueue.sortByDue") },
-                { id: "priority", label: t("reviewQueue.sortByPriority") },
-              ]}
-              label={t("reviewQueue.sort")}
-              onChange={setSortMode}
-              value={sortMode}
-            />
-          }
-          meta={items.length > 0 ? <Badge tone="danger">{items.length}</Badge> : null}
-          title={<span id="review-list-title">{t("reviewQueue.listTitle")}</span>}
-        />
-        {items.length === 0 ? (
-          <EmptyState
-            actions={
-              <ButtonLink to={routeConfig.practice.buildPath()}>{t("reviewQueue.browseQuestions")}</ButtonLink>
-            }
-            body={t("reviewQueue.emptyBody")}
-            icon="check"
-            title={t("reviewQueue.emptyTitle")}
-          />
-        ) : (
-          items.map((item) => (
-            <ListRow
-              key={item.id}
-              meta={[item.reasonTypeLabel, difficultyLabel(item.difficulty, locale)].filter(Boolean).join(" · ")}
-              title={item.questionTitle}
-              trailing={
-                <>
-                  <DueBadge locale={locale} scheduledAt={item.scheduledAt} />
-                  <ButtonLink size="sm" to={routeConfig.answerEditor.buildPath({ questionId: item.questionId })}>
-                    {t("reviewQueue.answer")}
-                  </ButtonLink>
-                  <Button disabled={pendingId === item.id} onClick={() => void act(item, "skip")} size="sm" variant="ghost">
-                    {t("reviewQueue.later")}
-                  </Button>
-                  <Button disabled={pendingId === item.id} onClick={() => void act(item, "done")} size="sm" variant="ghost">
-                    {t("reviewQueue.done")}
-                  </Button>
-                </>
-              }
-            />
-          ))
-        )}
-      </Card>
+      <div className="review-layout">
+        <div className="review-layout__main">
+          {view === "weak" ? (
+            weakCard
+          ) : (
+            <>
+              <section aria-label={t("reviewQueue.weekLabel")} className="review-week">
+                {week.map((day) => {
+                  const key = day.date.toISOString();
+                  const pressed = key === selectedDay;
+                  const longDate = day.date.toLocaleDateString(dateLocale(locale), { month: "long", day: "numeric", weekday: "long" });
+                  return (
+                    <button
+                      aria-label={t("reviewQueue.weekDayButton", { date: longDate, count: day.count })}
+                      aria-pressed={pressed}
+                      className={`review-week__day${day.isToday ? " review-week__day--today" : ""}${day.count === 0 ? " review-week__day--empty" : ""}`}
+                      key={key}
+                      onClick={() => setSelectedDay(pressed ? null : key)}
+                      type="button"
+                    >
+                      <span className="review-week__name">
+                        {day.isToday ? t("reviewQueue.today") : day.date.toLocaleDateString(dateLocale(locale), { weekday: "short" })}{" "}
+                        {day.date.getDate()}
+                      </span>
+                      <span className="review-week__count">{day.count}</span>
+                    </button>
+                  );
+                })}
+              </section>
+              {list}
+            </>
+          )}
+        </div>
+
+        <aside aria-label={t("reviewQueue.asideLabel")} className="review-layout__aside">
+          {view === "weak" ? null : weakCard}
+          <section aria-labelledby="review-interval-title" className="review-interval">
+            <h2 className="review-interval__title" id="review-interval-title">{t("reviewQueue.intervalTitle")}</h2>
+            <p className="review-interval__body">{t("reviewQueue.intervalBody")}</p>
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }

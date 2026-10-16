@@ -17,10 +17,10 @@ import {
   Field,
   Input,
   ListRow,
-  PageHeader,
   PageSkeleton,
   Segmented,
 } from "../../shared/ui/primitives";
+import { ReviewTabs } from "./ReviewTabs";
 import "./review.css";
 
 type SourceFilter = "all" | "practice" | "interview" | "real_interview";
@@ -68,10 +68,13 @@ export function ArchivePage() {
 
   return (
     <div className="ui-page review-page">
-      <PageHeader
-        description={t("reviewQueue.archiveDescription")}
-        title={t("reviewQueue.archiveTitle")}
-      />
+      <header className="review-header">
+        <div className="review-header__row">
+          <h1 className="review-header__title">{t("reviewQueue.title")}</h1>
+        </div>
+        <ReviewTabs active="done" />
+      </header>
+      <p className="review-muted review-muted--lead">{t("reviewQueue.archiveDescription")}</p>
 
       {recordId ? (
         <Callout>
@@ -82,7 +85,7 @@ export function ArchivePage() {
         </Callout>
       ) : null}
 
-      <Card aria-labelledby="archive-list-title">
+      <Card aria-labelledby="archive-list-title" className="review-list">
         <CardHeader
           actions={
             <Segmented
@@ -97,7 +100,8 @@ export function ArchivePage() {
               value={source}
             />
           }
-          meta={<Badge>{total}</Badge>}
+          meta={<span className="review-count">{total}</span>}
+          titleAs="h2"
           title={<span id="archive-list-title">{t("reviewQueue.archiveListTitle")}</span>}
         />
         <div className="review-archive__search">

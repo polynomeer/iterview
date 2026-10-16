@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useArchiveQuery } from "../../features/archive/api/useArchiveQuery";
+import { useHomeQuery } from "../../features/home/api/useHomeQuery";
 import { useReviewQueueActionMutation } from "../../features/review-queue/api/useReviewQueueActionMutation";
 import { useReviewQueueQuery } from "../../features/review-queue/api/useReviewQueueQuery";
 import { ArchivePage } from "../../pages/review/ArchivePage";
@@ -14,9 +15,38 @@ import { renderWithProviders } from "../utils";
 vi.mock("../../features/review-queue/api/useReviewQueueQuery", () => ({ useReviewQueueQuery: vi.fn() }));
 vi.mock("../../features/review-queue/api/useReviewQueueActionMutation", () => ({ useReviewQueueActionMutation: vi.fn() }));
 vi.mock("../../features/archive/api/useArchiveQuery", () => ({ useArchiveQuery: vi.fn() }));
+vi.mock("../../features/home/api/useHomeQuery", () => ({ useHomeQuery: vi.fn() }));
 
 const NOW = new Date(2026, 8, 30, 10); // Wed 30 Sep 2026, local time
 const at = (dayOffset: number) => new Date(2026, 8, 30 + dayOffset, 9).toISOString();
+
+const QUEUE_ITEMS = [
+  { id: "q2", questionId: "12", questionTitle: "Redis 분산 락 만료", scheduledAt: at(3), difficulty: "MEDIUM", priority: 80, reasonTypeLabel: "전체 점수 낮음", relatedSkillLabels: [] },
+  { id: "q1", questionId: "11", questionTitle: "Self-invocation 트랜잭션", scheduledAt: at(-1), difficulty: "HARD", priority: 80, reasonTypeLabel: "꼬리질문 깊이 부족", relatedSkillLabels: [] },
+  { id: "q3", questionId: "13", questionTitle: "p99 지연 측정", scheduledAt: at(0), difficulty: "EASY", priority: 100, reasonTypeLabel: "예약된 복습", relatedSkillLabels: [] },
+];
+
+const ARCHIVE_ITEMS = [
+  { id: "a1", questionId: "3", questionTitle: "40% 지연 개선 측정", sourceType: "interview", sourceBadgeLabel: "면접", difficulty: "MEDIUM", totalAttemptCount: 2, bestScore: 88, archivedAtLabel: "8월 26일", sourceSessionId: "1", sourceInterviewRecordId: null, sourceInterviewQuestionId: null },
+  { id: "a2", questionId: "2", questionTitle: "Poison message 처리", sourceType: "practice", sourceBadgeLabel: "연습", difficulty: "HARD", totalAttemptCount: 1, bestScore: null, archivedAtLabel: "8월 26일", sourceSessionId: null, sourceInterviewRecordId: "9", sourceInterviewQuestionId: "4" },
+];
+
+beforeEach(() => {
+  vi.mocked(useReviewQueueQuery).mockReturnValue({ isLoading: false, isError: false, data: { items: QUEUE_ITEMS } } as never);
+  vi.mocked(useArchiveQuery).mockReturnValue({ isLoading: false, isError: false, data: { items: ARCHIVE_ITEMS } } as never);
+  vi.mocked(useHomeQuery).mockReturnValue({
+    isLoading: false,
+    isError: false,
+    data: {
+      skillReadiness: [
+        { code: "BACKEND", score: 61 },
+        { code: "DATABASE", score: 48 },
+        { code: "CS", score: 90 },
+        { code: "TESTING", score: 0 },
+      ],
+    },
+  } as never);
+});
 
 describe("due dates", () => {
   it("counts days relative to the local calendar day", () => {
@@ -46,52 +76,103 @@ describe("ReviewQueuePage", () => {
     vi.setSystemTime(NOW);
     mutateAsync.mockReset().mockResolvedValue({});
     vi.mocked(useReviewQueueActionMutation).mockReturnValue({ mutateAsync, error: null } as never);
-    vi.mocked(useReviewQueueQuery).mockReturnValue({
-      isLoading: false,
-      isError: false,
-      data: {
-        items: [
-          { id: "q2", questionId: "12", questionTitle: "Redis 분산 락 만료", scheduledAt: at(3), difficulty: "MEDIUM", priority: 90, reasonTypeLabel: "전체 점수 낮음", relatedSkillLabels: [] },
-          { id: "q1", questionId: "11", questionTitle: "Self-invocation 트랜잭션", scheduledAt: at(-1), difficulty: "HARD", priority: 40, reasonTypeLabel: "꼬리질문 깊이 부족", relatedSkillLabels: [] },
-          { id: "q3", questionId: "13", questionTitle: "p99 지연 측정", scheduledAt: at(0), difficulty: "EASY", priority: 60, reasonTypeLabel: "예약된 복습", relatedSkillLabels: [] },
-        ],
-      },
-    } as never);
   });
 
   afterEach(() => vi.useRealTimers());
 
-  function renderQueue() {
+  function renderQueue(route = "/review") {
     return renderWithProviders(
       <Routes>
         <Route element={<ReviewQueuePage />} path="/review" />
       </Routes>,
-      { route: "/review", locale: "ko" },
+      { route, locale: "ko" },
     );
   }
 
-  it("starts with the most urgent due question and lists items by due date", () => {
+  it("starts today's reviews and lists only what is due, most urgent first", () => {
     renderQueue();
 
-    expect(screen.getByRole("link", { name: "오늘 복습 시작 (2)" })).toHaveAttribute("href", "/questions/11/answer");
-    const list = screen.getByRole("region", { name: /다시 답할 질문/ });
-    const titles = within(list).getAllByText(/Redis|Self-invocation|p99/).map((node) => node.textContent);
-    expect(titles).toEqual(["Self-invocation 트랜잭션", "p99 지연 측정", "Redis 분산 락 만료"]);
-    expect(within(list).getByText("1일 지남")).toHaveClass("ui-badge--danger");
-    expect(within(list).getByText("꼬리질문 깊이 부족 · 어려움")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "복습" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "오늘 복습 시작 · 2문제" })).toHaveAttribute("href", "/questions/11/answer");
     expect(document.querySelectorAll(".ui-button--primary")).toHaveLength(1);
+
+    const list = screen.getByRole("region", { name: "오늘 다시 볼 질문" });
+    const titles = within(list).getAllByRole("link").map((node) => node.textContent);
+    expect(titles).toEqual(["Self-invocation 트랜잭션", "p99 지연 측정"]);
+    expect(within(list).getByRole("link", { name: "Self-invocation 트랜잭션" })).toHaveAttribute("href", "/questions/11/answer");
+    expect(within(list).getByText("1일 지남")).toHaveClass("review-item__due--overdue");
+    expect(within(list).getByText("꼬리질문 깊이 부족 · 어려움")).toBeInTheDocument();
+
+    const urgent = within(list).getByText("Self-invocation 트랜잭션").closest(".ui-list-row") as HTMLElement;
+    expect(within(urgent).getByText("보완")).toHaveClass("ui-badge--warning");
+    const scheduled = within(list).getByText("p99 지연 측정").closest(".ui-list-row") as HTMLElement;
+    expect(within(scheduled).getByText("약점")).toHaveClass("ui-badge--danger");
   });
 
-  it("re-sorts by priority and shows the week load", async () => {
+  it("shows tab counts and keeps 오늘/예정/약한 영역 on /review and 완료 on its own route", () => {
+    renderQueue();
+
+    const tabs = screen.getByRole("navigation", { name: "복습 보기" });
+    const links = within(tabs).getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual(["오늘2", "예정1", "약한 영역2", "완료2"]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual(["/review", "/review?view=upcoming", "/review?view=weak", "/review/done"]);
+    expect(links[0]).toHaveAttribute("aria-current", "page");
+  });
+
+  it("re-sorts by priority", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     renderQueue();
 
     await user.click(screen.getByRole("radio", { name: "우선순위" }));
+    const list = screen.getByRole("region", { name: "오늘 다시 볼 질문" });
+    expect(within(list).getAllByRole("link").map((node) => node.textContent)).toEqual(["p99 지연 측정", "Self-invocation 트랜잭션"]);
+  });
 
-    const list = screen.getByRole("region", { name: /다시 답할 질문/ });
-    expect(within(list).getAllByText(/Redis|Self-invocation|p99/)[0]).toHaveTextContent("Redis 분산 락 만료");
-    const week = screen.getByRole("list", { name: "이번 주 복습 일정" });
-    expect(within(week).getAllByRole("listitem").map((day) => day.querySelector("strong")?.textContent)).toEqual(["0", "1", "1", "0", "0", "1", "0"]);
+  it("lists upcoming reviews on the 예정 tab", () => {
+    renderQueue("/review?view=upcoming");
+
+    expect(screen.getByRole("link", { name: /예정/ })).toHaveAttribute("aria-current", "page");
+    const list = screen.getByRole("region", { name: "예정된 복습" });
+    expect(within(list).getAllByRole("link").map((node) => node.textContent)).toEqual(["Redis 분산 락 만료"]);
+  });
+
+  it("shows the week load and filters the list to a picked day", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    renderQueue();
+
+    const week = screen.getByRole("region", { name: "이번 주 복습 일정" });
+    const days = within(week).getAllByRole("button");
+    expect(days.map((day) => day.querySelector(".review-week__count")?.textContent)).toEqual(["0", "1", "1", "0", "0", "1", "0"]);
+    expect(days[2]).toHaveTextContent("오늘");
+
+    await user.click(days[5]);
+    expect(days[5]).toHaveAttribute("aria-pressed", "true");
+    const list = screen.getByRole("region", { name: /복습$/ });
+    expect(within(list).getAllByRole("link").map((node) => node.textContent)).toEqual(["Redis 분산 락 만료"]);
+
+    await user.click(days[5]);
+    expect(screen.getByRole("region", { name: "오늘 다시 볼 질문" })).toBeInTheDocument();
+  });
+
+  it("shows measured weak areas weakest first, linking to the skill map, and the real review spacing", () => {
+    renderQueue();
+
+    const aside = screen.getByRole("complementary", { name: "약한 영역과 복습 간격" });
+    const weak = within(aside).getByRole("region", { name: "약한 영역" });
+    const links = within(weak).getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual(["데이터베이스48", "백엔드61"]);
+    expect(links[0]).toHaveAttribute("href", "/questions/skills");
+    expect(within(links[0]).getByRole("progressbar")).toHaveClass("review-weak__track--danger");
+    expect(within(links[1]).getByRole("progressbar")).toHaveClass("review-weak__track--warning");
+    expect(within(aside).getByRole("region", { name: "복습 간격" })).toHaveTextContent("60점 미만이면 2일 뒤");
+  });
+
+  it("moves weak areas into the main column on the 약한 영역 tab", () => {
+    renderQueue("/review?view=weak");
+
+    expect(screen.queryByRole("region", { name: "오늘 다시 볼 질문" })).not.toBeInTheDocument();
+    expect(screen.getAllByRole("region", { name: "약한 영역" })).toHaveLength(1);
+    expect(screen.getByRole("link", { name: /약한 영역/ })).toHaveAttribute("aria-current", "page");
   });
 
   it("marks an item done and announces it", async () => {
@@ -122,19 +203,6 @@ describe("ReviewQueuePage", () => {
 });
 
 describe("ArchivePage", () => {
-  beforeEach(() => {
-    vi.mocked(useArchiveQuery).mockReturnValue({
-      isLoading: false,
-      isError: false,
-      data: {
-        items: [
-          { id: "a1", questionId: "3", questionTitle: "40% 지연 개선 측정", sourceType: "interview", sourceBadgeLabel: "면접", difficulty: "MEDIUM", totalAttemptCount: 2, bestScore: 88, archivedAtLabel: "8월 26일", sourceSessionId: "1", sourceInterviewRecordId: null, sourceInterviewQuestionId: null },
-          { id: "a2", questionId: "2", questionTitle: "Poison message 처리", sourceType: "practice", sourceBadgeLabel: "연습", difficulty: "HARD", totalAttemptCount: 1, bestScore: null, archivedAtLabel: "8월 26일", sourceSessionId: null, sourceInterviewRecordId: "9", sourceInterviewQuestionId: "4" },
-        ],
-      },
-    } as never);
-  });
-
   function renderArchive(route = "/review/done") {
     return renderWithProviders(
       <Routes>
@@ -146,6 +214,9 @@ describe("ArchivePage", () => {
 
   it("lists finished questions with source, attempts, best score, and a way back", () => {
     renderArchive();
+
+    const tabs = screen.getByRole("navigation", { name: "복습 보기" });
+    expect(within(tabs).getByRole("link", { name: /완료/ })).toHaveAttribute("aria-current", "page");
 
     const row = screen.getByText("40% 지연 개선 측정").closest(".ui-list-row") as HTMLElement;
     expect(within(row).getByText("면접 · 보통 · 시도 2회 · 8월 26일")).toBeInTheDocument();
