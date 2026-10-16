@@ -1,6 +1,6 @@
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { QuestionDetailModel } from "../../entities/question/model";
 import { useSubmitAnswerMutation } from "../../features/answer/api/useSubmitAnswerMutation";
@@ -54,27 +54,61 @@ beforeEach(() => {
   vi.mocked(useSubmitAnswerMutation).mockReturnValue({ mutateAsync, isPending: false, error: null } as never);
 });
 
-function renderEditor() {
+function renderEditor(route = "/questions/11/answer") {
   return renderWithProviders(
     <Routes>
       <Route element={<AnswerEditorPage />} path="/questions/:questionId/answer" />
+      {/* The question page opens the editor with the question's depth in history state. */}
+      <Route element={<Navigate replace state={{ depth: 3 }} to="/questions/11/answer" />} path="/from-flow" />
       <Route element={<LocationDisplay />} path="*" />
     </Routes>,
-    { route: "/questions/11/answer", locale: "ko" },
+    { route, locale: "ko" },
   );
 }
 
 describe("AnswerEditorPage", () => {
-  it("focuses on the question with the last score, attempt number, and last feedback", () => {
-    renderEditor();
+  it("focuses on the question with the attempt line, the last score, and last feedback above the editor", () => {
+    const { container } = renderEditor();
 
+    expect(container.firstElementChild).toHaveClass("answer-page", "iv-ink-focus");
     expect(screen.getByRole("heading", { level: 1, name: QUESTION.title })).toBeInTheDocument();
-    expect(screen.getByText("지난 점수 42")).toHaveClass("ui-badge--danger");
-    expect(screen.getByText("2번째 시도")).toBeInTheDocument();
-    expect(screen.getByText("해결 사례를 붙여 다시 답해보세요.")).toBeInTheDocument();
+    expect(screen.getByText("2번째 시도 · 어려움")).toBeInTheDocument();
+    const feedback = screen.getByRole("complementary", { name: "지난 피드백" });
+    expect(feedback).toHaveClass("answer-feedback--danger");
+    expect(feedback).toHaveTextContent("지난 점수 42");
+    expect(feedback).toHaveTextContent("해결 사례를 붙여 다시 답해보세요.");
+    // The feedback sits right above the editor.
+    expect(feedback.compareDocumentPosition(screen.getByLabelText("답변 입력")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(useResultAnalysisQuery).toHaveBeenCalledWith("7");
     expect(screen.getByRole("link", { name: "나가기" })).toHaveAttribute("href", "/questions/11");
     expect(screen.getByLabelText("답변 입력")).toHaveFocus();
+  });
+
+  it("shows the focus bar trail, a running timer, and the depth the question page passed along", () => {
+    renderEditor("/from-flow");
+
+    const trail = screen.getByRole("navigation", { name: "현재 위치" });
+    expect(within(trail).getByRole("link", { name: "질문" })).toHaveAttribute("href", "/questions");
+    expect(within(trail).getByRole("link", { name: "Spring" })).toHaveAttribute("href", "/questions/11");
+    expect(within(trail).getByText(QUESTION.title)).toHaveAttribute("aria-current", "page");
+    expect(screen.getByText("경과 시간").parentElement).toHaveTextContent(/^경과 시간\d{2}:\d{2}$/);
+    expect(screen.getByText("깊이 3 · 2번째 시도 · 어려움")).toBeInTheDocument();
+  });
+
+  it("checks the answer against the guide and names the resume it is evaluated with", () => {
+    vi.mocked(useResumeListQuery).mockReturnValue({
+      isLoading: false,
+      isError: false,
+      data: { items: [{ id: "1", title: "백엔드 이력서", versions: [{ id: "3", isActive: true, versionNumberLabel: "버전 2" }] }] },
+    } as never);
+    renderEditor();
+
+    const guide = screen.getByRole("complementary", { name: "답변 가이드" });
+    const checklist = within(guide).getByRole("region", { name: "답변 점검" });
+    expect(within(checklist).getAllByRole("listitem").map((item) => item.querySelector("strong")?.textContent)).toEqual(["주장", "근거", "꼬리질문 대비"]);
+    const resume = within(guide).getByRole("link", { name: /백엔드 이력서/ });
+    expect(resume).toHaveAttribute("href", "/resume/3");
+    expect(resume).toHaveTextContent("버전 2 · 이 이력서를 기준으로 평가해요");
   });
 
   it("blocks empty submissions with an announced error", async () => {
