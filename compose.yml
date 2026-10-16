@@ -55,8 +55,10 @@ services:
       - sh
       - -lc
       - |
-        if [ ! -d node_modules ] || [ -z "$(ls -A node_modules 2>/dev/null)" ]; then
-          npm ci
+        # Reinstall whenever the lockfile changes, not only into an empty volume.
+        lock_hash="$$(md5sum package-lock.json | cut -d' ' -f1)"
+        if [ "$$(cat node_modules/.lock-hash 2>/dev/null)" != "$$lock_hash" ]; then
+          npm install --no-audit --no-fund && echo "$$lock_hash" > node_modules/.lock-hash
         fi
         npm run dev -- --host 0.0.0.0 --port 5173
     environment:
