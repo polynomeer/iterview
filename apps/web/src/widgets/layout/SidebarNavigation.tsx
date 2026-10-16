@@ -8,7 +8,7 @@ import { LIBRARY_AREA, PRIMARY_AREAS, resolveNavLocation, SETTINGS_AREA, type Na
 import { routeConfig } from "../../shared/config/routes";
 import { useLocale } from "../../shared/i18n";
 import { parsingStatusLabel } from "../../shared/lib/labels";
-import { Icon, type IconName } from "../../shared/ui/primitives";
+import { BrandMark, Icon, type IconName } from "../../shared/ui/primitives";
 import { ResumeVersionSwitcher } from "./ResumeVersionSwitcher";
 
 type NavItemProps = {
@@ -122,9 +122,7 @@ export function SidebarNavigation() {
   return (
     <aside className="shell-nav">
       <Link className="shell-nav__brand" to={routeConfig.home.buildPath()}>
-        <span aria-hidden="true" className="shell-nav__brand-mark">
-          i
-        </span>
+        <BrandMark />
         iterview
       </Link>
 

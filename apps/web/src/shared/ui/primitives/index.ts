@@ -1,3 +1,4 @@
+export { BrandMark } from "./BrandMark";
 export { Button, ButtonLink, IconButton, type ButtonSize, type ButtonVariant } from "./Button";
 export { Dialog } from "./Dialog";
 export { Badge, Callout, Card, CardBody, CardHeader, ListRow, PageSkeleton, Progress, Skeleton, Stat, type Tone } from "./Display";

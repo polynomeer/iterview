@@ -10,16 +10,17 @@
       name="description"
       content="이력서 한 줄 한 줄과 이어지는 꼬리질문까지 대비하는 면접 준비 서비스"
     />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>이터뷰 | 이력서 기반 면접 준비</title>
     <script>
-      // Apply the stored theme and palette before React mounts so a reload never flashes other colors (ADR 0082, ADR 0093).
+      // Apply the stored theme and palette before React mounts so a reload never flashes other colors (ADR 0082, ADR 0093, ADR 0094).
       (() => {
         const stored = window.localStorage.getItem("iterview-theme");
         const retired = { workspace: "dark", dracula: "dark" };
         const theme = stored === "system" || stored === "light" || stored === "dark" ? stored : retired[stored] || "system";
         document.documentElement.dataset.theme = theme;
         const palette = window.localStorage.getItem("iterview-palette");
-        document.documentElement.dataset.palette = palette === "ink" ? "ink" : "classic";
+        document.documentElement.dataset.palette = palette === "classic" ? "classic" : "ink";
       })();
     </script>
   </head>

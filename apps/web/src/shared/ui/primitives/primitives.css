@@ -571,3 +571,9 @@ a.ui-tabs__tab { text-decoration: none; }
 @media (max-width: 1023px) {
   .ui-page { padding-top: var(--iv-space-4); }
 }
+
+/* Brand mark (ADR 0094). The stem takes the surrounding text color. */
+.brand-mark { flex: none; }
+.brand-mark__root { fill: var(--iv-accent); }
+.brand-mark__stem { fill: none; stroke: currentColor; stroke-width: 11; stroke-linecap: round; }
+.brand-mark__leaf { fill: var(--iv-brand-leaf); }

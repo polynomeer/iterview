@@ -211,4 +211,6 @@ Each ADR should include:
 92. [`0092-local-scripts-pick-free-ports.md`](0092-local-scripts-pick-free-ports.md)
    Scripts start from 5432/8080/5173 and move to the next free port; `POSTGRES_PORT`/`API_PORT`/`WEB_PORT` pin them; e2e finds the running stack's ports.
 93. [`0093-color-palettes-separate-from-brightness.md`](0093-color-palettes-separate-from-brightness.md)
-   Color palette (`classic` default, `ink` Ink & Signal) is a setting separate from brightness, on `data-palette`; sidebar gets `--iv-nav-*` roles. Amends 0082.
+   Color palette (`classic`, `ink` Ink & Signal; default changed by 0094) is a setting separate from brightness, on `data-palette`; sidebar gets `--iv-nav-*` roles. Amends 0082.
+94. [`0094-ink-and-signal-default-with-classic-theme.md`](0094-ink-and-signal-default-with-classic-theme.md)
+   Ink & Signal (IBM Plex, new mark, dark answer focus) is the default; classic stays a selectable theme; palettes may set type and shape. Amends 0093.

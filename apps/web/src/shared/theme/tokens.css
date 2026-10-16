@@ -43,6 +43,11 @@
   --iv-radius-lg: 14px;
   --iv-radius-full: 999px;
 
+  /* Brand mark (ADR 0094): the root dot uses --iv-accent, the follow-up dot is always signal orange. */
+  --iv-brand-leaf: #ff7a3d;
+  /* Non-text marks for weak scores (bars, dots). Classic reuses its danger color. */
+  --iv-signal: var(--iv-danger);
+
   /* Control sizes */
   --iv-control-sm: 1.875rem;
   --iv-control-md: 2.25rem;
@@ -53,7 +58,7 @@
   --iv-ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* Classic light roles (the default palette, ADR 0093). Used by the `light` theme and by `system` when the OS prefers light (ADR 0082). */
+/* Classic light roles (the earlier look, selectable since ADR 0093; Ink & Signal is the default, ADR 0094). Used by the `light` theme and by `system` when the OS prefers light (ADR 0082). */
 :root,
 :root[data-theme="light"] {
   color-scheme: light;
@@ -171,6 +176,9 @@
  */
 :root[data-palette="ink"] {
   color-scheme: light;
+  --iv-radius-md: 10px;
+  --iv-radius-lg: 16px;
+  --iv-signal: #ff7a3d;
   --iv-font-sans: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
   --iv-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --iv-bg: #f4f5f6;
@@ -206,6 +214,8 @@
   --iv-nav-active-text: #ffffff;
 }
 
+/* `.iv-ink-focus` keeps focus surfaces (the answer editor) dark in Ink & Signal at any brightness. */
+:root[data-palette="ink"] .iv-ink-focus,
 :root[data-palette="ink"][data-theme="dark"] {
   color-scheme: dark;
   --iv-bg: #0e1013;

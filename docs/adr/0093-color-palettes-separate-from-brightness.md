@@ -1,7 +1,7 @@
 # 0093. Color Palettes Separate from Brightness
 
 ## Status
-Accepted. Amends ADR 0082.
+Accepted. Amends ADR 0082. Default palette changed by ADR 0094.
 
 ## Date
 2026-10-15

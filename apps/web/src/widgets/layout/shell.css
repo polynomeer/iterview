@@ -46,18 +46,6 @@
   text-decoration: none;
 }
 
-.shell-nav__brand-mark {
-  display: grid;
-  place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: var(--iv-radius-sm);
-  background: var(--iv-accent);
-  color: var(--iv-on-accent);
-  font-size: var(--iv-text-sm);
-  font-weight: var(--iv-weight-bold);
-}
-
 .shell-nav__group {
   display: flex;
   flex-direction: column;

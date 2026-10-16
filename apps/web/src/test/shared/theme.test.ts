@@ -23,11 +23,11 @@ describe("theme", () => {
     expect(getStoredTheme(storageWith("dark"))).toBe("dark");
   });
 
-  it("keeps the classic palette unless Ink & Signal was chosen (ADR 0093)", () => {
+  it("uses Ink & Signal unless the classic palette was chosen (ADR 0094)", () => {
     expect(paletteOptions.map((option) => option.id)).toEqual(["ink", "classic"]);
-    expect(defaultPalette).toBe("classic");
-    expect(getStoredPalette(storageWith(null))).toBe("classic");
-    expect(getStoredPalette(storageWith("dracula"))).toBe("classic");
-    expect(getStoredPalette(storageWith("ink"))).toBe("ink");
+    expect(defaultPalette).toBe("ink");
+    expect(getStoredPalette(storageWith(null))).toBe("ink");
+    expect(getStoredPalette(storageWith("dracula"))).toBe("ink");
+    expect(getStoredPalette(storageWith("classic"))).toBe("classic");
   });
 });

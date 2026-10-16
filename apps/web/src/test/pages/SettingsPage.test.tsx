@@ -107,13 +107,13 @@ describe("SettingsPage", () => {
   it("picks the color theme separately from brightness and keeps it for the next visit", async () => {
     renderWithProviders(<SettingsPage />, { route: "/settings", locale: "ko" });
 
-    expect(screen.getByRole("radio", { name: "클래식" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Ink & Signal" })).toBeChecked();
     await userEvent.click(screen.getByRole("radio", { name: "다크" }));
-    await userEvent.click(screen.getByRole("radio", { name: "Ink & Signal" }));
+    await userEvent.click(screen.getByRole("radio", { name: "클래식" }));
 
-    expect(document.documentElement.dataset.palette).toBe("ink");
+    expect(document.documentElement.dataset.palette).toBe("classic");
     expect(document.documentElement.dataset.theme).toBe("dark");
-    expect(window.localStorage.getItem("iterview-palette")).toBe("ink");
+    expect(window.localStorage.getItem("iterview-palette")).toBe("classic");
     expect(window.localStorage.getItem("iterview-theme")).toBe("dark");
   });
 });

@@ -71,7 +71,7 @@ describe("SidebarNavigation", () => {
     renderWithProviders(<SidebarNavigation />, { route: "/explore", locale: "ko" });
 
     const labels = screen.getAllByRole("link").map((link) => link.textContent);
-    expect(labels).toEqual(["iiterview", "오늘", "질문", "둘러보기", "로그인", "회원가입"]);
+    expect(labels).toEqual(["iterview", "오늘", "질문", "둘러보기", "로그인", "회원가입"]);
     expect(screen.getByRole("link", { name: "둘러보기" })).toHaveAttribute("aria-current", "page");
     expect(useReviewQueueQuery).toHaveBeenCalledWith({ enabled: false });
   });

@@ -136,11 +136,12 @@ describe("design tokens", () => {
     expect(Object.fromEntries(systemDark)).toEqual(Object.fromEntries(dark));
   });
 
+  // Ink & Signal may add roles of its own (signal orange); classic derives those from its other roles.
   it("gives Ink & Signal every color role the classic palette has", () => {
     const ink = readRoleBlock(css, ':root[data-palette="ink"]');
     const inkDark = readRoleBlock(css, ':root[data-palette="ink"][data-theme="dark"]');
-    expect([...ink.keys()].sort()).toEqual([...classicLight.keys()].sort());
-    expect([...inkDark.keys()].sort()).toEqual([...classicLight.keys()].sort());
+    expect([...ink.keys()]).toEqual(expect.arrayContaining([...classicLight.keys()]));
+    expect([...inkDark.keys()]).toEqual(expect.arrayContaining([...classicLight.keys()]));
   });
 
   it("has no legacy stylesheet left: every rule is written against tokens", () => {
